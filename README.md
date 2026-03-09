@@ -12,6 +12,20 @@ Alongside the engine, an offline AI assistant pipeline (RAG + fine-tuned LLM) he
 
 ---
 
+## Why Build This?
+
+Reinforcement learning has proven highly effective for games of perfect information like chess and Go (see AlphaZero), but trading card games present a different challenge: hidden information, randomness, and vastly larger decision spaces.
+
+Among TCGs, Flesh and Blood is particularly interesting for RL research:
+
+- **Rich decision trees** - Nearly every card can be played as an attack, used to block, or pitched for resources, creating exponential branching at each turn
+- **Object-oriented rules system** - FAB's comprehensive rules define everything as objects with properties and interactions, making it naturally suited to programmatic implementation
+- **Accumulating deck knowledge** - Pitched cards go to the bottom of the deck in known order, creating an information advantage that compounds throughout the game and rewards long-term planning.
+
+This project explores whether transformer-based state encodings can capture the strategic patterns that distinguish expert play from random play, or if the combinatorial explosion of legal actions creates a decision forest too dense for current RL methods to navigate effectively.
+
+---
+
 ## Architecture
 
 ```
