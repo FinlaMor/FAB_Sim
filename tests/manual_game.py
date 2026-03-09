@@ -9,7 +9,7 @@ from engine.card import CardDB, Card
 from engine.engine import new_game
 from engine.deck import load_deck, create_player
 from engine.actions import legal_actions, Action
-from agents.random_agent import RandomAgent, UserInputAgent
+from rl_agents.random_agent import RandomAgent, UserInputAgent
 
 user_agent = UserInputAgent()
 

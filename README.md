@@ -29,7 +29,7 @@ FAB_Sim/
 │       ├── registry.py   # Trigger registration at game start
 │       └── db/           # SQLite card effects database + seed data
 │
-├── agents/               # Game-playing agents
+├── rl_agents/            # Game-playing agents
 │   └── random_agent.py   # Baseline: uniform random over legal actions
 │
 ├── offline_agents/       # Development assistant pipeline
