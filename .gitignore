@@ -1,0 +1,39 @@
+# --- Card data (LSS IP — do not redistribute) ---
+card_data/slug_index.json
+card_data/slug_index_backup*.json
+
+# --- Training data (proprietary Q&A pairs) ---
+offline_agents/distillation/rules_qa.jsonl
+offline_agents/distillation/cards_qa.jsonl
+offline_agents/distillation/training_data.jsonl
+
+# --- RAG vector store (derived from card data, ~200MB) ---
+offline_agents/rag/chroma_db/
+
+# --- Model weights ---
+models/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# --- Local DB (contains seeded card effects) ---
+engine/card_effects/db/*.db
+
+# --- Claude Code ---
+.claude/
+
+# --- IDE ---
+.vscode/settings.json
+.idea/
+
+# --- OS ---
+.DS_Store
+Thumbs.db

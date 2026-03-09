@@ -1,0 +1,37 @@
+Name: The Dodgefather
+Hero: Kayo, Underhanded Cheat
+Format: Classic Constructed
+
+Arena cards
+1x Apex Bonebreaker
+1x Fyendal's Spring Tunic
+1x Savage Claw
+1x Scabskin Leathers
+1x Scowling Flesh Bag
+
+Deck cards
+3x Big Bully (red)
+3x Chain of Brutality (red)
+3x Command and Conquer (red)
+3x Looking for a Scrap (red)
+3x Mocking Blow (red)
+2x Pummel (red)
+3x Show of Strength (red)
+3x Sigil of Solace (red)
+3x Sink Below (red)
+1x Snarky Prick (red)
+3x Swing Big (red)
+3x Mocking Blow (yellow)
+3x Booze! (blue)
+3x Insult to Injury (blue)
+3x Mocking Blow (blue)
+1x Nimblism (blue)
+3x Nimby (blue)
+3x Offensive Behavior (blue)
+3x Outside Interference (blue)
+2x Overcrowded (blue)
+3x Reckless Arithmetic (blue)
+3x Steal Victory (blue)
+
+Made with ❤️ at the FaBrary
+See the full deck @ https://fabrary.net/decks/01KFHCMKN5CWRSKTHBNX041BC3

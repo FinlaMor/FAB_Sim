@@ -1,0 +1,2765 @@
+Home  Rules and Policy  Release Notes  The Hunted
+
+# The Hunted
+
+# General Notes
+
+The Hunted contains 265 cards and becomes legal for tournament play on its official release date: January 31, 2025
+
+Icons
+
+{r} Resource
+
+{p} Power
+
+{d} Defense
+
+{h} Life
+
+{i} Intellect
+
+{c} Chi
+
+## Returning Cards
+
+Welcome to Rathe
+
+Razor Reflex (RED)
+
+Sigil of Solace (RED)
+
+#### Uprising
+
+Cinderskin Devotion (RED)
+
+Dust Runner Outlaw (RED)
+
+Lava Vein Loyalty (RED)
+
+Ronin Renegade (RED)
+
+Blaze Headlong (RED)
+
+#### Outsiders
+
+Back Stab (RED)
+
+Razor’s Edge (RED)
+
+## Returning Tokens
+
+None
+
+## New Keywords
+
+Agent of Chaos
+
+The Hunted features a new category of cards called Agent of Chaos, which support Arakni, Marionette | Arakni, Web of Deceit.
+
+There are 6 total unique Agent of Chaos cards. Each is identified by the tag “Agent of Chaos” printed below their name box.
+
+Each Agent of Chaos card features a number 1 through 6 (as Roman numerals in English language product). Players can select a random Agent of Chaos by rolling a six-sided dice and becoming the Agent of Chaos with the corresponding number. Choosing a random Agent of Chaos this way does not count as rolling a dice for effects that consider or modify dice-rolls. Players can also use an equivalent method of randomization, as long as it meets tournament guidelines.
+
+When playing as Arakni, Marionette | Arakni, Web of Deceit, you are required to have a physical copy of all 6 unique Agent of Chaos cards to play the hero. The corresponding card must be used to represent your hero if you become an Agent of Chaos.
+
+When registering Arakni, Marionette | Arakni, Web of Deceit on your card-pool registration sheet, the Agents of Chaos do not need to be in your card-pool / inventory.
+
+When you become an Agent of Chaos, effects that apply to your hero persist (especially the Marked condition), and your life total remains the same.
+
+Each Agent of Chaos has a life property that is represented by an * which is the base hero’s printed life value.
+
+Mark
+
+(You are marked until a hero hits you.)
+
+Marked is a new state for a hero.
+
+In The Hunted, there are effects that mark a hero. Some cards and their effects may depend on whether a hero is marked or not.
+
+A hero is marked until they are hit. Once they are hit, the marked status is immediately removed and they are no longer marked. This is not a triggered effect or a game-state process.
+
+Marking a marked hero does nothing.
+
+If a marked hero becomes a different hero or reverts to their base hero (e.g. Arakni, Marionette; Shiyana), their marked condition persists after they become / revert their specified hero.
+
+If a marked hero transforms into a different hero (e.g. Teklovossen, the Mechropotent; Levia, Redeemed), that hero is not marked.
+
+Retrieve
+
+(Pay {r} to equip it.)
+
+Retrieve is a discrete effect keyword.
+
+When resolving a retrieve effect, you must have the appropriate empty zone with nothing equipped to it. If you don’t, you will not pay the {r} and you won’t equip a dagger from your graveyard. For example, you cannot retrieve a dagger from your graveyard if both your weapon zones are already equipped with a weapon(s).
+
+You will be able to pay {r} when the effect is generated (assuming you can equip the object successfully).
+
+Retrieving an object can cause any “when you equip” triggered effects to trigger for that object.
+
+Return to the Brood
+
+(Revert to your base hero.)
+
+Return to the Brood is a new discrete effect keyword.
+
+When resolving Return to the Brood, your current hero returns to being the base hero you began the game with. Effects that apply to your hero persist (especially the Marked condition), and your life total remains the same.
+
+If you became an Agent of Chaos on your turn (e.g. Shiyana) with an ability that would require you to Return to the Brood, you will revert to your base hero. For example, Shiyana copies Arakni, Funnel Web at the beginning of their turn. At the end of phase of the Shiyana player’s turn, triggered effect that causes the copy of Arakni, Funnel Web to Return to the Brood will trigger for that Shiyana, and they will revert to their base hero.
+
+“Flicking” Notes
+
+Many cards in The Hunted have a similar effect that we refer to as “flicking”. Flicking effects typically take a variation of the following syntax: “Target dagger you control deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.”
+
+“Flicking” the dagger itself this way is not considered an attack for the purposes of cards and effects.
+
+If damage is dealt, it is considered a “hit event” with the dagger considered to have hit.
+
+If the dagger hits this way, the attack on the active chain link is not considered to have hit. This is relevant for effects that are conditional only on the attack hitting (e.g. Benji, on-hit effects on the attack etc.)
+
+If the dagger hits this way, the active chain link (but not the attack) is considered to have hit. This is relevant for effects that are conditional on a chain link hitting instead of an attack hitting (e.g. Mask of Momentum, Whirling Mist Blossom, etc.)
+
+The dagger is destroyed regardless of whether it hits.
+
+When the dagger is destroyed, it is put into the graveyard (or ceases to exist if it’s a token). It is neither put into your inventory nor continues to exist in the arena.
+
+## “Flicking” Notes
+
+Many cards in The Hunted have a similar effect that we refer to as “flicking”. Flicking effects typically take a variation of the following syntax: “Target dagger you control deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.”
+
+“Flicking” the dagger itself this way is not considered an attack for the purposes of cards and effects.
+
+If damage is dealt, it is considered a “hit event” with the dagger considered to have hit.
+
+If the dagger hits this way, the attack on the active chain link is not considered to have hit. This is relevant for effects that are conditional only on the attack hitting (Benji, on-hit effects on the attack etc.)
+
+If the dagger hits this way, the active chain link (but not the attack) is considered to have hit. This is relevant for effects that are conditional on a chain link hitting instead of an attack hitting (e.g. Mask of Momentum, Whirling Mist Blossom, etc.)
+
+The dagger is destroyed regardless of whether it hits.
+
+When the dagger is destroyed, it is put into the graveyard (or ceases to exist if it’s a token). It is neither put into your inventory nor continues to exist in the arena.
+
+# The Hunted Card Notes
+
+Schism of Chaos
+
+Chaos Resource – Gem
+
+(BLU)
+
+Legendary
+
+When this is pitched, each hero shuffles, then puts the top card of their deck face-down into their arsenal.
+
+All players shuffle before any player puts a card into their arsenal. Once all heroes have shuffled, each player puts a card into their arsenal.
+
+The player who pitched Schism of Chaos is the first player to put a card into their arsenal, then each player does the same in clockwise order.
+
+If a player doesn’t have any empty arsenal zones, they do not put a card into their arsenal, but still shuffles.
+
+—————————————————————
+
+## Chaos Assassin Cards
+
+Arakni, Marionette | Arakni, Web of Deceit
+
+Chaos Assassin Hero | Chaos Assassin Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Your attacks with stealth that are attacking a marked hero get +1{p} and “When this hits, this gets go again.”
+
+At the beginning of your end phase, if an opponent is marked, you become a random Agent of Chaos.
+
+Arakni’s first ability generates a static-continuous effect that is applied to your attacks with stealth that are attacking a marked hero. Those affected attacks will get both the power increase and the “on-hit” triggered static ability as long as they are attacking a marked hero. If they are no longer attacking a marked hero, they will no longer have those aforementioned effects.
+
+Marked heroes are no longer marked after they are hit and damage is dealt to them in the damage step. This means stealth attacks that are attacking a marked hero will continue to have the +1{p} and the “on-hit” triggered-static ability as long as the defending hero is marked when damage calculation begins. The hit event occurs which will simultaneously trigger that on-hit ability granted to the attack from Arakni and will remove the marked condition from the defending hero.
+
+Arakni’s second ability triggers at the beginning of your end phase. Whether an opponent is marked is checked when this triggered effect resolves. When this triggered effect resolves, you become a random Agent of Chaos. There is no priority for any players during the end phase of a turn.
+
+—————————————————————
+
+Arakni, Black Widow
+
+Chaos Assassin Demi-Hero
+
+4{i} *{h}
+
+Once per Turn Attack Reaction — Discard an Assassin card: Target Assassin attack gets +3{p}. If it has stealth, it gets “When this hits a hero, they banish a card from their hand.”
+
+At the beginning of your end phase, return to the brood.
+
+You can discard a hybrid card (i.e.. Assassin / Ninja in the type box) to pay the cost to activate this ability.
+
+When Arakni, Black Widow’s activated ability resolves, the targeted Assassin attack gets +3{p}. If the attack had stealth at the time of the resolution, the attack gets the on-hit triggered-static ability.
+
+The card is banished face-up into the owner’s banished zone.
+
+The opponent is the hero banishing a card, which does not satisfy contracts that ask you to banish cards.
+
+Arakni’s second ability triggers at the beginning of your end phase. When this triggered effect resolves, you revert to your base hero. There is no priority for any players during the end phase of a turn.
+
+—————————————————————
+
+Arakni, Funnel Web
+
+Chaos Assassin Demi-Hero
+
+4{i} *{h}
+
+Once per Turn Attack Reaction — Discard an Assassin card: Target Assassin attack gets +3{p}. If it has stealth, it gets “When this hits a hero, banish a card in their arsenal.”
+
+At the beginning of your end phase, return to the brood.
+
+You can discard a hybrid card (i.e.. Assassin / Ninja in the type box) to pay the cost to activate this ability.
+
+When Arakni, Funnel Web’s activated ability resolves, the targeted Assassin attack gets +3{p}. If the attack had stealth at the time of the resolution, the attack gets the on-hit triggered-static ability.
+
+The card is banished face-up into the owner’s banished zone.
+
+If the defending hero has multiple cards in their arsenal, the attacking player chooses which one to banish.
+
+Arakni’s second ability triggers at the beginning of your end phase. When this triggered effect resolves, you revert to your base hero. There is no priority for any players during the end phase of a turn.
+
+—————————————————————
+
+Arakni, Orb-Weaver
+
+Chaos Assassin Demi-Hero
+
+4{i} *{h}
+
+Graphene Chelicerae cost you {r} less to activate.
+
+Once per Turn Instant — Discard an Assassin card: Equip a Graphene Chelicera token. Your next attack with stealth this turn gets +3{p}.
+
+At the beginning of your end phase, return to the brood.
+
+You can discard a hybrid card (i.e.. Assassin / Ninja in the type box) to pay the cost to activate this ability.
+
+When Arakni, Orb-Weaver’s activated ability resolves, you will create a Graphene Chelicera token that enters the arena equipped, and you will generate a continuous effect that gives your next attack with stealth this turn +3{p}. You must have an empty weapon zone with nothing equipped in order to create and equip the Graphene Chelicera token.
+
+You do not equip a Graphene Chelicera token if you are unable to create that token (e.g. if the effect fails).
+
+Arakni’s third ability triggers at the beginning of your end phase. When this triggered effect resolves, you revert to your base hero. There is no priority for any players during the end phase of a turn.
+
+—————————————————————
+
+Arakni, Redback
+
+Chaos Assassin Demi-Hero
+
+4{i} *{h}
+
+Once per Turn Attack Reaction — Discard an Assassin card: Target Assassin attack gets +3{p}. If it has stealth, it gets go again.
+
+At the beginning of your end phase, return to the brood.
+
+You can discard a hybrid card (i.e.. Assassin / Ninja in the type box) to pay the cost to activate this ability.
+
+When Arakni, Redback’s activated ability resolves, the targeted Assassin attack gets +3{p}. If the attack had stealth at the time of the resolution, the attack gets go again.
+
+Arakni’s second ability triggers at the beginning of your end phase. When this triggered effect resolves, you revert to your base hero. There is no priority for any players during the end phase of a turn.
+
+—————————————————————
+
+Arakni, Tarantula
+
+Chaos Assassin Demi-Hero
+
+4{i} *{h}
+
+Whenever a dagger you own hits a hero, they lose 1{h}.
+
+Once per Turn Attack Reaction — Discard an Assassin card: Target dagger attack gets +3{p}.
+
+At the beginning of your end phase, return to the brood.
+
+Arakni, Tarantula has a triggered-static ability that triggers each time a dagger you own hits a hero, typically either hitting with a dagger attack during the damage step or through effects that result in the dagger hitting (e.g. Flick Knives, Bite, etc.). When each triggered effect from Arakni Tarantula’s first ability resolves, that hero will lose 1{h}.
+
+You can discard a hybrid card (i.e.. Assassin / Ninja in the type box) to pay the cost to activate this ability.
+
+When Arakni, Tarantula’s activated ability resolves, the targeted dagger attack gets +3{p}. Note that the target here is a dagger attack, not an assassin attack that some other abilities are.
+
+Arakni’s third ability triggers at the beginning of your end phase. When this triggered effect resolves, you revert to your base hero. There is no priority for any players during the end phase of a turn.
+
+—————————————————————
+
+Arakni, Trap-Door
+
+Chaos Assassin Demi-Hero
+
+4{i} *{h}
+
+When you become this, you may search your deck for a card, banish it face-down, then shuffle. If it’s a trap, you may play it until the start of your next turn.
+
+At the beginning of your end phase, return to the brood.
+
+Arakni, Trap-Door has a triggered-static ability that triggers when you become it. When the triggered effect resolves, you may search your deck for a card, banish it face-down, then shuffle. As this is an optional effect, you must be able to resolve the search, banish and shuffle successfully.
+
+If your hero has already become Arakni, Trap-Door (e.g. Arakni hero ability), and another effect would cause you to become Arakni, Trap-Door (e.g. Mask of Deceit), the ability does not trigger.
+
+If you choose to search your deck and it is not empty, you must search for a card and banish it face-down. You cannot choose to fail the search since the effect does not specify any properties of the card to be chosen from the search.
+
+If there are no cards in your deck zone when instructed to shuffle, the zone is still considered shuffled.
+
+Shiyana can trigger this ability if they become Arakni, Trap-Door. Nice Shiyana Card.
+
+Arakni’s second ability triggers at the beginning of your end phase. When this triggered effect resolves, you revert to your base hero. There is no priority for any players during the end phase of a turn.
+
+—————————————————————
+
+## Assassin Cards
+
+Mark of the Huntsman
+
+Assassin Weapon – Dagger (1H)
+
+1{p}
+
+Once per Turn Action — {r}{r}: Attack. Go again
+
+When this hits a hero, you may choose to destroy this and mark them.
+
+If this is attacking a marked hero, this gets +1{p}.
+
+Mark of the Huntsman triggers when it hits a hero. You choose whether or not to destroy this weapon and mark the hero at the time the triggered layer resolves.
+
+The optional effect generated from Mark of the Huntsman’s triggered effect uses “you may choose to” instead of just “you may”. In contrast to optional effects that just use “you may”, optional effects that use “you may choose to” can be generated without the requirement that the effects would resolve successfully.
+
+You can mark a hero by flicking Mark of the Huntsman. It is destroyed by the “flicking” effect before its own trigger resolves, but you can still choose to mark the hero.
+
+You can destroy the Mark of the Huntsman even if the hero is already marked. If the hero is marked from another effect before the trigger resolves, you can still choose to destroy the dagger.
+
+—————————————————————
+
+Mask of Deceit
+
+Assassin Equipment – Head
+
+2{d}
+
+Arakni Specialization
+
+When this defends, become a random Agent of Chaos. If the attacking hero is marked, instead choose the Agent of Chaos.
+
+Blade Break
+
+Mask of Deceit triggers when it becomes a defending card.
+
+Whether the attacking hero is marked is checked on the resolution of the trigger. If they are not marked (or there is no attacking hero), the defending hero becomes a random Agent of Chaos at the time the triggered layer resolves. Otherwise, the player who controls Mask of Deceit will choose the Agent of Chaos they would like to become at that time. In both situations, there is no priority in between determining the Agent of Chaos and becoming that Agent of Chaos.
+
+When becoming a random Agent of Chaos, it is possible to randomly select the same Agent of Chaos you currently are. In that situation, the “become” event will not trigger as you can’t become something that you are already. The same is true when choosing an Agent of Chaos to become.
+
+—————————————————————
+
+Kiss of Death
+
+Assassin Action – Dagger Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+Stealth
+
+When this hits a hero, they lose 1{h}.
+
+A dagger is not a weapon.
+
+Kiss of Death is an attack action card with the dagger subtype – it does not have the weapon type. Effects that target or apply to daggers, can target/apply to this card. Effects that target or apply to weapons cannot target/apply to this card.
+
+Kiss of Death can be used with effects that flick daggers (e.g. Flick Knives). If Kiss of Death hits a hero this way, it will trigger any on-hit triggered effects that apply to Kiss of Death hitting. (e.g. Toxicity, Plunder Run)
+
+Even if you control a Kiss of Death and an effect is generated that allows you to attack with/activate a dagger an additional time that turn, you won’t be able to attack with/activate Kiss of Death and additional time as it does not have an attack ability on it.
+
+Kiss of Death cannot be equipped during start of game procedure or through any effect that allow you to equip a weapon (i.e. Concealed Blade).
+
+If you flick Kiss of Death, and Kiss of Death has go again (or there’s an triggered effect that would give Kiss of Death go again from hitting), you do not gain an action point as Kiss of Death is not resolving as a card on the stack or as an attack on an active chain link.
+
+—————————————————————
+
+Under the Trap-Door
+
+Assassin Action – Attack
+
+(BLU) 0{r} 1{p} 3{d}
+
+Stealth
+
+Instant — Discard this: Banish target trap from your graveyard. If you do, you may play it this turn and if it would be put into the graveyard this turn, instead banish it.
+
+Under the Trap-Door’s Instant activated ability may only be activated from hand.
+
+Defense reaction traps typically remain on the combat chain when they resolve and only go to the graveyard when the combat chain closes. If a defence reaction card is played with Under the Trap-Door’s effect, it would instead be banished when the combat chain closes.
+
+If a trap is banished this way and not played on the same turn, it remains in the banished zone and will not be banished by this effect if it is played another way.
+
+—————————————————————
+
+Take Up the Mantle
+
+Assassin Attack Reaction
+
+(YEL) 0{r} 3{d}
+
+Target attack action card with stealth gets +2{p}. If it’s attacking a marked hero, instead it gets +3{p} and you may banish an attack action card with stealth from your graveyard. If you do, the target becomes a copy of the banished card.
+
+Whether the targeted attack action card is attacking a marked hero this turn is checked when Take Up the Mantle resolves on the stack.
+
+If the target is attacking a marked hero, the target will get +3{p} (not optional). The effect that banishes a card is optional and if you do, the target becomes a copy of the banished card.
+
+If the target is attacking a non-hero, or the defending hero only becomes marked after Take Up the Mantle has already resolved on the stack, the continuous effect will remain at +2{p} and you do not banish a card.
+
+When the target becomes the chosen card, ALL of its properties are replaced by a copy of what is printed on the chosen card. This includes name, cost, color, power, defense (if any) etc. Then, when this leaves the arena, it reverts back to its own properties.
+
+When the attack becomes the chosen card, any layer-continuous effects that were applied to the attack will continue to apply after it becomes a different card.E.g. If Razor Reflex (red) was played on the attack, both the +3{p} and triggered ability would still apply after Take Up the Mantle, even if the new cost of the attack is 2 or more. Notably, the +3{p} given to the targeted attack action by Take Up the Mantle will continue applying after it has become a copy chosen card.
+
+When the attack becomes the chosen card, new layer-continuous effects may begin to apply to the attack when it becomes the chosen card, except for “next attack” effects which only apply if the attack met the condition when it was played/activated/triggered (e.g. Prismatic Leyline).
+
+When the attack becomes the chosen card, any static-continuous effects that were applied to the attack are re-evaluated whether they’ll continue to apply.
+
+—————————————————————
+
+Tarantula Toxin
+
+Assassin Attack Reaction
+
+(RED) 0{r} 3{d}
+
+Choose 1 or both;
+
+Target dagger attack gets +3{p}.
+
+Target card defending an attack with stealth gets -3{d} this turn.
+
+You choose the modes and targets when you play this card.
+
+You may not choose the same mode more than once.
+
+You must choose at least one of the modes or both modes. If you choose both modes, you must declare a target for each of the modes chosen as part of playing Tarantula Toxin.
+
+—————————————————————
+
+Anaphylactic Shock
+
+Assassin Instant – Trap
+
+(BLU) 0{r}
+
+Each opposing hero and ally that has dealt damage to you this turn loses 1{h}.
+
+A hero or ally has dealt damage to you if they have reduced your hero’s life total with {p} damage (through combat) or with an effect that deals damage.
+
+This effect will only affect opposing heroes and allies that have dealt damage to you this turn before this card resolves. Any new opposing heroes/allies that deal damage to you after this card resolves will not lose any life from this effect.
+
+If there are two or more opposing heroes, begin resolving this card’s effect by starting with the player to the left of the player who played Anaphylactic Shock. That player’s hero and allies that dealt damage to you this turn lose 1{h}. Repeat the same for each other opposing player in clockwise order.
+
+—————————————————————
+
+Bite
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.
+
+Bite triggers when it resolves on the stack and becomes an attacking card against a hero. As this is a targeted effect, the dagger must be under your control when the triggered effect is added to the stack. If you do not control a dagger this triggered effect does not get added to the stack (it does not resolve).
+
+—————————————————————
+
+Whittle from Bone
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this attacks a marked hero, equip a Graphene Chelicera token.
+
+Whittle from Bone triggers when it resolves on the stack and becomes an attacking card.
+
+You must have an empty weapon zone with nothing equipped to it when the trigger resolves in order to create and equip the Graphene Chelicera token.
+
+You do not equip a Graphene Chelicera token if you are unable to create that token (e.g. Ripple Away).
+
+—————————————————————
+
+Stains of the Redback
+
+Assassin Attack Reaction
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+If the defending hero is marked, this costs {r} less to play.
+
+Target attack with stealth gets +3/2/1{p} and go again.
+
+—————————————————————
+
+Orb-Weaver Spinneret
+
+Assassin Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Equip a Graphene Chelicera token.
+
+Your next attack with stealth this turn gets +3/2/1{p}.
+
+Go again
+
+You must have an empty weapon zone with nothing equipped to it when Orb-Weaver Spinneret resolves in order to create and equip the Graphene Chelicera token.
+
+You do not equip a Graphene Chelicera token if you are unable to create that token (e.g. Ripple Away).
+
+—————————————————————
+
+Defang the Dragon
+
+Assassin Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+Stealth
+
+Contract – You are contracted to hit a marked hero named Fang. Whenever you complete this contract, draw a card.
+
+As long as this card is face-up in the arena on the combat chain and not defending, this contract may be completed any number of times by hitting a marked hero named Fang.
+
+This contract may be completed by hitting a marked hero named Fang during the damage step, or with an effect that hits the hero. E.g. flicking a dagger.
+
+—————————————————————
+
+Extinguish the Flames
+
+Assassin Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+Stealth
+
+Contract – You are contracted to hit a marked hero named Cindra. Whenever you complete this contract, draw a card.
+
+As long as this card is face-up in the arena on the combat chain and not defending, this contract may be completed any number of times by hitting a marked hero named Cindra.
+
+This contract may be completed by hitting a marked hero named Cindra during the damage step, or with an effect that hits the hero. E.g. flicking a dagger.
+
+—————————————————————
+
+Mark of the Black Widow
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this hits a marked hero, they banish a card from their hand.
+
+The card is banished face-up into the owner’s banished zone.
+
+If the defending hero has multiple cards in their hand, they choose which one to banish.
+
+The opponent is the hero banishing a card, which will not satisfy contracts that ask you to banish cards.
+
+—————————————————————
+
+Mark of the Funnel Web
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this hits a marked hero, banish a card in their arsenal.
+
+The card is banished face-up into the owner’s banished zone.
+
+If the defending hero has multiple cards in their arsenal, you choose which one to banish.
+
+—————————————————————
+
+Mark the Prey
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this hits a hero, mark them.
+
+—————————————————————
+
+Plunge the Prospect
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+If this is attacking a marked hero, this gets +1{p}.
+
+—————————————————————
+
+Reaper’s Call
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+Instant — Discard this: Mark target opposing hero.
+
+Reaper’s Call’s instant activated ability may only be activated from hand.
+
+—————————————————————
+
+Scuttle the Canal
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this attacks a marked hero, this gets go again.
+
+Scuttle the Canal triggers when it resolves on the stack and becomes an attacking card against a marked hero. Even if the marked hero is no longer marked at the time this triggered effect resolves, Scuttle the Canal will still get go again.
+
+—————————————————————
+
+Two Sides to the Blade
+
+Assassin Attack Reaction
+
+(RED) 1{r} 3{d}
+
+Choose 1;
+
+Target dagger attack gets +3{p}.
+
+Target attack action card with stealth gets +3{p} and “When this hits a hero, mark them.”
+
+You choose the modes when you play this card.
+
+—————————————————————
+
+Hunted or Hunter
+
+Assassin Defense Reaction – Trap
+
+(RED) 0{r} 3{d}
+
+When this defends and the attacking hero has played or activated an attack reaction this chain link, they lose 1{h}.
+
+“When this defends” is an event-based trigger. Whether the attacking hero has played/activated a reaction is checked at the time Hunted or Hunter resolves on the stack and becomes a defending card (i..e defends the attack). If the trigger condition is met after this resolves, then this does not trigger.
+
+If there is no attacking hero (e.g. this is defending against an ally attack), this does not trigger.
+
+—————————————————————
+
+## Draconic Ninja Cards
+
+Cindra, Dracai of Retribution | Cindra
+
+Royal Draconic Ninja Hero | Royal Draconic Ninja Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Whenever you hit a marked hero, create a Fealty token.
+
+Once per Turn Instant — {r}{r}{r}: Equip up to 2 Draconic daggers from your graveyard. This costs {r} less to activate for each Draconic chain link you control.
+
+When Cindra’s activated ability resolves, you choose which Draconic daggers you want to equip. You may also choose not to equip any Draconic daggers from your graveyard.
+
+The chosen daggers must have the 1H, 2H, or off-hand subtype in order for it to be equipped. (i.e. you cannot choose to equip Kiss of Death even though it has the dagger sub-type).
+
+You must have an empty weapon zone with nothing equipped to it when Cindra’s activated ability begins to resolve on the stack in order to equip.
+
+A Draconic attack becomes a chain link when it resolves as a layer on the stack and becomes attacking. This means going from the layer step of combat to the attack step of combat.
+
+If an attack is no longer on the combat chain, Last Known Information is used to determine the types of a chain link. If the attack was Draconic, You are still considered to control a (Draconic) chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of Cindra’s ability, the decreases would be applied last.
+
+Cindra’s instant ability can be activated on the opponent’s turn, but you would not control any draconic chain links (most likely).
+
+—————————————————————
+
+Kunai of Retribution
+
+Draconic Ninja Weapon – Dagger (1H)
+
+1{p}
+
+Once per Turn Action — {r}, destroy this when the combat chain closes: Attack. Go again
+
+To activate this action, as part of its cost, you will generate a delayed triggered effect that will destroy this dagger when the combat chain closes. Even If the dagger is destroyed before the combat chain closes, you are still considered to have paid the cost successfully.
+
+If you attack with Kunai of Retribution, destroy it (e.g. by flicking), and then equip it from your graveyard, the newly equipped Kunai of Retribution is considered a new object and won’t be destroyed from the delayed triggered effect generated from activating it previously. If you activate this newly equipped Kunai of Retribution, it will be destroyed when the combat chain closes.
+
+—————————————————————
+
+Blood Runs Deep
+
+Draconic Ninja Action – Attack
+
+(RED) 2{r} 2{p} 3{d}
+
+This costs {r} less to play for each Draconic chain link you control.
+
+When this attacks a hero, each dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the daggers.
+
+Go again
+
+A Draconic attack becomes a chain link when it resolves as a layer on the stack and becomes attacking. This means going from the layer step of combat to the attack step of combat.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Blood Runs Deep, the decreases would be applied last.
+
+Blood Runs Deep triggers when it resolves on the stack and becomes an attacking card against a hero. In contrast to other similar effects like Bite or Flick Knives, it does not require you to target any daggers you control to add the triggered effect to the stack.
+
+Blood Runs Deep’s triggered effect will be added to the stack even if you don’t control any daggers at the time it is triggered. When the triggered effect resolves, each dagger you control at that time deals 1 damage to the defending hero. This effect is not optional (in contrast to other similar effects). After all damage is dealt this way, the daggers are then destroyed. There is no priority between each dagger dealing its damage and their destruction.
+
+If both a dagger deals damage due to these effects and an attack hits in the damage step in the same active chain link, this situation does not count as two separate chain links hitting. A chain link simply hits or it doesn’t.
+
+If multiple daggers are “flicked” this way against the defending hero when resolving the trigger, you (the attacking hero) decide the order in which the daggers you control will hit the hero. If the defending hero is marked in this scenario, the first dagger that deals damage and hits them this way causes that hero to no longer be marked, then any remaining daggers will be “flicked”. For example, if Cindra controls two daggers and attacks a marked hero with Blood Runs Deep, the triggered effect will cause the daggers to be “flicked”: The first dagger “flicked” deals 1 damage and hits the marked hero, causing them to no longer be marked. Then, the second dagger is flicked and deals 1 damage, hitting that hero.
+
+All triggered effects triggered from the daggers hitting or dealing damage while resolving Blood Runs Deep’s triggered effect will be added to the stack after it resolves.
+
+The number of hits that result from resolving Blood Runs Deep’s triggered effect contribute to the combined number of times a dagger has hit for the purposes of cards and effects (e.g. Stab Wound).
+
+—————————————————————
+
+Ignite
+
+Draconic Ninja Action – Attack
+
+(RED) 0{r} 2{p} 2{d}
+
+When this attacks, the next Draconic card you play or activate this combat chain costs {r} less to play or activate.
+
+Go again
+
+Ignite triggers when it resolves on the stack and becomes an attacking card. When the triggered effect resolves, the next draconic card you play or activate this combat chain costs {r} less to play or activate. This cost decrease will not apply to any Draconic cards played or activated while the combat chain is not opened.
+
+Ignite’s cost decrease is a continuous effect that will apply to cards that gain the Draconic supertype from effects like Fealty.
+
+—————————————————————
+
+Demonstrate Devotion
+
+Draconic Ninja Action – Attack
+
+(RED) 1{r} 4{p} 2{d}
+
+If you control 2 or more Draconic chain links, this gets go again and “When this attacks a hero, create a Fealty token.”
+
+Demonstrate Devotion is considered a Draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Display Loyalty
+
+Draconic Ninja Action – Attack
+
+(RED) 0{r} 3{p} 2{d}
+
+If you control 2 or more Draconic chain links, this gets go again and “When this attacks a hero, create a Fealty token.”
+
+Display Loyalty is considered a Draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Wrath of Retribution
+
+Draconic Ninja Action – Attack
+
+(RED) 3{r} 3{p} 3{d}
+
+Legendary
+
+This costs {r} less to play for each Draconic chain link you control.
+
+When this attacks, daggers you control get +1{p} and cost {r} less to activate this combat chain.
+
+Go again
+
+A Draconic attack becomes a chain link when it resolves as a layer on the stack and becomes attacking. This means going from the layer step of combat to the attack step of combat.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Wrath of Retribution, the decreases would be applied last.
+
+Wrath of Retribution triggers when it resolves on the stack and becomes an attacking card. When the triggered effect resolves, any daggers you control will get +1{p} and cost {r} less to activate for the remainder of the current combat chain. This will also apply to any new daggers that come under your control after this triggered effect resolves.
+
+If you play a Kiss of Death after Wrath of Retribution’s triggered effect resolves on the same combat chain (e.g. played via Infiltrate), Wrath of Retribution’s +1{p} continuous effect would apply to Kiss of Death; however, the cost decrease continuous effect will not apply as it would only apply to daggers you activate, not daggers you play.
+
+—————————————————————
+
+Blood Drop
+
+Draconic Ninja Action – Attack
+
+(RED) 1{r} 2{p} 3{d}
+
+This costs {r} less to play for each Draconic chain link you control.
+
+Go again
+
+A Draconic attack becomes a chain link when it resolves as a layer on the stack and becomes attacking. This means going from the layer step of combat to the attack step of combat.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Blood Drop, the decreases would be applied last.
+
+—————————————————————
+
+Blood Line
+
+Draconic Ninja Action – Attack
+
+(RED) 2{r} 3{p} 3{d}
+
+This costs {r} less to play for each Draconic chain link you control.
+
+Go again
+
+A Draconic attack becomes a chain link when it resolves as a layer on the stack and becomes attacking. This means going from the layer step of combat to the attack step of combat.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Blood Line, the decreases would be applied last.
+
+—————————————————————
+
+Burning Blade Dance
+
+Draconic Ninja Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+If you control 2 or more Draconic chain links, this gets go again and “When this hits a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.”
+
+Burning Blade Dance is considered a Draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+This is a targeted effect on an “on-hit” trigger. The dagger must be under your control when the triggered effect is added to the stack. If you do not control a dagger this triggered effect does not get added to the stack (it does not resolve).
+
+—————————————————————
+
+Hot on Their Heels
+
+Draconic Ninja Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+If you control 2 or more Draconic chain links, this gets go again and “When this hits a hero, mark them.”
+
+Hot on Their Heels is considered a Draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Mark with Magma
+
+Draconic Ninja Action – Attack
+
+(RED) 1{r} 4{p} 3{d}
+
+If you control 2 or more Draconic chain links, this gets go again and “When this hits a hero, mark them.”
+
+Mark with Magma is considered a Draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+## Ninja Cards
+
+Art of the Dragon: Blood
+
+Ninja Action – Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+When this attacks, if it is Draconic, it gets go again and the next 3 Draconic cards you play this turn cost {r} less to play.
+
+Art of the Dragon: Blood triggers when it resolves on the stack and becomes an attacking card. Whether it is a card with the Draconic talent supertype is checked when this trigger resolves. When the triggered effect resolves, if it is Draconic, it gets go again and the next 3 Draconic cards you play this turn cost {r} less to play.
+
+The cost decrease continuous effect applies only to the next 3 Draconic cards you play this turn, not just the same combat chain.
+
+—————————————————————
+
+Devotion Never Dies
+
+Ninja Action – Attack
+
+(RED) 1{r} 4{p} 2{d}
+
+When this hits, if a Draconic attack was the last attack this combat chain, banish this. If you do, you may play it this turn.
+
+Go again
+
+Devotion Never Dies triggers when it hits in the damage step. Whether the last attack on the combat chain before Devotion Never Dies was a Draconic attack or not is checked when this trigger resolves. When the triggered effect resolves, if the last attack on the combat chain was a Draconic attack, you must banish Devotion Never Dies. If you do, you may play it this turn from the banished zone.
+
+When Devotion Never Dies leaves the combat chain this way, its chain link remains and is still considered to be there for the purposes of abilities and effects like Rupture.
+
+When Devotion Never Dies is put into the banished zone, it becomes a new object separate from its previous existence. Effects that applied to its previous existence do not continue to apply to the card, including when it is played from the banished zone.
+
+You still control the chain link, but do not control the card when Devotion Never Dies leaves the combat chain.
+
+If the combat chain is open and a Draconic attack that was the last attack is no longer on the combat chain, the last attack is still considered to be a Draconic attack, even if the attack is no longer on the combat chain. Last Known Information is used to determine the properties of the attack before it was removed from the combat chain.
+
+—————————————————————
+
+Prowess of Agility
+
+Ninja Action – Aura
+
+(BLU) 0{r} 3{d}
+
+When you attack for the fourth time during a turn, you may destroy this. If you do, draw a card.
+
+At the beginning of your end phase, if you’ve attacked less than 3 times this turn, destroy this.
+
+Prowess of Agility’s first ability triggers when you’ve attacked four times during a turn (reaching the attack step of combat 4 times). When the triggered effect resolves, you may choose to destroy Prowess of Agility as it is optional. If you do, draw a card.
+
+Prowess of Agility’s second ability triggers at the beginning of your end phase. Whether you’ve attacked less than 3 times this turn is checked when the trigger resolves. If you’ve attacked less than 3 times, Prowess of Agility is destroyed. If you’ve attacked 3 or more times, it is not destroyed.
+
+—————————————————————
+
+Art of the Dragon: Claw
+
+Ninja Action – Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+When this attacks, if it is Draconic, it gets “When this hits a hero, destroy all cards in their arsenal.”
+
+Art of the Dragon: Claw triggers when it resolves on the stack and becomes an attacking card. Whether it is a card with the Draconic talent supertype is checked when this trigger resolves. When the triggered effect resolves, if it is Draconic, it gets the triggered-static ability that when it hits a hero, you destroy all cards in their arsenal.
+
+—————————————————————
+
+Art of the Dragon: Fire
+
+Ninja Action – Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+When this attacks, if it is Draconic, deal 2 damage to any target.
+
+Art of the Dragon: Fire triggers when it resolves on the stack and becomes an attacking card. Whether it is a card with the Draconic talent supertype is checked when this trigger resolves. When the triggered effect is added to the stack, you must choose any object with a life property (typically hero or ally) to deal the 2 damage to when this resolves. When the triggered effect resolves, if it is Draconic, it will deal 2 damage to the declared target.
+
+—————————————————————
+
+Art of the Dragon: Scale
+
+Ninja Action – Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+When this attacks, if it is Draconic, it gets “When this hits a hero, put a -1{d} counter on an equipment they control. Then if it has 0{d}, destroy it.”
+
+Art of the Dragon: Scale triggers when it resolves on the stack and becomes an attacking card. Whether it is a card with the Draconic talent supertype is checked when this trigger resolves. When the triggered effect resolves, if it is Draconic, it gets the triggered-static ability that when it hits a hero, you put a -1{d} counter on an equipment they control. Then, if after placing the -1{d} the equipment has 0{d}, you destroy that equipment.
+
+This triggered effect does not target. You choose the equipment when the triggered effect begins to resolve.
+
+Effects that put a -1{d} counter on an equipment may put one on any object with the equipment type. This may include demi-heroes like Teklovossen, the Mechropotent or may even include equipment objects without a defense value.
+
+If a -1{d} counter is added to an equipment without a defense value due to this effect, it is not destroyed.
+
+—————————————————————
+
+Dragon Power
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 3{d}
+
+When this attacks, if it is Draconic, it gets +3{p}.
+
+Dragon Power triggers when it resolves on the stack and becomes an attacking card. Whether it is a card with the Draconic talent supertype is checked when this trigger resolves. When the triggered effect resolves, if it is Draconic, it gets +3{p}.
+
+—————————————————————
+
+Silver Talons
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+When this attacks a hero, if it is Draconic, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.
+
+Silver Talons triggers when it resolves on the stack and becomes an attacking card against a hero. Whether it is a card with the Draconic talent supertype is checked when this trigger resolves. As this is a targeted effect, the dagger must be under your control when the triggered effect is added to the stack. If you do not control a dagger this triggered effect does not get added to the stack (it does not resolve).
+
+—————————————————————
+
+Fire Tenet: Strike First
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+When this attacks, your next Draconic attack this combat chain gets +1{p}.
+
+Go again
+
+Fire Tenet: Strike First triggers when it resolves on the stack and becomes an attacking card. When the triggered effect resolves, your next Draconic attack this combat chain gets +1{p}. This power increase will not apply to the next Draconic attack played or activated if the combat chain were to close after this attack.
+
+—————————————————————
+
+Grow Claws
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 2{d}
+
+If a Draconic attack was the last attack this combat chain, this gets +1{p}.
+
+Go again
+
+If the combat chain is open and a Draconic attack that was the last attack is no longer on the combat chain, the last attack is still considered to be a Draconic attack, even if the attack is no longer on the combat chain. Last Known Information is used to determine the properties of the attack before it was removed from the combat chain.
+
+—————————————————————
+
+Grow Wings
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+If a Draconic attack was the last attack this combat chain, this gets go again.
+
+If the combat chain is open and a Draconic attack that was the last attack is no longer on the combat chain, the last attack is still considered to be a Draconic attack, even if the attack is no longer on the combat chain. Last Known Information is used to determine the properties of the attack before it was removed from the combat chain.
+
+—————————————————————
+
+Tag the Target
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+When this hits a hero, mark them.
+
+Go again
+
+—————————————————————
+
+Trap and Release
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 2{d}
+
+When this hits a hero, mark them.
+
+Go again
+
+—————————————————————
+
+## Draconic Warrior Cards
+
+Fang, Dracai of Blades | Fang
+
+Royal Draconic Warrior Hero | Royal Draconic Warrior Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Whenever you hit a marked hero, create a Fealty token.
+
+If you control 3 or more Fealty tokens, dagger attacks cost you {r} less to activate.
+
+Fang can trigger multiple times in a turn and triggers each time you hit a marked hero. When each triggered effect resolves, you create a Fealty token.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of activating a dagger attack, the decreases would be applied last.
+
+—————————————————————
+
+Obsidian Fire Vein
+
+Draconic Warrior Weapon – Dagger (1H)
+
+1{p}
+
+Once per Turn Action — {r}: Attack. If you’ve played a Draconic card this chain link, this attack gets +1{p} and go again.
+
+Whether you’ve played a Draconic card this chain link is constantly checked while Obsidian Fire Vein is an attacking card on the chain link. Draconic cards played on other chain links where Obsidian Fire Vein was an attacking card will not satisfy the condition for the current chain link. The conditional effect will only look at the current chain link.
+
+If you haven’t played any Draconic cards this chain link, then play a Draconic card (e.g. instant) before damage is dealt, this will have +1{p} during damage calculation.
+
+You don’t retroactively deal extra damage if you’ve passed the Damage step (i.e. damage calculation) without playing a Draconic card, and then proceed to play a Draconic card.
+
+Go again is checked during the Link step. If you haven’t played any Draconic cards this chain link, then play a Draconic card (e.g. instant) before the attack’s Link step (i.e. after damage is dealt, but before playing another attack), you will gain an action point from go again during the Link step.
+
+You don’t retroactively get an action point from go again if you’ve passed the Resolution step without playing a Draconic card, and then proceed to play a Draconic card. (e.g. after you’ve played another attack, closed the combat chain etc.)
+
+—————————————————————
+
+Hunt’s End
+
+Draconic Warrior Attack Reaction
+
+(RED) 0{r} 3{d}
+
+Play this only if you control 3 or more Fealty tokens.
+
+Target dagger attack gets +4{p}.
+
+—————————————————————
+
+Long Whisker Loyalty
+
+Draconic Warrior Attack Reaction
+
+(RED) 0{r} 3{d}
+
+For each Draconic chain link you control, choose 1;
+
+Target dagger attack gets +2{p}.
+
+You may attack with target dagger an additional time this turn.
+
+The next time target dagger hits a hero this turn, mark them.
+
+You choose the modes when you play this card.
+
+You may not choose the same mode more than once.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+You must choose a number of modes equal to the number of Draconic chain links you control. For example, if you control 2 Draconic chain links when you play Long Whisker Loyalty, you must choose 2 different modes; no more, no less.
+
+If you control more than 3 Draconic chain links, you must choose all three modes.
+
+After selecting the modes, you must select the targets for each of the modes.
+
+You may attack with target dagger with an attack ability an additional time this turn. This is provided you are able to successfully activate their attack abilities again (i.e. pay any required action points, pay resource point costs, etc.)
+
+Effects that allow the additional activation of an activated ability are additive e.g. if you have two separate effects that both allow you to attack with a weapon an additional time, you will be able to activate the attack ability 2 additional times.
+
+—————————————————————
+
+Affirm Loyalty
+
+Draconic Warrior Attack Reaction
+
+(RED) 0{r} 2{d}
+
+Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, create a Fealty token.
+
+When Affirm Loyalty resolves, if you control 2 or more Draconic chain links, you will create a Fealty token. If you control 2 or more Draconic chain links only after this has already resolved, you will not create a Fealty token.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Endear Devotion
+
+Draconic Warrior Attack Reaction
+
+(RED) 1{r} 2{d}
+
+Target dagger attack gets +3{p}. If you control 2 or more Draconic chain links, create a Fealty token.
+
+When Endear Devotion resolves, if you control 2 or more Draconic chain links, you will create a Fealty token. If you control 2 or more Draconic chain links only after this has already resolved, you will not create a Fealty token.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Fire and Brimstone
+
+Draconic Warrior Attack Reaction
+
+(RED) 2{r} 3{d}
+
+Legendary
+
+This costs {r} less to play for each Draconic chain link you control.
+
+Daggers you control get +1{p} and you may attack with each of them an additional time this turn.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Fire and Brimstone, the decreases would be applied last.
+
+When Fire and Brimstone resolves, any daggers you control will get +1{p} and may attack an additional time this turn. This will also apply to any new daggers that come under your control after this triggered effect resolves.
+
+You may attack with daggers with an attack ability an additional time this turn. This is provided you are able to successfully activate their attack abilities again (i.e. pay any required action points, pay resource point costs, etc.)
+
+Effects that allow the additional activation of an activated ability are additive e.g. if you have two separate effects that both allow you to attack with a weapon an additional time, you will be able to activate the attack ability 2 additional times.
+
+—————————————————————
+
+Blistering Blade
+
+Draconic Warrior Attack Reaction
+
+(RED) 0{r} 2{d}
+
+Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, instead it gets +3{p}.
+
+When Blistering Blade resolves, the targeted dagger attack will get +2{p}; however, if you control 2 or more Draconic chain links, you will instead get +3{p}. If you control 2 or more Draconic chain links only after this has already resolved, you will not retroactively gain the increase in power nor will you deal additional damage.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Brothers of Flame
+
+Draconic Warrior Attack Reaction
+
+(RED) 1{r} 3{d}
+
+Play this only if you control 2 or more Draconic chain links.
+
+Target dagger attack gets +4{p}.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Dynastic Dedication
+
+Draconic Warrior Attack Reaction
+
+(RED) 2{r} 2{d}
+
+This costs {r} less to play for each Draconic chain link you control.
+
+Target dagger attack gets +3{p}.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Dynastic Dedication, the decrease would be applied last.
+
+—————————————————————
+
+Imperial Intent
+
+Draconic Warrior Attack Reaction
+
+(RED) 1{r} 2{d}
+
+This costs {r} less to play for each Draconic chain link you control.
+
+Target dagger attack gets +2{p}.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Imperial Intent, the decrease would be applied last.
+
+—————————————————————
+
+Scalding Iron
+
+Draconic Warrior Attack Reaction
+
+(RED) 0{r} 2{d}
+
+Target dagger attack gets +X{p}, where X is the number of Draconic chain links you control.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+The value of X is determined when Scalding Iron resolves.
+
+—————————————————————
+
+Searing Gaze
+
+Draconic Warrior Attack Reaction
+
+(RED) 0{r} 2{d}
+
+Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, it gets “When this hits a hero, mark them.”
+
+When Searing Gaze resolves, if you control 2 or more Draconic chain links, the targeted dagger attack will get the ability that when it hits a hero, it will mark them. If you control 2 or more Draconic chain links only after this has already resolved, you will not retroactively gain the ability.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Sisters of Fire
+
+Draconic Warrior Attack Reaction
+
+(RED) 0{r} 3{d}
+
+Play this only if you control 2 or more Draconic chain links.
+
+Target dagger attack gets +3{p}.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Sizzling Steel
+
+Draconic Warrior Attack Reaction
+
+(RED) 1{r} 2{d}
+
+Target dagger attack gets +3{p}. If you control 2 or more Draconic chain links, instead it gets +4{p}.
+
+When Sizzling Steel resolves, the targeted dagger attack will get +3{p}; however, if you control 2 or more Draconic chain links, you will instead get +4{p}. If you control 2 or more Draconic chain links only after this has already resolved, you will not retroactively gain the increase in power nor will you deal additional damage.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Stabbing Pain
+
+Draconic Warrior Attack Reaction
+
+(RED) 1{r} 2{d}
+
+Target dagger attack gets +3{p}. If you control 2 or more Draconic chain links, it gets “When this hits a hero, mark them.”
+
+When Stabbing Pain resolves, if you control 2 or more Draconic chain links, the targeted dagger attack will get the ability that when it hits a hero, it will mark them. If you control 2 or more Draconic chain links only after this has already resolved, you will not retroactively gain the ability.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+## Warrior Cards
+
+Kabuto of Imperial Authority
+
+Warrior Equipment – Head
+
+2{d}
+
+When this defends, until end of turn, opponents can’t attack with weapons.
+
+Blade Break
+
+The continuous effect generated from Kabuto of Imperial Authority’s triggered effect will prevent opponents from attacking with weapons, even if they are allowed to attack with them an additional time that turn.
+
+If this is added as a defending card against a weapon attack, the current attack will continue as normal and the combat chain will not close. This will only affect subsequent weapon attacks for the remainder of the turn after this triggered effect resolves.
+
+—————————————————————
+
+Jagged Edge
+
+Warrior Attack Reaction
+
+(RED) 1{r} 3{d}
+
+Target weapon attack gets +3{p} and “Damage this would deal can’t be prevented.”
+
+When Jagged Edge resolves, the targeted weapon attack gets +3{p} and a static ability that makes the damage dealt from the attack be unpreventable. If you targeted a dagger attack then were to “flick” the attack’s dagger, the damage the dagger will deal from that effect would be preventable as the static ability’s effect only applies to the dagger’s attack but does not apply to the dagger itself.
+
+Only the targeted weapon attack is what gains the static ability and the power increase, not the weapon itself. If you attack again after the attack where Jagged Edge’s effects were applied, it will not retain those effects for those subsequent attacks.
+
+—————————————————————
+
+Provoke
+
+Warrior Attack Reaction
+
+(BLU) 1{r} 3{d}
+
+If you’re attacking with a weapon this chain link, the defending hero reveals a card from their hand. If it’s an action card, add it to this chain link as a defending card, otherwise they discard it.
+
+If an effect prevents the revealed action card from being added to the chain link as a defending card (i.e. dominate, overpower, etc.), the revealed action card remains in their hand and is not discarded.
+
+—————————————————————
+
+Sharpened Senses
+
+Warrior Action – Aura
+
+(YEL) 0{r} 3{d}
+
+Go again
+
+Your weapon attacks get +1{p}. If their {p} is greater than twice their base, they get go again.
+
+At the beginning of your end phase, destroy this.
+
+When Sharpened Senses resolves, it enters into the arena and its ability becomes active to give your weapon attacks +1{p}. Additionally, for each attack, if that attack’s {p} is greater than twice their base, that attack gets go again.
+
+Only the weapon attacks are what gets the power increase and go again, not the weapon itself.
+
+If you first perform a weapon attack that received go again from Sharpened Senses, then you perform an attack with the same weapon later that turn, that later attack will not get the go again from Sharpened Senses unless that attack’s {p} is greater than twice its base (it doesn’t retain the go again from the previous attack).
+
+“Greater” means “strictly more than”, meaning the power of the attack must be larger than twice the base {p} of the weapon’s attack. E.g. if the weapon has base 1{p}, the attack must have 3{p} or more to get go again.
+
+—————————————————————
+
+Diced
+
+Warrior Attack Reaction
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Target dagger attack gets +1{p}.
+
+Your next dagger attack this turn gets +3/2/1{p}.
+
+If the targeted dagger attack is no longer on the active chain link before Diced resolves on the stack, Diced does not resolve and is removed from the stack. This also means that your next dagger attack this turn will not get the power increase from Diced’s second resolution ability.
+
+—————————————————————
+
+Twist and Turn
+
+Warrior Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Your next dagger attack this turn gets +4/3/2{p} and “When this hits, you may attack with it an additional time this turn.”
+
+Go again
+
+When the dagger attack hits, you may attack with that dagger an additional time this turn. This is provided you are able to successfully activate the attack ability again (i.e. pay any required action points, pay resource point costs, etc.)
+
+Effects that allow the additional activation of an activated ability are additive e.g. if you have two separate effects that both allow you to attack with a weapon an additional time, you will be able to activate the attack ability 2 additional times.
+
+—————————————————————
+
+Agility Stance
+
+Warrior Action – Aura
+
+(YEL) 0{r} 3{d}
+
+Go again
+
+At the start of your turn, destroy this, then your dagger attacks get go again this turn.
+
+Agility Stance’s triggered ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to.
+
+—————————————————————
+
+Flurry Stance
+
+Warrior Action – Aura
+
+(RED) 0{r} 3{d}
+
+Go again
+
+At the start of your turn, destroy this, then you may attack with each dagger you control an additional time this turn.
+
+Flurry Stance’s triggered ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to.
+
+With the continuous effect generated from Flurry Stance’s triggered effect, you may attack with daggers an additional time this turn. This is provided you are able to successfully activate their attack abilities again (i.e. pay any required action points, pay resource point costs, etc.). This will also apply to any new daggers that come under your control after this triggered effect resolves.
+
+Effects that allow the additional activation of an activated ability are additive e.g. if you have two separate effects that both allow you to attack with a weapon an additional time, you will be able to activate the attack ability 2 additional times.
+
+—————————————————————
+
+Power Stance
+
+Warrior Action – Aura
+
+(BLU) 0{r} 3{d}
+
+Go again
+
+At the start of your turn, destroy this, then your dagger attacks get +1{p} this turn.
+
+Power Stance’s triggered ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to.
+
+—————————————————————
+
+Cut Deep
+
+Warrior Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Your next dagger attack this turn gets +4/3/2{p}.
+
+Go again
+
+—————————————————————
+
+Hunt a Killer
+
+Warrior Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Your next dagger attack this turn gets +4/3/2{p} and “When this hits a hero, mark them.”
+
+Go again
+
+—————————————————————
+
+Knife through Butter
+
+Warrior Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Your next dagger attack this turn gets +4/3/2{p}
+
+Whenever you attack a marked hero this turn, the attack gets go again.
+
+Go again
+
+Knife through Butter’s second resolution ability generates a continuous triggered effect that lasts for the remainder of the turn. This triggered effect can trigger multiple times in a turn and triggers each time you attack a marked hero (when the attack reaches the attack step of combat). When each triggered effect resolves, that attack gets go again.
+
+—————————————————————
+
+Point of Engagement
+
+Warrior Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Your next dagger attack this turn gets +3/2/1{p}.
+
+Until end of turn, your attacks get +1{p} while attacking a marked hero.
+
+Go again
+
+Point of Engagement’s second resolution ability generates a conditional continuous effect that increases the power of your attacks while attacking a marked hero.
+
+If you are attacking a marked hero and that hero becomes no longer marked, the attack would lose +1{p} as it would no longer satisfy the condition.
+
+If you are attacking a hero who is not marked but then they become marked, the attack would gain +1{p} as it would satisfy the condition.
+
+In the damage step, marked heroes are no longer marked after they are hit and damage is dealt to them. This means attacks will continue to have the +1{p} from Point of Engagement’s continuous effect as long as the defending hero is marked when damage calculation begins.
+
+—————————————————————
+
+Sworn Vengeance
+
+Warrior Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Your next dagger attack this turn gets +3/2/1{p} and “When this hits a hero, mark them.”
+
+Go again
+
+—————————————————————
+
+## Draconic Cards
+
+Dragonscaler Flight Path
+
+Draconic Equipment – Legs
+
+1{d}
+
+Instant — {r}{r}{r}, destroy this: Target Draconic attack gets go again. If it’s a weapon or ally attack, you may attack with it an additional time this turn. This ability costs {r} less to activate for each Draconic chain link you control.
+
+Battleworn
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of activating Draconscaler Flight Path, the decreases would be applied last.
+
+When you activate Dragonscaler Flight Path’s ability, you must target a Draconic attack, which may be typically an attack from a Draconic weapon, Draconic ally, or Draconic attack action card. The targeted Draconic attack may be one controlled by another hero, in which case the cost to activate it is not reduced by Dragonscaler Flight Path’s own cost decrease effect (you don’t control chain links on other heroes’ turns).
+
+When Dragonscaler Flight Path’s activated ability resolves, the targeted Draconic attack gets go again. If it was a weapon attack or ally attack, that weapon/ally may attack an additional time this turn. This is provided you are able to successfully activate their attack abilities again (i.e. pay any required action points, pay resource point costs, etc.).
+
+Effects that allow the additional activation of an activated ability are additive e.g. if you have two separate effects that both allow you to attack with a weapon an additional time, you will be able to activate the attack ability 2 additional times.
+
+—————————————————————
+
+Vow of Vengeance
+
+Draconic Equipment – Head
+
+1{d}
+
+Attack Reaction — Destroy this: Mark target Arakni.
+
+Blade Break
+
+When Vow of Vengeance’s activated ability resolves, you may mark the targeted hero with the name Arakni. If the targeted Arakni becomes a different Agent of Chaos before this effect resolves, that Arakni will become marked (if it isn’t already) when this Vow of Vengeance resolves.
+
+—————————————————————
+
+Heart of Vengeance
+
+Draconic Equipment – Chest
+
+1{d}
+
+Instant — Destroy this: Your next attack this turn that targets Arakni costs {r} less to play or activate.
+
+Blade Break
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing/activating an attack, the decreases would be applied last.
+
+—————————————————————
+
+Hand of Vengeance
+
+Draconic Equipment – Arms
+
+1{d}
+
+Attack Reaction — Destroy this: Target attack that is attacking Arakni gets +1{p}.
+
+Blade Break
+
+—————————————————————
+
+Path of Vengeance
+
+Draconic Equipment – Legs
+
+1{d}
+
+Attack Reaction — Destroy this: Target attack that is attacking Arakni gets go again.
+
+Blade Break
+
+—————————————————————
+
+Coat of Allegiance
+
+Draconic Equipment – Chest
+
+0{d}
+
+Action — Destroy this: Gain {r}. Until end of turn, you may only play cards that are Draconic. Go again
+
+When Coat of Allegiance’s activated ability resolves, in addition to gaining a resource point, a continuous effect is generated where, for the remainder of the turn, the only cards you may play are cards that are Draconic. This only affects cards that are played, not cards that are activated. I.e. you may still activate cards that do not have the Draconic talent.
+
+If an effect is active that restricts cards being played to only Draconic cards (e.g. Oath of Loyalty, Coat of Allegiance), continuous effects that cause cards to gain the Draconic supertype (e.g. Fealty, Brand with Cinderclaw) allow you to play a card without the printed Draconic supertype (i.e. a generic attack action card) while under that restriction. That card would gain the Draconic supertype as part of playing the card from those types of continuous effects.
+
+If an effect is active that results in cards you own to lose their talent supertypes (i.e. Erase Face) you would not be able to play any cards with the printed Draconic supertype while under Coat of Allegiance’s restriction.
+
+If an effect is active that results in cards you own to lose their talent supertypes (i.e. Erase Face) and an effect is active that restricts cards being played to only Draconic cards (e.g. Oath of Loyalty, Coat of Allegiance), continuous effects that cause cards to gain the Draconic supertype (e.g. Fealty, Brand with Cinderclaw) would allow you to play any card in this scenario. This is because even though a card would lose their supertypes, it would gain the Draconic supertype as part of playing the card from those types of continuous effect (and you can’t lose a gained property).
+
+—————————————————————
+
+Oath of Loyalty
+
+Draconic Action – Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+This may only be played if it’s the first action of your turn.
+
+When this is played, until end of turn, you may only play cards that are Draconic.
+
+Go again
+
+Oath of Loyalty triggers when it is played but before it resolves on the stack and becomes an attacking card. When the triggered effect resolves, a continuous effect is generated where, for the remainder of the turn, the only cards you may play are cards that are Draconic. This only affects cards that are played, not cards that are activated. I.e. you may still activate cards that do not have the Draconic talent.
+
+If an effect is active that restricts cards being played to only Draconic cards (e.g. Oath of Loyalty, Coat of Allegiance), continuous effects that cause cards to gain the Draconic supertype (e.g. Fealty, Brand with Cinderclaw) allow you to play a card without the printed Draconic supertype (i.e. a generic attack action card) while under that restriction. That card would gain the Draconic supertype as part of playing the card from those types of continuous effects.
+
+If an effect is active that results in cards you own to lose their talent supertypes (i.e. Erase Face) you would not be able to play any cards with the printed Draconic supertype while under Oath of Loyalty’s restriction.
+
+If an effect is active that results in cards you own to lose their talent supertypes (i.e. Erase Face) and an effect is active that restricts cards being played to only Draconic cards (e.g. Oath of Loyalty, Coat of Allegiance), continuous effects that cause cards to gain the Draconic supertype (e.g. Fealty, Brand with Cinderclaw) would allow you to play any card in this scenario. This is because even though a card would lose their supertypes, it would gain the Draconic supertype as part of playing the card from those types of continuous effect (and you can’t lose a gained property).
+
+—————————————————————
+
+Loyalty Beyond the Grave
+
+Draconic Defense Reaction
+
+(RED) 0{r} 3{d}
+
+While this is in your graveyard, at the start of your turn, you may banish 2 cards named Loyalty Beyond the Grave from your graveyard. If you do, draw a card.
+
+While Loyalty Beyond the Grave is in the graveyard, its triggered ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to.
+
+When Loyalty Beyond the Grave begins to resolve, banishing 2 cards named Loyalty Beyond the Grave from your graveyard is an optional effect and you may choose to banish them at that point. If you do banish the cards this way, you will draw a card.
+
+—————————————————————
+
+Compounding Anger
+
+Draconic Action – Attack
+
+(RED) 3{r} 5{p} 3{d}
+
+This costs {r} less to play for each Draconic chain link you control.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Compounding Anger, the decreases would be applied last.
+
+—————————————————————
+
+Hunt to the Ends of Rathe
+
+Draconic Action – Attack
+
+(RED) 0{r} 2{p} 2{d}
+
+When this attacks Arakni, mark them.
+
+If this is attacking a marked hero, this gets +2{p}.
+
+Go again
+
+Hunt to the Ends of Rathe triggers when it resolves on the stack and becomes an attacking card against a hero named Arakni. When this triggered effect resolves, you will mark that Arakni (if it isn’t already marked).
+
+Hunt to the Ends of Rathe’s second ability is static ability with a conditional continuous effect that generates +2{p} if Hunt to the Ends of Rathe is attacking a marked hero. This conditional continuous effect is always checking and may be active/inactive depending on if the hero is marked/not marked.
+
+—————————————————————
+
+March of Loyalty
+
+Draconic Action – Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+If you’ve created a Fealty token this turn, this gets go again.
+
+This conditional continuous effect is always checking. If you haven’t created a Fealty token when you attack with this and then you create a Fealty token, this will get go again.
+
+Go again is checked during the Link step. If you haven’t created a Fealty token this turn but create one (e.g. instant or trigger) before the attack’s Link step (i.e. after damage is dealt, but before playing another attack), you will gain an action point from go again during the Link step.
+
+You don’t retroactively get an action point from go again if you’ve passed the Link step without creating a Fealty token, and then proceed to create a Fealty token. (e.g. after you’ve played another attack, closed the combat chain etc.)
+
+—————————————————————
+
+Bubble to the Surface
+
+Draconic Instant
+
+(RED) 2{r}
+
+This costs {r} less to play for each Draconic chain link you control.
+
+Reveal cards from the top of your deck until you’ve revealed a red card. Banish it. You may play it this turn. Shuffle.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Bubble to the Surface, the decreases would be applied last.
+
+You will still shuffle even if no red cards are revealed or banished.
+
+—————————————————————
+
+Drop of Dragon Blood
+
+Draconic Instant
+
+(RED) 2{r}
+
+Legendary
+
+This costs {r} less to play for each Draconic chain link you control.
+
+Gain {r}. Draw a card.
+
+If the combat chain is open, you are still considered to control a (Draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Decreases to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of playing Drop of Dragon Blood, the decreases would be applied last.
+
+You gain the {r} and draw a card when Drop of Dragon Blood resolves. You cannot use this {r} to play Drop of Dragon Blood in retrospect.
+
+—————————————————————
+
+Rake Over the Coals
+
+Draconic Instant
+
+(RED) 0{r}
+
+Draconic attacks get +1{p} this turn.
+
+—————————————————————
+
+For the Dracai | For the Emperor | For the Realm
+
+Draconic Action – Attack
+
+(RED) 0{r} 4{p} 3{d} | (RED) 1{r} 5{p} 3{d} | (RED) 2{r} 6{p} 3{d}
+
+When this attacks a marked hero, create a Fealty token.
+
+For the Dracai, For the Emperor, and For the Realm trigger when they resolve on the stack and become an attacking card against a marked hero. When this triggered effect resolves, you will create a Fealty token.
+
+—————————————————————
+
+Hunt the Hunter
+
+Draconic Action – Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+When this attacks a hero, if you’ve played another red card this turn, mark them.
+
+Hunt the Hunter triggers when it resolves on the stack and becomes an attacking card against a hero. Whether you’ve played another red card (other than this one) this turn is checked when this triggered effect resolves. If you have, you will mark that hero (if they aren’t already marked).
+
+—————————————————————
+
+Smoke Out
+
+Draconic Defense Reaction
+
+(RED) 0{r} 3{d}
+
+When this defends a red card, mark the attacking hero.
+
+“When this defends” is an event-based trigger that triggers when Smoke Out resolves on the stack and becomes a defending card (i..e defends the attack) against a red card. If the card that this is defending against isn’t a red card, this will not trigger. When Smoke Out’s triggered effect resolves, you will mark the attacking hero (if they aren’t already marked).
+
+If there is no attacking hero (e.g. this is defending against an ally attack), nothing happens when the trigger resolves.
+
+—————————————————————
+
+Blessing of Vynserakai
+
+Draconic Action – Aura
+
+(RED) 0{r} 2{d}
+
+At the start of your turn, destroy this, then your next attack this turn is Draconic and gets +3{p}.
+
+Blessing of Vynserakai’s triggered ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to.
+
+The attack gains the supertype Draconic and will retain all of its other existing supertypes, types and subtypes.
+
+—————————————————————
+
+Pledge Fealty
+
+Draconic Instant
+
+(RED) 0{r}
+
+Create a Fealty token.
+
+—————————————————————
+
+Proclaim Vengeance
+
+Draconic Instant
+
+(RED) 0{r}
+
+Mark target opposing hero. If that hero is Arakni, gain {r}.
+
+When Proclaim Vengence resolves, you must mark the targeted opposing hero (if it isn’t already). If that hero happens to have the name Arakni, you will gain {r} regardless if you were able to mark them with the preceding effect.
+
+—————————————————————
+
+Tooth of the Dragon
+
+Draconic Instant
+
+(RED) 0{r}
+
+Your next Draconic attack this turn gets +3{p}.
+
+—————————————————————
+
+## Assassin / Ninja Cards
+
+Blood Splattered Vest
+
+Assassin / Ninja Equipment – Chest
+
+1{d}
+
+Whenever a dagger you control hits, you may gain {r} and put a stain counter on this. Then if there are 3 or more stain counters on this, destroy it.
+
+Blade Break
+
+Blood Splattered Vest triggers each time a dagger you control hits, typically either hitting with a dagger attack during the damage step or through effects that result in the dagger hitting (e.g. Flick Knives, Bite, etc.).
+
+When each triggered effect from Blood Splattered Vest’s first ability resolves, you may gain {r} and put a stain counter on Blood Splattered Vest. If you choose to gain {r}, you must put a stain counter on Blood Splattered Vest. You may also choose not to gain {r}, in which case you will not put a stain counter. Regardless of your choice, the game will destroy this equipment if you have 3 or more stain counters on it. There is no priority in between each of these effects.
+
+If Blood Splattered Vest is triggered two or more times and gets destroyed after the first triggered effect resolves but before the second triggered effect resolve, you can’t gain {r} because there isn’t a chest for you to put a stain counter on it. To do the optional effect, you need to do both!
+
+—————————————————————
+
+Leap Frog Vocal Sac | Leap Frog Slime Skin | Leap Frog Gloves | Leap Frog Leggings
+
+Assassin / Ninja Equipment – Head | Assassin / Ninja Equipment – Chest | Assassin / Ninja Equipment – Arms | Assassin / Ninja Equipment – Legs
+
+1{d}
+
+When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.
+
+Blade Break
+
+Leap Frog equipment will trigger when an opponent plays or activates an attack reaction. When the triggered effect resolves, you may add the equipment to the active chain link as a defending card.
+
+If this card is already defending on a previous chain link, this may be added as a defending card to the active chain link as a defending card (moving it from the previous chain link to the active chain link).
+
+If this card is already defending on the active chain link, it cannot defend again on the same chain link.
+
+If an effect prevents you from adding an equipment to the active chain link, the Leap Frog equipment will not be added when the triggered effect resolves.
+
+—————————————————————
+
+Danger Digits
+
+Assassin / Ninja Equipment – Arms
+
+0{d}
+
+Attack Reaction — Destroy this: Target dagger you control that isn’t on the active chain link deals 1 damage to the defending hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.
+
+This is a targeted effect. The target dagger must be under your control and not on the active chain link for this equipment to be activated successfully.
+
+—————————————————————
+
+Pain in the Backside
+
+Assassin / Ninja Action – Attack
+
+(RED) 0{r} 3{p} 2{d}
+
+When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit.
+
+Go again
+
+Pain in the Backside triggers when it hits hero. As this is a targeted effect, the dagger must be under your control when the triggered effect is added to the stack. If you do not control a dagger this triggered effect does not get added to the stack (it does not resolve).
+
+Pain in the Backside does NOT destroy the daggers that are flicked this way.
+
+—————————————————————
+
+Throw Dagger
+
+Assassin / Ninja Attack Reaction
+
+(BLU) 0{r} 3{d}
+
+Target dagger you control that isn’t on the active chain link deals 1 damage to the defending hero. If damage is dealt this way, the dagger has hit and you draw a card. Destroy the dagger.
+
+This is a targeted effect. The target dagger must be under your control and not on the active chain link for this card to be played successfully.
+
+—————————————————————
+
+Cut Through
+
+Assassin / Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+If you’ve hit with a dagger this combat chain, this gets +1{p} and go again.
+
+This conditional continuous effect is always checking. If you haven’t hit with a dagger this combat chain when you attack with this and then you hit with a dagger (i.e. Flick Knives, Bite), this will get +1{p} and go again.
+
+You gain an action point from go again after the resolution step of combat (resolving on-hit effects) but before you can play/resolve anything in the link step of combat (before you play another attack). If this gains go again after the resolution step of combat, you do not retroactively gain an action point.
+
+—————————————————————
+
+Up Sticks and Run
+
+Assassin / Ninja Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+You may retrieve a dagger from your graveyard.
+
+Your next dagger attack this turn gets +4/3/2{p}.
+
+Go again
+
+You choose which dagger to retrieve from your graveyard when Up Sticks and Run resolves on the stack.
+
+Retrieving a dagger from your graveyard is optional.
+
+You must have an empty weapon zone with nothing equipped to it to retrieve a dagger. If you don’t, you will not pay the {r} and you won’t equip a dagger from your graveyard.
+
+—————————————————————
+
+Pick Up the Point
+
+Assassin / Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+When this attacks, you may retrieve a dagger from your graveyard.
+
+Go again
+
+Pick Up the Point triggers when it resolves on the stack and becomes an attacking card. When this triggered effect resolves, you may choose which dagger to retrieve from your graveyard as it is an optional effect.
+
+You must have an empty weapon zone with nothing equipped to it to retrieve a dagger. If you don’t, you will not pay the {r} and you won’t equip a dagger from your graveyard.
+
+—————————————————————
+
+Poisoned Blade
+
+Assassin / Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 3/2/1{p} 2{d}
+
+Whenever a dagger you own hits a hero this combat chain, they lose 1{h}.
+
+Go again
+
+Poisoned Blade has a triggered-static ability that triggers each time a dagger you own hits as long as Poisoned Blade is on the combat chain, typically either hitting with a dagger attack during the damage step or through effects that result in the dagger hitting (e.g. Flick Knives, Bite, etc.). When each triggered effect from Poisoned Blade’s first ability resolves, that hero will lose 1{h}
+
+—————————————————————
+
+Throw Yourself at Them
+
+Assassin / Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 3/2/1{p} 2{d}
+
+When this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.
+
+Go again
+
+Throw Yourself at Them triggers when it resolves on the stack and becomes an attacking card against a hero. As this is a targeted effect, the dagger must be under your control when the triggered effect is added to the stack. If you do not control a dagger this triggered effect does not get added to the stack (it does not resolve).
+
+—————————————————————
+
+Lair of the Spider
+
+Assassin / Ninja Defense Reaction – Trap
+
+(RED) 0{r} 3{d}
+
+When this defends an attack with go again, mark the attacking hero.
+
+“When this defends” is an event-based trigger that triggers when Lair of the Spider resolves on the stack and becomes a defending card (i..e defends the attack) against an attack with go again. Whether the attack has go again is checked at the time this resolves and becomes a defending card (i.e. defends the attack). If the trigger condition is met only after this resolves, then this does not trigger. When Lair of the Spider’s triggered effect resolves, you will mark the attacking hero (if they aren’t already marked).
+
+If there is no attacking hero (e.g. this is defending against an ally attack), nothing happens when the trigger resolves.
+
+—————————————————————
+
+## Assassin / Warrior Cards
+
+Red Alert Visor | Red Alert Vest | Red Alert Gloves | Red Alert Boots
+
+Assassin / Warrior Equipment – Head | Assassin / Warrior Equipment – Chest | Assassin / Warrior Equipment – Arms | Assassin / Warrior Equipment – Legs
+
+1{d}
+
+If an attack reaction has been played or activated this chain link, this gets +1{d}.
+
+Blade Break
+
+Whether an attack reaction has been played or activated on this chain link is constantly checked. Attack reactions played or activated on other chain links will not satisfy the condition for the current chain link. The conditional effect will only look at the current chain link.
+
+—————————————————————
+
+Starting Point
+
+Assassin / Warrior Equipment – Legs
+
+0{d}
+
+Attack Reaction — Destroy this: Target attack gets go again. Activate this only if you’ve played a card or activated an ability this reaction step.
+
+You can only activate this ability if you’ve previously played a card or activated an ability in the reaction step you desire to activate Starting Point. Card played / abilities activated during other attacks’ reaction steps will not satisfy the activation requirement for Starting Point.
+
+—————————————————————
+
+Perforate
+
+Assassin / Warrior Attack Reaction
+
+(YEL) 1{r} 3{d}
+
+You may attack with target dagger an additional time and its attacks cost you {r} less to activate this turn.
+
+Draw a card.
+
+You may attack with the targeted dagger an additional time this turn. This is provided you are able to successfully activate their attack abilities again (i.e. pay any required action points, pay resource point costs, etc.)
+
+Effects that allow the additional activation of an activated ability are additive e.g. if you have two separate effects that both allow you to attack with a weapon an additional time, you will be able to activate the attack ability 2 additional times.
+
+—————————————————————
+
+Savor Bloodshed
+
+Assassin / Warrior Action
+
+(RED) 0{r} 3{d}
+
+Your next dagger attack this turn gets +4{p}.
+
+The next time you hit a marked hero with a dagger this turn, draw a card.
+
+Go again
+
+Savor Bloodshed’s second ability generates a delayed triggered effect that triggers the next time you hit a marked hero with a dagger this turn.
+
+—————————————————————
+
+To the Point
+
+Assassin / Warrior Attack Reaction
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Target dagger attack gets +3/2/1{p}. If the defending hero is marked, instead it gets +4{p}.
+
+When To the Point resolves, the targeted dagger attack gets +3/2/1{p}. If the defending hero is marked, the targeted dagger attack gets +4{p}.
+
+—————————————————————
+
+Cut from the Same Cloth
+
+Assassin / Warrior Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Target opposing hero reveals their hand. If an attack reaction card is revealed this way, mark them.
+
+Your next dagger attack this turn gets +4/3/2{p}.
+
+Go again
+
+The targeted opposing hero still reveals their hand even if they are already marked. If they reveal an attack reaction card this way, that hero is marked (if they aren’t marked already).
+
+—————————————————————
+
+Incision
+
+Assassin / Warrior Attack Reaction
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Target dagger attack gets +3/2/1{p}.
+
+—————————————————————
+
+Scar Tissue
+
+Assassin / Warrior Attack Reaction
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Target dagger attack gets +3{p} and “When this hits a hero, mark them.”
+
+—————————————————————
+
+Take a Stab
+
+Assassin / Warrior Attack Reaction
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Target dagger attack gets +3{p} and “When this hits a marked hero, you may attack with it an additional time this turn.”
+
+You may attack with the targeted dagger attack’s dagger an additional time this turn. This is provided you are able to successfully activate their attack abilities again (i.e. pay any required action points, pay resource point costs, etc.)
+
+Effects that allow the additional activation of an activated ability are additive e.g. if you have two separate effects that both allow you to attack with a weapon an additional time, you will be able to activate the attack ability 2 additional times.
+
+—————————————————————
+
+Den of the Spider
+
+Assassin / Warrior Defense Reaction – Trap
+
+(RED) 0{r} 3{d}
+
+When this defends an attack with {p} greater than its base, mark the attacking hero.
+
+“When this defends” is an event-based trigger that triggers when Den of the Spider resolves on the stack and becomes a defending card (i..e defends the attack) against an attack with {p} greater than its base. The power of the attack is checked at the time this resolves and becomes a defending card (i.e. defends the attack). If the trigger condition is met only after this resolves, then this does not trigger. When Den of the Spider’s triggered effect resolves, you will mark the attacking hero (if they aren’t already marked).
+
+If there is no attacking hero (e.g. this is defending against an ally attack), nothing happens when the trigger resolves.
+
+—————————————————————
+
+## Generic Cards
+
+Quickdodge Flexors
+
+Generic Equipment – Legs
+
+0{d}
+
+Defense Reaction — {r}: Add this to the active chain link as a defending card. It has 2 base {d} this chain link.
+
+At the beginning of the end phase, if this defended this turn, destroy it.
+
+If this card is already defending on a previous chain link, this may be added as a defending card to the active chain link as a defending card (moving it from the previous chain link to the active chain link).
+
+If this card is already defending on the active chain link, it cannot defend again on the same chain link, but it will have 2 base {d}.
+
+If an effect prevents you from adding an equipment to the active chain link, the equipment will not be added when the activated ability resolves.
+
+—————————————————————
+
+Blade Beckoner Helm | Blade Beckoner Plating | Blade Beckoner Gauntlets | Blade Beckoner Boots
+
+Generic Equipment – Head | Generic Equipment – Chest | Generic Equipment – Arms | Generic Equipment – Legs
+
+1{d}
+
+This gets +1{d} while defending a weapon attack.
+
+Guardwell
+
+Even if an attack’s weapon is no longer on the same chain link that a Blade Beckoner equipment is defending (e.g. being used to attack on a different chain link, or a weapon from a previous chain link was “flicked”), the Blade Beckoner equipment will still have the +1{d} from its ability.
+
+—————————————————————
+
+Bunker Beard
+
+Generic Equipment – Head
+
+0{d}
+
+Defense Reaction — Destroy this: You may add an action card from your arsenal to the active chain link as a defending card.
+
+When Bunker Beard’s activated ability resolves, you may add an action card from your arsenal to the active chain link as a defending card. This is an optional effect.
+
+If an effect prevents the action card from being added to the chain link as a defending card (i.e. overpower, etc.), the action card remains in their arsenal and is not discarded.
+
+—————————————————————
+
+Rotten Remains
+
+Generic Action – Attack
+
+(BLU) 0{r} 1{p} 3{d}
+
+When this attacks, you may banish a card with 1{p} from each hero’s graveyard. If you do, this gets +1{p}, then repeat this process.
+
+Rotten Remains triggers when it resolves on the stack and becomes an attacking card. When this triggered effect resolves, you may banish a card with 1{p} from each hero’s graveyard. This is an optional effect. If a card with 1{p} from each hero’s graveyard is banished this way, the attack will get +1{p}, then you repeat the process.
+
+You cannot do the optional effect if you are unable to banish a card with 1{p} from each hero’s graveyard.
+
+Each time you repeat the process, you may choose not to banish any cards.
+
+If an effect prevents the attack from gaining power (e.g. Snag, Chokeslam), you still repeat the process and may continue banishing cards.
+
+—————————————————————
+
+Shelter from the Storm
+
+Generic Defense Reaction
+
+(RED) 0{r} 4{d}
+
+Instant — Discard this: The next 3 times you would be dealt damage this turn, prevent 1 of that damage.
+
+When Shelter from the Storm’s activated ability resolves, it creates a continuous replacement effect that will apply to the next 3 times you would be dealt damage.
+
+If a single damage event is unpreventable, Shelter from the Storm’s replacement effect would be applied once and will not reduce any damage. In this scenario, Shelter from the Storm’s replacement effect may be applied to other damage events, if able.
+
+You can only activate this ability while Shelter from the Storm is in your hand. If it is on the combat chain defending, you will not be able to activate this ability.
+
+—————————————————————
+
+Dual Threat
+
+Generic Action
+
+(YEL) 0{r} 3{d}
+
+If you’ve attacked with a weapon this turn, the next attack action card you play this turn gets +3{p}.
+
+If you’ve attacked with an attack action card this turn, your next weapon attack this turn gets +3{p}.
+
+Go again
+
+Whether you’ve attacked with a weapon this turn is checked when Dual Threat resolves. The same is true of whether you’ve attacked with an attack action card this turn.
+
+—————————————————————
+
+Pursue to the Edge of Oblivion | Pursue to the Pits of Despair
+
+Generic Action – Attack
+
+(RED) 0{r} 4{p} 3{d} | (RED) 1{r} 5{p} 3{d}
+
+When this hits a hero, mark them.
+
+—————————————————————
+
+Sound the Alarm
+
+Generic Action – Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+When this attacks a hero, they reveal their hand. If an attack reaction card is revealed this way, you may search your deck for a defense reaction card, reveal it, then shuffle and put it on top.
+
+Sound the Alarm triggers when it resolves on the stack and becomes an attacking card against a hero. When this triggered effect resolves, that hero must reveal their hand. If an attack reaction card is revealed this way, you may choose to do the optional effect of searching your deck for a defense reaction card, reveal it, then shuffle and put it on top.
+
+If you choose to search your deck, you may fail to find a defense reaction card. If you do, you will still shuffle your deck.
+
+—————————————————————
+
+Imperial Seal of Command
+
+Generic Action – Item
+
+(RED) 0{r}
+
+Legendary
+
+Action — Destroy this: Defense reactions can’t be played this turn. If you are Royal, the next time you hit a hero this turn, destroy all cards in their arsenal. Go again
+
+The continuous effect that restricts players from playing defense reactions this turn only affects defense reactions cards that are played. It does not affect the activation of defense reaction abilities.
+
+—————————————————————
+
+Relentless Pursuit
+
+Generic Action
+
+(BLU) 0{r} 3{d}
+
+Mark target opposing hero.
+
+If you’ve attacked them this turn, put this on the bottom of its owner’s deck.
+
+Go again
+
+You can target a hero that is already marked. When Relentless Pursuit resolves, you will mark that hero (if they aren’t already marked).
+
+—————————————————————
+
+Calming Breeze
+
+Generic Instant
+
+(RED) 0{r}
+
+The next 3 times you would be dealt damage this turn, prevent 1 of that damage.
+
+When Calming Breeze resolves, it creates a continuous replacement effect that will apply to the next 3 times you would be dealt damage.
+
+If a single damage event is unpreventable, Calming Breeze’s replacement effect would be applied once and will not reduce any damage. In this scenario, Calming Breeze’s replacement effect may be applied to other damage events, if able.
+
+—————————————————————
+
+Tip-Off
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 2{d}
+
+Instant — Discard this: Mark target opposing hero.
+
+You can target a hero that is already marked. When Tip-Off resolves, you will mark that hero (if they aren’t already marked).
+
+You can only activate this ability while Tip-Off is in your hand. If it is on the combat chain attacking/defending, you will not be able to activate this ability.
+
+—————————————————————
+
+Outed
+
+Generic Action – Attack
+
+(RED) 0{r} 3{p}
+
+If you are marked, you can’t play this.
+
+If the defending hero is marked, this gets +1{p}.
+
+Go again
+
+If your hero becomes marked after you play Outed but before it resolves and becomes attacking, Outed will still resolve on the stack and become an attack.
+
+Outed’s second ability is constantly checking to see if the defending hero is marked. In the damage step, marked heroes are no longer marked after they are hit and damage is dealt to them. This means Outed will continue to have the +1{p} from its second ability as long as the defending hero is marked when damage calculation begins.
+
+Outed does not get its damage bonus if there is no defending hero.
+
+—————————————————————
+
+Lay Low
+
+Generic Defense Reaction
+
+(YEL) 0{r} 3{d}
+
+If you are marked, you can’t play this.
+
+If the attacking hero is marked, their next attack this turn gets -1{p}.
+
+If your hero becomes marked after you play Lay Low but before it resolves and becomes defending, Lay Low will still resolve.
+
+Whether the attacking hero is marked is checked when Lay Low resolves. If there is an attacking hero, their next attack this turn gets -1{p}, which includes attacks from their weapons, allies, or attacks they play.
+
+—————————————————————
+
+Exposed
+
+Generic Attack Reaction
+
+(BLU) 0{r}
+
+If you are marked, you can’t play this.
+
+Target attack gets +1{p}.
+
+Mark the defending hero.
+
+If your hero becomes marked after you play Exposed but before it resolves, Exposed will still resolve.
+
+You may play this even if the targeted attack has no defending hero.
+
+—————————————————————
+
+Put in Context
+
+Generic Defense Reaction
+
+(BLU) 0{r} 3{d}
+
+This can only defend an attack with 3 or less base {p}.
+
+Put in Context cannot be played if it would defend an attack with 3 or less base {p}. Base {p} is typically the printed power of the card.
+
+If Put in Context is played against an attack with 3 or less base {p} but then the base {p} of the attack has more than 3{p} when Put in Context begins to resolve, Put in Context fails to resolve as it can’t become a defending card due to its own effect.
+
+Put in Context remains a defending card on the chain link if the base {p} of the attack its already defending against becomes more than 3{p}.
+
+—————————————————————
+
+Nip at the Heels
+
+Generic Attack Reaction
+
+(BLU) 0{r} 3{d}
+
+Target attack with 3 or less base {p} gets +1{p}.
+
+When Nip at the Heels begins to resolve, if the targeted attack’s base {p} is greater than 3{p}, it is no longer a legal target and fails to resolve.
+
+—————————————————————
+
+Trot Along
+
+Generic Action
+
+(BLU) 0{r} 3{d}
+
+Your next attack with 3 or less base {p} this turn gets go again.
+
+Go again
+
+Trot Along’s continuous effect applies to the next attack with 3 or less base {p} this turn. If this continuous effect is applied to an attack and then the base {p} of the attack were to become greater than 3{p}, that continuous effect will continue to apply and the attack will still have go again.
+
+—————————————————————
+
+Public Bounty
+
+Generic Action
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+Mark target opposing hero.
+
+The next time you attack a marked hero this turn, the attack gets +3/2/1{p}.
+
+Go again
+
+You can target a hero that is already marked. When Public Bounty resolves, you will mark that hero (if they aren’t already marked).
+
+Public Bounty’s second ability generates a delayed triggered effect that triggers the next time you attack a marked hero this turn (e.g. when the attack resolves on the stack and becomes an attacking card against a marked hero). When that triggered effect resolves, the attack will get the power increase indicated.
+
+—————————————————————
+
+## Expansion Slot Cards
+
+Hunter’s Klaive
+
+Assassin Weapon – Dagger (1H)
+
+1{p}
+
+Once per Turn Action — {r}{r}: Attack. Go again
+
+When this hits a hero, mark them.
+
+Piercing 1
+
+This card is an expansion slot card and appears in the back 2 cards of The Hunted booster packs. It is not able to be used in The Hunted limited formats, including sealed deck and booster draft.
+
+The hero becomes marked when the triggered layer resolves. If this hits a marked hero, the hero will become unmarked when hit, and then marked when the trigger resolves.
+
+—————————————————————
+
+Thick Hide Hunter
+
+Brute Action – Attack
+
+(YEL) 2{r} 6{p} 6{d}
+
+When this attacks or defends, discard a random card.
+
+Thick Tide Hunter triggers when it resolves on the stack and becomes an attacking card, or when it is added as a defending card against an attack (i.e. declared as a defending card in the defend step or added via an effect.). When the triggered effect resolves, you must discard a random card from your hand.
+
+Discard a random card is not an additional cost. You can still attack/defend with this card if you don’t have any cards in your hand.
+
+—————————————————————
+
+Tremorshield Sabatons
+
+Guardian Equipment – Legs
+
+1{d}
+
+Instant — Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn. If you’ve controlled a Seismic Surge token this turn, instead prevent the next 2.
+
+Blade Break
+
+To get the additional value for the shielding-prevention effect, you need to currently control or have controlled a Seismic Surge token this turn before Tremorshield Sabatons’ activated ability resolves. If you do, prevent the next 2 arcane damage that would be dealt to you instead of just 1.
+
+This is a shielding-prevention effect that prevents the next 1 arcane damage (or 2 arcane damage total if you’ve controlled a Seismic Surge token) that would be dealt to your hero. This can be over separate events of damage (i.e. 1 arcane damage, then 1 arcane damage).
+
+—————————————————————
+
+Roiling Fissure
+
+Guardian Action
+
+(BLU) X1{r} 3{d}
+
+Destroy an aura with cost X or less, then you may destroy a Seismic Surge you control. If you do, repeat this process.
+
+Go again
+
+When Roiling Fissure resolves, you must choose which aura with cost X or less to destroy. Then you may destroy a Seismic Surge you control (this is an optional effect). If you do, you may repeat the process
+
+Base cost is the printed cost value on a card. (Located at the top right corner of a card.) The base cost to play this card is X+1.
+
+You cannot choose an aura without a cost property.
+
+You cannot do the optional effect if you are unable to destroy a Seismic Surge.
+
+Destroying a Seismic Surge this way will not trigger its effect.
+
+Each time you repeat the process, you must destroy an aura with cost X or less if able. After doing so, then you may choose whether you want to destroy a Seismic Surge you control.
+
+Destroyed cards go to their owner’s graveyard. If a token is destroyed (leaves the arena), it ceases to exist.
+
+—————————————————————
+
+Retrace the Past
+
+Ninja Action – Attack
+
+(BLU) 0{r} 2{p} 3{d}
+
+Katsu Specialization
+
+Combo – When this attacks, if a card with Gustwave in its name was the last attack this combat chain, name a card, then this gets that name, +2{p}, and go again.
+
+Retrace the Past triggers when it resolves on the stack and becomes an attacking card. When the triggered effect resolves, you must name a card and it will get that name (in addition to its other names), then it gets +2{p}, and go again.
+
+When naming a card, you may name any card, even those that are not legal for the format. For example, you may name “Bonds of Ancestry” if you wish! May you Dishonor your foes again with impunity!
+
+Effects that prevent you from playing a named card (i.e. Null Time Zone, Chains of Eminence, etc.) do not affect cards that gain that name after they have been successfully played.
+
+—————————————————————
+
+Misfire Dampener
+
+Mechanologist Equipment – Arms
+
+1{d}
+
+Instant — Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn. If you’ve boosted this turn, instead prevent the next 2.
+
+Blade Break
+
+To get the additional value for the shielding-prevention effect, you need to have boosted this turn before Misfire Dampener’s activated ability resolves. If you do, prevent the next 2 arcane damage that would be dealt to you instead of just 1.
+
+This is a shielding-prevention effect that prevents the next 1 arcane damage (or 2 arcane damage total if you’ve boosted this turn) that would be dealt to your hero. This can be over separate events of damage (i.e. 1 arcane damage, then 1 arcane damage).
+
+—————————————————————
+
+Null Time Zone
+
+Mechanologist Action – Item
+
+(BLU) 0{r}
+
+Crank
+
+This enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.
+
+When this enters the arena, name a card. The named card can’t be pitched or played from hand while this is in the arena.
+
+When naming a card, you may name any card, even those that are not legal for the format.
+
+—————————————————————
+
+Enchanted Quiver
+
+Ranger Equipment – Quiver
+
+Instant — Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn. If there is a face-up arrow in your arsenal, instead prevent the next 2.
+
+To get the additional value for the shielding-prevention effect, you need to have a face-up arrow in your arsenal before Enchanted Quiver’s activated ability resolves. If you do, prevent the next 2 arcane damage that would be dealt to you instead of just 1.
+
+This is a shielding-prevention effect that prevents the next 1 arcane damage (or 2 arcane damage total if you have a face-up arrow in arsenal) that would be dealt to your hero. This can be over separate events of damage (i.e. 1 arcane damage, then 1 arcane damage).
+
+—————————————————————
+
+Chain Reaction
+
+Ranger Defense Reaction – Trap
+
+(YEL) 0{r} 3{d}
+
+When this defends an attack with go again, you may turn a non-attack action card in your arsenal face-up. If you do, you may play it this turn as though it were an instant.
+
+“When this defends” is an event-based trigger that triggers when Chain Reaction resolves on the stack and becomes a defending card (i..e defends the attack) against an attack with go again. Whether the attack has go again is checked at the time this resolves and becomes a defending card (i.e. defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+When Chain Reaction’s triggered effect resolves, you may turn a non-attack action card in your arsenal face-up. If you do, you may play it this turn as though it were an instant.
+
+Turning a card face-up is not considered revealing the card or putting the card face-up in arsenal. It is simply changing its state from face-down to face-up.
+
+An action card played as though it were an instant does not cost an action point and can be played whenever the player has priority, otherwise it is still considered to be an action card.
+
+—————————————————————
+
+Douse in Runeblood
+
+Runeblade Action – Attack
+
+(RED) 1{r} 4{p} 3{d}
+
+When this attacks, create Runechant tokens equal to the number of non-attack action cards you’ve played this turn. If 3 or more Runechants are created this way, this gets go again.
+
+Douse in Runeblood triggers when it resolves on the stack and becomes an attacking card. When the triggered effect resolves, you will create a number of Runechant tokens equal to the number of non-attack action cards you’ve played this turn. If you create 3 or more Runechants this way, this will get go again when the triggered effect resolves.
+
+—————————————————————
+
+Spur Locked
+
+Chaos Action
+
+(BLU) 0{r} 3{d}
+
+Each hero secretly chooses a number between 1 and 6, then those numbers are revealed. The hero that chose the highest number loses that much {h}, searches their deck for a card with cost less than or equal to the chosen number, reveals it, puts it in their hand, then shuffles.
+
+Go again
+
+Each hero will choose their number secretly. After all players have secretly chosen their number, beginning with the player who played Spur Locked, each player reveals their number in clockwise order.
+
+If all players chose the same number, no one searches their deck and no one loses life.
+
+You may choose to fail to find a card while searching your deck as this card is looking for a card with cost less than or equal to your chosen number.
+
+—————————————————————
+
+Ring of Roses
+
+Earth Wizard Action – Aura
+
+(YEL) 0{r} 3{d}
+
+Legendary Verdance Specialization
+
+The first time you deal arcane damage each turn, gain 1{h}.
+
+Ring of Roses triggers the first time you deal arcane damage each turn. This is active as long as Ring of Roses is in the arena.
+
+If you’ve dealt arcane damage already in a turn before Ring of Roses resolves and enters the arena, Ring of Roses will not trigger that turn since you’ve already dealt your first arcane damage that turn.
+
+—————————————————————
+
+War Cry of Themis
+
+Light Illusionist Action
+
+(YEL) 0{r} 3{d}
+
+Your next angel attack this turn gets +4{p}.
+
+Go again
+
+Instant — Discard this, banish X cards from your soul: Turn X target cards in a banished zone face-down.
+
+You choose the value of X when you activate War Cry of Themis. You may choose X=0. If you do, you do not banish any cards from your soul as part of the cost.
+
+You must have a target to activate War Cry of Themis for any X>0. E.g. You cannot activate with X=4 and banish 4 cards from your soul if there are not at least 4 face-up cards in all banished zones that can be legally targeted.
+
+—————————————————————
+
+War Cry of Bellona
+
+Light Warrior Attack Reaction
+
+(YEL) 0{r} 3{d}
+
+Target Raydn gets +2{p} this turn.
+
+Instant — Discard this, banish X cards from your soul: The next time target weapon deals X or less damage to you this turn, deal that much damage to its controller and that damage can’t be prevented.
+
+You choose the value of X when you activate War Cry of Bellona. You may choose X=0. If you do, when the activated ability resolves, the delayed triggered effect will be generated; however, because the triggering condition is having to deal damage, it would never trigger as no damage is ever dealt.
+
+—————————————————————
+
+Cull
+
+Shadow Runeblade Action
+
+(RED) 0{r} 3{d}
+
+You may play this from your banished zone.
+
+If a hero has lost {h} this turn, you may play this as though it were an instant.
+
+Each hero banishes a card from their hand.
+
+Blood Debt
+
+An action card played as though it were an instant does not cost an action point and can be played whenever the player has priority, otherwise it is still considered to be an action card.
+
+When Cull resolves, each hero banishes a card from their hand, beginning with the hero who played Cull, followed by the remaining players in the game in clockwise order.
+
+—————————————————————
+
+# Token-specific Notes
+
+Graphene Chelicera
+
+Assassin Token Weapon – Dagger
+
+1{p}
+
+Stealth
+
+Once per Turn Action — {r}: Attack
+
+When this attacks a marked hero, the attack gets go again.
+
+You cannot start a game with Graphene Chelicera equipped as it is a card with the token-type (token-rarity has no bearing on whether a card can be equipped at the start of the game).
+
+Graphene Chelicera triggers when it resolves on the stack and becomes an attacking card against a marked hero. When this trigger resolves, the current Graphene Chelicera attack gets go again. Future or previous Graphene Chelicera attacks would not be impacted.
+
+If an effect says “Equip a Graphene Chelicera”, you will create a Graphene Chelicera token that enters the arena equipped. You must have an empty weapon zone with nothing equipped to it when the effect begins to resolve in order to create and equip the Graphene Chelicera token.
+
+You do not equip a Graphene Chelicera token if you are unable to create that token (the effect fails).
+
+If Uzuri would put Graphene Chelicera to the bottom of the deck, instead it ceases to exist.
+
+—————————————————————
+
+Fealty
+
+Draconic Token – Aura
+
+Instant — Destroy this: The next card you play this turn is Draconic.
+
+At the beginning of your end phase, if you haven’t created a Fealty token or played a Draconic card this turn, destroy this.
+
+The next card you play after Fealty’s activated ability resolves will gain the supertype Draconic and will retain all of its other existing supertypes, types and subtypes.
+
+The effect of Fealty’s activated ability will only affect the next card you play. It will not affect the next card you activate.
+
+If an effect is active that restricts cards being played to only Draconic cards (e.g. Oath of Loyalty, Coat of Allegiance), Fealty’s continuous effect would allow you to play a card without the printed Draconic supertype (i.e. a generic attack action card) while under that restriction. That card would gain the Draconic supertype as part of playing the card from Fealty’s effect.
+
+If an effect is active that results in cards you own to lose their talent supertypes (i.e. Erase Face) and an effect is active that restricts cards being played to only Draconic cards (e.g. Oath of Loyalty, Coat of Allegiance), Fealty’s continuous effect would allow you to play any card in this scenario. This is because even though a card would lose their supertypes, it would gain the Draconic supertype as part of playing the card from Fealty’s effect (and you can’t lose a gained property).
+
+Fealty’s second ability triggers at the beginning of your end phase. Whether you’ve created a Fealty token or played a Draconic turn is checked when this trigger resolves. If you haven’t done either of these actions during your turn, you will destroy the Fealty token. There is no priority for any players during the end phase of your turn.
+
+—————————————————————

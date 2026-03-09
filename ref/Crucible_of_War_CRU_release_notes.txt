@@ -1,0 +1,2338 @@
+Home  Rules and Policy  Release Notes  Crucible of War
+
+# Crucible of War
+
+## General Notes
+
+Crucible of War contains 198 cards. (103 commons, 56 rares, 36 majestics, 2 legendaries, 1 fabled).
+
+Crucible of War becomes legal for tournaments on its official release date: 28 August, 2020.
+
+#### Icon Abbreviations
+
+Within this document the following abbreviations are used to represent game icons which appear in the printed text box of cards:
+
+{r} Resource Point
+
+{p} Power
+
+{d} Defense Value
+
+{h} Life (of a hero card)
+
+{i} Intellect (of a hero card)
+
+## New Keywords
+
+### Negate
+
+Negate is a new keyword that exists in Crucible of War. Negating a card on a layer of the chain will prevent the card from resolving.
+
+Example:
+
+Aetherize
+
+Pitch: 3
+
+Cost: 1
+
+Wizard Instant
+
+Negate target instant card with cost {r} or less. (The card does not resolve. Put it into its owner’s graveyard.)
+
+Power: –
+
+Defense: –
+
+Negating an instant will prevent the card from resolving. The card will go to its owner’s graveyard and the effects of the card do not happen.
+
+You can only target a card on a layer of the chain.
+
+### Temper
+
+Temper is a new keyword that exists on equipment in Crucible of War. Usually high in defense, Temper equipment presents a choice when it is down to 1{d}, of whether to defend with it one last time and see it destroyed, or save it to use for its ability.
+
+Example:
+
+Temper (If you defend with {name}, put a -1{d} counter on it when the combat chain closes then destroy it if it has 0{d}.)
+
+If the equipment gains a -1{d} in a different way other than defending, it would not be destroyed even if it has 0{d}.
+
+If a card has less than 0{d}, it would count as though it had 0{d}. E.g. a Temper card with 2{d} and three -1{d} counters would still be destroyed when the combat chain closes.
+
+## Returning Keywords
+
+### Battleworn
+
+Equipment that wear down after each time they are used to defend. If you defend with a card with Battleworn, put a -1{d} counter on it when the combat chain closes.
+
+Example card:
+
+Breeze Rider Boots
+
+Ninja Equipment – Legs
+
+When a Ninja attack action card you control hits, you may destroy Breeze Rider Boots. If you do, attack action cards with combo gain go again this turn.
+
+Battleworn (If you defend with Breeze Rider Boots, put a -1{d} counter on it when the combat chain closes.)
+
+Defense: 1
+
+When you defend with a card it remains on the combat chain until the chain closes, therefore you cannot defend with an equipment multiple times on the same combat chain.
+
+A -1{d} counter stays on the card until the card is destroyed or the game ends.
+
+If the defense of a card that is defending is below zero, its defense value is considered to be zero.
+
+When this card is destroyed, it is sent to your graveyard.
+
+### Blade Break
+
+Equipment that are fragile and break after being used to defend. If you defend with a card with Blade Break, destroy it when the combat chain closes.
+
+Example card:
+
+Fyendal’s Spring Tunic
+
+Generic Equipment – Chest
+
+At the start of your turn, if Fyendal’s Spring Tunic has less than 3 energy counters, you may put an energy counter on it.
+
+Instant – Remove 3 energy counters from Fyendal’s Spring Tunic: Gain {r}
+
+Blade Break (If you defend with Fyendal’s Spring Tunic, destroy it when the combat chain closes.)
+
+Defense: 1
+
+When you defend with a card it remains on the combat chain until the chain closes, therefore you cannot defend with an equipment multiple times on the same combat chain.
+
+When this card is destroyed, it is sent to your graveyard.
+
+The Blade Break ability becomes a layer on the chain when the combat chain closes.
+
+### Combo
+
+A ninja mechanic that showcases the power of playing multiple attacks in a perfect sequence. Combo cares about the last (previous) attack that was played in the combat chain.
+
+Example card:
+
+Crane Dance
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Ninja Action – Attack
+
+Combo – If Soulbead Strike was the last attack this combat chain, Crane Dance gains +1{p}, go again, and it can’t be defended by attack action cards with base {p} greater than the number of chain links you control.
+
+Power: 3/2/1
+
+Defense: 3
+
+The last attack does not have to have hit for combo to be active.
+
+Only the name of the last attack matters, other variables such as the pitch cost does not matter.
+
+You may still play the attack even if combo isn’t active.
+
+### Crush
+
+A guardian mechanic that showcases the strength of the guardian. When an attack with crush deals 4 or more damage to a hero, an effect is applied.
+
+Example card:
+
+Crush the Weak
+
+Pitch: 3/2/1
+
+Cost: 3
+
+Guardian Action – Attack
+
+Crush – If Crush the Weak deals 4 or more damage to a hero, they can’t play attack action cards with 3 or less base {p} during their next action phase.
+
+Power: 5/6/7
+
+Defense: 3
+
+Crush only checks the amount of damage dealt to the hero. Prevented damage does not count.
+
+Crush is not optional, if the card does 4 or more damage, the effect will apply.
+
+Crush is a (conditional) hit effect.
+
+### Dominate
+
+An attack that is difficult to defend. Cards with dominate cannot be defended with more than 1 card from the defending hero’s hand.
+
+Example card:
+
+Emerging Dominance
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Guardian Action – Aura
+
+(Auras stay in the arena until they are destroyed.)
+
+At the beginning of your action phase, destroy Emerging Dominance then the next Guardian attack action card you play this turn gains +1/2/3{p} and dominate. (The defending hero can’t defend the attack with more than 1 card from their hand.)
+
+Power: –
+
+Defense: 3
+
+You can still defend with equipment and defense reactions played from arsenal in addition to up to 1 card from hand.
+
+Playing a defense reaction from your hand counts towards the 1 card from your hand restriction. You cannot defend with a card in your hand then play a defense reaction from your hand.
+
+### Go again
+
+Go again allows multiple actions to be played in a turn when usually playing an action with use up your action point, and therefore end your turn. A card with go again gives the controller of that card or activated ability 1 action point when it resolves.
+
+Example card:
+
+Head Jab
+
+Pitch: 3
+
+Cost: 0
+
+Ninja Action – Attack
+
+Go again
+
+Power: 1
+Defense: 2
+
+When an action with go again resolves, its controller gains 1 action point.
+
+Multiple instances of go again on the same card or activated ability do not stack. If a card or activated ability has multiple instances of go again when it resolves its controller gains 1 action point only.
+
+### Intimidate
+
+A brute mechanic that showcases how frightening a brute is to its enemies. Intimidate removes a random card from a hero’s hand until the end of turn, making it more difficult to defend.
+
+Example card:
+
+Massacre
+
+Pitch: 1
+
+Cost: 3
+
+Brute Action – Attack
+
+If you have discarded a card with 6 or more {p} this turn, Massacre gains +2{p} and intimidate.
+
+If Massacre is discarded to pay the cost of a Brute attack action card, the attack gains intimidate.
+Power: 6
+Defense: 3
+
+The player who owns the banished card may look at it.
+
+The card banished from intimidate is returned to hand at the beginning of the end phase. This is before players draw up to your {i} (hand size).
+
+You may target yourself with this ability. However you will receive the card back into your hand before drawing up to your {i} (hand size). (Intimidating yourself is a very rare circumstance.)
+
+You may target a hero with no cards in hand.
+
+If there are other banished cards that aren’t from intimidate, it is encouraged to keep intimidated cards seperate from these cards.
+
+### Reprise
+
+A warrior mechanic that showcases the prowess a warrior has when they are engaged in close combat. Reprise effects “turn on” if the defending hero has defended with a card from their hand.
+
+Example card:
+
+Out for Blood
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Warrior Attack Reaction
+
+Target weapon attack gains +1/2/3{p}.
+
+Reprise – If the defending hero has defended with a card from their hand this chain link, your next attack this turn gains +1{p}.
+
+Power: –
+
+Defense: 3
+
+Reprise cares about the current chain link not the whole combat chain. If a previous attack was defended by a card in hand, it will have no effect on reprise for the current chain link.
+
+Reprise is checked at the time you play the card. If a card with reprise is played then a defense reaction is played from hand, the effect will not apply retroactively.
+
+Equipment and cards from arsenal that defend an attack do not turn on reprise.
+
+### Arcane Barrier X
+
+Arcane barrier is one of the most common ways to prevent arcane damage. If you would be dealt arcane damage you may pay X{r} instead to prevent X arcane damage that source will deal.
+
+Example card:
+
+Skullhorn
+
+Brute Equipment – Head
+
+Action – Destroy Skullhorn: Draw a card then discard a random card. Go again
+
+Arcane Barrier 2 (If your hero would be dealt arcane damage, you may pay {r}{r} instead. If you do, prevent 2 arcane damage that source would deal.)
+
+Defense: 0
+
+You can have multiple instances of arcane barrier.
+
+You can prevent arcane damage you do to yourself.
+
+Arcane barrier is a replacement effect. It does not use the chain. Players cannot respond to the prevention.
+
+Each source of arcane barrier can replace damage 1 time per source. To fully prevent a card dealing 3 arcane damage, you would require arcane barrier 3 and 3 resources to prevent it. To fully prevent 3 Runechant tokens (3 instances of 1 damage). You would require arcane barrier 1 and 3 resources to prevent it.
+
+Preventing arcane damage does not destroy the equipment with arcane barrier (unless otherwise specified).
+
+If a card has Arcane Barrier 2, you must pay the full two resources even if it only prevents one damage. You cannot choose to pay one resource to prevent one damage.
+
+### Opt X
+
+Opt is a keyword that allows you to look at the top X cards and put any number of them to the top or bottom of your deck in any order.
+
+Example card:
+
+Gaze the Ages
+
+Pitch: 3
+
+Cost: 0
+
+Wizard Action
+
+Opt 2 (Look at the top 2 cards of your deck. You may put them on the top and/or bottom in any order.)
+
+If you have played another Wizard ‘non-attack’ action card this turn, put Gaze the Ages into your hand as it resolves.
+
+Power: –
+
+Defense: 3
+
+The number of cards you place on top and bottom of your deck is known to your opponent, the order of the cards are not.
+
+You may put all of the cards on the top or all of the cards on the bottom if you so wish.
+
+### Boost
+
+Boost is a Mechnologist mechanic that allows a Mechanologist attack action card to gain go again if a Mechanologist card is banished from the top of the deck as an additional cost to play the card.
+
+Example card:
+
+Combustible Courier
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Mechanologist Action – Attack
+
+If Combustible Courier hits, the next attack you boost this combat chain gains +3{p}.
+
+Boost (As an additional cost to play Combustible Courier, you may banish the top card of your deck. If it’s a Mechanologist card, Combustible Courier gains go again.)
+
+Power: 2/3/4
+
+Defense: 3
+
+You choose if you want to boost or not at the time you play the card.
+
+You may only boost once per instance of boost.
+
+### Reload
+
+Reload is a Ranger mechanic that allows you to put a card from your hand face down into your arsenal when the card resolves.
+
+Example card:
+
+Poison the Tips
+
+Pitch: 2
+
+Cost: 0
+
+Ranger Action
+
+Until end of turn, arrows you control gain “If this hits a hero, they discard a card.”
+
+Reload (If you have no cards in your arsenal, you may put a card from your hand face down into your arsenal.)
+
+Go again
+
+Defense: 2
+
+You may elect to put no cards from your hand to your arsenal.
+
+Your arsenal must be empty to put a card into your arsenal.
+
+# Card-specific Notes
+
+## Heroes
+
+### Azalea, Ace in the Hole
+
+Ranger Hero
+
+Once per Turn Action – 0: Put a card from your arsenal on the bottom of your deck. If you do, put the top card of your deck face up into your arsenal. If it’s an arrow card, it gains dominate until end of turn. Go again (The defending hero can’t defend the attack with more than 1 card from their hand.)
+
+Intellect: 4
+
+Health: 40
+
+If you have no cards in deck, it will put the card you placed on the bottom, back into the arsenal face up.
+
+If there is no card in your arsenal when this effect resolves, you do not put the top card into your arsenal.
+
+You may activate this even when you have no arsenal. When it resolves you do not put the top card into your arsenal.
+
+### Bravo, Showstopper
+
+Guardian Hero
+
+Action – {r}{r}: Until end of turn, your attack action cards with cost 3 or greater gain dominate. Go again (The defending hero can’t defend the attack with more than 1 card from their hand.)
+
+Intellect: 4
+
+Health: 40
+
+The attack action does not gain go again. Bravo’s activated ability requires an action point to use and provides an action point from go again upon resolution.
+
+Bravo’s activated ability does not give weapons dominate.
+
+### Benji, the Piercing Wind
+
+Ninja Hero – Young
+
+Attack action cards you control with 2 or less {p} can’t be defended by cards from hand.
+
+Once per Turn Effect – When an attack action card you control hits, your next attack this turn gains +1{p}.
+
+Intellect: 4
+
+Health: 17
+
+Benji looks at the current power of the attack action, not the base power.
+
+If an attack reaction raises the power to beyond 2, the attack can then be defended by cards in hand, however since the defending window would already have been passed, the defending player would only be able to use defense reactions at this point.
+
+The +1{p} is not optional. It does affect weapon attacks.
+
+### Dash, Inventor Extraordinaire
+
+Mechanologist Hero
+
+You may start the game with a Mechanologist item with cost 2 or less in the arena. (It is considered to have entered the arena.)
+
+Intellect: 4
+
+Health: 40
+
+The item must be chosen before you present your deck.
+
+The card is considered in your deck when counting the minimum sized deck. (e.g. once your item is chosen, you can have 59 cards in deck to present in Classic Constructed.)
+
+The item starts with the appropriate counters as though it entered the arena.
+
+You may elect to not start with an item in play.
+
+### Data Doll MKII
+
+Mechanologist Hero – Young
+
+Whenever a Mechanologist item with cost 2 or less is put into your banished zone from your deck, put it into the arena.
+
+Intellect: 3
+
+Health: 20
+
+Data Doll has 3 intellect, that means you only draw up to 3 cards (instead of the more common 4) when you start the game and draw up to your intellect at the end of your turn.
+
+This is not a Once per Turn effect. Every mechanologist item with cost 2 or less that is put into your banished zone from your deck is put into the arena. This effect is not optional.
+
+### Dorinthea Ironsong
+
+Warrior Hero
+
+Once per turn Effect – When your weapon attack hits, you may attack an additional time with that weapon this turn. (You must have an action point to attack an additional time.)
+
+Intellect: 4
+
+Health: 40
+
+This ability does not give the weapon attack go again. You are still required to have an action point to attack again.
+
+This ability bypasses the “Once per Turn Action – Attack” on weapons and allows an additional attack with the same weapon
+
+This effect is mandatory, the first weapon you hit with each turn gets this effect. It cannot be saved up for a future weapon attack that turn.
+
+### Ira, Crimson Haze
+
+Ninja Hero – Young
+
+Your second attack each turn gains +1{p}
+
+Intellect: 4
+
+Health: 20
+
+Ira, Crimson Haze now has the sub-type young. (Previous editions errata’d to “Ninja Hero – Young” [IRA001-P] [HER000-P])
+
+The second attack does not need to be in the same combat chain.
+
+The second attack can be a weapon or attack action.
+
+This ability is passive, there is no choice in the power bonus.
+
+### Kano, Dracai of Aether
+
+Wizard Hero
+
+Instant – {r}{r}{r}: Look at the top card of your deck. If it’s a ‘non-attack’ action card, you may banish it. If you do, you may play it this turn as though it were an instant.
+
+Intellect: 4
+
+Health: 30
+
+Kano’s activated ability is an instant. You may activate it anytime you have priority, including during an opponent’s turn, and during the reaction window of either player’s turn.
+
+If the card has go again you gain an action point when the card resolves. Note: You cannot gain an action point on an opponent’s turn.
+
+The card is banished face up.
+
+The card remains in the banished zone face up if it is not played.
+
+You may play it anytime during the turn you banished it as long as you have priority.
+
+### Kassai, Cintari Sellsword
+
+Warrior Hero – Young
+
+Your second sword attack each turn costs {r} less.
+
+At the beginning of your end phase, if you’ve attacked 2 or more times with weapons this turn, create a Copper token for each weapon attack that hit. (It’s an item with “Action– {r}{r}{r}{r}, destroy Copper: Draw a card. Go again“)
+
+Intellect: 4
+
+Health: 20
+
+This will trigger even if you only hit with one weapon attack as long as you attacked 2 or more times with weapons this turn.
+
+Attacking with the same weapon twice still counts as attacking 2 times with weapons.
+
+### Katsu, the Wanderer
+
+Ninja Hero
+
+The first time an attack action card you control hits each turn, you may discard a card with cost 0. If you do, search your deck for a card with combo, banish it face up, then shuffle your deck. You may play it this turn.
+
+Intellect: 4
+
+Health 40
+
+Katsu card text has been updated in Crucible of War. It is a non-functional change.
+
+You may elect not to banish a card when searching, however you still must shuffle your deck.
+
+Katsu’s hero card effect triggers only the first time you hit with an attack action card each turn. If you choose not to resolve the effect and you hit again later in the same turn, Katsu’s hero card effect will not trigger again.
+
+The card remains in the banished zone face up if it is not played.
+
+A card without a printed cost is not a card with cost 0.
+
+### Kavdaen, Trader of Skins
+
+Merchant Hero – Young
+
+Once per Turn Action – {r}{r}{r}: If a hero has more {h} than any other hero, they lose 1{h} and create a Copper token. Then if a hero has less {h} than any other hero, they gain 1{h}. Go again (It’s an item with “Action– {r}{r}{r}{r}, destroy Copper: Draw a card. Go again“)
+
+Intellect: 4
+
+Health: 20
+
+Kavdeen is a Merchant Hero meaning his deck can only contain Merchant cards and generic cards.
+
+The green symbol on Kavdaen is life.
+
+The second clause of gaining life is checked after the first clause, therefore if the life loss causes both heroes to be the same life, then no life will be gained from the second part of the ability.
+
+### Kayo, Berserker Runt
+
+Brute Hero – Young
+
+Whenever you play an attack action card with base power 6 or more {p}, roll a 6 sided die. On;
+
+1-4 – Halve the attack’s base {p}, rounded down.
+
+5-6 – Double the attack’s base {p}.
+
+Intellect: 4
+
+Health: 19
+
+This ability is not optional.
+
+Base power is the printed {p} value on a card. (Located at the bottom left corner of a card.)
+
+The number is rounded down after being halved for example 7 becomes 3 and 9 becomes 4.
+
+### Rhinar, Reckless Rampage
+
+Brute Hero
+
+Whenever you discard a card with 6 or more {p} during your action phase, intimidate. (Target hero banishes face down a random card from their hand. At the beginning of the end phase, return all cards banished this way to their owners hand.)
+
+Intellect: 4
+
+Health: 40
+
+Effects that modify the power of “cards you control” are not applied to a card discarded from hand. (Cards you control are cards in the arena, on the chain, equipment, weapons, and hero.)
+
+The player who owns the card banished face down is allowed to look at it.
+
+The card banished from intimidate is returned to hand at the beginning of the end phase. This is before players draw up to their {i} (hand size).
+
+### Shiyana, Diamond Gemini
+
+Shapeshifter Hero – Young
+
+You may have specialization cards of any hero in your deck.
+
+At the beginning of your action phase, Shiyana becomes a copy of target hero until the start of your next turn, and gains “Cards you own are the class of your hero in addition to their other class types.”
+
+Intellect: 4
+Health: 20
+
+When Shiyana copies a hero, it does not change the amount of damage she has taken. For example, if Shiyana has taken 16 damage while at 20 life, then copies a hero that has 15 base life, she will lose the game due to having taken equal or more damage than her life.
+
+You may play the specialization cards regardless of what hero you are. You do not need to be Shiyana or the respective hero to play them. (Only to have them in your deck)
+
+This effect is mandatory. Shiyana must target a hero and become a copy of that hero. (Shiyana can target herself which would turn all her cards into Shapeshifter cards)
+
+Only Shapeshifter, Generic, and cards with the specialization keyword may be added to your deck if Shiyana is your hero.
+
+### Viserai, Rune Blood
+
+Runeblade Hero
+Whenever you play a Runeblade card, if you have played another ‘non-attack’ action card this turn, create a Runechant token. (It’s an aura with “When you play an attack action card or attack with a weapon, destroy Runechant and deal 1 arcane damage to target opposing hero.”)
+
+Intellect: 4
+Health: 40
+
+You can create multiple runechants a turn provided you play multiple Runeblade cards.
+
+The non-attack action does not have to be a Runeblade card.
+
+Activated abilities are not “playing a card”. Attacking with a Runeblade weapon or activating a Runeblade equipment is not “playing a Runeblade card”. (The following are counted as Runeblade cards: Runeblade attack action, Runeblade action, Runeblade Instant, Runeblade attack reaction and Runeblade defense reaction.)
+
+## Weapons
+
+### Aether Conduit
+
+Wizard Weapon – Staff (2H)
+
+Once per Turn Action – {r}{r}: Deal 2 arcane damage to target hero.
+
+Power: –
+
+You cannot attack with this weapon.
+
+You require an action point to use this action. It does not have go again.
+
+Modifiers that affect the next card you play do not effect this as Aether Conduit is an activated ability, not a card being played.
+
+### Anothos
+
+Guardian Weapon – Hammer (2H)
+
+Once per turn Action – {r}{r}{r}: Attack
+
+If you have 2 or more cards in your pitch zone with cost 3 or greater, Anothos gains +2{p}
+
+Power: 4
+
+Anothos checks your pitch zone constantly not just when it attacks. If the criteria is met after the attack is made, it will get the +2{p} bonus.
+
+You can only pitch when there is a cost to pay. (Bravo’s hero ability can be useful for this.)
+
+### Cintari Saber
+
+Warrior Weapon – Sword (1H)
+
+Once per Turn Action – {r}: Attack
+
+If Cintari Saber is defended by an attack action card, it gains +1{p} until end of turn.
+
+Power: 2
+
+If Cintari Saber is defended by multiple attack action cards it would still only gain +1{p}.
+
+You may start the game with up to two Cintari Sabers in play as they are 1H.
+
+When a card references its own card name it only affects the actual card. For example when an attack action card defends a Cintari Saber only the Cintari Saber that was defended gains +1{p] not all Cintari Sabers.
+
+### Crucible of Aetherweave
+
+Wizard Weapon – Staff (2H)
+
+Once per Turn Instant – {r}: The next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.
+
+Power: –
+
+You cannot attack with this weapon.
+
+If the next card you play after activating Crucible of Aetherweave does not have an effect that deals arcane damage, the modifier will persist until the next card with an effect that deals arcane damage is played that turn.
+
+You must activate this before playing the card in order for the card to gain the damage modifier.
+
+Crucible of Aetherweave’s activated ability is an instant. You may activate it anytime you have priority, including during an opponent’s turn, and during the reaction window of either player’s turn.
+
+### Dawnblade
+
+Warrior Weapon – Sword (2H)
+
+Once per Turn Action – {r}: Attack
+
+If Dawnblade hits, and it’s the second time it has hit this turn, put a +1{p} counter on Dawnblade.
+
+At the beginning of your end phase, if Dawnblade has not hit this turn, remove all +1{p} counters from Dawnblade.
+
+Power: 3
+
+Dawnblade does not have go again nor can it attack more than Once per Turn. Dawnblade requires other cards to allow Dawnblade to attack more than once.
+
+A +1{p} counter is a permanent effect that increases the power of Dawnblade (until the counter is removed).
+
+### Death Dealer
+
+Ranger Weapon – Bow (2H)
+
+Once per Turn Action – {r}: If you have no cards in your arsenal, you may put an arrow card from your hand face up into your arsenal. If you do, draw a card. Go again
+
+Power: –
+
+You cannot attack with this weapon.
+
+You may use this ability even when you have a card in your arsenal, however you cannot put an arrow card from your hand into your arsenal or draw a card.
+
+An arrow card has the sub-type “arrow” and is located at the bottom middle of the card.
+
+An arrow can be played from arsenal even if it wasn’t a bow that placed it in the arsenal.
+
+This does not give the arrow go again. (The action on Death Dealer has go again)
+
+### Harmonized Kodachi
+
+Ninja Weapon – Dagger (1H)
+
+Once per Turn Action – {r}: Attack
+
+If you have a card in your pitch zone with cost 0, Harmonized Kodachi gains go again.
+
+Power: 1
+
+It is possible for Harmonized Kodachi to gain go again after the attack has been declared if a card with cost 0 enters the pitch zone before the chain link resolves.
+
+You can only pitch when there is a cost to pay.
+
+Harmonized Kodachi is looking for cards in your pitch zone with a defined value (cost 0). A card with no resource cost, such as Heart of Fyendal or Cracked Bauble, do not have this defined value, and are ignored by Harmonized Kodachi’s effect.
+
+You may start the game with up to two Harmonized Kodachi in play as they are 1H.
+
+### Talishar, the Lost Prince
+
+Generic Weapon – Sword (2H)
+
+Once per Turn Action – {r}{r}, put a rust counter on Talishar, the Lost Prince: Attack
+
+At the beginning of your end phase, if Talishar, the Lost Prince has 3 or more rust counters on it, destroy it.
+
+Power: 4
+
+You reveal what weapon you are using at the same time you reveal equipment and present your deck. (After heroes are revealed and pre-game procedure is done).
+
+When this card is destroyed, it is sent to your graveyard.
+
+Putting the rust counter on Talishar is part of the cost.
+
+This is a Generic Weapon and any class can start with this weapon in play. (Provided it’s part of your 80 cards you submitted)
+
+### Plasma Barrel Shot
+
+Mechanologist Weapon – Gun (2H)
+
+Once per Turn Action – Remove a steam counter from Plasma Barrel Shot: Attack
+
+Action – {r}{r}: If there are no steam counters on Plasma Barrel Shot, put a steam counter on it. Go again
+
+Plasma Barrel Shot’s {p} is equal to 1 plus the number of times you have boosted this combat chain.
+
+Power: X
+
+You may use the second ability even if it already has one or more steam counters on it, however it will not put a steam counter on it.
+
+Non-attack actions such as putting a steam counter on Plasma Barrel Shot requires an empty combat chain. Note: It is recommended to put a steam counter on Plasma Barrel Shot before attacking with attack actions.
+
+### Reaping Blade
+
+Runeblade Weapon – Sword (2H)
+
+Once per Turn Action – {r}: Attack
+
+If a hero has more {h} than any other hero, they can’t gain {h}.
+Power: 3
+
+The green symbol on Reaping Blade is life.
+
+This applies to all players, including the controller of Reaping Blade.
+
+If player A is on 18 life and player B is on 17 life and tries to gain 3 life, they will gain the full 3 life even though it would put them above player A’s life.
+
+Players can still play cards and effects that gain life however life would not be gained if they have more {h} than any other hero.
+
+### Romping Club
+
+Brute Weapon – Club (2H)
+
+Once per Turn Action – {r}{r}: Attack
+
+Once per Turn Effect – When you discard a card with 6 or more {p}, Romping Club gains +1{p} until end of turn.
+
+Power: 4
+
+Effects that modify the power of “cards you control” are not applied to a card discarded from hand. (Cards you control are cards in the arena, on the chain, equipment, weapons, and hero.)
+
+### Mandible Claw
+
+Brute Weapon – Claw (1H)
+
+Once per Turn Action – {r}{r}: Attack
+
+If you have discarded a card with 6 or more {p} this turn, Mandible Claw gains go again.
+
+Power: 3
+
+Effects that modify the power of “cards you control” are not applied to a card discarded from hand. (Cards you control are cards in the arena, on the chain, equipment, weapons, and hero.)
+
+You may start the game with up to two Mandible Claw in play as they are 1H.
+
+### Nebula Blade
+
+Runeblade Weapon – Sword (2H)
+
+Once per Turn Action – {r}{r}: Attack
+
+If Nebula Blade hits, create a Runechant token.
+
+If you have played a ‘non-attack’ action card this turn, Nebula Blade gains +3{p} until end of turn.
+
+Power: 1
+
+Nebula Blade can only gain the +3{p} bonus once per turn even if you played multiple ‘non-attack’ action cards.
+
+If you play a ‘non-attack’ action card after you’ve attacked with Nebula Blade but before it does damage, it will gain +3{p}.
+
+A Runechant token is an aura with “When you play an attack action card or attack with a weapon, destroy Runechant and deal 1 arcane damage to target opposing hero.”
+
+### Teklo Plasma Pistol
+
+Mechanologist Weapon – Pistol (2H)
+
+Action – Remove a steam counter from Teklo Plasma Pistol: Attack
+
+Action – {r}: If there are no steam counters on Telko Plasma Pistol, put a steam counter on it. Go again
+
+Power: 2
+
+You may use the second ability even if it already has one or more steam counters on it, however it will not put a steam counter on it.
+
+This weapon does not have Once per Turn. You can attack with this weapon multiple times in the same turn provided you have the action points.
+
+### Zephyr Needle
+
+Ninja Weapon – Dagger (1H)
+
+Once per Turn Attack – {r}: Attack
+
+Go again
+
+If Zephyr Needle is defended by a card with {d} greater than Zephyr Needle’s {p}, destroy Zephyr Needle when the combat chain closes.
+
+Power: 2
+
+The ability triggers at the time a card defends. If the trigger resolves but later the power of Zephyr Needle is greater than the defense value of the defending card, Zephyr Needle would still be destroyed when the combat chain closes.
+
+If the triggered ability is responded to, e.g. with an attack reaction that will make Zephyr Needle’s power greater than the defense value of the defending card, then Zephyr Needle would not be destroyed when the combat chain closes. Note: You cannot play attack reactions during the defending window.
+
+You may start the game with up to two Zephyr Needle in play as they are 1H.
+
+## Tokens
+
+### Copper
+
+Generic Token – Item
+
+Action – {r}{r}{r}{r}, destroy Copper: Draw a card. Go again“
+
+Copper is a token and is not part of your deck.
+
+You can activate as many Copper as you want per turn.
+
+Copper stays in the arena until destroyed.
+
+Destroying Copper is part of it’s cost.
+
+A Copper token may be represented by a small object such as a card sleeve or coin if a Copper token card is not available.
+
+### Runechant
+
+Runeblade Token – Aura
+
+When you play an attack action card or attack with a weapon, destroy Runechant and deal 1 arcane damage to target opposing hero.
+
+Each Runechant is its own source and therefore arcane barrier 1 can prevent arcane damage that would be dealt from multiple Runechants, provided you have the resources to pay for the prevention.
+
+Runechant is a token and is not part of your deck.
+
+The Runechant token remains in play until destroyed.
+
+When you play an attack action or attack with a weapon, you must destroy your Runechant auras if the trigger becomes a layer on the chain. It is not optional.
+
+A Runechant token may be represented by a small object such as a card sleeve or coin if a Runchant aura token card is not available.
+
+### Quicken
+
+Generic Token – Aura
+
+When you play an attack action card or attack with a weapon, destroy Quicken and the attack gains go again.
+
+Quicken is a token and is not part of your deck.
+
+Quicken stays in the arena until destroyed.
+
+When you attack with an attack action card or weapon you must destroy Quicken. It is not optional.
+
+A Quicken token may be represented by a small object such as a card sleeve or coin if a Quicken token card is not available.
+
+Multiple instances of go again on the same card or activated ability do not stack. If a card or activated ability has multiple instances of go again when it resolves its controller gains 1 action point only.
+
+### Zen State
+
+Ninja Token – Aura
+
+Zen State enters the arena with 1 balance counter on it. At the beginning of your action phase, destroy Zen State unless you remove a balance counter from it.
+
+Whenever your hero would be dealt damage, prevent 1 damage that source would deal.
+
+Zen State is created by the card Find Center.
+
+Zen State is a token and is not part of your deck. (You can not put this in your deck.)
+
+Zen State prevents 1 damage each time any source would deal damage to your hero. Zen State can prevent damage from multiple different sources in the same turn.
+
+Removing a balance counter from Zen State is not optional.
+
+## Generic Cards
+
+### Fyendal’s Spring Tunic
+
+Generic Equipment – Chest
+
+At the start of your turn, if Fyendal’s Spring Tunic has less than 3 energy counters, you may put an energy counter on it.
+
+Instant – Remove 3 energy counters from Fyendal’s Spring Tunic: Gain {r}
+
+Blade Break (If you defend with Fyendal’s Spring Tunic, destroy it when the combat chain closes.)
+
+Defense: 1
+
+You cannot activate Fynedal’s Spring Tunic during the start of the turn phase (in response to the trigger), because players do not get priority during the start of turn phase.
+
+You must have at least 3 energy counters on Fyendal’s Spring Tunic to use it’s activated ability.
+
+Fyendal’s Spring Tunic’s activated ability is an instant. You may activate it any time you have priority, including during an opponent’s turn, and during the reaction window of either player’s turn.
+
+When this card is destroyed, it is sent to your graveyard.
+
+### Gambler’s Glove
+
+Generic Equipment – Arms
+
+Whenever a hero rolls a 6 sided die, you may destroy Gambler’s Glove. If you do, that hero rerolls the die. (You decide whether to use Gambler’s Glove after seeing the result of the die roll.)
+Defense: 0
+
+You see the result of the die roll before deciding whether to use Glamber’s Glove.
+
+If both players have a Gambler’s Glove, the turn player decides the order of the triggers that are added to the chain.
+
+The hero that initially rolled the die is the one who rerolls it, regardless of who’s Gambler’s Gloves was used.
+
+Gambler’s Glove can only be used to reroll a die when a card effect instructs a player to roll a 6 sided die. For example, Gambler’s Glove does not trigger if a player uses a 6 sided die to determine which card to randomly discard to Bloodrush Bellow.
+
+### Cash In
+
+Pitch: 2
+
+Cost: 4
+
+Generic Action
+
+You may destroy 4 Coppers, 2 Silvers, or 1 Gold you control rather than pay Cash In’s {r} cost.
+
+Draw 2 cards.
+
+Go again
+
+Power: –
+Defense: 2
+
+You cannot pay a portion of the alternate cost and a portion of resource cost.
+
+If you choose the alternative cost, you destroy the Coppers, Silvers or Gold as part of the cost and cannot respond to it.
+
+### Coax a Commotion
+
+Pitch: 1
+
+Cost: 0
+
+Generic Action – Attack
+
+If Coax a Commotion hits, choose any number:
+
+Each hero creates a Quicken token.
+
+Each hero draws a card.
+
+Each hero gains 1{h}.
+
+Power: 4
+
+Defense: 2
+
+You choose the modes after this has hit.
+
+You cannot choose the same mode twice.
+
+You may choose 0 modes.
+
+The green symbol on Coax a Commotion is life.
+
+### Gorganian Tome
+
+Pitch: –
+Cost: 0
+
+Generic Action
+
+Legendary (You may only have 1 Gorganian Tome in your deck.)
+
+Draw X cards, where X is 1 plus the number of Gorganian Tomes in all graveyards.
+
+Go again
+
+Power: –
+
+Defense: –
+
+You cannot pitch Gorganian Tome as it does not have a pitch value.
+
+You cannot defend with Gorganian Tome as it does not have a defense value.
+
+Since Gorganian Tome is not in your graveyard at the time it resolves, it does not count itself.
+
+If another card’s effect needs to know Gorganian Tome’s pitch value, such as Ravenous Rabble, Gorganian Tome is considered to have a pitch value of 0.
+
+### Lunging Press
+
+Pitch: 3
+
+Cost: 0
+
+Generic Attack Reaction
+
+Target attack action card gains +1{p}
+
+Power: –
+
+Defense: 2
+
+You cannot target a weapon attack with Lunging Press.
+
+### Promise of Plenty
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Generic Action – Attack
+
+If Promise of Plenty hits, each hero who doesn’t have a card in their arsenal puts the top card of their deck face down into their arsenal.
+
+If Promise of Plenty is played from arsenal, it gains go again.
+
+Power: 1/2/3
+
+Defense: 2
+
+You can respond to the ability by playing the card from arsenal (e.g. an instant) to make the arsenal empty before it resolves.
+
+### Reinforce the Line
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Generic Instant
+
+Target defending attack action card gains +2/3/4{d}
+
+Power: –
+
+Defense: –
+
+You can only target an attack action card that is defending. Cards that defended previous chains on the combat chain are still considered to be defending cards.
+
+You can target a defending attack action card on a previous chain link. It would not reduce the damage dealt on a chain link that has already resolved.
+
+You cannot defend with Reinforce the Line as it does not have a defense value.
+
+You can only play Reinforce the Line if there is a legal target.
+
+### Snag
+
+Pitch: 3
+
+Cost: 0
+
+Generic Instant
+
+Attack action cards can’t gain {p} from their own effects, or the effects of attack reaction cards this turn. (This only affects {p} that would be gained after Snag has resolved.)
+
+Power: –
+
+Defense: –
+
+You cannot defend with Snag as it does not have a defense value.
+
+This does not affect -{p} effects as that is not gaining {p}.
+
+You may play this anytime you have priority including in response to playing an attack action but before it resolves and becomes attacking on the combat chain.
+
+## Brute Cards
+
+### Skullhorn
+
+Brute Equipment – Head
+
+Action – Destroy Skullhorn: Draw a card then discard a random card. Go again
+
+Arcane Barrier 2 (If your hero would be dealt arcane damage, you may pay {r}{r} instead. If you do, prevent 2 arcane damage that source would deal.)
+
+Defense: 0
+
+If you have no cards in your hand when this ability resolves, you will discard the card you draw.
+
+There is no priority in between drawing and discarding the card.
+
+When this card is destroyed, it is sent to your graveyard.
+
+You must pay {r}{r} to prevent arcane damage even if only one point of arcane damage would be prevented.
+
+The prevention does not carry over even if you only prevent one arcane damage.
+
+### Argh… Smash!
+
+Pitch: 2
+
+Cost: 3
+
+Brute Action
+
+Roll a 6 sided die. Destroy up to X items, where X is half the number rolled, rounded down.
+
+Go again
+
+Power: –
+
+Defense: 3
+
+You choose the items after the die has been rolled.
+
+There is no priority between seeing what number is rolled and the items being destroyed. For example, a player cannot see the result of the dice then elect to use their potion’s instant effects. (Replacement effects that can impact the result of the dice still take place)
+
+If X is 0, no items would be destroyed. (As a result of rolling a 1)
+
+The number is rounded down after being halved for example 5 becomes 2 and 3 becomes 1.
+
+You can elect to destroy 0 items.
+
+### Barraging Big Horn
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Brute Action – Attack
+
+As an additional cost to play Barraging Big Horn, discard a random card.
+
+While Barraging Big Horn is defended by less than 2 non-equipment cards, it has go again.
+
+Power: 4/5/6
+
+Defense: 3
+
+You must have at least one other card in your hand to pay for the additional cost at the time you play Barraging Big Horn.
+
+### Beast Within
+
+Pitch: 2
+
+Cost: 3
+
+Brute Action – Attack
+
+If Beast Within is put into a graveyard from anywhere other than the combat chain, banish the top card of your deck and lose 1{h}. If it has 6 or more {p}, put it into your hand, otherwise, repeat this process.
+
+Power: 6
+
+Defense: 3
+
+This effect is not optional.
+
+The green symbol on Beast Within is life.
+
+If there are no cards in your deck, you still lose 1{h} and the effect repeats itself. (Resulting in losing the game.)
+
+### Massacre
+
+Pitch: 1
+
+Cost: 3
+
+Brute Action – Attack
+
+If you have discarded a card with 6 or more {p} this turn, Massacre gains +2{p} and intimidate.
+
+If Massacre is discarded to pay the cost of a Brute attack action card, the attack gains intimidate.
+Power: 6
+Defense: 3
+
+Massacre’s effect only works when it’s discarded to a Brute attack action card.
+
+If you’ve discarded more than one 6 or more {p} card this turn, the +2{p} bonus will only apply once.
+
+### Swing Fist, Think Later
+
+Pitch: 3/2/1
+
+Brute Action – Attack
+
+Cost: 1
+
+As an additional cost to play Swing Fist, Think Later, discard a random card.
+
+Go again
+
+Power: 2/3/4
+
+Defense: 3
+
+You must have at least one other card in your hand to pay for the additional cost at the time you play Swing Fist, Think Later.
+
+## Guardian Cards
+
+### Crater Fist
+
+Guardian Equipment – Arms
+
+Action – {r}{r}{r}, destroy Crater Fist: Your attacks with crush gain +2{p} this turn. Go again
+
+Temper (If you defend with Crater Fist, put a -1{d} counter on it when the combat chain closes then destroy it if it has 0{d}.)
+
+Defense: 2
+
+This affects all attacks with crush not just the first.
+
+When this card is destroyed, it is sent to your graveyard.
+
+### Blessing of Serenity
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Guardian Instant
+
+The next time you would be dealt {p} damage this turn, prevent 1/2/3 damage that source would deal.
+
+Power: –
+
+Defense: –
+
+If you have multiple damage preventions available, you choose which prevention to apply first.
+
+The prevention does not carry over, if this prevents an attack with {p} less than the amount of damage this would prevent there will be no leftover preventions.
+
+This effect is compulsory, you must prevent the next {p} damage that would be dealt to you this turn.
+
+This only affects {p} damage. Loss of life or arcane damage cannot be prevented.
+
+You cannot defend with Blessing of Serenity as it does not have a defense value.
+
+Blessing of Serenity is an instant. You may play it anytime you have priority, including during an opponent’s turn, and during the reaction window of either player’s turn.
+
+### Crush the Weak
+
+Pitch: 3/2/1
+
+Cost: 3
+
+Guardian Action – Attack
+
+Crush – If Crush the Weak deals 4 or more damage to a hero, they can’t play attack action cards with 3 or less base {p} during their next action phase.
+
+Power: 5/6/7
+
+Defense: 3
+
+This looks at the base power of the attack. If there is a modifier, the attack still can’t be played unless the modifier specifically modifies base power.
+
+Base power is the printed {p} value on the card.
+
+Cards with 3 or less base {p} can still be pitched.
+
+### Chokeslam
+
+Pitch: 3/2/1
+
+Cost: 4
+
+Guardian Action – Attack
+
+Crush – If Chokeslam deals 4 or more damage to a hero, attack action cards they control can’t gain {p} during their next action phase.
+
+Power: 6/7/8
+
+Defense: 3
+
+If an attack action card would gain {p} it instead gains 0{p}.
+
+You can still play power modifier cards. Attack action cards would just gain 0{p}.
+
+Attack action cards can still lose {p}.
+
+### Emerging Dominance
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Guardian Action – Aura
+
+(Auras stay in the arena until they are destroyed.)
+
+At the beginning of your action phase, destroy Emerging Dominance then the next Guardian attack action card you play this turn gains +1/2/3{p} and dominate. (The defending hero can’t defend the attack with more than 1 card from their hand.)
+
+Power: –
+
+Defense: 3
+
+Emerging Dominance must be destroyed at the beginning of your action phase, it is not optional.
+
+Emerging Dominance does not affect weapon attacks.
+
+### Mangle
+
+Pitch: 1
+
+Cost: 4
+
+Guardian Action – Attack
+
+Crush – If Mangle deals 4 or more damage to a hero, destroy target equipment they control with a -1{d} counter on it.
+
+Power: 8
+
+Defense: 3
+
+If a battleworn equipment with no counters defend this and the defending hero is crushed, you cannot target the equipment as it does not have the -1{d} counter yet
+
+If an equipment has multiple -1{d} counters on it, you can target it.
+
+You must destroy an equipment if there is a legal target.
+
+### Righteous Cleansing
+
+Pitch: 2
+
+Cost: 7
+
+Guardian Action – Attack
+
+Crush – If Righteous Cleansing deals 4 or more damage to a hero, look at the top 5 cards of their deck. Banish 1 or more cards with the same name from among them, then put the rest on top of their deck in any order.
+
+Power: 10
+
+Defense: 3
+
+If there are less than 5 cards, look at all the cards.
+
+They can be different pitch costs as long as the card name is exactly the same.
+
+The defending hero does not get to look at the cards.
+
+### Stamp Authority
+
+Pitch: 3
+
+Cost: 3
+
+Guardian Action – Aura
+
+When Stamp Authority enters the arena, if you have 2 or more cards in your pitch zone with cost 3 or greater, your hero gains +1{i} until end of turn.
+
+While Stamp Authority is in the arena, attack action card effects do not trigger when they hit.
+
+At the beginning of your action phase, destroy Stamp Authority.
+
+Power: –
+
+Defense: 3
+
+This affects all attack action cards including your own.
+
+The blue symbol on Stamp Authority is intellect (hand size).
+
+You can only pitch cards to pay for a cost. You cannot pitch for no reason.
+
+You draw cards up to your hero’s intellect before end of turn effects wear off.
+
+## Mechanologist Cards
+
+### Viziertronic Model i
+
+Mechanologist Equipment – Head
+
+Action – destroy Vizertronic Model i: Whenever you boost this turn, draw a card then put a card from your hand on top of your deck. Go again
+
+Arcane Barrier 2 (If your hero would be dealt arcane damage, you may pay {r}{r} instead. If you do, prevent 2 arcane damage that source would deal.)
+
+Defense: 0
+
+You boost the top deck of your deck first, banishing it before drawing a card and putting one back on top.
+
+You still draw a card even if the boost did not hit a mechanologist card.
+
+You must pay {r}{r} to prevent arcane damage even if only one point of arcane damage would be prevented.
+
+The prevention does not carry over even if you only prevent one arcane damage.
+
+### Absorption Dome
+
+Pitch: 2
+
+Cost: 0
+
+Mechanologist Action – Item
+
+Absorption Dome enters the arena with steam counters on it equal to the number of times you have boosted this turn.
+
+If you would be dealt damage, remove that many steam counters from Absorption Dome instead, then prevent damage equal to the number of steam counters removed this way.
+
+When Absorption Dome has no steam counters on it, destroy it.
+
+Defense: –
+
+Absorption Dome requires an action point to play as it is an action card.
+
+If you have not boosted this turn, Absorption Dome enters the arena with no stream counters and would be immediately destroyed.
+
+If you have multiple damage preventions available, you choose which prevention to apply first.
+
+It is not optional, you cannot choose to take damage instead of removing steam counters and preventing the damage.
+
+This prevents all types of damage including arcane damage. This does not prevent loss of life.
+
+You cannot defend with Absorption Dome as it does not have a defense value.
+
+### Combustible Courier
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Mechanologist Action – Attack
+
+If Combustible Courier hits, the next attack you boost this combat chain gains +3{p}.
+
+Boost (As an additional cost to play Combustible Courier, you may banish the top card of your deck. If it’s a Mechanologist card, Combustible Courier gains go again.)
+
+Power: 2/3/4
+
+Defense: 3
+
+The next attack must be on the same combat chain.
+
+It does not matter if the boost is successful or not.
+
+### High Speed Impact
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Mechanologist Action – Attack
+
+If High Speed Impact hits, the next attack you boost this combat chain gains dominate. (The defending hero can’t defend the attack with more than 1 card from their hand.)
+
+Boost (As an additional cost to play High Speed Impact, you may banish the top card of your deck. If it’s a Mechanologist card, High Speed Impact gains go again.)
+
+Power: 2/3/4
+
+Defense: 3
+
+The next attack must be on the same combat chain to gain dominate.
+
+It does not matter if the boost is successful or not.
+
+### Meganetic Shockwave
+
+Pitch: 3
+
+Cost: 2
+
+Mechanologist Action – Attack
+
+The defending hero must defend Meganetic Shockwave with X equipment they control, where X is the number of times you have boosted this combat chain.
+
+Power: 4
+
+Defense: 3
+
+If the defending hero has less than X equipment, they must defend with all the equipment they have that can defend.
+
+Players can defend with equipment with 0 defense.
+
+If an equipment is already on the combat chain defending another attack, it cannot also be forced to defend Meganetic Shockwave.
+
+### Plasma Purifier
+
+Pitch: 1
+
+Cost: 2
+
+Mechanologist Action – Item
+
+Action – {r}: If there are no steam counters on Plasma Purifier, put a steam counter on it. Go again
+
+Once per Turn Action – Remove a steam counter from Plasma Purifier: Target Mechanologist pistol you control gains +1{p} until end of turn. Go again
+
+Defense: –
+
+Plasma Purifier requires an action point to play as it is an action card.
+
+You cannot defend with Plasma Purifier as it does not have a defense value.
+
+You may use the action even if it already has one or more steam counters on it, however it will not put a steam counter on it.
+
+The pistol keeps the +1{p} until end of turn even if you attack with it multiple times.
+
+## Ninja Cards
+
+### Breeze Rider Boots
+
+Ninja Equipment – Legs
+
+When a Ninja attack action card you control hits, you may destroy Breeze Rider Boots. If you do, attack action cards with combo gain go again this turn.
+
+Battleworn (If you defend with Breeze Rider Boots, put a -1{d} counter on it when the combat chain closes.)
+
+Defense: 1
+
+If you choose to use this, it will give the attack action you hit with go again if it has combo.
+
+Multiple instances of go again on the same card or activated ability do not stack. If a card or activated ability has multiple instances of go again when it resolves its controller gains 1 action point only.
+
+When this card is destroyed, it is sent to your graveyard.
+
+### Crane Dance
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Ninja Action – Attack
+
+Combo – If Soulbead Strike was the last attack this combat chain, Crane Dance gains +1{p}, go again, and it can’t be defended by attack action cards with base {p} greater than the number of chain links you control.
+
+Power: 3/2/1
+
+Defense: 3
+
+You may defend with cards that aren’t attack action cards, as normal.
+
+Base power is the printed {p} value on a card. (Located at the bottom left corner of a card)
+
+### Find Center
+
+Pitch: 3
+
+Cost: 0
+
+Ninja Action – Attack
+
+Combo – If Crane Dance was the last attack this combat chain, Find Center can’t be defended by cards with {r} cost less than the number of chain links you control, and it gains “If this hits, create a Zen State token.”
+
+Power: 2
+
+Defense: 3
+
+The cost of a card is located at the top right corner of a card.
+
+If a card does not have a cost, such as equipment, Find Center considers its {r} cost to be 0.
+
+Zen State is an aura with “Zen State enters the arena with 1 balance counter on it. At the beginning of your action phase, destroy Zen State unless you remove a balance counter from it.
+
+Whenever your hero would be dealt damage, prevent 1 damage that source would deal.”
+
+### Flood of Force
+
+Pitch: 2
+
+Cost: 0
+
+Ninja Action – Attack
+
+Combo – If Rushing River or Flood of Force was the last attack this combat chain, reveal the top card of your deck. If it’s a card with combo, put it into your hand then Flood of Force gains +3{p} and go again.
+
+Power: 1
+
+Defense: 3
+
+If it’s not a card with combo, it stays on top of your deck and Flood of Force does not gain +3{p} or go again.
+
+You do not have to play the card put into your hand straight away. (Or at all, it can be pitched or just remain in your hand)
+
+### Heron’s Flight
+
+Pitch: 1
+
+Cost: 0
+
+Ninja Action – Attack
+
+Combo – If Crane Dance was the last attack this combat chain, Heron’s Flight gains +2{p} and you choose attack action or ‘non-attack’ action. Heron’s Flight can only be defended by cards of the chosen type.
+
+Power: 3
+
+Defense: 3
+
+You choose at the time you play this card.
+
+Heron’s Flight cannot be defended by equipment, instants, or reaction cards.
+
+Defense reactions become a defending card when played. You cannot defend Heron’s Flight with defense reactions if Crane Dance was the last attack this combat chain. (You cannot play the defense reaction)
+
+### Rushing River
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Ninja Action – Attack
+
+Combo – If Torrent of Tempo was the last attack this combat chain, Rushing River gains +1{p}, go again, and “If Rushing River hits, draw X cards then put X cards from your hand on top of your deck in any order, where X is the number of attacks that have hit this combat chain.
+
+Power: 1/2/3
+
+Defense: 3
+
+There is no priority in between drawing and putting cards back on top of the deck.
+
+### Whirling Mist Blossom
+
+Pitch: 2
+
+Cost: 1
+
+Ninja Action – Attack
+
+Ira Specialization (You may only have Whirling Mist Blossom in your deck if your hero is Ira.)
+
+If Whirling Mist Blossom hits, and it’s the second or higher chain link in a row to hit, draw 2 cards.
+
+Go again
+
+Defense: 2
+
+You may only have Whirling Mist Blossom in your deck if your hero is Ira, Crimson Haze.
+
+Whirling Mist Blossom must be the second or higher chain link to hit in a row, meaning that previous attack must have also hit.
+
+## Ranger Cards
+
+### Perch Grapplers
+
+Ranger Equipment – Legs
+
+Action – {r}{r}, destroy Perch Grapplers: Until end of turn, face up arrow cards played from arsenal gain go again. Go again
+
+Blade Break (If you defend with Perch Grapplers, destroy it when the combat chain closes.)
+
+Defense: 2
+
+The arrows must be face-up at the time you play them to gain go again.
+
+Arrow is a sub-type that exists on attack actions. This is located at the bottom center of the card.
+
+When this card is destroyed, it is sent to your graveyard.
+
+### Feign Death
+
+Pitch: 2
+
+Cost: 1
+
+Ranger Instant
+
+Play Feign Death only if you have been dealt damage this turn.
+
+The next time you would be dealt damage this turn, prevent it.
+
+Defense: –
+
+You cannot defend with Feign Death as it does not have a defense value.
+
+You cannot play this card if you have not been dealt damage this turn.
+
+Any form of damage such as {p} or arcane damage counts as damage dealt. Loss of life does not count as being dealt damage.
+
+If you have multiple damage preventions available, you choose which prevention to apply first.
+
+### Increase the Tension
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Ranger Action
+
+Your next arrow attack this turn gains +1/2/3{p} and “Defense reactions can’t be played from hand this chain link.”
+
+Go again
+
+Defense: 2
+
+The attack can still be defended by defense reaction cards from arsenal and by non-defense reactions from hand.
+
+### Pitfall Trap
+
+Pitch: 2
+
+Cost: 0
+
+Ranger Defense Reaction – Trap
+
+(Traps can only be played from arsenal.)
+
+Deal 2 damage to the attacking hero unless they pay {r}.
+
+Defense: 3
+
+The attacking hero decides if they want to pay {r} at the time this resolves. (Before damage from the attack action is calculated)
+
+This damage cannot be defended.
+
+This damage can be prevented. This damage is not arcane damage. This must be prevented by cards that have a prevention effect.
+
+Trap cards cannot be played from hand.
+
+### Poison the Tips
+
+Pitch: 2
+
+Cost: 0
+
+Ranger Action
+
+Until end of turn, arrows you control gain “If this hits a hero, they discard a card.”
+
+Reload (If you have no cards in your arsenal, you may put a card from your hand face down into your arsenal.)
+
+Go again
+
+Defense: 2
+
+If the arrow has multiple hit triggers, you pick which effect goes on the chain first when it hits.
+
+This effect is until the end of turn. You can trigger the hit effect on multiple arrows.
+
+You may elect to put no cards from your hand to your arsenal with Reload.
+
+Your arsenal must be empty to put a card into your arsenal with Reload.
+
+The defending hero selects the card to be discarded.
+
+### Remorseless
+
+Pitch: 1
+
+Cost: 1
+
+Ranger Action – Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+If Remorseless is put into your arsenal face up, until end of turn it gains “Defense reaction cards can’t be played from arsenal to Remoreseless’s chain link.”
+
+If Remorseless hits a hero, until the end of their next turn, whenever they play an action card, they lose 1{h}.
+
+Power: 5
+
+Defense: 3
+
+Turning a facedown card in arsenal face up does not count as putting it into your arsenal face up and therefore would not gain the effect.
+
+The green symbol on Remorseless is life.
+
+Action cards played as though they were an instant still count as playing an action card and would lose 1{h} if they were hit by Remorseless.
+
+Remorseless can still be defended by defense reactions from hand.
+
+### Rockslide Trap
+
+Pitch: 3
+
+Cost: 0
+
+Ranger Defense Reaction – Trap
+
+(Traps can only be played from arsenal.)
+
+Target attack gets -2{p} unless the attacking hero pays {r}. (The attacking hero chooses whether to pay {r} as Rock Slide Trap resolves.)
+
+Defense: 2
+
+The attacking hero decides if they want to pay {r} at the time this resolves. (Before damage from the attack action is calculated.)
+
+Trap cards cannot be played from hand.
+
+You can only target attacks with this, you cannot target a defending card that is an attack action.
+
+You can only target the attack on the current chain link. (You cannot target a defending attack action card as it’s not considered an attack).
+
+The ability is not optional, you must target an attack.
+
+### Sleep Dart
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Ranger Action – Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+If Sleep Dart hits a hero, they lose all hero card effects and activated abilities until the end of their next turn. (Treat the hero card as if the text box is empty.)
+
+Power: 3/4/5
+
+Defense: 3
+
+The hero loses all hero card effects and the hero loses all activated abilities, other cards with card effects or activated abilities are unaffected.
+
+### Tripwire Trap
+
+Pitch: 1
+
+Cost: 0
+
+Ranger Defense Reaction – Trap
+
+(Traps can only be played from arsenal.)
+
+Hit effects don’t trigger this chain link unless the attacking hero pays {r}. (The attacking hero chooses whether to pay {r} as Pitfall Trap resolves.)
+
+Defense: 4
+
+The attacking hero decides if they want to pay {r} at the time this resolves. (Before damage from the attack action is calculated.)
+
+If the attacking hero does not pay {r}, Tripwire Trap prevents all effects that would trigger, including hero and equipment hit trigger effects.
+
+Trap cards cannot be played from hand.
+
+## Runeblade Cards
+
+### Arknight Shard
+
+Runeblade Gem – Resource
+
+Pitch: 3
+
+Legendary Viserai Specialization (You may only have 1 Arknight Shard in your deck, and only if your hero is Viserai.)
+
+When you pitch Arknight Shard, Create a Runechant token.
+
+Creating a Runechant token is mandatory.
+
+You cannot defend with Arknight Shard as it does not have a defense value.
+
+You cannot pitch a card if you have no cost to pay.
+
+You may only have 1 Arknight Shard in your deck including cards in your registered 80-card pool in Classic Constructed tournaments and only 1 Arknight Shard in your deck in limited tournaments.
+
+Arknight Shard has no resource cost value.
+
+A Runechant is an aura with “When you play an attack action card or attack with a weapon, destroy Runechant and deal 1 arcane damage to target opposing hero.”)
+
+If you pitch Arknight Shard to pay for an attack, the Runechant that it creates does not trigger from the attack (the Runechant is created after the attack action card has been played / weapon attack is activated).
+
+### Bloodsheath Skeleta
+
+Runeblade Equipment – Chest
+
+Instant – Destroy Bloodsheath Skeleta: The next attack action card and ‘non-attack’ action card you play this turn gain “This card costs {r} less to play for each Runechant you control.”
+
+Temper (If you defend with Bloodsheath Skeleta, put a -1{d} counter on it when the combat chain closes then destroy it if it has 0{d}.)
+
+Defense: 2
+
+The reduction is calculated at the time you play the card, not at the time Blood Skeleta’s ability resolves.
+
+When this card is destroyed, it is sent to your graveyard.
+
+You can play either attack action card or ‘non-attack’ action card in any order.
+
+Bloodsheath Skeleta’s activated ability is an instant. You may activate it anytime you have priority, including during an opponent’s turn, and during the reaction window of either player’s turn.
+
+If the card already has a cost reduction effect such as “This card costs {r} less to play for each Runechant you control.” the reduction effects will stack making it cost 2 less for each Runechant you control.
+
+### Consuming Volition
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Runeblade Action – Attack
+
+If you have dealt arcane damage this turn, Consuming Volition gains “If this hits a hero, they discard a card.”
+
+Power: 2/3/4
+
+Defense: 3
+
+If this attack causes Runechant token(s) to deal arcane damage, this attack would gain the effect as arcane damage would have been dealt.
+
+The defending hero selects the card to be discarded.
+
+### Dread Triptych
+
+Pitch: 3
+Cost: 3
+
+Runeblade Action – Attack
+
+If you’ve played a ‘non-attack’ action card this turn, create a Runechant token.
+
+If you’ve dealt arcane damage this turn, create a Runechant token.
+
+If Dread Triptych hits, create a Runechant token.
+
+Power: 4
+
+Defense: 3
+
+The Runechant token created does not trigger or get destroyed as Dread Triptych is already played at the point the Runechant token is created.
+
+If this attack causes Runechant token(s) to deal arcane damage, this attack would create a Runechant token from the second effect as arcane damage would have been dealt.
+
+Each instance of creating a Runechant token is separate. An effect that affects Runechant tokens being created, such as Modred Tide, will affect each effect of Dread Triptych .
+
+A Runechant is an aura with “When you play an attack action card or attack with a weapon, destroy Runechant and deal 1 arcane damage to target opposing hero.”)
+
+### Meat and Greet
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Runeblade Action – Attack
+
+If Meat and Greet hits, create a Runechant token. (It’s an aura with “When you play an attack action card or attack with a weapon, destroy Runechant and deal 1 arcane damage to target opposing hero.”)
+
+If you have dealt or deal arcane damage to an opposing hero this turn, Meat and Greet gains go again.
+
+Power: 2/3/4
+
+Defense: 3
+
+If this attack causes Runechant token(s) to deal arcane damage, this attack would gain the effect as arcane damage would have been dealt.
+
+### Rattle Bones
+
+Pitch: 1
+
+Cost: 2
+
+Runeblade Action
+
+Banish target Runeblade attack action card from your graveyard. You may play it this turn.
+
+If you have dealt arcane damage to an opposing hero this turn, you may play Rattle Bones as though it were an instant.
+
+Go again
+
+Power: –
+
+Defense: 3
+
+If this is played as though it were an instant, it would not cost an action point but when it resolves you would gain an action point from go again (as long as it’s your action phase)
+
+If the attack action card is played, it would go to the graveyard afterwards (Unless an effect tells you otherwise).
+
+If the attack action is not played, it would remain in the banished zone.
+
+### Runeblood Barrier
+
+Pitch: 2
+
+Cost: 3
+
+Runeblade Action
+
+Create 4 Runechant tokens.
+
+If your hero would be dealt damage, instead destroy that many Runechants you control and prevent 1 damage that source would deal for each Runechant token destroyed this way.
+
+At the beginning of your action phase, destroy Runeblood Barrier.
+
+Power: –
+
+Defense: 2
+
+If you have multiple damage preventions available, you choose which prevention to apply first.
+
+You must destroy Runechants when you would be dealt damage, you cannot choose to be dealt damage instead.
+
+If you control no Runechants, you are dealt damage as normal.
+
+A Runechant is an aura with “When you play an attack action card or attack with a weapon, destroy Runechant and deal 1 arcane damage to target opposing hero.”)
+
+### Sutcliffe’s Research Notes
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Runeblade Action
+
+Reveal the top 1/2/3 cards of your deck. Create a Runechant token for each Runeblade attack action card revealed this way, then put the cards on top of your deck in any order. (They’re auras with “When you play an attack action card or attack with a weapon, destroy Runechant and deal 1 arcane damage to target opposing hero.”)
+
+Go again
+
+Power: –
+
+Defense: 2
+
+The order of the cards put on top of your deck is not known to the opponent.
+
+## Warrior Cards
+
+### Courage of Bladehold
+
+Warrior Equipment – Chest
+
+Action – Destroy Courage of Bladehold: Your sword attacks cost {r} less this turn. Go again
+
+Temper (If you defend with Courage of Bladehold, put a -1{d} counter on it when the combat chain closes then destroy it if it has 0{d}.)
+
+Defense: 2
+
+This applies to all your sword attacks this turn, not just the first.
+
+A sword attack is an attack with a weapon with the subtype ‘Sword’. (Located at the bottom middle of the weapon card.)
+
+When this card is destroyed, it is sent to your graveyard.
+
+### Dauntless
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Warrior Action
+
+Your next weapon attack this turn gains +1/2/3{p}.
+
+The next defense reaction card the defending hero plays this turn costs an additional {r} to play.
+
+Go again
+
+Power: –
+
+Defense: 3
+
+To defend with a defense reaction, it must be played.
+
+The additional cost can be reduced by cost reduction effects.
+
+### Spoils of War
+
+Pitch: 1
+
+Cost: 1
+
+Warrior Action
+
+Your next weapon attack this turn gains +2{p} and go again.
+
+Whenever a weapon you control hits this turn, create 2 Copper tokens.
+
+Go again
+
+Power: –
+
+Defense: 3
+
+The second ability affects every weapon hit this turn, not just your next attack.
+
+A Copper token is an item with “Action– {r}{r}{r}{r}, destroy Copper: Draw a card. Go again“
+
+### Twinning Blade
+
+Pitch: 2
+
+Cost: 0
+
+Warrior Attack Reaction
+
+You may attack an additional time with target sword this turn. (You must have an action point to attack an additional time.)
+
+Power: –
+
+Defense: 3
+
+This ability does not give the weapon attack go again. You are still required to have an action point to attack again. This ability bypasses the “Once per Turn Action – Attack” on the sword attack and allows an additional attack with the same weapon.
+
+The weapon must have the sub-type ‘Sword’. (Located at the bottom middle of the weapon card.)
+
+It does not need to target an attacking sword, but must be played during the reaction step as an attacking hero. (You can target a sword while attacking with an attack action.)
+
+### Out for Blood
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Warrior Attack Reaction
+
+Target weapon attack gains +1/2/3{p}.
+
+Reprise – If the defending hero has defended with a card from their hand this chain link, your next attack this turn gains +1{p}.
+
+Power: –
+
+Defense: 3
+
+Reprise cares about the current chain link not the whole combat chain. If a previous attack was defended by a card in hand, it will have no effect on reprise for the current chain link.
+
+Reprise is checked at the time you play the card. If a card with reprise is played then a defense reaction is played from hand, the effect will not apply retroactively.
+
+Equipment and cards from arsenal that defend an attack do not turn on reprise.
+
+The next attack can be any attack including attack action or a different weapon attack.
+
+### Unified Decree
+
+Pitch: 2
+
+Cost: 2
+
+Warrior Attack Reaction
+
+Target weapon attack gains +3{p}.
+
+Reprise – If the defending hero has defended with a card from their hand this chain link, look at the top card of your deck. If it’s an attack reaction card, you may banish it. If you do, you may play it this combat chain.
+
+Power: –
+
+Defense: 3
+
+Reprise cares about the current chain link not the whole combat chain. If a previous attack was defended by a card in hand, it will have no effect on reprise for the current chain link.
+
+Reprise is checked at the time you play the card. If a card with reprise is played then a defense reaction is played from hand, the effect will not apply retroactively.
+
+Equipment and cards from arsenal that defend an attack do not turn on reprise.
+
+If you do not banish the card, it stays on top of the deck.
+
+When the banished card is played, it will go to the graveyard when it resolves as normal.
+
+If you banish the card and do not play it this combat chain, it remains in the banished zone.
+
+## Wizard Cards
+
+### Metacarpus Node
+
+Wizard Equipment – Arms
+
+Whenever you play a card with an effect that deals arcane damage, you may pay {r}. If you do, that effect deals that much arcane damage plus 1 and at the beginning of the end phase, destroy Metacarpus Node.
+
+Arcane Barrier 1 (If your hero would be dealt arcane damage, you may pay {r} instead. If you do, prevent 1 arcane damage that source would deal.)
+
+Defense: 0
+
+You may use this ability only once per card. You may use this ability multiple times in a turn on different cards provided you pay {r} each time.
+
+When this card is destroyed, it is sent to your graveyard.
+
+### Aetherize
+
+Pitch: 3
+
+Cost: 1
+
+Wizard Instant
+
+Negate target instant card with cost {r} or less. (The card does not resolve. Put it into its owner’s graveyard.)
+
+Power: –
+
+Defense: –
+
+Negating an instant will prevent the card from resolving. The card will go to its owner’s graveyard and the effects of the card do not happen.
+
+Aetherize can only target instant cards, not instant activated abilities.
+
+You cannot defend with Aetherize as it does not have a defense value.
+
+### Chain Lightning
+
+Pitch: 2
+
+Cost: 1
+
+Wizard Action
+
+You may play your next Wizard ‘non-attack’ action card this turn as though it were an instant.
+
+If you have played another Wizard ‘non-attack’ action card this turn, deal 3 arcane damage to each opposing hero.
+
+Power: –
+
+Defense: 3
+
+Each defending hero decides if they want to defend the arcane damage they would take. They cannot defend the other arcane damage.
+
+Chain Lightning checks if you have played another Wizard ‘non-attack’ action card this turn at the time it resolves, not at the time you play the card.
+
+Chain Lightning counts as a card with an effect that deals arcane damage, regardless if you have played another wizard “non-attack” action card this turn or not. (e.g. if you activated Crucible of Aetherweave then play Chain Lightning, it would use up the Crucible of Aetherweave effect but deal no arcane damage.)
+
+### Cindering Foresight
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Wizard Action
+
+If it’s not your turn, you may play Cindering Foresight as though it were an instant.
+
+The next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.
+
+Opt 1/2/3 (Look at the top 1/2/3 cards of your deck. You may put them on the top and/or bottom in any order.)
+
+Power: –
+
+Defense: 2
+
+If the next card you play does not have an effect that deals arcane damage, it will not gain this modifier however the next card played this turn that has an effect that deals arcane damage will still gain the bonus.
+
+This card is always an action card, regardless of whether it’s your turn or not (e.g. for Kano’s hero ability.), or if it is being played as an instant.
+
+### Gaze the Ages
+
+Pitch: 3
+
+Cost: 0
+
+Wizard Action
+
+Opt 2 (Look at the top 2 cards of your deck. You may put them on the top and/or bottom in any order.)
+
+If you have played another Wizard ‘non-attack’ action card this turn, put Gaze the Ages into your hand as it resolves.
+
+Power: –
+
+Defense: 3
+
+You cannot respond between opting and putting Gaze the Ages into your hand as you must finish resolving the card completely first.
+
+Gaze the Ages checks if you have played another Wizard ‘non-attack’ action card this turn at the time it resolves, not at the time you play the card.
+
+### Foreboding Bolt
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Wizard Action
+
+Deal 1/2/3 damage to target hero.
+
+Opt 1 (Look at the top card of your deck. You may put it on the bottom.)
+
+Power: –
+
+Defense: 3
+
+You opt when the card resolves after damage is dealt (or prevented).
+
+### Rousing Aether
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Wizard Action
+
+Deal 2/3/4 arcane damage to target hero.
+
+The next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.
+
+Power: –
+
+Defense: 3
+
+If the next card you play does not have an effect that deals arcane damage, it will not gain this modifier however the next card played this turn that has an effect that deals arcane damage will still gain the bonus.
+
+### Snapback
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Wizard Action
+
+Deal 1/2/3 arcane damage to target hero.
+
+If you have played another Wizard ‘non-attack’ action card this turn, you may play Snapback as though it were an instant.
+
+Power: –
+
+Defense: 3
+
+You still pay Snapback’s resource costs as normal even when Snapback is played as though it were an instant.
+
+Snapback is still an action card when played as an instant. It just does not require an action point to play and can be played anytime you have priority, including during an opponent’s turn, and during the reaction window of either player’s turn.

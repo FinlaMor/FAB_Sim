@@ -1,0 +1,82 @@
+# fab_cards_lora.yaml — Fine-tune Qwen2.5 7B on FAB card validation Q&A (LoRA, single GPU)
+#
+# Requirements: CUDA GPU with ≥14GB VRAM
+# Train: tune run lora_finetune_single_device --config offline_agents/torchtune_configs/fab_cards_lora.yaml
+#
+# Download base model first (no approval needed):
+#   tune download Qwen/Qwen2.5-7B-Instruct --output-dir ./models/qwen2.5-7b
+
+# --- Model ---
+model:
+  _component_: torchtune.models.qwen2_5.lora_qwen2_5_7b
+  lora_attn_modules: [q_proj, v_proj, k_proj, o_proj]
+  apply_lora_to_mlp: false
+  apply_lora_to_output: false
+  lora_rank: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+
+# --- Tokenizer ---
+tokenizer:
+  _component_: torchtune.models.qwen2_5.qwen2_5_tokenizer
+  path: ./models/qwen2.5-7b/vocab.json
+  merges_file: ./models/qwen2.5-7b/merges.txt
+  max_seq_len: 2048
+
+# --- Checkpointing ---
+checkpointer:
+  _component_: torchtune.training.FullModelHFCheckpointer
+  checkpoint_dir: ./models/qwen2.5-7b
+  checkpoint_files: [model.safetensors]
+  recipe_checkpoint: null
+  output_dir: ./models/fab-cards-ft
+  model_type: QWEN2
+
+resume_from_checkpoint: false
+
+# --- Dataset ---
+dataset:
+  _component_: torchtune.datasets.chat_dataset
+  source: json
+  data_files: offline_agents/distillation/training_data.jsonl
+  conversation_column: messages
+  conversation_style: openai
+  train_on_input: false
+  packed: false
+
+seed: 42
+shuffle: true
+
+# --- Training ---
+epochs: 3
+max_steps_per_epoch: null
+batch_size: 4
+gradient_accumulation_steps: 4
+
+optimizer:
+  _component_: torch.optim.AdamW
+  fused: true
+  lr: 2e-4
+
+lr_scheduler:
+  _component_: torchtune.training.lr_schedulers.get_cosine_schedule_with_warmup
+  num_warmup_steps: 50
+
+loss:
+  _component_: torch.nn.CrossEntropyLoss
+
+# --- Memory ---
+compile: false
+dtype: bf16
+enable_activation_checkpointing: true
+enable_activation_offloading: false
+custom_sharded_layers: null
+
+# --- Logging ---
+output_dir: ./models/fab-cards-ft
+metric_logger:
+  _component_: torchtune.training.metric_logging.DiskLogger
+  log_dir: ./models/fab-cards-ft/logs
+
+log_every_n_steps: 10
+log_peak_memory_stats: true

@@ -1,0 +1,2347 @@
+Home  Rules and Policy  Release Notes  Dynasty
+
+# Dynasty
+
+# General Notes
+
+Dynasty contains 247 cards (1 Fabled, 5 Legendary, 51 Majestic, 81 Rares, 109 Commons, 14 Marvels)
+
+Dynasty becomes legal for tournaments on its official release date: 11 November, 2022
+
+Icons
+
+{r} Resource Point
+
+{p} Power
+
+{d} Defense Value
+
+{h} Life
+
+{i} Intellect
+
+## Returning Keywords
+
+Welcome to Rathe
+
+Battleworn
+
+Blade Break
+
+Combo
+
+Dominate
+
+Go again
+
+#### Arcane Rising
+
+Arcane Barrier X
+
+Boost
+
+Opt X
+
+#### Crucible of War
+
+Negate
+
+Temper
+
+#### Monarch
+
+Phantasm
+
+Spellvoid X
+
+#### Uprising
+
+Material
+
+Transform
+
+## Returning Tokens
+
+Arcane Rising
+
+Runechant
+
+#### Crucible of War
+
+Copper
+
+#### Monarch
+
+Spectral Shield
+
+#### Everfest
+
+Silver
+
+## Returning Cards
+
+Arcane Rising
+
+Command and Conquer
+
+Hyper Driver (red)
+
+#### Monarch (blitz decks only)
+
+Spell Fray Cloak
+
+Spell Fray Gloves
+
+Spell Fray Leggings
+
+## New Subtype Keywords
+
+Construct
+
+Constructs resolve flipped as a permanent in the arena.
+
+If a card with the subtype construct resolves as a layer on the stack, it enters the arena flipped.
+
+The card face with the subtype construct is considered the front-face for a double-faced card (DFC).
+
+When a DFC construct is put into a zone other than the stack or the arena, it becomes a new object, and resets to using the front-face to determine its properties (e.g. when it is sent to the graveyard, a DFC will revert to being a construct again)
+
+Example:
+
+Construct Nitro Mechanoid // Nitro Mechanoid
+
+Mechanologist Action – Construct // Mechanologist Weapon Equipment – Item
+
+(YEL) 4{r} 3{d} // 5{p} 5{d}
+
+Transform target Mechanologist head, chest, arms, legs, weapon and 3 Hyper Drivers you control into Nitro Mechanoid. If you don’t, negate this.
+
+Go again
+
+//
+
+Action – Banish a card from under Nitro Mechanoid: Attack
+
+Overpower
+
+Temper
+
+—————————————————————
+
+## New Ability Keywords
+
+Ephemeral
+
+If this would be put into a graveyard from anywhere, instead it ceases to exist.
+
+Ephemeral is a static ability that generates a replacement effect.
+
+Ceasing to exist means that the object is removed from the game.
+
+If a card is removed from the game, it is not in any zone, and can no longer be interacted with. If the card was originally part of the player’s registered deck, it does not go into the player’s sideboard.
+
+Example:
+
+Crouching Tiger
+
+Ninja Action – Attack
+
+0{r} 0{p}
+
+Ephemeral
+
+Go again
+
+—————————————————————
+
+Overpower
+
+The defending hero can’t defend this with more than one action card.
+
+Overpower is a static ability that generates a continuous effect.
+
+A player can not declare more than one defending action card against an attack with overpower.
+
+Overpower does not prevent additional action cards being added as defending cards through effects (e.g. Amulet of Havencall).
+
+Example:
+
+Hanabi Blaster
+
+Mechanologist Weapon – Gun (2H)
+
+5{p}
+
+Once per Turn Action — Remove 2 steam counters from Hanabi Blaster: Attack
+
+Overpower
+
+The third time you play a card with boost each turn, put a steam counter on Hanabi Blaster.
+
+—————————————————————
+
+Piercing X
+
+If this is defended by an equipment, it has +X{p}.
+
+Piercing X is a static ability that generates a continuous effect.
+
+If an attack with Piercing is defended by multiple equipment, it does not gain +X{p} for each defending equipment.
+
+If an attack has multiple instances of Piercing X, each effect is evaluated and applied separately.
+
+If an attack with Piercing is no longer defended by an equipment, it loses its +X{p} bonus.
+
+Example:
+
+Precision Press
+
+Warrior Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Your next sword or dagger attack this turn has go again and piercing 3/2/1.
+
+Go again
+
+—————————————————————
+
+## New Effect Keywords
+
+Contract
+
+Contract is both a label keyword and an effect keyword. As a label keyword it represents a static ability that generates a continuous effect and a triggered effect. As an effect keyword it is a continuous effect.
+
+When a player is contracted, they are given a set of instructions to complete. If they perform those instructions, they are considered to have completed the contract.
+
+Unless otherwise specified, contracts can be completed any number of times while they are active. For most cards, this means while the card is face-up in the arena on the combat chain and not defending.
+
+Example:
+
+Rob the Rich
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+Contract – You are contracted to banish opponents’ cards with cost 2 or greater. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+—————————————————————
+
+# Card-specific Notes
+
+Emperor, Dracai of Aesir
+
+Royal Draconic Warrior Wizard Hero – Young
+
+4{i} 15{h}
+
+You may only have red cards in your deck.
+
+Action — {r}{r}{r}: Search your deck for Command and Conquer, attack with it, then shuffle.
+
+You may have any Draconic cards, Warrior cards, Wizard cards etc. in your deck as long as they are red.
+
+When you activate Emperor, it is considered an attack and requires you to specify the attack target.
+
+Activating Emperor opens the combat chain and begins the Layer Step of combat. Activating Emperor does not close the combat chain in the link step.
+
+You may fail to find Command and Conquer even if your deck contains one or more.
+
+If you fail to find Command and Conquer, you fail to attack with it and the combat chain closes. You must still shuffle, even if you fail to find Command and Conquer.
+
+Attacking with Command and Conquer this way is not considered playing Command and Conquer. If you only activate Emporer on your turn you are not considered to have played Command and Conquer for the purposes of rules and effects. E.g. effects that apply to the next attack action card you play this turn do not apply to Command and Conquer.
+
+Effects that apply specifically to Royal, Draconic, Warrior, and/or Wizard activated abilities (but not attacks) apply to Emperor’s ability.
+
+Effects that apply specifically to Royal, Draconic, Warrior, and/or Wizard attacks do not apply to the Emperor’s ability or Command and Conquer (e.g. Uprising).
+
+Effects that apply to your next attack or attacks you control, apply to the Emperor’s ability and Command and Conquer (e.g. Hamstring Shot, Out for Blood, Channel Mount Heroic).
+
+—————————————————————
+
+## Draconic Illusionist
+
+Dust from the Golden Plains
+
+Draconic Illusionist Action – Ash
+
+(RED) 0{r} 3{d}
+
+Material – While this is under a permanent other than Themai, that permanent has phantasm.
+
+When this resolves as a layer on the stack, it becomes a permanent in the arena under the player’s control.
+
+If a Dust from the Golden Plains is transformed into a dragon, it is put underneath that dragon and the dragon gains Phantasm unless the dragon is named Themai.
+
+While this is underneath a card, it can not be targeted by effects and is not considered to be controlled by any player.
+
+If the card on top of this is destroyed or otherwise removed from the arena, this is put into the owner’s graveyard.
+
+—————————————————————
+
+Dust from the Red Desert
+
+Draconic Illusionist Action – Ash
+
+(RED) 0{r} 3{d}
+
+Material – While this is under a permanent other than Vynserakai, that permanent has phantasm.
+
+When this resolves as a layer on the stack, it becomes a permanent in the arena under the player’s control.
+
+If a Dust from the Red Desert is transformed into a dragon, it is put underneath that dragon and the dragon gains Phantasm unless the dragon is named Vynserakai.
+
+While this is underneath a card, it can not be targeted by effects and is not considered to be controlled by any player.
+
+If the card on top of this is destroyed or otherwise removed from the arena, this is put into the owner’s graveyard.
+
+—————————————————————
+
+Dust from the Shadow Crypts
+
+Draconic Illusionist Action – Ash
+
+(RED) 0{r} 3{d}
+
+Material – While this is under a permanent other than Nekria, that permanent has phantasm.
+
+When this resolves as a layer on the stack, it becomes a permanent in the arena under the player’s control.
+
+If a Dust from the Shadow Crypts is transformed into a dragon, it is put underneath that dragon and the dragon gains Phantasm unless the dragon is named Nekria.
+
+While this is underneath a card, it can not be targeted by effects and is not considered to be controlled by any player.
+
+If the card on top of this is destroyed or otherwise removed from the arena, this is put into the owner’s graveyard.
+
+—————————————————————
+
+## Brute
+
+Rok
+
+Brute Weapon – Rock (2H)
+
+7{p}
+
+Once per Turn Action — {r}{r}{r}: Attack
+
+Activate Rok only if you have no cards in hand.
+
+Damage that would be dealt by Rok can’t be prevented.
+
+You can only announce to activate Rok if you have no cards in hand at that point in time. The number of cards in your hand is checked before you pitch for resources.
+
+If a prevention effect tries to prevent damage from Rok, each replacement effect will still try to do everything else other than preventing that damage. E.g. a card with Ward would still be destroyed.
+
+Players can still attempt to prevent damage (apply optional prevention effects) even when the damage cannot be prevented.
+
+An ongoing-prevention effect does not have its prevention amount reduced when the effect does not actually prevent any amount of damage.
+
+Rok.
+
+—————————————————————
+
+Beaten Trackers
+
+Brute Equipment – Legs
+
+1{d}
+
+Whenever you discard a random card with 6 or more {p}, you may destroy Beaten Trackers. If you do, gain 1 action point.
+
+Battleworn
+
+If you would discard a card with 6 or more {p} as an additional cost to play an action card, you may choose to destroy Beaten Trackers and gain the action point after the card is played – you can not use the action point gained to pay for that card.
+
+The triggered effect is optional, and the decision to destroy Beaten Trackers is made when the triggered-layer resolves on the stack.
+
+There is no priority between deciding to destroy Beaten Trackers and gaining an action point.
+
+You can only gain action points when you are the turn player. If you trigger Beaten Trackers on an opponents turn, you do not gain action points.
+
+—————————————————————
+
+Savage Beatdown
+
+Brute Action – Attack
+
+(RED) 3{r} 6{p} 3{d}
+
+Play Savage Beatdown only if you’ve discarded a card with 6 or more {p} this turn.
+
+As an additional cost to play Savage Beatdown, discard a random card.
+
+If the discarded card has 6 or more {p}, Savage Beatdown has +6{p}.
+
+You must have discarded a card with 6+{p} before announcing that you are playing Savage Beatdown. Discarding a random card for Savage Beatdown’s additional cost does not meet its own requirement to be played.
+
+You cannot play this card if you cannot discard a card to pay its additional cost.
+
+Savage Beatdown has +6{p} if the card discarded as the additional cost has 6 or more {p}.
+
+—————————————————————
+
+Skull Crack
+
+Brute Action – Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+When Skull Crack is discarded at random, gain {r}.
+
+If you would discard Skull Crack as an additional cost to play a card, you will gain the {r} after the card is played – you can not use the {r} gained to pay for that card.
+
+If you choose to discard Skull Crack, its effect does not trigger – the discard effect must specify that it is random. Choosing to use a random method to determine which card to discard does not make it a random discard.
+
+—————————————————————
+
+Berserk
+
+Brute Action
+
+(YEL) 1{r} 3{d}
+
+Until end of turn, whenever you discard a random card with 6 or more {p}, banish it. If you do, reveal the top card of your deck. If it has 6 or more {p}, draw a card.
+
+Go again
+
+If there are multiple Berserk effects active, each triggered-layer from each Berserk effect will resolve independently of the other. When the first Berserk trigger resolves, the card will be banished, preventing it from being banished by any additional Berserk triggers. This would result in a maximum of 1 reveal (and up to 1 draw).
+
+If the top card of your deck is not 6 or more {p}, it remains on top.
+
+If you choose to discard a card, Berserk’s effect does not trigger – the discard effect must specify that it is random. Choosing to use a random method to determine which card to discard does not make it a random discard.
+
+—————————————————————
+
+Reincarnate
+
+Brute Action – Attack
+
+(RED/YEL/BLU) 3{r} 7/6/5{p} 3{d}
+
+When Reincarnate is discarded at random, put it on the bottom of your deck.
+
+If Reincarnate is banished before its trigger resolves (i.e. ordering of Berserk trigger), it is not put on the bottom of your deck.
+
+If you choose to discard Reincarnate, its effect does not trigger – the discard effect must specify that it is random. Choosing to use a random method to determine which card to discard does not make it a random discard.
+
+—————————————————————
+
+Blessing of Savagery
+
+Brute Action – Aura
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+At the start of your turn, destroy Blessing of Savagery then your next attack with 6 or more base {p} this turn gains +3/2/1{p}.
+
+Blessing of Savagery’s effect applies to any attack, including weapon attacks and attack action cards with base power of 6 or more.
+
+Blessing of Savagery’s effect applies to the next attack with 6 or more base power you control. If you have applied Blessing of Savagery’s effect on an attack then that attack’s base power is then reduced below 6, Blessing of Savagery’s effect will still continue to apply.
+
+—————————————————————
+
+Madcap Charger
+
+Brute Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+As an additional cost to play Madcap Charger, discard a random card.
+
+If the discarded card has 6 or more {p}, Madcap Charger has go again.
+
+You cannot play this card if you cannot discard a card to pay its additional cost.
+
+—————————————————————
+
+Madcap Muscle
+
+Brute Action – Attack
+
+(RED/YEL/BLU) 3{r} 6/5/4{p} 3{d}
+
+As an additional cost to play Madcap Muscle, discard a random card.
+
+If the discarded card has 6 or more {p}, Madcap Muscle has +3{p}.
+
+You cannot play this card if you cannot discard a card to pay its additional cost.
+
+—————————————————————
+
+Rumble Grunting
+
+Brute Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Play Rumble Grunting only if you’ve discarded a card with 6 or more {p} this turn.
+
+Your next Brute attack this turn gains +4/3/2{p}.
+
+Go again
+
+Rumble Grunting’s effect applies to any Brute attack, including weapon attacks and attack action cards.
+
+—————————————————————
+
+## Guardian
+
+Yoji, Royal Protector
+
+Guardian Hero – Young
+
+4{i} 22{h}
+
+Once per Turn Instant — {r}{r}{r}: The next time another target hero would be dealt damage this turn, instead that damage is dealt to Yoji and prevent 1 of that damage.
+
+You can only target another hero – you cannot target yourself.
+
+Yoji’s effect is a replacement effect. It does not redirect or prevent damage if there is no damage being dealt with (especially if the damage is prevented using other replacement effects).
+
+Yoji’s effect applies to hits from attacks and damage dealt through effects (including arcane damage). It does not apply to loss of life effects.
+
+—————————————————————
+
+Seasoned Saviour
+
+Guardian Equipment – Off-Hand
+
+3{d}
+
+When you equip Seasoned Saviour, put two -1{d} counters on it.
+
+Battleworn
+
+Equipment is equipped at the start of the game. This will trigger and resolve before either player draws their first hand for the first turn of the game. The triggered effect is not optional.
+
+If you start the game with Seasoned Saviour as your equipment, its effect triggers/resolves and you put two -1{d} counters on it before you draw your first hand.
+
+You cannot equip more than one off-hand equipment, even if you have more than one empty weapon zone.
+
+—————————————————————
+
+Steelbraid Buckler
+
+Guardian Equipment – Off-Hand
+
+2{d}
+
+Temper
+
+You cannot equip more than one off-hand equipment, even if you have more than one empty weapon zone.
+
+—————————————————————
+
+Buckle
+
+Guardian Action
+
+(BLU) 3{r} 3{d}
+
+Your next Guardian attack this turn gains +1{p}, dominate, and “When this hits a hero, destroy an equipment they control with a -1{d} counter on it.”
+
+Go again
+
+If the opponent defends the attack with an equipment with Battleworn or Temper, that equipment would not gain a counter from its effect until the combat chain closes, after the hit triggered effect has resolved. The equipment must already have a -1{d} counter on it at the time the hit trigger resolves.
+
+The hit trigger is not a targeted effect. The equipment with the -1{d} counter that will be destroyed is determined when the hit trigger resolves.
+
+—————————————————————
+
+Never Yield
+
+Guardian Action – Aura
+
+(BLU) 3{r} 3{d}
+
+At the start of your turn, destroy Never Yield then if you have no cards in hand, draw a card. If you have less {h} than all other heroes, gain 2{h}. If you control less equipment than all other heroes, remove a -1{d} counter from an equipment you control.
+
+Each conditional effect is independent of one another. You can meet the condition of none/any/all of them, generating their respective effects.
+
+Even if you do not meet any of the conditions for the effects, Never Yield is still destroyed at the start of your turn.
+
+You gain life if you have less life than each other individual hero, not just the highest life total hero or the total life total of all other heroes.
+
+You remove a -1{d} counter if control less equipment than each other individual hero, not just the hero with the most equipment or the total equipment controlled by all other heroes.
+
+—————————————————————
+
+Shield Bash
+
+Guardian Defense Reaction
+
+(RED/YEL/BLU) 3{r} 6/5/4{d}
+
+If a Guardian off-hand with 1 or more {d} is defending this chain link, deal 1 damage to the attacking hero unless they discard a card.
+
+The attacking hero may choose to discard a card to avoid being dealt 1 damage.
+
+The attacking hero can only choose to discard if they have a card in hand to discard. If they cannot discard a card (e.g. they have no cards in hand), they can not pay the cost and they will be dealt 1 damage.
+
+Shield Bash’s effect does not apply to the controller of an attacking ally as they are not an attacking hero. The controller of the attacking ally will neither discard nor will be dealt damage from resolving Shield Bash.
+
+—————————————————————
+
+Blessing of Patience
+
+Guardian Action – Aura
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+At the start of your turn, destroy Blessing of Patience then target hero gains 3/2/1{h}.
+
+Blessing of Patience triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+Target hero is determined at the time this triggers at the start of the turn, not when it is first played/put into the arena.
+
+You may target any hero, including yourself.
+
+—————————————————————
+
+Shield Wall
+
+Guardian Defense Reaction
+
+(RED/YEL/BLU) 6{r} 7/6/5{d}
+
+If you control a Guardian off-hand, Shield Wall has +4{d}.
+
+If you would no longer control a Guardian off-hand after Shield Wall resolves, Shield Wall would not lose its +4{d} effect.
+
+—————————————————————
+
+Reinforce Steel
+
+Guardian Action
+
+(RED/YEL/BLU) 2{r} 3{d}
+
+Remove a -1{d} counter from a Guardian off-hand you control with 3/2/1 or less base {d}.
+
+Base {d} is derived from the value printed on the card. -1{d} counters and other effects that modified {d} do not modify the base {d} value, unless otherwise specified.
+
+—————————————————————
+
+Withstand
+
+Guardian Instant
+
+(RED/YEL/BLU) 2{r}
+
+The next time target Guardian off-hand defends this turn, it gains +6/5/4{d} until the combat chain closes.
+
+You may target a Guardian off-hand controlled by any player, including yourself.
+
+You must declare the target when Withstand is played.
+
+Withstands effect does not apply to the target Guardian off-hand if it is already defending. It must be played/resolved before the Guardian off-hand becomes defending to gain the effect.
+
+—————————————————————
+
+## Ninja
+
+Blazen Yoroi
+
+Ninja Equipment – Chest
+
+1{d}
+
+While Blazen Yoroi is defending on chain link 4 or higher, it has +4{d}.
+
+Blade Break
+
+Players may close the combat chain by passing in succession with an empty stack after a chain link has resolved. If they do, the chain link number is “reset”.
+
+—————————————————————
+
+Tearing Shuko
+
+Ninja Equipment – Arms
+
+1{d}
+
+Instant — Destroy Tearing Shuko: The next Crouching Tiger you play this turn gains +2{p}.
+
+Battleworn
+
+Activating Tearing Shuko’s ability does not close the combat chain.
+
+—————————————————————
+
+Tiger Swipe
+
+Ninja Action – Attack
+
+(RED) 0{r} 2{p} 3{d}
+
+Combo – If Crouching Tiger was the last attack this combat chain, this has +2{p}, go again and “When this hits, create X Crouching Tigers in your banished zone, where X is the number of Crouching Tigers you control. You may play them this turn.”
+
+You only control cards that are in the arena (e.g. on the combat chain). Crouching Tigers in your banished zone are not considered under your control.
+
+Crouching Tiger is a card, and when it is created this way, it does not count towards the card limit for the format.
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Mindstate of Tiger
+
+Ninja Action – Aura
+
+(BLU) 0{r} 3{d}
+
+At the start of your turn, destroy Mindstate of Tiger then create a Crouching Tiger in your hand.
+
+Crouching Tiger is a card, and when it is created this way, it does not count towards the card limit for the format.
+
+—————————————————————
+
+Roar of the Tiger
+
+Ninja Action
+
+(YEL) 0{r} 3{d}
+
+Create a Crouching Tiger in your hand.
+
+Crouching Tigers you control gain +1{p} this turn.
+
+Go again
+
+Crouching Tiger is a card, and when it is created this way, it does not count towards the card limit for the format.
+
+—————————————————————
+
+Flex Claws
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 2{d}
+
+When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.
+
+Go again
+
+Crouching Tiger is a card, and when it is created this way, it does not count towards the card limit for the format.
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Blessing of Qi
+
+Ninja Action – Aura
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+At the start of your turn, destroy Blessing of Qi then create a Crouching Tiger in your banished zone. It gains +3/2/1{p} and you may play it this turn.
+
+Blessing of Qi triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+Crouching Tiger is a card, and when it is created this way, it does not count towards the card limit for the format.
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone and loses the +3/2/1{p} effect.
+
+—————————————————————
+
+Pouncing Qi
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Combo – If Crouching Tiger was the last attack this combat chain, Pouncing Qi has +1{p} and go again.
+
+—————————————————————
+
+Qi Unleashed
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 2{r} 3/2/1{p} 3{d}
+
+Combo – If Crouching Tiger was the last attack this combat chain, Qi Unleashed has +4{p}.
+
+—————————————————————
+
+Predatory Streak
+
+Ninja Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Create 3/2/a Crouching Tiger(s) in your banished zone. You may play them this turn.
+
+Go again
+
+Crouching Tiger is a card, and when it is created this way, it does not count towards the card limit for the format.
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Crouching Tiger
+
+Ninja Action – Attack
+
+0{r} 0{p}
+
+Ephemeral
+
+Go again
+
+Crouching Tiger has no pitch property, meaning it can not be pitched to gain resources.
+
+Crouching Tiger has no defense property, meaning it can not be used to defend with.
+
+Crouching Tiger is a card. If it is created by an effect, it spawns into the game and does not count towards the card limit for the format.
+
+Crouching Tiger is NOT a token, it can be put into any zone other than the graveyard (e.g. hand/deck/banished zone etc), without ceasing to exist.
+
+—————————————————————
+
+## Light Warrior
+
+Spirit of Eirina
+
+Light Warrior Action – Item
+
+(YEL) 0{r}
+
+Legendary
+
+If Spirit of Eirina would be put into your soul, instead put it into the arena.
+
+You may play Lumina Ascension as though it were an instant.
+
+Putting Spirit of Eirina into the arena instead of your soul is a replacement effect. There is no priority between when it would have been put into your soul and when it is put into the arena.
+
+Playing Lumina Ascension as an instant is optional. You may still declare to play Lumina Ascension as an action.
+
+If Spirit of Eirina is put into the soul because of a Charge effect, the card and you are still considered to have Charged for the purposes of game rules and effects.
+
+Effects that are conditional on the properties of Spirit of Eirina as it “would” be put into your soul only consider its properties, and not whether it was successfully put into the soul. E.g. If you would put Spirit of Eirina into your soul with Halo of illumination, it would instead enter the arena, you would still draw a card from Halo of illumination’s conditional effect.
+
+Effects that are conditional on whether a card has entered your soul would not consider Spirit of Eirina having put into your soul. E.g. If you would have put Spirit of Erina into your soul, it would instead enter the arena, and Vestige of Soul’s would not be active because Spirit of Eirina has not been put into your soul.
+
+—————————————————————
+
+## Warrior
+
+Jubeel, Spellbane
+
+Warrior Weapon – Sword (2H)
+
+3{p}
+
+Once per Turn Action — {r}: Attack
+
+Whenever this hits a hero and you don’t control a Spellbane Aegis, create a Spellbane Aegis token.
+
+The condition of whether you control a Spellbane Aedis token is checked at the time Jubeel, Spellbane hits. If you control a Spellbane Aegis token at the time Jubeel, Spellbane hits, this effect does not trigger.
+
+—————————————————————
+
+Merciless Battleaxe
+
+Warrior Weapon – Axe (2H)
+
+3{p}
+
+Once per Turn Action — {r}{r}{r}: Attack
+
+Whenever Merciless Battleaxe attacks, if its {p} is greater than twice its base {p}, the attack gains overpower.
+
+The power of the attack itself is compared to Merciless Battleaxe’s base power. Effects that specifically increase the power of the attack, are taken into account.
+
+The attack is what gains overpower, not Merciless Battleaxe. If you attack with Merciless Battleaxe multiple times, it will not retain the overpower gained from previous attacks’ with Merciless Battleaxe.
+
+“Greater” means “strictly more than”, meaning the power of the attack must be 7+{p}.
+
+—————————————————————
+
+Quicksilver Dagger
+
+Warrior Weapon – Dagger (1H)
+
+1{p}
+
+Once per Turn Action — {r}: Attack
+
+If another weapon you control has gained go again this turn, Quicksilver Dagger has go again.
+
+Giving a weapon attack go again essentially gives the weapon go again and meets the condition for this effect.
+
+Quicksilver Dagger does not have base go again. It is gained by meeting a condition.
+
+—————————————————————
+
+Cleave
+
+Warrior Action
+
+(RED) 1{r} 3{d}
+
+Your next axe attack this turn gains +4{p} and “When this hits a hero or ally, you may deal that much damage to another ally controlled by the same hero.”
+
+Go again
+
+The effects apply to the next axe attack only. They do not apply to any additional axe attacks made that turn.
+
+If you hit a hero, you can deal damage to an ally controlled by that hero. If you hit an ally, you can deal damage to a different ally controlled by the same hero that controls the ally you hit.
+
+—————————————————————
+
+Ironsong Pride
+
+Warrior Instant – Aura
+
+(RED) 1{r}
+
+Put a +1{p} counter on target sword you control.
+
+When Ironsong Pride leaves the arena, remove all +1{p} counters from swords you control.
+
+At the beginning of your end phase, if a sword has not hit this turn, destroy Ironsong Pride.
+
+When Ironsong Pride resolves as a layer on the stack (after being played), you put a +1{p} counter on target sword you control, and Ironsong Pride becomes a permanent in the arena.
+
+If Ironsong Pride is destroyed, banished, or otherwise leaves the arena (ceases to exist), its effect triggers.
+
+At the beginning of your end phase, if no swords have hit this turn, then Ironsong Pride will be destroyed when the triggered-layer resolves on the stack. If you control two swords and at least one of them hit this turn, Ironsong Pride will not be destroyed.
+
+—————————————————————
+
+Blessing of Steel
+
+Warrior Action – Aura
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+At the start of your turn, destroy Blessing of Steel then your next weapon attack this turn gains +3/2/1{p}.
+
+Blessing of Steel triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+The effect applies to the next weapon attack only. It does not apply to any additional weapon attacks made that turn.
+
+—————————————————————
+
+Precision Press
+
+Warrior Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Your next sword or dagger attack this turn has go again and piercing 3/2/1.
+
+Go again
+
+The effects apply to the next sword or dagger attack only. They do not apply to any additional sword or dagger attacks made that turn.
+
+—————————————————————
+
+Puncture
+
+Warrior Attack Reaction
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Target sword or dagger attack gains +3/2/1{p} and piercing 1.
+
+The effects apply to the sword or dagger attack only. They do not apply to any additional sword or dagger attacks made that turn.
+
+—————————————————————
+
+Felling Swing
+
+Warrior Action
+
+(RED/YEL/BLU) 3{r} 3{d}
+
+Your next axe attack this turn gains +6/5/4{p}.
+
+Go again
+
+The effect applies to the next axe attack only. It does not apply to any additional axe attacks made that turn.
+
+—————————————————————
+
+Visit the Imperial Forge
+
+Warrior Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Sword and dagger attacks have piercing 3/2/1 this turn.
+
+Go again
+
+This effect applies to all sword and dagger attacks this turn, not just sword and dagger attacks controlled by you.
+
+—————————————————————
+
+## Mechanologist
+
+Hanabi Blaster
+
+Mechanologist Weapon – Gun (2H)
+
+5{p}
+
+Once per Turn Action — Remove 2 steam counters from Hanabi Blaster: Attack
+
+Overpower
+
+The third time you play a card with boost each turn, put a steam counter on Hanabi Blaster.
+
+Hanabi Blaster triggers only once per turn, and only on the third time you play a card with boost.
+
+Hanabi Blaster considers when you play a card with boost, not when you boost. You do not have to pay the boost cost for any cards for it to count towards triggering the ability.
+
+There is no limit to the number of steam counters that can be put on Hanabi Blaster.
+
+—————————————————————
+
+Galvanic Bender
+
+Mechanologist Equipment – Arms
+
+1{d}
+
+Material – While this is under a permanent, that permanent has +1{p}.
+
+Battleworn
+
+If Galvanic Bender is transformed into a permanent, it is put underneath that permanent which then gains the +1{p}.
+
+While Galvanic Bender is underneath a permanent, it can not be targeted by effects and is not considered to be controlled by any player (you can not defend with it).
+
+If the permanent on top of Galvanic Bender is destroyed or otherwise removed from the arena, the Galvanic Bender put into the graveyard.
+
+—————————————————————
+
+Pulsewave Harpoon
+
+Mechanologist Action – Attack
+
+(RED) 1{r} 4{p} 3{d}
+
+When this attacks a hero, they reveal X cards from their hand, where X is the number of times you’ve boosted this combat chain. Choose an action card with {d} less than or equal to X then add it to this chain link as a defending card.
+
+Boost
+
+It does not matter if the boost is successful or not – the number of times you’ve boosted this combat chain is the number of times you’ve paid for a boost cost by banishing a card.
+
+Pulsewave Harpoon counts itself towards its effect if it was boosted when it was played.
+
+The defending hero chooses which cards they reveal. If X is greater than the number of cards in their hand, they reveal their whole hand. If X is zero, no cards are revealed.
+
+The card to add to this chain link must be an action card with a {d} property. Cards that are not action cards or do not have the {d} property, can not be added as a defending card.
+
+The card chosen must be selected from the cards revealed by Pulsewave Harpoon if possible (it is not optional). If no cards are revealed, no card can be chosen.
+
+Adding a card to the chain link this way is not considered as that hero “defending” and does not trigger “when you/this defend(s)” effects.
+
+—————————————————————
+
+Bios Update
+
+Mechanologist Action
+
+(RED) 0{r} 3{d}
+
+The next attack action card you boost this turn gains +3{p}.
+
+The next time a Mechanologist item with cost 2 or less is banished to pay a boost cost this turn, put it into the arena.
+
+Go again
+
+The second effect is not optional. If you banish a Mechanologist item with cost 2 or less as part of paying a boost cost, it is put into the arena.
+
+The second effect lasts until the trigger condition is met or the end of the turn.
+
+—————————————————————
+
+Construct Nitro Mechanoid // Nitro Mechanoid
+
+Mechanologist Action – Construct // Mechanologist Weapon Equipment – Item
+
+(YEL) 4{r} 3{d} // 5{p} 5{d}
+
+Transform target Mechanologist head, chest, arms, legs, weapon and 3 Hyper Drivers you control into Nitro Mechanoid. If you don’t, negate this.
+
+Go again
+
+//
+
+Action – Banish a card from under Nitro Mechanoid: Attack
+
+Overpower
+
+Temper
+
+If Construct Nitro Mechanoid does not transform ALL of the Mechanologist head, chest, arms, legs, weapon and 3 Hyper Drivers that are targeted, it negates itself and all of the targets remain unchanged.
+
+The cards that are transformed this way go underneath Nitro Mechanoid. They are not considered to be in the arena, and their abilities are not functional unless they specify otherwise.
+
+If there are no cards beneath Nitro Mechanoid, it can not attack using its activated ability.
+
+If an opponent takes control of Nitro Mechanoid, cards underneath Nitro Mechanoid remain underneath the card. If the cards that are banished to attack, they are banished to their owner’s banished zone
+
+—————————————————————
+
+Plasma Mainline
+
+Mechanologist Action – Item
+
+(RED) 2{r}
+
+Plasma Mainline enters the arena with 5 steam counters on it. When it has no steam counters, destroy it.
+
+When a Mechanologist item with cost 2 or less enters the arena under your control, you may move a steam counter from Plasma Mainline to that item.
+
+Plasma Mainline’s triggered effect is optional. You may still move a steam counter from Plasma Mainline onto the Mechanologist item with cost 2, even if it does not use steam counters.
+
+—————————————————————
+
+Powder Keg
+
+Mechanologist Action – Item
+
+(BLU) 0{r}
+
+Whenever a Mechanologist gun you control hits, you may destroy Powder Keg and a defending equipment.
+
+A pistol is not a gun.
+
+Powder Keg’s triggered effect is optional.
+
+The defending equipment does not have to be defending the Mechanologist gun attack that has it.
+
+The equipment is chosen when the triggered effect resolves. There is no priority between destroying Powder Keg and choosing and destroying the defending equipment.
+
+—————————————————————
+
+Scramble Pulse
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 2{r} 5/4/3{p} 3{d}
+
+Equipment have -1{d} while defending this combat chain.
+
+Boost
+
+This effect only applies while Scramble Pulse is attacking on the combat chain. If it is defending or put into the deck after its chain link resolves, its effect is no longer active.
+
+This effect applies to all equipment defending this combat chain, not just equipment defending on Scramble Pulse’s chain link.
+
+Defending equipment have -1{d} when the combat chain closes. If an equipment with Temper has 0{d} after this effect is applied, when the combat chain closes, the equipment will be destroyed.
+
+—————————————————————
+
+Blessing of Ingenuity
+
+Mechanologist Action – Aura
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+At the start of your turn, destroy Blessing of Ingenuity then put up to 3/2/1 Hyper Drivers from your graveyard and/or banished zone into the arena.
+
+Blessing of Ingenuity triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+You may choose a combination of Hyper Driver cards from banished zone and graveyard to put into the arena.
+
+The part of the trigger effect that destroys Blessing of Ingenuity is not optional. The part of the effect that puts Hyper Drivers into the arena is optional. You may choose to put 0 Hyper Drivers into the arena.
+
+—————————————————————
+
+Crankshaft
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 2{r} 5/4/3{p} 3{d}
+
+When Crankshaft is banished to pay a boost cost, put a steam counter on a Hyper Driver you control.
+
+Boost
+
+You may order the Hyper Driver’s triggered effect to resolve after Crankshaft’s triggered effect to prevent it from being destroyed due to having no steam counters on it.
+
+Crankshaft only triggers when it is banished to pay a boost cost. If it is banished in any other way, it’s effect does not trigger.
+
+—————————————————————
+
+Jump Start
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 2{r} 5/4/3{p} 3{d}
+
+If you control a Hyper Driver, Jump Start costs {r} less to play.
+
+Boost
+
+You do not have to boost Jump Start to gain the {r} cost reduction.
+
+—————————————————————
+
+Urgent Delivery
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+When this hits, you may put a Mechanologist item from your hand into the arena with cost less than or equal to the number of times you’ve boosted this combat chain.
+
+If you have not boosted this combat chain, you may still put a Mechanologist item from your hand with cost 0 into the arena.
+
+—————————————————————
+
+Hyper Driver
+
+Mechanologist Action – Item
+
+(YEL/BLU) 1{r}
+
+Hyper Driver enters the arena with 2/1 steam counters on it. When it has no steam counters, destroy it.
+
+Once per turn, when you boost a card, remove a steam counter from Hyper Driver and gain {r}.
+
+—————————————————————
+
+## Assassin
+
+Arakni, Huntsman/Arakni
+
+Assassin Hero/Assassin Hero – Young
+
+4{i} 40/20{h}
+
+Whenever you play a card with contract, you may look at the top card of target opponent’s deck. You may put it on the bottom.
+
+Arakni’s triggered effect may trigger more than once per turn.
+
+The target opponent does not have to be the same as the target of an attack with contract.
+
+—————————————————————
+
+Spider’s Bite
+
+Assassin Weapon – Dagger (1H)
+
+1{p}
+
+Once per Turn Action — {r}{r}: Attack. Go again
+
+Piercing 1
+
+When this hits a hero, the next time they defend with 1 or more attack action cards this turn, those cards have -1{d} while defending.
+
+If a hero is hit two or more times by Spider’s Bite and has not yet defended, the effects stack and the next time they defend with 1 or more attack action cards this turn, those cards have -1{d} for each time they were hit by a Spider’s Bite.
+
+—————————————————————
+
+Blacktek Whisperers
+
+Assassin Equipment – Legs
+
+1{d}
+
+While Blacktek Whisperers is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip Blacktek Whisperers.
+
+Attack Reaction — Destroy Blacktek Whisperers: Target Assassin attack action card gains “When this hits a hero, it gains go again.”
+
+Battleworn
+
+Any -1{d} counters are removed from the Blacktek Whisperers when it goes to the graveyard. If it is then equipped, it will not have any -1{d} counters on it.
+
+Blacktek Whisperers’ triggered effect triggers at the start of the turn and can not be responded to.
+
+—————————————————————
+
+Mask of Perdition
+
+Assassin Equipment – Head
+
+1{d}
+
+While Mask of Perdition is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip Mask of Perdition.
+
+Attack Reaction — Destroy Mask of Perdition: Target Assassin attack action card gains “When this hits a hero, banish the top card of their deck.”
+
+Battleworn
+
+Any -1{d} counters are removed from the Mask of Perdition when it goes to the graveyard. If it is then equipped, it will not have any -1{d} counters on it.
+
+Mask of Perdition’s triggered effect triggers at the start of the turn and can not be responded to.
+
+—————————————————————
+
+Eradicate
+
+Assassin Action – Attack
+
+(YEL) 1{r} 4{p} 3{d}
+
+Contract – You are contracted to banish opponents’ yellow cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top X cards of their deck, where X is the damage dealt by Eradicate.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+Banishing multiple yellow cards at the same time completes this contract that many times. I.e. the contract is completed with each yellow card banished.
+
+—————————————————————
+
+Leave No Witnesses
+
+Assassin Action – Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+Contract – You are contracted to banish opponents’ red cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck and up to 1 card in their arsenal.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+Banishing multiple red cards at the same time completes this contract that many times. I.e. the contract is completed with each red card banished.
+
+The attacking player may choose to banish 0 cards from arsenal. If they banish a card from arsenal, the card turned face-up before it is moved to the banished zone. Cards turned face up this do not count as a reveal for the purposes of game rules and effects.
+
+—————————————————————
+
+Regicide
+
+Assassin Action – Attack
+
+(BLU) 0{r} 3{p} 3{d}
+
+Legendary Arakni Specialization
+
+When this hits a Royal hero, they lose the game.
+
+When the combat chain closes, you lose the game.
+
+Regicide can’t be defended by cards with the same name as cards in the defending hero’s banished zone.
+
+If all of your opponents lose the game, you win the game.
+
+Defending with Regicide does not make its triggered ability functional – you do not lose the game when the combat chain closes.
+
+The defending hero can not play defence reaction cards against Regicide if they have the same name as a card in their banished zone.
+
+You come at the king, you best not miss.
+
+—————————————————————
+
+Surgical Extraction
+
+Assassin Action – Attack
+
+(BLU) 2{r} 4{p} 3{d}
+
+Contract – You are contracted to banish opponents’ blue cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck, then look at their hand and banish a card.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+Banishing multiple blue cards at the same time completes this contract that many times. I.e. the contract is completed with each blue card banished.
+
+—————————————————————
+
+Pay Day
+
+Assassin Action
+
+(BLU) 0{r} 3{d}
+
+If you’ve completed a contract this turn, create 4 Silver tokens.
+
+This condition is checked at the time Pay Day resolves. If you complete a contract later in the turn, you do not create 4 Silver tokens.
+
+—————————————————————
+
+Plunder the Poor
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+Contract – You are contracted to banish opponents’ cards with cost 1 or less. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+Banishing an opponent’s card with a cost including X (e.g. Sonata Arcanix) will count towards completing Plunder the Poor’s contract. If the value of X is not declared, such as when the card is banished straight from the player’s deck or hand, the value is X is considered to be 0.
+
+Banishing an opponent’s card without a cost value (e.g. Heart of Fyendal) does not complete the contract for Plunder the Poor, as it has no cost property.
+
+—————————————————————
+
+Rob the Rich
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+Contract – You are contracted to banish opponents’ cards with cost 2 or greater. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+—————————————————————
+
+Shred
+
+Assassin Attack Reaction
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Target card defending an Assassin attack gets -4/3/2{d} this combat chain.
+
+If you target a defending equipment with Temper and its {d} is reduced to 0, it will be destroyed when the combat chain closes.
+
+—————————————————————
+
+Annihilate the Armed
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+Contract – You are contracted to banish opponents’ attack action cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+—————————————————————
+
+Fleece the Frail
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+Contract – You are contracted to banish opponents’ cards with 2 or less {d}. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+Banishing an opponent’s card without a defense value (e.g. Heart of Fyendal) does not complete the contract for Fleece the Frail, as it has no defense property.
+
+—————————————————————
+
+Nix the Nimble
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+Contract – You are contracted to banish opponents’ reaction cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+—————————————————————
+
+Sack the Shifty
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+Contract – You are contracted to banish opponents’ cards with base go again. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+The condition that the card has base go again refers to whether the card is printed with go again or not. The card banished must simply have “go again” written in their text box, without being conditional (preceded by a condition) or having been granted by an effect.
+
+—————————————————————
+
+Slay the Scholars
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+Contract – You are contracted to banish opponents’ ‘non-attack’ action cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+To banish an opponent’s cards, you must be the one instructed by an effect to do the banishing. If an opponent is instructed by an effect to banish a card, it does not complete the contract because YOU are not banishing an opponent’s card.
+
+This contract can be completed any number of times, as long as this is face-up in the arena.
+
+—————————————————————
+
+Cut to the Chase
+
+Assassin Attack Reaction
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Target Assassin attack action card with contract gains +3/2/1{p}.
+
+Look at the top card of the defending hero’s deck. You may put it on the bottom.
+
+If there is no defending hero this chain link, you do not look at any hero’s deck.
+
+—————————————————————
+
+## Ranger
+
+Sandscour Greatbow
+
+Ranger Weapon – Bow (2H)
+
+Once per Turn Action — {r}: Look at the top card of your deck. You may put an arrow from your hand or the top of your deck face up into your arsenal. Go again
+
+Whenever an arrow is put face up in arsenal from your deck, put an aim counter on it.
+
+The effect is optional. You may choose not to put an arrow into your arsenal.
+
+If you have no empty arsenal zones, you can not put an arrow into your arsenal (the effect simply fails).
+
+If your deck is not empty and you cannot look at the top of your deck, you can not attempt to put the top card of your deck face up in arsenal.
+
+Aim counters are removed from objects when they are turned face down or are moved into any zone other than the stack or a zone in the arena.
+
+An aim counter has no specific rules or meaning other than being a marker for other effects to apply to the object.
+
+—————————————————————
+
+Hornet’s Sting
+
+Ranger Equipment – Arms
+
+1{d}
+
+Whenever Hornet’s Sting defends, reveal the top card of your deck. If it’s an arrow, deal 1 damage to the attacking hero or ally. Otherwise, put it on the bottom of your deck.
+
+Blade Break
+
+If the damage dealt by Hornet’s Sting kills an attacking Ally, the combat chain closes before the reaction step begins and any damage is dealt.
+
+—————————————————————
+
+Heat Seeker
+
+Ranger Action – Arrow Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+When this hits, at the beginning of your end phase, put the top card of your deck face up into your arsenal.
+
+This triggered effect is not optional. You must put the top card of your deck into your arsenal if it is empty. If you have no empty arsenal zones, you can not put the top card of your deck into your arsenal (the effect simply fails).
+
+At the beginning of the end phase triggers before you would put a card into your arsenal from your hand.
+
+—————————————————————
+
+Immobilizing Shot
+
+Ranger Action – Arrow Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+If Immobilizing Shot has an aim counter, it has “When this hits a hero, they can’t play more than 1 attack action card and 1 ‘non attack’ action card during their next action phase.”
+
+The affected hero can still play and activate instant and reaction cards as they are not actions.
+
+Multiple action points do not get around this ability. The affected player may only play or activate 1 attack action card and 1 ‘non-attack’ action card even if they have additional action points.
+
+Actions played as though they were an instant still count as action cards. Playing a ‘non-attack’ action card as though it was an instant does not allow the player to play more than one ‘non-attack’ action card after being hit by Immobilizing Shot.
+
+Multiple aim counters do not give this multiple instances of its ability.
+
+—————————————————————
+
+Dead Eye
+
+Ranger Action
+
+(YEL) 1{r} 3{d}
+
+Your next arrow attack this turn gains +3{p}.
+
+If it has an aim counter, it gains “When this hits a hero, look at their hand and choose a card. They discard it.”
+
+Go again
+
+The next arrow attack is the one that is checked for an aim counter.
+
+Multiple aim counters do not give this multiple instances of the ability.
+
+—————————————————————
+
+Drill Shot
+
+Ranger Action – Arrow Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+If Drill Shot has an aim counter, it has piercing 1.
+
+When this hits a hero, put a -1{d} counter on an equipment they control.
+
+Multiple aim counters do not give this multiple instances of piercing 1.
+
+—————————————————————
+
+Blessing of Focus
+
+Ranger Action – Aura
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+At the start of your turn, destroy Blessing of Focus then opt 3/2/1 and reveal the top card of your deck. If it’s an arrow, put it face up into your arsenal with an aim counter.
+
+Blessing of Focus triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+This triggered effect is not optional. You must put the top card of your deck into your arsenal if it is empty. If you have no empty arsenal zones, you can not put the top card of your deck into your arsenal (the effect simply fails).
+
+If your deck is not empty and you cannot reveal the top of your deck, you can not attempt to put the top card of your deck face up in arsenal.
+
+Aim counters are removed from objects when they are turned face down or are moved into any zone other than the stack or a zone in the arena.
+
+An aim counter has no specific rules or meaning other than being a marker for other effects to apply to the object.
+
+—————————————————————
+
+Hemorrhage Bore
+
+Ranger Action – Arrow Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+If Hemorrhage Bore has an aim counter, it has “When this hits a hero, destroy a card in their arsenal.”
+
+If the hero hit has two or more cards in their arsenal, you choose which one you want to destroy when the hit trigger resolves.
+
+Multiple aim counters do not give this multiple instances of its ability.
+
+—————————————————————
+
+Long Shot
+
+Ranger Action – Arrow Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+If Long Shot has an aim counter, it has +2{p}.
+
+Multiple aim counters do not give this multiple instances of+2{p}.
+
+—————————————————————
+
+Point the Tip
+
+Ranger Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Target face up arrow in your arsenal gains +3/2/1{p} until end of turn. Put an aim counter on it.
+
+Go again
+
+Aim counters are removed from objects when they are turned face down or are moved into any zone other than the stack or a zone in the arena.
+
+An aim counter has no specific rules or meaning other than being a marker for other effects to apply to the object.
+
+—————————————————————
+
+## Runeblade
+
+Amethyst Tiara
+
+Runeblade Equipment – Head
+
+1{d}
+
+Instant — Destroy Amethyst Tiara: Runechants you control have spellvoid 1 this turn.
+
+Blade Break
+
+—————————————————————
+
+Annals of Sutcliffe
+
+Runeblade Weapon – Book (2H)
+
+Once per Turn Action — {r}{r}{r}: Draw a card. If an attack action card and a ‘non-attack’ action card were pitched this way, create a Runechant token.
+
+You may only pitch cards if there is a cost to pay. If you pitch a single card to pay for this, and there are no more resources to pay for, you can not pitch another card to gain the additional effect.
+
+You must pitch the card as part of the cost to pay to gain the additional effect. Having an attack or ‘non-attack’ action card in your pitch zone that you pitched for a different cost does not grant the additional effect.
+
+Annals of Sutcliffe does not have an attack ability or go again.
+
+—————————————————————
+
+Cryptic Crossing
+
+Runeblade Action – Attack
+
+(YEL) 3{r} 6{p} 3{d}
+
+If an attack action card and a ‘non-attack’ action card were pitched to play Cryptic Crossing, it has “The first time this deals damage to the defending hero, they discard a card and you draw a card.”
+
+You may only pitch cards if there is a cost to pay. If you pitch a single card to pay for this, and there are no more resources to pay for, you can not pitch another card to gain the additional effect.
+
+You must pitch the card as part of the cost to pay to gain the additional effect. Having an attack or ‘non-attack’ action card in your pitch zone that you pitched for a different cost does not grant the additional effect.
+
+The triggered effect only triggers once. If this deals damage to the defending hero more than once, it will not trigger any additional times.
+
+—————————————————————
+
+Diabolic Ultimatum
+
+Runeblade Action
+
+(RED) 3{r} 2{d}
+
+If an attack action card was pitched to play Diabolic Ultimatum, each hero chooses and destroys an ally they control.
+
+If a ‘non-attack’ action card was pitched to play Diabolic Ultimatum, each hero chooses and destroys an aura they control.
+
+You may only pitch cards if there is a cost to pay. If you pitch a single card to pay for this, and there are no more resources to pay for, you can not pitch another card to gain the additional effect.
+
+You must pitch the card as part of the cost to pay to gain the additional effect. Having an attack or ‘non-attack’ action card in your pitch zone that you pitched for a different cost does not grant the additional effect.
+
+The turn player chooses and destroys their choice first. If both conditions are met, all allies are chosen and destroyed first, then all auras are chosen and destroyed.
+
+—————————————————————
+
+Looming Doom
+
+Runeblade Action – Aura
+
+(BLU) 3{r} 3{d}
+
+When Looming Doom enters the arena, destroy all Runechants you control and put that many doom counters on Looming Doom.
+
+At the beginning of your end phase, remove a doom counter from Looming Doom. If you do, deal 2 arcane damage to any target. Otherwise, destroy Looming Doom.
+
+Looming Doom still stays in play when the last counter is removed, it is only destroyed when you cannot remove a counter.
+
+There is no priority during the end phase. You can not play cards or activate abilities to gain resources (Energy Potion) or to prevent damage (Oasis Respite) during this phase (you may do so during the action phase, before the end phase). Only effects that are already active can prevent the damage (Arcane barrier, Spellvoid etc.).
+
+Runechants trigger when you play an attack action card or activate a weapon attack. They are only destroyed when that trigger resolves. You can play Looming Doom (if you can do so at instant speed) after a Runechant has triggered, but before it is destroyed by its own trigger, to use them for Looming Doom – the trigger will still resolve and deal 1 damage.
+
+Looming Doom triggers at the the beginning of your end phase. As the turn player, you may order the resolution of triggered effects. E.g. You may choose to resolve Looming Doom’s arcane damage before Spellbound Creepers checks if you’ve dealt arcane damage this turn.
+
+—————————————————————
+
+Deathly Duet
+
+Runeblade Action – Attack
+
+(RED/YEL/BLU) 2{r} 4/3/2{p} 3{d}
+
+When Deathly Duet attacks, if an attack action card was pitched to play it, it gains +2{p}. If a ‘non-attack’ action card was pitched to play it, create 2 Runechant tokens.
+
+You may only pitch cards if there is a cost to pay. If you pitch a single card to pay for this, and there are no more resources to pay for, you can not pitch another card to gain the additional effect.
+
+You must pitch the card as part of the cost to pay to gain the additional effect. Having an attack or ‘non-attack’ action card in your pitch zone that you pitched for a different cost does not grant the additional effect.
+
+—————————————————————
+
+Blessing of Occult
+
+Runeblade Action – Aura
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+At the start of your turn, destroy Blessing of Occult then create 3/2/a Runechant token(s).
+
+Blessing of Occult triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+—————————————————————
+
+Aether Slash
+
+Runeblade Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 3{d}
+
+When Aether Slash attacks, if a ‘non-attack’ action card was pitched to play it, deal 1 arcane damage to any target.
+
+You may only pitch cards if there is a cost to pay. If you pitch a single card to pay for this, and there are no more resources to pay for, you can not pitch another card to gain the additional effect.
+
+You must pitch the card as part of the cost to pay to gain the additional effect. Having a ‘non-attack’ action card in your pitch zone that you pitched for a different cost does not grant the additional effect.
+
+—————————————————————
+
+Runic Reaping
+
+Runeblade Action
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+The next Runeblade attack action card you play this turn gains “When this hits, create 3/2/a Runechant token(s)”.
+
+If an attack action card was pitched to play Runic Reaping, the next Runeblade attack action card you play this turn gains +1{p}.
+
+Go again
+
+You may only pitch cards if there is a cost to pay. If you pitch a single card to pay for this, and there are no more resources to pay for, you can not pitch another card to gain the additional effect.
+
+You must pitch the card as part of the cost to pay to gain the additional effect. Having an attack action card in your pitch zone that you pitched for a different cost does not grant the additional effect.
+
+—————————————————————
+
+Sky Fire Lanterns
+
+Runeblade Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Reveal the top card of your deck. If it’s red/yellow/blue, create a Runechant token.
+
+Go again
+
+—————————————————————
+
+## Wizard
+
+Surgent Aethertide
+
+Wizard Weapon – Staff (2H)
+
+Once per Turn Action — {r}{r}: Deal 1 arcane damage to an opposing hero. Go again
+
+The first card you play each turn with an arcane damage effect, instead deals that much arcane damage plus X, where X is the damage dealt by Surgent Aethertide this turn.
+
+If Surgent Aethertide deals no damage, it does not grant any benefit to the first card you play each turn.
+
+If you play, but do not resolve a card with an arcane damage effect, then activate Surgent Aethertide and deal damage with it, it will retroactively apply the effect to that unresolved card.
+
+If you play and resolve a card with an arcane damage effect before activating Surgent Aethertide, it will not retroactively apply the effect and will not apply to the next card you play with an arcane damage effect.
+
+The card with the arcane damage effect does not have to target the same opposing hero that Surgent Aethertide dealt damage to in order to gain the effect.
+
+—————————————————————
+
+Seerstone
+
+Wizard Weapon – Orb (2H)
+
+Action — {r}{r}{r}: Look at the top card of your deck. You may put it on the bottom. Create a Ponder token.
+
+Seerstone activation is not limited to once per turn. If you have additional action points (and resources) you can activate it as many times as you want.
+
+This is not an opt effect.
+
+Even if you have no cards in your deck, you must still create a Ponder token.
+
+—————————————————————
+
+Mind Warp
+
+Wizard Action
+
+(YEL) 0{r} 3{d}
+
+Deal 2 arcane damage to target hero.
+
+Surge – If this deals more than 2 damage to a hero, they shuffle their hand into their deck, then they draw that many cards minus 1.
+
+If they do not have any cards in their hand, they still shuffle their deck – in this case, they would not draw any cards.
+
+If they have no cards in their deck zone, they still shuffle their hand into their deck, then draw that many cards minus 1.
+
+You must deal more than that much damage (after prevention effects have been applied) for the surge condition to be met.
+
+The surge effect is not a triggered effect. There is no priority between dealing damage and the surge effect resolving.
+
+—————————————————————
+
+Swell Tidings
+
+Wizard Action
+
+(RED) 2{r} 3{d}
+
+Deal 5 arcane damage to target hero.
+
+Surge – If this deals more than 5 damage, create a Ponder token.
+
+You must deal more than that much damage (after prevention effects have been applied) for the surge condition to be met.
+
+The surge effect is not a triggered effect. There is no priority between dealing damage and the surge effect resolving.
+
+—————————————————————
+
+Brainstorm
+
+Wizard Instant
+
+(BLU) 3{r}
+
+Until end of turn, your hero gains “Whenever you draw a card this action phase, deal 1 arcane damage to any target”.
+
+If you draw multiple cards from a single effect, the ability would trigger multiple times, once for each card drawn this way. Each triggered effect can have different targets.
+
+If you play multiple Brainstorms, your hero would gain multiple instances of the triggered ability.
+
+If the hero loses their abilities due to an effect, but is not prevented from gaining abilities (e.g. Sleep Dart), it does not prevent the hero from gaining the ability from Brainstorm.
+
+Brainstorm can not typically be modified by (most) arcane damage modifiers.
+
+—————————————————————
+
+Aether Quickening
+
+Wizard Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Deal 4/3/2 arcane damage to target hero.
+
+Surge – If this deals more than 4/3/2 damage, it gains go again.
+
+You must deal more than that much damage (after prevention effects have been applied) for the surge condition to be met.
+
+The surge effect is not a triggered effect. There is no priority between dealing damage and the surge effect resolving.
+
+—————————————————————
+
+Blessing of Aether
+
+Wizard Action – Aura
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+At the start of your turn, destroy Blessing of Aether then if the next card you play this turn has an arcane damage effect, instead it deals that much arcane damage plus 3/2/1.
+
+Blessing of Aether triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+If the next card you play this turn does not have an arcane damage effect, it would still consume the effect, but to no benefit.
+
+—————————————————————
+
+Prognosticate
+
+Wizard Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Deal 3 arcane damage to target hero.
+
+Surge – If this deals more than 3/2/1 damage, opt 1.
+
+You must deal more than that much damage (after prevention effects have been applied) for the surge condition to be met.
+
+The surge effect is not a triggered effect. There is no priority between dealing damage and the surge effect resolving.
+
+—————————————————————
+
+Sap
+
+Wizard Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Deal 3/2/1 arcane damage to target hero.
+
+Surge – If this deals more than 3/2/1 damage to a hero, you may remove an energy counter from a permanent they control.
+
+You must deal more than that much damage (after prevention effects have been applied) for the surge condition to be met.
+
+The surge effect is not a triggered effect. There is no priority between dealing damage and the surge effect resolving.
+
+The surge effect is not a targeted effect. The player who played Sap determines which permanent to remove an energy counter from when Sap resolves.
+
+—————————————————————
+
+Tempest Aurora
+
+Wizard Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+The next card you play this turn with cost 2/1/0 (or less) and an arcane damage effect, instead deals that much arcane damage plus 1.
+
+Go again
+
+If you play a card that does not have the specified cost, or does not have an arcane damage effect, it does not consume the effect.
+
+Cards with costs that include X, are considered to have the cost determined by the player that plays it. E.g. If the card has cost X, and player declares X=2 when playing the card, the card is considered to have cost 2 for the purposes of this effect.
+
+—————————————————————
+
+## Light Illusionist
+
+Invoke Suraya // Suraya, Archangel of Knowledge
+
+Light Illusionist Action – Invocation // Light Illusionist – Angel Ally
+
+(YEL) 2{r} 3{d} // 4{p} 4{h}
+
+Legendary
+
+Transform target Spectral Shield you control into Suraya, Archangel of Knowledge.
+
+Go again
+
+//
+
+Once per Turn Action – {r}{r}: Attack. Whenever Suraya attacks, you may banish a Light card from you hero’s soul. If you do, Suraya deals 1 arcane damage to any target.
+
+Whenever Suraya deals damage, you gain that much {h}.
+
+Ward 4
+
+If the target Spectral Shield becomes an illegal target when this resolves (e.g. if it doesn’t exist anymore), this will not resolve and you will not gain an action point.
+
+Suraya, Archangel of Knowledge is an ally and can be the target of attacks.
+
+If Suraya, Archangel of Knowledge is destroyed while it is attacking, but before the chain link resolves, the combat chain closes.
+
+—————————————————————
+
+## Illusionist
+
+Celestial Kimono
+
+Illusionist Equipment – Chest
+
+Once per turn, when Celestial Kimono or a non-token permanent you control with ward is destroyed, gain {r}.
+
+Ward 1
+
+Celestial Kimono can only trigger once per turn, even if both a non-token permanent and Celestial Kimono are destroyed in the same turn.
+
+Celestial Kimono does not have the defense property and can not be declared as defending card.
+
+—————————————————————
+
+Wave of Reality
+
+Illusionist Equipment – Arms
+
+When Wave of Reality is destroyed, create a Spectral Shield token.
+
+Ward 1
+
+Wave of Reality does not have the defense property and can not be declared as defending card.
+
+—————————————————————
+
+Phantasmal Symbiosis
+
+Illusionist Action – Attack
+
+(YEL) 1{r} 6{p} 3{d}
+
+When this attacks, name a card. Cards with that name are Illusionist until end of turn.
+
+Phantasm
+
+Phantasm only triggers when the attack defends a non-illusionist 6+ {p} attack. If a card with the chosen name defends against an attack with Phantasm, it does not trigger Phantasm even if it has 6 or more {p}.
+
+A named card being Illusionist does not remove any existing class or talent supertypes it has.
+
+—————————————————————
+
+Spectral Procession
+
+Illusionist Action – Attack
+
+(RED) 0{r} *{p} 3{d}
+
+Spectral Procession’s {p} is equal to the number of Spectral Shields you control.
+
+Phantasm
+
+Spectral Procession’s power is defined wherever it is in the game. Outside of the game its power is considered to be 0.
+
+Spectral Procession’s power is constantly being evaluated. If you create a Spectral Shield after playing Spectral Procession, its power will increase. If you lose a Spectral Shield after playing Spectral Procession, its power will decrease.
+
+—————————————————————
+
+Tome of Aeo
+
+Illusionist Action – Aura
+
+(BLU) 1{r} 2{d}
+
+At the beginning of your action phase, destroy Tome of Aeo then draw a card.
+
+Ward 1
+
+Tome of Aeo triggers at the beginning of your action phase. Players can play cards or activate abilities before Tome of Aeo’s trigger-layer resolves off the stack.
+
+—————————————————————
+
+Blessing of Spirits
+
+Illusionist Action – Aura
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+At the start of your turn, destroy Blessing of Spirits then create 3/2/a Spectral Shield token(s).
+
+Ward 1
+
+Blessing of Spirits triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+—————————————————————
+
+Tranquil Passing
+
+Illusionist Action – Aura
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+When Tranquil Passing enters the arena, you may banish target aura token or aura permanent with cost 3/2/1 or less controlled by an opponent until Tranquil Passing leaves the arena.
+
+Ward 1
+
+A card or token with a triggered effect that has a triggering condition when it enters the arena may trigger when it returns to the arena after Tranquil Passing leaves the arena.
+
+A card banished this way returns to the arena immediately after Tranquil Passing leaves the arena. There is no priority between the two events.
+
+If you banish a token with Tranquil Passing, the token ceases to exist and does not return when Tranquil Passing leaves the arena.
+
+You may banish any target aura token (token’s typically don’t have a cost), but can only banish non-token aura tokens with the specified cost.
+
+—————————————————————
+
+Spectral Prowler
+
+Illusionist Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+When you play Spectral Prowler, if you control a Spectral Shield, this gains go again.
+
+Phantasm
+
+The condition of controlling a Spectral Shield is evaluated after Spectral Prowler is played but before it becomes attacking.
+
+If you create a Spectral Shield after Spectral Prowler is played, but before the trigger resolves, Spectral Prowler will gain go again.
+
+If you create a Spectral Shield after the trigger resolves, Spectral Prowler does not retroactively gain go again.
+
+—————————————————————
+
+Spectral Rider
+
+Illusionist Action – Attack
+
+(RED/YEL/BLU) 3{r} 8/7/6{p} 3{d}
+
+When you play Spectral Rider, if you control a Spectral Shield, this gains overpower.
+
+Phantasm
+
+The condition of controlling a Spectral Shield is evaluated after Spectral Rider is played but before it becomes attacking.
+
+If you create a Spectral Shield after Spectral Rider is played, but before the trigger resolves, Spectral Rider will gain overpower.
+
+If you create a Spectral Shield after the trigger resolves, Spectral Rider does not retroactively gain overpower.
+
+—————————————————————
+
+Water Glow Lanterns
+
+Illusionist Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Reveal the top card of your deck. If it’s red/yellow/blue, create a Spectral Shield token.
+
+Go again
+
+—————————————————————
+
+## Generic
+
+Crown of Dominion
+
+Generic Equipment – Head
+
+Your hero is Royal.
+
+When you equip Crown of Dominion, create a Gold token.
+
+Equipment is equipped at the start of the game. This will trigger and resolve before either player draws their first hand for the first turn of the game. The triggered effect is not optional.
+
+Your hero is only Royal while they control Crown of Dominion. Including Crown of Dominion in your deck does not allow you to include Royal cards in the same deck (to overcome the talent/class supertype deckbuilding restrictions).
+
+If you no longer control Crown of Dominion, your hero is not considered Royal anymore.
+
+Crown of Dominion does not have the defense property and can not be declared as defending card.
+
+—————————————————————
+
+Ornate Tessen
+
+Generic Equipment – Off-Hand
+
+Instant — {r}, destroy Ornate Tessen: Put a card from your hand on the bottom of your deck. If you do, draw a card.
+
+Ornate Tessen does not have the defense property and can not be declared as defending card.
+
+—————————————————————
+
+Spell Fray Tiara
+
+Generic Equipment – Head
+
+0{d}
+
+Spellvoid 1
+
+Equipment with 0 defense still have the defense property (despite the value being 0) and can be declared as a defending card.
+
+—————————————————————
+
+Spell Fray Cloak
+
+Generic Equipment – Chest
+
+0{d}
+
+Spellvoid 1
+
+Equipment with 0 defense still have the defense property (despite the value being 0) and can be declared as a defending card.
+
+—————————————————————
+
+Spell Fray Gloves
+
+Generic Equipment – Arms
+
+0{d}
+
+Spellvoid 1
+
+Equipment with 0 defense still have the defense property (despite the value being 0) and can be declared as a defending card.
+
+—————————————————————
+
+Spell Fray Leggings
+
+Generic Equipment – Legs
+
+0{d}
+
+Spellvoid 1
+
+Equipment with 0 defense still have the defense property (despite the value being 0) and can be declared as a defending card.
+
+—————————————————————
+
+Imperial Edict
+
+Generic Action – Item
+
+(RED) 1{r}
+
+Legendary
+
+Action — Destroy Imperial Edict: Name a card. The named card can’t be played until the start of your next turn. If you are Royal, instead each opponent reveals their hand, then name a card. Go again
+
+All opposing heroes reveal their hands simultaneously.
+
+The named card can still be pitched, defended with, and activated.
+
+—————————————————————
+
+Imperial Ledger
+
+Generic Action – Item
+
+(RED) 0{r}
+
+Legendary
+
+Action — Shuffle Imperial Ledger into its owner’s deck: Create a Copper token. If you are Royal, instead create a Gold token.
+
+Shuffling Imperial Ledger into the deck is part of the cost of activation.
+
+—————————————————————
+
+Imperial Warhorn
+
+Generic Action – Item
+
+(RED) 2{r}
+
+Legendary
+
+Action — {r}, destroy Imperial Warhorn: Choose any number of heroes. Each of them chooses an ally, aura, item, or landmark permanent they control. Destroy each permanent chosen this way. If you are Royal, instead you choose the permanents.
+
+Heroes choose permanents in clockwise order starting with the turn player.
+
+If you choose yourself (while not Royal) you choose your own permanent that you control.
+
+All heroes choose a permanent before all of them are destroyed.
+
+Choosing the number of heroes is done when the Imperial Warhorn resolves as a layer on the stack.
+
+—————————————————————
+
+## Token-specific Notes
+
+Gold
+
+Generic Token – Item
+
+Action — {r}{r}, destroy Gold: Draw a card. Go again
+
+Destroying Gold is part of the cost for activating its ability.
+
+—————————————————————
+
+Ponder
+
+Generic Token – Aura
+
+At the beginning of your end phase, destroy Ponder and draw a card.
+
+You draw the card before you choose to arsenal a card and draw up to your hero’s intellect.
+
+—————————————————————
+
+Spellbane Aegis
+
+Generic Token – Aura
+
+Spellvoid 1
+
+—————————————————————

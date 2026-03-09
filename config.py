@@ -1,0 +1,6 @@
+# Paths configuration
+import os
+
+CARD_DATA_DIR = r'C:\Users\Joseph\Desktop\FAB_Sim_v2\card_data'
+SLUG_INDEX_PATH = os.path.join(CARD_DATA_DIR, "slug_index.json")
+DECKS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "decks")

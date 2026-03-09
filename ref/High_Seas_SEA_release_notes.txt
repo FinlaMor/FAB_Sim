@@ -1,0 +1,3123 @@
+Home  Rules and Policy  Release Notes  High Seas
+
+# High Seas
+
+# General Notes
+
+High Seas contains 264 cards and becomes legal for tournament play on its official release date: June 6, 2025.
+
+Icons
+
+{r} Resource Point
+
+{p} Power
+
+{d} Defense Value
+
+{h} Life
+
+{i} Intellect
+
+{c} Chi point
+
+{t} Tap
+
+{u} Untap
+
+## Returning Cards
+
+Welcome to Rathe
+
+Nimblism (RED/YEL/BLU)
+
+Scar for a Scar (RED)
+
+#### Arcane Rising
+
+Ravenous Rabble (RED)
+
+Life for a Life (RED)
+
+Head Shot (RED/YEL/BLU)
+
+Salvage Shot (RED/YEL/BLU)
+
+Sic ‘Em Shot (RED/YEL/BLU)
+
+#### Uprising
+
+Trade In (RED/YEL/BLU)
+
+#### Outsiders
+
+Codex of Frailty (YEL)
+
+## Returning Tokens
+
+Dynasty
+
+Gold
+
+## New Keywords and Rules Notes
+
+Tap/Untap
+
+Tap/Tapping/Tapped and Untap/Untapping/Untapped are new terms for actions and states debuting in High Seas.
+
+{t} means “Tap” as a verb
+
+{u} means “Untap” as a verb
+
+By default, cards are untapped when they enter into the arena as a permanent.
+
+When a player taps a card, it is rotated 90 degrees, and is considered tapped.
+
+When a player untaps a card, it is rotated back to its original orientation and is considered untapped again.
+
+During the end phase of your turn, these are the steps you take:
+
+You may place a card in your arsenal (if you have an empty arsenal slot)
+
+Put cards in your pitch zone on the bottom of your deck
+
+Untap all tapped permanents you control
+
+Draw cards from your deck up to your hero’s intellect value.
+
+During the end phase of the very first turn of the game, only the player whose turn it is will untap their permanents
+
+When you are instructed to {t} or {u}, only permanents in the arena are able to be tapped or untapped (e.g. any zone that is in the arena which includes the combat chain). This includes defending equipment cards, weapons on the combat chain, or even allies on the combat chain. Non-permanent cards in the arena can not be tapped/untapped (e.g. attack action cards, defense reactions, blocks)
+
+If a cost requires you to {t} an object, you must {t} an untapped object to fulfill this cost. You cannot {t} an already tapped object to pay for the costs in these situations. The same applies to costs that require you to {u} objects.
+
+If an effect requires you to {t} objects when the effect resolves, you are allowed to select an object that is already tapped; however, that {t} effect will fail and will not satisfy any condition nor trigger any effects that look at whether you’ve tapped an object.
+
+If an effect requires you to {u} objects when the effect resolves, you are allowed to select an object that is untapped; however, that {u} effect will fail and will not satisfy any condition nor trigger any effects that look at whether you’ve untapped an object.
+
+Objects with abilities that require you to {t} themselves as part of paying a cost or resolving an effect may be done in the same turn you played them.
+
+Give
+
+Give is an effect keyword.
+
+When a player is instructed to give something to another player, they choose what to give, and the other player gains control of it.
+
+Any objects given to the other player will remain in its current state (e.g. tapped/untapped, existing counters, etc.).
+
+If a player is instructed to give an object that is equipped, the other player must have a respective empty zone and must be able to equip that object to that zone. If that other player does not have the required empty zone and/or the zone already has another object equipped to it, the give effect will fail and the object will stay where it is.
+
+Giving an equipped object to another player will cause them to equip the object. This can satisfy any conditions and can trigger any effects that specifically look at when the object is equipped.
+
+The effect of giving control of an object does not satisfy any conditions nor trigger any effects that specifically look at when the object enters the arena or is played because the object is already in the arena and the control of the object is simply changing.
+
+Giving control of an object does not count as the other hero stealing that object for the purposes of rules or effects.
+
+Steal
+
+Steal is an effect keyword.
+
+When a player is instructed to steal something from another player, they choose what to steal and they gain control of it.
+
+Any objects stolen from the other player will remain in its current state (e.g. tapped/untapped, existing counters, etc.).
+
+If a player is instructed to steal an object that is equipped, that player must have a respective empty zone and must be able to equip that object to that zone. If that player does not have the required empty zone and/or the zone already has another object equipped to it, the steal effect will fail and the object will stay where it is.
+
+Stealing an equipped object from another player will equip the object. This can satisfy any conditions and can trigger any effects that specifically look at when the object is equipped.
+
+The effect of stealing an object does not satisfy any conditions nor trigger any effects that specifically look at when the object enters the arena or is played because the object is already in the arena and the control of the object is simply changing.
+
+Stealing an object does not count as giving control of an object for the purposes of rules or effects.
+
+Stealing an object counts as gaining control of an object for the purposes of rules or effects; however, gaining control of an object does not count as stealing for the purposes of rules or effects.
+
+Companion
+
+Companion is a type keyword.
+
+A Companion is a new type that will represent allies that start the game in play. When paired with an off-hand subtype, the Companion must be equipped to a weapon slot to start in play.
+
+Perched
+
+This can be equipped in addition to a 2H weapon. This can’t be attacked while it’s equipped.
+
+Perched is an ability keyword.
+
+Like a Quiver, this can be equipped with a 2H weapon as long as the weapon slot is otherwise empty.
+
+While it is equipped, it cannot be attacked. This means something with Perched can exist unequipped in the arena.
+
+Allies with Perched cannot be attacked while equipped; however, they can be targeted and damaged by cards and effects.
+
+Unlimited
+
+You may have any number of this card in your deck.
+
+Unlimited is an ability keyword.
+
+You may have any number of the same object with unlimited in your deck. This means you can have more than 3 of that card in your deck to start the game in classic constructed and similar formats and more than 2 of that card in blitz and similar formats. Other than this limit, that card is still subject to all other applicable deck-building rules for the format you are playing in.
+
+Watery Grave
+
+When this is put into your graveyard from the arena, turn it face-down.
+
+Watery Grave is an ability keyword.
+
+Watery Grave is a trigger that ONLY triggers if the card is put from the arena into the graveyard, excluding when it is a non-permanent defending card on the combat chain. It also does not trigger if it is put into the graveyard by other means (e.g. discarded from your hand, destroyed from the top of the deck, put into the graveyard from your deck).
+
+When Watery Grave’s triggered effect resolves, you must turn that card with watery grave face-down in your graveyard.
+
+Similar to face-down cards in the banish zone, you can look at face-down cards in your graveyard. Opponents cannot look at face-down cards in your graveyard.
+
+Cards and effects that interact with cards in the graveyard cannot interact with face-down cards in the graveyard unless the effect specifies that it affects face-down cards. For example, if a card requires you to banish 3 random cards from your graveyard as an additional cost, face-down banished cards are unable to be banished from your graveyard this way to pay for the cost.
+
+Legend of the Watery Grave
+
+You may only have one of this card in your constructed deck. When this is put into your graveyard from the arena, turn it face-down.
+
+Legend of the Watery Grave is a thematic representation of the two ability keywords of “Legendary” and “Watery Grave.”
+
+A card with Legend of the Watery Grave functions in the same ways as their keywords: You may only have 1 of that card in your constructed deck. The same rules related to Watery Grave applies here as well.
+
+High Tide
+
+High Tide – If there are 2 or more blue cards in your pitch zone, [EFFECT].
+
+High Tide is a label keyword
+
+High Tide’s continuous effect is constantly checking if there are 2 or more blue cards in your pitch zone.
+
+Unless otherwise stated, High Tide is not functional on cards while defending.
+
+Go Fish
+
+Go Fish – **Go Fish** – When this hits a hero, they choose and reveal a card from their hand. If it’s [ADJECTIVE] they discard it and you create a Gold token.
+
+Go Fish is a label keyword.
+
+In High Seas, Go Fish is associated with triggered-static abilities that appear on attacks, which trigger when the attack hits a hero. That hero must choose and reveal a card from their hand when the triggered effect resolves. If that hero reveals a card that is described by the conditional effect this way (e.g. If it’s an action card,…), then that hero will discard the card and you will create a Gold token.
+
+If an effect prevents that hero from revealing cards, no cards are discarded and no Gold tokens are created from resolving this triggered effect.
+
+# High Seas Card Notes
+
+Riches of Trōpal-Dhani
+
+Generic Resource – Gem
+
+(YEL)
+
+Legendary
+
+When this is pitched, create a Gold token.
+
+If this is pitched to pay for a resource cost and the cost also requires you to destroy Gold (e.g. Puffin, The Golden Son etc.), you cannot destroy the Gold that would be created from resolving the triggered effect because it is created after the cost would be paid.
+
+If this is pitched from an effect, the effect still triggers and will create a gold.
+
+—————————————————————
+
+## Pirate Mechanologist / Mechanologist
+
+Puffin, Hightail | Puffin
+
+Pirate Mechanologist Hero | Pirate Mechanologist Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Action — {t}, destroy a Gold you control: Create a Golden Cog token.
+
+The second time you crank each turn, draw a card.
+
+When paying the costs to activate Puffin’s first ability, you may choose to destroy any Gold you control, not just Gold tokens. This includes objects which count as a Gold (e.g. Aurum Aegis)
+
+You can only gain action points during your action phase. You may crank during your start and end phase and during your opponent’s turn but you will not gain any action points. If Puffin’s second ability is triggered during your start or end phase, you will still draw a card.
+
+—————————————————————
+
+Polly Cranka
+
+Puffin Companion – Off-Hand Ally
+
+1{h}
+
+Action — {t}, banish this: Return this to the arena under its owner’s control, unequipped, tapped, and with a steam counter.
+
+Crank
+
+Perched
+
+Polly can be targeted by effects that deal arcane or untyped damage to any target even while it is perched.
+
+You can activate Polly while it’s in the arena, even if it is no longer perched.
+
+When activating Polly, banishing it is part of its cost. You remove any counters it has when banishing it.
+
+When resolving Polly’s activated ability, neither player receives priority in between the different effects of returning it to the arena unequipped, tapped and with a steam counter.
+
+You may choose to crank and remove the steam counter that Polly gets when it returns to the arena when resolving its activated ability.
+
+If Polly is turned face-down by an effect after it is banished but before its activated ability resolves, it will remain face-down and does not return to the arena.
+
+If an opponent steals an equipped Polly and activates its ability, its owner decides if they would like to crank or not when it enters the battlefield and may gain the action point.
+
+—————————————————————
+
+Golden Skywarden
+
+Pirate Mechanologist Action – Attack
+
+(YEL) 4{r} 7{p} 2{d}
+
+Galvanize – When this defends, you may destroy an item you control. If you do, this gets +1{d}. If a Golden Cog is destroyed this way, create a Gold token and repeat this process.
+
+Golden Skywarden triggers when it becomes a defending card on the combat chain.
+
+Galvanize has an optional effect. You choose whether or not to destroy an item at the time the triggered effect resolves. If an item you control is destroyed, Golden Skywarden gets +1{d}. If the item you destroyed this way was a Golden Cog, you will create a Gold token and repeat the process.
+
+There’s no priority between choosing to destroy an item you control, Golden Skywarden getting +1{d} and creating a gold token (if the item you destroyed was a Golden Cog).
+
+You cannot do the optional effect if you are unable to destroy an item you control.
+
+Each time you repeat the process, you may choose not to destroy an item you control.
+
+If an effect prevents the attack from gaining defense or if you are unable to create a Gold token (e.g. Ripple Away), you still repeat the process and may continue to destroy items you control.
+
+You can destroy a Gold token created by Golden Skywarden’s effect when repeating the process. E.g. destroy a Golden Cog and create a Gold token, then destroy the Gold token created.
+
+—————————————————————
+
+Jolly Bludger
+
+Pirate Mechanologist Action – Attack
+
+(YEL) 2{r} 5{p} 3{d}
+
+When this attacks, you may {t} a cog you control. If you do, this gets overpower.
+
+When this deals damage to a hero, steal that many items they control.
+
+Thrice per Turn Instant — {t} a cog you control: This gets +1{p}.
+
+Jolly Bludger’s first ability triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to {t} a cog you control at the time the triggered effect resolves. If you do, this gets overpower.
+
+Jolly Bludger’s second ability triggers when it deals damage to a hero. This is not an optional effect: you must steal a number of items from that hero equal to the damage dealt, and you must choose those items at the time the triggered effect resolves. When resolving this triggered effect, if that hero controls less items than the amount of damage dealt to them by this card, you will steal all their items.
+
+Jolly Bludger’s activated ability can be activated three times only while it is on the combat chain as an attacking card. It cannot be activated while it is a defending card.
+
+—————————————————————
+
+Cogwerx Blunderbuss
+
+Mechanologist Weapon – Gun (2H)
+
+2{p}
+
+Action — {r}{r}, {t}: Attack
+
+Instant — {t} a cog you control: This card’s next attack this turn gets go again.
+
+The go again continuous effect generated from Cogwerx Blunderbuss’ second ability will apply to Cogwerx Blunderbuss’ next attack after the activated ability resolves.
+
+If you attack Cogwerx Blunderbuss, then activate its second ability, go again will not apply to the current attack.
+
+Cogwerx Blunderbuss’ second activated ability can be activated during your opponent’s turn; however, the go again continuous effect generated from its resolution will not apply to this card’s next attack because it will expire at the end of the turn and you don’t attack on your opponent’s turn.
+
+You may attack with this multiple times during a turn using its first ability provided you have the necessary action points and can pay for the required costs of activating the ability (e.g. the resources and can tap the weapon).
+
+—————————————————————
+
+Spitfire
+
+Mechanologist Weapon – Gun (2H)
+
+2{p}
+
+Action — {t}, {t} a cog you control: Attack
+
+When this attacks, you may {t} a cog you control. If you do, the attack gets +1{p}.
+
+Spitfire triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to {t} a cog you control at the time the triggered effect resolves. If you do, its current attack gets +1{p}.
+
+You may attack with this multiple times during a turn using its first ability provided you have the necessary action points and can pay for the required costs of activating the ability (e.g. can tap the weapon and can tap a cog you control).
+
+—————————————————————
+
+Cogwerx Tinker Rings
+
+Mechanologist Equipment – Arms
+
+2{d}
+
+When this defends, create a Golden Cog token.
+
+Blade Break
+
+Cogwerx Tinker Rings triggers when it becomes a defending card on the combat chain. You will create a Golden Cog token when this triggered effect resolves.
+
+—————————————————————
+
+Rust Belt
+
+Mechanologist Equipment – Chest
+
+1{d}
+
+Instant — {t} a cog you control, destroy this: Gain {r}.
+
+Battleworn
+
+Rust Belt’s activated ability will still resolve even if the cog you control that you tapped to pay its activation cost is destroyed before the activated ability resolves on the stack.
+
+—————————————————————
+
+Unicycle
+
+Mechanologist Equipment – Legs
+
+1{d}
+
+Instant — Destroy this: {u} a cog you control.
+
+Battleworn
+
+You choose which cog you want to {u} when Unicycle’s activated ability resolves.
+
+—————————————————————
+
+Cogwerx Dovetail
+
+Mechanologist Action – Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+When this hits a hero, {u} all cogs you control.
+
+Thrice per Turn Instant — {t} a cog you control: This gets +1{p} or go again.
+
+When Cogwerx Dovetail triggered effect resolves, you will {u} all cogs you control. This includes any cogs that were tapped after Cogwerx Dovetail triggered but before it began to resolve.
+
+Cogwerx Dovetail’s activated ability can be activated three times only while it is on the combat chain as an attacking card. It cannot be activated while it is a defending card.
+
+When Cogwerx Dovetail’s activated ability resolves, you choose for Cogwerx Dovetail to either get +1{p} or go again.
+
+You may activate Cogwerx Dovetail during the damage step of combat – after damage is calculated/dealt but before go again is checked in the resolution step.
+
+—————————————————————
+
+Palantir Aeronought
+
+Mechanologist Action – Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+The defending hero must defend this with an equipment they control if able.
+
+Thrice per Turn Instant — {t} a cog you control: This gets +1{p}. If this is the third time you’ve activated this ability, destroy a defending card.
+
+The defending hero must add at least one equipment they control to defend Palantir Aeronought. If there is no defending hero (e.g. attacking an ally) or the defending hero controls no equipment that can defend (e.g. the equipment they control has no defense property) they do not defend with any equipment they control.
+
+Palantir Aeronought’s activated ability can be activated three times only while it is on the combat chain as an attacking card. Whether it’s the third time you’ve activated this ability is checked when it resolves. If it is the third time you’ve activated the ability, you must destroy a defending card on the combat chain. It cannot be activated while it is a defending card.
+
+If you activate Palantir Aeronought three times without passing priority, you put 3 activated-layers on the stack. The topmost layer is the one created by activating ability for the third time, so when it resolves you destroy a defending card. The remaining 2 layers do not destroy any cards.
+
+The defending card you choose to destroy does not have to be on the same chain link as the Palantir Aeronought.
+
+—————————————————————
+
+Cog in the Machine
+
+Mechanologist Action
+
+(RED) 1{r} 3{d}
+
+Create 2 Golden Cog tokens.
+
+You may {t} a cog you control. If you do, put this on the bottom of its owner’s deck.
+
+When resolving Cog in the Machine’s second ability, you may {t} one of the Golden Cog tokens created by this card’s first ability.
+
+There is no priority between creating the Golden Cog tokens, choosing to {t} a cog you control and putting Cog in the Machine on the bottom of its owner’s deck.
+
+If there are no cards in the owner’s deck zone when resolving this effect, it becomes the only card in the deck.
+
+—————————————————————
+
+Cogwerx Workshop
+
+Mechanologist Action
+
+(BLU) 1{r} 3{d}
+
+Create a Golden Cog token.
+
+Put a steam counter on up to 2 cogs you control.
+
+When resolving Cogwerx Workshop’s second ability, you can put a steam counter on the Golden Cog token created by this card’s first ability.
+
+When resolving Cogwerx Workshop, you can choose to not put any steam counters on any cogs you control. If you choose to put a steam counter on 2 cogs you control, they must be two different cogs you control.
+
+—————————————————————
+
+Cloud City Steamboat
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 3{d}
+
+When this hits a hero, you may {t} a cog you control. If you do, put a steam counter on a cog you control.
+
+Twice per Turn Instant — {t} a cog you control: This gets +1{p}.
+
+Cloud City Steamboat’s first ability triggers when it hits a hero. This is an optional effect: You choose whether or not to {t} a cog you control at the time the triggered effect resolves. If you do, you put a steam counter on a cog you control.
+
+You do not have to put the steam counter on the same cog you tapped as part of the triggered ability.
+
+Cloud City Steamboat’s activated ability can be activated two times only while it is on the combat chain as an attacking card. It cannot be activated while it is a defending card.
+
+—————————————————————
+
+Cogwerx Zeppelin
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 3{d}
+
+When this hits a hero, you may {t} a cog you control. If you do, create a Golden Cog token.
+
+Twice per Turn Instant — {t} a cog you control: This gets +1{p}.
+
+Cogwerx Zeppelin’s first ability triggers when it hits a hero. This is an optional effect: You choose whether or not to {t} a cog you control at the time the triggered effect resolves. If you do, you create a Golden Cog token.
+
+This card’s activated ability can be activated two times only while it is on the combat chain as an attacking card. It cannot be activated while it is a defending card.
+
+—————————————————————
+
+Copper Cog
+
+Mechanologist Action – Cog Item
+
+(BLU) 0{r}
+
+Unlimited
+
+Crank
+
+This enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.
+
+You may have any number of Copper Cogs in your deck. This means you can have more than 3 of this card in your deck to start the game in classic constructed and similar formats and more than 2 of this card in blitz and similar formats. Other than this limit, this is still subject to all other applicable deck-building rules for the format you are playing in.
+
+Copper Cog has a rare-rarity. In limited formats, Copper Cog does not automatically get added to your card pool, because it isn’t a basic-rarity.
+
+Removing a steam counter is optional. If you choose not to remove a steam counter, it is simply destroyed.
+
+—————————————————————
+
+Lubricate
+
+Mechanologist Instant
+
+(BLU) 0{r}
+
+{u} up to 3 cogs you control.
+
+When Lubricate resolves, you may choose up to 3 cogs you control and untap them.
+
+You may choose to untap no cogs when resolving this card.
+
+—————————————————————
+
+Pinion Sentry
+
+Mechanologist Block
+
+(BLU) 3{d}
+
+When this defends, you may {t} a cog you control. If you do, create a Golden Cog token.
+
+Pinion Sentry triggers when it becomes a defending card on the combat chain. This is an optional effect: You choose whether or not to {t} a cog you control at the time the triggered effect resolves. If you do, you will create a Golden Cog token.
+
+There is no priority between choosing to {t} a cog you control and creating the Golden Cog token.
+
+You may choose to crank the Golden Cog created this way, however you will not get an action point since it is not your action phase.
+
+—————————————————————
+
+Cloud Skiff
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+Once per Turn Instant — {t} a cog you control: This gets +1{p} or go again.
+
+Cloud Skiff’s activated ability can be activated only while it is on the combat chain as an attacking card. It cannot be activated while it is a defending card.
+
+When Cloud Skiff’s activated ability resolves, you choose for Cloud Skiff to either get +1{p} or go again.
+
+—————————————————————
+
+Sky Skimmer
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+Once per Turn Instant — {t} a cog you control: This gets +1{p} or go again.
+
+Sky Skimmer’s activated ability can be activated only while it is on the combat chain as an attacking card. It cannot be activated while it is a defending card.
+
+When Sky Skimmer’s activated ability resolves, you choose for Sky Skimmer to either get +1{p} or go again.
+
+—————————————————————
+
+Teeth of the Cog
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 2{d}
+
+Galvanize – When this defends, you may destroy an item you control. If you do, create a Golden Cog token.
+
+Teeth of the Cog triggers when it becomes a defending card on the combat chain. This is an optional effect: You choose whether or not to destroy an item at the time the triggered effect resolves. If an item you control is destroyed, you will create a Golden Cog token.
+
+There’s no priority between choosing to destroy an item you control and creating a Golden Cog token.
+
+You cannot do the optional effect if you are unable to destroy an item you control.
+
+You may choose to crank the Golden Cog created this way, however you will not get an action point since it is not your action phase.
+
+—————————————————————
+
+Tough Old Wrench
+
+Mechanologist Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 2{d}
+
+Galvanize – When this defends, you may destroy an item you control. If you do, create a Golden Cog token.
+
+Tough Old Wrench triggers when it becomes a defending card on the combat chain. This is an optional effect: You choose whether or not to destroy an item at the time the triggered effect resolves. If an item you control is destroyed, you will create a Golden Cog token.
+
+There’s no priority between choosing to destroy an item you control and creating a Golden Cog token.
+
+You cannot do the optional effect if you are unable to destroy an item you control.
+
+You may choose to crank the Golden Cog created this way, however you will not get an action point since it is not your action phase.
+
+—————————————————————
+
+Goldwing Turbine
+
+Mechanologist Action
+
+(RED/YEL/BLU) 2{r} 3{d}
+
+Your next Mechanologist attack this turn gets +3/2/1{p}.
+
+Create a Golden Cog token.
+
+—————————————————————
+
+Draw Back the Hammer
+
+Mechanologist Action
+
+(RED) 1{r} 2{d}
+
+Your next Mechanologist attack this turn gets +4{p}.
+
+You may {u} a gun you control.
+
+Go again
+
+—————————————————————
+
+Perk Up
+
+Mechanologist Action
+
+(RED) 1{r} 2{d}
+
+Your next Mechanologist attack this turn gets +4{p}.
+
+You may {u} your hero.
+
+Go again
+
+—————————————————————
+
+Tighten the Screws
+
+Mechanologist Action
+
+(RED) 1{r} 2{d}
+
+Your next Mechanologist attack this turn gets +4{p}.
+
+You may {u} a cog you control.
+
+Go again
+
+—————————————————————
+
+## Pirate Necromancer / Necromancer Cards
+
+Gravy Bones, Shipwrecked Looter | Gravy Bones
+
+Pirate Necromancer Hero | Pirate Necromancer Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Instant — {t}, destroy a Gold you control: Draw a card, then discard a card.
+
+If a blue card has been put into your graveyard this turn, you may play cards with watery grave from your graveyard.
+
+When paying the costs to activate Gravy’s first ability, you may choose to destroy any Gold you control, not just Gold tokens. This includes objects which count as a Gold (e.g. Aurum Aegis)
+
+When resolving Gravy’s activated ability, even if you cannot draw a card, you will still discard a card.
+
+There is no priority between drawing a card and discarding a card while resolving Gravy’s activated ability.
+
+If you come under the effect that results in cards you own to lose colors (e.g. Blanch), the color of cards used in any historical actions taken beforehand are not affected for the purposes of rules and effects. For example, if a blue card was put into your graveyard this turn, then Blanch hits you, it does not change the fact a blue card was put into your graveyard that turn.
+
+Face-down cards with watery grave in the graveyard cannot be played from your graveyard by the effect.
+
+—————————————————————
+
+Compass of Sunken Depths
+
+Pirate Necromancer Equipment – Off-Hand
+
+Instant — {t}: Look at the top card of your deck.
+
+The first card with watery grave you play from your graveyard each turn gets go again.
+
+Compass of Sunken Depths has an instant activated ability that can be activated whenever you have priority. When Compass of Sunken Depths resolves, you look at the top of your deck at that time.
+
+—————————————————————
+
+Washed Up Wave
+
+Pirate Necromancer Equipment – Arms
+
+0{d}
+
+When this defends, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets +2{d}.
+
+Blade Break
+
+Washed Up Wave triggers when it becomes a defending card. This is an optional effect: You choose whether to either discard a card from your hand, destroy the top card of your deck, or do neither at the time the triggered effect resolves. If you either discard a card or destroy the top card of your deck this way and that card has watery grave, Washed Up Wave gets +2{d}.
+
+Destroying the top card of your deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of your deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+—————————————————————
+
+Blood in the Water
+
+Pirate Necromancer Defense Reaction
+
+(RED) 0{r} 4{d}
+
+When this defends, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets +2{d}.
+
+Blood in the Water triggers when it resolves and becomes a defending card on the combat chain. This is an optional effect: You choose whether to either discard a card from your hand, destroy the top card of your deck, or do neither at the time the triggered effect resolves. If you either discard a card or destroy the top card of your deck this way and that card has watery grave, Blood in the Water gets +2{d}.
+
+Destroying the top card of your deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of your deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+Unless a rule or effect allows you to do so, you cannot play or activate defense reactions against attacks where the attack-target is an ally you control.
+
+—————————————————————
+
+Chart the High Seas
+
+Pirate Necromancer Action
+
+(BLU) 0{r} 3{d}
+
+Look at the top 2 cards of your deck. You may pitch a blue card from among them. Put the rest into your graveyard.
+
+Create a Gold token for each yellow card put into your graveyard this way.
+
+Go again
+
+When resolving Chart the High Seas, there is no priority between any of the effects on this card (e.g. between looking at cards, pitching a blue card, putting the rest in the graveyard, and creating Gold tokens).
+
+Pitching the blue card is optional. Even if one of the cards you looked at was a blue card, you may choose not to pitch it and it would be put into the graveyard by the subsequent effect.
+
+When you pitch cards this way, you may still trigger effects due to pitching and you still gain the resources from pitching (e.g. you would gain 3 resources).
+
+If a card that is being pitched is in a private state, it is shown and made public first before it is moved to the pitched zone. if you are under an effect that says you can’t pitch a specific card (e.g. Chains of Eminence, Null Time Zone) you will not be able to pitch that card and it will be put into the graveyard by the subsequent effect.
+
+—————————————————————
+
+Give No Quarter
+
+Pirate Necromancer Action
+
+(BLU) 0{r} 3{d}
+
+The next 2 ally cards with watery grave you play this turn cost {r}{r}{r} less to play.
+
+Go again
+
+This effect reduces the cost of playing each of the two cards by {r}{r}{r}.
+
+Effects that increase resource costs are applied before effects that decrease resource costs.
+
+—————————————————————
+
+Chum, Friendly First Mate
+
+Pirate Necromancer Action – Ally
+
+(YEL) 4{r} 4{p} 6{h}
+
+Action — {t}: Attack
+
+Instant — {t}, discard a card with watery grave: Until end of turn, opponents must choose this as the target of attacks if able.
+
+Watery Grave
+
+When Chum’s activated ability resolves, it generates a continuous effect that lasts for the turn and requires the opponent to choose Chum as the target of their attacks if able.
+
+If an attack does not specify a specific target (e.g. the attack doesn’t say “this can only attack heroes”), that attack must target Chum.
+
+If 2 or more Chums’ effects are active you may choose any of them to attack. It does not prevent you from attacking.
+
+If an attack requires specific targets (e.g. Apocalypse Automaton), that attack is unable to target Chum if Chum does not meet the required targeting specifications.
+
+If an attack allows you to have an additional attack-target (e.g. Barbed Barrage), one of those attack-targets must be Chum if able.
+
+If you play or activate an attack, then your opponent activates and resolves Chum, you will continue with the current attack against your originally declared attack-targets. Subsequent attacks must target Chum if able.
+
+—————————————————————
+
+Moray le Fay
+
+Pirate Necromancer Action – Ally
+
+(YEL) 0{r} 0{p} 3{h}
+
+Action — {t}: Attack
+
+Instant — {r}, {t}: Put a +1{p} counter on target ally.
+
+Watery Grave
+
+—————————————————————
+
+Wailer Humperdinck
+
+Pirate Necromancer Action – Ally
+
+(YEL) 6{r} 11{p} 7{h}
+
+Action — {r}{r}{r} {r}{r}{r}, {t}: Attack
+
+Watery Grave
+
+—————————————————————
+
+Board the Ship
+
+Pirate Necromancer Action – Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+When this attacks, you may {t} an ally you control. If you do, this gets overpower.
+
+Board the Ship triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to {t} an ally you control at the time the triggered effect resolves. If you do {t} an ally this way, this gets overpower.
+
+—————————————————————
+
+Paddle Faster
+
+Pirate Necromancer Action – Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+When this attacks, you may {t} an ally you control. If you do, this gets go again.
+
+Paddle Faster triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to {t} an ally you control at the time the triggered effect resolves. If you do {t} an ally this way, this gets go again.
+
+—————————————————————
+
+Hoist ‘Em Up
+
+Pirate Necromancer Block
+
+(RED) 4{d}
+
+When this defends, you may {t} an ally you control. If you do, this gets +1{d}.
+
+Hoist ‘Em Up triggers when it becomes a defending card on the combat chain. This is an optional effect: You choose whether or not to {t} an ally you control at the time the triggered effect resolves. If you do {t} an ally this way, this gets +1{d}.
+
+Unless a rule or effect allows you to do so, you cannot declare defending cards against attacks where the attack-target is an ally you control.
+
+—————————————————————
+
+Avast Ye!
+
+Pirate Necromancer Action
+
+(BLU) 0{r} 3{d}
+
+Your next Pirate ally attack this turn gets go again and “When this hits a hero, create a Gold token.”
+
+Go again
+
+—————————————————————
+
+Heave Ho!
+
+Pirate Necromancer Action
+
+(BLU) 0{r} 3{d}
+
+Your next Pirate ally attack this turn gets overpower and “When this hits a hero, create a Gold token.”
+
+Go again
+
+—————————————————————
+
+Yo Ho Ho!
+
+Pirate Necromancer Action
+
+(BLU) 0{r} 3{d}
+
+Your next Pirate ally attack this turn gets +1{p} and “When this hits a hero, create a Gold token.”
+
+Go again
+
+—————————————————————
+
+Kelpie, Tangled Mess
+
+Pirate Necromancer Action – Ally
+
+(YEL) 0{r} 1{p} 3{h}
+
+Action — {t}: Attack
+
+Action — {r}, {t}: {t} target hero or ally. Go again
+
+Watery Grave
+
+When activating Kelpie’s second activated ability, you must declare which target hero or ally you will {t}. When this activated ability resolves, you will {t} that declared target.
+
+If the target hero or ally ceases to exist, the ability will not resolve, and you will not gain an action point from go again.
+
+—————————————————————
+
+Limpit, Hop-a-long
+
+Pirate Necromancer Action – Ally
+
+(YEL) 0{r} 2{p} 1{h}
+
+Action — {r}, {t}: Attack. Go again
+
+Watery Grave
+
+—————————————————————
+
+Scooba, Salty Sea Dog
+
+Pirate Necromancer Action – Ally
+
+(YEL) 0{r} 4{p} 4{h}
+
+Action — {r}{r}{r}, {t}: Attack
+
+When this attacks, you may put a yellow card from a graveyard on the bottom of its owner’s deck. If you do, create a Gold token.
+
+Watery Grave
+
+Scooba triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to put a yellow card from a graveyard on the bottom of its owner’s deck at the time the triggered effect resolves. If you put a yellow card from the graveyard on the bottom of the deck this way, you will create a Gold token.
+
+Face-down yellow cards in the graveyard cannot be put on the bottom of its owner’s deck by this effect.
+
+If there are no cards in the owner’s deck zone when resolving this effect, it will become the only card in the deck.
+
+—————————————————————
+
+Angry Bones
+
+Pirate Necromancer Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 3{d}
+
+When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets +1{p}.
+
+Angry Bones triggers when it resolves and becomes an attacking card. This is an optional effect: You choose whether to either discard a card from your hand, destroy the top card of your deck, or do neither at the time the triggered effect resolves. If you either discard a card or destroy the top card of your deck this way and that card has watery grave, Angry Bones gets +1{p}.
+
+Destroying the top card of your deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of your deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+—————————————————————
+
+Burly Bones
+
+Pirate Necromancer Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 3{d}
+
+When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets overpower.
+
+Burly Bones triggers when it resolves and becomes an attacking card. This is an optional effect: You choose whether to either discard a card from your hand, destroy the top card of your deck, or do neither at the time the triggered effect resolves. If you either discard a card or destroy the top card of your deck this way and that card has watery grave, Burly Bones gets overpower.
+
+Destroying the top card of your deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of your deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+—————————————————————
+
+Jittery Bones
+
+Pirate Necromancer Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 3{d}
+
+When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets go again.
+
+Jittery Bones triggers when it resolves and becomes an attacking card. This is an optional effect: You choose whether to either discard a card from your hand, destroy the top card of your deck, or do neither at the time the triggered effect resolves. If you either discard a card or destroy the top card of your deck this way and that card has watery grave, Jittery Bones gets go again.
+
+Destroying the top card of your deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of your deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+—————————————————————
+
+Restless Bones
+
+Pirate Necromancer Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 3{d}
+
+When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets go again.
+
+Restless Bones triggers when it resolves and becomes an attacking card. This is an optional effect: You choose whether to either discard a card from your hand, destroy the top card of your deck, or do neither at the time the triggered effect resolves. If you either discard a card or destroy the top card of your deck this way and that card has watery grave, Restless Bones gets go again.
+
+Destroying the top card of your deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of your deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+—————————————————————
+
+Barnacle
+
+Pirate Necromancer Action – Ally
+
+(YEL) 2{r} 4{p} 3{h}
+
+Action — {t}: Attack
+
+Watery Grave
+
+—————————————————————
+
+Chowder, Hearty Cook
+
+Pirate Necromancer Action – Ally
+
+(YEL) 3{r} 3{p} 3{h}
+
+Action — {t}: Attack
+
+Instant — {t}: Gain 1{h}
+
+Watery Grave
+
+When resolving Chowder’s instant activated ability, your hero gains 1{h}. Chowder does not gain {h}.
+
+—————————————————————
+
+Cutty Shark, Quick Clip
+
+Pirate Necromancer Action – Ally
+
+(YEL) 1{r} 3{p} 4{h}
+
+Action — {r}, {t}: Attack
+
+Once per Turn Action — {r}: Your next ally attack this turn gets +1{p}. Go again
+
+Watery Grave
+
+—————————————————————
+
+Riggermortis
+
+Pirate Necromancer Action – Ally
+
+(YEL) 1{r} 6{p} 1{h}
+
+Action — {r}, {t}: Attack
+
+Watery Grave
+
+—————————————————————
+
+Shelly, Hardened Traveler
+
+Pirate Necromancer Action – Ally
+
+(YEL) 2{r} 4{p} 5{h}
+
+Action — {r}{r}{r}, {t}: Attack
+
+Instant — {t}: The next attack action card you defend with this turn gets +1{d}.
+
+Watery Grave
+
+After you resolve Shelly’s instant activated ability, the next attack action card you defend with this turn gets +1{d}. This includes situations where the next attack action card you defend with is one that was added to the combat chain by an effect (e.g. Pulsewave Harpoon).
+
+—————————————————————
+
+Swabbie
+
+Pirate Necromancer Action – Ally
+
+(YEL) 3{r} 7{p} 3{h}
+
+Action — {r}{r}, {t}: Attack
+
+Watery Grave
+
+—————————————————————
+
+Dead Threads
+
+Necromancer Equipment – Chest
+
+1{d}
+
+Instant — {t}: Gain {r}. Activate this only if an ally has been put into your graveyard this turn.
+
+Blade Break
+
+You can activate Dead Threads’ activated ability if an ally has been put into your graveyard this turn (e.g. from the arena, destroyed from the top of your deck, etc)
+
+—————————————————————
+
+Head Stone
+
+Necromancer Equipment – Head
+
+1{d}
+
+Instant — Destroy this: Destroy the top card of your deck.
+
+Battleworn
+
+Destroying the top card of your deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of your deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+—————————————————————
+
+## Pirate Ranger / Ranger Cards
+
+Marlynn, Treasure Hunter | Marlynn
+
+Pirate Ranger Hero | Pirate Ranger Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Action — {t}, destroy a Gold you control: Create a Goldfin Harpoon in your hand. Go again
+
+Whenever you draw a card during your action phase, you may put an arrow from your hand face-up into your arsenal.
+
+When paying the costs to activate Marlynn’s first ability, you may choose to destroy any Gold you control, not just Gold tokens. This includes objects which count as a Gold (e.g. Aurum Aegis)
+
+If an effect causes you to draw multiple cards (e.g. Three of a Kind) during your action phase, Marlynn will trigger for each card drawn by the effect. For example, if you draw three cards, Marlynn triggers three times.
+
+When resolving an effect that involves drawing a card (e.g. draw a card, then discard a card; discard a card, then draw a card; etc.), Marlynn will trigger from drawing the card; however, you must finish resolving the current card’s/ability’s layer on the stack before you can add that triggered effect to the stack and resolve its effect.
+
+—————————————————————
+
+Hammerhead, Harpoon Cannon
+
+Pirate Ranger Weapon – Bow Cannon (2H)
+
+Action — {r}{r}{r}{r}, {t}: Your next arrow attack this turn gets +4{p}. If it has harpoon in its name, it gets overpower. Go again
+
+—————————————————————
+
+King Kraken Harpoon
+
+Pirate Ranger Action – Arrow Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+Go Fish – When this hits a hero, they choose and reveal a card from their hand. If it’s a non-attack action card, they discard it and you create a Gold token. If you’ve activated a cannon this turn, instead look at their hand and you choose the card.
+
+King Kraken Harpoon triggers when it hits a hero. That hero then chooses and reveals a card from their hand. If the card revealed this way is a non-attack action card, they will discard it and you will create a Gold token. However, if you activated a cannon this turn before this triggered effect started to resolve, you will instead look at that hero’s hand and you choose the card.
+
+There is no priority between the different parts of resolving this triggered effect (e.g. looking, choosing, revealing, discarding, and creating a Gold token.)
+
+While resolving this triggered effect, if you’ve activated a cannon this turn, you will look at that hero’s hand and choose a card, then that hero will reveal the card. If that hero is unable to reveal cards (e.g. Channel the Bleak Expanse), you will still look at that hero’s hand, and choose a card, but it is not revealed and the subsequent conditional effect doesn’t happen.
+
+—————————————————————
+
+King Shark Harpoon
+
+Pirate Ranger Action – Arrow Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+Go Fish – When this hits a hero, they choose and reveal a card from their hand. If it’s an attack action card, they discard it and you create a Gold token. If you’ve activated a cannon this turn, instead look at their hand and you choose the card.
+
+King Shark Harpoon triggers when it hits a hero. That hero then chooses and reveals a card from their hand. If the card revealed this way is an attack action card, they will discard it and you will create a Gold token. However, if you activated a cannon this turn before this triggered effect started to resolve, you will instead look at that hero’s hand and you choose the card.
+
+There is no priority between the different parts of resolving this triggered effect (e.g. looking, choosing, revealing, discarding, and creating a Gold token.)
+
+While resolving this triggered effect, if you’ve activated a cannon this turn, you will look at that hero’s hand and choose a card, then that hero will reveal the card. If that hero is unable to reveal cards (e.g. Channel the Bleak Expanse), you will still look at that hero’s hand, and choose a card, but it is not revealed and the subsequent conditional effect doesn’t happen.
+
+—————————————————————
+
+Big Game Trophy Shot
+
+Pirate Ranger Action
+
+(YEL) 2{r} 3{d}
+
+Your next arrow attack this turn gets +4{p}. If it has harpoon in its name, it gets “When this hits a hero, create a Gold token.”
+
+Draw a card, then discard a card.
+
+Go again
+
+If you cannot draw a card, you will still discard a card.
+
+There is no priority between drawing a card and discarding a card
+
+—————————————————————
+
+Gold the Tip
+
+Pirate Ranger Action
+
+(YEL) 0{r} 2{d}
+
+Your next arrow attack this turn gets +3{p}.
+
+If there is a yellow arrow face-up in your arsenal, create a Gold token.
+
+Go again
+
+—————————————————————
+
+Blue Fin Harpoon
+
+Pirate Ranger Action – Arrow Attack
+
+(BLU) 2{r} 4{p} 3{d}
+
+Go Fish – When this hits a hero, they choose and reveal a card from their hand. If it’s blue, they discard it and you create a Gold token. If you’ve activated a cannon this turn, instead look at their hand and you choose the card.
+
+Blue Fin Harpoon triggers when it hits a hero. That hero then chooses and reveals a card from their hand. If the card revealed this way is a blue card, they will discard it and you will create a Gold token. However, if you activated a cannon this turn before this triggered effect started to resolve, you will instead look at that hero’s hand and you choose the card.
+
+There is no priority between the different parts of resolving this triggered effect (e.g. looking, choosing, revealing, discarding, and creating a Gold token.)
+
+While resolving this triggered effect, if you’ve activated a cannon this turn, you will look at that hero’s hand and choose a card, then that hero will reveal the card. If that hero is unable to reveal cards (e.g. Channel the Bleak Expanse), you will still look at that hero’s hand, and choose a card, but it is not revealed and the subsequent conditional effect doesn’t happen.
+
+—————————————————————
+
+Red Fin Harpoon
+
+Pirate Ranger Action – Arrow Attack
+
+(BLU) 2{r} 4{p} 3{d}
+
+Go Fish – When this hits a hero, they choose and reveal a card from their hand. If it’s red, they discard it and you create a Gold token. If you’ve activated a cannon this turn, instead look at their hand and you choose the card.
+
+Red Fin Harpoon triggers when it hits a hero. That hero then chooses and reveals a card from their hand. If the card revealed this way is a red card, they will discard it and you will create a Gold token. However, if you activated a cannon this turn before this triggered effect started to resolve, you will instead look at that hero’s hand and you choose the card.
+
+There is no priority between the different parts of resolving this triggered effect (e.g. looking, choosing, revealing, discarding, and creating a Gold token.)
+
+While resolving this triggered effect, if you’ve activated a cannon this turn, you will look at that hero’s hand and choose a card, then that hero will reveal the card. If that hero is unable to reveal cards (e.g. Channel the Bleak Expanse), you will still look at that hero’s hand, and choose a card, but it is not revealed and the subsequent conditional effect doesn’t happen.
+
+—————————————————————
+
+Yellow Fin Harpoon
+
+Pirate Ranger Action – Arrow Attack
+
+(BLU) 2{r} 4{p} 3{d}
+
+Go Fish – When this hits a hero, they choose and reveal a card from their hand. If it’s yellow, they discard it and you create a Gold token. If you’ve activated a cannon this turn, instead look at their hand and you choose the card.
+
+Yellow Fin Harpoon triggers when it hits a hero. That hero then chooses and reveals a card from their hand. If the card revealed this way is a yellow card, they will discard it and you will create a Gold token. However, if you activated a cannon this turn before this triggered effect started to resolve, you will instead look at that hero’s hand and you choose the card.
+
+There is no priority between the different parts of resolving this triggered effect (e.g. looking, choosing, revealing, discarding, and creating a Gold token.)
+
+While resolving this triggered effect, if you’ve activated a cannon this turn, you will look at that hero’s hand and choose a card, then that hero will reveal the card. If that hero is unable to reveal cards (e.g. Channel the Bleak Expanse), you will still look at that hero’s hand, and choose a card, but it is not revealed and the subsequent conditional effect doesn’t happen.
+
+—————————————————————
+
+Rusty Harpoon
+
+Pirate Ranger Action – Arrow Attack
+
+(BLU) 0{r} 1{p} 3{d}
+
+—————————————————————
+
+Goldfin Harpoon
+
+Pirate Ranger Action – Arrow Attack
+
+(YEL) 0{r} 2{p}
+
+If this would be put into a graveyard, instead remove it from the game.
+
+Goldfin Harpoon is a yellow card but it has no pitch property, meaning it cannot be pitched to gain resources to pay for costs. Effects can cause Goldfin Harpoon to be pitched (e.g. Shifting Tides); however, no resources would be generated.
+
+Goldfin Harpoon has no defense property, meaning it can not be used to defend with.
+
+Goldfin Harpoon is a card. If it is created by an effect, it spawns into the game and does not count towards the card limit for the format.
+
+Goldfin Harpoon can be included in a player’s card-pool and starting deck.
+
+Goldfin Harpoon is NOT a token, it can be put into any zone other than the graveyard (e.g. hand/deck/banished zone etc), without it being removed from the game.
+
+—————————————————————
+
+Redspine Manta
+
+Ranger Weapon – Bow (2H)
+
+Action — {t}: Put an arrow from your hand face-up into your arsenal. Go again
+
+—————————————————————
+
+Sealace Sarong
+
+Ranger Equipment – Legs
+
+2{d}
+
+Instant — {t}, turn a blue arrow in your arsenal face-up: It gets go again this turn.
+
+Blade Break
+
+When activating Sealace Sarong, you must turn a blue arrow in your arsenal face-up as part of its activation cost. An already face-up blue card in arsenal does not satisfy this cost.
+
+Turning a card face-up is not considered revealing the card or putting the card face-up in arsenal. It is simply changing its state from face-down to face-up.
+
+—————————————————————
+
+Patch the Hole
+
+Ranger Equipment – Head
+
+0{d}
+
+Instant — Destroy this: Return a card from your arsenal to your hand.
+
+When Patch the Hole’s activated ability resolves, you can return a card from your arsenal into your hand regardless of its face-up or face-down.
+
+The card that is returned to your hand loses any continuous effects (e.g. +1{p} from Bull’s Eye Bracers, etc) or counters it had while it was face-up in your arsenal. It effectively becomes a new object.
+
+—————————————————————
+
+Glidewell Fins
+
+Ranger Equipment – Arms
+
+1{d}
+
+Action — {r}, destroy this: Put an arrow from your hand face-up into your arsenal. It gets +1{p} this turn. Go again
+
+Battleworn
+
+You may activate Glidewell Fins’ activated ability even if you do not have an arrow in your hand. You will still get the action point from go again.
+
+—————————————————————
+
+Barbed Barrage
+
+Ranger Action – Arrow Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+As an additional cost to play this, you may pay {r}{r}{r}. If you do, this attacks an additional target.
+
+When playing Barbed Barrage, you will declare any costs you intend to pay, then you will declare any targets. As the additional cost is optional, if you declare you are intending to pay the additional cost, you will be able to declare an additional attack target.
+
+Any continuous effects that modify your Barbed Barrage attack (e.g. power increases/decreases, abilities, etc) will apply to the attack and each attack-target will face the same modified attack.
+
+When declaring multiple attack-targets for an attack, all attack-targets must be different from one another.
+
+Damage for each target is calculated separately, based on the defending cards (if any) that have been declared for that attack-target.
+
+If you attack with Barbed Barrage against an opponent who controls an object that requires you to choose them as the target of attacks if able (e.g. Arc Light Sentinel; Chum, Friendly First Mate), one of the attack-targets must be that required object. In the scenario where they happen to have two of these objects with requirements in the arena, Barbed Barrage can declare each one as an attack-target.
+
+If you attack with Barbed Barrage against multiple targets, one of which is an object with Spectra (e.g. Arc Light Sentinel, Shimmers of Silver, etc.), Spectra will trigger and destroy its object when it resolves; however, the combat chain will no longer explicitly close from Spectra’s effect (this is a rule change with High Seas). The combat chain will still close if there are no legal attack-targets remaining.
+
+If you attack with Barbed Barrage and deal damage to both a hero and an ally with ward they control in the first part of the damage step, the ally does not automatically die from damage as game state actions are not checked until after all damage has been dealt that players move into the priority window. (Allies die from damage during game state actions here). In this scenario, the ally will be destroyed as part of its ward effect if the hero takes damage, reducing the amount of damage dealt to the hero.
+
+If you attack 2 different targets using Barbed Barrage, during the defend step each hero in clockwise order declares the defending cards for themselves, starting with the player left of the attacker. Once a player has declared defending cards for themselves, players in clockwise order may add defending cards (e.g. with Protect), and then you move onto the next player declaring defending cards for themselves etc. Then, if two or more attack-targets are controlled by the same player, defending cards are declared for each attack-target in an order determined by that controlling player.
+
+If an effect would trigger for Barbed Barrage dealing damage or hitting an attack-target, it triggers for each attack-target it deals damage to or hits. For example, you play Toxicity (red) then play Barbed Barrage and attack two different heroes. In this scenario, if you were to hit both heroes, you would trigger Toxicity’s triggered effect twice: once for each hero that was hit. This results in one hero losing 5{h} when the first triggered effect resolves and the other hero also losing 5{h} when the other triggered effect resolves.
+
+If Barbed Barrage attacks multiple targets and has dominate, each player may add only one card from hand as a defending card to Barbed Barrage’s chain link.
+
+If Barbed Barrage attacks multiple targets and has overpower, each player may add only one action card as a defending card to Barbed Barrage’s chain link.
+
+In a UPF game, Barbed Barrage can target any attackable object controlled by opponents to the player’s immediate left or right. If you choose to attack an additional target, you can target any additional target using this same rule. If you choose to attack both an object controlled by the player on your left and object controlled by the player on your right, the player chooses at that time the focus of the combat chain (i.e. who can continue to be attacked without closing the combat chain).
+
+—————————————————————
+
+Return Fire
+
+Ranger Block
+
+(RED) 4{d}
+
+When this defends, you may banish an arrow from your hand. If you do, at the start of your next turn, put it face-up into your arsenal and it gets +3{p} until end of turn.
+
+Return Fire triggers when it becomes a defending card. This is an optional effect: You choose whether to banish an arrow from your hand at the time the triggered effect resolves. If you banish an arrow this way, you will generate a delayed-triggered effect that triggers at the start of your next turn. When resolving that delayed-triggered effect, you will put the banished arrow from the preceding effect into your arsenal and it gets +3{p} until end of turn.
+
+If you do not have an empty arsenal zone or the arrow gets turned face-down when Return Fire’s delayed-triggered resolves at the start of your turn, the banished arrow remains in the banish zone and does not move.
+
+Neither player receives priority at the start of turn.
+
+—————————————————————
+
+Drop the Anchor
+
+Ranger Action
+
+(RED) 0{r} 2{d}
+
+Your next arrow attack this turn gets +3{p} and “When this hits a hero, {t} them and all allies they control.”
+
+Go again
+
+—————————————————————
+
+Fire in the Hole
+
+Ranger Action
+
+(RED) 0{r} 2{d}
+
+Your next arrow attack this turn gets +3{p}.
+
+You may {u} a bow you control.
+
+Go again
+
+—————————————————————
+
+Monkey Powder
+
+Ranger Action
+
+(RED) 3{r} 2{d}
+
+Your next arrow attack this turn gets +1{p} and overpower.
+
+Draw a card.
+
+Go again
+
+—————————————————————
+
+Hook
+
+Ranger Action
+
+(BLU) 0{r} 3{d}
+
+Look at the top card of your deck. If it’s an arrow, you may put it face-up into your arsenal. If you do, it gets +1{p} this turn.
+
+Go again
+
+There is no priority between looking at the top of your deck and putting it face-up into your arsenal if it’s an arrow.
+
+While resolving Hook, you must look at the top card of your deck; however, the subsequent effect of putting it face-up into your arsenal if it is an arrow is optional.
+
+—————————————————————
+
+Line
+
+Ranger Action
+
+(BLU) 0{r} 3{d}
+
+Look at the top card of your deck. If it’s an arrow, you may put it face-up into your arsenal. If you do, it gets go again this turn.
+
+Go again
+
+There is no priority between looking at the top of your deck and putting it face-up into your arsenal if it’s an arrow.
+
+While resolving Line, you must look at the top card of your deck; however, the subsequent effect of putting it face-up into your arsenal if it is an arrow is optional.
+
+—————————————————————
+
+Sinker
+
+Ranger Action
+
+(BLU) 0{r} 3{d}
+
+Look at the top card of your deck. If it’s an arrow, you may put it face-up into your arsenal. If you do, it gets overpower this turn.
+
+Go again
+
+There is no priority between looking at the top of your deck and putting it face-up into your arsenal if it’s an arrow.
+
+While resolving Sinker, you must look at the top card of your deck; however, the subsequent effect of putting it face-up into your arsenal if it is an arrow is optional.
+
+—————————————————————
+
+Dry Powder Shot
+
+Ranger Action – Arrow Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+When this is put face-up into your arsenal, it gets +2{p} this turn.
+
+Dry Powder Shot triggers when it is put into the arsenal face-up. It does not trigger if it is already in the arsenal and is turned face-up by an effect.
+
+—————————————————————
+
+Entangling Shot
+
+Ranger Action – Arrow Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+When this is put face-up into your arsenal, you may {t} target hero.
+
+Entangling Shot triggers when it is put into the arsenal face-up. This is an optional effect: If you would like to {t} a target hero, you will declare that target when adding this triggered effect to the stack. You may also choose not to target a hero and the triggered effect is not added to the stack.
+
+Entangling Shot does not trigger if it is already in the arsenal and is turned face-up by an effect.
+
+—————————————————————
+
+Nettling Shot
+
+Ranger Action – Arrow Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+When this is put face-up into your arsenal, you may {t} target ally.
+
+Nettling Shot triggers when it is put into the arsenal face-up. This is an optional effect: If you would like to {t} a target ally, you will declare that target when adding this triggered effect to the stack. You may also choose not to target a hero and the triggered effect is not added to the stack.
+
+Nettling Shot does not trigger if it is already in the arsenal and is turned face-up by an effect.
+
+—————————————————————
+
+Scouting Shot
+
+Ranger Action – Arrow Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+When this is put face-up into your arsenal, you may look at the top card of your deck.
+
+Scouting Shot triggers when it is put into the arsenal face-up. This is an optional effect: You choose whether or not you would like to look at the top card of your deck when the triggered effect resolves.
+
+Scouting Shot does not trigger if it is already in the arsenal and is turned face-up by an effect.
+
+—————————————————————
+
+Swift Shot
+
+Ranger Action – Arrow Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+When this is put face-up into your arsenal, it gets go again this turn.
+
+Swift Shot triggers when it is put into the arsenal face-up. It does not trigger if it is already in the arsenal and is turned face-up by an effect.
+
+—————————————————————
+
+Call in the Big Guns
+
+Ranger Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Your next arrow attack this turn gets +3/2/1{p}.
+
+You may put an arrow from your hand face-up into your arsenal.
+
+Go again
+
+—————————————————————
+
+## Pirate Thief Cards
+
+Scurv, Stowaway
+
+Pirate Thief Hero – Young
+
+4{i} 20{h}
+
+Action — {t}, destroy a Gold you control: Create a Goldkiss Rum token. Go again
+
+Whenever you activate a Goldkiss Rum, gain {r}.
+
+Scurv, Stowaway does not have a basic-rarity. In High Seas limited formats, you must have Scurv, Stowaway in your limited card-pool to use them as a hero. If you do not open Scurv, Stowaway from your booster pack in a sealed deck format, or draft Scurv, Stowaway from a booster in booster draft format, then you cannot play as Scurv, Stowaway.
+
+When paying the costs to activate Scurv’s activated ability, you may choose to destroy any Gold you control, not just Gold tokens. This includes objects which count as a Gold (e.g. Aurum Aegis)
+
+Scurv triggers whenever you activate a Goldkiss Rum. If you activate a Goldkiss Rum, Scurv will trigger; however, the {r} you would gain won’t be able to be used to pay for any additional resource costs (e.g. Channel Lake Frigid, Frostbite) that the activation may require. You will gain {r} when the triggered effect resolves.
+
+—————————————————————
+
+Sticky Fingers
+
+Scurv Companion – Off-Hand Ally
+
+2{p} 2{h}
+
+Action — {t}: Attack. If this is equipped, unequip it.
+
+When this attacks a hero, steal a Gold token they control.
+
+Perched
+
+You may only use Sticky Fingers if your hero has the moniker (i.e. short name) Scurv.
+
+Sticky Fingers’ triggers when its attack ability resolves and Sticky Fingers becomes attacking against a hero. You will steal a Gold token that hero controls when the triggered effect resolves.
+
+—————————————————————
+
+## Pirate Cards
+
+Gold-Baited Hook
+
+Pirate Equipment – Arms
+
+1{d}
+
+Action — {t}: Your next Pirate attack this turn gets “When this hits a hero, steal a Gold token they control, otherwise create a Gold token.” At the beginning of your end phase, if you haven’t created or stolen a Gold this turn, destroy this. Go again
+
+Battleworn
+
+When Gold-Baited Hook’s activated ability resolves, it generates a continuous effect that applies to your next Pirate attack this turn. After applying the continuous effect to your next Pirate attack, it triggers when the attack hits a hero. You will steal a Gold token they control when the triggered effect resolves. If you do not steal a Gold token they control, you will create a Gold token.
+
+When Gold-Baited Hook’s activated ability resolves, it also generates a delayed-triggered effect that triggers at the beginning of your end phase. Whether or not you have created or stolen a Gold this turn is checked at the time this triggered effect resolves. If you have not created or stolen a Gold this turn, you will destroy Gold-Bated Hook as part of resolving this triggered effect.
+
+The continuous effect gives the triggered-static ability to your next Pirate attack which may include it being the next Pirate attack action card you play, the next Pirate weapon attack you activate, or the next Pirate ally attack you activate.
+
+Neither player receives priority during the end phase of a turn.
+
+—————————————————————
+
+Blue Sea Tricorn
+
+Pirate Equipment – Head
+
+1{d}
+
+Action — {r}{r}{r}, destroy this: Draw a card. Go again
+
+Blade Break
+
+—————————————————————
+
+Buccaneer’s Bounty
+
+Pirate Equipment – Chest
+
+1{d}
+
+Action — Destroy this: Gain {r}. Go again
+
+Blade Break
+
+—————————————————————
+
+Fish Fingers
+
+Pirate Equipment – Arms
+
+1{d}
+
+Action — {r}, destroy this: Your next attack this turn gets +1{p}. Go again
+
+Blade Break
+
+The continuous effect that increases the power applies to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+—————————————————————
+
+Peg Leg
+
+Pirate Equipment – Legs
+
+1{d}
+
+Action — {r}{r}{r}, destroy this: Your next attack this turn gets go again. Go again
+
+Blade Break
+
+The continuous effect that grants go again applies to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+—————————————————————
+
+Conqueror of the High Seas
+
+Pirate Action – Attack
+
+(RED) 4{r} 7{p} 3{d}
+
+When this hits a hero, destroy all cards in their arsenal. Create a Gold token for each card destroyed this way.
+
+High Tide – If there are 2 or more blue cards in your pitch zone, this gets +1{p} and go again.
+
+There is no priority between destroying all cards in the arsenal of the hero who was hit and creating Gold tokens.
+
+High Tide checks your pitch zone constantly, not just when it attacks. If the condition is met after the attack is made, it will get the effect.
+
+—————————————————————
+
+Loan Shark
+
+Pirate Action – Aura
+
+(YEL) 0{r} 3{d}
+
+Go again
+
+When this enters the arena, create 2 Gold tokens.
+
+At the beginning of your end phase, if you haven’t created or stolen a Gold this turn, destroy this, then lose 2{h} unless you discard a card.
+
+Loan Shark’s first ability triggers when it enters the arena. You will create 2 Gold tokens when the triggered effect resolves.
+
+Loan Shark’s second ability triggers at the beginning of your end phase. There is no priority in the end phase.
+
+Whether you have created or stolen a Gold this turn is checked when the triggered effect resolves. If you haven’t created or stolen a Gold this turn, you must destroy Loan Shark. Then, regardless if Loan Shark is destroyed or not, you must either lose 2{h} or discard a card of your choice from your hand.
+
+If you have created or stolen a Gold this turn you do not destroy Loan Shark and you do not lose 2{h}/discard a card.
+
+—————————————————————
+
+Tip the Barkeep
+
+Pirate Action
+
+(BLU) 0{r} 3{d}
+
+Create a Goldkiss Rum token.
+
+You may give a Gold token you control to another hero. If you do, put this on the bottom of its owner’s deck.
+
+Go again
+
+Giving a Gold token you control to another hero this way is not creating nor stealing a Gold for the purposes of cards and effects.
+
+There is no priority between giving a Gold token to another hero and putting this card on the bottom of its owner’s deck.
+
+If there are no cards in the owner’s deck zone when resolving this effect, it will become the only card there.
+
+—————————————————————
+
+Sunken Treasure
+
+Pirate Block
+
+(BLU) 3{d}
+
+When this defends, you may turn a card in a graveyard face-down. If it’s yellow, create a Gold token.
+
+Sunken Treasure triggers when it resolves and becomes a defending card on the combat chain. This is an optional effect: You choose whether or not to turn a card in any graveyard face-down at the time the triggered effect resolves. If you turn a card in a graveyard face-down and it is yellow, you will create a Gold token.
+
+The card in the graveyard must be face-up in order for it to be turned face-down. If there are no cards face-up in any graveyard at the time this triggered effect resolves, you cannot do this optional effect.
+
+Unless a rule or effect allows you to do so, you cannot declare defending cards against attacks where the attack-target is an ally you control.
+
+—————————————————————
+
+HMS Barracuda
+
+Pirate Action – Attack
+
+(YEL) 4{r} 6{p} 3{d}
+
+When this hits a hero, destroy an ally they control.
+
+High Tide – If there are 2 or more blue cards in your pitch zone, this gets +1{p} and overpower.
+
+HMS Barrucuda triggers when it hits a hero. You will choose which ally that hero controls to destroy when the triggered effect resolves.
+
+You can destroy a perched ally with HMS Barrucuda’s trigger.
+
+High Tide checks your pitch zone constantly, not just when it attacks. If the condition is met after the attack is made, it will get the effect.
+
+—————————————————————
+
+HMS Kraken
+
+Pirate Action – Attack
+
+(YEL) 4{r} 6{p} 3{d}
+
+When this hits a hero, destroy an item they control.
+
+High Tide – If there are 2 or more blue cards in your pitch zone, this gets +1{p} and overpower.
+
+HMS Kraken triggers when it hits a hero. You will choose which item that hero controls to destroy when the triggered effect resolves.
+
+High Tide checks your pitch zone constantly, not just when it attacks. If the condition is met after the attack is made, it will get the effect.
+
+—————————————————————
+
+HMS Marlin
+
+Pirate Action – Attack
+
+(YEL) 4{r} 6{p} 3{d}
+
+When this hits a hero, destroy the top card of their deck.
+
+High Tide – If there are 2 or more blue cards in your pitch zone, this gets +1{p} and overpower.
+
+HMS Marlin triggers when it hits a hero. You will destroy the top card of that hero’s deck when the triggered effect resolves.
+
+Destroying the top card of that hero’s deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of that hero’s deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+High Tide checks your pitch zone constantly, not just when it attacks. If the condition is met after the attack is made, it will get the effect.
+
+—————————————————————
+
+Murderous Rabble
+
+Pirate Action – Attack
+
+(BLU) 0{r} 0{p} 3{d}
+
+When this attacks, reveal the top card of your deck. This gets +X{p}, where X is the pitch value of the card revealed this way.
+
+Go again
+
+Murderous Rabble triggers when it resolves on the stack and becomes an attacking card. You will reveal the top card of your deck when the triggered effect resolves. Then, this gets +X{p} where X is the pitch value of the card revealed this way.
+
+If a card with no pitch value is revealed (e.g. Gorganian Tome, Goldfin Harpoon), X will be 0.
+
+If you can’t reveal cards because there are no cards in your deck, or due to an effect (e.g. Channel the Bleak Expanse), X will be 0.
+
+—————————————————————
+
+Pilfer the Wreck
+
+Pirate Action – Attack
+
+(RED/YEL/BLU) 3{r} 7/6/5{p} 2{d}
+
+When this hits a hero, you may turn a card in their graveyard face-down. If it’s yellow, create a Gold token.
+
+Pilfer the Wreck triggers when it hits a hero. This is an optional effect: You choose whether or not to turn a card in any graveyard face-down at the time the triggered effect resolves. If you turn a card in a graveyard face-down and it is yellow, you will create a Gold token.
+
+The card in that hero’s graveyard must be face-up in order for it to be turned face-down. If there are no cards face-up in that hero’s graveyard at the time this triggered effect resolves, you cannot do this optional effect.
+
+—————————————————————
+
+Saltwater Swell
+
+Pirate Action – Attack
+
+(RED/YEL/BLU) 1{r} 3/2/1{p} 3{d}
+
+When this attacks, reveal the top card of your deck. If it’s blue, pitch it.
+
+Go again
+
+Saltwater Swell triggers when it resolves on the stack and becomes an attacking card. You will reveal the top card of your deck when the triggered effect resolves. If the card revealed this way is blue, you must pitch it.
+
+When you pitch cards this way, you may still trigger effects due to pitching and you still gain the resources from pitching (e.g. you would gain 3 resources). Cards without a pitch value do not generate any resources when pitched.
+
+If you are under an effect that says you can’t pitch a specific card (e.g. Chains of Eminence, Null Time Zone) you will not be able to pitch that card and it will remain on top of the deck.
+
+—————————————————————
+
+Divvy Up
+
+Pirate Action
+
+(BLU) 0{r} 3{d}
+
+Remove half the gold counters from Treasure Island, rounded up. If you are a Thief, instead remove all of them.
+
+Create Gold tokens equal to the number of gold counters removed this way.
+
+When Divvy Up resolves, you will remove half the gold counters from Treasure island, rounding-up; however, if you are a Thief, you will remove all of the Gold tokens. Then, you will create Gold tokens equal to the number of gold counters removed this way.
+
+There is no priority between removing the gold tokens from Treasure Island and creating the Gold tokens.
+
+—————————————————————
+
+Portside Exchange
+
+Pirate Action
+
+(BLU) 0{r} 3{d}
+
+Discard a card, then draw a card. If a yellow card is discarded this way, create a Gold token.
+
+Go again
+
+If you don’t discard a card, you will still draw a card.
+
+There is no priority between discarding a card, drawing a card and creating a Gold token.
+
+—————————————————————
+
+Sea Floor Salvage
+
+Pirate Action
+
+(BLU) 0{r} 3{d}
+
+Turn a card in a graveyard face-down. If it’s yellow, create a Gold token.
+
+Go again
+
+When Sea Floor Salvage resolves, you must turn a card in any graveyard face-down. If you turn a card in a graveyard face-down and it is yellow, you will create a Gold token.
+
+The card in the graveyard must be face-up in order for it to be turned face-down. If there are no cards face-up in any graveyard at the time this triggered effect resolves, you cannot do this optional effect.
+
+—————————————————————
+
+Scrub the Deck
+
+Pirate Action
+
+(BLU) 0{r} 3{d}
+
+Destroy the top card of target hero’s deck. If it’s yellow, create a Gold token.
+
+Go again
+
+When you play Scrub the Deck, you must target a hero. When it resolves, you will destroy the top card of that hero’s deck and it is yellow, you will create a Gold token.
+
+Destroying the top card of that hero’s deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of that hero’s deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+—————————————————————
+
+Shifting Tides
+
+Pirate Action – Aura
+
+(BLU) 0{r} 3{d}
+
+Go again
+
+At the start of your turn, pitch the top card of your deck. If it’s blue, put this on the bottom of its owner’s deck, otherwise destroy this.
+
+Shifting Tides triggers at the start of your turn if it is in the arena. You must pitch the top card of your deck
+
+When you pitch cards this way, you may still trigger effects due to pitching and you still gain the resources from pitching (e.g. you would gain resources equivalent to the pitch value of the card). Cards without a pitch value (e.g. Gorganian Tome, Goldfin Harpoon) do not generate any resources when pitched.
+
+Neither player receives priority during the start phase of a turn.
+
+If a card that is being pitched is in a private state, it is shown and made public first before it is moved to the pitched zone. if you are under an effect that says you can’t pitch a specific card (e.g. Chains of Eminence, Null Time Zone) you will not be able to pitch that card and will be put into the graveyard by the subsequent effect.
+
+If you do not pitch the top card of your deck (e.g. your deck zone is empty), you will destroy Shifting Tides.
+
+If you don’t have any cards in your deck zone when resolving this effect, it will become the only card there.
+
+—————————————————————
+
+Not So Fast
+
+Pirate Instant
+
+(YEL) 0{r}
+
+Scurv Specialization
+
+The next time an opponent would draw a card from the effect of a Gold token this turn, instead you draw a card.
+
+Not So Fast generates a standard-replacement effect when its card resolves. After it resolves, the next time an opponent would draw a card from the effect of a Gold token this turn, instead you draw a card.
+
+If an opponent would draw 2 or more cards from the effect of a Gold token, instead you draw a card, and they draw that many minus 1.
+
+—————————————————————
+
+Throw Caution to the Wind
+
+Pirate Instant
+
+(BLU) 0{r}
+
+Reveal the top card of your deck. The next time you would be dealt damage this turn, prevent X of that damage, where X is the pitch value of the card revealed this way.
+
+This is a fixed-prevention effect. It prevents damage from 1 event, and any remaining prevention amount is lost and does not prevent damage from future damage events.
+
+If a card with no pitch value is revealed (e.g. Gorganian Tome, Goldfin Harpoon), X will be 0.
+
+If you can’t reveal cards due to an effect (e.g. Channel the Bleak Expanse), X will be 0.
+
+—————————————————————
+
+Lost in Transit
+
+Pirate Block
+
+(YEL) 3{d}
+
+When this defends, you may remove a gold counter from Treasure Island. If you do and you are a Thief, create a Gold token.
+
+Lost in Transit triggers when it becomes a defending card on the combat chain. This is an optional effect: You choose whether or not to remove a gold counter from Treasure Island at the time the triggered effect resolves. If you do and your hero is a Thief, you will create a Gold token.
+
+Unless a rule or effect allows you to do so, you cannot declare defending cards against attacks where the attack-target is an ally you control.
+
+There is no priority between removing a gold counter and creating a Gold token.
+
+—————————————————————
+
+Battalion Barque
+
+Pirate Action – Attack
+
+(RED/YEL/BLU) 4{r} 7/6/5{p} 3{d}
+
+High Tide – If there are 2 or more blue cards in your pitch zone, this gets +2{p}.
+
+High Tide checks your pitch zone constantly, not just when it attacks. If the condition is met after the attack is made, it will get the effect.
+
+—————————————————————
+
+Expedition to Azuro Keys
+
+Pirate Action – Attack
+
+(RED) 0{r} 4{p} 2{d}
+
+When this attacks, you may put a gold counter on Treasure Island.
+
+Expedition to Azuro Keys triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to put a gold counter on Treasure Island at the time the triggered effect resolves.
+
+—————————————————————
+
+Expedition to Blackwater Strait
+
+Pirate Action – Attack
+
+(RED) 1{r} 5{p} 2{d}
+
+When this attacks, you may put a gold counter on Treasure Island.
+
+Expedition to Blackwater Strait triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to put a gold counter on Treasure Island at the time the triggered effect resolves.
+
+—————————————————————
+
+Expedition to Dreadfall Reach
+
+Pirate Action – Attack
+
+(RED) 2{r} 6{p} 2{d}
+
+When this attacks, you may put a gold counter on Treasure Island.
+
+Expedition to Dreadfall Reach triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to put a gold counter on Treasure Island at the time the triggered effect resolves.
+
+—————————————————————
+
+Expedition to Horizon’s Mantle
+
+Pirate Action – Attack
+
+(RED) 3{r} 7{p} 2{d}
+
+When this attacks, you may put a gold counter on Treasure Island.
+
+Expedition to Horizon’s Mantle triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to put a gold counter on Treasure Island at the time the triggered effect resolves.
+
+—————————————————————
+
+Golden Tipple
+
+Pirate Action – Attack
+
+(RED/YEL/BLU) 1{r} 3/2/1{p} 2{d}
+
+When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.
+
+Go again
+
+Golden Tipple triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to discard a yellow card at the time the triggered effect resolves. If you discard a yellow card this way, you will draw a card and create a Gold token.
+
+While resolving this effect, if you discard a yellow card this way and you cannot draw a card, you will still create a Gold token and vice versa.
+
+There is no priority between discarding a card, drawing a card and creating a gold token.
+
+—————————————————————
+
+Gold Hunter Lightsail
+
+Pirate Action – Attack
+
+(YEL) 1{r} 4{p} 2{d}
+
+When this attacks, if you control less Gold than an opponent, this gets go again.
+
+Gold Hunter Lightsail triggers when it resolves on the stack and becomes an attacking card. Whether or not you control less Gold than an opponent is checked at the time the triggered effect resolves. If you control less Gold than an opponent, this attack gets go again.
+
+When checking whether or not you control less Gold than an opponent, any Gold tokens and objects that count as Gold (e.g. Aurum Aegis) under your control contribute to this check. Treasure Island’s gold counters do not contribute to this check.
+
+Less Gold than an opponent essentially means less Gold than the opponent with the most gold.
+
+—————————————————————
+
+Gold Hunter Longboat
+
+Pirate Action – Attack
+
+(YEL) 0{r} 3{p} 2{d}
+
+If you control less Gold than an opponent, this gets +2{p}.
+
+Gold Hunter Longboat’s continuous effect constantly checks whether or not you have less Gold than an opponent.
+
+When checking whether or not you control less Gold than an opponent, any Gold tokens and objects that count as Gold (e.g. Aurum Aegis) under your control contribute to this check. Treasure Island’s gold counters do not contribute to this check.
+
+This ability is not functional while it is defending.
+
+Less Gold than an opponent essentially means less Gold than the opponent with the most gold.
+
+—————————————————————
+
+Gold Hunter Marauder
+
+Pirate Action – Attack
+
+(YEL) 3{r} 6{p} 2{d}
+
+If you control less Gold than an opponent, this gets overpower.
+
+Gold Hunter Marauder’s continuous effect constantly checks whether or not you have less Gold than an opponent.
+
+When checking whether or not you control less Gold than an opponent, any Gold tokens and objects that count as Gold (e.g. Aurum Aegis) under your control contribute to this check.Treasure Island’s gold counters do not contribute to this check.
+
+Less Gold than an opponent essentially means less Gold than the opponent with the most gold.
+
+—————————————————————
+
+Gold Hunter Ketch
+
+Pirate Action – Attack
+
+(YEL) 4{r} 7{p} 2{d}
+
+If you control less Gold than an opponent, this costs {r}{r} less to play.
+
+Gold Hunter Longboat’s continuous effect constantly checks whether or not you have less Gold than an opponent.
+
+When checking whether or not you control less Gold than an opponent, any Gold tokens and objects that count as Gold (e.g. Aurum Aegis) under your control contributes to this check. Treasure Island’s gold counters do not contribute to this check.
+
+—————————————————————
+
+Swiftwater Sloop
+
+Pirate Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 2{d}
+
+High Tide – If there are 2 or more blue cards in your pitch zone, this gets go again.
+
+High Tide checks your pitch zone constantly, not just when it attacks. If the condition is met after the attack is made, it will get the effect.
+
+—————————————————————
+
+Swindler’s Grift
+
+Pirate Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 2{d}
+
+When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.
+
+Swindler’s Grift triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to discard a yellow card at the time the triggered effect resolves. If you discard a yellow card this way, you will draw a card and create a Gold token.
+
+While resolving this effect, if you discard a yellow card this way and you cannot draw a card, you will still create a Gold token and vice versa.
+
+There is no priority between discarding a card, drawing a card and creating a gold token.
+
+—————————————————————
+
+Thiev’n Varmints
+
+Pirate Action – Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+When this attacks, you may remove a gold counter from Treasure Island. If you do and you are a Thief, create a Gold token.
+
+Thiev’n Varmints triggers when it resolves and becomes an attacking card This is an optional effect: You choose whether or not to remove a gold counter from Treasure Island at the time the triggered effect resolves. If you do and your hero is a Thief, you will create a Gold token.
+
+Unless a rule or effect allows you to do so, you cannot declare defending cards against attacks where the attack-target is an ally you control.
+
+There is no priority between removing a gold counter and creating a Gold token
+
+—————————————————————
+
+Chart a Course
+
+Pirate Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Your first/second/third attack this turn gets +3{p}.
+
+You may put a gold counter on Treasure Island.
+
+Go again
+
+If you play Chart a Course after your first/second/third attack of the turn, it retroactively increases the power of that attack but does not retroactively recalculate damage dealt. It does not give the effect to your next attack instead.
+
+—————————————————————
+
+Mutiny on the Battalion Barque
+
+Pirate Action
+
+(BLU) 0{r} 2{d}
+
+For each hero that controls more Gold than you, steal a Gold token they control.
+
+If you gain control of 1 or more Gold tokens this way, your next attack this turn gets +2{p}.
+
+Go again
+
+When Mutiny on the Battalion Barque resolves, you will first establish and determine who and how many players have more Gold than you at that time. After you determine that, then you will steal a Gold token from each of those players.
+
+Any Gold tokens and objects that count as Gold (e.g. Aurum Aegis) under players’ control contributes to this check. Treasure Island’s gold counters do not contribute to this check.
+
+This can only steal Gold tokens. It cannot steal non-token cards that count as Gold (e.g. Aurum Aegis).
+
+The continuous effect that increases the power applies to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+—————————————————————
+
+Mutiny on the Nimbus Sovereign
+
+Pirate Action
+
+(BLU) 0{r} 2{d}
+
+For each hero that controls more Gold than you, steal a Gold token they control.
+
+If you gain control of 1 or more Gold tokens this way, your next attack this turn gets overpower.
+
+Go again
+
+When Mutiny on the Nimbus Sovereign resolves, you will first establish and determine who and how many players have more Gold than you at that time. After you determine that, then you will steal a Gold token from each of those players.
+
+Any Gold tokens and objects that count as Gold (e.g. Aurum Aegis) under players’ control contributes to this check. Treasure Island’s gold counters do not contribute to this check.
+
+This can only steal Gold tokens. It cannot steal non-token cards that count as Gold (e.g. Aurum Aegis).
+
+The continuous effect that grants overpower applies to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+—————————————————————
+
+Mutiny on the Swiftwater
+
+Pirate Action
+
+(BLU) 0{r} 2{d}
+
+For each hero that controls more Gold than you, steal a Gold token they control.
+
+If you gain control of 1 or more Gold tokens this way, your next attack this turn gets go again.
+
+Go again
+
+When Mutiny on the Swiftwater resolves, you will first establish and determine who and how many players have more Gold than you at that time. After you determine that, then you will steal a Gold token from each of those players.
+
+Any Gold tokens and objects that count as Gold (e.g. Aurum Aegis) under players’ control contributes to this check. Treasure Island’s gold counters do not contribute to this check.
+
+This can only steal Gold tokens. It cannot steal non-token cards that count as Gold (e.g. Aurum Aegis).
+
+The continuous effect grants go again applies to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+—————————————————————
+
+## Generic Cards
+
+Bandana of the Blue Beyond
+
+Generic Equipment – Head
+
+0{d}
+
+Action — Discard a card, destroy this: Put a blue card from your graveyard on the bottom of your deck. Go again
+
+If you don’t have any cards in your deck zone when resolving this effect, it will become the only card there.
+
+If you have no blue cards in your graveyard when resolving this effect, no cards will be added to your deck.
+
+—————————————————————
+
+Helmsman’s Peak
+
+Generic Equipment – Head
+
+1{d}
+
+When this defends, look at the top card of your deck.
+
+Blade Break
+
+Helmsman’s Peak triggers when it becomes a defending card on the combat chain. You must look at the top card of your deck when it resolves.
+
+—————————————————————
+
+Captain’s Coat
+
+Generic Equipment – Chest
+
+0{d}
+
+Action — Destroy this: Gain {r}. Activate this only if you’ve drawn a card this turn. Go again
+
+—————————————————————
+
+Old Knocker
+
+Generic Equipment – Chest
+
+1{d}
+
+Instant — {t} your hero, destroy this: Gain {r}
+
+Blade Break
+
+—————————————————————
+
+Swiftstrike Bracers
+
+Generic Equipment – Arms
+
+0{d}
+
+Action — Destroy this: Your next attack this turn gets +2{p}. Activate this only if you’ve played a Nimblism this turn. Go again
+
+The continuous effect that increases the power applies to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+—————————————————————
+
+Light Fingers
+
+Generic Equipment – Arms
+
+1{d}
+
+When this defends, if you are a Thief, steal a Gold token the attacking hero controls.
+
+Blade Break
+
+Light Fingers triggers when it becomes a defending card on the combat chain. Whether or not your hero is a Thief is checked when the triggered effect resolves. If you are a Thief, you will steal a Gold token that the attacking hero controls.
+
+You will not steal a Gold token if this defends an ally attack as there is no attacking hero for that attack.
+
+—————————————————————
+
+Quartermaster’s Boots
+
+Generic Equipment – Legs
+
+1{d}
+
+Action — {r}{r}, destroy this: The next non-attack action card you play this turn gets go again. Go again
+
+Blade Break
+
+—————————————————————
+
+Quick Clicks
+
+Generic Equipment – Legs
+
+0{d}
+
+Action — Destroy this: Your next attack this turn gets go again. Activate this only if you’ve played a Nimblism this turn. Go again
+
+The continuous effect that grants go again applies to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+—————————————————————
+
+Sea Legs
+
+Generic Action – Attack
+
+(YEL) 3{r} 6{p} 3{d}
+
+When this is discarded, create a Goldkiss Rum token.
+
+Sea Legs triggers when it is discarded from your hand. You will create a Goldkiss Rum token when this triggered effect resolves.
+
+—————————————————————
+
+Midas Touch
+
+Generic Action
+
+(YEL) 1{r} 3{d}
+
+Destroy target ally. Its controller creates Gold tokens equal to its cost.
+
+Go again
+
+You can target an ally that is on the stack waiting to resolve. Destroying the ally this way is not dealing lethal damage to it.
+
+The cost of an ally is located in the upper right hand corner of the card. If the ally does not have a cost property (e.g. Metis, Archangel of Tenacity), its controller will not create any Gold tokens.
+
+—————————————————————
+
+Amethyst Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Instant — Destroy this: Your next attack this turn gets +2{p}.
+
+Legend of the Watery Grave
+
+The continuous effects that increases the power applies to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+—————————————————————
+
+Diamond Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Instant — Destroy this: Gain 1 action point.
+
+Legend of the Watery Grave
+
+You cannot gain action points during your opponent’s turns.
+
+—————————————————————
+
+Onyx Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Action — Destroy this: {t} all heroes and allies. Go again
+
+Legend of the Watery Grave
+
+When Onyx Amulet’s activated ability resolves, you will {t} all heroes and allies, including your hero and your allies.
+
+—————————————————————
+
+Opal Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Instant — Destroy this: Opt 2
+
+Legend of the Watery Grave
+
+—————————————————————
+
+Pearl Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Action — Destroy this: {u} target permanent. Go again
+
+Legend of the Watery Grave
+
+When you activate Pearl Amulet, you must target a permanent that is the arena for its effect. When Pearl Amulet activated ability resolves, you will {u} that target permanent.
+
+—————————————————————
+
+Platinum Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Instant — Destroy this: Target defending card gets +1{d} until end of turn.
+
+Legend of the Watery Grave
+
+When you activate Platinum Amulet, you must target a defending card on the combat chain for its effect. When Platinum Amulet’s activated ability resolves, that defending card will get +1{d} until the end of turn.
+
+You may target any defending card, including those defending cards that are on the previous chain link on the current combat chain.
+
+You may target a defending card that does not have a defense value; however, this will still result in that target defending card having no defense value. (Note: 0 is a valid defense value).
+
+If the combat chain closes, the defending card will retain the +1{d} continuous effect generated from Platinum Amulet for the remainder of the turn as long as the defending card remains in the arena (e.g. a defending equipment card that is not destroyed when the combat chain closes). If you were to defend with that affected card again against another attack that turn, it will have the +1{d}.
+
+—————————————————————
+
+Pounamu Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Action — Destroy this: Gain 2{h}. Go again
+
+Legend of the Watery Grave
+
+—————————————————————
+
+Ruby Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Instant — Destroy this: Gain {r}{r}
+
+Legend of the Watery Grave
+
+—————————————————————
+
+Sapphire Amulet
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Action — Destroy this: Your hero gets +1{i} this turn.
+
+Legend of the Watery Grave
+
+You draw cards up to your intellect before end of turn effects end. In this case you will essentially draw an additional card during your end phase due to Sapphire Amulet’s continuous effect that increases your intellect.
+
+—————————————————————
+
+Crash Down the Gates
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 3{r} 6/5/4{p} 2{d}
+
+When this attacks a hero, they reveal the top card of their deck. If this has {p} greater than the revealed card, this gets +2{p}.
+
+When this hits a hero, destroy the top card of their deck.
+
+Crash Down the Gates’ first ability triggers when it resolves on the stack and becomes an attacking card against a hero. That hero must reveal the top of their deck. If Crash Down the Gates has {p} that is strictly greater than the revealed card, this will get +2{p}.
+
+Crash Down the Gates’ will compare its modified {p}, not its base {p}.
+
+If a card without the {p} property is revealed, Crash Down the Gates will get +2{p}.
+
+If the hero cannot reveal the top card of their deck when Crash Down the Gates’ triggered effect resolves (e.g. Channel the Bleak Expanse), Crash Down the Gates will get +2{p}
+
+Crash Down the Gates’ second ability triggers when it hits a hero. That hero must destroy the top card of their deck when the triggered effect resolves.
+
+Destroying the top card of that hero’s deck will not trigger any “when this is destroyed,…” effects unless it is specified by the ability’s triggering condition.
+
+Destroying the top card of that hero’s deck will not satisfy any condition nor trigger any effects that look at whether you’ve destroyed an object you control (e.g. Merciful Retribution, Ratchet Up) as you do not control the cards in your deck.
+
+—————————————————————
+
+Jack Be Nimble
+
+Generic Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+When this attacks, you may banish a Nimblism from your graveyard. If you do, this gets +1{p} and go again.
+
+When this hits a hero, steal an item they control until the end of this action phase.
+
+Jack Be Nimble’s first ability triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to banish a Nimblism from your graveyard at the time the triggered effect resolves. If you banish a Nimblism from your graveyard this way, Jack Be Nimble will get +1{p} and go again.
+
+Jack Be Nimble’s second ability triggers when it hits a hero. You will select which item you will steal at the time the triggered effect resolves and will steal (gain control) of it until the end of this action phase.
+
+The item stolen by Jack Be Nimble’s effect must be returned to its previous controller at the end of the action phase in its current state (e.g. tapped/untapped, existing counters, etc.). This does not satisfy any conditions nor trigger any effects that look at when the item enters the arena or is played because the item is already in the arena and the control of the object is simply changing.
+
+—————————————————————
+
+Jack Be Quick
+
+Generic Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+When this attacks, you may banish a Nimblism from your graveyard. If you do, this gets +1{p} and go again.
+
+When this hits a hero, {u} an ally they control, then steal it until the end of this action phase.
+
+Jack Be Quick’s first ability triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to banish a Nimblism from your graveyard at the time the triggered effect resolves. If you banish a Nimblism from your graveyard this way, Jack Be Nimble will get +1{p} and go again.
+
+Jack Be Quick’s second ability triggers when it hits a hero. When the triggered effect resolves, you will select which ally you will {u} and steal (gain control) of it until the end of this action phase. There is no priority between {u} an ally and stealing it.
+
+The ally stolen by Jack Be Quick’s effect must be returned to its previous controller at the end of the action phase in its current state (e.g. tapped/untapped, existing counters, etc.). This does not satisfy any conditions nor trigger any effects that look at when the ally enters the arena or is played because the ally is already in the arena and the control of the object is simply changing.
+
+To steal an off-hand ally with perched that is equipped, you must also be able to equip that ally. To do so, you must have an empty weapon zone, or have a 2H weapon, and must not have another off-hand equipped.
+
+—————————————————————
+
+Money or Your Life?
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 3{r} 6/5/4{p} 2{d}
+
+When this hits a hero, deal 2 damage to them unless they give you a Gold token they control. If you are a Thief, repeat this process once.
+
+Money or Your Life? triggers when it hits a hero. That hero may give you a Gold token they control. If that hero does not give you a Gold token this way, this attack deals 2 damage to them. Then, if you are a Thief, this process repeats exactly once. When you repeat this process, that hero may choose to give you a Gold token or not.
+
+—————————————————————
+
+Flying High
+
+Generic Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Your next attack this turn gets go again. If it’s red/yellow/blue, it gets +1{p}.
+
+Go again
+
+—————————————————————
+
+Clap ‘Em in Irons
+
+Generic Action – Item
+
+(BLU) 0{r}
+
+Go again
+
+When this enters the arena, {t} target Pirate hero or ally. It can’t {u} while this is in the arena.
+
+At the start of your turn, destroy this.
+
+Clap ‘Em in Irons’ first ability triggers when it resolves and enters into the arena. When it triggers, you must declare a target Pirate hero or Pirate ally. You will {t} that target Pirate hero or ally when this triggered effect resolves. Additionally, the Pirate hero or Pirate ally can’t {u} while Clap ‘Em in Irons is in the arena.
+
+When declaring a target hero for Clap ‘Em in Irons first ability’s triggered effect, you may declare an already tapped Pirate hero or ally. If that target is still tapped when the triggered effect resolves, the layer will continue to resolve since the target is still valid but the {t} effect will fail. The subsequent continuous effect will still apply to that tapped target and it will not be able to {u} while Clap ‘Em in Irons is still in the arena.
+
+Clap ‘Em in Irons second ability triggers at the start of your turn. Neither player receives priority during the start phase of a turn.
+
+—————————————————————
+
+Regain Composure
+
+Generic Action
+
+(BLU) 0{r} 2{d}
+
+Your next attack this turn gets +1{p} and “When this hits, {u} your hero.”
+
+Go again
+
+These continuous effects that increase the power and give the attack an on-hit triggered ability both apply to your next attack which may include it being the next attack action card you play, the next weapon attack you activate, or the next ally attack you activate.
+
+The trigger-static ability granted by Regain Composure and applied to your next action triggers when you hit (e.g. heroes or allies). You will {u} your hero when the triggered effect resolves.
+
+—————————————————————
+
+Tit for Tat
+
+Generic Action
+
+(BLU) 0{r} 2{d}
+
+{t} target hero. {u} another target hero.
+
+Go again
+
+When you play Tit for Tat, you must declare two target heroes: one hero that you would like to {t} and a different target hero that you would like to {u}. When Tit for Tat resolves, you will perform those effects on your respective, declared targets.
+
+The heroes you target do not have to be tapped/untapped. If you try to tap an already tapped hero, nothing happens. Same with untapping an untapped hero.
+
+—————————————————————
+
+Fiddler’s Green
+
+Generic Block
+
+(RED/YEL/BLU) 1{d}
+
+When this is put into your graveyard from anywhere, gain 3/2/1{h}.
+
+Fiddler’s Green triggers when it is put into your graveyard from anywhere (e.g. put into the graveyard from the combat chain, discarded from your hand, destroyed from the top of the deck, put into the graveyard). You will gain the appropriate amount of {h} specified by its effect when the triggered effect resolves.
+
+Unless a rule or effect allows you to do so, you cannot declare defending cards against attacks where the attack-target is an ally you control.
+
+—————————————————————
+
+Fool’s Gold
+
+Generic Resource
+
+(YEL)
+
+When this is discarded, create a Gold token.
+
+Fool’s Gold triggers when it is discarded from your hand. You create a Gold token when the triggered effect resolves.
+
+—————————————————————
+
+Blow for a Blow
+
+Generic Action – Attack
+
+(RED) 2{r} 4{p} 2{d}
+
+When this is played, if you have less {h} than an opposing hero, it gets go again.
+
+When this hits, deal 1 damage to any target.
+
+Blow for a Blow’s first ability triggers when it is played. Whether or not you have less {h} than any opposing hero is checked at the time the triggered effect resolves. If you do have less {h} than any opposing hero in the game, Blow for a Blow gets go again.
+
+Blow for a Blow’s second ability triggers when it hits (e.g. heroes or allies). When it triggers, you must declare a target. You will deal 1 damage to that target when the triggered effect resolves.
+
+—————————————————————
+
+Nimby
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle.
+
+Nimby triggers when it resolves on the stack and becomes an attacking card. This is an optional effect: You choose whether or not to search your deck for a Nimblism at the time the triggered effect resolves.
+
+As this is an optional effect, you must be able to search, reveal, put cards into your hand, and shuffle given the current state. If you are unable to do any of these, you will not be able to resolve the triggered effect (e.g. Channel the Bleak Expanse).
+
+—————————————————————
+
+Rally the Coast Guard
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 3{r} 7/6/5{p} 2{d}
+
+Once per Turn Instant — Discard a card: This gets +3{d}. Activate this only while this card is defending.
+
+—————————————————————
+
+Sirens of Safe Harbor
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 2{d}
+
+When this is put into your graveyard from anywhere, gain 1{h}.
+
+Sirens of Safe Harbor triggers when it is put into your graveyard from anywhere (e.g. put into the graveyard from the combat chain, discarded from your hand, destroyed from the top of the deck, put into the graveyard). You will gain 1{h} when the triggered effect resolves.
+
+—————————————————————
+
+Strike Gold
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 2{d}
+
+When this hits, create a Gold token.
+
+Strike Gold triggers when it hits (e.g. heroes or allies). You will create a Gold token when the triggered effect resolves.
+
+—————————————————————
+
+Walk the Plank
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 3{r} 7/6/5{p} 2{d}
+
+When this hits a Pirate hero, {t} them or an ally they control.
+
+Walk the Plank triggers when it hits a Pirate hero. You will choose to either {t} that hero or {t} an ally they control at the time the triggered effect resolves.
+
+—————————————————————
+
+On the Horizon
+
+Generic Block
+
+(RED/YEL/BLU) 4/3/2{d}
+
+When this defends, look at the top card of your deck.
+
+On the Horizon triggers when it becomes a defending card on the combat chain. You will look at the top card of your deck when the triggered effect resolves.
+
+Unless a rule or effect allows you to do so, you cannot declare defending cards against attacks where the attack-target is an ally you control.
+
+—————————————————————
+
+# Expansion-Slot Cards
+
+Undercover Acquisition
+
+Assassin Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+Stealth
+
+When this hits a hero, steal an item they control.
+
+Undercover Acquisition triggers when it hits a hero. You will select which item you will steal at the time the triggered effect resolves, gaining control of it until it leaves the arena or the control of the item changes.
+
+—————————————————————
+
+Bam Bam
+
+Brute Action – Attack
+
+(YEL) 3{r} 6{p} 3{d}
+
+When this hits a hero, destroy an item they control.
+
+Instant — Discard this: Your club attacks this turn get “When this hits a hero, destroy an item they control.”
+
+Bam Bam triggers when it hits a hero. You will select which item you will destroy at the time the triggered effect resolves.
+
+Bam Bam has an ability that can only be activated from your hand. To activate this, show Bam Bam to all players, then pay the cost of discarding it.
+
+—————————————————————
+
+Surface Shaking
+
+Guardian Action – Aura
+
+(BLU) 3{r} 3{d}
+
+Go again
+
+When this enters the arena, create 3 Seismic Surge tokens.
+
+At the beginning of your action phase, destroy this, then you may put up to X cards from your hand on the bottom of your deck, where X is the number of Seismic Surge tokens you control. Draw cards equal to the number of cards put on the bottom this way.
+
+Surface Shaking’s first ability triggers when it resolves and enters into the arena. You create 3 Seismic Surge tokens when the triggered effect resolves.
+
+Surface Shaking’s second ability triggers at the beginning of your action phase. When this triggered effect resolves, you must destroy Surface Shaking. Then, you choose whether or not you would like to put up to X cards from your hand on the bottom of your deck.
+
+—————————————————————
+
+Preach Modesty
+
+Ninja Action – Aura
+
+(RED) 0{r} 2{d}
+
+This enters the arena with a balance counter. At the beginning of your action phase, destroy this unless you remove a balance counter from it.
+
+Hero abilities can’t create cards.
+
+Preach Modesty triggers at the beginning of your action phase. This is an optional effect: You choose whether or not to remove a balance counter from it at the time the triggered effect resolves. If you don’t remove a balance counter, you will destroy Preach Modestry.
+
+As long as Preach Modesty is in the arena, hero abilities can’t create cards, including those on your hero. Examples of hero abilities that create cards include, but are not limited to, those that create cards in the arena (e.g. Briar, Cindra, Olympia, etc.) or create cards in the hand (e.g. Zen)
+
+—————————————————————
+
+Escalate Bloodshed
+
+Warrior Instant – Aura
+
+(RED) 0{r}
+
+Whenever a hero draws a card during an action phase, they lose 1{h}.
+
+At the beginning of each hero’s action phase, they draw a card.
+
+At the beginning of each hero’s end phase, if a weapon did not attack this turn, destroy this.
+
+Escalate Bloodshed’s first ability triggers each time a hero draws a card during any action phase. That hero who drew the card will lose 1{h} when the triggered effect resolves.
+
+Escalate Bloodshed’s second ability triggers at the beginning of each hero’s action phase. That hero draws a card when the triggered effect resolves.
+
+Escalate Bloodshed’s third ability triggers at the beginning of each hero’s end phase, regardless if a weapon attacked this turn. If a weapon did not attack this turn, you will destroy Escalate Bloodshed.
+
+Neither player receives priority in the end phase of a turn.
+
+—————————————————————
+
+Deny Redemption
+
+Runeblade Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+When this attacks a hero with more {h} than you, deal 1 arcane damage to them. This damage can’t be prevented.
+
+Instant — Discard this: Heroes can’t gain {h} this turn.
+
+Deny Redemption triggers when it resolves and becomes attacking against a hero with more {h} than you. You will deal 1 unpreventable arcane damage to that hero when the triggered effect resolves.
+
+Deny Redemption has an ability that can only be activated from your hand. To activate this, show Deny Redemption to all players, then pay the cost of discarding it. When this activated ability resolves, all heroes cannot gain {h} this turn.
+
+Heroes gain life through effects that specify that a hero gains life. Changing your hero into another hero (e.g. Levia, Redeemed) is not considered gaining life, even if the life total for that player increases.
+
+—————————————————————
+
+Burn Bare
+
+Wizard Action
+
+3{r} 3{d}
+
+Deal 6 arcane damage to any target.
+
+Instant — Discard this: Destroy target card with phantasm that is attacking you.
+
+When you play Burn Bare, you must declare a target. You will deal 6 damage to that target when Burn Bare resolves.
+
+You cannot damage an unresolved ally on the stack.
+
+Burn Bare has an ability that can only be activated from your hand. To activate this, show Burn Bare to all players, declare the target card with phantasm that is attacking you, then pay the cost of discarding it. When this activated ability resolves, destroy the targeted card with phantasm.
+
+Destroying a card with phantasm with Burn Bare’s activated ability does not trigger effects that trigger when a card is destroyed by phantasm (e.g. Ghostly Touch). The card is destroyed, just not by a phantasm effect.
+
+—————————————————————
+
+Riddle with Regret
+
+Chaos Action – Aura
+
+(RED) 0{r} 2{d}
+
+Go again
+
+At the beginning of each hero’s end phase, they lose X{h}, where X is the number of auras they controlled when this triggered. If X is 3 or more, destroy this.
+
+Riddle with Regret triggers at the beginning of each hero’s phase. The value of X is determined by the number of auras controlled by that hero at the time Riddle with Regret triggered. That hero will lose life equal to the value of X. Then if X is at 3, you will destroy Riddle with Regret.
+
+Neither player receives priority in the end phase of a turn.
+
+—————————————————————
+
+Claw of Vynserakai
+
+Draconic Weapon – Dagger (1H)
+
+1{p}
+
+Once per Turn Action — {r}: Attack
+
+Spellvoid 1
+
+—————————————————————
+
+Everbloom || Life
+
+Earth Action || Earth Instant
+
+(BLU) 0{r} 3{d}
+
+Meld
+
+Choose an action card in a graveyard with cost less than the total {h} you’ve gained this turn. Put it on the bottom of its owner’s deck.
+
+Go again
+
+||
+
+Meld
+
+Gain 1{h}
+
+Everbloom||Life is an Earth card and can only be included in your card-pool if you can include Earth cards
+
+Everbloom is not a targeted effect. When Everbloom resolves, you will choose from any graveyard which action card with cost less than the total {h} you’ve gained this turn to put on the bottom of its owner’s deck.
+
+When Everbloom resolves, if there is at least one attack action card with cost less than the total {h} you’ve gained this turn in any graveyard, you must put one of them on the bottom of its owner’s deck.
+
+Base cost is the printed cost value on a card. (Located at the top right corner of a card.) If the cost includes X, the value of X is 0.
+
+If you meld Everbloom||Life, you will resolve the Life side of the card the first time the melded-card’s layer resolves. Any {h} you gained this turn before will be considered when you resolve the Everbloom side of the card when the melded-card’s layer resolves the second time.
+
+If you meld Everbloom||Life, you will receive an action point from go again when you resolve the Everbloom side when the melded-card’s layer resolves the second time. You will not receive it when you resolve the Life side of the card the first time the layer resolves.
+
+—————————————————————
+
+Consign to Cosmos || Shock
+
+Lightning Wizard Action || Lightning Instant
+
+(YEL) 0{r} 3{d}
+
+Meld
+
+Banish X instant and/or aura cards from any graveyard, where X is the amount of arcane damage you’ve dealt this turn.
+
+||
+
+Meld
+
+Deal 1 arcane damage to any target.
+
+Consign to Cosmos||Shock is a Lightning Wizard card and can only be included in your card-pool if you can include Lightning and Wizard cards.
+
+The value of X is based on how much arcane damage you’ve dealt this turn when Consign to Cosmos resolves on the stack, not when you first play it.
+
+Consign to Cosmos is not a targeted effect. When Consign to Cosmos resolves, you will choose a combined total of X instant cards and/or aura cards from any graveyard to banish.
+
+If you meld Consign to Cosmos||Shock, you will resolve the Shock side of the card the first time the melded-card’s layer resolves. Any arcane damage dealt will contribute to the value of X when you resolve the Consign to Cosmos side of the card when the melded-card’s layer resolves the second time.
+
+—————————————————————
+
+Herald of Sekem
+
+Light Illusionist Action – Attack
+
+(RED) 2{r} 7{p} 3{d}
+
+When this attacks, you may put a yellow card from your hand into your soul. If you do, deal 2 arcane damage to any target.
+
+Phantasm
+
+Herald of Sekem triggered when it resolves and becomes attacking. This is an optional effect: Because it has a conditional targeted effect, you must declare a target when you add this triggered effect to the stack. You choose whether or not to put a yellow card from your hand into your soul at the time the triggered effect resolves. If you do put a yellow card from your hand into your soul this way, you will deal 2 arcane damage to that target.
+
+—————————————————————
+
+Arcane Compliance
+
+Generic Instant
+
+(BLU) 0{r}
+
+Until end of turn, effects can’t increase arcane damage that target action card on the stack would deal.
+
+When you play Arcane Compliance, you must target an action card that is waiting to resolve on the stack. When Arcane Compliance resolves, a continuous effect is generated that disallows effects from increasing arcane damage that action card would deal. Examples of effects that increase arcane damage dealt would be those cards that generate card-based buff effects (e.g. Crucible of Aetherweave) or event-based buff effects (e.g. Amp).
+
+If the targeted action card generates a continuous triggered effect (e.g. Arc Lightning), effects will not increase the arcane damage generated from that continuous triggered effect as the triggered effect’s source was the action card.
+
+While Arcane Compliance’s continuous effect is active, if an arcane damage event would be modified by an event-based buff effect (e.g. Amp), the buff effect would still apply to the arcane damage event; however, the amount of arcane damage dealt would remain the same as if it were unbuffed. The event-based buff effect would be used up and would not apply to any future events that deal arcane damage.
+
+While Arcane Compliance’s continuous effect is active, if a card that deals arcane damage would be modified by a card-based buff effect (e.g. Absorb in Aether, etc.), the buff effect would still apply to the card; however, the amount of arcane damage it deals would remain the same as if it were unbuffed. The card-based buff effect would be used up and would not apply to any future cards played that deal arcane damage.
+
+For actions cards that would explicitly deal “X arcane damage”, the value of X is not affected by Arcane Compliance, but any additional effects that would increase X would be stopped.
+
+—————————————————————
+
+Anka, Drag Under
+
+Pirate Necromancer Action – Ally
+
+(YEL) 5{p} 3{h}
+
+Action — {r}, {t}: Attack
+
+Instant — {t}, discard a card with watery grave: The next time an opponent draws one or more cards this action phase, they discard a card.
+
+Watery Grave
+
+When Anka’s instant activated ability resolves, it generates a delayed triggered effect that triggers the next time the opponent draws one or more cards. That opponent will discard a card when that triggered effect resolves.
+
+Anka’s effect does not trigger when cards are drawn during the end phase. If a player draws one or more cards from another effect (e.g. Ponder) or draws cards up to their intellect as an end of turn procedure, it does not trigger Anka’s effect.
+
+If a player would draw one or more cards and trigger Anka’s effect, they finish drawing all of those cards, then when the triggered-layer resolves, they discard a card. There is priority between drawing the cards and resolving the triggered layer to discard a card.
+
+—————————————————————
+
+Oysten, Heart of Gold
+
+Pirate Necromancer Action – Ally
+
+(YEL) 3{p} 1{h}
+
+Action — {t}: Attack
+
+When this dies, create a Gold token.
+
+Watery Grave
+
+Oysten, Heart of Gold triggers when it dies, which is when it leaves the arena (e.g by being destroyed, dealt damage equal to its health, etc.). You create a Gold token when this triggered effect resolves.
+
+—————————————————————
+
+Sawbones, Dockhand
+
+Pirate Necromancer Action – Ally
+
+(YEL) 6{p} 2{h}
+
+Action — {r}, {t}: Attack
+
+Instant — {t}: The next time you or a Pirate you control would be dealt damage this turn, prevent 1 of that damage.
+
+Watery Grave
+
+When Sawbones’s instant activated ability resolves, it generates a fixed-prevention effect that prevent 1 damage from a single event of damage that would be dealt to either you or a Pirate you control.
+
+—————————————————————
+
+# Token-Specific Notes
+
+Golden Cog
+
+Mechanologist Token – Cog Item
+
+Crank
+
+This enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.
+
+Golden Cog triggers at the start of your turn. This is an optional effect: You choose whether or not to remove a steam counter from it at the time the triggered effect resolves. If you don’t remove a steam counter, you will destroy Golden Cog.
+
+—————————————————————
+
+Goldkiss Rum
+
+Generic Token – Item
+
+Instant — {t} your hero, destroy this: Your next action this turn gets go again. Your hero can’t {u} this turn unless they’re a Pirate.
+
+When Goldkiss Rum’s activated ability resolves, it generates two continuous effects. The first continuous effect will apply to the next action you play or activate this turn, and gives it go again. The second continuous effect will prevent your hero from {u} this turn through an effect or during the end phase unless you are a Pirate.
+
+—————————————————————
+
+# Macro-Specific Notes
+
+Treasure Island
+
+High Seas Macro – Landmark
+
+The first time a hero is attacked each turn, put a gold counter on this.
+
+Whenever you or an ally you control deals damage to an opposing hero, you remove that many gold counters from this, then create Gold tokens equal to the number of counters removed this way.
+
+Treasure Island is a macro that is available in High Seas limited formats, which includes the draft, sealed, and blitz pre-constructed deck formats. When you begin a game in one of these High Seas formats, one Treasure Island is placed between both players into the arena before you reveal your heroes.
+
+Treasure Island is neither a card nor a token. It is a shared game object that neither player controls and exists in the arena with two triggered-static abilities.
+
+Because it is a shared object, both players are responsible for ensuring that Treasure Island triggers are generated and resolved appropriately.
+
+Treasure Island’s first ability triggers the first time a hero is attacked each turn, when the attack action card/weapon/ally resolves and becomes attacking. Players will put a gold counter on this when the triggered effect resolves.
+
+Treasure Island’s second ability triggers each time you or the allies you control deals damage to an opposing hero. When this triggered effect resolves. you must remove gold counters from Treasure Island equal to the amount of damage dealt, then you will create Gold tokens equal to the number of counters removed this way. If there are less gold counters than the amount of damage dealt, you will remove all existing gold counters from Treasure Island.
+
+The controller of a triggered effect generated from any of Treasure Island’s abilities is the player who satisfied the triggering condition and triggered the ability.
+
+If there are multiple triggered effects that are to be added to the stack and one of them is Treasure Island’s triggered effect, the player who triggered Treasure Island for that triggered effect will be responsible for adding it to the stack as if they are its controller and will determine its order among their other triggered effects being added. For example, if Tyler has an “when this attacks” triggered effect that will remove gold counters from treasure island and the triggered effect from Treasure Island’s first ability waiting to be added to the stack, Tyler will add both triggered effects to the stack in the order of their choosing.
+
+You cannot name Treasure Island for effects that require you to name a card.
+
+Cards and effects that interact with Treasure Island will specifically say so in the High Seas card pool. You cannot choose Treasure Island for effects that allow you to choose card/tokens. Similarly, you cannot target it for effects that require a target card/token.
+
+—————————————————————

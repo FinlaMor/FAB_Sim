@@ -1,0 +1,39 @@
+Name: Privateer Equity
+Hero: Marlynn, Treasure Hunter
+Format: Classic Constructed
+
+Arena cards
+1x Crown of Dominion
+1x Fyendal's Spring Tunic
+1x Gold-Baited Hook
+1x Hammerhead, Harpoon Cannon
+1x Quiver of Abyssal Depths
+1x Sealace Sarong
+
+Deck cards
+3x Battering Bolt (red)
+3x Cheating Scoundrel (red)
+3x King Kraken Harpoon (red)
+3x King Shark Harpoon (red)
+3x Three of a Kind (red)
+3x Big Game Trophy Shot (yellow)
+3x Codex of Frailty (yellow)
+3x Gold the Tip (yellow)
+1x Riches of Trōpal-Dhani (yellow)
+3x Shallow Water Shark Harpoon (yellow)
+3x Blue Fin Harpoon (blue)
+3x Catch of the Day (blue)
+3x Golden Tipple (blue)
+3x Murderous Rabble (blue)
+3x Portside Exchange (blue)
+3x Red Fin Harpoon (blue)
+3x Ripple Away (blue)
+3x Sea Floor Salvage (blue)
+3x Shifting Tides (blue)
+2x Sift (blue)
+3x Sunken Treasure (blue)
+3x Throw Caution to the Wind (blue)
+3x Yellow Fin Harpoon (blue)
+
+Made with ❤️ at the FaBrary
+See the full deck @ https://fabrary.net/decks/01KHBZX091JHSP43YZC5GXXWSQ

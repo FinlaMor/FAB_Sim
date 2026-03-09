@@ -1,0 +1,2007 @@
+Home  Rules and Policy  Release Notes  Outsiders
+
+# Outsiders
+
+# General Notes
+
+Outsiders contains 239 cards (1 Fabled, 5 Legendary, 31 Majestic, 51 Rares, 128 Commons, 20 Tokens, 3 Marvels)
+
+Outsiders becomes legal for tournaments on its official release date: 24 March, 2023
+
+#### Icons
+
+{r} Resource Point
+
+{p} Power
+
+{d} Defense Value
+
+{h} Life
+
+{i} Intellect
+
+## Returning Keywords
+
+#### Welcome to Rathe
+
+Battleworn
+
+Blade Break
+
+Combo
+
+Dominate
+
+Go again
+
+#### Arcane Rising
+
+Arcane Barrier X
+
+Opt X
+
+## Returning Tokens
+
+#### Dynasty
+
+Ponder
+
+## Returning Cards
+
+#### Welcome to Rathe
+
+Katsu, the Wanderer
+
+Katsu
+
+Harmonized Kodachi
+
+Head Jab (RED/YEL/BLU)
+
+Surging Strike (RED/YEL/BLU)
+
+#### Arcane Rising
+
+Azalea, Ace in the Hole
+
+Azalea
+
+Ravenous Rabble (RED/YEL/BLU)
+
+Come to Fight (RED/YEL/BLU)
+
+#### Crucible of War
+
+Benji, the Piercing Wind
+
+#### Monarch
+
+Seek Horizons (RED/YEL/BLU)
+
+#### Everfest
+
+Twin Twisters (RED/YEL/BLU)
+
+#### Dynasty
+
+Spider’s Bite
+
+## New Keywords
+
+Stealth
+
+Stealth is an ability keyword written on the text box of a card.
+
+There is no meaning to the keyword ability itself. It is used as an “empty” ability that is used by other abilities.
+
+Quiver
+
+Quiver is a subtype keyword written on the type box of a card.
+
+A quiver can be equipped in the weapon slot in addition to a 2H bow as a special exception to equip rules.
+
+Only 1 quiver can be equipped at a time, similar to off-hand equipment.
+
+A quiver occupies a weapon slot. It cannot be equipped with two 1H weapons if there are only two weapon zones.
+
+A quiver can be equipped by itself without a weapon.
+
+# Card-specific Notes
+
+Plague Hive
+
+Assassin / Ranger Resource – Gem
+
+(YEL)
+
+Legendary
+
+When you pitch Plague Hive, for each opposing hero, choose Frailty, Inertia, or Bloodrot Pox at random and create that token under their control.
+
+The type of token is created at random from the given options of Frailty, Inertia, or Bloodrot Pox.
+
+If there are two or more opposing heroes, a different token may be created at random under each hero’s control.
+
+You can not play or defend with Plague Hive because it does not have a cost or defense property.
+
+—————————————————————
+
+## Assassin
+
+Uzuri, Switchblade | Uzuri
+
+Assassin Hero
+
+4{i} 40|20{h}
+
+Once per Turn Attack Reaction — Banish a card from your hand face down: Turn the card banished this way face up. If it’s an attack action card with cost 2 or less, put target attacking card with stealth from the active chain link on the bottom of its owner’s deck, then put the banished card onto the active chain link as the attacking card.
+
+You may banish any card from your hand to pay for the activation of this ability – it does not have to be an attack action card with cost 2 or less.
+
+You must have an attacking card with stealth on the active chain link to target to activate this ability. An attack with stealth on a resolved (previous) chain link is not a valid target for this effect.
+
+There is no priority between turning the banished card face-up, putting the attacking stealth card on the bottom of your deck, and putting the banished card on the chain link.
+
+If the banished card is not an attack action card with cost 2 or less, it remains face-up in the banished zone, and the attack on the active chain link remains there.
+
+All cards currently defending on the active chain link (including equipment, defense reactions etc.) remain on the active chain link as defending cards against the new attack.
+
+Effects that apply to the defending cards continue to apply to those defending cards when Uzuri ability replaces the stealth card.
+
+Effects that apply to the target card with stealth do not transfer to the card that replaces it.
+
+If a layer on the stack targets the stealth card, and then the stealth card is put to the bottom of the deck, the layer will either fail to resolve (if the stealth card was the only target of the layer), or the effect that targets the stealth card will simply fail (it does not transfer to the card that replaces it).
+
+When the banished card is put onto the chain link as an attacking card, it is not considered to be played. You do not choose targets, select modes, pay on-play costs, or trigger on-play or on-attack effects, as you normally would if you typically played/attacked with the card.
+
+—————————————————————
+
+Arakni, Solitary Confinement
+
+Assassin Hero – Young
+
+4{i} 19{h}
+
+Your first attack with stealth each turn has go again.
+
+Your first attack with stealth is given go again, even if it is the second or later attack in the turn (if none of the previous attacks had stealth).
+
+—————————————————————
+
+Nerve Scalpel
+
+Assassin Weapon – Dagger 1H
+
+1{p}
+
+Once per Turn Action — {r}{r}: Attack. Go again
+
+Piercing 1
+
+When this hits a hero, the next time they defend with 1 or more reaction cards this turn, those cards have -1{d} while defending.
+
+Reaction cards include both defense reactions and attack reactions.
+
+If two or more attack reactions are declared as defending cards at once, they would all get -1{d}.
+
+If two or more defense reactions are played, they would not all get -1{d} because each defense reaction must be resolved one at a time, and the first that resolves (and thus defends) would count as the next time, and get the -1{d}.
+
+If a hero is hit two or more times by Nerve Scalpel and has not yet defended, the effects stack and the next time they defend with 1 or more reaction cards this turn, those cards have -1{d} for each time they were hit by a Nerve Scalpel this turn.
+
+If a hero is hit by Nerve Scalpel after a defense reaction is played, but before it resolves, then that defense reaction will get -1{d} after it resolves and becomes defending.
+
+—————————————————————
+
+Orbitoclast
+
+Assassin Weapon – Dagger 1H
+
+1{p}
+
+Once per Turn Action — {r}{r}: Attack. Go again
+
+Piercing 1
+
+When this hits a hero, the next time they defend with 1 or more ‘non-attack’ action cards this turn, those cards have -1{d} while defending.
+
+If two or more non-attack action cards are declared as defending cards at once, they would all get -1{d}.
+
+If a hero is hit two or more times by Orbitoclast and has not yet defended, the effects stack and the next time they defend with 1 or more non-attack action cards this turn, those cards have -1{d} for each time they were hit by an Orbitoclast this turn.
+
+—————————————————————
+
+Scale Peeler
+
+Assassin Weapon – Dagger 1H
+
+1{p}
+
+Once per Turn Action — {r}{r}: Attack. Go again
+
+Piercing 1
+
+When this hits a hero, the next time they defend with 1 or more equipment this turn, those equipment have -1{d} while defending.
+
+If two or more equipment are declared as defending cards at once, they would all get -1{d}.
+
+If a hero is hit two or more times by Scale Peeler and has not yet defended, the effects stack and the next time they defend with 1 or more equipment cards this turn, those cards have -1{d} for each time they were hit by a Scale Peeler this turn.
+
+When the combat chain closes and effects like Temper trigger, the -1{d} would still apply when calculating the defense of the equipment.
+
+—————————————————————
+
+Redback Shroud
+
+Assassin Equipment – Chest
+
+1{d}
+
+While Redback Shroud is in your graveyard, at the start of your turn, you may destroy 2 Silver you control. If you do, equip Redback Shroud.
+
+Attack Reaction — Destroy Redback Shroud: The next attack reaction card you play this turn costs {r} less to play.
+
+Battleworn
+
+There is no way to generate Silver tokens in the Outsiders set. This effect in particular is designed to be combined with Silver generation effects in other sets.
+
+Redback Shroud’s activated ability is an Attack Reaction, and can only be activated in the reaction step of combat.
+
+Any -1{d} counters are removed from the Redback Shroud when it goes to the graveyard. If it is then equipped, it will not have any -1{d} counters on it.
+
+Redback Shroud’s triggers and resolves during the start of turn phase. There is no priority and it can not be responded to.
+
+Decreasing the cost to play a card does not decrease the actual cost of the card for the purposes of effects that reference cost.
+
+—————————————————————
+
+Infiltrate
+
+Assassin Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck. You may play it until the end of your next turn.
+
+The card is banished face-up into the owner’s banished zone.
+
+You may play the card even if it does not have talents or classes that match your hero.
+
+If you play another hero’s card it is considered to be controlled by you, but still owned by the player whose deck it came from, until it becomes a new card (i.e. when it gets turned face-down or moves to a zone outside the arena).
+
+Effects that put themselves on the bottom of your deck have received errata that put them on the bottom of the “owner’s deck”. If you play a card you don’t own with this effect, it does not go on the bottom of your deck.
+
+When a card is cleared it goes to the owner’s graveyard, not the graveyard of the player that played it (e.g. after resolving or when the combat chain closes).
+
+If the card is not played by the end of your next turn, it simply remains in the banished zone.
+
+If the card is played by the hero or otherwise moved from the banished zone, before you play it, you can no longer play that card.
+
+The card must be legal to play, and you must still pay the appropriate costs to play it. E.g. if the card is an action, you must have an action point to play it on your own turn.
+
+—————————————————————
+
+Shake Down
+
+Assassin Action – Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+Uzuri Specialization
+
+If you’ve played or activated an attack reaction this chain link, Shake Down has “When this hits a hero, choose red, yellow, or blue. They reveal their hand. Banish a card of the chosen color.”
+
+If Shake Down is put on the active chain link as the attacking card by Uzuri’s effect, it would have the ability because you have activated an attack reaction this chain link.
+
+When Shake Down’s ability resolves, the attacking player picks a color before the opponent reveals their hand.
+
+The controller of Shake Down chooses the color and the card that is banished based on that color.
+
+—————————————————————
+
+Spreading Plague
+
+Assassin Attack Reaction
+
+(YEL) 1{r} 3{d}
+
+Create X Bloodrot Pox tokens under the defending hero’s control, where X is the number of defending cards this chain link.
+
+X is determined to be the current number of defending cards on the active chain link at the time that Spreading Plague resolves, not when it was played, or any time after it resolves.
+
+Defending cards include equipment and resolved defense reactions on the active chain link.
+
+—————————————————————
+
+Back Stab
+
+Assassin Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Stealth
+
+Defense reactions can’t be played to Back Stab’s chain link.
+
+If Back Stab is put on the active chain link as an attacking card by Uzuri’s effect, Back Stab’s continuous effect would only affect defense reactions that have not yet been played by the defending player. Any defense reactions already on the chain link or waiting to resolve on the stack are not affected.
+
+Back Stab does not prevent defense reaction abilities from being activated (e.g. Oldhim)
+
+—————————————————————
+
+Sneak Attack
+
+Assassin Action – Attack
+
+(RED|YEL|BLU) 2{r} 3|2|1{p} 2{d}
+
+If you’ve played or activated an attack reaction this chain link, Sneak Attack has +4{p}.
+
+If Sneak Attack is put on the active chain link as the attacking card by Uzuri’s effect, it would have the +4{p} because you have activated an attack reaction this chain link.
+
+—————————————————————
+
+Spike with Bloodrot
+
+Assassin Attack Reaction
+
+(RED) 1{r} 3{d}
+
+Target attack action card with stealth gains +3{p} and “When this hits a hero, create a Bloodrot Pox token under their control.”
+
+—————————————————————
+
+Spike with Frailty
+
+Assassin Attack Reaction
+
+(RED) 1{r} 3{d}
+
+Target attack action card with stealth gains +3{p} and “When this hits a hero, create a Frailty token under their control.”
+
+—————————————————————
+
+Spike with Inertia
+
+Assassin Attack Reaction
+
+(RED) 1{r} 3{d}
+
+Target attack action card with stealth gains +3{p} and “When this hits a hero, create an Inertia token under their control.”
+
+—————————————————————
+
+Infect
+
+Assassin Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Stealth
+
+When this hits a hero, create a Bloodrot Pox token under their control.
+
+—————————————————————
+
+Isolate
+
+Assassin Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Stealth
+
+Dominate
+
+If Isolate is put on the active chain link as an attacking card by Uzuri’s effect, Isolate’s dominate effect would only affect defense reactions that have not yet been played by the defending player. Any defending cards (including defense reactions already on the chain link or waiting to resolve on the stack) are not affected.
+
+—————————————————————
+
+Malign
+
+Assassin Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Stealth
+
+Damage that would be dealt by Malign can’t be prevented.
+
+Malign stops its damage from being prevented by prevention effects. It does not stop the defending hero from adding defending cards to the chain link.
+
+If a prevention effect tries to prevent damage from Malign, each replacement effect will still try to do everything else other than preventing that damage. E.g. a card with Ward would still be destroyed.
+
+Players can still attempt to prevent damage (apply optional prevention effects) even when the damage cannot be prevented.
+
+An ongoing-prevention effect does not have its prevention amount reduced when the effect does not actually prevent any amount of damage. E.g. Crown of Seed’s ongoing-prevention effect would not have its prevention amount reduced and would still be able to prevent 1 damage later in the turn.
+
+—————————————————————
+
+Prowl
+
+Assassin Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Stealth
+
+The next attack with stealth you play this combat chain gains +1{p}.
+
+This is a resolution ability.If Prowl were to leave the combat chain (e.g. Uzuri’s ability), the +1{p} continuous effect will still be applied to the next attack with stealth you play later that combat chain.
+
+—————————————————————
+
+Sedate
+
+Assassin Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Stealth
+
+When this hits a hero, create an Inertia token under their control.
+
+—————————————————————
+
+Wither
+
+Assassin Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Stealth
+
+When this hits a hero, create a Frailty token under their control.
+
+—————————————————————
+
+Razor’s Edge
+
+Assassin Attack Reaction
+
+(RED|YEL|BLU) 0{r} 3{d}
+
+Target attack action card with stealth gains +3|2|1{p}.
+
+—————————————————————
+
+## Ninja
+
+Mask of Many Faces
+
+Ninja Equipment – Head
+
+1{d}
+
+Instant — {r}, destroy Mask of Many Faces: Name a card. The next attack action card you play this turn gains that name.
+
+Blade Break
+
+The attack action card gains the name in addition to its own name. E.g. If you name “Head Jab” and play Surging Strike, it would have both names “Head Jab” and “Surging Strike”.
+
+You may only name a card if that card exists and is legal in the format being played.
+
+Tokens are not cards, and can not be named unless there is a card with the same name.
+
+The attack action card later loses that name once it enters another zone in the arena, E.g. when the combat chain closes and the card is put in the graveyard, the gained name is lost.
+
+—————————————————————
+
+Cyclone Roundhouse
+
+Ninja Action – Attack
+
+(YEL) 2{r} 5{p} 3{d}
+
+Combo – If Spinning Wheel Kick was the last attack this combat chain, this has “At the beginning of the reaction step, banish a random defending card from each chain link.”
+
+This is a trigger that happens when players move to the reaction step. Both players have an opportunity to respond to that trigger. After that trigger resolves both players receive priority in reaction step to act before game moves to damage step.
+
+Any defending card on each chain link may be banished this way, including equipment and defense reactions.
+
+A defending card that is banished this way is no longer considered to be defending on its chain link and thus is not calculated in the total defense against an attack. Damage is not retroactively dealt to respective targets for resolved (previous) chain links.
+
+—————————————————————
+
+Dishonor
+
+Ninja Action – Attack
+
+(BLU) 0{r} 2{p} 3{d}
+
+Combo – If Bonds of Ancestry was the last attack this combat chain, this has +2{p}.
+
+When this hits a hero, if you control Surging Strike, Descendent Gustwave, and Bonds of Ancestry, that hero loses all abilities for the rest of the game.
+
+Bonds of Ancestry must be the last attack on the combat chain for Dishonor to gain +2{p}.
+
+Surging Strike, Descendent Gustwave, and Bonds of Ancestry do not have to be in any specific order on the combat chain to meet the condition for the on-hit trigger, just that you control them when the triggered effect resolves.
+
+When a hero loses their abilities, simply treat their text box as empty.
+
+If a hero loses their abilities this way, they are not prevented from gaining abilities from other effects (e.g. Brainstorm).
+
+—————————————————————
+
+Head Leads the Tail
+
+Ninja Action – Attack
+
+(RED) 1{r} 3{p} 2{d}
+
+When this attacks, name another card. Attack action cards with that name have +1{p} this combat chain.
+
+Go again
+
+You may not name “Head Leads the Tail” as the effect requires you to name another card.
+
+You may only name a card if that card exists and is legal in the format being played.
+
+Tokens are not cards, and can not be named unless there is a card with the same name. Tokens (which can not be named) are distinct from token-rarity cards. E.g. You may name attack action cards like Phoenix Flame.
+
+You can name any type of card (eg: Energy Potion) but it will only get +1{p} if the named card is an attack action card.
+
+—————————————————————
+
+Wander With Purpose
+
+Ninja Action – Attack
+
+(YEL) 0{r} 2{p} 3{d}
+
+Benji Specialization
+
+When this hits, you may discard a card with cost 0. If you do, search your deck for a card with combo, banish it, then shuffle. You may play it this turn.
+
+Go again
+
+Discarding a card with cost 0 is optional. If you do, you are required to search your deck for a card with combo.
+
+You may purposefully fail to find a card with combo in your deck when searching.
+
+If you fail to find a card when searching, you do not banish any cards, but you are still required to shuffle your deck.
+
+If the card is not played by the end of the turn, it simply remains in the banished zone.
+
+There is no priority to respond between choosing whether to discard and searching your deck.
+
+—————————————————————
+
+Silverwind Shuriken
+
+Ninja Action – Shuriken Item
+
+(BLU) 0{r}
+
+Attack Reaction — Destroy Silverwind Shuriken: Target attack action card with combo gains +1{p}.
+
+—————————————————————
+
+Visit the Floating Dojo
+
+Ninja Instant
+
+(BLU) 0{r}
+
+Katsu Specialization
+
+Put a Surging Strike and a card with combo from your graveyard on the top and/or bottom of your deck.
+
+This is not a targeted effect, you are not required to have both a Surging Strike and a card with combo in your graveyard to play this.
+
+The effect is not optional. When this resolves, if you have a Surging Strike and/or card with combo in your graveyard, you must put them on the top and/or bottom of your deck.
+
+If you only have either Surging Strike or a card with combo in your graveyard, but not both, you put the card that you have on the top or bottom of your deck. If you have neither, the effect simply fails.
+
+You may put the cards in any combination on the top and/or bottom of your deck. You are not required to put both on the top, or both on the bottom.
+
+You’re required to show your opponent the two cards you are putting into your deck. You are not required to share with them which of those cards (and what order) are put to the top and/or bottom.
+
+—————————————————————
+
+Bonds of Ancestry
+
+Ninja Action – Attack
+
+(RED|YEL|BLU) 2{r} 4|3|2{p} 3{d}
+
+Combo – If a card with Gustwave in its name was the last attack this combat chain, this costs {r}{r} less to play, and has go again and “When this attacks, you may banish a card with combo from your graveyard. If you do, search your deck for a card with the same name, banish it, then shuffle. You may play it this combat chain.”
+
+A card has Gustwave in its name if “Gustwave” is one of the whole words of one or more of the names of the card. If a card has no name, it does not have “Gustwave” in its name.
+
+Banishing a card from your graveyard is optional. If you do, searching your deck is mandatory.
+
+While searching, you may fail to find a card with the same name as the card that you banished. Even if you fail to find, you must shuffle your deck.
+
+If you do not play the banished card this combat chain, it remains banished.
+
+Decreasing the cost to play a card does not decrease the actual cost of the card for the purposes of effects that reference cost.
+
+—————————————————————
+
+Recoil
+
+Ninja Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Combo – If Head Jab was the last attack this combat chain, this has “When this hits a hero, they put a card from their hand on top of their deck.”
+
+The player who was hit chooses the card in their hand to put on top of their deck. If they have no cards in hand, the effect simply fails.
+
+—————————————————————
+
+Spinning Wheel Kick
+
+Ninja Action – Attack
+
+(RED|YEL|BLU) 1{r} 4|3|2{p} 2{d}
+
+Combo – If Twin Twisters or Spinning Wheel Kick was the last attack this combat chain, this has +1{p} and “When this hits, put it on the bottom of its owner’s deck.”
+
+Go again
+
+If Spinning Wheel Kick is played by the opponent, and its on-hit effect triggers, it is put on the bottom of your (the owner’s) deck, not the deck of the player who played it.
+
+—————————————————————
+
+Back Heel Kick
+
+Ninja Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Combo – If Twin Twisters was the last attack this combat chain, while this is face-up in any zone and would gain {p}, instead it gains that much plus 1.
+
+Back Heel Kick received an errata to its text. The text above reflects its intended gameplay text as of March 15, 2023.
+
+Effects that increase power are applied as events. This effect modifies that event (and thus the result of the effect) to increase the power by an additional 1.
+
+This effect increases ALL instances of effects that increase power, not just the first. If two or more effects would increase the power of Back Heel Kick by 1, then each of those effects instead increase the power by 2.
+
+Effects that apply when Back Heel Kick is played and on the stack (e.g. Come to Fight) will be affected by its ability.
+
+Effects that set or decrease power are not modified by Back Heel Kick’s effect (e.g. -2{p} would not become -1{p}).
+
+—————————————————————
+
+Be Like Water
+
+Ninja Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 2{d}
+
+When this hits, you may pay {r}. If you do, choose Head Jab, Surging Strike, or Twin Twisters. This gains the chosen name.
+
+Go again
+
+The Be Like Water gains the name in addition to its own name. E.g. If you choose“Head Jab”, it would have both names “Head Jab” and “Be Like Water”.
+
+Be Like Water later loses that name once it enters another zone in the arena, E.g. when the combat chain closes and Be Like Water is put in the graveyard, the gained name is lost.
+
+—————————————————————
+
+Deadly Duo
+
+Ninja Action – Attack
+
+(RED|YEL|BLU) 1{r} 3|2|1{p} 2{d}
+
+When this hits, the next attack action card with 2 or less base {p} you play this combat chain gains +2{p}.
+
+Go again
+
+—————————————————————
+
+Descendent Gustwave
+
+Ninja Action – Attack
+
+(RED|YEL|BLU) 1{r} 3|2|1{p} 2{d}
+
+Combo – If Surging Strike was the last attack this combat chain, this costs {r} less to play and has +2{p}.
+
+Go again
+
+Decreasing the cost to play a card does not decrease the actual cost of the card for the purposes of effects that reference cost.
+
+—————————————————————
+
+One-Two Punch
+
+Ninja Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+Combo – If Head Jab was the last attack this combat chain, this has “When this hits a hero, deal 2 damage to them.”
+
+The source of the 2 damage is One-Two Punch.
+
+—————————————————————
+
+## Ranger
+
+Riptide, Lurker of the Deep | Riptide
+
+Ranger Hero
+
+4{i} 38|19{h}
+
+Whenever you play a card from hand, you may put a card from hand face down into your arsenal.
+
+Whenever a trap you control triggers, deal 1 damage to the attacking hero.
+
+The first effect triggers when the card is played from hand, but does not resolve until after the card has finished being played. You do not put a card in arsenal part-way through playing a card.
+
+The first effect resolves before the played card resolves.
+
+The second effect triggers whenever a trap you control triggers. Traps typically trigger when they resolve and become defending (e.g. “When this defends”), but may also have additional trigger conditions that must be met for the trap to trigger.
+
+Even if the trap’s triggered effect does not affect the gamestate, if the trigger condition is met and it has triggered, then Riptide’s second effect will also be triggered.
+
+Both effects can trigger any number of times each turn, as long as their trigger condition is met.
+
+—————————————————————
+
+Barbed Castaway
+
+Ranger Weapon – Bow 2H
+
+Once per Turn Instant — {r}: You may put an arrow card from your hand face up into your arsenal.
+
+Once per Turn Instant — {r}: You may turn a face down arrow in your arsenal face up. If you do, put an aim counter on it.
+
+If an effect allows you to activate a bow an additional time, you choose which ability you wish to activate an additional time when you activate the bow for that additional time. It would not allow you to activate both abilities additional times. E.g. Tri-Shot.
+
+If an effect allows you to activate the abilities of a bow an additional time, each ability on Barbed Castaway is able to be activated one additional time each. E.g. Snap Shot.
+
+Both effects of the abilities are optional. You may activate either ability without having an arrow in hand, or face down in arsenal, and the effect would simply do nothing.
+
+Turning a card face-up is not considered revealing the card or putting the card face-up in arsenal. It is simply changing its state from face-down to face-up.
+
+—————————————————————
+
+Trench of Sunken Treasure
+
+Ranger Equipment – Chest
+
+1{d}
+
+Once per Turn Instant — Put a face down card from your arsenal on the bottom of your deck: Gain {r}
+
+Arcane Barrier 1
+
+Blade Break
+
+Putting the face-down card from your arsenal on the bottom of your deck is the cost for activating this ability and can not be responded to.
+
+If you have two or more face-down cards in your arsenal, you choose which card is put on the bottom of your deck.
+
+—————————————————————
+
+Quiver of Abyssal Depths
+
+Ranger Equipment – Quiver
+
+Instant — {r}{r}{r}, destroy Quiver of Abyssal Depths: Shuffle up to 3 arrows with different names from your graveyard into your deck.
+
+This is not a targeted effect, you are not required to have 3 arrows with different names in your graveyard to play this.
+
+The effect is not optional. When this resolves, choose 0-3 arrows with different names in your graveyard, and shuffle them into your deck. You may choose less than the number of arrows you have with different names in your graveyard.
+
+If you choose 0 arrows for the effect, you must still shuffle your deck.
+
+—————————————————————
+
+Quiver of Rustling Leaves
+
+Ranger Equipment – Quiver
+
+Instant — {r}{r}{r}: Reveal the top card of your deck. If it’s an arrow, put it face up into your arsenal and destroy Quiver of Rustling Leaves.
+
+If the card revealed is not an arrow card, it remains on the top of the deck and Quiver of Rustling Leaves is NOT destroyed.
+
+If the card revealed is an arrow, but can not be put into your arsenal (e.g. if you have no empty arsenal zones), then it remains on the top of the deck and Quiver of Rustling Leaves is destroyed.
+
+You can activate Quiver of Rustling Leaves two or more times in a row by holding priority, even if the top card of the deck is an arrow. In this case, the resolution of the first will put the arrow face-up in arsenal and destroy Quiver of Rustling Leaves, the second and subsequent resolutions will still reveal the top card and attempt to put the card into arsenal if it’s an arrow.
+
+—————————————————————
+
+Crow’s Nest
+
+Ranger Equipment – Quiver
+
+Azalea Specialization
+
+Whenever an arrow is put face up into your arsenal from your deck, you may pay {r}. If you do, put an aim counter on it.
+
+If a card in arsenal is turned face-up, it is not considered to have been put face-up into your arsenal from your deck.
+
+A card can have two or more aim counters on it, but it does not have twice the number of effects.
+
+—————————————————————
+
+Driftwood Quiver
+
+Ranger Equipment – Quiver
+
+Riptide Specialization
+
+Instant — Destroy Driftwood Quiver: Put a card from your arsenal on the bottom of your deck.
+
+This is not a targeted effect, you are not required to have a card in your arsenal to activate this.
+
+This effect is not optional. If you have a card in arsenal, you must put it on the bottom of your deck.
+
+If you have two or more in your arsenal, you choose which card is put on the bottom of your deck.
+
+—————————————————————
+
+Wayfinder’s Crest
+
+Ranger Equipment – Head
+
+1{d}
+
+When you defend with Wayfinder’s Crest, look at the top card of target hero’s deck.
+
+Blade Break
+
+This effect triggers when Wayfinder’s Crest becomes a defending card, even if it is added as a defending card to the combat chain by an effect.
+
+You may target yourself with this effect. If you do, you look at the top card of your own deck.
+
+If you target an opposing hero, they do not have the privilege of looking at that card from this effect.
+
+—————————————————————
+
+Amplifying Arrow
+
+Ranger Action – Arrow Attack
+
+(YEL) 0{r} 2{p} 3{d}
+
+While Amplifying Arrow is face up in any zone, if it would gain {p}, instead it gains that much plus 1.
+
+Effects that increase power are applied as events. This effect modifies that event (and thus the result of the effect) to increase the power by an additional 1.
+
+This effect increases ALL instances of effects that increase power, not just the first. If two or more effects would increase the power of Amplifying Arrow by 1, then each of those effects instead increase the power by 2.
+
+Effects that apply when Amplifying Arrow is played and on the stack (e.g. Come to Fight) will be affected by its ability.
+
+Effects that set or decrease power are not modified by Amplifying Arrow’s effect (e.g. -2{p} would not become -1{p}).
+
+—————————————————————
+
+Barbed Undertow
+
+Ranger Action – Arrow Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+If Barbed Undertow has an aim counter, it gains “When this hits a hero, choose red, yellow, or blue. Until the start of your next turn, they can’t pitch cards of the chosen color.”
+
+The choice of color is made on the resolution of the trigger.
+
+Barbed Undertow prevents the player from pitching a card with the chosen color strip. Those cards can still be played, or used to pay additional costs such as discarding or revealing.
+
+—————————————————————
+
+Buzzsaw Trap
+
+Ranger Defense Reaction – Trap
+
+(BLU) 0{r} 3{d}
+
+Legendary Riptide Specialization
+
+When this defends an attack with {p} greater than its base, the attack can’t gain {p} this turn.
+
+“When this defends” is an event-based trigger. The power of the attack is checked at the time this resolves and becomes a defending card (i.e. defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+Any effect that increases the power of an attack is retroactively and proactively prevented by this triggered effect (e.g. gets, gains, has etc.). This typically makes the modified power of an attack equal to its base power.
+
+Counters that increase power are also prevented from modifying power by Buzzsaw Trap.
+
+—————————————————————
+
+Collapsing Trap
+
+Ranger Defense Reaction – Trap
+
+(BLU) 0{r} 3{d}
+
+Legendary Riptide Specialization
+
+When this defends an attack with go again, the attacking hero discards their hand then draws that many cards minus 1.
+
+“When this defends” is an event-based trigger. Whether the attack has go again is checked at the time this resolves and becomes a defending card (i.e. defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+If there are fewer cards in the hero’s deck than how many they would draw, they draw all of those cards.
+
+If an effect triggers whenever a card is discarded (specifically one and not “one or more”), it triggers for each card discarded this way (e.g. Rhinar).
+
+—————————————————————
+
+Spike Pit Trap
+
+Ranger Defense Reaction – Trap
+
+(BLU) 0{r} 3{d}
+
+Legendary Riptide Specialization
+
+When this defends and the attacking hero has played or activated a reaction this chain link, put the top card of their deck into their graveyard, then they lose X{h}, where X is the number of cards in their graveyard with that name.
+
+“When this defends” is an event-based trigger. Whether the attacking hero has played/activated a reaction is checked at the time this resolves and becomes a defending card (i..e defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+If there is no attacking hero (e.g. this is defending against an ally attack), this does not trigger.
+
+If there are no cards in the attacking hero’s deck, no card is put into the graveyard, and they do not lose any life this way (i.e. X=0).
+
+—————————————————————
+
+Melting Point
+
+Ranger Action
+
+(RED) 1{r} 3{d}
+
+Your next arrow attack this turn gains +4{p}.
+
+If it has an aim counter, it gains “When this hits a hero, destroy a 1H weapon they control with 1 base {p}.”
+
+Go again
+
+When the dagger is destroyed, it is put into the opponent’s graveyard. It is neither put into their inventory nor does it continue to exist in the arena.
+
+—————————————————————
+
+Boulder Trap
+
+Ranger Defense Reaction – Trap
+
+(YEL) 0{r} 3{d}
+
+When this defends an attack with {p} greater than its base, put a -1{d} counter on an equipment the attacking hero controls.
+
+“When this defends” is an event-based trigger. The power of the attack is checked at the time this resolves and becomes a defending card (i.e. defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+This effect is not optional. If the opponent controls at least one equipment, you must put a -1{d} counter on one of them.
+
+You may put a -1{d} counter on an equipment, even if it doesn’t have the defense property, or it would bring its defense value below zero (when actually calculated, negative defense values become 0).
+
+—————————————————————
+
+Pendulum Trap
+
+Ranger Defense Reaction – Trap
+
+(YEL) 0{r} 3{d}
+
+When this defends and the attacking hero has played or activated a reaction this chain link, put the top 2 cards of their deck into their graveyard.
+
+“When this defends” is an event-based trigger. Whether the attacking hero has played/activated a reaction is checked at the time this resolves and becomes a defending card (i.e. defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+This effect is not optional.
+
+If there are 2 or less cards in their deck, put all the cards in the deck into the graveyard.
+
+If there is no attacking hero (e.g. this is defending against an ally attack), this does not trigger.
+
+—————————————————————
+
+Tarpit Trap
+
+Ranger Defense Reaction – Trap
+
+(YEL) 0{r} 3{d}
+
+When this defends an attack with go again, the next time an attack action card hits this turn, effects don’t trigger.
+
+“When this defends” is an event-based trigger. Whether the attack has go again is checked at the time this resolves and becomes a defending card (i.e. defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+Go again is a resolution ability not a trigger ability. An attack with go again defended with Tarpit Trap will still grant an action point in the link step of combat.
+
+The effect is still functional on the next attack action card to hit, even if that attack is on a new combat chain.
+
+This prevents any effect that would trigger the next time an attack action card hits, including on-hit and on-damage effects. It does not prevent effects from triggering if the attack deals damage in other ways (in steps other than the damage step of combat) or subsequent times an attack action card hits.
+
+If an effect would trigger, but is prevented by this, it still counts towards the number of times it would trigger. For effects that say “The next time” or “The first time” that are prevented from triggering, they won’t trigger again.
+
+—————————————————————
+
+Fletch a Red Tail
+
+Ranger Action
+
+(RED) 1{r} 2{d}
+
+Your next arrow attack this turn gains +4{p}.
+
+If it has an aim counter, it gains “Red cards have -1{d} while defending this.”
+
+Go again
+
+Red cards are cards with a red color bar on the top of the card. Cards without a color bar have no color.
+
+—————————————————————
+
+Fletch a Yellow Tail
+
+Ranger Action
+
+(YEL) 1{r} 2{d}
+
+Your next arrow attack this turn gains +3{p}.
+
+If it has an aim counter, it gains “Yellow cards have -1{d} while defending this.”
+
+Go again
+
+Yellow cards are cards with a yellow color bar on the top of the card. Cards without a color bar have no color.
+
+—————————————————————
+
+Fletch a Blue Tail
+
+Ranger Action
+
+(BLU) 1{r} 2{d}
+
+Your next arrow attack this turn gains +2{p}.
+
+If it has an aim counter, it gains “Blue cards have -1{d} while defending this.”
+
+Go again
+
+Blue cards are cards with a blue color bar on the top of the card. Cards without a color bar have no color.
+
+—————————————————————
+
+Lace with Bloodrot
+
+Ranger Action
+
+(RED) 0{r} 2{d}
+
+Your next arrow attack this turn gains +3{p} and “When this hits a hero, create a Bloodrot Pox token under their control.”
+
+Go again
+
+—————————————————————
+
+Lace with Frailty
+
+Ranger Action
+
+(RED) 0{r} 2{d}
+
+Your next arrow attack this turn gains +3{p} and “When this hits a hero, create a Frailty token under their control.”
+
+Go again
+
+—————————————————————
+
+Lace with Inertia
+
+Ranger Action
+
+(RED) 0{r} 2{d}
+
+Your next arrow attack this turn gains +3{p} and “When this hits a hero, create an Inertia token under their control.”
+
+Go again
+
+—————————————————————
+
+Falcon Wing
+
+Ranger Action – Arrow Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 3{d}
+
+If Falcon Wing has an aim counter, it has +1{p}.
+
+Go again
+
+—————————————————————
+
+Infecting Shot
+
+Ranger Action – Arrow Attack
+
+(RED|YEL|BLU) 1{r} 5|4|3{p} 3{d}
+
+If Infecting Shot has an aim counter, it has +1{p}.
+
+When this hits a hero, create a Bloodrot Pox token under their control.
+
+—————————————————————
+
+Murkmire Grapnel
+
+Ranger Action – Arrow Attack
+
+(RED|YEL|BLU) 0{r} 4|3|2{p} 3{d}
+
+If Murkmire Grapnel has an aim counter, it has +1{p}.
+
+Damage that would be dealt by Murkmire Grapnel can’t be prevented.
+
+Murkmire Grapnel stops its damage from being prevented by prevention effects. It does not stop the defending hero from adding defending cards to the chain link.
+
+If a prevention effect tries to prevent damage from Murkmire Grapnel, each replacement effect will still try to do everything else other than preventing that damage. E.g. a card with Ward would still be destroyed.
+
+Players can still attempt to prevent damage (apply optional prevention effects) even when the damage cannot be prevented.
+
+An ongoing-prevention effect does not have its prevention amount reduced when the effect does not actually prevent any amount of damage.
+
+—————————————————————
+
+Sedation Shot
+
+Ranger Action – Arrow Attack
+
+(RED|YEL|BLU) 1{r} 5|4|3{p} 3{d}
+
+If Sedation Shot has an aim counter, it has +1{p}.
+
+When this hits a hero, create an Inertia token under their control.
+
+—————————————————————
+
+Skybound Shot
+
+Ranger Action – Arrow Attack
+
+(RED|YEL|BLU) 1{r} 5|4|3{p} 3{d}
+
+If Skybound Shot has an aim counter, it has +1{p}.
+
+—————————————————————
+
+Spire Sniping
+
+Ranger Action – Arrow Attack
+
+(RED|YEL|BLU) 1{r} 5|4|3{p} 3{d}
+
+When Spire Sniping is put or turned face up in arsenal, look at the top 2 cards of your deck, then put them back in any order.
+
+Spire Sniping triggers when it is put face-up in arsenal or is turned face-up in arsenal. It does not trigger if it is put face-down in arsenal.
+
+This is not an opt effect, both cards must return to the top of the deck (not bottom), but you choose the order.
+
+—————————————————————
+
+Widowmaker
+
+Ranger Action – Arrow Attack
+
+(RED|YEL|BLU) 1{r} 4|3|2{p} 3{d}
+
+Defense reactions can’t be played to Widowmaker’s chain link.
+
+If Widowmaker is defended by fewer than 2 cards, it has +3{p}.
+
+Widowmaker does not prevent defense reaction abilities from being activated (e.g. Oldhim)
+
+All cards that are defending on the chain link are considered for whether it is being defended by fewer than 2 cards, including equipment and defense reactions.
+
+—————————————————————
+
+Withering Shot
+
+Ranger Action – Arrow Attack
+
+(RED|YEL|BLU) 1{r} 5|4|3{p} 3{d}
+
+If Withering Shot has an aim counter, it has +1{p}.
+
+When this hits a hero, create a Frailty token under their control.
+
+—————————————————————
+
+## Assassin / Ninja
+
+Flick Knives
+
+Assassin / Ninja Equipment – Arms
+
+1{d}
+
+Once per Turn Attack Reaction — 0: Target dagger you control that isn’t on the active chain link deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.
+
+Blade Break
+
+This is a targeted effect. The dagger must be under your control and not on the active chain link for you to activate this ability.
+
+If damage is dealt, it is considered a “hit event” with the dagger considered to have hit.
+
+The dagger itself is not an attack.
+
+If the dagger hits this way, the attack on the active chain link is not considered to have hit. This is relevant for effects that are conditional only on the attack hitting (Benji, on-hit effects on the attack etc.)
+
+If the dagger hits this way, the active chain link (but not the attack) is considered to have hit. This is relevant for effects that are conditional on a chain link hitting instead of an attack hitting (e.g. Mask of Momentum, Whirling Mist Blossom, etc.)
+
+The dagger is destroyed regardless of whether it hits.
+
+When the dagger is destroyed, it is put into the graveyard. It is neither put into your inventory nor continues to exist in the arena.
+
+If both a dagger deals damage due to these effects and an attack hits in the damage step in the same active chain link, this situation does not count as two separate chain links hitting. A chain link simply hits or it doesn’t.
+
+—————————————————————
+
+Mask of Shifting Perspectives
+
+Assassin / Ninja Equipment – Head
+
+1{d}
+
+Attack Reaction — Destroy Mask of Shifting Perspectives: Whenever a dagger hits this turn, you may put a card from your hand on the bottom of your deck. If you do, draw a card.
+
+Blade Break
+
+Mask of Shifting Perspectives can be activated (in the reaction step) even if you are not currently attacking with a dagger.
+
+Mask of Shifting Perspectives must be activated and resolved during the reaction step of combat, before a dagger is considered to have hit for the effect to trigger.
+
+The effect created by Mask of Shifting Perspectives triggers every time a dagger hits this turn, not just the first time.
+
+—————————————————————
+
+Blade Cuff
+
+Assassin / Ninja Equipment – Arms
+
+1{d}
+
+Action — {r}{r}, destroy Blade Cuff: Your daggers gain +1{p} this turn. Go again
+
+Blade Break
+
+—————————————————————
+
+Stab Wound
+
+Assassin / Ninja Action – Attack
+
+(BLU) 0{r} 2{p} 3{d}
+
+When this hits a hero, they lose X{h}, where X is the number of times a dagger has hit this combat chain.
+
+If a Dagger has hit from Hurl or Flick Knives, it counts towards the number of times a dagger has hit this combat chain.
+
+This is a life loss effect. It can not be prevented by damage prevention effects.
+
+—————————————————————
+
+Concealed Blade
+
+Assassin / Ninja Attack Reaction
+
+(BLU) 0{r} 3{d}
+
+Target Assassin or Ninja attack action card gains +1{p} and “When this hits, equip a dagger from your inventory.”
+
+In limited formats, you can have any number of token-rarity cards in your card pool, and therefore your inventory during a game. For Outsiders limited specifically, you have access to any number of Spider’s Bite (if you’re an Assassin hero) or Harmonized Kodachi (if you’re a Ninja hero)
+
+In constructed formats, you only have the cards you’ve registered in your card pool, and they are only in your inventory if you didn’t choose them during the start of game procedure. If there are no daggers in your inventory, this effect fails.
+
+If you do not have an empty weapon zone to equip a dagger, the effect fails.
+
+If you have a 2H weapon equipped, and only 2 weapon zones, the effect fails.
+
+—————————————————————
+
+Knives Out
+
+Assassin / Ninja Attack Reaction
+
+(BLU) 0{r} 3{d}
+
+Your daggers gain +1{p} this turn.
+
+Knives Out can be played (in the reaction step) even if you are not currently attacking with a dagger.
+
+—————————————————————
+
+Bleed Out
+
+Assassin / Ninja Action – Attack
+
+(RED|YEL|BLU) 2{r} 4|3|2{p} 2{d}
+
+Bleed Out costs X resource points less to play, where X is the total damage you’ve dealt with daggers this combat chain.
+
+Go again
+
+If a Dagger has dealt damage from Hurl or Flick Knives, it counts towards the amount of damage daggers have dealt this combat chain.
+
+Decreasing the cost to play a card does not decrease the actual cost of the card for the purposes of effects that reference cost.
+
+—————————————————————
+
+Hurl
+
+Assassin / Ninja Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 2{d}
+
+As an additional cost to play Hurl, you may pay {r}. When you do, it gains “When this attacks, target dagger you control deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.”
+
+Go again
+
+This is a targeted effect on an attack-trigger. The dagger must be under your control when the triggered effect is added to the stack. If you do not control a dagger this triggered effect does not get added to the stack (it does not resolve).
+
+If damage is dealt, it is considered a “hit event” with the dagger considered to have hit.
+
+The dagger itself is not an attack.
+
+If the dagger hits this way, the attack on the active chain link is not considered to have hit. This is relevant for effects that are conditional only on the attack hitting (Benji, on-hit effects on the attack etc.)
+
+If the dagger hits this way, the active chain link (but not the attack) is considered to have hit. This is relevant for effects that are conditional on a chain link hitting instead of an attack hitting (e.g. Mask of Momentum, Whirling Mist Blossom, etc.)
+
+The dagger is destroyed regardless of whether it hits.
+
+When the dagger is destroyed, it is put into the graveyard. It is neither put into your inventory nor continues to exist in the arena.
+
+If both a dagger deals damage due to these effects and an attack hits in the damage step in the same active chain link, this situation does not count as two separate chain links hitting. A chain link simply hits or it doesn’t.
+
+—————————————————————
+
+Plunge
+
+Assassin / Ninja Action – Attack
+
+(RED|YEL|BLU) 1{r} 3|2|1{p} 2{d}
+
+When this hits, your next dagger attack this turn gains +1{p}.
+
+Go again
+
+—————————————————————
+
+Short and Sharp
+
+Assassin / Ninja Attack Reaction
+
+(RED|YEL|BLU) 1{r} 2{d}
+
+Choose 1;
+
+Target dagger attack gains +3|2|1{p}.
+
+Target attack action card with 2 or less base {p} gains +3/2/1{p}.
+
+—————————————————————
+
+## Assassin / Ranger
+
+Mask of Malicious Manifestations
+
+Assassin / Ranger Equipment – Head
+
+1{d}
+
+Action — {r}, put a card from your hand or arsenal on the bottom of your deck, destroy Mask of Malicious Manifestations: Reveal cards from the top of your deck until you reveal an attack action card. Put it into your hand, then shuffle. Go again
+
+Blade Break
+
+Putting a card from your hand or arsenal on the bottom of your deck is part of the cost for activating this ability and can not be responded to.
+
+When you reveal cards until you reveal an attack action card, you reveal them one at a time, and stop revealing cards until the condition is met or the effect fails. The revealed cards remain revealed until your stop revealing. Revealed cards are technically in the same zone, even while being revealed.
+
+Effects that trigger when one or more cards are revealed only trigger once (e.g. Korshem), even though you’re revealing cards one at a time because it’s all part of a single reveal event.
+
+If you reveal your entire deck without revealing an attack action card, the reveal effect fails to produce a result. Nothing is put into your hand, but you still shuffle.
+
+If the card you put on the top or bottom of the deck is an attack action card, it can be revealed and put into your hand if revealed this way.
+
+—————————————————————
+
+Toxic Tips
+
+Assassin / Ranger Equipment – Arms
+
+1{d}
+
+Action — {r}, destroy Toxic Tips: The next attack action card you play this turn gains “When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.” Go again
+
+Blade Break
+
+You choose between Frailty, Inertia, or Bloodrot Pox at the time the triggered effect resolves.
+
+—————————————————————
+
+Codex of Bloodrot
+
+Assassin / Ranger Action
+
+(YEL) 0{r} 2{d}
+
+Each hero puts a card from their hand face down into their arsenal.
+
+Create a Ponder token under your control and a Bloodrot Pox token under each opponent’s control.
+
+Go again
+
+A player can’t put a card from their hand into their arsenal if they don’t have any cards in hand, or they don’t have any empty arsenal zones.
+
+This effect is not optional. If a player has at least one card in their hand, and an empty arsenal zone, they must put a card into their arsenal.
+
+Players choose and put one of those cards in their arsenal starting with the turn player and going in player turn order (clockwise) around the table.
+
+Creating Ponder and Bloodrot Pox tokens is not dependent on the preceding effects.
+
+—————————————————————
+
+Codex of Frailty
+
+Assassin / Ranger Action
+
+(YEL) 0{r} 2{d}
+
+Each hero puts an attack action card from their graveyard face down into their arsenal. Each hero that does, discards a card.
+
+Create a Ponder token under your control and a Frailty token under each opponent’s control.
+
+Go again
+
+A player can’t put an attack action card from their graveyard into their arsenal if they don’t have any attack action cards in their graveyard, or they don’t have any empty arsenal zones.
+
+This effect is not optional. If a player has at least one attack action card in their graveyard and an empty arsenal zone, they must put one of those cards in their arsenal.
+
+You can play this card and have no cards in hand. If you are instructed to discard and you have no cards in hand, you simply don’t discard.
+
+Players choose and put the card in their arsenal starting with the turn player and going in player turn order (clockwise) around the table. Then the players that have successfully done so, choose and discard a card starting with the turn player and in the same player order.
+
+Each player is required to show what card they are putting into their arsenal.
+
+Creating Ponder and Frailty tokens is not dependent on the preceding effects.
+
+—————————————————————
+
+Codex of Inertia
+
+Assassin / Ranger Action
+
+(YEL) 0{r} 2{d}
+
+Each hero puts the top card of their deck face down into their arsenal. Each hero that does, discards a card.
+
+Create a Ponder token under your control and an Inertia token under each opponent’s control.
+
+Go again
+
+A player can’t put a card from the top of their deck into their arsenal if they don’t have any cards in their deck, or they don’t have any empty arsenal zones.
+
+This effect is not optional. If a player has at least one card in their deck and an empty arsenal zone, they must put one of those cards in their arsenal.
+
+You can play this card and have no cards in hand. If you are instructed to discard and you have no cards in hand, you simply don’t discard.
+
+Players put the card in their arsenal starting with the turn player and going in player turn order (clockwise) around the table. Then the players that have successfully done so, choose and discard a card starting with the turn player and in the same player order.
+
+Creating Ponder and Inertia tokens is not dependent on the preceding effects.
+
+—————————————————————
+
+Death Touch
+
+Assassin / Ranger Action – Attack
+
+(RED|YEL|BLU) 1{r} 6|5|4{p} 2{d}
+
+Death Touch can’t be played from hand.
+
+When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.
+
+You choose between Frailty, Inertia, or Bloodrot Pox at the time the triggered effect resolves.
+
+—————————————————————
+
+Toxicity
+
+Assassin / Ranger Action
+
+(RED|YEL|BLU) 0{r} 2{d}
+
+The next Assassin or Ranger attack action card you play this turn gains “When this hits a hero, they lose 5|4|3{h}.”
+
+Go again
+
+Losing {h} is not considered dealing damage. Effects that prevent damage (or otherwise modify damage) do not change how much life is lost from this effect. Effects that trigger when damage is dealt do not trigger when life is lost this way.
+
+—————————————————————
+
+Virulent Touch
+
+Assassin / Ranger Action – Attack
+
+(RED|YEL|BLU) 0{r} 4|3|2{p} 2{d}
+
+Virulent Touch can’t be played from hand.
+
+When this chain link resolves, if Virulent Touch is defended by a card from hand, create a Bloodrot Pox token under the defending hero’s control.
+
+Virulent Touch can’t be played from hand, even if an effect allows you to. Something that can not happen takes precedence over something that can happen.
+
+Virulent Touch triggers when the chain link resolves at the beginning of the resolution step of combat (after damage is dealt).
+
+—————————————————————
+
+Bloodrot Trap
+
+Assassin / Ranger Defense Reaction – Trap
+
+(RED) 0{r} 3{d}
+
+When this defends and the attacking hero has played or activated a reaction this chain link, create a Bloodrot Pox token under their control.
+
+“When this defends” is an event-based trigger. Whether the attacking hero has played/activated a reaction is checked at the time this resolves and becomes a defending card (i..e defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+If there is no attacking hero (e.g. this is defending against an ally attack), this does not trigger.
+
+—————————————————————
+
+Frailty Trap
+
+Assassin / Ranger Defense Reaction – Trap
+
+(RED) 0{r} 3{d}
+
+When this defends an attack with go again, create a Frailty token under the attacking hero’s control.
+
+“When this defends” is an event-based trigger. Whether the attack has go again is checked at the time this resolves and becomes a defending card (i..e defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+If there is no attacking hero (e.g. this is defending against an ally attack), this does not create a token under the opponent’s control.
+
+—————————————————————
+
+Inertia Trap
+
+Assassin / Ranger Defense Reaction – Trap
+
+(RED) 0{r} 3{d}
+
+When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero’s control.
+
+“When this defends” is an event-based trigger. The power of the attack is checked at the time this resolves and becomes a defending card (i..e defends the attack). If the trigger condition is met only after this resolves, then this does not trigger.
+
+If there is no attacking hero (e.g. this is defending against an ally attack), this does not create a token under the opponent’s control.
+
+—————————————————————
+
+## Generic
+
+Vambrace of Determination
+
+Generic Equipment – Arms
+
+0{d}
+
+Once per Turn Attack Reaction — {r}: The next prevention effect that prevents {p} damage this turn, prevents 1 less of that damage.
+
+When this defends, you may pay {r}. If you do, it gains +1{d} and blade break.
+
+Vambrace of Determination reduces the maximum amount of damage a prevention effect can prevent on a single event of damage.
+
+Vambrace of Determination’s effect applies to ANY kind of prevention effect, as long as the damage that it is preventing is {p} damage.
+
+If it is a fixed-prevention effect (e.g. “The next time you’d be dealt damage, prevent 3 of that damage.”) it would simply prevent 1 less of that damage (e.g. it would essentially become “prevent 2 of that damage”).
+
+If it is an ongoing-prevention effect (e.g. “Prevent the next 3 damage dealt to your hero.”) it would simply reduce the prevention amount (e.g. it would essentially become “Prevent the next 2 damage dealt to your hero.)
+
+Vambrace of Determination does not reduce the {d} of defending cards or their effectiveness during damage calculation in the damage step of combat.
+
+If the opponent controls multiple prevention effects that could apply to an event of {p} damage, they choose which of those effects apply first. Vambrace of Determination’s effect only applies to the first of those effects that prevent the {p} damage.
+
+—————————————————————
+
+Seeker’s Hood
+
+Generic Equipment – Head
+
+Instant — {r}, destroy Seeker’s Hood: Prevent the next 1 damage that would be dealt to your hero this turn. Opt 1.
+
+—————————————————————
+
+Seeker’s Gilet
+
+Generic Equipment – Chest
+
+Instant — {r}, destroy Seeker’s Gilet: Prevent the next 1 damage that would be dealt to your hero this turn. Opt 1
+
+—————————————————————
+
+Seeker’s Mitts
+
+Generic Equipment – Arms
+
+Instant — {r}, destroy Seeker’s Mitts: Prevent the next 1 damage that would be dealt to your hero this turn. Opt 1
+
+—————————————————————
+
+Seeker’s Leggings
+
+Generic Equipment – Legs
+
+Instant — {r}, destroy Seeker’s Leggings: Prevent the next 1 damage that would be dealt to your hero this turn. Opt 1
+
+—————————————————————
+
+Silken Gi
+
+Generic Equipment – Chest
+
+Instant — Destroy Silken Gi: The next attack action card you play this turn has -1{p} and costs {r} less to play.
+
+Increases to {r} costs are applied before decreases to {r} costs. A card can not be reduced below 0{r} to play.
+
+Decreasing the cost to play a card does not decrease the actual cost of the card for the purposes of effects that reference cost.
+
+—————————————————————
+
+Threadbare Tunic
+
+Generic Equipment – Chest
+
+Instant — Destroy Threadbare Tunic: Gain {r}. Activate this ability only if you have no cards in hand.
+
+If you have only one card in your hand costing 1{r} you can’t activate this ability to gain {r} to pay for that last card. You must activate this while you have no cards in hand.
+
+—————————————————————
+
+Fisticuffs
+
+Generic Equipment – Arms
+
+Attack Reaction — {r}{r}, destroy Fisticuffs: Target attack action card gains +1{p}.
+
+—————————————————————
+
+Fleet Foot Sandals
+
+Generic Equipment – Legs
+
+Attack Reaction — Destroy Fleet Foot Sandals: Target attack with 1 or less base {p} gains go again.
+
+—————————————————————
+
+Amnesia
+
+Generic Action – Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+When this hits a hero, cards and tokens they own lose and can’t gain names until the start of your next turn.
+
+Players own the cards that they start the game with and they own tokens that they create. This is separate to “control” where some effects have you create (and own) something under an opponent’s control (e.g. Frostbite).
+
+Effects with text that reference the card that they are on by name are unaffected. For the avoidance of doubt, any card text that references its source card name can effectively be written/read as “this”. (e.g. Down and Dirty’s text can be written as “While THIS is in your arsenal, you may defend with it.”). This does not apply to effects with text that reference cards with the same name that aren’t its source. (e.g. Spinning Wheel Kick’s text can NOT be written as “If Twin Twisters or THIS was the last attack […]”)
+
+If a card or token does not have a name, it is not affected by effects that specify cards or tokens by name. The opponent can not target or choose cards and tokens if the effect specifies by name.
+
+You can not choose “nameless” as part of a name effect.
+
+Cards retain all of their other properties, including class, talent, type, subtypes etc.
+
+—————————————————————
+
+Down and Dirty
+
+Generic Action – Attack
+
+(RED) 2{r} 6{p} 2{d}
+
+While Down and Dirty is in your arsenal, you may defend with it.
+
+If Down and Dirty is in your arsenal and you are the defending hero, you may declare it as a defending card during the defend step of combat. You can not add Down and Dirty during any other step of combat or if you are not a defending hero.
+
+—————————————————————
+
+Give and Take
+
+Generic Action – Attack
+
+(RED) 1{r} 3{p} 3{d}
+
+Whenever an action card defends Give and Take, you may put an action card with cost less than Give and Take’s {p} from your graveyard on top of your deck.
+
+Go again
+
+Give and Take received an errata to its text. The text above reflects its intended gameplay text as of March 15, 2023.
+
+Give and Take triggers once each time an action card defends it on the combat chain. If the defending hero declares two or more defending action cards during the defend step, the Give and Take triggers once for each action card.
+
+If Give and Take is added to an already active chain link as an attacking card (i.e. with Uzuri’s hero ability), then existing defending action cards on the combat chain do not cause the effect to trigger.
+
+You’re required to show your opponent the card you are putting on the top of your deck.
+
+—————————————————————
+
+Gore Belching
+
+Generic Action – Attack
+
+(RED) 0{r} 7{p}
+
+When this attacks, reveal cards from the top of your deck until you reveal an attack action card. If you do, banish it and this gets -X{p}, where X is the {p} of the card banished this way. Otherwise, this gets -7{p}. Shuffle.
+
+When you reveal cards until you reveal an attack action card, you reveal them one at a time, and stop revealing cards until the condition is met or the effect fails. The revealed cards remain revealed until your stop revealing.
+
+Effects that trigger when one or more cards are revealed only trigger once (e.g. Korshem), even though you’re revealing cards one at a time because it’s all part of a single reveal event.
+
+If you reveal your entire deck without revealing an attack action card, the reveal effect fails to produce a result. No card is banished, Gore Belching gets -7{p}, and you shuffle your deck.
+
+If Gore Belching is added to an already active chain link as an attacking card (i.e. with Uzuri’s hero ability), then the effect does not trigger. No cards are revealed, it does not get -7{p}, and you do not shuffle your deck.
+
+—————————————————————
+
+Burdens of the Past
+
+Generic Action
+
+(BLU) 0{r} 3{d}
+
+Until end of turn, target hero can’t play defense reaction cards with the same name as a card in their graveyard.
+
+If there are 10 or more defense reaction cards in their graveyard, draw a card.
+
+Go again
+
+If the target hero has one or more defense reaction cards in their graveyard, they can’t play defense reaction cards with the same name.
+
+If a defense reaction has no name (e.g. after being hit by Amnesia), then it can still be played.
+
+—————————————————————
+
+Premeditate
+
+Generic Action
+
+(RED) 0{r} 2{d}
+
+The next time an attack action card hits a hero this turn, create a Ponder token.
+
+The next attack action card you play from arsenal this turn gains +3{p}.
+
+Go again
+
+The first effect of premeditate checks on the next attack action card to hit, not the next attack action played.
+
+—————————————————————
+
+Humble
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 2{r} 6|5|4{p} 2{d}
+
+When this hits a hero, that hero loses all abilities until the end of their next turn.
+
+Simply treat their hero’s text box as empty.
+
+If a hero loses their abilities this way, they are not prevented from gaining abilities from other effects (e.g. Brainstorm).
+
+—————————————————————
+
+Infectious Host
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 0{r} 4|3|2{p} 2{d}
+
+When this attacks a hero, if you control a Frailty token, create a Frailty token under their control, then repeat for Inertia and Bloodrot Pox.
+
+Repeating means if you control an Inertia token, create an Inertia under their control, and if you control a Bloodrot Pox token, create a Bloodrot Pox under their control.
+
+If you control all three of Frailty, Inertia, and Bloodrot Pox tokens, create one of each under the hero’s control.
+
+If you control multiple of a token you still only create one of that token under the hero’s control.
+
+You don’t lose control of your tokens, you simply create tokens under the control of your opponent based on what you control.
+
+—————————————————————
+
+Looking for a Scrap
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 1{r} 4|3|2{p} 2{d}
+
+As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and go again.
+
+The card banished from the graveyard must have exactly 1{p}. This includes weapon cards (e.g. Harmonized Kodachi).
+
+When an attack moves into the graveyard, it becomes a “fresh version” of that card and essentially loses all of the effects (especially {p} effects) that previously applied to it.
+
+You do not control cards in your graveyard. Effects that increase the power of your attacks or cards you control do not apply to cards in your graveyard.
+
+—————————————————————
+
+Wreck Havoc
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 2{r} 6|5|4{p} 2{d}
+
+Defense reactions can’t be played to Wreck Havoc’s chain link.
+
+When this hits a hero, you may turn a card in their arsenal face up, then destroy a defense reaction in their arsenal.
+
+Turning a card face-up is not considered revealing the card or putting the card face-up in arsenal. It is simply changing its state from face-down to face-up.
+
+The second part of the effect is not optional. If the hero hit has a face-down card in arsenal it maybe turned face-up, and then if there is a face-up defense reaction in their arsenal, you must destroy it.
+
+If there are two or more defense reactions in the hero’s arsenal, you choose which card to destroy.
+
+If there are face-down cards in the opponent’s arsenal, no cards are turned face-up.
+
+If there are no face-up defense reactions in the hero’s arsenal, no cards are destroyed.
+
+Wreck Havoc does not prevent defense reaction abilities from being activated (e.g. Oldhim)
+
+—————————————————————
+
+Cut Down to Size
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 2{r} 6|5|4{p} 2{d}
+
+When this hits a hero, if they have 4 or more cards in hand, they discard a card.
+
+Cut Down to Size will trigger when it hits a hero and it will check if the hero hit has 4 or more cards in hand when the layer resolves.
+
+The hero hit chooses what card they discard.
+
+—————————————————————
+
+Destructive Deliberation
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 2{r} 5|4|3{p} 2{d}
+
+When this hits a hero, create a Ponder token.
+
+—————————————————————
+
+Feisty Locals
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 0{r} 3|2|1{p} 2{d}
+
+If this is defended by an action card, this has +2{p}.
+
+If this is defended by two or more action cards, it still only gets +2{p} in total.
+
+—————————————————————
+
+Freewheeling Renegades
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 1{r} 6|5|4{p} 2{d}
+
+If this is defended by an action card, this has -2{p}.
+
+If this is defended by two or more action cards, it still only gets -2{p} in total.
+
+—————————————————————
+
+Spring Load
+
+Generic Action – Attack
+
+(RED|YEL|BLU) 1{r} 2{p} 2{d}
+
+When this attacks, if you have no cards in hand, it gains +3|2|1{p}.
+
+Spring Load triggers during the attack step of combat. It will check if you have no cards when the layer resolves.
+
+If you have no cards in your hand when it resolves then you draw cards afterwards, it does not lose the +{p} effect.
+
+—————————————————————
+
+Scout the Periphery
+
+Generic Action
+
+(RED|YEL|BLU) 0{r} 2{d}
+
+Look at the top card of target hero’s deck.
+
+The next attack action card you play from arsenal this turn gains +3|2|1{p}.
+
+Go again
+
+You may target yourself with this effect. If you do, you look at the top card of your own deck.
+
+If you target an opposing hero, they do not have the privilege of looking at that card from this effect.
+
+—————————————————————
+
+Brush Off
+
+Generic Instant
+
+(RED|YEL|BLU) 0{r}
+
+The next time you would be dealt 3 or less|2 or less|1 damage this turn, prevent it.
+
+If this prevention effect applies to an event of damage, it typically prevents all of that damage. The value of the damage is determined at the time Brush Off is checked for when it is active. E.g. If you would be dealt 2 damage, Brush Off (red) would prevent 2 damage.
+
+Brush Off (blue) is only active if you would be dealt exactly 1 damage.
+
+Brush Off’s effect is applied like any other prevention effect. It is only applied to damage if the amount of damage is X or less.
+
+If the damage amount is more than X, this effect is not applied or consumed. However, if another prevention effect would reduce this to X or less, then this effect may apply before the damage would be dealt. E.g. 7 damage, Oasis Respite (red) prevents 4 reducing it to 3 damage, Brush Off (red) prevents the rest.
+
+If you control two or more prevention effects, and both would apply to an event of damage, you may decide which of those prevention effects to apply. If the first prevention effect would reduce the damage to 0, no more prevention effects would apply (and be consumed) to the damage event.
+
+—————————————————————
+
+Peace of Mind
+
+Generic Instant
+
+(RED|YEL|BLU) 2{r}
+
+The next time you would be dealt {p} damage this turn, prevent 4|3|2 of that damage.
+
+Create a Ponder token.
+
+After preventing damage, any remaining prevention amount does not carry-over to events where you take damage.
+
+—————————————————————
+
+# Token-specific Notes
+
+Bloodrot Pox
+
+Generic Token – Aura
+
+At the beginning of your end phase, destroy Bloodrot Pox, then it deals 2 damage to you unless you pay {r}{r}{r}.
+
+This triggers and resolves in the end phase. There is no priority and it can not be responded to.
+
+This triggered effect resolves before choosing an arsenal card, putting pitched cards on the bottom of your deck, and drawing up to your intellect.
+
+If there are two or more effects that trigger in the end phase, the turn player decides the order that those layers resolve.
+
+Effects that increase costs to play cards or activate abilities do not alter the cost to prevent the damage from this effect.
+
+—————————————————————
+
+Frailty
+
+Generic Token – Aura
+
+Your attack action cards played from arsenal and weapon attacks have -1{p}.
+
+At the beginning of your end phase, destroy Frailty.
+
+This triggers and resolves in the end phase. There is no priority and it can not be responded to.
+
+This triggered effect resolves before choosing an arsenal card, putting pitched cards on the bottom of your deck, and drawing up to your intellect.
+
+If there are two or more effects that trigger in the end phase, the turn player decides the order that those layers resolve.
+
+—————————————————————
+
+Inertia
+
+Generic Token – Aura
+
+At the beginning of your end phase, destroy Inertia, then put all cards from your hand and arsenal on the bottom of your deck.
+
+This triggers and resolves in the end phase. There is no priority and it can not be responded to.
+
+This triggered effect resolves before choosing an arsenal card, putting pitched cards on the bottom of your deck, and drawing up to your intellect.
+
+If there are two or more effects that trigger in the end phase, the turn player decides the order that those layers resolve.

@@ -1,0 +1,250 @@
+"""Deck loading and player state construction for FAB self-play engine (OO rewrite)."""
+
+from __future__ import annotations
+
+import re
+import random
+import unicodedata
+from typing import Optional
+
+from engine.card import CardDB, Card
+from engine.state import Player, Event, TriggeredAbility
+
+
+
+def _kw(card, kw):
+    if card is None:
+        return False
+    kw_lower = kw.lower()
+    if any(k.lower() == kw_lower for k in (card.keywords or [])):
+        return True
+    return card.functional_text is not None and f'**{kw}**' in card.functional_text
+
+
+# Map equipment type strings to slot names
+_EQUIP_TYPE_TO_SLOT = {
+    "Head": "head",
+    "Chest": "chest",
+    "Arms": "arms",
+    "Legs": "legs",
+    "Quiver": "weapon",  # 8.2.15a: quiver equips to weapon zone (can share with 2H bow)
+}
+
+
+def _slugify(name: str) -> str:
+    """Convert a card display name to slug format."""
+    s = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii")
+    s = s.lower()
+    s = re.sub(r"['\u2019,!?.]", "", s)
+    s = re.sub(r"[\s\-]+", "_", s.strip())
+    s = re.sub(r"[^a-z0-9_]", "", s)
+    return s
+
+
+def _parse_fabrary_card_line(line: str):
+    m = re.match(r"^(\d+)x\s+(.+)$", line.strip())
+    if not m:
+        return None
+    count = int(m.group(1))
+    rest = m.group(2).strip()
+    color_m = re.match(r"^(.+?)\s+\((red|yellow|blue)\)$", rest)
+    if color_m:
+        slug = _slugify(color_m.group(1)) + "_" + color_m.group(2)
+    else:
+        slug = _slugify(rest)
+    return count, slug
+
+
+def _is_fabrary_format(lines: list[str]) -> bool:
+    for line in lines[:15]:
+        stripped = line.strip()
+        if stripped.startswith("Hero:") or stripped == "Arena cards":
+            return True
+    return False
+
+
+def _load_deck_fabrary(lines: list[str], card_db: CardDB) -> dict:
+    hero_slug: Optional[str] = None
+    weapon_slug: Optional[str] = None
+    equipment: dict[str, str] = {}
+    cards: list[str] = []
+
+    in_arena = False
+    in_deck = False
+
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            in_arena = in_deck = False
+            continue
+        if stripped.startswith("Name:") or stripped.startswith("Format:"):
+            continue
+        if stripped.startswith("Made with") or stripped.startswith("See the full") or stripped.startswith("http"):
+            continue
+        if stripped.startswith("Hero:"):
+            hero_slug = _slugify(stripped[5:].strip())
+            continue
+        if stripped == "Arena cards":
+            in_arena = True
+            in_deck = False
+            continue
+        if stripped == "Deck cards":
+            in_deck = True
+            in_arena = False
+            continue
+
+        parsed = _parse_fabrary_card_line(stripped)
+        if parsed is None:
+            continue
+        count, slug = parsed
+
+        if in_arena:
+            card = card_db.get(slug)
+            if card is None:
+                continue
+            if "Weapon" in card.types:
+                if weapon_slug is None:
+                    weapon_slug = slug
+            else:
+                for type_name, slot_name in _EQUIP_TYPE_TO_SLOT.items():
+                    if type_name in card.types and slot_name not in equipment:
+                        equipment[slot_name] = slug
+                        break
+        elif in_deck:
+            for _ in range(count):
+                cards.append(slug)
+
+    return {
+        "hero": hero_slug,
+        "weapon": weapon_slug,
+        "equipment": equipment,
+        "cards": cards,
+    }
+
+
+def load_deck(path: str, card_db: CardDB) -> dict:
+    """Load a deck from a text file."""
+    hero_slug: Optional[str] = None
+    weapon_slug: Optional[str] = None
+    equipment: dict[str, str] = {}
+    cards: list[str] = []
+
+    with open(path, encoding="utf-8") as f:
+        lines = f.readlines()
+
+    if _is_fabrary_format(lines):
+        result = _load_deck_fabrary(lines, card_db)
+        if result["hero"] is None:
+            raise ValueError(f"No hero found in fabrary deck file: {path}")
+        return result
+
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+
+        parts = line.split()
+        if parts[0] == "hero":
+            hero_slug = parts[1]
+        elif parts[0] == "weapon":
+            weapon_slug = parts[1]
+        elif parts[0] == "equipment":
+            equip_slug = parts[1]
+            card = card_db.get(equip_slug)
+            if card is not None:
+                slot_found = False
+                for type_name, slot_name in _EQUIP_TYPE_TO_SLOT.items():
+                    if type_name in card.types:
+                        equipment[slot_name] = equip_slug
+                        slot_found = True
+                        break
+                if not slot_found:
+                    equipment[equip_slug] = equip_slug
+        else:
+            try:
+                count = int(parts[0])
+                slug = parts[1]
+                for _ in range(count):
+                    cards.append(slug)
+            except (ValueError, IndexError):
+                pass
+
+    if hero_slug is None:
+        raise ValueError(f"No hero found in deck file: {path}")
+    if weapon_slug is None:
+        raise ValueError(f"No weapon found in deck file: {path}")
+
+    return {
+        "hero": hero_slug,
+        "weapon": weapon_slug,
+        "equipment": equipment,
+        "cards": cards,
+    }
+
+
+def get_card_info(slug: str, card_db: CardDB) -> Card:
+    """Get a card from db, or raise error if not found."""
+    c = card_db.get(slug)
+    if c is None:
+        raise ValueError(f'Card slug "{slug}" not found in card database.')
+    return c
+
+
+def create_player(
+    deck_data: dict,
+    player_id: int,
+    card_db: CardDB,
+    seed: Optional[int] = None,
+) -> Player:
+    """Set up initial Player.
+    Returns a Player object with deck loaded and shuffled, hero card assigned, and weapon/equipment placed.
+    """
+    rng = random.Random(seed)
+
+    # Get hero card
+    hero_card = get_card_info(deck_data["hero"], card_db)
+
+    # Create player
+    player = Player(player_id=player_id, hero_card=hero_card)
+
+    # Override health/intellect from card db if set
+    if hero_card.life and hero_card.life > 0:
+        player.health = hero_card.life
+    if hero_card.intellect and hero_card.intellect > 0:
+        player.intellect = hero_card.intellect
+
+    # Shuffle and load deck
+    deck_slugs = list(deck_data["cards"])
+    rng.shuffle(deck_slugs)
+
+    for slug in deck_slugs:
+        card = get_card_info(slug, card_db)
+        card.owner = player_id
+        card.controller = None
+        player.deck.cards.append(card)
+        card.zone = "deck"
+        card.is_public = False
+
+    # Place weapon
+    weapon_slug = deck_data.get("weapon")
+    if weapon_slug:
+        wc = get_card_info(weapon_slug, card_db)
+        wc.owner = player_id
+        wc.controller = player_id
+        player.weapon.add(wc)
+
+    # Place equipment
+    for slot_name, equip_slug in deck_data.get("equipment", {}).items():
+        equip_zone = player.zone_by_name(slot_name)
+        if equip_zone is None:
+            continue
+        ec = get_card_info(equip_slug, card_db)
+        ec.owner = player_id
+        ec.controller = player_id
+        equip_zone.add(ec)
+
+        # # Initialize Battleworn defense counters
+        # if _kw(ec, 'Battleworn') and ec.defense is not None and ec.defense > 0:
+        #     player.set_equipment_counter(slot_name, ec.defense)
+
+    return player

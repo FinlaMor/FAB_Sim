@@ -1,0 +1,2339 @@
+Home  Rules and Policy  Release Notes  Uprising
+
+# Uprising
+
+# General Notes
+
+Uprising contains 226 cards (1 Fabled, 6 Legendary, 27 Majestic, 51 Rares, 125 Commons, 16 Tokens)
+
+Uprising becomes legal for tournaments on its official release date: 24 June, 2022
+
+#### Icons
+
+{r} Resource Point
+
+{p} Power
+
+{d} Defense Value
+
+{h} Life
+
+{i} Intellect
+
+## Returning Keywords
+
+#### Welcome to Rathe
+
+Battleworn
+
+Blade Break
+
+Dominate
+
+Go again
+
+#### Arcane Rising
+
+Arcane Barrier X
+
+Opt X
+
+#### Crucible of War
+
+Negate
+
+Temper
+
+#### Monarch
+
+Phantasm
+
+#### Tales of Aria
+
+Channel
+
+Essence
+
+Fusion
+
+## Returning Tokens
+
+#### Tales of Aria
+
+Frostbite
+
+## Returning Cards
+
+#### Welcome to Rathe
+
+Scar for a Scar
+
+#### Everfest
+
+Iyslander
+
+## New Subtype Keywords
+
+Affliction
+
+An affliction enters the arena under an opposing hero’s control
+
+If an object with subtype affliction enters the arena, it enters the arena under the control of an opposing hero to the player that owns the card.
+
+When the control of an object changes, it does not change the owner of an object.
+
+When an object would be sent to the graveyard, it is sent to the owner’s graveyard regardless of the current controller.
+
+Example:
+
+Frost Hex
+
+Ice Wizard Action – Affliction Aura
+
+(BLU) 3{r} 3{d}
+
+Iyslander Specialization
+
+Frostbites you control have “At the beginning of your end phase, this deals 1 arcane damage to you.”
+
+—————————————————————
+
+Invocation
+
+Invocations resolve flipped as an ally in the arena.
+
+If a card with the subtype invocation resolves as a layer on the stack, it enters the arena flipped.
+
+The card face with the subtype invocation is considered the front-face for a double-faced card (DFC).
+
+When a DFC invocation is put into a zone other than the stack or the arena, it becomes a new object, and resets to using the front-face to determine its properties (e.g. when it is sent to the graveyard, a DFC will revert to being an invocation again)
+
+Example:
+
+Invoke Themai // Themai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 2{r} 3{d} // 3{p} 4{h}
+
+Transform target ash you control into Themai.
+
+Go again
+
+//
+
+Opponents can’t play cards or activate abilities during your turn.
+
+—————————————————————
+
+## New Ability Keywords
+
+Quell X
+
+If your hero would be dealt damage, you may pay X to prevent X of that damage. If you do, destroy Quell at the beginning of the end phase.
+
+Quell is a static ability that generates a fixed-prevention effect.
+
+The prevention effect is optional. When the effect is applied, the controller chooses whether to pay the amount. If they do, the prevention effect reduces the damage, and creates a delayed triggered-effect that destroys the source object at the beginning of the End Phase.
+
+If another prevention effect reduces a damage event to 0, the replacement condition is no longer met (damage would not be dealt), so Quell would not apply.
+
+The prevention amount applies to a single damage event. The leftover prevention amount does not apply to any future damage that would be dealt to your hero.
+
+If the damage prevention can not be applied due to an effect, the delayed triggered effect is still created as part of the replacement effect application and will still destroy the source at the beginning of the End Phase.
+
+Example:
+
+Quelling Robe
+
+Generic Equipment – Chest
+
+0{d}
+
+Quell 1
+
+—————————————————————
+
+Ward X
+
+If your hero would be dealt damage, prevent X of that damage and destroy this.
+
+Ward is a static ability that generates a fixed-prevention effect.
+
+The prevention effect is not optional. It applies whenever damage would be dealt to your hero.
+
+If another prevention effect reduces a damage event to 0, the replacement condition is no longer met (damage would not be dealt), so Ward would not apply.
+
+The prevention amount applies to a single damage event. The leftover prevention amount does not apply to any future damage that would be dealt to your hero.
+
+If the damage prevention can not be applied due to an effect, the object with Ward on it is still destroyed as part of the replacement effect application.
+
+Example:
+
+Sigil of Protection
+
+Generic Action – Aura
+
+(BLU) 1{r} 2{d}
+
+Ward 2
+
+At the beginning of your action phase, destroy Sigil of Protection.
+
+—————————————————————
+
+## New Effect Keywords
+
+Transform
+
+Put the X under this/it/him/her
+
+Create a Y and put the X under it.
+
+Transform is a discrete effect.
+
+To transform subject objects into a specified object, first create the specified object in the arena if it does not yet exist, then put the subjects under it.
+
+To transform objects into a token that does not exist yet, first create the token, then put the objects underneath it.
+
+To transform objects into an existing permanent, just put the objects underneath it.
+
+When used in conjunction with cards that flip (e.g. Invocations), the card is first flipped and becomes a permanent in the arena, then the transform will refer to that permanent as the specified object to transform into (the permanent to put cards under).
+
+The transform fails if there are no transform subjects, or if they can not be put under the specified object for whatever reason.
+
+Example:
+
+Billowing Mirage
+
+Draconic Illusionist Action – Attack
+
+(RED) 1{r} 3{p} 3{d}
+
+When you attack with Billowing Mirage, transform up to 1 ash you control into an Aether Ashwing.
+
+Go again
+
+—————————————————————
+
+Freeze
+
+A frozen object can not be played or activated.
+
+Freeze is a continuous effect.
+
+An object under the effect of “freeze” is considered frozen.
+
+A frozen object can not be played and its activated abilities can not be activated until it is no longer frozen.
+
+It is recommended that frozen objects should be physically indicated by the use of a counter or token on the object, or by orienting the object in a way that clearly communicates that it is frozen.
+
+If the effect “unfreeze” applies to an object, that object is no longer frozen and the freeze effect ends.
+
+Example:
+
+Glacial Horns
+
+Ice Equipment – Head
+
+0{d}
+
+Action – Destroy Glacial Horns: Choose a hero. Freeze up to 1 card in their arsenal and 1 ally they control until the start of your next turn. Go again
+
+—————————————————————
+
+# Card-specific Notes
+
+Blood of the Dracai
+
+Draconic Resource – Gem
+
+(RED)
+
+Legendary
+
+When you pitch Blood of the Dracai, the next 3 Draconic cards you play this turn cost {r} less.
+
+The cost reduction does not apply to the card it is being pitched to pay for, as its triggered effect only resolves after that card is played, not during it being played.
+
+The cost reduction does not apply to activated abilities, such as those on Draconic weapons or equipment.
+
+You can not play or defend with Blood of the Dracai because it does not have a cost or defense property.
+
+—————————————————————
+
+## Draconic Illusionist
+
+Dromai, Ash Artist / Dromai
+
+Draconic Illusionist Hero / Draconic Illusionist Hero – Young
+
+4{i} 40/20{h}
+
+Whenever you pitch a red card, create an Ash token.
+
+If you’ve played a red card this turn, dragons you control have go again while attacking.
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+You can create more than one Ash token each turn through the triggered effect.
+
+If you have not played a red card, then attack with a dragon, if you play a red card (instant) any time up until and including the resolution step of combat, the dragon will have go again and you will gain an action point in the link step of combat.
+
+If an attacking dragon dies before the resolution step of combat (before the chain link resolves), you will not gain an action point from the go again.
+
+—————————————————————
+
+Storm of Sandikai
+
+Draconic Illusionist Weapon – Scepter (2H)
+
+Dragon allies you control have “Once per Turn Action – 0: Attack”.
+
+This weapon gives an attack ability to dragons you control. The dragons are the ones that actually attack.
+
+When a dragon (ally) attacks, your hero is not considered the attacking hero and you can not play attack reactions during the reaction step of combat.
+
+Attacking with a dragon (ally) and then playing an attack action card does not close the combat chain.
+
+Attacking with a dragon using this ability costs an action point and does not grant an action point, unless the dragon has go again.
+
+—————————————————————
+
+Silken Form
+
+Draconic Illusionist Equipment – Arms
+
+0{d}
+
+Instant – Destroy Silken Form: Transform target ash you control into an Aether Ashwing.
+
+Quell 1
+
+You can activate the ability of Silken Form on the same turn Quell is used to prevent damage, as the delayed triggered effect of Quell does not destroy Silken Form until the end phase.
+
+You can not activate the ability of Silken Form (and destroy it) without a target ash.
+
+Silken Form is destroyed as part of the cost of its ability, even if the target ceases to exist before the activated ability resolves.
+
+—————————————————————
+
+Burn Them All
+
+Draconic Illusionist Action – Aura
+
+(RED) 0{r} 3{d}
+
+Go again
+
+Once per turn, when a dragon you control attacks, it deals 1 arcane damage to each opposing hero.
+
+At the beginning of your end phase, put a raze counter on Burn Them All then destroy it unless you banish a red card from your graveyard for each raze counter on it.
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+If you attack with a dragon, then play Burn Them All, then attack with a second dragon, the second dragon attack will still trigger the effect of Burn Them All.
+
+The first triggered effect triggers when a dragon attacks (when the dragon is considered to have attacked), during the attack step of combat. It will still resolve even if the dragon ceases to exist (e.g. phantasm).
+
+You may choose not to pay the cost of banishing red cards from your graveyard. If you choose not to, it is destroyed.
+
+You can not resolve “part” of the effect of banishing red cards from your graveyard. You can not for example, only banish 1 card when there are 3 raze counters on Burn Them All.
+
+If you have 2 or more Burn Them All in the arena, each end phase trigger is resolved and paid for separately. Banishing cards for one Burn Them All, does not prevent another Burn Them All from being destroyed.
+
+—————————————————————
+
+Invoke Dracona Optimai // Dracona Optimai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 6{r} 3{d} // 6{p} 6{h}
+
+Legendary
+
+Transform target ash you control into Dracona Optimai.
+
+Go again
+
+//
+
+Whenever Dracona Optimai attacks a hero, reveal the top 3 cards of your deck. He deals arcane damage equal to twice the number of red cards revealed this way to them or ally they control.
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+“When this attacks” is a triggered effect that triggers when the dragon is considered to have attacked, during the attack step. It does not trigger if the combat chain closes in the layer step of combat. After it triggers, it will still resolve even if the dragon ceases to exist or the combat chain closes.
+
+If you have 2 or less cards in your deck you reveal the entire deck. You still deal damage equal to the number of red cards revealed this way.
+
+The cards are revealed before the hero or an ally they control is selected to be dealt damage.
+
+—————————————————————
+
+Invoke Tomeltai // Tomeltai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 5{r} 3{d} // 5{p} 5{h}
+
+Legendary
+
+Transform target ash you control into Tomeltai.
+
+Go again
+
+//
+
+Whenever Tomeltai attacks a hero, reveal the top 2 cards of your deck. If 1 or more red cards are revealed this way, put that many -1{d} counters on an equipment they control, then if it has 0{d}, destroy it.
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+“When this attacks” is a triggered effect that triggers when the dragon is considered to have attacked, during the attack step. It does not trigger if the combat chain closes in the layer step of combat. After it triggers, it will still resolve even if the dragon ceases to exist or the combat chain closes.
+
+If you only have 1 card your deck you reveal that card.
+
+Revealing cards is not optional, even if the hero does not control any equipment.
+
+If you do not reveal 1 or more red cards this way, do you do not put a -1{d} counter an equipment and you do not destroy an equipment with 0{d}.
+
+The cards are revealed before the equipment is selected and a -1{d} counter is put on it.
+
+You can put a -1{d} counter on an equipment that does not have a defense {d} property, but it will not be destroyed because it does not have 0{d}.
+
+—————————————————————
+
+Invoke Dominia // Dominia
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 4{r} 3{d} // 4{p} 4{h}
+
+Legendary
+
+Transform target ash you control into Dominia.
+
+Go again
+
+//
+
+Whenever Dominia attacks a hero, reveal the top card of your deck. If it’s a red card, look at their hand and banish a card from it.
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+“When this attacks” is a triggered effect that triggers when the dragon is considered to have attacked, during the attack step. It does not trigger if the combat chain closes in the layer step of combat. After it triggers, it will still resolve even if the dragon ceases to exist or the combat chain closes.
+
+If the revealed card is not a red card, or if you have no cards in your deck to reveal, the rest of the triggered effect fails to resolve.
+
+Banishing a card is not an optional effect. You must banish a card if you are able.
+
+—————————————————————
+
+Invoke Azvolai // Azvolai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 0{r} 3{d} // 2{p} 3{h}
+
+Transform target ash you control into Azvolai.
+
+Go again
+
+//
+
+Whenever Azvolai attacks, you may have him deal 1 arcane damage to up to any 2 targets.
+
+“When this attacks” is a triggered effect that triggers when the dragon is considered to have attacked, during the attack step. It does not trigger if the combat chain closes in the layer step of combat. After it triggers, it will still resolve even if the dragon ceases to exist or the combat chain closes.
+
+A single target cannot be chosen more than once for one instances of the term “target”. You can select the target of the attack as one of the targets for this effect.
+
+—————————————————————
+
+Invoke Cromai // Cromai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 0{r} 3{d} // 3{p} 2{h}
+
+Transform target ash you control into Cromai.
+
+Go again
+
+//
+
+Once per turn, when Cromai attacks or leaves the arena, gain 1 action point.
+
+“When this attacks” is a triggered effect that triggers when the dragon is considered to have attacked, during the attack step. It does not trigger if the combat chain closes in the layer step of combat. After it triggers, it will still resolve even if the dragon ceases to exist or the combat chain closes.
+
+This triggered effect triggers when Cromai ceases to exist (such as when it flipped back to an invocation) or otherwise leaves the arena.
+
+This triggered effect only triggers once per turn. If Cromai attacks and then leaves the arena later in that turn (e.g. from phatasm), you would still only gain 1 action point in total.
+
+Gaining an action point from the triggered effect is independent of gaining an action point from go again. If Cromai also has go again, you would gain net 1 action point after attacking with it.
+
+—————————————————————
+
+Invoke Kyloria // Kyloria
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 1{r} 3{d} // 4{p} 2{h}
+
+Transform target ash you control into Kyloria.
+
+Go again
+
+//
+
+Whenever Kyloria hits a hero, gain control of an item they control. If you don’t gain control of an item this way, draw a card.
+
+Hitting an ally (or anything other than a hero) with Kyloria does not trigger its effect.
+
+The triggered effect is not optional, if the hero you hit controls an item, you must gain control of an item.
+
+If the hero that was hit controls an item at the time Kyloria hits, but does not when the triggered effect resolves, you do not gain control of an item and therefore draw a card.
+
+When you gain control of an item, you retain control indefinitely until that item leaves the stack/arena or another player gains control of it from another effect.
+
+—————————————————————
+
+Invoke Miragai // Miragai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 1{r} 3{d} // 2{p} 4{h}
+
+Transform target ash you control into Miragai.
+
+Go again
+
+//
+
+Your first dragon attack each turn loses and can’t gain phantasm.
+
+A “dragon attack” is an attack (e.g. activated ability, attack action card) with the dragon sub-type. This does not apply to cards with “Dragon” in their name,
+
+The effect only applies to the first dragon you control that attacks each turn. If you have attacked with a dragon, then play Miragi, the next dragon you attack would not lose phantasm.
+
+Losing Phantasm this way does not prevent phantasm triggered-effects from resolving if the Phantasm has already triggered.
+
+—————————————————————
+
+Invoke Nekria // Nekria
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 3{r} 3{d} // 4{p} 7{h}
+
+Transform target ash you control into Nekria.
+
+Go again
+
+//
+
+Whenever Nekria deals or is dealt damage, put a -1{h} counter on her and create an Ash token.
+
+Nekria is considered to have dealt damage when a damage event created by Nekria (such as an attack) causes a loss of life on a living object (e.g. a hero or ally). Nekria does not deal damage if its attack is fully defended.
+
+Nekria is considered to have been dealt damage if a damage event causes Nekria to lose life. This can be done with any type of damage (e.g. physical, arcane, untyped).
+
+Adding a -1{h} counter to Nekria, reduces its life total. If you deal 6 damage to full life Nekria, then add a -1{h} counter to it, it dies.
+
+-1{h} counters are not removed at the end of the turn when Allies life totals are reset. If Nekria has two -1{h} counters on it, its life total will be 5 when it resets at the end of the turn (7 base life – 2 from counters).
+
+Nekria’s triggered effect still triggers (and creates an Ash) even if the damage dealt kills it.
+
+—————————————————————
+
+Invoke Ouvia // Ouvia
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 2{r} 3{d} // 1{p} 6{h}
+
+Transform target ash you control into Ouvia.
+
+Go again
+
+//
+
+At the start of your turn or when Ouvia enters the arena, transform up to 1 ash you control into an Aether Ashwing.
+
+The triggered effect is not targeted. You do not need ash at the time you play Ouvia Invocation, only once the triggered effect of Ouvia resolves. This means you can create an ash between playing Ouvia and its triggered effect resolving, and then turn that ash into an Aether Ashwing.
+
+Players do not have priority during the start of turn, so they cannot respond to the triggered effect at the start of the turn.
+
+—————————————————————
+
+Invoke Themai // Themai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 2{r} 3{d} // 3{p} 4{h}
+
+Transform target ash you control into Themai.
+
+Go again
+
+//
+
+Opponents can’t play cards or activate abilities during your turn.
+
+Themai does not prevent opponents from defending, pitching, applying replacement effects (e.g. Arcane Barrier), or triggering and resolving triggered effects.
+
+Playing cards or activating abilities, involves all instant and defence reaction type cards and abilities.
+
+—————————————————————
+
+Invoke Vynserakai // Vynserakai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 3{r} 3{d} // 6{p} 1{h}
+
+Transform target ash you control into Vynserakai.
+
+Go again
+
+//
+
+Whenever Vynserakai hits a hero, he deals 3 arcane damage to them.
+
+Hitting an ally (or anything other than a hero) with Vynserakai does not trigger its effect.
+
+The triggered effect creates a damage event that is seperate from the original hit. Vynserakai is considered to be the source of this damage.
+
+—————————————————————
+
+Invoke Yendurai // Yendurai
+
+Draconic Illusionist Action – Invocation // Draconic Illusionist – Dragon Ally
+
+(RED) 1{r} 3{d} // 3{p} 3{h}
+
+Transform target ash you control into Yendurai.
+
+Go again
+
+//
+
+Yendurai enters the arena with an endurance counter on him.
+
+If Yendurai would be dealt damage, remove an endurance counter from him to prevent 3 of that damage.
+
+If Yendurai enters the arena from anything other than its invocation being resolved, it still enters the arena with an endurance counter.
+
+If Yendurai is dealt 4 or more damage, the endurance counter would be removed and the extra damage would still be dealt to Yendurai.
+
+If Yendurai is dealt 2 or less damage, the endurance counter would be removed and Yendurai does not take any damage. The remaining prevention amount does not apply to the next damage event.
+
+—————————————————————
+
+Billowing Mirage
+
+Draconic Illusionist Action – Attack
+
+(RED/YEL/BLU) 1{r} 3/2/1{p} 3{d}
+
+When you attack with Billowing Mirage, transform up to 1 ash you control into an Aether Ashwing.
+
+Go again
+
+The transform effect is not targeted. You do not need ash at the time you play Billowing Mirage, only once the effect of Billowing Mirage resolves. This means you can create an ash between playing Billowing Mirage and its effect resolving, and then turn that ash into an Aether Ashwing.
+
+The transform effect is optional. You may choose to transform 0 ash you control.
+
+—————————————————————
+
+Dunebreaker Cenipai
+
+Draconic Illusionist Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+Phantasm
+
+When Dunebreaker Cenipai is destroyed, create an Ash token.
+
+Go again
+
+Dunebreaker Cenipai must be in the arena (not as a defending card) for its effect to trigger from being destroyed. If it is anywhere else when it is destroyed (such as on the stack or in arsenal) its effect does not trigger.
+
+—————————————————————
+
+Dustup
+
+Draconic Illusionist Action – Attack
+
+(RED/YEL/BLU) 0{r} 4{p} 3{d}
+
+When Dustup hits, create an Ash token, then transform up to 1 ash you control into an Aether Ashwing.
+
+The transform effect is not targeted. You do not need ash at the time you play Dustup, only once the effect of Dustup resolves. This means you can create an ash between hitting with Dustup and its effect resolving, and then turn that ash into an Aether Ashwing.
+
+The transform effect is optional. You may choose to transform 0 ash you control.
+
+—————————————————————
+
+Embermaw Cenipai
+
+Draconic Illusionist Action – Attack
+
+(RED/YEL/BLU) 2{r} 8/7/6{p} 3{d}
+
+Phantasm
+
+When Embermaw Cenipai is destroyed, create an Ash token.
+
+Embermaw Cenipai must be in the arena (not as a defending card) for its effect to trigger from being destroyed. If it is anywhere else when it is destroyed (such as on the stack or in arsenal) its effect does not trigger.
+
+—————————————————————
+
+Sweeping Blow
+
+Draconic Illusionist Action – Attack
+
+(RED/YEL/BLU) 1{r} 3/2/1{p} 3{d}
+
+When you attack with Sweeping Blow, create an Ash token.
+
+Go again
+
+—————————————————————
+
+Rake the Embers
+
+Draconic Illusionist Action
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+Create an Ash token, then transform up to 3/2/1 ash you control into Aether Ashwings.
+
+Go again
+
+The transform effect is not targeted. You do not need ash at the time you play Rake the Embers, only once Rake the Embers resolves. This means you can create an ash between playing Rake the Embers and it resolving, turning that ash into an Aether Ashwing.
+
+You can turn the Ash you’ve created from Rake the Embers into an Aether Ashwing.
+
+The transform effect is optional. You may choose to transform 0 ash you control.
+
+—————————————————————
+
+Skittering Sands
+
+Draconic Illusionist Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Transform target ash you control into an Aether Ashwing. It gains +3/2/1{p} until end of turn.
+
+Go again
+
+Aether Ashwing gains the +3/2/1{p} until end of turn, not the ash.
+
+—————————————————————
+
+Sand Cover
+
+Draconic Illusionist Instant
+
+(RED/YEL/BLU) 0{r}
+
+Target ash you control gains ward 4/3/2 until end of turn.
+
+Ward X is not optional. If you control an ash with ward X and you would be dealt damage, the ash will be destroyed.
+
+—————————————————————
+
+## Draconic Ninja
+
+Fai, Rising Rebellion / Fai
+
+Draconic Ninja Hero / Draconic Ninja Hero – Young
+
+4{i} 40/20{h}
+
+You may start the game with a Phoenix Flame in your graveyard.
+
+Once per Turn Instant – {r}{r}{r}: Return a Phoenix Flame from your graveyard to your hand. This ability costs {r} less for each Draconic chain link you control.
+
+The Phoenix Flame is taken from your presented deck. It is included in the minimum cards required in the deck at the start of the game. This means you could start a game with 59 cards in the deck zone for classic constructed format, or 39 in a blitz constructed format.
+
+A draconic attack becomes a chain link when it resolves as a layer on the stack and becomes attacking. This means going from the layer step of combat to the attack step of combat.
+
+If the combat chain is open, you are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Discounts to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of Fai’s ability, the decreases would be applied last.
+
+Fai’s instant ability can be activated on the opponent’s turn, but you would not control any draconic chain links (most likely).
+
+—————————————————————
+
+Searing Emberblade
+
+Draconic Ninja Weapon – Sword (2H)
+
+3{p}
+
+Once per Turn Action – {r}{r}: Attack
+
+If you control 2 or more Draconic chain links, Searing Emberblade has go again.
+
+Searing Emberblade’s activated attacks are considered draconic.
+
+Searing Emberblade considers its own chain link for meeting its effect’s condition.
+
+—————————————————————
+
+Heat Wave
+
+Draconic Ninja Equipment – Arms
+
+0{d}
+
+Instant – Destroy Heat Wave: Phoenix Flames you control gain +1{p} until end of turn.
+
+Quell 1
+
+You control Phoenix Flame cards when they are on the stack or combat chain as attacks/chain links.
+
+This applies retroactively to Phoenix Flame cards on previous chain links, but does not retroactively apply the damage of those attacks.
+
+Heat Wave’s ability can be activated on the same turn Quell is used, as Quell will not destroy Heat Wave until the end of the turn.
+
+—————————————————————
+
+Phoenix Form
+
+Draconic Ninja Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+If you control 1 or more Phoenix Flames, Phoenix Form has go again. If you control 2 or more, it has +2{p}. If you control 3 or more, it has “When this hits a hero, draw 3 cards.”
+
+Phoenix Flame refers to a card with the name “Phoenix Flame”
+
+You control Phoenix Flame cards when they are on the stack or combat chain as attacks/chain links.
+
+If a Pheonix Flame card was a chain link on the combat chain but is no longer in the arena (e.g. Warmonger’s Recital), you are not considered to control that Phoenix Flame anymore.
+
+—————————————————————
+
+Spreading Flames
+
+Draconic Ninja Action – Attack
+
+(RED) 1{r} 3{p} 2{d}
+
+Draconic attacks you control have +1{p} while their base {p} is less than the number of Draconic chain links you control.
+
+Go again
+
+Draconic attacks include both attack action cards and activated attacks with the draconic talent.
+
+The base power of an attack is typically determined by its printed power value located at the bottom left of the card or token.
+
+A draconic chain link you control is a chain link on the combat chain created by you playing an attack action card or activating an attack ability with the talent “draconic”.
+
+Spreading Flames is considered a draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Combustion Point
+
+Draconic Ninja Attack Reaction
+
+(RED) 1{r} 3{d}
+
+Target Draconic or Ninja attack action card gains +1{p}.
+
+You may banish a non-equipment defending card with {d} less than the number of Draconic chain links you control.
+
+You choose the non-equipment defending card when Combustion Point resolves, not when it is played.
+
+Banishing a non-equipment defending card is optional.
+
+If a non-equipment defending card is banished, it no longer contributes its defense value to the total defense for damage calculation.
+
+—————————————————————
+
+Engulfing Flamewave
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 2{r} 5/4/3{p} 2{d}
+
+When Engulfing Flamewave hits, reveal the top card of your deck. If it’s an attack action card with cost less than number of Draconic chain links you control, banish it. You may play it this turn.
+
+Go again
+
+You must banish the card if it is an attack action card with cost less than the number of draconic chain links you control. It is not an optional effect.
+
+If you banish a card and do not play it this turn, it remains banished.
+
+—————————————————————
+
+Mounting Anger
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 2{d}
+
+When Mounting Anger hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains +1{p} and you may play it this turn.
+
+Go again
+
+Banishing a card with cost less than the number of Draconic chain links you control is optional.
+
+If you banish a card and do not play it this turn, it remains banished.
+
+A draconic chain link you control is a chain link on the combat chain created by you playing an attack action card or activating an attack ability with the talent “draconic”.
+
+Mounting Anger is considered a draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Rise from the Ashes
+
+Draconic Ninja Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+The next Draconic or Ninja attack action card you play this turn gains +3/2/1{p}.
+
+You may return a Phoenix Flame from your graveyard to your hand.
+
+Go again
+
+Phoenix Flame refers to a card with the name “Phoenix Flame”
+
+The return effect is optional.
+
+—————————————————————
+
+Brand with Cinderclaw
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+Your next attack this combat chain is Draconic in addition to its other card types.
+
+Go again
+
+Attacks include both attack action cards and activated attacks.
+
+The effect only applies to the next attack on the current combat chain. If the combat chain closes, the effect will not apply to any attack.
+
+—————————————————————
+
+Cinderskin Devotion
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 3{d}
+
+If you control 2 or more Draconic chain links, Cinderskin Devotion has go again.
+
+A draconic chain link you control is a chain link on the combat chain created by you playing an attack action card or activating an attack ability with the talent “draconic”.
+
+Cinderskin Devotion is considered a draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Dust Runner Outlaw
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 2{d}
+
+Go again
+
+—————————————————————
+
+Lava Vein Loyalty
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+If you control 2 or more Draconic chain links, Lava Vein Loyalty has go again.
+
+A draconic chain link you control is a chain link on the combat chain created by you playing an attack action card or activating an attack ability with the talent “draconic”.
+
+Lava Vein Loyalty is considered a draconic chain link you control for the purposes of its own effect.
+
+You are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Rebellious Rush
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 2{r} 5/4/3{p} 2{d}
+
+Go again
+
+—————————————————————
+
+Rising Resentment
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+When Rising Resentment hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it costs {r} less to play and you may play it this turn.
+
+Go again
+
+Banishing a card with cost less than the number of Draconic chain links you control is optional.
+
+If you banish a card and do not play it this turn, it remains banished.
+
+A draconic chain link you control is a chain link on the combat chain created by you playing an attack action card or activating an attack ability with the talent “draconic”.
+
+Rising Resentment is considered a draconic chain link you control for the purposes of its own effect. This means you could banish a zero cost card and still play it for zero even if under an effect that increases costs by 1 (Frostbite, Channel Lake Frigid etc.).
+
+If the combat chain is open, you are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+Discounts to resource costs are applied after increases to resource costs. If an effect would increase the resource cost of Fai’s ability, the decreases would be applied last.
+
+—————————————————————
+
+Ronin Renegade
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+Go again
+
+—————————————————————
+
+Soaring Strike
+
+Draconic Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 2{d}
+
+When Soaring Strike hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains go again and you may play it this turn.
+
+Go again
+
+Banishing a card with cost less than the number of Draconic chain links you control is optional.
+
+If you banish a card and do not play it this turn, it remains banished.
+
+A draconic chain link you control is a chain link on the combat chain created by you playing an attack action card or activating an attack ability with the talent “draconic”.
+
+Soaring Strike is considered a draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+## Draconic Talent
+
+Flamescale Furnace
+
+Draconic Equipment – Chest
+
+2{d}
+
+Once per Turn Instant – {r}: Gain {r} for each red card in your pitch zone. Activate this ability only if you’ve played a red card this turn.
+
+Temper
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+If you pitch a red card to activate Flamescale Furnace, it will be considered as a red card in the pitch when the activated ability resolves.
+
+—————————————————————
+
+Sash of Sandikai
+
+Draconic Equipment – Chest
+
+0{d}
+
+Instant – Destroy Sash of Sandikai: Gain {r}. Activate this ability only if you’ve played a red card this turn.
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+You can not activate this card to pay for the first red card you play this turn. The card has to be considered played (and paid for) before Sash of Sandikai is activated.
+
+—————————————————————
+
+Thaw
+
+Draconic Action – Attack
+
+(RED) 2{r} 6{p} 2{d}
+
+While Thaw is in your graveyard, at the start of your turn, you may banish it and choose 1:
+
+Destroy target Frostbite.
+
+Destroy target Ice affliction.
+
+Unfreeze target frozen card.
+
+Players do not have priority during the start of turn phase.
+
+This triggered ability is functional while Thaw is in the graveyard and nowhere else.
+
+—————————————————————
+
+Liquefy
+
+Draconic Attack Reaction
+
+(RED) 1{r} 2{d}
+
+Rupture – If Liquefy is played at chain link 4 or higher, target attack action card gains “When this hits a hero, put a -1{d} counter on an equipment they control. Then if it has 0{d}, destroy it.”
+
+To play Liquefy at chain link 4 or higher, there must already be 4 chain links on the combat chain before you play this.
+
+The triggered effect given by Liquefy is not targeted. The equipment is chosen at the time the triggered effect resolves.
+
+You can put a -1{d} counter on an equipment without a {d} property, but the effect will fail to destroy it (it has to have the {d} property to be destroyed).
+
+If an equipment would have less than 0{d}, it is considered to have 0{d}.
+
+—————————————————————
+
+Uprising
+
+Draconic Action
+
+(RED) 0{r} 3{d}
+
+Your next 4 Draconic attacks this turn gain +1{p}.
+
+Go again
+
+Draconic attacks include both attack action cards and activated attacks with the draconic talent.
+
+The combat chain closing has no affect on this effect as it is applied to attacks this turn, not restricted to a single combat chain.
+
+—————————————————————
+
+Tome of Firebrand
+
+Draconic Instant
+
+(RED) 1{r}
+
+Play Tome of Firebrand only if you control 4 or more Draconic chain links.
+
+Draw 2 cards.
+
+A draconic chain link you control is a chain link on the combat chain created by you playing an attack action card or activating an attack ability with the talent “draconic”.
+
+If the combat chain is open, you are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+Red Hot
+
+Draconic Action – Attack
+
+(RED) 2{r} 4{p} 3{d}
+
+Dromai or Fai Specialization
+
+Rupture – If Red Hot is played as chain link 4 or higher, it has “When you attack with this, reveal the top X cards of your deck, where X is the number of Draconic chain links you control. Deal damage equal to the number of red cards revealed this way to any target, then shuffle.”
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+To play Red Hot as chain link 4 or higher, there must already be 3 chain links on the combat chain before you play this.
+
+If you have less than X cards in your deck, you reveal all the cards in your deck.
+
+The damage dealt by Red Hot’s triggered effect is untyped and can not be prevented by anything other than prevention effects that reduce untyped damage.
+
+You may select any target that can be dealt damage as the target of the damage, including both allies and heroes.
+
+—————————————————————
+
+Rise Up
+
+Draconic Action – Attack
+
+(RED) 1{r} 3{p} 3{d}
+
+Dromai or Fai Specialization
+
+Rupture – If Rise Up is played as chain link 4 or higher, it has dominate and +X{p}, where X is twice the number of Phoenix Flames you control.
+
+To play Rise Up as chain link 4 or higher, there must already be 3 chain links on the combat chain before you play this.
+
+Phoenix Flame refers to a card with the name “Phoenix Flame”
+
+You control Phoenix Flame cards when they are on the stack or combat chain as attacks/chain links.
+
+If a Pheonix Flame card was a chain link on the combat chain but is no longer in the arena (e.g. Warmonger’s Recital), you are not considered to control that Phoenix Flame anymore.
+
+—————————————————————
+
+Blaze Headlong
+
+Draconic Action – Attack
+
+(RED) 0{r} 4{p} 2{d}
+
+If you’ve played another red card this turn, Blaze Headlong has go again.
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+As long as you play a red card before the link step of combat, Blaze Headlong will have go again and grant you an action point.
+
+—————————————————————
+
+Breaking Point
+
+Draconic Action – Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+Rupture – If Breaking Point is played as chain link 4 or higher, it has “When this hits a hero, destroy all cards in their arsenal.”
+
+To play Breaking Point as chain link 4 or higher, there must already be 3 chain links on the combat chain before you play this.
+
+—————————————————————
+
+Burn Away
+
+Draconic Action – Attack
+
+(RED) 0{r} 2{p} 3{d}
+
+As an additional cost to play Burn Away, you may banish a Phoenix Flame from your graveyard. When you do, Burn Away gains +2{p} and go again.
+
+Phoenix Flame refers to a card with the name “Phoenix Flame”
+
+The additional cost is optional and does not have to be paid.
+
+The cost is part of playing the card and can not be responded to. You can not play cards or activate abilities until after the card has been played and paid for.
+
+Burn Away gains the +2{p} and go again as a triggered effect after the card has been played.
+
+—————————————————————
+
+Flameborn Retribution
+
+Draconic Action – Attack
+
+(RED) 1{r} 3{p} 2{d}
+
+When you defend with Flameborn Retribution, if you’ve been dealt damage this turn, you may return a Phoenix Flame from your graveyard to your hand.
+
+Go again
+
+The triggered effect triggers and resolves during the defend step of combat.
+
+You must have taken damage at the time you defend with Flameborn Retribution to meet the condition. If you have not taken damage, then you defend an attack with Flameborn Retribution and are dealt damage from the attack, you would not retroactively meet the condition and be granted the effect.
+
+Phoenix Flame refers to a card with the name “Phoenix Flame”
+
+—————————————————————
+
+Flamecall Awakening
+
+Draconic Action – Attack
+
+(RED) 1{r} 3{p} 2{d}
+
+When you attack with Flamecall Awakening, if you’ve played another red card this turn, you may search your deck for a Phoenix Flame, reveal it, put it into your hand, then shuffle.
+
+Go again
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+Phoenix Flame refers to a card with the name “Phoenix Flame”
+
+Searching your deck (and the rest of the triggered effect) is optional.
+
+You may search your deck for a Phoenix Flame and intentionally or not fail to find one. In which case you must still shuffle your deck.
+
+—————————————————————
+
+Inflame
+
+Draconic Action – Attack
+
+(RED) 0{r} 1{p} 2{d}
+
+When you attack with Inflame, if you’ve played another red card this turn, you may return a Phoenix Flame from your graveyard to your hand.
+
+Go again
+
+A red card is a card with a red color bar (usually at the top of the card).
+
+Phoenix Flame refers to a card with the name “Phoenix Flame”.
+
+—————————————————————
+
+Lava Burst
+
+Draconic Action – Attack
+
+(RED) 0{r} 2{p} 3{d}
+
+Rupture – If Lava Burst is played as chain link 4 or higher, it has +3{p}.
+
+To play Lava Burst as chain link 4 or higher, there must already be 3 chain links on the combat chain before you play this.
+
+—————————————————————
+
+Searing Touch
+
+Draconic Action – Attack
+
+(RED) 1{r} 3{p} 3{d}
+
+Rupture – If Searing Touch is played as chain link 4 or higher, it has “When you attack with this, deal 2 damage to any target.”
+
+To play Searing Touch as chain link 4 or higher, there must already be 3 chain links on the combat chain before you play this.
+
+You may select any target that can be dealt damage as the target of the damage, including both allies and heroes.
+
+—————————————————————
+
+Stoke the Flames
+
+Draconic Action – Attack
+
+(RED) 1{r} 4{p} 3{d}
+
+When Stoke the Flames hits, you may return a Phoenix Flame from your graveyard to your hand. If you do, Stoke the Flames gains go again.
+
+Phoenix Flame refers to a card with the name “Phoenix Flame”
+
+Returning a Phoenix Flame is an optional effect.
+
+If there are no Phoenix Flame in your graveyard, Stoke the Flames can not gain the go again from its effect.
+
+—————————————————————
+
+Phoenix Flame
+
+Draconic Action – Attack
+
+(RED) 0{r} 0{p}
+
+If you control 2 or more Draconic chain links, Phoenix Flame has +1{p}.
+
+Go again
+
+Phoenix Flame is considered a card, can be included in the deck, and counts towards the number of cards in that deck.
+
+In Uprising limited formats (sealed and draft), a player may include up to 3 Phoenix Flames in the card pool (and thus their deck) even if they did not pull them from a pack. A player can not add more than 3 Phoenix Flames to a limited format deck, even if they pulled more than 3 from their packs.
+
+In non-limited formats, the number of Phoenix Flames a player can add to their deck is determined by the format rules (e.g. 2 in blitz constructed and 3 in classic constructed).
+
+A draconic chain link you control is a chain link on the combat chain created by you playing an attack action card or activating an attack ability with the talent “draconic”.
+
+Phoenix Flame is considered a draconic chain link you control for the purposes of its own effect.
+
+If the combat chain is open, you are still considered to control a (draconic) chain link, even if the attack is no longer on the combat chain. Last Known Information is used to determine the type of a chain link.
+
+—————————————————————
+
+## Elemental Wizard
+
+Iyslander, Stormbind
+
+Elemental Wizard Hero / Elemental Wizard Hero – Young
+
+4{i} 36{h}
+
+Essence of Ice
+
+If it’s not your turn, you may play blue ‘non-attack’ action cards from your arsenal as though they were an instant.
+
+Whenever you play an Ice card during an opponent’s turn, create a Frostbite token under their control.
+
+A blue card is a card with a blue color bar (usually at the top of the card).
+
+‘Non-attack’ action cards played as an instant are still considered ‘non-attack’ action cards for the purposes of effects.
+
+You cannot gain an action point on an opponent’s turn.
+
+Frostbite tokens affect cards before they are played. If you create a Frostbite in response to a player playing a card, Frostbite will not affect that card.
+
+Iyslander’s effect that creates a Frostbite token is a triggered effect that can be responded to.
+
+—————————————————————
+
+Encase
+
+Elemental Wizard Action
+
+(RED) 0{r} 3{d}
+
+Ice Fusion
+
+Deal 3 arcane damage to any target. If Encase was fused and deals damage to a hero, freeze that hero and all equipment they control until the start of your next turn.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+A player can still defend with frozen equipment they control.
+
+Static abilities on frozen equipment and heroes are still functional and generate effects, including triggered and replacement effects.
+
+—————————————————————
+
+Freezing Point
+
+Elemental Wizard Action
+
+(RED) 3{r} 3{d}
+
+Ice Fusion
+
+Deal 5 arcane damage to target hero. If Freezing Point was fused, instead deal X arcane damage, where X is 5 plus the number of Frostbites, Ice afflictions, and frozen cards they control.
+
+You can only target heroes as the target for the arcane damage.
+
+The value of X is determined at the time Freezing Point resolves as a card on the stack.
+
+A frozen card in arsenal is not controlled by a hero and does not count towards the value of X.
+
+—————————————————————
+
+Sigil of Permafrost
+
+Elemental Wizard Defense Reaction
+
+(RED/YEL/BLU) 1{r} 4/3/2{d}
+
+Ice Fusion
+
+If Sigil of Permafrost was fused, the next time you deal arcane damage to a hero this turn, create that many Frostbite tokens under their control.
+
+This is a triggered effect that triggers the next time you deal arcane damage (including a weapon activated ability), not whether the next card you play deals arcane damage.
+
+—————————————————————
+
+Ice Eternal
+
+Elemental Wizard Action
+
+(BLU) XX{r} 3{d}
+
+Iyslander Specialization
+
+Ice Fusion
+
+Create X Frostbite tokens under target hero’s control. Then, if Ice Eternal was fused, deal arcane damage to that hero equal to the number of Frostbites they control.
+
+XX means X + X, for the resource cost of the card. X defaults to 0 in all cases other than when Ice Eternal is played as a card on the stack.
+
+The value of X can be declared as 0, in which case the cost of Ice Eternal would be 0.
+
+The damage dealt by Ice Eternal is calculated based on the total number of Frostbites the hero controls not just the ones made by Ice Eternal.
+
+Frostbites do not affect the cost of paying for replacement effects to prevent arcane damage (such as arcane barrier).
+
+—————————————————————
+
+Succumb to Winter
+
+Elemental Wizard Action
+
+(RED/YEL/BLU) 3{r} 3{d}
+
+Ice Fusion
+
+Deal 5/4/3 arcane damage to any target. If Succumb to Winter was fused and targets a hero, destroy a frozen card in their arsenal. If it was fused and targets a frozen ally, destroy that ally.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+The conditional effect of Succumb to Winter is not dependent on damage. If it is fused, it destroys a frozen arsenal/ally even if it doesn’t deal damage.
+
+If Succumb to Winter is fused and targets a frozen ally, it deals damage to that ally before the effect attempts to destroy it.
+
+—————————————————————
+
+Aether Icevein
+
+Elemental Wizard Action
+
+(RED/YEL/BLU) 3{r} 3{d}
+
+Ice Fusion
+
+Deal 5/4/3 arcane damage to any target. If Aether Icevein was fused and deals damage to a hero, they discard a card unless they pay {r}{r}.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+If a player has no cards in hand but resources available, they can still choose to discard a card instead of paying resources.
+
+—————————————————————
+
+Brain Freeze
+
+Elemental Wizard Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Ice Fusion
+
+Target opponent reveals their hand. If Brain Freeze was fused, put an action card with cost 2/1/0 (or less) from their hand on top of their deck.
+
+The fuse effect of Brain Freeze is not optional. You must select a card if possible.
+
+Action cards include any card with the type “Action”.
+
+The opponent can not respond between revealing their hand and you selecting a card to put on top of their deck.
+
+—————————————————————
+
+Icebind
+
+Elemental Wizard Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Ice Fusion
+
+Deal 3/2/1 arcane damage to any target. If Icebind was fused and deals damage to a hero, freeze a card in their arsenal until the start of your next turn.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+A frozen card in arsenal cannot be played, even if it is a defense reaction.
+
+—————————————————————
+
+Polar Cap
+
+Elemental Wizard Action
+
+(RED/YEL/BLU) 2{r} 3{d}
+
+Ice Fusion
+
+Deal 4/3/2 arcane damage to any target. If Polar Cap was fused and deals damage to a hero, create a Frostbite token under their control.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+—————————————————————
+
+## Ice Wizard
+
+Conduit of Frostburn
+
+Ice Wizard Equipment – Arms
+
+0{d}
+
+Instant – Destroy Conduit of Frostburn: The next card you play this turn with an effect that deals arcane damage gains “When this deals arcane damage to a hero, destroy a frozen card in their arsenal.”
+
+Quell 1
+
+This effect does not apply to activated abilities that deal arcane damage (such as Waning Moon)
+
+If there are multiple frozen cards in their arsenal, you choose which one to destroy. Players may not shuffle or change the positioning of facedown arsenal cards. Players must be able to tell which one was more recent if there are multiple face-down arsenal cards.
+
+Conduit of Frostburn’s ability can be activated on the same turn Quell is used, as Quell will not destroy Conduit of Frostburn until the end of the turn.
+
+—————————————————————
+
+Frost Hex
+
+Ice Wizard Action – Affliction Aura
+
+(BLU) 3{r} 3{d}
+
+Iyslander Specialization
+
+Frostbites you control have “At the beginning of your end phase, this deals 1 arcane damage to you.”
+
+If you have multiple Frostbites in play, each Frostbite triggers (for each Frost Hex) as a separate instance of arcane damage and can all be prevented with a single instance of arcane barrier 1.
+
+Even if the Frostbite tokens are destroyed first during the end phase, the triggered effects still resolve and deal arcane damage, as triggered effects are independent of their source once they’ve been triggered.
+
+—————————————————————
+
+Aether Hail
+
+Ice Wizard Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Deal 4/3/2 arcane damage to any target.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+—————————————————————
+
+Frosting
+
+Ice Wizard Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Deal 3/2/1 arcane damage to any target.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+—————————————————————
+
+Ice Bolt
+
+Ice Wizard Action
+
+(RED/YEL/BLU) 2{r} 3{d}
+
+Deal 5/4/3 arcane damage to any target.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+—————————————————————
+
+## Ice Talent
+
+Coronet Peak
+
+Ice Equipment – Head
+
+2{d}
+
+Action – {r}{r}{r}: Target hero discards a card unless they pay {r}.
+
+Blade Break
+
+The activated ability does not have go again and requires an action point to be activated.
+
+If the target hero has no cards in hand they can still elect to discard a card instead of paying {r}.
+
+—————————————————————
+
+Glacial Horns
+
+Ice Equipment – Head
+
+0{d}
+
+Action – Destroy Glacial Horns: Choose a hero. Freeze up to 1 card in their arsenal and 1 ally they control until the start of your next turn. Go again
+
+The hero, the card in their arsenal, and the ally they control are chosen on the resolution of the activated ability.
+
+The freeze effect is optional. You may choose to freeze 0 cards and/or allies of the chosen hero.
+
+—————————————————————
+
+Channel the Bleak Expanse
+
+Ice Action – Aura
+
+(BLU) 1{r} 2{d}
+
+Go again
+
+Heroes can’t draw cards, reveal cards, or search decks from effects.
+
+Channel Ice – At the beginning of your end phase, put a flow counter on Channel the Bleak Expanse then destroy it unless you put an Ice card from your pitch zone on the bottom of your deck for each flow counter on it.
+
+If a card/ability has an additional cost that requires a player to reveal cards, the player can not play that card. If the cost is optional, the player can only play/activate that card/ability without that additional cost.
+
+If an effect instructs you to reveal a card, you do not reveal any cards and you continue as though there were no cards to reveal in the first place.
+
+If an effect instructs you to draw a card, you do not draw the card and you continue as though there were no cards to draw in the first place.
+
+If an effect instructs you to search for a card, you do not search for that card and you continue as though the search failed to find the card you were looking for.
+
+Kyloria still can’t draw cards for its owner even though it’s from an ally, it is still the hero who draws the card.
+
+Channel Bleak Expanse affects all heroes, not just opponents.
+
+Channel Bleak Expanse affects the effects of all cards and tokens and their abilities.
+
+—————————————————————
+
+Hypothermia
+
+Ice Action – Affliction Aura
+
+(BLU) 0{r} 2{d}
+
+Attacks you control can’t gain go again.
+
+At the beginning of your end phase, destroy Hypothermia.
+
+Attacks that just have “Go again” without being conditional, or granted by a triggered effect or otherwise, are unaffected and retain their “go again” ability. (e.g. Head Jab does not lose Go again)
+
+Hypothermia retroactively removes “go again” from attacks that have gained it from an effect. It does not retroactively remove go again from attacks that have it as a base ability (e.g. Head Jab)
+
+If Hypothermia is played after an attack gains go again, but before the link step of combat, the attack (retroactively) does not gain go again and does not give an action point during the link step.
+
+Cromai still gives you the action point as long as the once per turn triggered effect has not been triggered yet.
+
+—————————————————————
+
+Insidious Chill
+
+Ice Action – Aura
+
+(BLU) 3{r} 2{d}
+
+Insidious Chill enters the arena with 3 frost counters on it. When it has no frost counters on it, destroy it.
+
+Whenever you Ice Fuse, remove a frost counter from Insidious Chill. If you do, target hero discards a card unless they pay {r}{r}.
+
+Fusing with more than an ice card will still trigger Insidious Chill, as long as an ice card is used to fuse.
+
+The triggered effect of Insidious Chill resolves before the card with Ice fusion resolves.
+
+If the target hero has no cards in hand they can still elect to discard a card instead of paying {r}{r}.
+
+This is not a optional effect. Insidious Chill triggers each time you Ice fuse.
+
+This is not a once per turn effect. Insidious Chill triggers each time you Ice fuse, even in a single turn.
+
+Insidious Chill is destroyed as a triggered effect when it does not have Ice counters on it.
+
+You cannot respond to your own Ice Fuse with another Ice Fuse to gain the Insidious Chill effect if it does not have any frost counters left.
+
+—————————————————————
+
+Isenhowl Weathervane
+
+Ice Action
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+The next time you Ice fuse this turn, create 4/3/2 Frostbite tokens under target hero’s control.
+
+Go again
+
+The triggered effect of Isenhowl Weathervane resolves before the card with Ice fusion resolves.
+
+—————————————————————
+
+Arctic Incarceration
+
+Ice Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Create 3/2/a Frostbite token(s) under target hero’s control.
+
+—————————————————————
+
+Cold Snap
+
+Ice Action
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+Target hero may pay {r}{r}{r}/{r}{r}/{r}. If they don’t, freeze a card in their arsenal or an ally they control until the start of your next turn.
+
+If Cold Snap is played from arsenal, draw a card.
+
+Go again
+
+If the target hero has no cards in arsenal arsenal and does not control an ally they can still elect to not pay resources.
+
+The target hero chooses if they are paying the resources first. You do not choose what you are freezing until they choose not to pay.
+
+—————————————————————
+
+## Illusionist Class
+
+Ghostly Touch
+
+Illusionist Equipment – Arms
+
+0{d}
+
+Whenever an Illusionist attack you control is destroyed by phantasm, put a haunt counter on Ghostly Touch.
+
+Once per Turn Action – Remove a haunt counter from Ghostly Touch: Until end of turn, this becomes an Illusionist ally with phantasm, base {p} and {h} equal to the number of haunt counters on it, and “Once per Turn Action – {r}{r}{r}: Attack”. Go again
+
+The triggered effect is not once per turn, you put a haunt counter on whenever an illusionist attack you control is destroyed by phantasm, even if it happens more than once per turn.
+
+The effect also triggers when an ally you control is attacking and is destroyed by phantasm.
+
+You cannot remove a haunt counter if there are none on the card.
+
+The activated ability has go again, but the attack does not.
+
+When Ghostly Touch becomes an illusionist ally with phantasm, it loses all other properties until the end of the turn. It is no longer called Ghostly Touch, does not have the types Illusionist Equipment Arms, does not have 0{d}, and does not have its card text. As such it does not trigger when an attack you control is destroyed by phantasm.
+
+—————————————————————
+
+Silent Stilettos
+
+Illusionist Equipment – Legs
+
+0{d}
+
+Whenever an attacking ally you control dies or an attack action card you control is destroyed by phantasm, you may pay {r}{r}{r}. If you do, destroy Silent Stilettos and gain 1 action point.
+
+Arcane Barrier 1
+
+If an attacking ally is removed from the arena by its life total being reduced to zero or an effect that destroys it, it counts as dying.
+
+An ally is considered to be attacking when its attack ability resolves as a layer on the stack and you move from the layer step of combat to the attack step of combat.
+
+—————————————————————
+
+Frightmare
+
+Illusionist Action – Attack
+
+(RED) 3{r} 13{p}
+
+Play Frightmare only if an Illusionist attack action card you control has been destroyed by phantasm this turn.
+
+Phantasm
+
+You cannot play this card unless an Illusionist attack action card you control has been destroyed by phantasm this turn.
+
+You cannot defend with Frightmare as it does not have the defense property.
+
+—————————————————————
+
+Semblance
+
+Illusionist Instant
+
+(BLU) 3{r}
+
+Negate all phantasm triggered effects of target Illusionist attack you control. The attack loses and can’t gain phantasm.
+
+If phantasm has already been triggered, the triggered-layers it has put onto the stack cease to exist. After Semblance has resolved, the attack can not be destroyed by its own phantasm effect.
+
+Semblance can target any Illusionist attack including allies, weapon attacks, attack action cards and even Illusionist attacks that do not have phantasm.
+
+—————————————————————
+
+Transmogrify
+
+Illusionist Action
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+The next attack action card you play this turn is Illusionist, has 8/7/6 base {p}, and gains phantasm.
+
+Go again
+
+The base {p} of a card is typically determined by the printed {p} on the bottom left of a card. This effect overrides and sets the base power of a card, before any other modifications to the base power apply.
+
+The attack action card affected retains its other supertypes (classes and talents),
+
+—————————————————————
+
+## Ninja Class
+
+Tiger Stripe Shuko
+
+Ninja Equipment – Arms
+
+2{d}
+
+The second attack action card with 2 or less base {p} you play each turn has +1{p} and “Damage that would be dealt by this can’t be prevented.”
+
+Blade Break
+
+The defending hero can still declare defending cards and play defense reactions against the attack.
+
+If a prevention effect tries to prevent damage while Tiger Stripe Shuko would stop damage from being prevented, each replacement effect will still try to do everything else other than preventing that damage. E.g. a card with Ward would still be destroyed.
+
+Players can still attempt to prevent damage (apply optional prevention effects) even when the damage cannot be prevented.
+
+An ongoing-prevention effect does not have its prevention amount reduced when the effect does not actually prevent any amount of damage.
+
+The base power of a card is determined by the printed power which is typically located at the bottom left of the card.
+
+Tiger Stripe Shuko counts the attacks played in a turn and not number of chain links. If the combat chain has been broken, but a 2 base {p} attack action card has been played, the second one will still gain the effect from Tiget Stripe Shuko.
+
+—————————————————————
+
+Tide Flippers
+
+Ninja Equipment – Legs
+
+0{d}
+
+Attack Reaction – Destroy Tide Flippers: Target attack action card with 2 or less base {p} gains go again.
+
+Arcane Barrier 1
+
+The base power of a card is determined by the printed power which is typically located at the bottom left of the card.
+
+—————————————————————
+
+Double Strike
+
+Ninja Action – Attack
+
+(RED) 0{r} 1{p} 2{d}
+
+When Double Strike’s chain link resolves, banish it. You may play it this combat chain. If you do, it loses this ability.
+
+Go again
+
+When Double Strike leaves the combat chain this way, its chain link remains and is still considered there for the purposes of abilities and effects like Rupture.
+
+You still control the chain link, but do not control the card when Double Strike leaves the combat chain.
+
+The chain link resolves immediately after the damage step of combat.
+
+When Double Strike is put into the banished zone, it becomes a new object separate to its previous existence. Effects that applied to its previous existence do not continue to apply to the card, including when it is played from the banished zone.
+
+When Double Strike is put into the banished zone this way, it only loses it the triggered ability; it retains the Go again ability (for the second time you play it).
+
+—————————————————————
+
+Take the Tempo
+
+Ninja Action – Attack
+
+(RED) 1{r} 5{p} 3{d}
+
+When Take the Tempo hits, if you’ve hit 3 or more times this combat chain, banish the top card of your deck. If it’s an attack action card, you may play it until the end of your next turn.
+
+Take the Tempo is considered as a hit this combat chain for the purposes of its own effect.
+
+The condition looks at hit events on the current combat chain. The hits do not have to be in a row, but they must all be on the same combat chain.
+
+The card banished this way can be played until the end of your NEXT turn, not just the current turn.
+
+—————————————————————
+
+Rapid Reflex
+
+Ninja Attack Reaction
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Target attack action card with cost 0 gains +3/2/1{p}.
+
+—————————————————————
+
+## Wizard Class
+
+Waning Moon
+
+Wizard Weapon – Staff (2H)
+
+Once per Turn Instant – {r}{r}: Deal 2 arcane damage to target hero. If it’s not your turn, instead deal 3 arcane damage to them. Activate this ability only if you’ve played a ‘non-attack’ action card this turn.
+
+The non-attack action card needs to have been played, not resolved, before Waning Moon can be activated.
+
+If it is the opponents turn, you can not choose to deal 2 damage instead.
+
+You may target your own hero.
+
+—————————————————————
+
+Alluvion Constellas
+
+Wizard Equipment – Chest
+
+0{d}
+
+The first time Alluvion Constellas prevents arcane damage each turn, if it has less than 4 energy counters, you may put an energy counter on it.
+
+Instant – Remove 2 energy counters from Alluvion Constellas: The next staff ability you activate this turn costs {r}{r}{r} less.
+
+Arcane Barrier 1
+
+You may prevent arcane damage you are deal to yourself using the arcane barrier on Alluvion Constellas.
+
+If Alluvion Constellas has 4 counters on it, its ability will still trigger, the condition of less than 4 counters is checked on the resolution of the trigger on the stack. This means you can activate Alluvion Constellas after it has triggered, but before that trigger resolves in order to remove counters.
+
+You may prevent multiple events of arcane damage over the course of a turn, however only the first time would put a counter on this.
+
+You must remove 2 counters to pay the cost of activating Alluvion Constellas. If you don’t have 2 counters on it, it can not be activated.
+
+—————————————————————
+
+Spellfire Cloak
+
+Wizard Equipment – Chest
+
+0{d}
+
+Instant – Destroy Spellfire Cloak: Gain {r}. Activate this ability only during an opponent’s turn.
+
+Arcane Barrier 1
+
+—————————————————————
+
+Tome of Duplicity
+
+Wizard Action
+
+(BLU) 3{r} 2{d}
+
+Look at the top 2 cards of your deck, then banish one. If it’s a ‘non-attack’ action card, you may play it this turn as though it were an instant.
+
+If you have less than 2 cards in your deck, you look at the whole deck.
+
+Banishing a card is not optional, you must banish a card if you are able.
+
+You must still pay the cost of the card banished this way if you play it as an instant.
+
+Playing an action card as an instant, does not change the type of tha card played, you are still considered to be playing an action card.
+
+—————————————————————
+
+Rewind
+
+Wizard Instant
+
+(BLU) 1{r}
+
+Negate target ‘non-attack’ action card and return it to its owner’s hand. Then that hero gains 1 action point.
+
+You can only target a ‘non-attack’ action card that is unresolved on the stack.
+
+You may target your own non-attack action card
+
+If the card is returned to hand, its costs will need to be paid again if it is played again.
+
+When the target card is put into the players hand, it becomes a new object separate to its previous existence. Effects that applied to its previous existence do not continue to apply to the card, including cost reduction effects.
+
+—————————————————————
+
+Dampen
+
+Wizard Action
+
+(RED/YEL/BLU) 2{r} 3{d}
+
+Deal 4/3/2 arcane damage to any target.
+
+Prevent the next X arcane damage that would be dealt to your hero this turn, where X is the damage dealt by Dampen.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+Dampen’s prevention effect is an ongoing-prevention effect, where any remaining prevention amount will apply to the next arcane damage event that turn.
+
+—————————————————————
+
+Aether Dart
+
+Wizard Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Deal 3/2/1 arcane damage to any target.
+
+You may select any target that can be dealt damage as the target of the arcane damage, including both allies and heroes.
+
+—————————————————————
+
+Read the Ripples
+
+Wizard Action – Aura
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+At the beginning of your end phase, destroy Read the Ripples then (opt 1, opt 1, opt 1,/opt 1, opt 1,/opt 1) and draw a card.
+
+The “opt 1” is performed in its entirety before the next effect. You must look at the top card, then put it to the top or bottom before you repeat the process for the next opt 1 effect.
+
+You draw the card at the beginning of the end phase. This is before you arsenal a card and draw up to your intellect. You may arsenal the card you draw if you do not already have a card in arsenal.
+
+—————————————————————
+
+Singe
+
+Wizard Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Deal 1 arcane damage to target hero and up to 3/2/1 target allies they control.
+
+Effects that modify arcane damage (e.g. Crucible of Aetherweave) modifies the damage dealt to all targets by Singe.
+
+The ally targets are optional. You may choose to deal damage to 0 allies the hero controls.
+
+—————————————————————
+
+## Generic
+
+Crown of Providence
+
+Generic Equipment – Head
+
+2{d}
+
+When you defend with Crown of Providence, you may put a card from your hand or arsenal on the bottom of your deck. If you do, draw a card.
+
+Blade Break
+
+If you control no arsenal or have no cards in hand and the effect fails, you do not draw a card.
+
+The triggered effect is optional. You do not have to put a card from your hand or arsenal to the bottom of your deck.
+
+—————————————————————
+
+Helio’s Mitre
+
+Generic Equipment – Head
+
+0{d}
+
+Instant – {r}{r}: Prevent the next 1 damage that would be dealt to your hero this turn by a source of your choice. Destroy Helio’s Mitre at the beginning of the end phase.
+
+Helio’s Mitre is considered a card, can be included in a player’s registered deck, and counts towards the number of cards in that registered deck.
+
+In Uprising limited formats (sealed and draft), a player may include up to 1 Helio’s Mitre in the card pool (and start with it in play) even if they did not pull it from a pack.
+
+Helio’s Mitre’s ability can be activated any number of times in a turn (as long as the cost can be paid).
+
+The source of damage must be chosen at the time the activated ability resolves. The source can not be changed after the activated ability resolves.
+
+—————————————————————
+
+Quelling Robe
+
+Generic Equipment – Chest
+
+0{d}
+
+Quell 1
+
+—————————————————————
+
+Quelling Sleeves
+
+Generic Equipment – Arms
+
+0{d}
+
+Quell 1
+
+—————————————————————
+
+Quelling Slippers
+
+Generic Equipment – Legs
+
+0{d}
+
+Quell 1
+
+—————————————————————
+
+Erase Face
+
+Generic Action – Attack
+
+(RED) 2{r} 6{p} 2{d}
+
+When Erase Face hits a hero, cards and tokens they own lose all class and talent types until the end of their next turn.
+
+Erase Face affects all cards the player owns, including cards in the arena, hand, arsenal, deck, pitch zone, banished zone, graveyard, and even cards outside the game.
+
+Erase Face does not prevent a card or token from gaining class and talent types through other effects.
+
+—————————————————————
+
+Vipox
+
+Generic Action – Attack
+
+(RED) 0{r} 1{p} 3{d}
+
+When Vipox hits a hero, they lose {h} equal to the number of cards in their hand.
+
+The number of cards is determined at the time the triggered effect resolves.
+
+The loss of life cannot be prevented by prevention effects.
+
+—————————————————————
+
+That All You Got?
+
+Generic Defense Reaction
+
+(YEL) 0{r} 3{d}
+
+While this is defending an attack with 2 or less {p}, when the combat chain closes, draw a card.
+
+The power of the card is checked at the time the combat chain closes. If the power was increased after this is played but before combat chain closes to be over 2 power, That All You Got? would not draw a card.
+
+—————————————————————
+
+Fog Down
+
+Generic Action – Aura
+
+(YEL) 3{r} 3{d}
+
+‘Non-attack’ action cards lose and can’t gain go again.
+
+At the beginning of your action phase, destroy Fog Down.
+
+Fog Down affects all heroes, not just opposing heroes.
+
+If Fog Down gained go again, it would lose go again from its own effect.
+
+Fog Down retroactively affects ‘non-attack’ action cards that have already gained go again.
+
+—————————————————————
+
+Flex
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 0{r} 4/3/2{p} 2{d}
+
+When you attack or defend with Flex, you may pay {r}{r}. If you do, it gains +2{p}.
+
+If Flex defends a phantasm card and it’s {p} is increased to 6 or more, it will destroy the phantasm attack.
+
+—————————————————————
+
+Fyendal’s Fighting Spirit
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 3{r} 7/6/5{p} 2{d}
+
+When you attack or defend with Fyendal’s Fighting Spirit, if you have less {h} than an opposing hero, gain 1{h}.
+
+Fyendal’s Fighting Spirit checks if you are lower life at the time you defend, you have not taken damage from the attack yet as damage calculation comes after.
+
+—————————————————————
+
+Sift
+
+Generic Action
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Put up to 4/3/2 cards from your hand on the bottom of your deck, then draw that many cards.
+
+Go again
+
+This effect is optional. You may choose to put 0 cards to the bottom of your deck. If you don’t draw any cards.
+
+—————————————————————
+
+Strategic Planning
+
+Generic Action
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+Put an action card with cost 2/1/0 (or less) from a graveyard on the bottom of its owner’s deck. At the beginning of the end phase, draw a card.
+
+Go again
+
+You draw the card at the beginning of the end phase. This is before you arsenal a card and draw up to your intellect. You may arsenal the card you draw if you do not already have a card in arsenal.
+
+You can choose an opponent’s card in their graveyard.
+
+—————————————————————
+
+Brothers in Arms
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 2{d}
+
+When you defend with Brothers in Arms, you may pay {r}. If you do, it gains +2{d}.
+
+—————————————————————
+
+Critical Strike
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 3{d}
+
+—————————————————————
+
+Trade In
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+When you attack with Trade In, you may discard a card. If you do, draw a card.
+
+If Trade In is played from arsenal, it gains go again.
+
+The discard effect is optional. You may choose not to do it. If you don’t you do not draw a card.
+
+—————————————————————
+
+Healing Balm
+
+Generic Action
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+Gain 3/2/1{h}
+
+—————————————————————
+
+Sigil of Protection
+
+Generic Action – Aura
+
+(RED/YEL/BLU) 1{r} 2{d}
+
+Ward 4/3/2
+
+At the beginning of your action phase, destroy Sigil of Protection.
+
+—————————————————————
+
+Oasis Respite
+
+Generic Instant
+
+(RED/YEL/BLU) 1{r}
+
+Prevent the next 4/3/2 damage that would be dealt to target hero this turn by a source of your choice. If they have less life than each other hero, they may gain 1{h}.
+
+Oasis Respite’s prevention effect is an ongoing-prevention effect, where any remaining prevention amount will apply to the next damage event that turn.
+
+You do not have to target your own hero.
+
+The life gain is optional.
+
+—————————————————————
+
+Token-specific Notes
+
+Aether Ashwing
+
+Draconic Illusionist Token – Dragon Ally
+
+1{p} 1{h}
+
+Arcane Barrier 1
+
+If there is a card (i.e singe) that is dealing damage to your hero and an ashwing you control, you can still use the ashwing’s arcane barrier to prevent the damage to your hero.
+
+—————————————————————
+
+Ash
+
+Draconic Illusionist Token – Ash
+
+Material – While Ash is under an object, that object has phantasm.
+
+If an Ash is transformed into a dragon, it is put underneath that dragon and the dragon gains Phantasm.
+
+While an Ash is underneath a card, it can not be targeted by effects and is not considered to be controlled by any player.
+
+If the card on top of Ash is destroyed or otherwise removed from the arena, the Ash ceases to exist.
+
+—————————————————————
