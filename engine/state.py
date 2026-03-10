@@ -15,6 +15,7 @@ from engine.card import Card, CardDB
 
 class Step(Enum):
     BEGIN_GAME = 'begin_game'
+    START_PHASE = 'start_phase'              # CR 4.2
     ACTION = "action"
     COMBAT_LAYER = 'combat_layer'
     COMBAT_ATTACK = 'combat_attack'
@@ -23,6 +24,8 @@ class Step(Enum):
     COMBAT_DAMAGE = "combat_damage"
     COMBAT_RESOLUTION = "combat_resolution"
     COMBAT_CLOSE = "combat_close"
+    END_PHASE_BEGINNING = 'end_phase_beginning'  # CR 4.4.2
+    END_PHASE_CLEANUP = 'end_phase_cleanup'      # CR 4.4.3
     END_TURN = "end_turn"
     END_GAME = "end_game"
 
@@ -122,6 +125,11 @@ class EventManager:
         """Emit an event. Accepts an Event object or a string event type."""
         if isinstance(event, str):
             event = Event(type=event)
+
+        # Track coarse event history for state embedding features.
+        if hasattr(game_state, 'events_this_turn') and isinstance(game_state.events_this_turn, set):
+            game_state.events_this_turn.add(event.type)
+
         for listener in self.listeners.get(event.type, []):
             listener(event, game_state)
 
@@ -144,10 +152,16 @@ class TriggeredAbility:
     
     def trigger(self, event: Event, game_state: GameState) -> None:
         # Put on stack instead of executing
+        # CR 1.6.2c: Triggered effect (triggered-layer)
+        # CR 3.15.4: layer position is N+1 where N is existing layers
         stack_entry = StackEntry(
             player_id=self.card.owner,
             card=self.card,
-            from_arsenal=False  # or True if applicable
+            layer_type='triggered',
+            layer_position=len(game_state.stack_entries) + 1,
+            from_arsenal=False,
+            is_triggered=True,
+            trigger_event=self.trigger_event
         )
         game_state.stack.add(self.card)
         game_state.stack_entries.append(stack_entry)
@@ -182,7 +196,9 @@ class Player:
         self.chest = Zone("chest", player_id)
         self.arms = Zone("arms", player_id)
         self.legs = Zone("legs", player_id)
-        self.weapon = Zone("weapon", player_id)
+        # CR 3.0.2: "Each player has two weapon zones"
+        self.weapon1 = Zone("weapon1", player_id)
+        self.weapon2 = Zone("weapon2", player_id)
         self.items = Zone("items", player_id) # \\
         self.auras = Zone("auras", player_id)#  || Actual rules text is 'permanent' zone for these four. split out for convenience.
         self.allies = Zone("allies", player_id)#||
@@ -210,10 +226,16 @@ class Player:
 
         # Equipment defense tracking (for Battleworn/Temper/Blade Break)
         self.equipment_defended_this_turn: list[str] = []
+    
+    @property
+    def weapon(self) -> Zone:
+        """Backward compatibility: returns weapon1.
+        Use weapon1/weapon2 explicitly for CR-compliant dual-zone handling."""
+        return self.weapon1
 
     @property
     def arena_cards(self) -> list[Card]:
-        arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon, self.items, self.auras, self.allies, self.soul, self.tokens, self.hero_zone]
+        arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2, self.items, self.auras, self.allies, self.soul, self.tokens, self.hero_zone]
         cards = []
         for z in arena_zones:
             cards.extend(z.cards)
@@ -237,7 +259,7 @@ class Player:
 
     def all_zones(self) -> list[Zone]:
         return [self.hand, self.deck, self.graveyard, self.arsenal, self.banished,
-                self.head, self.chest, self.arms, self.legs, self.weapon,
+                self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2,
                 self.items, self.auras, self.allies, self.soul, self.tokens,
                 self.inventory, self.hero_zone, self.pitch]
 
@@ -246,7 +268,8 @@ class Player:
             "hand": self.hand, "deck": self.deck, "graveyard": self.graveyard,
             "arsenal": self.arsenal, "banished": self.banished, "head": self.head,
             "chest": self.chest, "arms": self.arms, "legs": self.legs,
-            "weapon": self.weapon, "items": self.items, "auras": self.auras,
+            "weapon": self.weapon1, "weapon1": self.weapon1, "weapon2": self.weapon2,
+            "items": self.items, "auras": self.auras,
             "allies": self.allies, "soul": self.soul, "tokens": self.tokens,
             "inventory": self.inventory, "hero": self.hero_zone, "pitch": self.pitch,
         }.get(name)
@@ -294,7 +317,8 @@ class Player:
             "chest": self.chest.to_dict(),
             "arms": self.arms.to_dict(),
             "legs": self.legs.to_dict(),
-            "weapon":	self.weapon.to_dict(),
+            "weapon1":	self.weapon1.to_dict(),
+            "weapon2":	self.weapon2.to_dict(),
             "items":	self.items.to_dict(),
             "auras":	self.auras.to_dict(),
             "allies":	self.allies.to_dict(),
@@ -322,12 +346,28 @@ class Player:
 
 @dataclass
 class StackEntry:
-    """One card waiting to resolve on the stack (CR 3.0.1)."""
+    """One card waiting to resolve on the stack (CR 3.0.1).
+    
+    Layer System (CR 1.6.2):
+    - Card-layer: card played to stack
+    - Activated-layer: activated ability on stack
+    - Triggered-layer: triggered effect on stack
+    """
     player_id: int
     card: Card
+    layer_type: str = 'card'  # 'card', 'activated', 'triggered'
+    layer_position: int = 0  # N value (position in stack)
     from_arsenal: bool = False
-    is_triggered: bool = False          # True if this is a triggered ability layer
-    effect_fn: Optional[Callable] = None  # effect to run on resolution (for triggered layers)
+    
+    # Modal/targeting metadata (CR 1.7.5, 1.8.5, 5.1.3a)
+    declared_modes: list[str] = field(default_factory=list)  # e.g., ['first_mode', 'second_mode']
+    declared_targets: list[str] = field(default_factory=list)  # card slugs or 'hero'
+    declared_x: Optional[int] = None  # X-cost declaration
+    
+    # Triggered metadata (CR 5.4.6)
+    is_triggered: bool = False  # Legacy compatibility
+    trigger_event: Optional[str] = None  # e.g., 'hit_hero', 'end_of_turn'
+    effect_fn: Optional[Callable] = None  # effect to run on resolution
 
     @property
     def slug(self) -> str:
@@ -341,8 +381,14 @@ class StackEntry:
         return {
             'player': self.player_id,
             'card': self.card.to_dict(),
+            'layer_type': self.layer_type,
+            'layer_position': self.layer_position,
             'from_arsenal': self.from_arsenal,
+            'declared_modes': self.declared_modes.copy() if self.declared_modes else [],
+            'declared_targets': self.declared_targets.copy() if self.declared_targets else [],
+            'declared_x': self.declared_x,
             'is_triggered': self.is_triggered,
+            'trigger_event': self.trigger_event,
             'effect_fn': self.effect_fn if self.effect_fn else None
         }
 
@@ -442,6 +488,7 @@ class GameState:
     effect_manager: Optional[object] = None  # EffectManager from engine.effects
     priority_player: int = 1
     consecutive_passes: int = 0
+    events_this_turn: set[str] = field(default_factory=set)
     chain_links: list[ChainLink] = field(default_factory=list)
     # Stack zone (CR 3.0.1): LIFO; Zone tracks which cards are on the stack;
     # stack_entries holds the parallel metadata (player_id, from_arsenal).

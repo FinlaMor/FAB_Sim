@@ -6,10 +6,12 @@
 # Download base model first (no approval needed):
 #   tune download Qwen/Qwen2.5-7B-Instruct --output-dir ./models/qwen2.5-7b
 
+output_dir: ./models/fab-rules-ft
+
 # --- Model ---
 model:
-  _component_: torchtune.models.qwen2_5.lora_qwen2_5_7b
-  lora_attn_modules: [q_proj, v_proj, k_proj, o_proj]
+  _component_: torchtune.models.qwen2_5.lora_qwen2_5_7b_instruct
+  lora_attn_modules: [q_proj, v_proj, output_proj]
   apply_lora_to_mlp: false
   apply_lora_to_output: false
   lora_rank: 16
@@ -27,9 +29,13 @@ tokenizer:
 checkpointer:
   _component_: torchtune.training.FullModelHFCheckpointer
   checkpoint_dir: ./models/qwen2.5-7b
-  checkpoint_files: [model.safetensors]
+  checkpoint_files:
+    - model-00001-of-00004.safetensors
+    - model-00002-of-00004.safetensors
+    - model-00003-of-00004.safetensors
+    - model-00004-of-00004.safetensors
   recipe_checkpoint: null
-  output_dir: ./models/fab-rules-ft
+  output_dir: ${output_dir}
   model_type: QWEN2
 
 resume_from_checkpoint: false
@@ -55,7 +61,7 @@ gradient_accumulation_steps: 4
 
 optimizer:
   _component_: torch.optim.AdamW
-  fused: true
+  fused: false
   lr: 2e-4
 
 lr_scheduler:
@@ -73,10 +79,33 @@ enable_activation_offloading: false
 custom_sharded_layers: null
 
 # --- Logging ---
-output_dir: ./models/fab-rules-ft
 metric_logger:
   _component_: torchtune.training.metric_logging.DiskLogger
-  log_dir: ./models/fab-rules-ft/logs
+  log_dir: ${output_dir}/logs
 
 log_every_n_steps: 10
 log_peak_memory_stats: true
+
+# --- Environment ---
+device: cuda
+dtype: bf16
+
+# --- Profiling ---
+profiler:
+  _component_: torchtune.training.setup_torch_profiler
+  enabled: false
+
+  output_dir: ${output_dir}/profiling_outputs
+
+  cpu: true
+  cuda: true
+
+  profile_memory: false
+  with_stack: false
+  record_shapes: true
+  with_flops: false
+
+  wait_steps: 5
+  warmup_steps: 5
+  active_steps: 2
+  num_cycles: 1

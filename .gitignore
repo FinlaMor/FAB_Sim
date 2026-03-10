@@ -19,6 +19,7 @@ __pycache__/
 *.pyo
 .env
 .venv/
+.venv-wsl/
 venv/
 *.egg-info/
 dist/
@@ -33,11 +34,25 @@ engine/card_effects/db/*.db
 # --- IDE ---
 .vscode/settings.json
 .idea/
+.cursor/
 
 # --- Generated output ---
 random_game_output.txt
 card_data/ability_analysis_output.txt
 ROADMAP.md
+
+# --- Local analysis reports ---
+ACTION_EMBEDDER_*.md
+CARD_EMBEDDER_*_REPORT.md
+EMBEDDER_RULES_ANALYSIS.md
+
+# --- Local data collection ---
+data_collection/
+
+# --- Temp / debug scripts ---
+debug_modal_verb.py
+temp_ability_examples.py
+temp_triggered_examples.py
 
 # --- OS ---
 .DS_Store

@@ -117,11 +117,18 @@ cards.sniff_test_all()  # breadth-first pass over all implemented cards
 
 ### Fine-Tuning (optional)
 
-Adapts Qwen2.5 7B to FAB-specific vocabulary using LoRA via torchtune. Requires a CUDA GPU with ≥14GB VRAM, run under WSL2.
+Adapts Qwen2.5 7B to FAB-specific vocabulary using LoRA via torchtune. Requires an NVIDIA CUDA GPU with ≥14GB VRAM.
+On Windows, run this in WSL2 only if CUDA is visible to PyTorch; otherwise use a cloud NVIDIA Linux instance.
 
 ```bash
 tune run lora_finetune_single_device --config offline_agents/torchtune_configs/fab_rules_lora.yaml
 bash offline_agents/torchtune_configs/export_to_ollama.sh rules
+```
+
+Cloud one-command path:
+
+```bash
+bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh rules
 ```
 
 See [`offline_agents/LOCAL_AGENTS.md`](offline_agents/LOCAL_AGENTS.md) for full fine-tuning instructions.

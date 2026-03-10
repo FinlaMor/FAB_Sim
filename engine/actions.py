@@ -46,6 +46,32 @@ class Action:
     slot: Optional[str] = None
     card_list: Optional[list[Card]] = None
     target: Optional[Card] = None
+    targets: Optional[list[str]] = None       # Multi-target declarations (CR 1.8.5c)
+    
+    # Game context (added Round 3 for CR compliance)
+    phase: Optional[str] = None              # "start", "action", "end" (CR 4.0.3)
+    step: Optional[Step] = None              # Current game step (CR 4.0.4)
+    chain_link_number: Optional[int] = None  # Position in combat chain, 0 if none (CR 7.0.3b)
+    priority_player: Optional[int] = None    # Which player has priority (CR 1.10)
+    
+    # Action economy (added Round 5 for CR 4.3.2, 5.1.6-7, 8.1.1c, 8.3.5)
+    action_points_available: Optional[int] = None  # Current action points (CR 4.3.2)
+    resources_available: Optional[int] = None      # Floating resources (CR 5.1.6)
+    action_cost: Optional[int] = None              # Action point cost (CR 8.1.1c)
+    resource_cost: Optional[int] = None            # Resource cost (CR 5.1.7)
+    has_go_again: Optional[bool] = None            # Action chaining (CR 8.3.5)
+    
+    # Action speed (added Round 6 for CR 8.1.1a/b/c, 8.1.6a)
+    is_instant_speed: Optional[bool] = None        # Card/ability is Instant type (CR 8.1.6a)
+    is_action_speed: Optional[bool] = None         # Card/ability is Action type (CR 8.1.1a/b)
+    played_as_instant: Optional[bool] = None       # Action played "as though instant" (CR 8.1.1d)
+    
+    # Modal and optional choices (added Round 9 for CR 1.7.5, 5.1.3, 8.3.9 - Gap #1 fix +10 points)
+    modes_selected: Optional[list[int]] = None     # Indices of selected modes (CR 1.7.5)
+    boost_used: Optional[bool] = None              # Boost decision yes/no (CR 8.3.9)
+    x_value_declared: Optional[int] = None         # X-cost value declared (CR 1.12.2, 5.1.3a)
+    is_melded: Optional[bool] = None               # Meld flag for split-cards (CR 8.3.38, 5.1.2c)
+    alternative_cost_used: Optional[str] = None    # Alternative cost name if used (CR 5.1.3c)
 
     def __repr__(self):
         parts = [self.type.value]
@@ -61,6 +87,8 @@ class Action:
             parts.append(f"slot={self.slot}")
         if self.target is not None:
             parts.append(f"target={self.target}")
+        if self.targets:
+            parts.append(f"targets={self.targets}")
         return f"Action({', '.join(parts)})"
 
 

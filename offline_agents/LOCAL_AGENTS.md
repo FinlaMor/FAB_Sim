@@ -71,7 +71,7 @@ pip install sentence-transformers chromadb ollama anthropic
 This embeds all rules docs and cards into ChromaDB. Takes ~2–5 minutes.
 
 ```bash
-cd FAB_Sim_v2
+cd FAB_Sim
 python -m offline_agents.rag.embedder
 ```
 
@@ -169,10 +169,10 @@ Fine-tuning adapts Qwen2.5 7B to FAB-specific vocabulary so it needs less RAG co
 
 To regenerate or expand the dataset using a local LLM instead of the Claude API, modify `distillation/generate_dataset.py` to point at `http://localhost:11434` (Ollama's API endpoint) instead of the Anthropic client.
 
-> **Windows note:** torchtune does not support Windows. All training commands must run under **WSL2** (Ubuntu).
-> Enable WSL2: open PowerShell as admin and run `wsl --install`, then restart.
-> Inside WSL2, the project is at `/mnt/c/Users/Joseph/Desktop/FAB_Sim_v2`.
-> WSL2 has full CUDA GPU passthrough — training performance is the same as native Linux.
+> **Windows note:** torchtune does not support native Windows. Training commands must run under Linux (WSL2 or cloud).
+> WSL2 training requires an **NVIDIA GPU with CUDA** available to PyTorch.
+> If your machine has AMD graphics (or CUDA is unavailable), run training on a cloud NVIDIA instance.
+> One-command cloud path: `bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh rules` (or `cards`).
 
 ### Step 1: Download base model
 
@@ -195,6 +195,13 @@ Both configs already point at `training_data.jsonl`. Run either or both:
 tune run lora_finetune_single_device --config offline_agents/torchtune_configs/fab_rules_lora.yaml
 
 tune run lora_finetune_single_device --config offline_agents/torchtune_configs/fab_cards_lora.yaml
+```
+
+If you are training on a cloud Linux host with NVIDIA CUDA, use the one-command setup+train script:
+
+```bash
+bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh rules
+bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh cards
 ```
 
 Training takes ~1–2 hours depending on GPU. Checkpoints save to `models/fab-rules-ft/` and `models/fab-cards-ft/`.
@@ -245,6 +252,6 @@ The Claude API fallback reads `ANTHROPIC_API_KEY` from the environment automatic
 | RAG vector store | Built — 5,126 rules chunks + 4,561 cards |
 | rules_qa.jsonl | 150 pairs, reviewed and corrected |
 | cards_qa.jsonl | 179 pairs, reviewed and corrected |
-| Fine-tuning configs | Written — Qwen2.5 7B, waiting on CUDA GPU |
+| Fine-tuning configs | Written — Qwen2.5 7B, includes WSL + cloud NVIDIA launch scripts |
 | Ollama export script | Written — ready to run after fine-tuning |
 | Fine-tuned models | Not yet trained |

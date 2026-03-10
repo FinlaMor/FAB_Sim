@@ -160,6 +160,7 @@ def _start_of_turn_phase(state: GameState) -> None:
     """Start Phase (4.2) — reset per-turn state, emit start_of_turn."""
 
     state.turn_number += 1
+    state.events_this_turn = set()
     player = state.active()
 
     player.weapon_exhausted = False
@@ -858,10 +859,28 @@ def apply_action(state: GameState, action: Action) -> None:
     elif action.type == ActionType.DISCARD_ACTIVATE:
         _apply_discard_activate(state, action)
 
+
+def _stack_declarations_from_action(action: Action) -> tuple[list[str], list[str], Optional[int]]:
+    """Extract mode/target/X declarations for stack-layer metadata."""
+    declared_modes = [str(mode) for mode in (action.modes_selected or [])]
+
+    declared_targets: list[str] = []
+    if action.targets:
+        declared_targets.extend([str(t) for t in action.targets if t is not None])
+    if action.target is not None:
+        if hasattr(action.target, 'slug'):
+            declared_targets.append(action.target.slug)
+        else:
+            declared_targets.append(str(action.target))
+
+    declared_x = action.x_value_declared
+    return declared_modes, declared_targets, declared_x
+
 def _apply_play_card(state: GameState, action: Action) -> None:
     """Play a card from hand: pitch for cost, place on stack."""
     player = state.players[action.player_id]
     card = action.card
+    declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
     # Pitch cards for resources
     if action.pitch_cards:
@@ -878,7 +897,16 @@ def _apply_play_card(state: GameState, action: Action) -> None:
         player.action_points -= 1
 
     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
-    entry = StackEntry(player_id=action.player_id, card=card)
+    # CR 3.15.4: layer position is N+1 where N is existing layers
+    entry = StackEntry(
+        player_id=action.player_id, 
+        card=card,
+        layer_type='card',
+        layer_position=len(state.stack_entries) + 1,
+        declared_modes=declared_modes,
+        declared_targets=declared_targets,
+        declared_x=declared_x,
+    )
     state.stack_entries.append(entry)
     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card}), state)
 
@@ -886,6 +914,7 @@ def _apply_play_arsenal(state: GameState, action: Action) -> None:
     """Play a card from arsenal: pitch from hand for cost, place on stack (CR 3.3.4, CR 5.1.1a)."""
     player = state.players[action.player_id]
     card = action.card
+    declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
     # Pitch cards for resources (pitched from hand, not from arsenal)
     if action.pitch_cards:
@@ -902,7 +931,17 @@ def _apply_play_arsenal(state: GameState, action: Action) -> None:
         player.action_points -= 1
 
     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
-    entry = StackEntry(player_id=action.player_id, card=card, from_arsenal=True)
+    # CR 3.15.4: layer position is N+1 where N is existing layers
+    entry = StackEntry(
+        player_id=action.player_id, 
+        card=card, 
+        from_arsenal=True,
+        layer_type='card',
+        layer_position=len(state.stack_entries) + 1,
+        declared_modes=declared_modes,
+        declared_targets=declared_targets,
+        declared_x=declared_x,
+    )
     state.stack_entries.append(entry)
     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card}), state)
 
@@ -910,6 +949,7 @@ def _apply_play_banish(state: GameState, action: Action) -> None:
     """Play a card from the banish zone (e.g. via Under the Trap-Door trap_door_playable_ flag)."""
     player = state.players[action.player_id]
     card = action.card
+    declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
     if action.pitch_cards:
         for c in action.pitch_cards:
@@ -930,7 +970,16 @@ def _apply_play_banish(state: GameState, action: Action) -> None:
     if "Instant" not in (card.types or []):
         player.action_points -= 1
 
-    entry = StackEntry(player_id=action.player_id, card=card)
+    # CR 3.15.4: layer position is N+1 where N is existing layers
+    entry = StackEntry(
+        player_id=action.player_id, 
+        card=card,
+        layer_type='card',
+        layer_position=len(state.stack_entries) + 1,
+        declared_modes=declared_modes,
+        declared_targets=declared_targets,
+        declared_x=declared_x,
+    )
     state.stack_entries.append(entry)
     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card}), state)
 
@@ -939,8 +988,19 @@ def _apply_weapon_attack(state: GameState, action: Action) -> None:
     player = state.players[action.player_id]
     player.weapon_exhausted = True
     player.action_points -= 1
+    declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
-    entry = StackEntry(player_id=action.player_id, card=action.card)
+    # CR 1.6.2b: Weapon attack is an activated ability (activated-layer)
+    # CR 3.15.4: layer position is N+1 where N is existing layers
+    entry = StackEntry(
+        player_id=action.player_id, 
+        card=action.card,
+        layer_type='activated',
+        layer_position=len(state.stack_entries) + 1,
+        declared_modes=declared_modes,
+        declared_targets=declared_targets,
+        declared_x=declared_x,
+    )
     state.stack_entries.append(entry)
 
 def _apply_activate(state: GameState, action: Action) -> None:
@@ -1014,6 +1074,7 @@ def _apply_react(state: GameState, action: Action) -> None:
     """Play a reaction card (defense reaction or attack reaction)."""
     player = state.players[action.player_id]
     card = action.card
+    declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
     # Pitch cards for resources
     if action.pitch_cards:
@@ -1027,7 +1088,16 @@ def _apply_react(state: GameState, action: Action) -> None:
     player.hand.remove(card)
 
     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
-    entry = StackEntry(player_id=action.player_id, card=card)
+    # CR 3.15.4: layer position is N+1 where N is existing layers
+    entry = StackEntry(
+        player_id=action.player_id, 
+        card=card,
+        layer_type='card',
+        layer_position=len(state.stack_entries) + 1,
+        declared_modes=declared_modes,
+        declared_targets=declared_targets,
+        declared_x=declared_x,
+    )
     state.stack_entries.append(entry)
     state.event_manager.emit(Event(type='on_play', card=card.slug), state)
 

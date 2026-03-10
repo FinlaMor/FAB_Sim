@@ -16,6 +16,9 @@ INSERT OR REPLACE INTO token_keywords VALUES ('aether_ashwing',   'Arcane Barrie
 -- aether_bindings_of_the_third_age
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_bindings_of_the_third_age', 'leaves_arena', 'none', '{}', NULL, 'custom', '{}', '_aether_bindings_sigil_leave', 0, 0);
 
+-- aether_wildfire_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_wildfire_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_aether_wildfire_on_play', 0, 0);
+
 -- apex_bonebreaker
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('apex_bonebreaker', 'defend', 'custom', '{}', '_apex_defend_condition', 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), \"might\"),"}', NULL, 0, 0);
 

@@ -2695,6 +2695,57 @@ CARD_TRIGGERS["comet_storm__shock"] = [
 ]
 
 
+# -- aether_wildfire_red --
+# "Deal 4 arcane damage to target opposing hero.
+#  If Aether Wildfire is played during an opponents turn, until end of turn,
+#  action card effects that deal arcane damage instead deal that much arcane
+#  damage plus X, where X is the damage dealt by Aether Wildfire."
+def _aether_wildfire_on_play(card, event, state):
+    cid = _controller_id(card)
+    target_id = 3 - cid
+    # Deal 4 arcane damage and track how much actually landed
+    damage_dealt = effect_deal_arcane(state, target_id, 4, card)
+    # Check if played during opponent's turn
+    if cid != state.active_player and damage_dealt > 0:
+        # Register a replacement effect that boosts action card arcane damage
+        from engine.effects import ReplacementEffect, ReplacementType
+        boost_amount = damage_dealt
+        # Set a flag to track this effect (cleared at end of turn via current_turn_effects)
+        flag_key = f"aether_wildfire_boost_{boost_amount}"
+        state.players[cid].current_turn_effects.append(flag_key)
+        
+        def _condition(evt, gs):
+            # Check if the boost flag is still active (will be cleared at end of turn)
+            if flag_key not in gs.players[cid].current_turn_effects:
+                return False
+            # Check if this is arcane damage from an Action card
+            if evt.get("type") != "damage" or evt.get("damage_type") != "arcane":
+                return False
+            source = evt.get("source")
+            if source is None or "Action" not in (source.types or []):
+                return False
+            # Check that the source is controlled by the same player
+            return _controller_id(source) == cid
+        
+        def _replace(evt, gs):
+            # Add bonus damage
+            evt["amount"] = evt.get("amount", 0) + boost_amount
+            return evt
+        
+        state.effect_manager.add_replacement(ReplacementEffect(
+            source_card=card,
+            replacement_type=ReplacementType.STANDARD,
+            condition_fn=_condition,
+            replace_fn=_replace,
+            owner_id=cid,
+            consumed=False,  # Persists for all arcane damage this turn
+        ))
+
+CARD_TRIGGERS["aether_wildfire_red"] = [
+    TriggerDef(event_type="on_play", effect_fn=_aether_wildfire_on_play),
+]
+
+
 # -- consign_to_cosmos__shock (meld) --
 # "Banish X instant and/or aura cards from any graveyard, X = arcane damage dealt this turn."
 def _consign_to_cosmos_on_play(card, event, state):
@@ -3254,10 +3305,15 @@ def register_card_triggers(card: Card, event_manager) -> None:
                     def resolve_fn(c, gs, _e=captured_event, _fn=trig.effect_fn):
                         _fn(c, _e, gs)
                     # CR 6.6.6: add triggered-layer to stack; resolves when priority passes
+                    # CR 1.6.2c: Triggered effect (triggered-layer)
+                    # CR 3.15.4: layer position is N+1 where N is existing layers
                     entry = StackEntry(
                         player_id=player_id,
                         card=source_card,
+                        layer_type='triggered',
+                        layer_position=len(state.stack_entries) + 1,
                         is_triggered=True,
+                        trigger_event=trig.event_type,
                         effect_fn=resolve_fn,
                     )
                     state.stack_entries.append(entry)

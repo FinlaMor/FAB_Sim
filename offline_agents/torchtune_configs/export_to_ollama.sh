@@ -13,26 +13,30 @@ ROLE="${1:-rules}"   # "rules" or "cards"
 
 if [[ "$ROLE" == "rules" ]]; then
     FT_DIR="./models/fab-rules-ft"
-    MODEL_NAME="fab-rules-agent"
+    MODEL_NAME="fab-rules-ft"
 elif [[ "$ROLE" == "cards" ]]; then
     FT_DIR="./models/fab-cards-ft"
-    MODEL_NAME="fab-cards-agent"
+    MODEL_NAME="fab-cards-ft"
 else
     echo "Usage: $0 [rules|cards]"
     exit 1
 fi
 
 GGUF_OUT="${FT_DIR}/${MODEL_NAME}.Q4_K_M.gguf"
+LATEST_EPOCH_DIR="$(ls -d "${FT_DIR}"/epoch_* 2>/dev/null | sort -V | tail -n 1)"
 
-echo "=== Merging LoRA weights into base model ==="
-tune run lora_finetune_single_device \
-    --config "offline_agents/torchtune_configs/fab_${ROLE}_lora.yaml" \
-    checkpointer.output_dir="${FT_DIR}/merged" \
-    --merge-weights
+if [[ -z "$LATEST_EPOCH_DIR" ]]; then
+    echo "No trained checkpoints found under ${FT_DIR}/epoch_*"
+    echo "Run training first: tune run lora_finetune_single_device --config offline_agents/torchtune_configs/fab_${ROLE}_lora.yaml"
+    exit 1
+fi
+
+echo "=== Using latest trained checkpoint ==="
+echo "${LATEST_EPOCH_DIR}"
 
 echo "=== Converting to GGUF (Q4_K_M quantisation) ==="
 python -m llama_cpp.convert \
-    "${FT_DIR}/merged" \
+    "${LATEST_EPOCH_DIR}" \
     --outfile "${GGUF_OUT}" \
     --outtype q4_k_m
 
