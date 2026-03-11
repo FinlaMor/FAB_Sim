@@ -146,18 +146,24 @@ def test_equipment_slot_encoding():
 
 
 def test_dimension_increases():
-    """Verify dimension increases from all improvements."""
+    """Verify dimension tracking matches the current embedder architecture."""
     embedder = GameStateEmbedder(d_model=128)
     
-    expected_dim = 182 + 23 * 128  # Per updated calculation
+    expected_dim = (
+        2 * embedder.player_embedder.get_output_dim()
+        + embedder.global_embedder.get_output_dim()
+    )
     actual_dim = embedder.get_output_dim()
     
     print(f"✓ Test 6 (Dimensions): Expected {expected_dim}, got {actual_dim}")
     assert actual_dim == expected_dim, f"Dimension mismatch"
-    assert actual_dim == 3126, f"Expected 3126 dims (was 3102, +24 improvements)"
+    assert actual_dim == 4052, f"Expected 4052 dims for current architecture"
     
-    print(f"  → Breakdown: 182 scalars + 23×128 card embeddings = 3126")
-    print(f"  → Improvements: +1 arsenal_face_up, +1 inventory, +5 counters, +5 exhausted = +12 per player")
+    print(
+        f"  → Breakdown: 2×{embedder.player_embedder.get_output_dim()} player dims "
+        f"+ {embedder.global_embedder.get_output_dim()} global dims = {actual_dim}"
+    )
+    print("  → Includes expanded stack, event, continuous-effect, and replacement-effect features")
 
 
 if __name__ == "__main__":

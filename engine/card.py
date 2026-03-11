@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass, field
+from itertools import count
 from typing import Optional
 import os, sys
 
@@ -12,6 +13,9 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parent_dir)
 
 from config import SLUG_INDEX_PATH
+
+
+_CARD_OBJECT_ID_COUNTER = count(1)
 
 
 def _int_or_none(val) -> Optional[int]:
@@ -61,6 +65,8 @@ class Card:
     abilities_and_effects: list[str] = field(default_factory=list)  # From slug_index
     effects: list[tuple[str, function]] = field(default_factory=list)
     counters: dict[str, int] = field(default_factory=dict)  # Card-specific counters
+    object_id: int = field(default_factory=lambda: next(_CARD_OBJECT_ID_COUNTER))
+    last_known_state: Optional[dict] = field(default=None, repr=False)
 
     # Zone tracking
     zone: str = "inventory"
@@ -275,12 +281,70 @@ class Card:
             if kw.lower() == keyword_name.lower():
                 return None
         return None
+
+    def snapshot_state(self) -> dict:
+        """Capture a last-known-information snapshot for this object.
+
+        The snapshot intentionally stores resolved values rather than base_* values so
+        callers can reason about the object's effective state immediately before it
+        changed zones or ceased to exist.
+        """
+        return {
+            'object_id': self.object_id,
+            'slug': self.slug,
+            'name': self.name,
+            'zone': self.zone,
+            'prev_zone': self.prev_zone,
+            'owner': self.owner,
+            'controller': self.controller,
+            'is_public': self.is_public,
+            'tapped': self.tapped,
+            'exhausted': self.exhausted,
+            'face_down': self.face_down,
+            'pitch': self.pitch,
+            'cost': self.cost,
+            'power': self.power,
+            'defense': self.defense,
+            'life': self.life,
+            'intellect': self.intellect,
+            'arcane_damage': self.arcane_damage,
+            'types': list(self.types),
+            'subtypes': list(self.subtypes),
+            'supertypes': list(self.supertypes),
+            'keywords': list(self.keywords),
+            'counters': dict(self.counters),
+        }
+
+    def remember_last_known_state(self, force: bool = False) -> dict:
+        """Persist the current object snapshot for later last-known-information lookups.
+
+        CR 1.2.3c: Last known information is immutable once recorded.
+        Subsequent calls return the existing snapshot unless force=True.
+        force=True is reserved for process_cease_to_exist() when an object
+        definitively ceases to exist and we want the true final state.
+        """
+        if self.last_known_state is not None and not force:
+            # Inventory is a staging/default zone, not a rules-relevant public state.
+            # Allow one replacement once the card is in an actual game zone.
+            if not (
+                self.last_known_state.get('zone') == 'inventory'
+                and self.zone != 'inventory'
+            ):
+                return self.last_known_state
+        snapshot = self.snapshot_state()
+        self.last_known_state = snapshot
+        return snapshot
+
+    def get_last_known_state(self) -> Optional[dict]:
+        """Return the latest recorded last-known-information snapshot, if any."""
+        return self.last_known_state
     
     def to_dict(self) -> dict:
         """Convert card object to dict type object for outputting during debug
         """
         return {
-            'name': self.name
+            'name': self.name,
+            'object_id': self.object_id,
         }
 class CardDB:
     """Wraps slug_index.json for card lookups."""

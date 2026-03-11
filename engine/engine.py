@@ -636,6 +636,7 @@ def _close_combat_chain(state: GameState) -> None:
 
     # Attack card: weapons stay equipped, non-permanent attacks go to graveyard
     attack_card = combat.attack_card
+    state.remember_last_known(attack_card)
     if attack_card in state.combat_chain.cards:
         state.combat_chain.remove(attack_card)
     if combat.from_weapon:
@@ -645,6 +646,7 @@ def _close_combat_chain(state: GameState) -> None:
 
     # Defending cards: equipment stays, hand cards go to graveyard
     for card in combat.defending_cards:
+        state.remember_last_known(card)
         if card.is_equipment:
             pass  # 7.7.5: equipment returns to equipped zone
         else:
@@ -672,6 +674,11 @@ def resolve_stack(game_state: GameState) -> None:
     """Resolve one stack entry from the top of the stack."""
 
     entry = game_state.stack_entries.pop()  # LIFO: resolve the top (last-added) layer first (CR 3.15.5)
+
+    # CR 5.3.4c: card-type layers cease to exist on resolution; capture LKI while still at stack zone.
+    # activated/triggered layers leave their source card in its zone — do NOT freeze its LKI here.
+    if entry.layer_type == 'card' and entry.card:
+        game_state.process_cease_to_exist(entry.card)
 
     if entry.effect_fn:
         result = entry.effect_fn(entry.card, game_state)  # call once — not twice
@@ -896,6 +903,10 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     if "Instant" not in (card.types or []):
         player.action_points -= 1
 
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone; zone='stack' enables correct LKI on layer cease
+    card.prev_zone = card.zone
+    card.zone = 'stack'
+
     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
     # CR 3.15.4: layer position is N+1 where N is existing layers
     entry = StackEntry(
@@ -929,6 +940,10 @@ def _apply_play_arsenal(state: GameState, action: Action) -> None:
 
     if "Instant" not in (card.types or []):
         player.action_points -= 1
+
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone
+    card.prev_zone = card.zone
+    card.zone = 'stack'
 
     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
     # CR 3.15.4: layer position is N+1 where N is existing layers
@@ -969,6 +984,10 @@ def _apply_play_banish(state: GameState, action: Action) -> None:
 
     if "Instant" not in (card.types or []):
         player.action_points -= 1
+
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone
+    card.prev_zone = card.zone
+    card.zone = 'stack'
 
     # CR 3.15.4: layer position is N+1 where N is existing layers
     entry = StackEntry(
@@ -1087,6 +1106,10 @@ def _apply_react(state: GameState, action: Action) -> None:
     player.resources -= card.cost or 0
     player.hand.remove(card)
 
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone
+    card.prev_zone = card.zone
+    card.zone = 'stack'
+
     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
     # CR 3.15.4: layer position is N+1 where N is existing layers
     entry = StackEntry(
@@ -1107,6 +1130,7 @@ def _apply_discard_activate(state: GameState, action: Action) -> None:
     player = state.players[action.player_id]
     card = action.card
     # Pay cost: discard the card to graveyard
+    state.remember_last_known(card)
     player.hand.remove(card)
     player.graveyard.add(card)
     # Apply effect

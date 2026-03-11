@@ -33,8 +33,8 @@ Global State Features:
 - Chain links: 3-dim aggregated (count, avg power, hits)
 - Total global: 80 + 3*d_model + 52 = 132 + 3*d_model
 
-Total State Embedding: 2*(11 + 10*d_model) + 132 + 3*d_model = 154 + 23*d_model
-With d_model=128: 3098 dimensions
+Total State Embedding: 2*(56 + 11*d_model) + (228 + 7*d_model) = 340 + 29*d_model
+With d_model=128: 4052 dimensions
 """
 
 import torch
@@ -240,7 +240,8 @@ class GlobalStateEmbedder(nn.Module):
     - Stack state: 1-dim + d_model
     - Chain links: 3-dim aggregated
     
-    Total: 29 + 2*d_model
+    Total: 228 + 7*d_model (Round 10: includes stack-layer details,
+    event history, continuous effects, replacement effects, trigger metadata)
     """
     
     def __init__(self, d_model: int = 128, card_embedder: Optional[CardEmbedder] = None, slug_vocab_size: int = 4563, slug_vocab: Optional[SlugVocab] = None):
@@ -286,10 +287,195 @@ class GlobalStateEmbedder(nn.Module):
         - Stack layers: 5 * (8 + d_model) = 40 + 5*d_model
         - Chain links: 3
         - Event history: 15
-        Total: 190 + 7*d_model
-        With d_model=128: 1086 dimensions
+        - Continuous effects summary: 25
+        - Replacement effects summary: 11
+        - Trigger metadata summary: 2
+        Total: 228 + 7*d_model
+        With d_model=128: 1124 dimensions
         """
-        return 190 + 7 * self.d_model
+        return 228 + 7 * self.d_model
+
+    @staticmethod
+    def _enum_to_str(value) -> str:
+        if value is None:
+            return ""
+        if hasattr(value, "value"):
+            value = value.value
+        text = str(value).lower()
+        if "." in text:
+            text = text.split(".")[-1]
+        return text
+
+    def _encode_continuous_effects(self, state: GameState) -> torch.Tensor:
+        """Encode active continuous effects from EffectManager into 25 dims."""
+        fx_manager = getattr(state, 'effect_manager', None)
+        effects = list(getattr(fx_manager, 'continuous_effects', []) or [])
+
+        norm_count = 20.0
+
+        stage_hist = torch.zeros(8)
+        mod_hist = torch.zeros(7)
+        source_hist = torch.zeros(2)  # layer/static
+        duration_hist = torch.zeros(4)  # end_of_turn, end_of_next_turn, permanent, other
+        owner_hist = torch.zeros(2)  # p1 / p2
+        consumed_count = 0.0
+
+        mod_name_to_idx = {
+            'add_property': 0,
+            'set': 1,
+            'multiply': 2,
+            'divide': 3,
+            'add': 4,
+            'subtract': 5,
+            'dependent': 6,
+        }
+
+        for effect in effects:
+            # Stage histogram (1..8)
+            stage_raw = getattr(effect, 'stage', 0)
+            try:
+                stage = int(stage_raw)
+            except (TypeError, ValueError):
+                stage = 0
+            if 1 <= stage <= 8:
+                stage_hist[stage - 1] += 1.0
+
+            # Mod type histogram (1..7 or enum/string name)
+            mod_raw = getattr(effect, 'mod_type', None)
+            mod_idx = None
+            if mod_raw is not None:
+                if hasattr(mod_raw, 'value'):
+                    mod_raw = mod_raw.value
+                if isinstance(mod_raw, int) and 1 <= mod_raw <= 7:
+                    mod_idx = mod_raw - 1
+                else:
+                    mod_name = self._enum_to_str(mod_raw)
+                    mod_idx = mod_name_to_idx.get(mod_name)
+            if mod_idx is not None:
+                mod_hist[mod_idx] += 1.0
+
+            # Source type histogram
+            source_type = self._enum_to_str(getattr(effect, 'source_type', None))
+            if source_type == 'layer':
+                source_hist[0] += 1.0
+            elif source_type == 'static':
+                source_hist[1] += 1.0
+
+            # Duration histogram
+            duration = str(getattr(effect, 'duration', None) or 'none').lower()
+            if duration == 'end_of_turn':
+                duration_hist[0] += 1.0
+            elif duration == 'end_of_next_turn':
+                duration_hist[1] += 1.0
+            elif duration == 'permanent':
+                duration_hist[2] += 1.0
+            else:
+                duration_hist[3] += 1.0
+
+            # Owner histogram
+            owner_raw = getattr(effect, 'owner_id', 0)
+            try:
+                owner = int(owner_raw)
+            except (TypeError, ValueError):
+                owner = 0
+            if owner in (1, 2):
+                owner_hist[owner - 1] += 1.0
+
+            consumed_count += float(bool(getattr(effect, 'consumed', False)))
+
+        effect_count = len(effects)
+        return torch.cat([
+            torch.tensor([
+                effect_count / norm_count,
+                consumed_count / norm_count,
+            ]),
+            stage_hist / norm_count,
+            mod_hist / norm_count,
+            source_hist / norm_count,
+            duration_hist / norm_count,
+            owner_hist / norm_count,
+        ])
+
+    def _encode_replacement_effects(self, state: GameState) -> torch.Tensor:
+        """Encode active replacement effects from EffectManager into 11 dims."""
+        fx_manager = getattr(state, 'effect_manager', None)
+        effects = list(getattr(fx_manager, 'replacement_effects', []) or [])
+
+        norm_count = 20.0
+        norm_prevention = 40.0
+
+        type_hist = torch.zeros(5)  # self, identity, standard, prevention, outcome
+        owner_hist = torch.zeros(2)
+
+        type_to_idx = {
+            'self': 0,
+            'identity': 1,
+            'standard': 2,
+            'prevention': 3,
+            'outcome': 4,
+        }
+
+        shielding_count = 0.0
+        consumed_count = 0.0
+        total_prevention = 0.0
+
+        for effect in effects:
+            replacement_type = self._enum_to_str(getattr(effect, 'replacement_type', None))
+            idx = type_to_idx.get(replacement_type)
+            if idx is not None:
+                type_hist[idx] += 1.0
+
+            owner_raw = getattr(effect, 'owner_id', 0)
+            try:
+                owner = int(owner_raw)
+            except (TypeError, ValueError):
+                owner = 0
+            if owner in (1, 2):
+                owner_hist[owner - 1] += 1.0
+
+            shielding_count += float(bool(getattr(effect, 'is_shielding', False)))
+            consumed_count += float(bool(getattr(effect, 'consumed', False)))
+
+            prevention_raw = getattr(effect, 'prevention_amount', 0)
+            try:
+                total_prevention += float(prevention_raw)
+            except (TypeError, ValueError):
+                pass
+
+        effect_count = len(effects)
+        return torch.cat([
+            torch.tensor([
+                effect_count / norm_count,
+            ]),
+            type_hist / norm_count,
+            torch.tensor([
+                shielding_count / norm_count,
+                consumed_count / norm_count,
+                total_prevention / norm_prevention,
+            ]),
+            owner_hist / norm_count,
+        ])
+
+    def _encode_trigger_metadata(self, state: GameState) -> torch.Tensor:
+        """Encode pending triggered-layer metadata into 2 dims."""
+        stack_entries = list(getattr(state, 'stack_entries', []) or [])
+
+        pending_triggers = 0
+        unique_trigger_events = set()
+
+        for entry in stack_entries:
+            layer_type = str(getattr(entry, 'layer_type', '')).lower()
+            is_triggered = bool(getattr(entry, 'is_triggered', False))
+            if layer_type == 'triggered' or is_triggered:
+                pending_triggers += 1
+                trigger_event = getattr(entry, 'trigger_event', None)
+                if trigger_event:
+                    unique_trigger_events.add(str(trigger_event))
+
+        return torch.tensor([
+            pending_triggers / 10.0,
+            len(unique_trigger_events) / 10.0,
+        ])
     
     def forward(self, state: GameState, player_counters: Optional[dict] = None) -> torch.Tensor:
         """Convert global state to embedding tensor.
@@ -328,7 +514,8 @@ class GlobalStateEmbedder(nn.Module):
         # 6. Combat state (10-dim + 51-dim keywords + 2*d_model if combat active)
         if state.combat is not None:
             # Attack target player ID (CR 1.4.5, 7.2.4b)
-            attack_target_id = state.combat.attack_target.player_id if state.combat.attack_target else 0
+            attack_target = getattr(state.combat, 'attack_target', None)
+            attack_target_id = attack_target.player_id if hasattr(attack_target, 'player_id') else 0
             # Defending equipment count (CR 7.0.5d, 7.3.2a)
             defending_equip_count = len(state.combat.defending_equipment_zones)
             
@@ -454,6 +641,15 @@ class GlobalStateEmbedder(nn.Module):
             1.0 if evt in events_this_turn else 0.0 for evt in tracked_events
         ])
         features.append(event_features)
+
+        # 10. Continuous effects summary (25-dim)
+        features.append(self._encode_continuous_effects(state))
+
+        # 11. Replacement effects summary (11-dim)
+        features.append(self._encode_replacement_effects(state))
+
+        # 12. Trigger metadata summary (2-dim)
+        features.append(self._encode_trigger_metadata(state))
         
         # Concatenate all features
         global_embedding = torch.cat(features)
@@ -464,13 +660,13 @@ class GlobalStateEmbedder(nn.Module):
 class GameStateEmbedder(nn.Module):
     """Full game state embedder combining player and global state.
     
-    Architecture (Round 9 + Layer System + Counter Expansion + Event History):
+    Architecture (Round 10 + Layer System + Counter Expansion + Event/Effect History):
     - Active player state: 56 + 11*d_model
     - Inactive player state: 56 + 11*d_model
-    - Global state: 190 + 7*d_model (includes stack layers with modal/targeting metadata + event history)
+    - Global state: 228 + 7*d_model (includes stack layers + event history + effect metadata)
     
-    Total: 302 + 29*d_model
-    With d_model=128: 4014 dimensions
+    Total: 340 + 29*d_model
+    With d_model=128: 4052 dimensions
     
     The embedder provides a rich representation of the full game state
     suitable for deep RL value networks and policy networks.
@@ -492,9 +688,9 @@ class GameStateEmbedder(nn.Module):
         self.layer_norm = nn.LayerNorm(self.get_output_dim())
     
     def get_output_dim(self) -> int:
-        """Total output dimension: 2*(56 + 11*d_model) + (190 + 7*d_model) = 302 + 29*d_model 
-        With d_model=128: 4014 dimensions"""
-        return 302 + 29 * self.d_model
+        """Total output dimension: 2*(56 + 11*d_model) + (228 + 7*d_model) = 340 + 29*d_model 
+        With d_model=128: 4052 dimensions"""
+        return 340 + 29 * self.d_model
     
     def forward(self, state: GameState, perspective_player: int = 1) -> torch.Tensor:
         """Convert GameState to embedding tensor from a player's perspective.

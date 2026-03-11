@@ -77,11 +77,19 @@ def _ask_player(state: GameState, player_id: int, options, context: str = "") ->
 def _remove_from_current_zone(card: Card, state: GameState) -> bool:
     """Remove card from whatever zone it currently sits in.
     MUST be followed by a Zone.add() call to maintain zone tracking."""
+    state.remember_last_known(card, overwrite=False)
     cid = _controller_id(card)
-    player = state.players[cid]
-    for zone in player.all_zones():
-        if zone.remove(card):
-            return True
+    players_to_search = []
+    if cid in state.players:
+        players_to_search.append(state.players[cid])
+    for player in state.players.values():
+        if player not in players_to_search:
+            players_to_search.append(player)
+
+    for player in players_to_search:
+        for zone in player.all_zones():
+            if zone.remove(card):
+                return True
     # Shared zones
     if state.combat_chain.remove(card):
         return True
@@ -94,6 +102,7 @@ def _move_to_graveyard(card: Card, state: GameState) -> None:
     """Destroy a card — move it to its OWNER's graveyard (8.5.4).
     Emits leaves_arena if card was in an arena zone, and card_destroyed."""
     was_arena = _was_in_arena(card) or card.zone in ARENA_ZONE_NAMES
+    state.process_cease_to_exist(card)
     _remove_from_current_zone(card, state)
     owner = _get_owner(state, card)
     owner.graveyard.add(card)  # add() updates card.prev_zone and card.zone
@@ -298,7 +307,7 @@ def watery_grave(card: Card, event: Event, state: GameState) -> None:
     """8.3.41: When put into graveyard from the arena, turn face-down.
     Arena includes combat chain per rules 3.0.5 / 7.0.3f."""
     if card.zone == "graveyard" and _was_in_arena(card):
-        card.is_public = False
+        state.set_card_visibility(card, False)
 
 
 # ---------------------------------------------------------------------------
@@ -354,8 +363,7 @@ def heave(card: Card, amount: int, state: GameState) -> bool:
     if not _pitch_for_cost(controller, amount, state, exclude_card=card):
         return False
     controller.hand.remove(card)
-    controller.arsenal.add(card)  # add() updates zone tracking
-    card.is_public = True
+    controller.arsenal.add(card, is_public=True)  # add() updates zone tracking
     for _ in range(amount):
         _create_token(state, controller, "seismic_surge")
     return True
@@ -396,7 +404,7 @@ def fusion(card: Card, supertype: str, state: GameState) -> bool:
                                 context=f"Choose which {supertype} card to reveal for Fusion")
     revealed = controller.hand.find(reveal_choice)
     if revealed:
-        revealed.is_public = True
+        state.set_card_visibility(revealed, True)
     return True
 
 
@@ -592,8 +600,7 @@ def effect_banish(state: GameState, card: Card, face_up: bool = True,
     banisher_id: player who caused the banish (for contract tracking)."""
     _remove_from_current_zone(card, state)
     owner = _get_owner(state, card)
-    owner.banished.add(card)  # add() updates zone tracking
-    card.is_public = face_up
+    owner.banished.add(card, is_public=face_up)  # add() updates zone tracking
     # Emit card_banished event for contract mechanics (8.5.39)
     state.event_manager.emit(
         type('Event', (), {'type': 'card_banished',
@@ -696,8 +703,7 @@ def effect_intimidate(state: GameState, target_player_id: int,
     idx = rng.randint(0, len(target.hand.cards) - 1)
     card = target.hand.cards[idx]
     target.hand.remove(card)
-    target.banished.add(card)  # add() updates zone tracking
-    card.is_public = False
+    target.banished.add(card, is_public=False)  # add() updates zone tracking
     return card
 
 
@@ -778,6 +784,9 @@ def effect_negate(state: GameState, target_entry) -> bool:
         return False
     state.stack_entries.remove(target_entry)
     if target_entry.card:
+        # CR 5.3.4c: negated layer ceases to exist without resolving; capture LKI at stack zone.
+        if getattr(target_entry, 'layer_type', 'card') == 'card':
+            state.process_cease_to_exist(target_entry.card)
         owner = state.players[target_entry.card.owner]
         owner.graveyard.add(target_entry.card)
     return True

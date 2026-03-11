@@ -131,6 +131,21 @@ Cloud one-command path:
 bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh rules
 ```
 
+Fresh Runpod pod order:
+
+```bash
+apt update && apt install -y git nano python3-venv
+git clone https://github.com/FinlaMor/FAB_Sim.git /workspace/FAB_Sim
+cd /workspace/FAB_Sim
+
+# From local WSL, upload the gitignored dataset:
+bash offline_agents/torchtune_configs/runpod_sync.sh upload-data <ssh-target> [--port PORT]
+
+# On the pod, keep all cache/temp/model writes on /workspace:
+bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh rules
+bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh cards
+```
+
 See [`offline_agents/LOCAL_AGENTS.md`](offline_agents/LOCAL_AGENTS.md) for full fine-tuning instructions.
 
 ---

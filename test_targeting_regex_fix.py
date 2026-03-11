@@ -88,7 +88,7 @@ def extract_targeting_flags(functional_text: str) -> dict:
     return ability_flags
 
 
-def test_case(description: str, text: str, expected: dict) -> bool:
+def run_case(description: str, text: str, expected: dict) -> bool:
     """Test a single case and report results."""
     result = extract_targeting_flags(text)
     passed = result == expected
@@ -204,7 +204,7 @@ def run_all_tests():
     failed = 0
     
     for description, text, expected in test_cases:
-        if test_case(description, text, expected):
+        if run_case(description, text, expected):
             passed += 1
         else:
             failed += 1
@@ -238,6 +238,11 @@ def run_all_tests():
         print(f"Target coverage: 95%+")
     
     return failed == 0
+
+
+def test_targeting_regex_suite():
+    """Pytest wrapper for the standalone targeting regex verification suite."""
+    assert run_all_tests()
 
 
 if __name__ == "__main__":

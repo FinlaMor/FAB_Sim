@@ -296,7 +296,7 @@ def _sealace_effect(action, player, state):
     """Effect: turn blue arrow in arsenal face-up, it gets go again this turn."""
     card = player.arsenal.top
     if card and "Arrow" in card.types and card.pitch == 3:
-        card.is_public = True
+        state.set_card_visibility(card, True)
         card.keywords = list(card.keywords or [])
         if "Go again" not in card.keywords:
             card.keywords.append("Go again")

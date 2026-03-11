@@ -174,6 +174,35 @@ To regenerate or expand the dataset using a local LLM instead of the Claude API,
 > If your machine has AMD graphics (or CUDA is unavailable), run training on a cloud NVIDIA instance.
 > One-command cloud path: `bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh rules` (or `cards`).
 
+### Fresh Runpod pod order
+
+On a fresh Runpod pod, keep the repo and every large artifact on `/workspace` so the root overlay disk does not fill up:
+
+```bash
+apt update && apt install -y git nano python3-venv
+git clone https://github.com/FinlaMor/FAB_Sim.git /workspace/FAB_Sim
+cd /workspace/FAB_Sim
+```
+
+From your local WSL checkout, upload the gitignored dataset to the pod:
+
+```bash
+bash offline_agents/torchtune_configs/runpod_sync.sh upload-data <ssh-target> [--port PORT]
+```
+
+Then on the pod:
+
+```bash
+bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh rules
+bash offline_agents/torchtune_configs/cloud_train_fab_lora.sh cards
+```
+
+To pull the finished LoRAs back later:
+
+```bash
+bash offline_agents/torchtune_configs/runpod_sync.sh download-all <ssh-target> [--port PORT]
+```
+
 ### Step 1: Download base model
 
 No approval required — Qwen2.5 is fully open. Run from WSL2 or use Python directly on Windows:

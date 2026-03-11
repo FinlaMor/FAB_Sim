@@ -43,11 +43,13 @@ class Zone:
     def is_public(self) -> bool:
         return self.name not in ('hand', 'deck', 'arsenal', 'inventory')
 
-    def add(self, card: Card) -> None:
+    def add(self, card: Card, is_public: Optional[bool] = None) -> None:
         """Move card into this zone, updating card.prev_zone / card.zone / card.is_public."""
+        next_is_public = self.is_public if is_public is None else is_public
+        card.remember_last_known_state()
         card.prev_zone = card.zone
         card.zone = self.name
-        card.is_public = self.is_public
+        card.is_public = next_is_public
         if card not in self.cards:
             self.cards.append(card)
 
@@ -63,11 +65,13 @@ class Zone:
     def find_all(self, slug: str) -> list[Card]:
         return [c for c in self.cards if c.slug == slug]
 
-    def add_bottom(self, card: Card) -> None:
+    def add_bottom(self, card: Card, is_public: Optional[bool] = None) -> None:
         """Add card to the bottom of this zone (e.g. bottom of deck)."""
+        next_is_public = self.is_public if is_public is None else is_public
+        card.remember_last_known_state()
         card.prev_zone = card.zone
         card.zone = self.name
-        card.is_public = self.is_public
+        card.is_public = next_is_public
         self.cards.append(card)
 
     def pop_top(self) -> Optional[Card]:
@@ -444,9 +448,10 @@ class CombatState:
     def defending_equipment_slots(self) -> list[str]:
         return self.defending_equipment_zones
     
-    def attack_target(self, state: GameState) -> Player:
+    def resolve_attack_target(self, state: "GameState") -> Player:
         if self.attack_target is None:
             self.attack_target = state.players[3 - self.attacker_id]
+        return self.attack_target
     
     def to_dict(self) -> dict:
         """Convert CombatState to a dictionary representation."""
@@ -498,6 +503,7 @@ class GameState:
     combat_chain: Zone = field(default_factory=lambda: Zone("combat chain"))
     landmarks: list[tuple[int, str]] = field(default_factory=list)
     last_acted_player: Optional[int] = None
+    last_known_cache: dict[int, dict] = field(default_factory=dict)
 
     def active(self) -> Player:
         return self.players[self.active_player]
@@ -507,6 +513,55 @@ class GameState:
 
     def copy(self) -> GameState:
         return copy.deepcopy(self)
+
+    def remember_last_known(self, card: Optional[Card], overwrite: bool = True) -> Optional[dict]:
+        """Capture and cache last-known information for a card-like object."""
+        if card is None:
+            return None
+        if not overwrite and card.object_id in self.last_known_cache:
+            return self.last_known_cache[card.object_id]
+        snapshot = card.remember_last_known_state(force=overwrite)
+        self.last_known_cache[card.object_id] = snapshot
+        return snapshot
+
+    def get_last_known(self, card_or_id, default: Optional[dict] = None) -> Optional[dict]:
+        """Return last-known-information snapshot for a Card or object id."""
+        if card_or_id is None:
+            return default
+
+        if isinstance(card_or_id, Card):
+            if card_or_id.object_id in self.last_known_cache:
+                return self.last_known_cache[card_or_id.object_id]
+            return card_or_id.get_last_known_state() or default
+
+        try:
+            object_id = int(card_or_id)
+        except (TypeError, ValueError):
+            return default
+
+        return self.last_known_cache.get(object_id, default)
+
+    def last_known_value(self, card_or_id, key: str, default=None):
+        """Convenience accessor for a single last-known-information field."""
+        snapshot = self.get_last_known(card_or_id)
+        if snapshot is None:
+            return default
+        return snapshot.get(key, default)
+
+    def process_cease_to_exist(self, card: Optional[Card]) -> Optional[dict]:
+        """Rules hook for objects that cease to exist; caches their final known state."""
+        return self.remember_last_known(card, overwrite=True)
+
+    def set_card_visibility(self, card: Optional[Card], is_public: bool) -> Optional[dict]:
+        """Update card visibility, capturing LKI for public-to-private transitions."""
+        if card is None:
+            return None
+        if card.is_public == is_public:
+            return self.get_last_known(card)
+        if card.is_public and not is_public:
+            self.process_cease_to_exist(card)
+        card.is_public = is_public
+        return self.get_last_known(card)
 
     def get_zone(self, zone_name: str, player_id: Optional[int] = None) -> Optional[Zone]:
         if player_id is not None:

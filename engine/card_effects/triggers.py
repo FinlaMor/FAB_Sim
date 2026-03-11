@@ -395,8 +395,7 @@ def on_hit_banish_top(count: int = 1) -> TriggerDef:
         for _ in range(count):
             if target.deck.cards:
                 top = target.deck.pop_top()
-                target.banished.add(top)
-                top.is_public = True
+                target.banished.add(top, is_public=True)
     return TriggerDef(event_type="hit", effect_fn=_effect)
 
 
@@ -539,8 +538,7 @@ def on_play_banish_top(count: int = 1) -> TriggerDef:
         for _ in range(count):
             if player.deck.cards:
                 top = player.deck.pop_top()
-                player.banished.add(top)
-                top.is_public = True
+                player.banished.add(top, is_public=True)
     return TriggerDef(event_type="on_play", effect_fn=_effect)
 
 
@@ -1020,7 +1018,7 @@ def _nimby_effect(card, event, state):
         if target:
             controller.deck.cards.remove(target)
             controller.hand.add(target)
-            target.is_public = True
+            state.set_card_visibility(target, True)
     # Shuffle regardless of whether a card was found
     effect_shuffle(state, cid)
 
@@ -1476,8 +1474,7 @@ def _codex_of_frailty_on_play(card, event, state):
             chosen = next((c for c in eligible if c.slug == pick), None)
             if chosen:
                 player.graveyard.remove(chosen)
-                player.arsenal.add(chosen)
-                chosen.is_public = False
+                player.arsenal.add(chosen, is_public=False)
                 effect_discard(state, pid, 1)
     create_token(state, cid, "ponder")
     for pid in state.players:
@@ -1498,8 +1495,7 @@ def _codex_of_inertia_on_play(card, event, state):
         player = state.players[pid]
         if player.deck.cards and player.arsenal.top is None:
             top = player.deck.pop_top()
-            player.arsenal.add(top)
-            top.is_public = False
+            player.arsenal.add(top, is_public=False)
             effect_discard(state, pid, 1)
     create_token(state, cid, "ponder")
     for pid in state.players:
@@ -1989,7 +1985,7 @@ def _go_fish_hit(card, event, state, check_fn):
         pick = _ask_player(state, target_id, [c.slug for c in target.hand.cards],
                            context="Go Fish: choose a card from your hand to reveal")
     chosen = next((c for c in target.hand.cards if c.slug == pick), target.hand.cards[0])
-    chosen.is_public = True
+    state.set_card_visibility(chosen, True)
     if check_fn(chosen):
         target.hand.remove(chosen)
         target.graveyard.add(chosen)
@@ -2125,7 +2121,7 @@ def _murderous_rabble_attack(card, event, state):
     player = state.players[cid]
     if player.deck.cards:
         top = player.deck.cards[0]
-        top.is_public = True
+        state.set_card_visibility(top, True)
         pitch = top.pitch or 0
         state.combat.attack_card.effects.append(
             ("base_power", lambda base, p=pitch: base + p))
@@ -2177,7 +2173,7 @@ def _sea_floor_salvage_on_play(card, event, state):
     chosen = next((c for c in targets if c.slug == pick), None)
     if chosen:
         is_yellow = chosen.pitch == 2
-        chosen.is_public = False
+        state.set_card_visibility(chosen, False)
         if is_yellow:
             create_token(state, cid, "gold")
 
@@ -2235,7 +2231,7 @@ def _shifting_tides_start_turn(card, event, state):
         return
     # Reveal and pitch the top card of the deck (CR 8.6.X: always moves to graveyard)
     top = player.deck.cards[0]
-    top.is_public = True
+    state.set_card_visibility(top, True)
     player.deck.cards.remove(top)
     _move_to_graveyard(top, state)
     # If it was blue, put this aura on the bottom of the deck; otherwise destroy it
@@ -2300,7 +2296,7 @@ def _sunken_treasure_defend(card, event, state):
     chosen = next((c for c in targets if c.slug == pick), None)
     if chosen:
         is_yellow = chosen.pitch == 2
-        chosen.is_public = False
+        state.set_card_visibility(chosen, False)
         if is_yellow:
             create_token(state, cid, "gold")
 
@@ -3054,8 +3050,7 @@ def _blacktek_whisperers_start_turn(card, event, state):
         player.graveyard.add(s)
     # Re-equip from graveyard
     player.graveyard.remove(card)
-    player.legs.add(card)
-    card.is_public = True
+    player.legs.add(card, is_public=True)
 
 # Attack Reaction handled in registry.py ATTACK_REACTION_CONDITIONS.
 # On-hit go again check handled in _dagger_turn_hit_effects.
@@ -3083,8 +3078,7 @@ def _schism_of_chaos_pitched(card, event, state):
         top = player.deck.top
         if top and player.arsenal.top is None:
             player.deck.remove(top)
-            player.arsenal.add(top)
-            top.is_public = False
+            player.arsenal.add(top, is_public=False)
 
 CARD_TRIGGERS["schism_of_chaos"] = [
     TriggerDef(event_type="card_pitched", effect_fn=_schism_of_chaos_pitched),
@@ -3145,7 +3139,7 @@ def _throw_caution_on_play(card, event, state):
     if not top:
         return
     prevent_amount = top.pitch or 0
-    top.is_public = True  # Reveal
+    state.set_card_visibility(top, True)
     # Register one-shot damage prevention
     from engine.effects import ReplacementEffect, ReplacementType
     def _condition(evt, gs):
