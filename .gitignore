@@ -17,6 +17,10 @@ __pycache__/
 *.py[cod]
 *.pyo
 .env
+.env.*
+*.secrets.json
+*.pem
+*.key
 .venv/
 .venv-wsl/
 venv/
@@ -44,6 +48,10 @@ ROADMAP.md
 ACTION_EMBEDDER_*.md
 CARD_EMBEDDER_*_REPORT.md
 EMBEDDER_RULES_ANALYSIS.md
+ENGINE_COMPLIANCE_AUDIT_*.md
+RULES_AUDIT_REPORT_*.md
+SEED*_AUDIT_REPORT_*.md
+SEEDED_*_AUDIT*.md
 
 # --- Local data collection ---
 data_collection/
@@ -52,6 +60,13 @@ data_collection/
 debug_modal_verb.py
 temp_ability_examples.py
 temp_triggered_examples.py
+temp_*.py
+audit_*.py
+check_*.py
+
+# --- Local probe/debug outputs ---
+ollama_*_out.txt
+ollama_test_out.txt
 
 # --- OS ---
 .DS_Store
