@@ -5,7 +5,6 @@ card_data/slug_index_backup*.json
 # --- Training data (proprietary Q&A pairs) ---
 offline_agents/distillation/rules_qa.jsonl
 offline_agents/distillation/cards_qa.jsonl
-offline_agents/distillation/training_data.jsonl
 
 # --- RAG vector store (derived from card data, ~200MB) ---
 offline_agents/rag/chroma_db/
