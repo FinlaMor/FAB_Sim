@@ -56,3 +56,5 @@ temp_triggered_examples.py
 # --- OS ---
 .DS_Store
 Thumbs.db
+
+offline_agents/distillation/training_data.jsonl
