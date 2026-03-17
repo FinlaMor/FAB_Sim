@@ -2,13 +2,6 @@
 card_data/slug_index.json
 card_data/slug_index_backup*.json
 
-# --- Training data (proprietary Q&A pairs) ---
-offline_agents/distillation/rules_qa.jsonl
-offline_agents/distillation/cards_qa.jsonl
-
-# --- RAG vector store (derived from card data, ~200MB) ---
-offline_agents/rag/chroma_db/
-
 # --- Model weights ---
 models/
 
@@ -53,8 +46,12 @@ RULES_AUDIT_REPORT_*.md
 SEED*_AUDIT_REPORT_*.md
 SEEDED_*_AUDIT*.md
 
-# --- Local data collection ---
+# --- Local data (large, generated, or runtime) ---
 data_collection/
+data/
+checkpoints/
+decks/generated/
+logs/
 
 # --- Local third-party checkouts ---
 third_party/Talishar/
@@ -71,9 +68,10 @@ check_*.py
 # --- Local probe/debug outputs ---
 ollama_*_out.txt
 ollama_test_out.txt
+*.log
+talishar_random_hero_*.txt
+talishar_random_hero_*.json
 
 # --- OS ---
 .DS_Store
 Thumbs.db
-
-offline_agents/distillation/training_data.jsonl
