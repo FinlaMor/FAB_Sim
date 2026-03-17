@@ -47,6 +47,9 @@ class Action:
     card_list: Optional[list[Card]] = None
     target: Optional[Card] = None
     targets: Optional[list[str]] = None       # Multi-target declarations (CR 1.8.5c)
+    attack_source: Optional[Card] = None      # Source object for attack proxies/layers (CR 1.4.3, 1.4.4)
+    is_attack_proxy: Optional[bool] = None    # Attack represented by a proxy object
+    is_attack_layer: Optional[bool] = None    # Attack represented by a non-card layer
     
     # Game context (added Round 3 for CR compliance)
     phase: Optional[str] = None              # "start", "action", "end" (CR 4.0.3)
@@ -66,11 +69,11 @@ class Action:
     is_action_speed: Optional[bool] = None         # Card/ability is Action type (CR 8.1.1a/b)
     played_as_instant: Optional[bool] = None       # Action played "as though instant" (CR 8.1.1d)
     
-    # Modal and optional choices (added Round 9 for CR 1.7.5, 5.1.3, 8.3.9 - Gap #1 fix +10 points)
+    # Modal and optional choices (added Round 9 for CR 1.7.5, 5.1.3 - Gap #1 fix +10 points)
     modes_selected: Optional[list[int]] = None     # Indices of selected modes (CR 1.7.5)
-    boost_used: Optional[bool] = None              # Boost decision yes/no (CR 8.3.9)
     x_value_declared: Optional[int] = None         # X-cost value declared (CR 1.12.2, 5.1.3a)
-    is_melded: Optional[bool] = None               # Meld flag for split-cards (CR 8.3.38, 5.1.2c)
+    is_melded: Optional[bool] = None               # Legacy meld flag (kept for compat)
+    meld_side: Optional[str] = None                # Meld side: 'top', 'bottom', 'both', or None (CR 8.3.38)
     alternative_cost_used: Optional[str] = None    # Alternative cost name if used (CR 5.1.3c)
 
     def __repr__(self):
@@ -89,6 +92,12 @@ class Action:
             parts.append(f"target={self.target}")
         if self.targets:
             parts.append(f"targets={self.targets}")
+        if self.attack_source is not None:
+            parts.append(f"attack_source={self.attack_source}")
+        if self.is_attack_proxy:
+            parts.append("attack_proxy")
+        if self.is_attack_layer:
+            parts.append("attack_layer")
         return f"Action({', '.join(parts)})"
 
 
@@ -159,26 +168,72 @@ def legal_actions(state: GameState, card_db: CardDB) -> list[Action]:
     """Return all legal actions for the current acting player in the current step."""
     step = state.step
     if step == Step.ACTION:
-        return _legal_action_step(state, card_db)
+        actions = _legal_action_step(state, card_db)
     elif step == Step.COMBAT_LAYER:
         # CR 7.0.1a: players may play instants and activate abilities at instant speed during Layer Step
-        return _legal_action_step(state, card_db)
+        actions = _legal_action_step(state, card_db)
     elif step == Step.COMBAT_ATTACK:
-        return _legal_action_step(state, card_db)
+        actions = _legal_action_step(state, card_db)
     elif step == Step.COMBAT_DEFEND:
         if state.combat and state.combat.defending_declared:
-            return _legal_action_step(state, card_db)
-        return _legal_defend_step(state, card_db)
+            actions = _legal_action_step(state, card_db)
+        else:
+            actions = _legal_defend_step(state, card_db)
     elif step == Step.COMBAT_REACTION:
-        return _legal_reaction_step(state, card_db)
+        actions = _legal_reaction_step(state, card_db)
     elif step == Step.COMBAT_DAMAGE:
-        return _legal_action_step(state, card_db)
+        actions = _legal_action_step(state, card_db)
     elif step == Step.COMBAT_RESOLUTION:
-        return _legal_action_step(state, card_db)
-    elif step == Step.END_TURN:
-        return _legal_end_turn_step(state, card_db)
+        actions = _legal_action_step(state, card_db)
+    elif step in (Step.END_PHASE_BEGINNING, Step.END_TURN):
+        actions = _legal_end_turn_step(state, card_db)
     else:
         return []
+
+    # Populate action economy metadata so encoders/JSONL always have these fields
+    pp = state.priority_player
+    player = state.players.get(pp)
+    if player:
+        ap = player.action_points
+        res = player.resources
+        for a in actions:
+            if a.action_points_available is None:
+                a.action_points_available = ap
+            if a.resources_available is None:
+                a.resources_available = res
+            if a.card:
+                if a.resource_cost is None:
+                    ms = a.meld_side
+                    if ms == 'bottom':
+                        a.resource_cost = 0
+                    elif ms == 'both':
+                        a.resource_cost = a.card.meld_cost or 0
+                    else:
+                        a.resource_cost = a.card.cost or 0
+                if a.action_cost is None:
+                    ms = a.meld_side
+                    if ms == 'bottom':
+                        a.action_cost = 0
+                    elif ms in ('top', 'both'):
+                        a.action_cost = 1
+                    else:
+                        a.action_cost = 0 if "Instant" in (a.card.types or []) else 1
+                if a.has_go_again is None:
+                    a.has_go_again = bool(a.card.has_go_again)
+    return actions
+
+
+def _is_null_meld_card(card: Optional[Card]) -> bool:
+    if card is None:
+        return False
+    return re.sub(r'_(red|yellow|blue)$', '', card.slug) == 'null__shock'
+
+
+def _stack_instant_target_entries(state: GameState) -> list:
+    return [
+        e for e in (state.stack_entries or [])
+        if e.card is not None and "Instant" in (e.card.types or [])
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -205,7 +260,13 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 )
                 for seq in weapon_attack_pitch_seqs:
                     if seq is not None:
-                        actions.append(Action(type=ActionType.ATTACK_WEAPON, card=weapon_card, pitch_cards=seq))
+                        actions.append(Action(
+                            type=ActionType.ATTACK_WEAPON,
+                            card=weapon_card,
+                            pitch_cards=seq,
+                            attack_source=weapon_card,
+                            is_attack_proxy=True,
+                        ))
 
         # Cards that can't be played from hand
         CANT_PLAY_FROM_HAND = {"death_touch"}
@@ -219,16 +280,68 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             is_instant = "Instant" in card.types
             if not card.is_action and not is_instant:
                 continue
-            if card.is_action and player.action_points <= 0:
-                continue
-            effective_cost = card.cost
-            play_card_pitch_seqs = find_all_valid_pitch_sequences(
-                player.hand.cards, 
-                effective_cost,
-                current_resources=player.resources
-            )
-            for seq in play_card_pitch_seqs:
-                actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, pitch_cards=seq))
+            is_meld = "Meld" in (card.keywords or [])
+            if is_meld:
+                # Meld cards expose three distinct action-time plays:
+                # TOP side   — action-speed (e.g. Comet Storm), costs card.cost, AP required
+                # BOTTOM side — instant-speed (Shock "1 arcane" / Life "gain 1{h}"), free, no AP
+                # MELDED     — action-speed, costs 2× base cost plus modifiers, AP required, dual resolution
+                null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(card) else None
+                if player.action_points > 0:
+                    top_seqs = find_all_valid_pitch_sequences(
+                        player.hand.cards, card.cost or 0, current_resources=player.resources)
+                    for seq in top_seqs:
+                        if null_targets is not None:
+                            for target_entry in null_targets:
+                                actions.append(Action(
+                                    type=ActionType.PLAY_CARD,
+                                    card_idx=i,
+                                    card=card,
+                                    pitch_cards=seq,
+                                    meld_side='top',
+                                    target=target_entry.card,
+                                    targets=[f"oid:{target_entry.card.object_id}"],
+                                ))
+                        else:
+                            actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                                                  pitch_cards=seq, meld_side='top'))
+                # Bottom side is always playable at instant speed (no AP needed)
+                bottom_seqs = find_all_valid_pitch_sequences(
+                    player.hand.cards, 0, current_resources=player.resources)
+                for seq in bottom_seqs:
+                    actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                                          pitch_cards=seq, meld_side='bottom'))
+                # Melded requires an action point
+                if player.action_points > 0:
+                    meld_cost = card.meld_cost or 0
+                    meld_seqs = find_all_valid_pitch_sequences(
+                        player.hand.cards, meld_cost, current_resources=player.resources)
+                    for seq in meld_seqs:
+                        if null_targets is not None:
+                            for target_entry in null_targets:
+                                actions.append(Action(
+                                    type=ActionType.PLAY_CARD,
+                                    card_idx=i,
+                                    card=card,
+                                    pitch_cards=seq,
+                                    meld_side='both',
+                                    target=target_entry.card,
+                                    targets=[f"oid:{target_entry.card.object_id}"],
+                                ))
+                        else:
+                            actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                                                  pitch_cards=seq, meld_side='both'))
+            else:
+                if card.is_action and player.action_points <= 0:
+                    continue
+                effective_cost = card.cost
+                play_card_pitch_seqs = find_all_valid_pitch_sequences(
+                    player.hand.cards,
+                    effective_cost,
+                    current_resources=player.resources
+                )
+                for seq in play_card_pitch_seqs:
+                    actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, pitch_cards=seq))
 
         # PLAY_ARSENAL — only face-up (public) cards can be played (CR 3.0.4b, CR 5.1.2b)
         arsenal_card = player.arsenal.top
@@ -244,14 +357,27 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                         effective_cost,
                         current_resources=player.resources
                     )
-                    for seq in arsenal_pitch_seqs:
-                        if seq is not None:
-                            actions.append(Action(
-                                type=ActionType.PLAY_ARSENAL,
-                                card=arsenal_card,
-                                pitch_cards=seq,
-                                from_arsenal=True,
-                            ))
+                    null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(arsenal_card) else None
+                    if not (null_targets is not None and not null_targets):
+                        for seq in arsenal_pitch_seqs:
+                            if seq is not None:
+                                if null_targets is not None:
+                                    for target_entry in null_targets:
+                                        actions.append(Action(
+                                            type=ActionType.PLAY_ARSENAL,
+                                            card=arsenal_card,
+                                            pitch_cards=seq,
+                                            from_arsenal=True,
+                                            target=target_entry.card,
+                                            targets=[f"oid:{target_entry.card.object_id}"],
+                                        ))
+                                else:
+                                    actions.append(Action(
+                                        type=ActionType.PLAY_ARSENAL,
+                                        card=arsenal_card,
+                                        pitch_cards=seq,
+                                        from_arsenal=True,
+                                    ))
 
         # ACTIVATE_ITEM
         for i, card in enumerate(player.items.cards):
@@ -479,18 +605,45 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
     attacker_id = combat.attacker_id
     defender_id = 3 - attacker_id
 
-    # Instants from hand
+    # Instants from hand (at reaction/instant speed — no action point consumed)
     for i, card in enumerate(player.hand.cards):
         if "Instant" not in card.types:
             continue
-        effective_cost = card.cost
-        hand_pitch_seqs = find_all_valid_pitch_sequences(
-            player.hand.cards, 
-            effective_cost,
-            current_resources=player.resources
-        )
-        for seq in hand_pitch_seqs:
-            actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, pitch_cards=seq))
+        is_meld = "Meld" in (card.keywords or [])
+        if is_meld:
+            # Top side at instant speed (meld_side=None → _apply_play_card uses Instant check → no AP)
+            null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(card) else None
+            top_seqs = find_all_valid_pitch_sequences(
+                player.hand.cards, card.cost or 0, current_resources=player.resources)
+            for seq in top_seqs:
+                if null_targets is not None:
+                    for target_entry in null_targets:
+                        actions.append(Action(
+                            type=ActionType.PLAY_CARD,
+                            card_idx=i,
+                            card=card,
+                            pitch_cards=seq,
+                            target=target_entry.card,
+                            targets=[f"oid:{target_entry.card.object_id}"],
+                        ))
+                else:
+                    actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                                          pitch_cards=seq))  # meld_side=None = instant-speed top
+            # Bottom side at instant speed: always cost 0
+            bottom_seqs = find_all_valid_pitch_sequences(
+                player.hand.cards, 0, current_resources=player.resources)
+            for seq in bottom_seqs:
+                actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                                      pitch_cards=seq, meld_side='bottom'))
+        else:
+            effective_cost = card.cost
+            hand_pitch_seqs = find_all_valid_pitch_sequences(
+                player.hand.cards,
+                effective_cost,
+                current_resources=player.resources
+            )
+            for seq in hand_pitch_seqs:
+                actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, pitch_cards=seq))
         
     # Instants from arsenal
     for i, card in enumerate(player.arsenal.cards):
@@ -502,8 +655,23 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             effective_cost,
             current_resources=player.resources
         )
+        null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(card) else None
+        if null_targets is not None and not null_targets:
+            # Null's top side requires a legal instant target at declaration time.
+            continue
         for seq in arsenal_pitch_seqs:
-            actions.append(Action(type=ActionType.PLAY_ARSENAL, card_idx=i, card=card, pitch_cards=seq))
+            if null_targets is not None:
+                for target_entry in null_targets:
+                    actions.append(Action(
+                        type=ActionType.PLAY_ARSENAL,
+                        card_idx=i,
+                        card=card,
+                        pitch_cards=seq,
+                        target=target_entry.card,
+                        targets=[f"oid:{target_entry.card.object_id}"],
+                    ))
+            else:
+                actions.append(Action(type=ActionType.PLAY_ARSENAL, card_idx=i, card=card, pitch_cards=seq))
 
     # ACTIVATE_EQUIPMENT (non-weapon)
     for slot_name in ("head", "chest", "arms", "legs"):
@@ -587,7 +755,14 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 current_resources=player.resources
             )
             for seq in ar_arsenal_pitch_seqs:
-                actions.append(Action(type=ActionType.PLAY_ATTACK_REACTION, card=card, pitch_cards=seq))
+                actions.append(
+                    Action(
+                        type=ActionType.PLAY_ATTACK_REACTION,
+                        card=card,
+                        pitch_cards=seq,
+                        from_arsenal=True,
+                    )
+                )
 
     elif pp == defender_id:
         if not combat.no_defense_reactions:
@@ -623,7 +798,14 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                     current_resources=player.resources
                 )
                 for seq in dr_arsenal_pitch_seqs:
-                    actions.append(Action(type=ActionType.PLAY_DEFENSE_REACTION, card=card, pitch_cards=seq))
+                    actions.append(
+                        Action(
+                            type=ActionType.PLAY_DEFENSE_REACTION,
+                            card=card,
+                            pitch_cards=seq,
+                            from_arsenal=True,
+                        )
+                    )
 
     return actions
 

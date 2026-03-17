@@ -15,11 +15,11 @@ Player State Features (per player):
 - Intellect: 1-dim normalized
 - Resources: 1-dim normalized
 - Action points: 1-dim normalized
-- Flags: weapon_exhausted, hero_power_exhausted (2-dim)
-- Zone sizes: hand, deck, graveyard, arsenal, banished, pitch (6-dim)
-- Equipment slots: head, chest, arms, legs, weapon (5 * d_model from CardEmbedder)
-- Permanents: items, auras, allies, soul, tokens (5 * d_model aggregated)
-- Total per player: 11 + 10*d_model
+- Flags: weapon_exhausted, hero_power_exhausted, arsenal_face_up, marked (4-dim)
+- Zone sizes: hand, deck, graveyard, arsenal, banished, pitch, inventory (7-dim)
+- Equipment slots: head, chest, arms, legs, weapon1, weapon2 (6 * d_model from CardEmbedder)
+- Permanents zone: sum-pooled embedding of items, auras, allies, soul, tokens (1 * d_model) + count scalar
+- Total per player: 28 + len(COUNTER_TYPES) + 7*d_model
 
 Global State Features:
 - Turn number: 1-dim normalized
@@ -27,14 +27,19 @@ Global State Features:
 - Step: 12-dim one-hot (BEGIN_GAME, ACTION, COMBAT_*, END_*)
 - Priority player: 1-dim binary
 - Consecutive passes: 1-dim normalized
-- Combat state: 10-dim (attacker, power, keywords, defense) + d_model (attack card) + 52-dim (keywords multi-hot) + d_model (defending cards)
-- Stack size: 1-dim normalized
-- Stack top card: d_model
+- Combat state: 13-dim + 4*d_model (attack card, attack source, defending cards, defending equipment)
+    + len(CARD_KEYWORDS)-dim (keywords multi-hot)
+- Stack state: 5 * (8 + d_model) explicit layers + (11 + 2*d_model) pooled/ordering summary
 - Chain links: 3-dim aggregated (count, avg power, hits)
-- Total global: 80 + 3*d_model + 52 = 132 + 3*d_model
+- Total global: 218 + len(CARD_KEYWORDS) + 11*d_model
 
-Total State Embedding: 2*(56 + 11*d_model) + (228 + 7*d_model) = 340 + 29*d_model
-With d_model=128: 4052 dimensions
+Total State Embedding:
+2*(28 + len(COUNTER_TYPES) + 7*d_model) + (218 + len(CARD_KEYWORDS) + 11*d_model)
+With d_model=128 and current registries: 3628 dimensions
+
+Note: legality checking is intentionally out of scope for embeddings. The engine and
+legal action generator are responsible for enforcing legal play before states/actions
+reach the model.
 """
 
 import torch
@@ -42,23 +47,27 @@ import torch.nn as nn
 from typing import Optional
 
 from engine.state import GameState, Player, Step, CombatState, Zone
-from encoder.card_embedder import CardEmbedder, SlugVocab, card_to_features, CARD_KEYWORDS
+from encoder.card_embedder import CardEmbedder, SlugVocab, card_to_features
+from encoder.feature_schema import (
+    CARD_KEYWORDS,
+    COUNTER_OOV_TYPE,
+    COUNTER_TYPES,
+    KEYWORD_OOV_TOKEN,
+    STEP_VOCABULARY,
+    build_schema_metadata,
+    normalize_counter,
+    validate_schema_metadata,
+)
 from engine.card import Card
 
 
-# Step vocabulary (14 steps per CR 4.0: added start/end phase substeps)
-STEPS = [
-    "begin_game",
-    "start_phase",           # CR 4.2: start of turn events
-    "action",
-    "combat_layer", "combat_attack",
-    "combat_defend", "combat_reaction", "combat_damage",
-    "combat_resolution", "combat_close",
-    "end_phase_beginning",   # CR 4.4.2: beginning of end phase
-    "end_phase_cleanup",     # CR 4.4.3: end-of-turn procedure
-    "end_turn",
-    "end_game"
-]
+_CARD_KEYWORD_IDX = {keyword.lower(): idx for idx, keyword in enumerate(CARD_KEYWORDS)}
+_CARD_KEYWORD_OOV_IDX = _CARD_KEYWORD_IDX[KEYWORD_OOV_TOKEN.lower()]
+
+STEPS = STEP_VOCABULARY
+
+MAX_STACK_LAYERS = 5
+STACK_LAYER_TYPES = ['card', 'activated', 'triggered']
 
 
 class PlayerStateEmbedder(nn.Module):
@@ -66,12 +75,12 @@ class PlayerStateEmbedder(nn.Module):
     
     Features:
     - Scalar resources: health, intellect, resources, action_points (4-dim)
-    - Binary flags: weapon_exhausted, hero_power_exhausted (2-dim)
-    - Zone sizes: hand, deck, graveyard, arsenal, banished, pitch (6-dim)
-    - Equipment cards: head, chest, arms, legs, weapon (5 * d_model)
-    - Permanent cards: items, auras, allies, soul, tokens (5 * d_model aggregated)
-    
-    Total: 12 scalar features + 10*d_model card features
+    - Binary flags: weapon_exhausted, hero_power_exhausted, arsenal_face_up, marked (4-dim)
+    - Zone sizes: hand, deck, graveyard, arsenal, banished, pitch, inventory (7-dim)
+    - Equipment cards: head, chest, arms, legs, weapon1, weapon2 (6 * d_model)
+    - Permanents zone cards: items, auras, allies, soul, tokens (1 * d_model aggregated)
+
+    Total: (28 + len(COUNTER_TYPES)) scalar features + 7*d_model card features
     """
     
     def __init__(self, d_model: int = 128, card_embedder: Optional[CardEmbedder] = None, slug_vocab_size: int = 4563, slug_vocab: Optional[SlugVocab] = None):
@@ -105,14 +114,14 @@ class PlayerStateEmbedder(nn.Module):
         return emb.squeeze(0)  # Remove batch dim
     
     def get_output_dim(self) -> int:
-        """Total output dimension: 56 + 11*d_model (Round 9+: 35 counter types, weapon2 per CR 3.0.2)
+        """Total output dimension: 28 + len(COUNTER_TYPES) + 7*d_model
         Breakdown: health(1) + intellect(1) + resources(1) + action_points(1) + 
                    weapon_exhausted(1) + hero_power_exhausted(1) + arsenal_face_up(1) + marked(1) +
-                   counters(35) + zone_sizes(7) + equipment_cards(6*d_model) + equipment_exhausted(6) + 
-                   permanents(5*d_model) = 56 + 11*d_model
-        With d_model=128: 1464 dimensions
+                   counters(len(COUNTER_TYPES)) + zone_sizes(7) + equipment_cards(6*d_model) + equipment_exhausted(6) + 
+                   equipment_tapped(6) + permanents_zone(d_model) + permanents_count(1)
+        With d_model=128 and current counter registry: 967 dimensions
         """
-        return 56 + 11 * self.d_model
+        return 28 + len(COUNTER_TYPES) + 7 * self.d_model
     
     def forward(self, player: Player, player_counters: Optional[dict] = None) -> torch.Tensor:
         """Convert Player to embedding tensor.
@@ -150,34 +159,13 @@ class PlayerStateEmbedder(nn.Module):
         # 8. Hero marked condition (CR 9.3)
         features.append(torch.tensor([float(player.marked)]))
         
-        # 9. Counter types (35 types, normalized counts) - Round 9+ expansion
-        # Counter keys are (card_slug, zone, counter_type)
-        # Includes: property-modifying (CR 1.15.2a), archetype-specific (Ranger/Pirate/Mentor/etc), and hero counters
-        counter_types = [
-            # Property-modifying counters (CR 1.15.2a)
-            "plus_power", "minus_power", "plus_defense", "minus_defense",
-            # Common non-property counters
-            "steam", "flow", "suspense", "verse", "energy",
-            # Archetype-specific counters
-            "aim", "doom", "balance", "rust", "storm", "stain", "raze", "gold", "lesson", "frost",
-            # Hero counters (Brute, Ice)
-            "vigor", "charge",
-            # NEW: Additional archetype counters for full coverage
-            "blood_debt",  # Runeblade (Viserai)
-            "ancestral", "crouching", "hidden",  # Ninja (Katsu/Fai)
-            "spectral", "illusion",  # Illusionist (Prism)
-            "soul",  # Light heroes (Boltyn/Minerva)
-            "rum", "plunder",  # Pirate (Privateer)
-            "age",  # Cracked Bauble (MST)
-            "seismic",  # Earth (HVY)
-            "rage",  # Brute (OUT)
-            "fury",  # Ranger (Azalea)
-            "inventory",  # Merchant
-        ]
-        counter_counts = []
-        for ctype in counter_types:
-            total = sum(count for (slug, zone, ct), count in player.counters.items() if ct == ctype)
-            counter_counts.append(total / self.norm_counters)
+        # 9. Counter types: shared registry with reserved OOV slots.
+        counter_counts_map = {counter_type: 0.0 for counter_type in COUNTER_TYPES}
+        for (_, _, counter_type), count in player.counters.items():
+            bucket = counter_type if counter_type in counter_counts_map else COUNTER_OOV_TYPE
+            counter_counts_map[bucket] += float(count)
+
+        counter_counts = [normalize_counter(counter_type, counter_counts_map[counter_type]) for counter_type in COUNTER_TYPES]
         features.append(torch.tensor(counter_counts))
         
         # 10. Zone sizes (7 zones, added inventory)
@@ -202,7 +190,7 @@ class PlayerStateEmbedder(nn.Module):
                 equip_emb = torch.zeros(self.d_model)
             features.append(equip_emb)
         
-        # 11b. Equipment exhausted flags (5 slots for "Once per Turn" tracking)
+        # 11b. Equipment exhausted flags (6 slots for "Once per Turn" tracking)
         equipment_exhausted = []
         for equip_zone in equipment_zones:
             if equip_zone.cards:
@@ -210,16 +198,34 @@ class PlayerStateEmbedder(nn.Module):
             else:
                 equipment_exhausted.append(0.0)
         features.append(torch.tensor(equipment_exhausted))
-        
-        # 12. Permanent cards (5 types, aggregated via sum pool)
-        permanent_zones = [player.items, player.auras, player.allies, player.soul, player.tokens]
-        for perm_zone in permanent_zones:
-            if perm_zone.cards:
-                perm_embs = [self.embed_card(card, player_counters) for card in perm_zone.cards]
-                perm_emb = sum(perm_embs) / len(perm_embs)  # Average pool
+
+        # 11c. Equipment tapped flags (6 slots, separate from exhausted)
+        equipment_tapped = []
+        for equip_zone in equipment_zones:
+            if equip_zone.cards:
+                equipment_tapped.append(float(equip_zone.cards[0].tapped))
             else:
-                perm_emb = torch.zeros(self.d_model)
-            features.append(perm_emb)
+                equipment_tapped.append(0.0)
+        features.append(torch.tensor(equipment_tapped))
+        
+        # 12. Permanents zone embedding (sum pool) + explicit count.
+        # Sum pooling preserves board scale; count keeps cardinality explicit.
+        permanent_cards = (
+            list(player.items.cards)
+            + list(player.auras.cards)
+            + list(player.allies.cards)
+            + list(player.soul.cards)
+            + list(player.tokens.cards)
+        )
+        if permanent_cards:
+            perm_embs = [self.embed_card(card, player_counters) for card in permanent_cards]
+            permanents_emb = sum(perm_embs)
+            permanents_count = min(float(len(permanent_cards)), 20.0) / 20.0
+        else:
+            permanents_emb = torch.zeros(self.d_model)
+            permanents_count = 0.0
+        features.append(permanents_emb)
+        features.append(torch.tensor([permanents_count]))
         
         # Concatenate all features
         player_embedding = torch.cat(features)
@@ -236,11 +242,11 @@ class GlobalStateEmbedder(nn.Module):
     - Step: 11-dim one-hot
     - Priority player: 1-dim binary
     - Consecutive passes: 1-dim normalized
-    - Combat state: 10-dim + d_model
-    - Stack state: 1-dim + d_model
+    - Combat state: 13-dim + len(CARD_KEYWORDS) + 4*d_model
+    - Stack state: 5 * (8 + d_model) + (11 + 2*d_model) summary
     - Chain links: 3-dim aggregated
     
-    Total: 228 + 7*d_model (Round 10: includes stack-layer details,
+    Total: 218 + len(CARD_KEYWORDS) + 11*d_model (Round 10: includes stack-layer details,
     event history, continuous effects, replacement effects, trigger metadata)
     """
     
@@ -283,17 +289,18 @@ class GlobalStateEmbedder(nn.Module):
         - Step embed: 64
         - Priority: 1
         - Consecutive passes: 1
-        - Combat: 12 + d_model + 52 + d_model = 64 + 2*d_model
+        - Combat: 13 + len(CARD_KEYWORDS) + 4*d_model
         - Stack layers: 5 * (8 + d_model) = 40 + 5*d_model
+        - Stack summary: 11 + 2*d_model
         - Chain links: 3
         - Event history: 15
-        - Continuous effects summary: 25
-        - Replacement effects summary: 11
+        - Continuous effects summary: 30
+        - Replacement effects summary: 36
         - Trigger metadata summary: 2
-        Total: 228 + 7*d_model
-        With d_model=128: 1124 dimensions
+        Total: 218 + len(CARD_KEYWORDS) + 11*d_model
+        With d_model=128 and current keyword registry: 1694 dimensions
         """
-        return 228 + 7 * self.d_model
+        return 218 + len(CARD_KEYWORDS) + 11 * self.d_model
 
     @staticmethod
     def _enum_to_str(value) -> str:
@@ -307,7 +314,7 @@ class GlobalStateEmbedder(nn.Module):
         return text
 
     def _encode_continuous_effects(self, state: GameState) -> torch.Tensor:
-        """Encode active continuous effects from EffectManager into 25 dims."""
+        """Encode active continuous effects from EffectManager into 30 dims."""
         fx_manager = getattr(state, 'effect_manager', None)
         effects = list(getattr(fx_manager, 'continuous_effects', []) or [])
 
@@ -330,13 +337,16 @@ class GlobalStateEmbedder(nn.Module):
             'dependent': 6,
         }
 
+        def _safe_int(value, default=0) -> int:
+            try:
+                return int(value)
+            except (TypeError, ValueError):
+                return default
+
         for effect in effects:
             # Stage histogram (1..8)
             stage_raw = getattr(effect, 'stage', 0)
-            try:
-                stage = int(stage_raw)
-            except (TypeError, ValueError):
-                stage = 0
+            stage = _safe_int(stage_raw, 0)
             if 1 <= stage <= 8:
                 stage_hist[stage - 1] += 1.0
 
@@ -383,6 +393,34 @@ class GlobalStateEmbedder(nn.Module):
 
             consumed_count += float(bool(getattr(effect, 'consumed', False)))
 
+        if effects:
+            ordered_effects = sorted(
+                effects,
+                key=lambda e: (
+                    _safe_int(getattr(e, 'stage', 0), 0),
+                    _safe_int(getattr(e, 'substage', 0), 0),
+                    _safe_int(getattr(e, 'timestamp', 0), 0),
+                ),
+            )
+            first_effect = ordered_effects[0]
+            last_effect = ordered_effects[-1]
+            first_stage = _safe_int(getattr(first_effect, 'stage', 0), 0)
+            first_substage = _safe_int(getattr(first_effect, 'substage', 0), 0)
+            last_stage = _safe_int(getattr(last_effect, 'stage', 0), 0)
+            last_substage = _safe_int(getattr(last_effect, 'substage', 0), 0)
+            first_ts = _safe_int(getattr(first_effect, 'timestamp', 0), 0)
+            last_ts = _safe_int(getattr(last_effect, 'timestamp', 0), 0)
+
+            ordering_features = torch.tensor([
+                first_stage / 8.0,
+                first_substage / 7.0,
+                last_stage / 8.0,
+                last_substage / 7.0,
+                max(0.0, float(last_ts - first_ts)) / norm_count,
+            ])
+        else:
+            ordering_features = torch.zeros(5)
+
         effect_count = len(effects)
         return torch.cat([
             torch.tensor([
@@ -394,10 +432,11 @@ class GlobalStateEmbedder(nn.Module):
             source_hist / norm_count,
             duration_hist / norm_count,
             owner_hist / norm_count,
+            ordering_features,
         ])
 
     def _encode_replacement_effects(self, state: GameState) -> torch.Tensor:
-        """Encode active replacement effects from EffectManager into 11 dims."""
+        """Encode active replacement effects from EffectManager into 36 dims."""
         fx_manager = getattr(state, 'effect_manager', None)
         effects = list(getattr(fx_manager, 'replacement_effects', []) or [])
 
@@ -418,12 +457,14 @@ class GlobalStateEmbedder(nn.Module):
         shielding_count = 0.0
         consumed_count = 0.0
         total_prevention = 0.0
+        ordered_type_indices: list[int] = []
 
         for effect in effects:
             replacement_type = self._enum_to_str(getattr(effect, 'replacement_type', None))
             idx = type_to_idx.get(replacement_type)
             if idx is not None:
                 type_hist[idx] += 1.0
+                ordered_type_indices.append(idx)
 
             owner_raw = getattr(effect, 'owner_id', 0)
             try:
@@ -442,6 +483,15 @@ class GlobalStateEmbedder(nn.Module):
             except (TypeError, ValueError):
                 pass
 
+        transition_hist = torch.zeros((5, 5))
+        if len(ordered_type_indices) > 1:
+            for i in range(1, len(ordered_type_indices)):
+                src_idx = ordered_type_indices[i - 1]
+                dst_idx = ordered_type_indices[i]
+                transition_hist[src_idx, dst_idx] += 1.0
+            transition_hist = transition_hist / float(len(ordered_type_indices) - 1)
+        transition_features = transition_hist.flatten()
+
         effect_count = len(effects)
         return torch.cat([
             torch.tensor([
@@ -454,6 +504,7 @@ class GlobalStateEmbedder(nn.Module):
                 total_prevention / norm_prevention,
             ]),
             owner_hist / norm_count,
+            transition_features,
         ])
 
     def _encode_trigger_metadata(self, state: GameState) -> torch.Tensor:
@@ -511,7 +562,7 @@ class GlobalStateEmbedder(nn.Module):
         # 5. Consecutive passes (normalized)
         features.append(torch.tensor([state.consecutive_passes / self.norm_passes]))
         
-        # 6. Combat state (10-dim + 51-dim keywords + 2*d_model if combat active)
+        # 6. Combat state (13-dim + keywords + 4*d_model if combat active)
         if state.combat is not None:
             # Attack target player ID (CR 1.4.5, 7.2.4b)
             attack_target = getattr(state.combat, 'attack_target', None)
@@ -538,16 +589,23 @@ class GlobalStateEmbedder(nn.Module):
             # Attack card embedding
             attack_emb = self.embed_card(state.combat.attack_card if state.combat.attack_card else None, player_counters)
             features.append(attack_emb)
+
+            # Attack source embedding distinguishes proxy/layer source semantics from attack card.
+            attack_source_card = getattr(state.combat, 'attack_source', None)
+            if attack_source_card is None and state.combat.from_weapon:
+                attack_source_card = state.combat.attack_card
+            attack_source_emb = self.embed_card(attack_source_card, player_counters)
+            features.append(attack_source_emb)
             
-            # Combat keywords multi-hot (51-dim)
+            # Combat keywords multi-hot using shared keyword registry.
             keywords_vec = torch.zeros(len(CARD_KEYWORDS), dtype=torch.float32)
             if state.combat.keywords:
                 for kw in state.combat.keywords:
-                    try:
-                        kw_idx = CARD_KEYWORDS.index(kw)
+                    kw_idx = _CARD_KEYWORD_IDX.get(kw.lower(), _CARD_KEYWORD_OOV_IDX)
+                    if kw_idx == _CARD_KEYWORD_OOV_IDX:
+                        keywords_vec[kw_idx] += 1.0
+                    else:
                         keywords_vec[kw_idx] = 1.0
-                    except ValueError:
-                        pass  # Keyword not in vocabulary
             features.append(keywords_vec)
             
             # Defending cards embedding (d_model-dim, sum pool)
@@ -557,20 +615,38 @@ class GlobalStateEmbedder(nn.Module):
             else:
                 defending_emb = torch.zeros(self.d_model)
             features.append(defending_emb)
+
+            # Defending equipment identity embeddings preserve equipment-specific interactions.
+            defender_player = attack_target if hasattr(attack_target, 'zone_by_name') else state.players.get(3 - state.combat.attacker_id)
+            defending_equipment_cards = []
+            if defender_player is not None:
+                for zone_name in state.combat.defending_equipment_zones:
+                    equip_zone = defender_player.zone_by_name(zone_name)
+                    if equip_zone and equip_zone.cards:
+                        defending_equipment_cards.append(equip_zone.cards[0])
+            if defending_equipment_cards:
+                defending_equip_emb = sum(self.embed_card(c, player_counters) for c in defending_equipment_cards)
+            else:
+                defending_equip_emb = torch.zeros(self.d_model)
+            features.append(defending_equip_emb)
+
+            # Defending card count is explicit for pooling disambiguation.
+            defending_count = min(float(len(state.combat.defending_cards)), 30.0) / 30.0
+            features.append(torch.tensor([defending_count]))
         else:
             features.append(torch.zeros(12))  # Updated from 10 to 12
             features.append(torch.zeros(self.d_model))
+            features.append(torch.zeros(self.d_model))
             features.append(torch.zeros(len(CARD_KEYWORDS)))
             features.append(torch.zeros(self.d_model))
+            features.append(torch.zeros(self.d_model))
+            features.append(torch.zeros(1))
         
         # 7. Stack layers (5 layers max, detailed per-layer features)
         # Per-layer: [position, type_onehot(3), from_arsenal, declared_x, 
         #             num_modes, num_targets, d_model(card)]
         # = 1 + 3 + 1 + 1 + 1 + 1 + d_model per layer
         # Total: 5 * (8 + d_model) dims
-        MAX_STACK_LAYERS = 5
-        LAYER_TYPES = ['card', 'activated', 'triggered']
-        
         for i in range(MAX_STACK_LAYERS):
             if i < len(state.stack_entries):
                 entry = state.stack_entries[-(i+1)]  # Top of stack is end of list
@@ -581,7 +657,7 @@ class GlobalStateEmbedder(nn.Module):
                 # Layer type (3-dim one-hot)
                 layer_type_onehot = torch.zeros(3)
                 try:
-                    type_idx = LAYER_TYPES.index(entry.layer_type)
+                    type_idx = STACK_LAYER_TYPES.index(entry.layer_type)
                     layer_type_onehot[type_idx] = 1.0
                 except (ValueError, AttributeError):
                     layer_type_onehot[0] = 1.0  # Default to 'card'
@@ -613,7 +689,59 @@ class GlobalStateEmbedder(nn.Module):
                 layer_features = torch.zeros(8 + self.d_model)
             
             features.append(layer_features)
-        
+
+        # Stack summary preserves information from layers beyond MAX_STACK_LAYERS.
+        stack_size = len(state.stack_entries)
+        stack_overflow = max(0, stack_size - MAX_STACK_LAYERS)
+        if state.stack_entries:
+            stack_embs = [self.embed_card(entry.card, player_counters) for entry in state.stack_entries]
+            stack_pooled_emb = sum(stack_embs)
+        else:
+            stack_pooled_emb = torch.zeros(self.d_model)
+
+        overflow_entries = state.stack_entries[:-MAX_STACK_LAYERS] if stack_overflow > 0 else []
+        overflow_order_features = torch.zeros(9)
+        overflow_sequence_emb = torch.zeros(self.d_model)
+        if overflow_entries:
+            overflow_oldest = overflow_entries[0]
+            overflow_newest = overflow_entries[-1]
+
+            oldest_pos = float(getattr(overflow_oldest, 'layer_position', 0)) / self.norm_stack_size
+            newest_pos = float(getattr(overflow_newest, 'layer_position', 0)) / self.norm_stack_size
+            pos_span = max(0.0, newest_pos - oldest_pos)
+
+            first_type_onehot = torch.zeros(3)
+            last_type_onehot = torch.zeros(3)
+            first_type = str(getattr(overflow_oldest, 'layer_type', '')).lower()
+            last_type = str(getattr(overflow_newest, 'layer_type', '')).lower()
+            if first_type in STACK_LAYER_TYPES:
+                first_type_onehot[STACK_LAYER_TYPES.index(first_type)] = 1.0
+            if last_type in STACK_LAYER_TYPES:
+                last_type_onehot[STACK_LAYER_TYPES.index(last_type)] = 1.0
+
+            overflow_order_features = torch.cat([
+                torch.tensor([oldest_pos, newest_pos, pos_span]),
+                first_type_onehot,
+                last_type_onehot,
+            ])
+
+            # Sequence-sensitive identity signal across overflow layers.
+            num_overflow = float(len(overflow_entries))
+            for idx, overflow_entry in enumerate(overflow_entries):
+                weight = float(idx + 1) / num_overflow
+                overflow_sequence_emb += weight * self.embed_card(getattr(overflow_entry, 'card', None), player_counters)
+
+        stack_summary = torch.cat([
+            torch.tensor([
+                stack_size / self.norm_stack_size,
+                stack_overflow / self.norm_stack_size,
+            ]),
+            stack_pooled_emb,
+            overflow_order_features,
+            overflow_sequence_emb,
+        ])
+        features.append(stack_summary)
+
         # 8. Chain links aggregated (3-dim: count, avg power, hit rate)
         if state.chain_links:
             num_links = len(state.chain_links)
@@ -642,10 +770,10 @@ class GlobalStateEmbedder(nn.Module):
         ])
         features.append(event_features)
 
-        # 10. Continuous effects summary (25-dim)
+        # 10. Continuous effects summary (30-dim)
         features.append(self._encode_continuous_effects(state))
 
-        # 11. Replacement effects summary (11-dim)
+        # 11. Replacement effects summary (36-dim)
         features.append(self._encode_replacement_effects(state))
 
         # 12. Trigger metadata summary (2-dim)
@@ -661,12 +789,12 @@ class GameStateEmbedder(nn.Module):
     """Full game state embedder combining player and global state.
     
     Architecture (Round 10 + Layer System + Counter Expansion + Event/Effect History):
-    - Active player state: 56 + 11*d_model
-    - Inactive player state: 56 + 11*d_model
-    - Global state: 228 + 7*d_model (includes stack layers + event history + effect metadata)
-    
-    Total: 340 + 29*d_model
-    With d_model=128: 4052 dimensions
+    - Active player state: 28 + len(COUNTER_TYPES) + 7*d_model
+    - Inactive player state: 28 + len(COUNTER_TYPES) + 7*d_model
+    - Global state: 218 + len(CARD_KEYWORDS) + 11*d_model
+
+    Total: 274 + 2*len(COUNTER_TYPES) + len(CARD_KEYWORDS) + 25*d_model
+    With d_model=128 and current registries: 3628 dimensions
     
     The embedder provides a rich representation of the full game state
     suitable for deep RL value networks and policy networks.
@@ -688,9 +816,30 @@ class GameStateEmbedder(nn.Module):
         self.layer_norm = nn.LayerNorm(self.get_output_dim())
     
     def get_output_dim(self) -> int:
-        """Total output dimension: 2*(56 + 11*d_model) + (228 + 7*d_model) = 340 + 29*d_model 
-        With d_model=128: 4052 dimensions"""
-        return 340 + 29 * self.d_model
+        """Total output dimension with shared schema registries."""
+        return 274 + (2 * len(COUNTER_TYPES)) + len(CARD_KEYWORDS) + (25 * self.d_model)
+
+    def get_schema_metadata(self) -> dict[str, object]:
+        """Return schema metadata bundle for checkpoint compatibility checks."""
+        return build_schema_metadata(
+            embedder="gamestate_embedder",
+            d_model=self.d_model,
+            extra={
+                "player_output_dim": self.player_embedder.get_output_dim(),
+                "global_output_dim": self.global_embedder.get_output_dim(),
+                "output_dim": self.get_output_dim(),
+            },
+        )
+
+    def validate_schema(
+        self,
+        schema_metadata: Optional[dict[str, object]],
+        strict: bool = True,
+    ) -> tuple[bool, list[str]]:
+        """Validate an incoming schema payload against this embedder's schema."""
+        if schema_metadata is None:
+            return False, ["schema metadata is missing"]
+        return validate_schema_metadata(self.get_schema_metadata(), schema_metadata, strict=strict)
     
     def forward(self, state: GameState, perspective_player: int = 1) -> torch.Tensor:
         """Convert GameState to embedding tensor from a player's perspective.
@@ -713,22 +862,22 @@ class GameStateEmbedder(nn.Module):
             my_player = state.inactive()
             opp_player = state.active()
         
-        # Combine player counter dicts for card embeddings
-        player_counters = {
-            **my_player.counters,
-            **opp_player.counters,
-        }
-        
         # 1. My player state
-        my_state = self.player_embedder(my_player, player_counters)
+        my_state = self.player_embedder(my_player, my_player.counters)
         features.append(my_state)
         
         # 2. Opponent player state
-        opp_state = self.player_embedder(opp_player, player_counters)
+        opp_state = self.player_embedder(opp_player, opp_player.counters)
         features.append(opp_state)
+
+        # 3. Global counters use player-id-prefixed keys to avoid cross-player collisions.
+        global_player_counters = {}
+        for pid, player in state.players.items():
+            for (slug, zone, counter_type), count in player.counters.items():
+                global_player_counters[(pid, slug, zone, counter_type)] = count
         
-        # 3. Global state
-        global_state = self.global_embedder(state, player_counters)
+        # 4. Global state
+        global_state = self.global_embedder(state, global_player_counters)
         features.append(global_state)
         
         # Concatenate all features
@@ -771,7 +920,12 @@ def gamestate_to_features(state: GameState) -> dict:
         "p2_hand_size": len(p2.hand),
         "p1_resources": p1.resources,
         "p2_resources": p2.resources,
-        "combat_active": state.combat is not None,
+        # True if a combat chain exists OR if we are in any combat sub-step
+        # (combat_layer fires before state.combat is created — CR 7.1)
+        "combat_active": (
+            state.combat is not None
+            or (state.step is not None and state.step.value.startswith("combat_"))
+        ),
         "stack_size": len(state.stack),
         "chain_length": len(state.chain_links),
     }

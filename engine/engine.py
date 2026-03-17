@@ -1,4 +1,5 @@
 from __future__ import annotations
+import inspect
 import re, json
 from os import environ
 from typing import Callable, Optional
@@ -19,7 +20,8 @@ def new_game(
         card_db: CardDB,
         p1_seed: Optional[int] = None,
         p2_seed: Optional[int] = None,
-        debug_file: Optional[str] = None
+    debug_file: Optional[str] = None,
+    max_turns: int = 200,
 ) -> GameState:
     """Create a new game state with the given deck paths and card database."""
     agents = {1: p1_agent, 2: p2_agent}
@@ -33,6 +35,9 @@ def new_game(
 
     if sum([x is None for x in (p1_deck_path, p2_deck_path)]) == 2:
         raise ValueError("At least one deck path must be provided.")
+
+    if max_turns <= 0:
+        raise ValueError("max_turns must be > 0")
 
     if sum([x is None for x in (p1_deck_path, p2_deck_path)]) == 1:
         p1_deck_path = p2_deck_path if p1_deck_path is None else p1_deck_path
@@ -53,7 +58,11 @@ def new_game(
     p2 = create_player(p2_deck, player_id=2, card_db=card_db, seed=p2_seed)
 
     ## Player is selected to decide who goes first
-    first_player = 1 if random() < 0.5 else 2
+    # Use a seeded RNG for reproducibility when seeds are provided (P3-6)
+    import numpy.random as _npr
+    _coin_seed = (p1_seed or 0) ^ (p2_seed or 0) ^ 0xFAB
+    _coin_rng = _npr.RandomState(_coin_seed)
+    first_player = 1 if _coin_rng.random() < 0.5 else 2
 
     state = GameState(
         players={1: p1, 2:p2},
@@ -62,6 +71,7 @@ def new_game(
         step=Step.BEGIN_GAME,
         turn_number=0,
         done=False,
+        max_turns=max_turns,
         card_db=card_db,
         event_manager=fx_mngr,
         effect_manager=effect_mngr,
@@ -113,12 +123,40 @@ def new_game(
     return state
 
 
+def _end_game_on_turn_cap(state: GameState) -> None:
+    """Terminate a game that has reached its configured turn cap.
+
+    Winner is determined by life total; ties resolve to the active player to keep
+    the outcome deterministic for replay/training pipelines.
+    """
+    p1_life = state.players[1].health
+    p2_life = state.players[2].health
+
+    if p1_life > p2_life:
+        winner = 1
+    elif p2_life > p1_life:
+        winner = 2
+    else:
+        winner = state.active_player
+
+    state.done = True
+    state.winner = winner
+    state.ended_on_turn_cap = True
+    state.step = Step.END_GAME
+    state._next_phase = "end_game"
+
+
 def _game_loop(state: GameState) -> None:
     """Iterative main game loop — avoids deep recursion from turn/combat cycling."""
     state._next_phase = "start_of_turn"
 
     while not state.done:
         phase = state._next_phase
+        # Prevent pathological long games from generating runaway data volume.
+        if phase == "start_of_turn" and state.turn_number >= state.max_turns:
+            _end_game_on_turn_cap(state)
+            break
+
         if phase == "start_of_turn":
             _start_of_turn_phase(state)
         elif phase == "action_phase":
@@ -286,12 +324,10 @@ def _combat_phase_iter(state: GameState) -> None:
         return
 
     # --- 7.6 Resolution Step ---
+    # _resolution_step now owns entering Close Step at the root chain-link level.
     _resolution_step(state)
     if state.done:
         return
-
-    # --- 7.7 Close Step ---
-    _close_step(state)
 
 def _attack_step(state: GameState, attack_card: Card) -> None:
     """Attack Step (7.2)."""
@@ -369,7 +405,7 @@ def _damage_step(state: GameState) -> None:
     state.consecutive_passes = 0
     priority_loop(state)
 
-def _resolution_step(state: GameState) -> None:
+def _resolution_step(state: GameState, _is_root: bool = True) -> None:
     """Resolution Step (7.6)."""
     state.step = Step.COMBAT_RESOLUTION
 
@@ -414,7 +450,13 @@ def _resolution_step(state: GameState) -> None:
         _damage_step(state)
         if state.done:
             return
-        _resolution_step(state)  # Recursive for further chain links
+        _resolution_step(state, _is_root=False)  # Recursive for further chain links
+        if state.done:
+            return
+
+    # 7.7 Close Step: execute exactly once after all chain links in this combat chain are done.
+    if _is_root and not state.done:
+        _close_step(state)
 
 def _close_step(state: GameState) -> None:
     """Close Step (7.7) — no priority (7.7.1)."""
@@ -444,19 +486,18 @@ def _close_step(state: GameState) -> None:
 
 def _end_phase_iter(state: GameState) -> None:
     """End Phase (4.4) — end of turn procedure."""
-    state.step = Step.END_TURN
+    state.step = Step.END_PHASE_BEGINNING   # CR 4.4.2
     player = state.active()
 
-    # 4.4.1: beginning of end phase — CR 4.4.1 grants each player priority in succession
+    # 4.4.1/4.4.2: no real priority is granted during End Phase.
+    # Triggered layers resolve as if all players pass in succession until stack is empty.
     state.event_manager.emit('start_of_end_phase', state)
-    handle_stack(state)
-    state.priority_player = state.active_player
-    state.consecutive_passes = 0
-    priority_loop(state)
+    _resolve_all_triggers(state)
     if state.done:
         return
 
-    # 4.4.3: end-of-turn procedure (triggers resolve after each step without priority)
+    # 4.4.3: end-of-turn cleanup (no priority — CR 4.4.3)
+    state.step = Step.END_PHASE_CLEANUP
 
     # 4.4.3a: ally life totals reset (TODO when allies are implemented)
 
@@ -675,6 +716,37 @@ def resolve_stack(game_state: GameState) -> None:
 
     entry = game_state.stack_entries.pop()  # LIFO: resolve the top (last-added) layer first (CR 3.15.5)
 
+    # CR 5.3.4d: Meld card layers resolve twice — first the right-side (bottom/Shock), then the
+    # left-side (top). A priority window exists between the two resolutions.
+    if (entry.layer_type == 'card' and entry.card
+            and getattr(entry.card, 'meld_side', None) == 'both'):
+        if entry.resolution_count == 0:
+            # First resolution: right-side (Shock) fires, layer stays on stack
+            if entry.meld_effect_bottom:
+                entry.meld_effect_bottom(entry.card, game_state)
+            entry.resolution_count = 1
+            game_state.stack_entries.append(entry)  # re-push for second resolution
+            game_state.priority_player = game_state.active_player
+            game_state.consecutive_passes = 0
+            game_state.last_acted_player = None
+            return
+        else:
+            # Second resolution: left-side (Comet Storm/Consign/Null) fires, layer leaves stack
+            if entry.meld_effect_top:
+                top_params = len(inspect.signature(entry.meld_effect_top).parameters)
+                if top_params >= 3:
+                    entry.meld_effect_top(entry.card, game_state, entry)
+                else:
+                    entry.meld_effect_top(entry.card, game_state)
+            game_state.process_cease_to_exist(entry.card)
+            card = entry.card
+            if card and not entry.is_attack and card.has_go_again:
+                game_state.players[entry.player_id].action_points += 1
+            game_state.priority_player = game_state.active_player
+            game_state.consecutive_passes = 0
+            game_state.last_acted_player = None
+            return
+
     # CR 5.3.4c: card-type layers cease to exist on resolution; capture LKI while still at stack zone.
     # activated/triggered layers leave their source card in its zone — do NOT freeze its LKI here.
     if entry.layer_type == 'card' and entry.card:
@@ -823,6 +895,14 @@ def priority_loop(state: GameState) -> None:
 def get_player_decision(state: GameState, player_id: int) -> Action:
     """Get action decision from player agent."""
     legal = legal_actions(state, state.card_db)
+
+    # Forced pass optimization: do not route pass-only decisions through agents.
+    # This avoids unnecessary embedder taps/logging for CR-mandated no-op priority passes.
+    if len(legal) == 1 and legal[0].type in (ActionType.PASS, ActionType.REACTION_PASS):
+        forced = legal[0]
+        forced.player_id = player_id
+        return forced
+
     choice = state.player_agents[player_id](state, legal, context='What do you do?')
     if isinstance(choice, Action):
         choice.player_id = player_id
@@ -874,7 +954,7 @@ def _stack_declarations_from_action(action: Action) -> tuple[list[str], list[str
     declared_targets: list[str] = []
     if action.targets:
         declared_targets.extend([str(t) for t in action.targets if t is not None])
-    if action.target is not None:
+    if action.target is not None and not action.targets:
         if hasattr(action.target, 'slug'):
             declared_targets.append(action.target.slug)
         else:
@@ -891,26 +971,45 @@ def _apply_play_card(state: GameState, action: Action) -> None:
 
     # Pitch cards for resources
     if action.pitch_cards:
+        pitched_slugs = []
         for c in action.pitch_cards:
             player.hand.remove(c)
             player.pitch.add(c)
+            pitched_slugs.append(c.slug)
             player.resources += c.pitch or 0
             state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
+        state.record_pitch(action.player_id, pitched_slugs)
 
-    player.resources -= card.cost or 0
+    # Meld-side-aware resource deduction.
+    # Pitch sequences were already generated for the correct effective cost per side.
+    _meld_side = getattr(action, 'meld_side', None)
+    if _meld_side == 'bottom':
+        pass  # bottom side (Shock/Life) is always free
+    elif _meld_side == 'both':
+        player.resources -= card.meld_cost or 0
+    else:
+        player.resources -= card.cost or 0  # top, None (instant-speed), or regular card
     player.hand.remove(card)
 
-    if "Instant" not in (card.types or []):
+    # Meld-side-aware action point deduction.
+    # 'top' / 'both' are explicit action-speed plays → spend 1 AP.
+    # 'bottom' is instant-speed → no AP.
+    # None = regular card or meld card played at instant-speed → use Instant-type check.
+    if _meld_side in ('top', 'both'):
+        player.action_points -= 1
+    elif "Instant" not in (card.types or []):
         player.action_points -= 1
 
-    # CR 3.0.1 / CR 5.3.4c: card enters stack zone; zone='stack' enables correct LKI on layer cease
+    # Tag the card so on_play triggers know which side is resolving
+    card.meld_side = _meld_side
+
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone
     card.prev_zone = card.zone
     card.zone = 'stack'
 
-    # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
-    # CR 3.15.4: layer position is N+1 where N is existing layers
+    # CR 5.1.2 / CR 3.15.4: card enters stack, on_play triggers sit above it (LIFO)
     entry = StackEntry(
-        player_id=action.player_id, 
+        player_id=action.player_id,
         card=card,
         layer_type='card',
         layer_position=len(state.stack_entries) + 1,
@@ -918,8 +1017,14 @@ def _apply_play_card(state: GameState, action: Action) -> None:
         declared_targets=declared_targets,
         declared_x=declared_x,
     )
+    if _meld_side == 'both':
+        from engine.card_effects.triggers import MELD_EFFECT_REGISTRY
+        _slug_base = re.sub(r'_(red|yellow|blue)$', '', card.slug)
+        _meld_effs = MELD_EFFECT_REGISTRY.get(_slug_base, {})
+        entry.meld_effect_bottom = _meld_effs.get('bottom')
+        entry.meld_effect_top = _meld_effs.get('top')
     state.stack_entries.append(entry)
-    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card}), state)
+    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'meld_side': _meld_side}), state)
 
 def _apply_play_arsenal(state: GameState, action: Action) -> None:
     """Play a card from arsenal: pitch from hand for cost, place on stack (CR 3.3.4, CR 5.1.1a)."""
@@ -929,11 +1034,14 @@ def _apply_play_arsenal(state: GameState, action: Action) -> None:
 
     # Pitch cards for resources (pitched from hand, not from arsenal)
     if action.pitch_cards:
+        pitched_slugs = []
         for c in action.pitch_cards:
             player.hand.remove(c)
             player.pitch.add(c)
+            pitched_slugs.append(c.slug)
             player.resources += c.pitch or 0
             state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
+        state.record_pitch(action.player_id, pitched_slugs)
 
     player.resources -= card.cost or 0
     player.arsenal.remove(card)
@@ -967,11 +1075,14 @@ def _apply_play_banish(state: GameState, action: Action) -> None:
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
     if action.pitch_cards:
+        pitched_slugs = []
         for c in action.pitch_cards:
             player.hand.remove(c)
             player.pitch.add(c)
+            pitched_slugs.append(c.slug)
             player.resources += c.pitch or 0
             state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
+        state.record_pitch(action.player_id, pitched_slugs)
 
     player.resources -= card.cost or 0
     player.banished.remove(card)
@@ -1030,11 +1141,14 @@ def _apply_activate(state: GameState, action: Action) -> None:
 
     # Pitch cards for resources
     if action.pitch_cards:
+        pitched_slugs = []
         for c in action.pitch_cards:
             player.hand.remove(c)
             player.pitch.add(c)
+            pitched_slugs.append(c.slug)
             player.resources += c.pitch or 0
             state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
+        state.record_pitch(action.player_id, pitched_slugs)
 
     player.resources -= card.cost or 0
 
@@ -1065,11 +1179,14 @@ def _apply_activate_hero(state: GameState, action: Action) -> None:
 
     # Pitch cards for resources
     if action.pitch_cards:
+        pitched_slugs = []
         for c in action.pitch_cards:
             player.hand.remove(c)
             player.pitch.add(c)
+            pitched_slugs.append(c.slug)
             player.resources += c.pitch or 0
             state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
+        state.record_pitch(action.player_id, pitched_slugs)
 
     hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
     cost = hero_cfg.get("cost", 0)
@@ -1097,14 +1214,28 @@ def _apply_react(state: GameState, action: Action) -> None:
 
     # Pitch cards for resources
     if action.pitch_cards:
+        pitched_slugs = []
         for c in action.pitch_cards:
             player.hand.remove(c)
             player.pitch.add(c)
+            pitched_slugs.append(c.slug)
             player.resources += c.pitch or 0
             state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
+        state.record_pitch(action.player_id, pitched_slugs)
 
     player.resources -= card.cost or 0
-    player.hand.remove(card)
+
+    # Reactions can be played from hand or arsenal; remove from the declared source zone.
+    if action.from_arsenal:
+        removed = player.arsenal.remove(card)
+        if not removed:
+            # Fallback safety to avoid ghost copies if metadata gets out of sync.
+            player.hand.remove(card)
+    else:
+        removed = player.hand.remove(card)
+        if not removed:
+            # Fallback safety for legacy actions incorrectly marked as hand plays.
+            player.arsenal.remove(card)
 
     # CR 3.0.1 / CR 5.3.4c: card enters stack zone
     card.prev_zone = card.zone

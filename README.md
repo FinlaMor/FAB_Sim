@@ -45,6 +45,7 @@ FAB_Sim/
 │
 ├── rl_agents/            # Game-playing agents
 │   └── random_agent.py   # Baseline: uniform random over legal actions
+│   └── transformer_policy.py # State+options transformer policy/value model
 │
 ├── offline_agents/       # Development assistant pipeline
 │   ├── rag/              # ChromaDB vector store (rules + card text)
@@ -115,10 +116,20 @@ cards.validate("big_bully", implementation_code)
 cards.sniff_test_all()  # breadth-first pass over all implemented cards
 ```
 
+PowerShell entrypoint:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File offline_agents/agent_cli.ps1 rules What does Arcane Barrier N do per CR 8.3.8?
+powershell -ExecutionPolicy Bypass -File offline_agents/agent_cli.ps1 cards --slug big_bully When does Big Bully's effect trigger?
+powershell -ExecutionPolicy Bypass -File offline_agents/agent_cli.ps1 smoke-test
+```
+
+The smoke test verifies that both agents are using the local merged fine-tuned Transformers backend rather than Ollama.
+
 ### Fine-Tuning (optional)
 
 Adapts Qwen2.5 7B to FAB-specific vocabulary using LoRA via torchtune. Requires an NVIDIA CUDA GPU with ≥14GB VRAM.
-On Windows, run this in WSL2 only if CUDA is visible to PyTorch; otherwise use a cloud NVIDIA Linux instance.
+On Windows, run training in WSL2 only if CUDA is visible to PyTorch; otherwise use a cloud NVIDIA Linux instance. Exporting the downloaded adapters back into Ollama can run locally on Windows or Linux.
 
 ```bash
 tune run lora_finetune_single_device --config offline_agents/torchtune_configs/fab_rules_lora.yaml
@@ -156,6 +167,36 @@ See [`offline_agents/LOCAL_AGENTS.md`](offline_agents/LOCAL_AGENTS.md) for full 
 from tests.test_random_game import run_random_game
 
 run_random_game()  # two random agents play a full game, result logged to random_game_output.txt
+```
+
+### Transformer Policy (Initial Build)
+
+The first transformer policy scaffold now exists at `rl_agents/transformer_policy.py`.
+It encodes the ask_agent inputs directly:
+
+- Priority player's hand cards
+- Public cards for both players
+- Unordered deck composition tokens
+- Legal action options
+
+Quick use:
+
+```python
+from encoder.card_embedder import SlugVocab
+from engine.card import CardDB
+from rl_agents.transformer_policy import AskAgentTransformer, TransformerPolicyAgent
+
+card_db = CardDB(SLUG_INDEX_PATH)
+slug_vocab = SlugVocab.from_card_db(card_db)
+
+model = AskAgentTransformer(slug_vocab=slug_vocab)
+agent = TransformerPolicyAgent(model=model, player_id=1)
+```
+
+Smoke test:
+
+```bash
+C:/Users/Joseph/Desktop/FAB_Sim/.venv/Scripts/python.exe -m pytest tests/test_transformer_policy_smoke.py
 ```
 
 ---

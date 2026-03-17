@@ -373,12 +373,20 @@ class StackEntry:
     trigger_event: Optional[str] = None  # e.g., 'hit_hero', 'end_of_turn'
     effect_fn: Optional[Callable] = None  # effect to run on resolution
 
+    # Meld two-pass resolution (CR 5.3.4d)
+    resolution_count: int = 0          # 0=before first, 1=after first; only used for meld 'both'
+    meld_effect_bottom: Optional[Callable] = None  # right-side (Shock) effect for meld 'both'
+    meld_effect_top: Optional[Callable] = None     # left-side (Comet Storm/Consign/Null) effect
+
     @property
     def slug(self) -> str:
         return self.card.slug
 
     @property
     def is_attack(self) -> bool:
+        # CR 1.6.2b: Weapon attacks (activated-layer) must enter combat
+        if self.layer_type == 'activated' and self.card and self.card.is_weapon:
+            return True
         return self.card.is_attack if self.card else False
     
     def to_dict(self):
@@ -393,7 +401,8 @@ class StackEntry:
             'declared_x': self.declared_x,
             'is_triggered': self.is_triggered,
             'trigger_event': self.trigger_event,
-            'effect_fn': self.effect_fn if self.effect_fn else None
+            'effect_fn': self.effect_fn if self.effect_fn else None,
+            'resolution_count': self.resolution_count,
         }
 
 
@@ -428,6 +437,7 @@ class CombatState:
     attack_target: Optional[Player] = None    
     base_attack_power: int = 0
     from_weapon: bool = False
+    attack_source: Optional[Card] = None
     defending_cards: list[Card] = field(default_factory=list)
     total_defense: int = 0
     defending_equipment_defense: int = 0
@@ -464,6 +474,7 @@ class CombatState:
             'attack_target': self.attack_target.to_dict() if self.attack_target else None,
             'base_attack_power': self.base_attack_power,
             'from_weapon': self.from_weapon,
+            'attack_source': self.attack_source.to_dict() if self.attack_source else None,
             'defending_cards': [card.to_dict() for card in self.defending_cards],
             'total_defense': self.total_defense,
             'defending_equipment_defense': self.defending_equipment_defense,
@@ -488,6 +499,8 @@ class GameState:
     combat: Optional[CombatState]
     done: bool
     winner: Optional[int]
+    ended_on_turn_cap: bool = False
+    max_turns: int = 200
     card_db: Optional[object] = None  # CardDB instance for effect/trigger access
     event_manager: EventManager = field(default_factory=EventManager)
     effect_manager: Optional[object] = None  # EffectManager from engine.effects
@@ -495,6 +508,7 @@ class GameState:
     consecutive_passes: int = 0
     events_this_turn: set[str] = field(default_factory=set)
     chain_links: list[ChainLink] = field(default_factory=list)
+    pitch_history: dict[int, dict[int, list[str]]] = field(default_factory=lambda: {1: {}, 2: {}})  # {player_id: {turn: [slug, ...]}}
     # Stack zone (CR 3.0.1): LIFO; Zone tracks which cards are on the stack;
     # stack_entries holds the parallel metadata (player_id, from_arsenal).
     stack: Zone = field(default_factory=lambda: Zone("stack"))
@@ -570,6 +584,16 @@ class GameState:
                 return p.zone_by_name(zone_name)
         return None
     
+    def record_pitch(self, player_id: int, card_slugs: list[str]) -> None:
+        """Record cards pitched this turn for a player (CR 4.4.3c)."""
+        if player_id not in self.pitch_history:
+            self.pitch_history[player_id] = {}
+        self.pitch_history[player_id][self.turn_number] = list(card_slugs)
+
+    def invalidate_pitch_history(self, player_id: int) -> None:
+        """Clear pitch history when deck is shuffled (CR 8.5.20: order now unknown)."""
+        self.pitch_history[player_id] = {}
+
     def record_pass(self, player_id: int) -> bool:
         """Record a pass. Returns True if both players have passed consecutively (latest stack entry resolves)."""
         if player_id != self.last_acted_player:
@@ -587,6 +611,7 @@ class GameState:
             # 'player_agents': {pid: str(agent) for pid, agent in self.player_agents.items()},  # Can't serialize callables, just string representation
             'step': self.step.value if hasattr(self.step, 'value') else str(self.step),
             'turn_number': self.turn_number,
+            'max_turns': self.max_turns,
             'combat': self.combat.to_dict() if self.combat else None,
             # 'done': self.done,
             # 'winner': self.winner,

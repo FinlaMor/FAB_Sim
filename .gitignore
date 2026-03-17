@@ -56,6 +56,10 @@ SEEDED_*_AUDIT*.md
 # --- Local data collection ---
 data_collection/
 
+# --- Local third-party checkouts ---
+third_party/Talishar/
+third_party/Talishar_official/
+
 # --- Temp / debug scripts ---
 debug_modal_verb.py
 temp_ability_examples.py

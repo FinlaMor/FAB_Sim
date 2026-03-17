@@ -17,12 +17,15 @@ def _resolve_game_ids(db_path: str, game_ids: Optional[list[int]] = None) -> lis
         return sorted(set(int(g) for g in game_ids))
 
     conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(
             """
             SELECT DISTINCT t.game_id
             FROM transitions t
             JOIN embeddings e ON e.transition_id = t.id
+            JOIN games g ON g.game_id = t.game_id
+            WHERE g.winner IS NOT NULL
             ORDER BY t.game_id
             """
         ).fetchall()
@@ -40,10 +43,34 @@ class IQLTensorBatch:
     dones: torch.Tensor
 
 
+def _apply_rtg(r_list: list[float], d_list: list[float], gamma: float) -> list[float]:
+    """Replace terminal-only rewards with discounted reward-to-go.
+
+    For sparse terminal rewards (+1/-1 at episode end, 0 elsewhere), this
+    propagates the outcome backwards: r_t = gamma^(steps_remaining) * outcome.
+    Transitions where done=1 keep their terminal reward.
+    Non-terminal transitions with reward=0 get the discounted future return.
+    """
+    result = list(r_list)
+    n = len(result)
+    # find episode boundaries (done=1) and back-fill
+    run = 0.0
+    for i in range(n - 1, -1, -1):
+        if d_list[i]:
+            run = r_list[i]  # reset to terminal reward at episode end
+            result[i] = run
+        else:
+            run = gamma * run
+            result[i] = run
+    return result
+
+
 def build_iql_tensors_from_replay_db(
     db_path: str,
     game_ids: Optional[list[int]] = None,
     next_state_same_player: bool = True,
+    reward_mode: str = "terminal",
+    gamma: float = 0.99,
 ) -> dict:
     """Build IQL tensors from ReplayDB embeddings.
 
@@ -52,12 +79,34 @@ def build_iql_tensors_from_replay_db(
         game_ids: Optional subset of game IDs. If omitted, uses all embedded games.
         next_state_same_player: If True, s' is next decision by the same player.
             If False, s' is the next global transition.
+        reward_mode: ``'terminal'`` keeps only the final ±1 reward (sparse).
+            ``'rtg'`` replaces each reward with discounted reward-to-go
+            ``gamma^(steps_remaining) * outcome``, giving every transition a
+            non-zero training signal.
+        gamma: Discount factor used when ``reward_mode='rtg'``.
     """
     db = ReplayDB(db_path)
     try:
+        # (P3-9) Fail-fast: validate reward_mode before loading any data
+        if reward_mode == "rtg" and not next_state_same_player:
+            raise ValueError(
+                "reward_mode='rtg' requires next_state_same_player=True. "
+                "Global trajectory mode mixes player perspectives, corrupting RTG signals."
+            )
+        if reward_mode not in ("terminal", "rtg"):
+            raise ValueError(f"Unknown reward_mode: {reward_mode!r}. Choose 'terminal' or 'rtg'.")
+
         selected_games = _resolve_game_ids(db_path, game_ids)
         if not selected_games:
             raise ValueError("No games with embeddings found in replay DB")
+
+        # P2-5: Warn about peak RAM cost before loading.  For large datasets
+        # consider building once with save_mmap() + loading via from_mmap().
+        print(
+            f"[dataset] assembling tensors from {len(selected_games)} games into RAM "
+            f"(~18 KB per transition). For large datasets use ReplayDataset.save_mmap() / from_mmap().",
+            flush=True,
+        )
 
         s_list: list[torch.Tensor] = []
         a_list: list[torch.Tensor] = []
@@ -90,10 +139,14 @@ def build_iql_tensors_from_replay_db(
                         s_list.append(row["state_emb"].float())
                         a_list.append(row["action_emb"].float())
                         r_list.append(float(row["reward"]))
-                        d_list.append(float(row["done"]))
                         if i + 1 < len(player_rows):
+                            # Keep original terminal marker when same-player next state exists.
+                            d_list.append(float(row["done"]))
                             s_next_list.append(player_rows[i + 1]["state_emb"].float())
                         else:
+                            # In same-player mode, this is an absorbing terminal transition
+                            # for the player's trajectory (no next same-player decision).
+                            d_list.append(1.0)
                             s_next_list.append(torch.zeros(state_dim, dtype=torch.float32))
             else:
                 for i, row in enumerate(rows):
@@ -109,6 +162,9 @@ def build_iql_tensors_from_replay_db(
         if not s_list:
             raise ValueError("No embedded transitions found for selected game IDs")
 
+        if reward_mode == "rtg":
+            r_list = _apply_rtg(r_list, d_list, gamma)
+
         return {
             "states": torch.stack(s_list),
             "actions": torch.stack(a_list),
@@ -120,6 +176,7 @@ def build_iql_tensors_from_replay_db(
             "num_transitions": len(s_list),
             "game_ids": selected_games,
             "transitions_loaded": transitions_loaded,
+            "reward_mode": reward_mode,
         }
     finally:
         db.close()
@@ -167,11 +224,15 @@ class ReplayDataset(Dataset):
         db_path: str,
         game_ids: Optional[list[int]] = None,
         next_state_same_player: bool = True,
+        reward_mode: str = "terminal",
+        gamma: float = 0.99,
     ) -> "ReplayDataset":
         payload = build_iql_tensors_from_replay_db(
             db_path=db_path,
             game_ids=game_ids,
             next_state_same_player=next_state_same_player,
+            reward_mode=reward_mode,
+            gamma=gamma,
         )
         return cls.from_tensor_dict(payload)
 
@@ -186,3 +247,40 @@ class ReplayDataset(Dataset):
             next_states=self.next_states[idx],
             dones=self.dones[idx],
         )
+
+    def save_mmap(self, directory: str) -> None:
+        """Save dataset to memory-mappable files for large-scale training (P2-18)."""
+        import numpy as np
+        from pathlib import Path
+        d = Path(directory)
+        d.mkdir(parents=True, exist_ok=True)
+        for name in ("states", "actions", "rewards", "next_states", "dones"):
+            arr = getattr(self, name).numpy()
+            mmap = np.memmap(str(d / f"{name}.npy"), dtype=arr.dtype, mode="w+", shape=arr.shape)
+            mmap[:] = arr
+            mmap.flush()
+        # Save metadata
+        import json
+        meta = {
+            "n": int(self.states.shape[0]),
+            "state_dim": int(self.states.shape[1]),
+            "action_dim": int(self.actions.shape[1]),
+        }
+        (d / "meta.json").write_text(json.dumps(meta))
+
+    @classmethod
+    def from_mmap(cls, directory: str) -> "ReplayDataset":
+        """Load dataset from memory-mapped files (low RAM usage)."""
+        import numpy as np
+        import json
+        from pathlib import Path
+        d = Path(directory)
+        meta = json.loads((d / "meta.json").read_text())
+        n, sd, ad = meta["n"], meta["state_dim"], meta["action_dim"]
+
+        states = torch.from_numpy(np.memmap(str(d / "states.npy"), dtype="float32", mode="r", shape=(n, sd)))
+        actions = torch.from_numpy(np.memmap(str(d / "actions.npy"), dtype="float32", mode="r", shape=(n, ad)))
+        rewards = torch.from_numpy(np.memmap(str(d / "rewards.npy"), dtype="float32", mode="r", shape=(n,)))
+        next_states = torch.from_numpy(np.memmap(str(d / "next_states.npy"), dtype="float32", mode="r", shape=(n, sd)))
+        dones = torch.from_numpy(np.memmap(str(d / "dones.npy"), dtype="float32", mode="r", shape=(n,)))
+        return cls(states=states, actions=actions, rewards=rewards, next_states=next_states, dones=dones)

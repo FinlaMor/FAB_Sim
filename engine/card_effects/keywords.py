@@ -181,8 +181,15 @@ def _pitch_for_cost(controller: Player, amount: int, state: GameState,
     choice = _ask_player(state, cid, list(range(len(sequences))),
                          context="Choose pitch order for suspense cost")
     seq = sequences[choice]
-    for idx in seq:
-        card = hand_cards[idx]
+    for item in seq:
+        # find_all_valid_pitch_sequences currently returns Card objects.
+        # Keep backward compatibility with older index-based sequences.
+        if isinstance(item, int):
+            card = hand_cards[item]
+        else:
+            card = item
+        if card not in controller.hand.cards:
+            continue
         controller.hand.remove(card)
         controller.pitch.add(card)  # add() updates zone tracking
         controller.resources += card.pitch or 0
@@ -639,6 +646,8 @@ def effect_deal_arcane(state: GameState, target_player_id: int, amount: int,
             # Track dealt_arcane for Consign to Cosmos // Shock and Null // Shock
             for _ in range(result):
                 source_player.current_turn_effects.append("dealt_arcane")
+                if target_player_id == (3 - source_id):
+                    source_player.current_turn_effects.append("dealt_arcane_to_opp_hero")
             # Emit arcane_damage_dealt for any registered listeners
             from engine.state import Event
             state.event_manager.emit(
@@ -747,6 +756,7 @@ def effect_shuffle(state: GameState, player_id: int) -> None:
     """8.5.20: Shuffle deck."""
     import random as rng
     rng.shuffle(state.players[player_id].deck.cards)
+    state.invalidate_pitch_history(player_id)  # CR 8.5.20: order now unknown
 
 
 def effect_amp(state: GameState, player_id: int, amount: int) -> None:

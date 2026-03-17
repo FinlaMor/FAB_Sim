@@ -1,0 +1,5 @@
+{
+  "include": ["rl_agents", "scripts", "data_collection"],
+  "extraPaths": ["."],
+  "pythonVersion": "3.12"
+}

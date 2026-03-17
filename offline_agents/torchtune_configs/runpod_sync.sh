@@ -57,24 +57,61 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+IS_RUNPOD_GATEWAY=false
+if [[ "$TARGET" == *@ssh.runpod.io || "$TARGET" == "ssh.runpod.io" ]]; then
+  IS_RUNPOD_GATEWAY=true
+fi
+
 SSH_ARGS=(-o IdentitiesOnly=yes -i "$IDENTITY_FILE")
-SCP_ARGS=(-o IdentitiesOnly=yes -i "$IDENTITY_FILE")
+if [[ "$IS_RUNPOD_GATEWAY" == true ]]; then
+  SSH_ARGS+=(-tt)
+else
+  SSH_ARGS+=(-T)
+fi
 
 if [[ -n "$SSH_PORT" ]]; then
   SSH_ARGS+=(-p "$SSH_PORT")
-  SCP_ARGS+=(-P "$SSH_PORT")
 fi
 
 run_remote() {
-  ssh "${SSH_ARGS[@]}" "$TARGET" "$1"
+  if [[ "$IS_RUNPOD_GATEWAY" == true ]]; then
+    # Gateway opens interactive PTY and ignores command arguments; pipe via stdin.
+    printf '%s\n' "$1" | ssh "${SSH_ARGS[@]}" "$TARGET"
+  else
+    ssh "${SSH_ARGS[@]}" "$TARGET" "$1"
+  fi
 }
 
+# Use ssh pipe instead of scp — Runpod's gateway doesn't support the SCP/SFTP subsystem.
 copy_to_remote() {
-  scp "${SCP_ARGS[@]}" "$1" "$2"
+  local local_path="$1"
+  local remote_path="$2"
+  if [[ "$IS_RUNPOD_GATEWAY" == true ]]; then
+    # Gateway requires PTY (-tt) and ignores command-line args.
+    # Stream a single Python heredoc through stdin: base64-encode the file locally,
+    # embed it as a Python bytes literal, and let Python decode+write it on the remote.
+    # base64.decodebytes() ignores embedded newlines so line-wrapping is safe.
+    {
+      printf "python3 << 'PYEOF'\nimport base64\ndata = b\"\"\"\n"
+      base64 -w60 "$local_path"
+      printf "\"\"\"\nwith open('%s', 'wb') as _f:\n    _f.write(base64.decodebytes(data))\nprint('__UPLOAD_OK__')\nPYEOF\n" "$remote_path"
+    } | ssh "${SSH_ARGS[@]}" "$TARGET"
+  else
+    ssh "${SSH_ARGS[@]}" "$TARGET" "cat > '${remote_path}'" < "$local_path"
+  fi
 }
 
 copy_from_remote() {
-  scp "${SCP_ARGS[@]}" -r "$1" "$2"
+  local remote_path="$1"
+  local local_dest="$2"
+  if [[ "$IS_RUNPOD_GATEWAY" == true ]]; then
+    echo "Download actions are not supported through ssh.runpod.io gateway."
+    echo "Use the direct pod endpoint: root@<pod-ip> --port <pod-port>"
+    exit 1
+  fi
+  # tar over ssh for directory transfers
+  ssh "${SSH_ARGS[@]}" "$TARGET" "tar -czf - -C '$(dirname "${remote_path}")' '$(basename "${remote_path}")'" \
+    | tar -xzf - -C "$local_dest"
 }
 
 case "$ACTION" in
@@ -84,20 +121,20 @@ case "$ACTION" in
       exit 1
     fi
     run_remote "mkdir -p '${REMOTE_REPO_DIR}/offline_agents/distillation' '${REMOTE_REPO_DIR}/models'"
-    copy_to_remote "$LOCAL_DATA_FILE" "${TARGET}:${REMOTE_REPO_DIR}/offline_agents/distillation/training_data.jsonl"
+    copy_to_remote "$LOCAL_DATA_FILE" "${REMOTE_REPO_DIR}/offline_agents/distillation/training_data.jsonl"
     ;;
   download-rules)
-    mkdir -p "$LOCAL_MODELS_DIR"
-    copy_from_remote "${TARGET}:${REMOTE_REPO_DIR}/models/fab-rules-ft" "$LOCAL_MODELS_DIR/"
+    mkdir -p "${LOCAL_MODELS_DIR}/fab-rules-ft"
+    copy_from_remote "${REMOTE_REPO_DIR}/models/fab-rules-ft/epoch_2" "${LOCAL_MODELS_DIR}/fab-rules-ft"
     ;;
   download-cards)
-    mkdir -p "$LOCAL_MODELS_DIR"
-    copy_from_remote "${TARGET}:${REMOTE_REPO_DIR}/models/fab-cards-ft" "$LOCAL_MODELS_DIR/"
+    mkdir -p "${LOCAL_MODELS_DIR}/fab-cards-ft"
+    copy_from_remote "${REMOTE_REPO_DIR}/models/fab-cards-ft/epoch_2" "${LOCAL_MODELS_DIR}/fab-cards-ft"
     ;;
   download-all)
-    mkdir -p "$LOCAL_MODELS_DIR"
-    copy_from_remote "${TARGET}:${REMOTE_REPO_DIR}/models/fab-rules-ft" "$LOCAL_MODELS_DIR/"
-    copy_from_remote "${TARGET}:${REMOTE_REPO_DIR}/models/fab-cards-ft" "$LOCAL_MODELS_DIR/"
+    mkdir -p "${LOCAL_MODELS_DIR}/fab-rules-ft" "${LOCAL_MODELS_DIR}/fab-cards-ft"
+    copy_from_remote "${REMOTE_REPO_DIR}/models/fab-rules-ft/epoch_2" "${LOCAL_MODELS_DIR}/fab-rules-ft"
+    copy_from_remote "${REMOTE_REPO_DIR}/models/fab-cards-ft/epoch_2" "${LOCAL_MODELS_DIR}/fab-cards-ft"
     ;;
   *)
     usage

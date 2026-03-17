@@ -138,6 +138,28 @@ report = agent.sniff_test_all()
 print(report)
 ```
 
+### PowerShell CLI
+
+For local Windows usage, call the thin PowerShell wrapper instead of writing ad hoc Python one-liners:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File offline_agents/agent_cli.ps1 rules What does Arcane Barrier N do per CR 8.3.8?
+
+powershell -ExecutionPolicy Bypass -File offline_agents/agent_cli.ps1 cards --slug big_bully When does Big Bully's effect trigger?
+```
+
+Use `--no-rag` to query the fine-tuned local model directly without Chroma retrieval.
+
+### Smoke Test
+
+To verify both local fine-tuned backends are wired up and selected before Ollama/Claude:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File offline_agents/agent_cli.ps1 smoke-test
+```
+
+This smoke test proves backend selection, not answer quality. It should report `backend=local-transformers` for both agents.
+
 ### Direct RAG queries (no LLM)
 
 ```python
@@ -237,11 +259,18 @@ Training takes ~1–2 hours depending on GPU. Checkpoints save to `models/fab-ru
 
 ### Step 4: Export to Ollama
 
-Merges LoRA weights, quantizes to Q4_K_M GGUF (~4.5GB), and loads into Ollama.
+Merges the downloaded LoRA adapter into the local `models/qwen2.5-7b` base model, writes a merged model directory, and loads it into Ollama.
 
 ```bash
 bash offline_agents/torchtune_configs/export_to_ollama.sh rules
 bash offline_agents/torchtune_configs/export_to_ollama.sh cards
+```
+
+Windows PowerShell can call the Python entrypoint directly:
+
+```powershell
+C:/Users/Joseph/Desktop/FAB_Sim/.venv/Scripts/python.exe offline_agents/torchtune_configs/export_to_ollama.py rules
+C:/Users/Joseph/Desktop/FAB_Sim/.venv/Scripts/python.exe offline_agents/torchtune_configs/export_to_ollama.py cards
 ```
 
 After this, `RulesAgent()` and `CardAgent()` will automatically detect and use `fab-rules-ft` / `fab-cards-ft`.

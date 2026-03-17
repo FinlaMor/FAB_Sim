@@ -82,12 +82,28 @@ def _ingest_rules(collection: chromadb.Collection) -> int:
 # Ingest card data
 # ---------------------------------------------------------------------------
 
+def _derive_category(data: dict) -> str:
+    """Derive card category from raw card data (mirrors engine/card.py logic)."""
+    types = data.get("types") or []
+    if "Hero" in types:
+        return "hero"
+    if "Token" in types:
+        return "token"
+    return "deck"
+
+
 def _card_to_text(slug: str, data: dict) -> str:
     """Render a card dict to a plain-text description suitable for embedding."""
     parts = [
         f"Card: {data.get('name', slug)} (slug: {slug})",
-        f"Types: {', '.join(data.get('types', []))}",
     ]
+    color = data.get("color", "")
+    if color:
+        parts.append(f"Color: {color}")
+    type_text = data.get("type_text", "")
+    if type_text:
+        parts.append(f"Type: {type_text}")
+    parts.append(f"Types: {', '.join(data.get('types', []))}")
     for field in ("pitch", "cost", "power", "defense", "health", "intelligence", "arcane"):
         val = data.get(field)
         if val:
@@ -127,6 +143,8 @@ def _ingest_cards(collection: chromadb.Collection) -> int:
             "slug": slug,
             "name": card_data.get("name", slug),
             "types": ",".join(types),
+            "color": card_data.get("color", ""),
+            "category": _derive_category(card_data),
         })
         if len(batch_docs) >= 100:
             flush()

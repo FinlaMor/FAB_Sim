@@ -3,13 +3,21 @@
 import random
 from typing import Optional
 
+from engine.actions import Action
+
 
 class RandomAgent:
     def __init__(self, seed=None):
         self.rng = random.Random(seed)
 
     def __call__(self, state, actions, context=None):
-        return self.rng.choice(actions)
+        if not isinstance(actions, (list, tuple)) or not actions:
+            return actions
+
+        if isinstance(actions[0], Action):
+            return self.rng.choice(list(actions))
+
+        return self.rng.choice(list(actions))
 
 class UserInputAgent:
     def __call__(self, state, actions, context=None):

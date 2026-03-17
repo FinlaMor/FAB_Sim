@@ -110,6 +110,8 @@ class Card:
     # Multi-ability decomposition (Gap #3 fix - Round 9)
     has_multiple_ability_types: bool = False
     ability_type_count: int = 0  # Count of distinct ability types (0-3)
+    # Meld side tracking (CR 8.3.38): set by engine when the card is played
+    meld_side: Optional[str] = None  # 'top', 'bottom', 'both', or None
 
     # ---------------------------------------------------------------------------
     # Computed properties
@@ -133,6 +135,19 @@ class Card:
         for func in [x[1] for x in self.effects if x[0] == 'base_cost']:
             val = func(self.base_cost)
         return val
+
+    @property
+    def meld_cost(self):
+        if self.base_cost is None:
+            return None
+
+        single_side_cost = self.cost
+        if single_side_cost is None:
+            return self.base_cost * 2
+
+        # Meld doubles printed cost first, then applies the same net modifier.
+        modifier_delta = single_side_cost - self.base_cost
+        return (self.base_cost * 2) + modifier_delta
 
     @property
     def power(self):

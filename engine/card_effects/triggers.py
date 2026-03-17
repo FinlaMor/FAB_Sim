@@ -2643,8 +2643,11 @@ CARD_TRIGGERS["temporal_wobble"] = [
 
 
 # -- electromagnetic_somersault --
-# "Return up to 2 attack action cards with cost ≥0 from active chain link to owner's hand."
+# "Return up to 2 attack action cards with cost ≥0 on the active chain link to their
+#  owner's hand when the chain link resolves."  (delayed trigger — CR 6.0)
 def _em_somersault_on_play(card, event, state):
+    """Selection window: player chooses which cards to return.
+    Actual movement is deferred to chain link close."""
     from engine.card_effects.keywords import _ask_player
     cid = _controller_id(card)
     if not state.combat:
@@ -2658,33 +2661,72 @@ def _em_somersault_on_play(card, event, state):
     for c in (state.combat.defending_cards or []):
         if "Attack" in (c.types or []) and "Action" in (c.types or []):
             on_chain.append(c)
-    eligible = on_chain
+    eligible = on_chain[:]
+    controller = state.players[cid]
     for _ in range(2):
         if not eligible:
             break
         options = [c.slug for c in eligible] + ["done"]
         pick = _ask_player(state, cid, options,
-                           context="Electromagnetic Somersault: choose an attack action card (cost 2+) defending to return to its owner's hand")
+                           context="Electromagnetic Somersault: choose up to 2 attack action cards"
+                                   " to return to their owner's hand when this chain link resolves")
         if pick == "done":
             break
         chosen = next((c for c in eligible if c.slug == pick), None)
         if chosen:
-            state.combat.defending_cards.remove(chosen)
-            owner = state.players[chosen.owner]
-            owner.hand.add(chosen)
+            # Store object_id in current_turn_effects as deferred return token
+            controller.current_turn_effects.append(f"em_pending:{chosen.object_id}")
             eligible.remove(chosen)
+
+def _em_somersault_chain_close(card, event, state):
+    """Chain close: move deferred cards to their owner's hand."""
+    cid = _controller_id(card)
+    controller = state.players[cid]
+    pending = [e for e in controller.current_turn_effects if e.startswith("em_pending:")]
+    for key in pending:
+        oid = int(key.split(":")[1])
+        # Search graveyard first (chain resolved), then defending_cards (in case still there)
+        found = False
+        for pid, player in state.players.items():
+            for zone in [player.graveyard, player.weapon1, player.weapon2,
+                         player.head, player.chest, player.arms, player.legs,
+                         player.items, player.auras, player.allies, player.hand]:
+                target = next((c for c in zone.cards if c.object_id == oid), None)
+                if target:
+                    zone.remove(target)
+                    state.players[target.owner].hand.add(target)
+                    found = True
+                    break
+            if found:
+                break
+        if not found and state.combat and state.combat.defending_cards:
+            target = next((c for c in state.combat.defending_cards if c.object_id == oid), None)
+            if target:
+                state.combat.defending_cards.remove(target)
+                state.players[target.owner].hand.add(target)
+        controller.current_turn_effects.remove(key)
 
 CARD_TRIGGERS["electromagnetic_somersault"] = [
     TriggerDef(event_type="on_play", effect_fn=_em_somersault_on_play),
+    TriggerDef(event_type="combat_chain_close", effect_fn=_em_somersault_chain_close),
 ]
 
 
 # -- comet_storm__shock (meld) --
-# "Deal 5 arcane damage." (Meld mechanic handled by engine)
+# TOP  (Comet Storm): "Deal 5 arcane damage."          — action-speed, costs 2
+# BOTTOM (Shock):     "Deal 1 arcane damage."          — instant-speed, costs 0
+# MELDED: Shock fires via on_play → priority gap → Comet Storm via triggered continuation
 def _comet_storm_on_play(card, event, state):
     cid = _controller_id(card)
     target_id = 3 - cid
-    effect_deal_arcane(state, target_id, 5, card)
+    ms = getattr(card, 'meld_side', None)
+    if ms == 'both':
+        return  # effects handled at layer resolution time (CR 5.3.4d) via MELD_EFFECT_REGISTRY
+    if ms == 'bottom':
+        effect_deal_arcane(state, target_id, 1, card)
+    else:
+        # Top side (meld_side='top', None, or legacy): Comet Storm 5 arcane
+        effect_deal_arcane(state, target_id, 5, card)
 
 CARD_TRIGGERS["comet_storm__shock"] = [
     TriggerDef(event_type="on_play", effect_fn=_comet_storm_on_play),
@@ -2743,13 +2785,13 @@ CARD_TRIGGERS["aether_wildfire_red"] = [
 
 
 # -- consign_to_cosmos__shock (meld) --
-# "Banish X instant and/or aura cards from any graveyard, X = arcane damage dealt this turn."
-def _consign_to_cosmos_on_play(card, event, state):
+# TOP  (Consign): "Banish X instant/aura cards from any graveyard, X = arcane damage dealt this turn."
+# BOTTOM (Shock): "Deal 1 arcane damage to any target."
+def _consign_top_effect(card, state):
     from engine.card_effects.keywords import _ask_player
     cid = _controller_id(card)
     arcane_amount = state.players[cid].current_turn_effects.count("dealt_arcane")
     for _ in range(arcane_amount):
-        # Collect instant and/or aura cards from ALL graveyards
         valid = [(pid, c)
                  for pid, p in state.players.items()
                  for c in p.graveyard.cards
@@ -2758,12 +2800,22 @@ def _consign_to_cosmos_on_play(card, event, state):
             break
         options = [c.slug for _, c in valid]
         pick = _ask_player(state, cid, options,
-                           context="Consign to Cosmos: choose an instant or aura card from any graveyard to banish")
+                           context="Consign to Cosmos // Shock: choose an instant or aura to banish from any graveyard")
         chosen = next(((pid, c) for pid, c in valid if c.slug == pick), None)
         if chosen:
             pid, chosen_card = chosen
             state.players[pid].graveyard.remove(chosen_card)
             effect_banish(state, chosen_card, face_up=True, banisher_id=cid)
+
+def _consign_to_cosmos_on_play(card, event, state):
+    cid = _controller_id(card)
+    ms = getattr(card, 'meld_side', None)
+    if ms == 'both':
+        return  # effects handled at layer resolution time (CR 5.3.4d) via MELD_EFFECT_REGISTRY
+    if ms == 'bottom':
+        effect_deal_arcane(state, 3 - cid, 1, card)
+    else:
+        _consign_top_effect(card, state)
 
 CARD_TRIGGERS["consign_to_cosmos__shock"] = [
     TriggerDef(event_type="on_play", effect_fn=_consign_to_cosmos_on_play),
@@ -2771,24 +2823,87 @@ CARD_TRIGGERS["consign_to_cosmos__shock"] = [
 
 
 # -- null__shock (meld) --
-# "Negate target instant if cost < total arcane damage dealt this turn."
+# TOP  (Null):    "Negate target instant with cost < total arcane damage dealt this turn."
+# BOTTOM (Shock): "Deal 1 arcane damage to any target."
+def _null_top_effect(card, state, resolving_entry=None):
+    cid = _controller_id(card)
+    declared_targets: list[str] = []
+
+    # During meld second resolution, resolve_stack passes the card layer's StackEntry.
+    # During normal top-side play, the card layer is still on stack while on_play resolves.
+    pending_entry = None
+    for e in (state.stack_entries or []):
+        if e.card is card and e.layer_type == 'card':
+            pending_entry = e
+            break
+    if pending_entry and pending_entry.declared_targets:
+        declared_targets.extend([str(t) for t in pending_entry.declared_targets])
+
+    # During meld 'both' second-pass resolution, the card layer is popped and provided explicitly.
+    if not declared_targets and resolving_entry and resolving_entry.declared_targets:
+        declared_targets.extend([str(t) for t in resolving_entry.declared_targets])
+
+    target_entry = None
+    for raw in declared_targets:
+        target_key = str(raw)
+        if target_key.startswith("oid:"):
+            try:
+                target_oid = int(target_key.split(":", 1)[1])
+            except (TypeError, ValueError):
+                continue
+            target_entry = next((e for e in state.stack_entries if e.card and e.card.object_id == target_oid), None)
+        else:
+            target_entry = next((e for e in state.stack_entries if e.card and e.card.slug == target_key), None)
+        if target_entry is not None:
+            break
+
+    if target_entry is None or target_entry.card is None:
+        return
+    if "Instant" not in (target_entry.card.types or []):
+        return
+
+    # Null checks arcane damage dealt to opposing heroes this turn.
+    arcane_count = state.players[cid].current_turn_effects.count("dealt_arcane_to_opp_hero")
+    target_base_cost = 0 if target_entry.card.base_cost is None else target_entry.card.base_cost
+    if target_base_cost < arcane_count:
+        effect_negate(state, target_entry)
+
 def _null_shock_on_play(card, event, state):
     cid = _controller_id(card)
-    arcane_count = state.players[cid].current_turn_effects.count("dealt_arcane")
-    eligible = [e for e in (state.stack_entries or [])
-                if e.card and e.card.is_instant
-                and (e.card.cost or 0) < arcane_count]
-    if eligible:
-        from engine.card_effects.keywords import _ask_player
-        options = [e.card.slug for e in eligible]
-        pick = _ask_player(state, cid, options,
-                           context="Null + Shock: choose a target instant card to negate")
-        target_entry = next((e for e in eligible if e.card.slug == pick), eligible[0])
-        effect_negate(state, target_entry)
+    ms = getattr(card, 'meld_side', None)
+    if ms == 'both':
+        return  # effects handled at layer resolution time (CR 5.3.4d) via MELD_EFFECT_REGISTRY
+    if ms == 'bottom':
+        effect_deal_arcane(state, 3 - cid, 1, card)
+    else:
+        _null_top_effect(card, state)
 
 CARD_TRIGGERS["null__shock"] = [
     TriggerDef(event_type="on_play", effect_fn=_null_shock_on_play),
 ]
+
+
+# ---------------------------------------------------------------------------
+# Meld resolution registry
+# resolve_stack dispatches here for two-pass resolution (CR 5.3.4d).
+# For meld_side='both': first pass fires bottom (Shock), second fires top.
+# ---------------------------------------------------------------------------
+
+def _comet_storm_top_resolve(card, state):
+    """Left-side (Comet Storm) at second resolution: 5 arcane damage."""
+    effect_deal_arcane(state, 3 - _controller_id(card), 5, card)
+
+
+def _meld_shock_resolve(card, state):
+    """Right-side (Shock) at first resolution: 1 arcane damage. Shared by all three meld cards."""
+    effect_deal_arcane(state, 3 - _controller_id(card), 1, card)
+
+
+MELD_EFFECT_REGISTRY: dict = {
+    'comet_storm__shock':       {'bottom': _meld_shock_resolve, 'top': _comet_storm_top_resolve},
+    'consign_to_cosmos__shock': {'bottom': _meld_shock_resolve, 'top': _consign_top_effect},
+    'null__shock':              {'bottom': _meld_shock_resolve, 'top': _null_top_effect},
+}
 
 
 # -- aether_bindings_of_the_third_age --

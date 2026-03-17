@@ -1,0 +1,30 @@
+Next steps:
+* train a model to be better than 50% against random bots.
+* use the model to self-play games to train itself.
+
+* Goal 1: generate 8 packs, 8 instances of drafter_bot creates 8 draft decks and passes them to player_bots depending on the hero. player_bots play 3 rounds of 4 games (12 games total). 
+    * rewards for drafter bot depend on the number of wins in the 'draft pod':
+        there will always be:
+            1 deck at 3-0
+            3 decks at 2-1
+            3 decks at 1-2
+            1 deck at 0-3
+
+    * i will provide the files to generate the card packs at the time.
+    * depends on getting a self-play bot up and running
+
+* Goal 2: similarly to draft, for classic constructed i want a deck_bot that will generate a random deck on game start from the cards available to the hero.
+    * General process:
+        * hero cards 'revealed'
+        * all legal cards go through encoding transformer with attention to hero cards and all other cards
+        * deck_bot selects a deck of 60, 4 equipment cards, and 1to2 weapons
+    * relative occurrance rates for deck cards will be: 
+        * 1x cards that match class and talent and/or a specialization, 
+        * 0.75x class or talent matches from the same set as the hero, 
+        * 0.5x class or talent matches from all sets, 
+        * 0.25x generic cards
+
+    * relative occurrance rates for equipment cards will be:
+        * 1x cards that match class or talent
+        * 0.25x generic cards
+    * save wins with card slugs in database for future deck building rewards

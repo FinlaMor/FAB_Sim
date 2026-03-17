@@ -415,6 +415,23 @@ def _blacktek_whisperers_ar_effect(action, player, state):
 EQUIPMENT_PAY_COSTS["blacktek_whisperers"] = _blacktek_whisperers_ar_pay_cost
 EQUIPMENT_ACTIVATION_EFFECTS["blacktek_whisperers"] = _blacktek_whisperers_ar_effect
 
+def _pummel_combat_condition(combat) -> bool:
+    """Pummel is legal only when the current chain attack is a Club/Hammer weapon
+    attack, or an Attack Action with cost >= 2.  Mirrors Talishar IsPlayRestricted."""
+    if not combat or not combat.attack_card:
+        return False
+    attack = combat.attack_card
+    # Club or Hammer weapon attack
+    if combat.from_weapon:
+        subtypes = getattr(attack, "subtypes", None) or []
+        if "Club" in subtypes or "Hammer" in subtypes:
+            return True
+    # Attack Action with cost >= 2 (Talishar: CardType=="AA" && CardCost>=2)
+    if "Action" in (attack.types or []) and attack.cost is not None and attack.cost >= 2:
+        return True
+    return False
+
+
 ATTACK_REACTION_CONDITIONS = {
     "blacktek_whisperers": {
         "condition_fn": lambda player, state: (
@@ -426,6 +443,9 @@ ATTACK_REACTION_CONDITIONS = {
         "pay_cost_fn": _blacktek_whisperers_ar_pay_cost,
         "effect_fn": _blacktek_whisperers_ar_effect,
     },
+    "pummel_red": _pummel_combat_condition,
+    "pummel_yellow": _pummel_combat_condition,
+    "pummel_blue": _pummel_combat_condition,
 }
 
 DEFENSE_REACTION_CONDITIONS = {

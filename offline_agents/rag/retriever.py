@@ -57,9 +57,24 @@ class Retriever:
             out.append(f"[{source}]\n{doc}")
         return out
 
-    def query_cards(self, query: str, n: int = 4) -> list[str]:
-        """Return top-N card descriptions relevant to the query."""
-        results = self._cards().query(query_texts=[query], n_results=n)
+    def query_cards(self, query: str, n: int = 4, *,
+                     color: str | None = None,
+                     category: str | None = None) -> list[str]:
+        """Return top-N card descriptions relevant to the query.
+
+        Optional filters:
+            color:    "Red", "Yellow", or "Blue"
+            category: "hero", "token", or "deck"
+        """
+        where = {}
+        if color:
+            where["color"] = color
+        if category:
+            where["category"] = category
+        kwargs: dict = {"query_texts": [query], "n_results": n}
+        if where:
+            kwargs["where"] = where
+        results = self._cards().query(**kwargs)
         docs = results.get("documents", [[]])[0]
         return docs
 

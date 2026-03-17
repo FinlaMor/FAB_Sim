@@ -1,24 +1,35 @@
 """encoder/card_embedder.py — Maps a Card (or masked placeholder) to a d_model vector.
 
 Each card is embedded as:
-  slug embedding          (card identity)
-  + color embedding       (color: none/red/yellow/blue)
-  + zone embedding        (where the card currently is)
-  + numeric projection    (pitch, cost, power, defense + presence flags + state bools)
-  + types projection      (multi-hot over card types)
-  + keywords projection   (multi-hot over keywords)
-  → final linear → LayerNorm → d_model
+    slug embedding          (card identity)
+    + color embedding       (color: none/red/yellow/blue)
+    + zone embedding        (where the card currently is)
+    + numeric projection    (properties + state flags + counters + ability metadata)
+    + types projection      (multi-hot over card types)
+    + keyword pooling       (variable-length keyword set pooled to fixed-width vector)
+    → final linear → LayerNorm → d_model
 
 Opponent's hidden cards are represented as masked tokens (slug_idx=0),
 preserving zone info but zeroing out all identity features.
 """
 
 import json
+import re
 from typing import Optional
 
 import torch
 import torch.nn as nn
 
+from encoder.feature_schema import (
+    CARD_KEYWORDS,
+    COUNTER_OOV_TYPE,
+    COUNTER_TYPES,
+    KEYWORD_OOV_TOKEN,
+    PARAMETERIZED_KEYWORD_NORMALIZERS,
+    build_schema_metadata,
+    normalize_counter,
+    validate_schema_metadata,
+)
 from engine.card import Card
 
 
@@ -57,25 +68,14 @@ CARD_SUPERTYPES = [
     "Generic",
 ]
 
-CARD_KEYWORDS = [
-    "Go Again", "Dominate", "Phantasm", "Blood Debt", "Ward",
-    "Arcane Barrier", "Boost", "Scrap", "Crush", "Intimidate",
-    "Wager", "Guardwell", "Battleworn", "Temper", "Blade Break",
-    "Reprise", "Combo", "Legendary", "Spellvoid", "Spectra",
-    "Opt", "Charge", "Heave", "Reload", "Quell", "Negate",
-    "Fuse", "Rupture", "Overpower", "Indestructible",
-    # Additional keywords
-    "Arcane Shelter", "Beat Chest", "Cloaked", "Crank", "Meld", "Modular",
-    "Perched", "Piercing", "Protect", "Rune Gate", "Ambush", "Essence",
-    "Fusion", "Pairs", "Specialization", "Universal", "Watery Grave",
-    "Unlimited", "Transcend", "Channel", "Galvanize", "Contract",
-]
-
 CARD_ZONES = [
     "hand", "deck", "graveyard", "arsenal", "banished",
     "head", "chest", "arms", "legs", "weapon",
+    "weapon1", "weapon2",
     "soul",
     "hero", "pitch", "stack", "combat chain", "inventory", "permanent",
+    "items", "auras", "allies", "tokens",
+    "equipment",
 ]
 
 CARD_COLORS = ["none", "red", "yellow", "blue"]
@@ -85,32 +85,33 @@ N_TYPES     = len(CARD_TYPES)
 N_SUBTYPES  = len(CARD_SUBTYPES)
 N_SUPERTYPES = len(CARD_SUPERTYPES)
 N_KEYWORDS  = len(CARD_KEYWORDS)
+N_COUNTER_TYPES = len(COUNTER_TYPES)
 N_ZONES     = len(CARD_ZONES) + 1    # 0 = unknown
 N_COLORS    = len(CARD_COLORS) + 1  # 0 = unknown
 
 _TYPE_IDX     = {t: i for i, t in enumerate(CARD_TYPES)}
 _SUBTYPE_IDX  = {s: i for i, s in enumerate(CARD_SUBTYPES)}
 _SUPERTYPE_IDX = {s: i for i, s in enumerate(CARD_SUPERTYPES)}
-_KW_IDX       = {k: i for i, k in enumerate(CARD_KEYWORDS)}
+_KW_IDX       = {k.lower(): i for i, k in enumerate(CARD_KEYWORDS)}
 _ZONE_IDX     = {z: i + 1 for i, z in enumerate(CARD_ZONES)}
 _COLOR_IDX    = {c: i + 1 for i, c in enumerate(CARD_COLORS)}
+_KW_OOV_IDX   = _KW_IDX[KEYWORD_OOV_TOKEN.lower()]
 
 # Approximate expected values for normalizing continuous features to [0, 1] i.e. should the model be impressed if it sees an attack bigger than x
 _NORM = {"pitch": 3.0, "cost": 3.0, "power": 10.0, "defense": 4.0, 
          "life": 40.0, "intellect": 4.0, "arcane": 6.0, "activation": 3.0}
 
-# Parameterized keywords that have numeric values
-PARAMETERIZED_KEYWORDS = [
-    "Ward", "Arcane Barrier", "Boost", "Quell", "Spellvoid", "Arcane Shelter"
-]
+# Parameterized keywords that have numeric values.
+PARAMETERIZED_KEYWORDS = sorted(PARAMETERIZED_KEYWORD_NORMALIZERS.keys())
+_KW_WITH_VALUE_RE = re.compile(r"^(.+?)\s+(\d+)$")
 
-# Number of numeric features per card (UPDATED Round 9):
+# Number of numeric features per card:
 #   pitch (-1 if none), cost (-1 if none), power, has_power, defense, has_defense,
 #   life, has_life, intellect, has_intellect,
 #   arcane_damage, has_arcane, activation_cost, has_activation,
 #   owner, controller,
 #   is_public, tapped, exhausted, played_from_hand, is_token,
-#   counter_types(19): plus_power, minus_power, plus_defense, minus_defense, steam, flow, suspense, verse, energy, aim, doom, balance, rust, storm, stain, raze, gold, lesson, frost,
+#   counter_types(N_COUNTER_TYPES): shared registry with reserved slots,
 #   special_states(4): face_up, face_down, is_attacking, is_defending,
 #   ward_value, arcane_barrier_value, quell_value, spellvoid_value,
 #   ability_flags(18): activated, once_per_turn, action_activation, instant_activation, attack_reaction_activation, non_resource_cost, conditional, 
@@ -119,7 +120,8 @@ PARAMETERIZED_KEYWORDS = [
 #   targeting_flags(4): requires_target, can_target_hero, can_target_attack, can_target_permanent (Round 9 Gap #2)
 #   multi_ability_flags(2): has_multiple_ability_types, ability_type_count (Round 9 Gap #3)
 #   efficiency_metrics(2): power_per_cost, defense_per_cost (Round 9 refinement +2 pts)
-N_NUMERIC = 74
+BASE_NUMERIC_FEATURES = 55  # Everything above except counter slots.
+N_NUMERIC = BASE_NUMERIC_FEATURES + N_COUNTER_TYPES
 
 
 # ---------------------------------------------------------------------------
@@ -224,28 +226,43 @@ def card_to_features(
     slug_idx  = vocab.get(card.slug)
     color_idx = _COLOR_IDX.get(card.color or "none", 0)
     
-    # Calculate counter types on this card (CR 1.15.1, 1.15.2a)
-    # Note: power/defense property values already account for counters, but we track
-    # the raw counter counts for informational purposes (e.g., "remove all counters" effects)
-    counter_types_map = {
-        # Power/defense modifying counters (CR 1.15.2a)
-        "plus_power": 0, "minus_power": 0, "plus_defense": 0, "minus_defense": 0,
-        # Non-property counters
-        "steam": 0, "flow": 0, "suspense": 0, "verse": 0, "energy": 0,
-        # Missing counters identified in Round 9 audit
-        "aim": 0, "doom": 0, "balance": 0, "rust": 0, "storm": 0,
-        "stain": 0, "raze": 0, "gold": 0, "lesson": 0, "frost": 0,
-    }
+    # Calculate counter types on this card (CR 1.15.1, 1.15.2a).
+    # Player snapshots are authoritative when available, but missing counter types
+    # are backfilled from card-local state for sparse snapshots.
+    counter_types_map = {counter_type: 0.0 for counter_type in COUNTER_TYPES}
+    has_player_counter_snapshot = False
+    snapshot_buckets: set[str] = set()
+
+    card_owner = card.owner if isinstance(card.owner, int) else None
+    card_controller = card.controller if isinstance(card.controller, int) else card_owner
+
     if player_counters and card.zone:
-        for (c_slug, c_zone, c_type), count in player_counters.items():
+        for counter_key, count in player_counters.items():
+            if not isinstance(counter_key, tuple):
+                continue
+
+            key_pid = None
+            if len(counter_key) == 3:
+                c_slug, c_zone, c_type = counter_key
+            elif len(counter_key) == 4:
+                key_pid, c_slug, c_zone, c_type = counter_key
+            else:
+                continue
+
             if c_slug == card.slug and c_zone == card.zone:
-                if c_type in counter_types_map:
-                    counter_types_map[c_type] += count
-    
-    # Also check card-local counters dict
+                if key_pid is not None and key_pid not in (card_owner, card_controller):
+                    continue
+                has_player_counter_snapshot = True
+                bucket = c_type if c_type in counter_types_map else COUNTER_OOV_TYPE
+                counter_types_map[bucket] += float(count)
+                snapshot_buckets.add(bucket)
+
+    # Preserve strict precedence for overlapping types but backfill missing types.
     for c_type, count in card.counters.items():
-        if c_type in counter_types_map:
-            counter_types_map[c_type] += count
+        bucket = c_type if c_type in counter_types_map else COUNTER_OOV_TYPE
+        if has_player_counter_snapshot and bucket in snapshot_buckets:
+            continue
+        counter_types_map[bucket] += float(count)
     
     # Special card states (CR 7.0.4, 7.0.5, 8.5.24, 9.1.3)
     # face_up: distinct from is_public (CR 3.0.3c, 4.4.3b)
@@ -265,7 +282,9 @@ def card_to_features(
     quell_value = card.get_keyword_value("Quell") or 0
     spellvoid_value = card.get_keyword_value("Spellvoid") or 0
 
-    numeric = torch.tensor([
+    counter_features = [normalize_counter(counter_type, counter_types_map[counter_type]) for counter_type in COUNTER_TYPES]
+
+    numeric_values = [
         (card.pitch / _NORM["pitch"]) if card.pitch is not None else -1.0,   # -1 = no pitch
         (card.cost / _NORM["cost"]) if card.cost is not None else -1.0,      # -1 = no cost
         (card.power   or 0) / _NORM["power"],
@@ -285,28 +304,8 @@ def card_to_features(
         float(card.is_public),
         float(card.tapped),
         float(card.exhausted),
-        float(card.prev_zone == "hand"),   # played from hand
+        -1.0 if card.prev_zone == "unknown" else float(card.prev_zone == "hand"),  # played from hand (-1=unknown)
         float(card.category == "token"),   # is token
-        # Counter types (19): CR 1.15.1, 1.15.2a - raw counts (card.power/defense already include effects)
-        counter_types_map["plus_power"] / 1.0,    # +power counters
-        counter_types_map["minus_power"] / 1.0,   # -power counters
-        counter_types_map["plus_defense"] / 1.0,  # +defense counters
-        counter_types_map["minus_defense"] / 1.0, # -defense counters
-        counter_types_map["steam"] / 1.0,    # steam counters
-        counter_types_map["flow"] / 1.0,     # flow counters
-        counter_types_map["suspense"] / 1.0,  # suspense counters
-        counter_types_map["verse"] / 1.0,    # verse counters
-        counter_types_map["energy"] / 3.0,   # energy counters
-        counter_types_map["aim"] / 1.0,       # aim counters (Ranger)
-        counter_types_map["doom"] / 1.0,      # doom counters (Runeblade/Shadow)
-        counter_types_map["balance"] / 1.0,   # balance counters (Ninja)
-        counter_types_map["rust"] / 3.0,      # rust counters (Talishar)
-        counter_types_map["storm"] / 1.0,     # storm counters
-        counter_types_map["stain"] / 3.0,     # stain counters (Assassin/Ninja)
-        counter_types_map["raze"] / 1.0,      # raze counters (Draconic)
-        counter_types_map["gold"] / 1.0,     # gold counters (Pirate)
-        counter_types_map["lesson"] / 3.0,    # lesson counters (Mentor)
-        counter_types_map["frost"] / 3.0,     # frost counters (Ice/Elemental)
         # Special states (4): CR 7.0.4, 7.0.5, 8.5.24, 9.1.3
         float(face_up),                   # face-up (distinct from is_public)
         float(face_down),                 # face-down = private (CR 8.5.24)
@@ -347,7 +346,11 @@ def card_to_features(
         # Cost efficiency metrics (2): Refinement (+2 points)
         (card.power if card.power is not None else 0.0) / max((card.cost if card.cost is not None else 0) + 1, 1),
         (card.defense if card.defense is not None else 0.0) / max((card.cost if card.cost is not None else 0) + 1, 1),
-    ], dtype=torch.float32)
+    ]
+    numeric_values = numeric_values[:21] + counter_features + numeric_values[21:]
+    numeric = torch.tensor(numeric_values, dtype=torch.float32)
+    if numeric.numel() != N_NUMERIC:
+        raise RuntimeError(f"card_to_features produced {numeric.numel()} numeric dims, expected {N_NUMERIC}")
 
     types_vec = torch.zeros(N_TYPES, dtype=torch.float32)
     for t in card.types:
@@ -364,31 +367,32 @@ def card_to_features(
         if st in _SUPERTYPE_IDX:
             supertypes_vec[_SUPERTYPE_IDX[st]] = 1.0
 
-    # Parse keywords: parameterized keywords use normalized values, others are 1.0
-    # E.g., "Ward 6" -> 6/3.0 = 2.0, "Arcane Barrier 2" -> 2/2.0 = 1.0, "Go Again" -> 1.0
-    import re
+    # Parse keywords into a weighted bag-of-keywords vector.
+    # Parameterized keywords carry normalized values; unknown keywords go to OOV bucket.
     kw_vec = torch.zeros(N_KEYWORDS, dtype=torch.float32)
-    # Normalization factors for parameterized keywords (90th percentile expected values)
-    kw_norms = {"Ward": 3.0, "Arcane Barrier": 2.0, "Boost": 1.0, "Quell": 1.0, 
-                "Spellvoid": 1.0, "Arcane Shelter": 2.0}
-    
-    for k in card.keywords:
-        # Extract base keyword and numeric value if present
-        match = re.match(r'^(.+?)\s+(\d+)$', k)
+    for raw_keyword in card.keywords:
+        keyword_text = str(raw_keyword or "").strip()
+        if not keyword_text:
+            continue
+
+        match = _KW_WITH_VALUE_RE.match(keyword_text)
         if match:
             base_kw, value = match.groups()
             base_kw = base_kw.strip()
-            if base_kw in _KW_IDX:
-                # Parameterized keyword: use normalized value
-                if base_kw in kw_norms:
-                    kw_vec[_KW_IDX[base_kw]] = float(value) / kw_norms[base_kw]
-                else:
-                    kw_vec[_KW_IDX[base_kw]] = float(value)  # Unknown norm, use raw value
+            value_float = float(value)
+            norm = PARAMETERIZED_KEYWORD_NORMALIZERS.get(base_kw, 1.0)
+            normalized_value = value_float / norm if norm > 0 else value_float
+            kw_idx = _KW_IDX.get(base_kw.lower(), _KW_OOV_IDX)
+            if kw_idx == _KW_OOV_IDX:
+                kw_vec[kw_idx] += 1.0
+            else:
+                kw_vec[kw_idx] += normalized_value
         else:
-            # Non-parameterized keyword: use 1.0 (presence indicator)
-            base_kw = k.strip()
-            if base_kw in _KW_IDX:
-                kw_vec[_KW_IDX[base_kw]] = 1.0
+            kw_idx = _KW_IDX.get(keyword_text.lower(), _KW_OOV_IDX)
+            if kw_idx == _KW_OOV_IDX:
+                kw_vec[kw_idx] += 1.0
+            else:
+                kw_vec[kw_idx] += 1.0
 
     return {
         "slug_idx":     torch.tensor(slug_idx,  dtype=torch.long),
@@ -447,11 +451,11 @@ class CardEmbedder(nn.Module):
         slug        → D_SLUG      = 64   (card identity)
         color       → D_COLOR     = 8    (pitch color)
         zone        → D_ZONE      = 16   (current zone)
-        numeric     → D_NUMERIC   = 80   (66 features: properties + counters + states + ability flags)
+        numeric     → D_NUMERIC   = 88   (projected numeric feature bundle)
         types       → D_TYPES     = 16   (multi-hot card types)
         subtypes    → D_SUBTYPES  = 16   (multi-hot subtypes)
         supertypes  → D_SUPERTYPES = 16  (multi-hot classes/talents)
-        keywords    → D_KW        = 16   (multi-hot keywords)
+        keywords    → D_KW        = 16   (pooled keyword embeddings)
         ────────────────────────────────
         concat      →             = 232
         linear      → d_model
@@ -461,16 +465,20 @@ class CardEmbedder(nn.Module):
     D_SLUG      = 64
     D_COLOR     = 8
     D_ZONE      = 16
-    D_NUMERIC   = 88   # Handles 74 numeric features (Round 9: +18 ability, +4 targeting, +2 multi-ability, +2 efficiency)
+    D_NUMERIC   = 88
     D_TYPES     = 16
     D_SUBTYPES  = 16
     D_SUPERTYPES = 16
     D_KW        = 16
     D_IN        = D_SLUG + D_COLOR + D_ZONE + D_NUMERIC + D_TYPES + D_SUBTYPES + D_SUPERTYPES + D_KW  # = 240
 
-    def __init__(self, slug_vocab_size: int, d_model: int = 128):
+    def __init__(self, slug_vocab_size: int, d_model: int = 128, keyword_pooling: str = "mean"):
         super().__init__()
+        if keyword_pooling not in {"mean", "sum"}:
+            raise ValueError("keyword_pooling must be 'mean' or 'sum'")
+
         self.d_model = d_model
+        self.keyword_pooling = keyword_pooling
 
         self.slug_embed     = nn.Embedding(slug_vocab_size, self.D_SLUG, padding_idx=SlugVocab.MASK)
         self.color_embed    = nn.Embedding(N_COLORS,        self.D_COLOR,  padding_idx=0)
@@ -479,9 +487,56 @@ class CardEmbedder(nn.Module):
         self.type_proj      = nn.Linear(N_TYPES,      self.D_TYPES)
         self.subtype_proj   = nn.Linear(N_SUBTYPES,   self.D_SUBTYPES)
         self.supertype_proj = nn.Linear(N_SUPERTYPES, self.D_SUPERTYPES)
-        self.kw_proj        = nn.Linear(N_KEYWORDS,   self.D_KW)
+        self.keyword_embed  = nn.Embedding(N_KEYWORDS, self.D_KW)
         self.out_proj       = nn.Linear(self.D_IN,  d_model)
         self.norm           = nn.LayerNorm(d_model)
+
+    def _pool_keyword_embeddings(self, keyword_weights: torch.Tensor) -> torch.Tensor:
+        """Pool weighted keyword embeddings to a fixed-size representation.
+
+        Args:
+            keyword_weights: (B, N_KEYWORDS) weighted bag-of-keywords tensor.
+
+        Returns:
+            (B, D_KW) pooled embedding tensor.
+        """
+        if keyword_weights.dim() == 1:
+            keyword_weights = keyword_weights.unsqueeze(0)
+        if keyword_weights.size(-1) != N_KEYWORDS:
+            raise ValueError(f"Expected keyword vector width {N_KEYWORDS}, got {keyword_weights.size(-1)}")
+
+        keyword_weights = keyword_weights.float()
+        token_ids = torch.arange(N_KEYWORDS, device=keyword_weights.device)
+        token_embs = self.keyword_embed(token_ids)  # (N_KEYWORDS, D_KW)
+        pooled = torch.matmul(keyword_weights, token_embs)
+
+        if self.keyword_pooling == "mean":
+            denom = keyword_weights.abs().sum(dim=1, keepdim=True).clamp_min(1.0)
+            pooled = pooled / denom
+        return pooled
+
+    def get_schema_metadata(self) -> dict[str, object]:
+        """Return schema metadata bundle for checkpoint compatibility checks."""
+        return build_schema_metadata(
+            embedder="card_embedder",
+            d_model=self.d_model,
+            extra={
+                "numeric_feature_dim": N_NUMERIC,
+                "keyword_pooling": self.keyword_pooling,
+                "keyword_embedding_dim": self.D_KW,
+                "output_dim": self.d_model,
+            },
+        )
+
+    def validate_schema(
+        self,
+        schema_metadata: Optional[dict[str, object]],
+        strict: bool = True,
+    ) -> tuple[bool, list[str]]:
+        """Validate an incoming schema payload against this embedder's schema."""
+        if schema_metadata is None:
+            return False, ["schema metadata is missing"]
+        return validate_schema_metadata(self.get_schema_metadata(), schema_metadata, strict=strict)
 
     def forward(self, features: dict[str, torch.Tensor]) -> torch.Tensor:
         """Embed a batch of cards.
@@ -499,7 +554,7 @@ class CardEmbedder(nn.Module):
         type_emb      = self.type_proj(features["types"])          # (B, D_TYPES)
         subtype_emb   = self.subtype_proj(features["subtypes"])    # (B, D_SUBTYPES)
         supertype_emb = self.supertype_proj(features["supertypes"]) # (B, D_SUPERTYPES)
-        kw_emb        = self.kw_proj(features["keywords"])         # (B, D_KW)
+        kw_emb        = self._pool_keyword_embeddings(features["keywords"])  # (B, D_KW)
 
         x = torch.cat([slug_emb, color_emb, zone_emb, num_emb, type_emb, 
                        subtype_emb, supertype_emb, kw_emb], dim=-1)
