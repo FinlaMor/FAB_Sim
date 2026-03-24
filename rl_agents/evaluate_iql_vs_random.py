@@ -12,13 +12,11 @@ IQL dataset only trains on Action decisions.
 from __future__ import annotations
 
 import argparse
-from dataclasses import replace
 import json
 import os
 from pathlib import Path
 import random
 import time
-from typing import Optional
 
 import torch
 
@@ -32,66 +30,10 @@ from rl_agents.embedder_bundle import load_embedder_bundle
 from rl_agents.game_backends import GameRunRequest, add_game_backend_args, build_game_backend
 from rl_agents.iql import IQLTrainer
 from rl_agents.random_agent import RandomAgent
-
-
-DECK_BY_HERO = {
-    "kayo_underhanded_cheat": "kayo_underhanded_cheat_CC_lite.txt",
-    "oscillio_constella_intelligence": "oscillio_constella_intelligence_CC_lite.txt",
-}
-
-
-MATCHUP_SPECS = [
-    {
-        "name": "kayo_vs_kayo",
-        "p1_hero": "kayo_underhanded_cheat",
-        "p2_hero": "kayo_underhanded_cheat",
-    },
-]
-
-
-def _resolve_base_seed(seed: int | None) -> int:
-    if seed is not None:
-        return int(seed)
-    return random.SystemRandom().randrange(1, 2_147_483_647)
-
-
-def _resolve_device(device_str: str):
-    """Resolve device string to a torch.device, with DirectML support."""
-    if device_str in ("dml", "directml"):
-        try:
-            import torch_directml
-            return torch_directml.device()
-        except ImportError:
-            return torch.device("cpu")
-    return torch.device(device_str)
-
-
-def _default_device() -> str:
-    if torch.cuda.is_available():
-        return "cuda"
-    try:
-        import torch_directml
-        return "dml"
-    except ImportError:
-        return "cpu"
-
-
-def _card_slug(card) -> Optional[str]:
-    if card is None:
-        return None
-    if hasattr(card, "slug"):
-        return card.slug
-    return str(card)
-
-
-def _normalise_action_for_embedder(action: Action, player_id: int) -> Action:
-    pitch_cards = [(_card_slug(card) or "") for card in (action.pitch_cards or [])]
-    pitch_cards = [slug for slug in pitch_cards if slug]
-
-    targets = [(_card_slug(target) or "") for target in (action.targets or [])]
-    targets = [slug for slug in targets if slug]
-
-    return replace(action, player_id=player_id, pitch_cards=pitch_cards, targets=targets)
+from rl_agents.utils.card_helpers import card_slug as _card_slug, normalise_action_for_embedder as _normalise_action_for_embedder
+from rl_agents.utils.device import default_device as _default_device, resolve_device as _resolve_device
+from rl_agents.utils.matchups import DECK_BY_HERO, MATCHUP_SPECS
+from rl_agents.utils.seed import resolve_base_seed as _resolve_base_seed
 
 
 class IQLPolicyAgent:

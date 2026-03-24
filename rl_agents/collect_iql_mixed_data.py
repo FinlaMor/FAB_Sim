@@ -11,7 +11,6 @@ import json
 import os
 import random
 from pathlib import Path
-from typing import Optional
 
 import torch
 
@@ -26,46 +25,9 @@ from encoder.gamestate_embedder import GameStateEmbedder, gamestate_to_features
 from rl_agents.dataset_adapter import build_iql_tensors_from_replay_db
 from rl_agents.embedder_bundle import BUNDLE_FILENAME, save_embedder_bundle
 from rl_agents.game_backends import GameRunRequest, add_game_backend_args, build_game_backend
-
-
-DECK_BY_HERO = {
-    "kayo_underhanded_cheat": "kayo_underhanded_cheat_CC_lite.txt",
-    "oscillio_constella_intelligence": "oscillio_constella_intelligence_CC_lite.txt",
-}
-
-
-def _resolve_base_seed(seed: int | None) -> int:
-    if seed is not None:
-        return int(seed)
-    return random.SystemRandom().randrange(1, 2_147_483_647)
-
-
-MATCHUP_SPECS = [
-    {
-        "name": "kayo_vs_kayo",
-        "p1_hero": "kayo_underhanded_cheat",
-        "p2_hero": "kayo_underhanded_cheat",
-    },
-]
-
-
-def _card_slug(card) -> Optional[str]:
-    if card is None:
-        return None
-    if hasattr(card, "slug"):
-        return card.slug
-    return str(card)
-
-
-def _normalise_action_for_embedder(action: Action) -> Action:
-    pitch_cards = [(_card_slug(c) or "") for c in (action.pitch_cards or [])]
-    pitch_cards = [c for c in pitch_cards if c]
-    targets = [(_card_slug(t) or "") for t in (action.targets or [])]
-    targets = [t for t in targets if t]
-    # dataclasses.replace works because Action is a dataclass.
-    from dataclasses import replace
-
-    return replace(action, pitch_cards=pitch_cards, targets=targets)
+from rl_agents.utils.card_helpers import card_slug as _card_slug, normalise_action_for_embedder as _normalise_action_for_embedder
+from rl_agents.utils.matchups import DECK_BY_HERO, MATCHUP_SPECS
+from rl_agents.utils.seed import resolve_base_seed as _resolve_base_seed
 
 
 def _serialise_action(action: Action) -> dict:

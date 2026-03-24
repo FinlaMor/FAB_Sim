@@ -776,11 +776,7 @@ def _call_talishar_agent_selector(agent: Any, state: dict, actions: list[dict], 
     return selector()
 
 
-def _safe_int(value: Any, default: int = 0) -> int:
-    try:
-        return int(value)
-    except (TypeError, ValueError):
-        return default
+from rl_agents.utils.card_helpers import safe_int as _safe_int
 
 
 def _is_talishar_pass_action(action: dict) -> bool:

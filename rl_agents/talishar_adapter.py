@@ -51,11 +51,7 @@ _REACTION_SPEED_TYPES = {
 }
 
 
-def _safe_int(value: Any, default: int = 0) -> int:
-    try:
-        return int(value)
-    except (TypeError, ValueError):
-        return default
+from rl_agents.utils.card_helpers import safe_int as _safe_int
 
 
 def _safe_bool(value: Any) -> bool:

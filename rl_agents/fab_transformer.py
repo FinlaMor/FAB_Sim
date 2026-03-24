@@ -21,11 +21,13 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any
 
 import numpy as np
 import torch
 import torch.nn as nn
+
+from encoder.card_embedder import CARD_TYPES
+from rl_agents.utils.card_helpers import safe_float as _safe_float
 
 
 # ── Constants ─────────────────────────────────────────────────────────
@@ -52,11 +54,8 @@ SEG_OPP_BOARD = 4
 SEG_COMBAT = 5
 NUM_SEGMENTS = 6
 
-# Card types (shared with engine vocabulary)
-CARD_TYPE_LIST = [
-    "Action", "Attack", "Defense Reaction", "Attack Reaction",
-    "Equipment", "Weapon", "Aura", "Ally", "Token", "Hero", "Item", "Instant",
-]
+# Card types — canonical source is encoder.card_embedder.CARD_TYPES
+CARD_TYPE_LIST = CARD_TYPES
 CARD_TYPE_TO_IDX = {t: i for i, t in enumerate(CARD_TYPE_LIST)}
 NUM_CARD_TYPES = len(CARD_TYPE_LIST)
 
@@ -106,13 +105,8 @@ NUM_ACTION_MODES = len(ACTION_MODE_LIST) + 1
 # ── Vocabulary & Attribute Table ──────────────────────────────────────
 
 
-def _safe_float(val: Any, default: float = 0.0) -> float:
-    if val is None or val == "" or val == "*":
-        return default
-    try:
-        return float(val)
-    except (TypeError, ValueError):
-        return default
+
+# _safe_float imported from rl_agents.utils.card_helpers above
 
 
 def build_card_vocab_and_attrs(slug_index_path: str) -> tuple[dict[str, int], np.ndarray]:

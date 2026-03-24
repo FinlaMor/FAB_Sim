@@ -14,30 +14,7 @@ import torch
 from rl_agents.dataset_adapter import ReplayDataset, build_iql_tensors_from_replay_db
 from rl_agents.embedder_bundle import load_embedder_bundle, resolve_embedder_bundle_path
 from rl_agents.iql import IQLConfig, IQLTrainer
-
-
-def _resolve_device(device_str: str):
-    """Resolve device string to a torch.device, with DirectML support."""
-    normalized = (device_str or "cpu").strip().lower()
-    if normalized in ("dml", "directml"):
-        try:
-            import torch_directml
-            return torch_directml.device()
-        except ImportError as exc:
-            raise RuntimeError(
-                "Requested device 'dml', but torch-directml is not installed in this Python environment."
-            ) from exc
-    return torch.device(device_str)
-
-
-def _default_device() -> str:
-    if torch.cuda.is_available():
-        return "cuda"
-    try:
-        import torch_directml
-        return "dml"
-    except ImportError:
-        return "cpu"
+from rl_agents.utils.device import default_device as _default_device, resolve_device as _resolve_device
 
 
 def _build_parser() -> argparse.ArgumentParser:

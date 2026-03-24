@@ -39,17 +39,7 @@ from rl_agents.talishar_iql import (
     TransformerIQLConfig,
     TransformerIQLTrainer,
 )
-
-
-def _default_device() -> str:
-    try:
-        import torch_directml  # noqa: F401
-        return "dml"
-    except ImportError:
-        pass
-    if torch.cuda.is_available():
-        return "cuda"
-    return "cpu"
+from rl_agents.utils.device import default_device as _default_device
 
 
 def _build_parser() -> argparse.ArgumentParser:

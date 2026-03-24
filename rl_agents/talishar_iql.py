@@ -38,51 +38,8 @@ from rl_agents.fab_transformer import (
     FABTransformerConfig,
     FABTransformerEncoder,
 )
-
-
-# ── Device resolution ─────────────────────────────────────────────────
-
-
-def _resolve_device(device_str: str):
-    normalized = (device_str or "cpu").strip().lower()
-    if normalized in ("dml", "directml"):
-        try:
-            import torch_directml
-            return torch_directml.device()
-        except ImportError as exc:
-            raise RuntimeError(
-                "torch-directml not installed"
-            ) from exc
-    if normalized == "auto":
-        if torch.cuda.is_available():
-            return torch.device("cuda")
-        try:
-            import torch_directml
-            return torch_directml.device()
-        except ImportError:
-            pass
-        return torch.device("cpu")
-    return torch.device(device_str)
-
-
-# ── IQL Networks ──────────────────────────────────────────────────────
-
-
-def _build_mlp(in_dim: int, out_dim: int, hidden_dim: int, layers: int) -> nn.Module:
-    if layers <= 0:
-        return nn.Linear(in_dim, out_dim)
-    parts: list[nn.Module] = []
-    prev = in_dim
-    for _ in range(layers):
-        parts.extend([nn.Linear(prev, hidden_dim), nn.ReLU()])
-        prev = hidden_dim
-    parts.append(nn.Linear(prev, out_dim))
-    return nn.Sequential(*parts)
-
-
-def expectile_loss(diff: torch.Tensor, expectile: float) -> torch.Tensor:
-    weight = torch.where(diff > 0, expectile, 1.0 - expectile)
-    return weight * diff.pow(2)
+from rl_agents.utils.device import resolve_device as _resolve_device
+from rl_agents.utils.mlp import build_mlp as _build_mlp, expectile_loss
 
 
 # ── Config ────────────────────────────────────────────────────────────

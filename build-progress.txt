@@ -1,0 +1,55 @@
+Refactor: Remove Duplicate Code, Consolidate Shared Logic, Archive Unused Code
+================================================================================
+
+Status: COMPLETE
+Date: 2026-03-24
+
+## What was done
+
+### Created shared utility modules (rl_agents/utils/)
+- device.py   — resolve_device(), default_device()
+- mlp.py      — build_mlp(), expectile_loss()
+- seed.py     — resolve_base_seed()
+- card_helpers.py — safe_int(), safe_float(), card_slug(), normalise_action_for_embedder()
+- matchups.py — DECK_BY_HERO, MATCHUP_SPECS
+- __init__.py — convenience re-exports
+
+### Updated consumer files (removed local duplicates, added imports)
+- rl_agents/iql.py                    — removed _resolve_device, _build_mlp, expectile_loss
+- rl_agents/talishar_iql.py           — removed _resolve_device, _build_mlp, expectile_loss
+- rl_agents/train_iql.py              — removed _resolve_device, _default_device
+- rl_agents/train_transformer_iql.py  — removed _default_device
+- rl_agents/evaluate_iql_vs_random.py — removed _resolve_device, _default_device, _resolve_base_seed, _card_slug, _normalise_action_for_embedder, DECK_BY_HERO, MATCHUP_SPECS
+- rl_agents/collect_iql_mixed_data.py — removed _resolve_base_seed, _card_slug, _normalise_action_for_embedder, DECK_BY_HERO, MATCHUP_SPECS
+- rl_agents/fab_transformer.py        — replaced CARD_TYPE_LIST literal with import from encoder.card_embedder.CARD_TYPES; removed _safe_float
+- rl_agents/heuristic_bot.py          — removed _safe_int
+- rl_agents/game_data.py              — removed _safe_int
+- rl_agents/game_backends.py          — removed _safe_int (bonus cleanup, not in original spec)
+- rl_agents/talishar_adapter.py       — removed _safe_int (bonus cleanup, not in original spec)
+
+### Archived unused files
+- archive/iql_decode_agent.py — unused module (zero imports anywhere in codebase)
+
+## Verification results
+
+### Grep checks (all pass)
+- 0 remaining def _resolve_device in rl_agents/*.py
+- 0 remaining def _default_device in rl_agents/*.py
+- 0 remaining def _build_mlp in rl_agents/*.py
+- 1 remaining def expectile_loss (correctly in utils/mlp.py only)
+- 0 remaining def _resolve_base_seed in rl_agents/*.py
+- 0 remaining def _card_slug in rl_agents/*.py
+- 0 remaining def _safe_int in rl_agents/*.py (excluding nested closures)
+- 0 remaining def _safe_float in rl_agents/*.py
+- CARD_TYPE_LIST is now an alias for CARD_TYPES (identity verified)
+
+### Import smoke tests (all pass)
+- All 6 utils modules import successfully
+- All 11 consumer modules import successfully
+- Function behavior verified: resolve_device, build_mlp, expectile_loss, etc.
+
+### Pre-existing issues (not caused by refactoring)
+- pytest cannot run due to PyTorch C extensions path conflict (pre-existing env issue)
+- train_transformer_iql.py references missing build_transformer_hdf5_from_talishar_db (pre-existing)
+
+## Estimated lines removed: ~160 lines of duplicated code

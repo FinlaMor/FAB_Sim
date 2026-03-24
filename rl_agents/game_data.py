@@ -32,18 +32,14 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
+from rl_agents.utils.card_helpers import safe_int as _safe_int
+
+
 def _generate_game_id() -> str:
     return uuid.uuid4().hex[:16]
 
 
 # ── State extraction helpers ─────────────────────────────────────────
-
-
-def _safe_int(val: Any, default: int = 0) -> int:
-    try:
-        return int(val)
-    except (TypeError, ValueError):
-        return default
 
 
 def _extract_turn_phase(state: dict) -> str:

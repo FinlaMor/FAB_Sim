@@ -17,12 +17,7 @@ import json
 import random
 from pathlib import Path
 
-
-def _safe_int(val, default: int = 0) -> int:
-    try:
-        return int(val)
-    except (TypeError, ValueError):
-        return default
+from rl_agents.utils.card_helpers import safe_int as _safe_int
 
 
 class HeuristicBot:

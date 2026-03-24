@@ -18,46 +18,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
-
-def _resolve_device(device_str: str):
-    """Resolve device string including 'dml'/'directml' for AMD GPU on Windows."""
-    normalized = (device_str or "cpu").strip().lower()
-    if normalized in ("dml", "directml"):
-        try:
-            import torch_directml
-            return torch_directml.device()
-        except ImportError as exc:
-            raise RuntimeError(
-                "Requested device 'dml', but torch-directml is not installed in this Python environment."
-            ) from exc
-    return torch.device(device_str)
-
 from rl_agents.dataset_adapter import ReplayDataset, build_iql_tensors_from_replay_db
-
-
-def _build_mlp(input_dim: int, output_dim: int, hidden_dim: int, hidden_layers: int) -> nn.Module:
-    if hidden_layers <= 0:
-        return nn.Linear(input_dim, output_dim)
-
-    layers: list[nn.Module] = []
-    last = input_dim
-    for _ in range(hidden_layers):
-        layers.append(nn.Linear(last, hidden_dim))
-        layers.append(nn.ReLU())
-        last = hidden_dim
-    layers.append(nn.Linear(last, output_dim))
-    return nn.Sequential(*layers)
-
-
-def expectile_loss(diff: torch.Tensor, expectile: float) -> torch.Tensor:
-    """Expectile regression loss used by IQL value training.
-
-    diff is typically (Q(s, a) - V(s)).
-    """
-    weight_high = torch.full_like(diff, expectile)
-    weight_low = torch.full_like(diff, 1.0 - expectile)
-    weight = torch.where(diff > 0, weight_high, weight_low)
-    return weight * diff.pow(2)
+from rl_agents.utils.device import resolve_device as _resolve_device
+from rl_agents.utils.mlp import build_mlp as _build_mlp, expectile_loss
 
 
 @dataclass
