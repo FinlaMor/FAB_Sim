@@ -13,9 +13,12 @@ from pathlib import Path
 from typing import Optional
 import time
 
+import math
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader, TensorDataset
 
 from rl_agents.dataset_adapter import ReplayDataset, build_iql_tensors_from_replay_db
@@ -48,6 +51,8 @@ class IQLConfig:
     embedder_hidden_dim: int = 512
     embedder_layers: int = 2
     lr_embedder: float = 1e-4
+    lr_schedule: str = "constant"
+    lr_warmup_steps: int = 0
 
 
 class ValueNetwork(nn.Module):
@@ -172,6 +177,8 @@ class IQLTrainer:
             else None
         )
 
+        self._schedulers: list[LambdaLR] = []
+
     def encode_states(self, states: torch.Tensor) -> torch.Tensor:
         return self.state_adapter(states)
 
@@ -189,6 +196,34 @@ class IQLTrainer:
     def _clip_embedder_grad(self) -> None:
         if self._embedder_params:
             nn.utils.clip_grad_norm_(self._embedder_params, self.config.grad_clip)
+
+    def _build_schedulers(self, total_steps: int) -> None:
+        """Create LR schedulers for all optimizers based on config."""
+        schedule = self.config.lr_schedule
+        warmup = self.config.lr_warmup_steps
+
+        if schedule == "constant" and warmup <= 0:
+            self._schedulers = []
+            return
+
+        def _lr_lambda(step: int) -> float:
+            # Warmup phase
+            if warmup > 0 and step < warmup:
+                return (step + 1) / warmup
+            # After warmup
+            if schedule == "cosine":
+                progress = (step - warmup) / max(1, total_steps - warmup)
+                return 0.5 * (1.0 + math.cos(math.pi * progress))
+            return 1.0
+
+        opts = [self.opt_q, self.opt_v, self.opt_actor]
+        if self.opt_embed is not None:
+            opts.append(self.opt_embed)
+        self._schedulers = [LambdaLR(opt, _lr_lambda) for opt in opts]
+
+    def _step_schedulers(self) -> None:
+        for sched in self._schedulers:
+            sched.step()
 
     @torch.no_grad()
     def _update_targets(self) -> None:
@@ -402,11 +437,13 @@ class IQLTrainer:
             )
 
         drop_last = len(train_ds) >= self.config.batch_size
+        use_pin_memory = self.device.type == "cuda"
         loader = DataLoader(
             train_ds,
             batch_size=self.config.batch_size,
             shuffle=True,
             drop_last=drop_last,
+            pin_memory=use_pin_memory,
             generator=torch.Generator().manual_seed(42),
         )
 
@@ -418,6 +455,8 @@ class IQLTrainer:
             f"batches_per_epoch={len(loader)} device={self.device}",
             flush=True,
         )
+
+        self._build_schedulers(num_steps)
 
         it = iter(loader)
         history: list[dict[str, float]] = []
@@ -450,6 +489,7 @@ class IQLTrainer:
 
                 if should_log:
                     metrics = self.train_batch(batch)
+                    self._step_schedulers()
                     metrics["step"] = float(step)
                     metrics["elapsed_seconds"] = float(time.time() - t0)
 
@@ -476,6 +516,7 @@ class IQLTrainer:
                     print(line, flush=True)
                 else:
                     self.train_batch(batch)
+                    self._step_schedulers()
         except KeyboardInterrupt:
             pass
         finally:
