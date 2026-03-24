@@ -2690,7 +2690,7 @@ def _em_somersault_chain_close(card, event, state):
         for pid, player in state.players.items():
             for zone in [player.graveyard, player.weapon1, player.weapon2,
                          player.head, player.chest, player.arms, player.legs,
-                         player.items, player.auras, player.allies, player.hand]:
+                         player.permanents, player.hand]:
                 target = next((c for c in zone.cards if c.object_id == oid), None)
                 if target:
                     zone.remove(target)

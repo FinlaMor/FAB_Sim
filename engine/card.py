@@ -74,6 +74,7 @@ class Card:
     owner: int = 0
     controller: Optional[int] = None
     is_public: bool = False
+    permanent_subtype: Optional[str] = None  # e.g. 'Item', 'Aura', etc.
 
     # State
     tapped: bool = False

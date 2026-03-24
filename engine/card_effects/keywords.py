@@ -37,7 +37,7 @@ if TYPE_CHECKING:
 # Per rules 3.0.5 — zones that comprise the arena.
 ARENA_ZONE_NAMES = frozenset({
     "head", "chest", "arms", "legs", "weapon",
-    "hero", "items", "auras", "allies", "tokens", "soul",
+    "hero", "permanents",
     "combat chain",
 })
 
@@ -773,7 +773,7 @@ def effect_charge(state: GameState, player_id: int, card: Card) -> None:
     """8.5.29: Move card from hand to hero's soul."""
     player = state.players[player_id]
     player.hand.remove(card)
-    player.soul.add(card)  # add() updates zone tracking
+    player.soul.add(card)
 
 
 def effect_mark(state: GameState, target_player_id: int) -> None:

@@ -118,6 +118,51 @@ class Zone:
             'cards': [card.to_dict() for card in self.cards]
         }
 
+class SubZoneView:
+    """A filtered, mutable view over a parent Zone, selecting cards by type tag."""
+
+    def __init__(self, parent: Zone, subtype: str):
+        self.parent = parent
+        self.subtype = subtype  # e.g., "Item", "Aura", "Ally", "Token", "Soul"
+
+    @property
+    def cards(self) -> list[Card]:
+        return [c for c in self.parent.cards if self._matches(c)]
+
+    def add(self, card: Card, is_public=None) -> None:
+        card.permanent_subtype = self.subtype
+        self.parent.add(card, is_public)
+
+    def remove(self, card: Card) -> bool:
+        return self.parent.remove(card)
+
+    def find(self, slug: str) -> Optional[Card]:
+        return next((c for c in self.cards if c.slug == slug), None)
+
+    def find_all(self, slug: str) -> list[Card]:
+        return [c for c in self.cards if c.slug == slug]
+
+    def extend(self, cards) -> None:
+        for card in cards:
+            self.add(card)
+
+    def _matches(self, card: Card) -> bool:
+        return getattr(card, 'permanent_subtype', None) == self.subtype
+
+    def __len__(self): return len(self.cards)
+    def __bool__(self): return bool(self.cards)
+    def __iter__(self): return iter(list(self.cards))
+    def __repr__(self): return f"SubZoneView({self.parent.name!r}, {self.subtype!r}, {[c.slug for c in self.cards]})"
+
+    def to_dict(self) -> dict:
+        """Convert the SubZoneView to a dictionary representation."""
+        return {
+            'name': f"{self.parent.name}:{self.subtype}",
+            'owner_id': self.parent.owner_id,
+            'cards': [card.to_dict() for card in self.cards]
+        }
+
+
 class EventManager:
     def __init__(self):
         self.listeners: dict = {}
@@ -203,11 +248,13 @@ class Player:
         # CR 3.0.2: "Each player has two weapon zones"
         self.weapon1 = Zone("weapon1", player_id)
         self.weapon2 = Zone("weapon2", player_id)
-        self.items = Zone("items", player_id) # \\
-        self.auras = Zone("auras", player_id)#  || Actual rules text is 'permanent' zone for these four. split out for convenience.
-        self.allies = Zone("allies", player_id)#||
-        self.tokens = Zone("tokens", player_id)#//
-        self.soul = Zone("soul", player_id)
+        # CR: single permanents zone with sub-zone views
+        self.permanents = Zone("permanents", player_id)
+        self.items = SubZoneView(self.permanents, "Item")
+        self.auras = SubZoneView(self.permanents, "Aura")
+        self.allies = SubZoneView(self.permanents, "Ally")
+        self.tokens = SubZoneView(self.permanents, "Token")
+        self.soul = SubZoneView(self.permanents, "Soul")
         self.hero_zone = Zone("hero", player_id)
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
 
@@ -239,7 +286,7 @@ class Player:
 
     @property
     def arena_cards(self) -> list[Card]:
-        arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2, self.items, self.auras, self.allies, self.soul, self.tokens, self.hero_zone]
+        arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2, self.permanents, self.hero_zone]
         cards = []
         for z in arena_zones:
             cards.extend(z.cards)
@@ -264,7 +311,7 @@ class Player:
     def all_zones(self) -> list[Zone]:
         return [self.hand, self.deck, self.graveyard, self.arsenal, self.banished,
                 self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2,
-                self.items, self.auras, self.allies, self.soul, self.tokens,
+                self.permanents,
                 self.inventory, self.hero_zone, self.pitch]
 
     def zone_by_name(self, name: str) -> Optional[Zone]:
@@ -273,6 +320,7 @@ class Player:
             "arsenal": self.arsenal, "banished": self.banished, "head": self.head,
             "chest": self.chest, "arms": self.arms, "legs": self.legs,
             "weapon": self.weapon1, "weapon1": self.weapon1, "weapon2": self.weapon2,
+            "permanents": self.permanents,
             "items": self.items, "auras": self.auras,
             "allies": self.allies, "soul": self.soul, "tokens": self.tokens,
             "inventory": self.inventory, "hero": self.hero_zone, "pitch": self.pitch,
@@ -323,6 +371,8 @@ class Player:
             "legs": self.legs.to_dict(),
             "weapon1":	self.weapon1.to_dict(),
             "weapon2":	self.weapon2.to_dict(),
+            "permanents":	self.permanents.to_dict(),
+            # Backward-compat sub-zone keys
             "items":	self.items.to_dict(),
             "auras":	self.auras.to_dict(),
             "allies":	self.allies.to_dict(),

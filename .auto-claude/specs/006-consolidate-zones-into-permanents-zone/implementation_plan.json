@@ -1,0 +1,566 @@
+{
+  "feature": "Consolidate zones into unified permanents zone",
+  "workflow_type": "refactor",
+  "workflow_rationale": "Architectural refactor of existing zone infrastructure to align with FAB Comprehensive Rules CR 3.0.5. No new game features \u2014 existing behavior must be preserved via SubZoneView backward compatibility. The change adds a new zone model alongside the old (via SubZoneView), migrates consumers, then the old separate Zone instances are simply removed from Player.__init__.",
+  "created_at": "2026-03-24T20:41:22.179Z",
+  "updated_at": "2026-03-24T21:53:02.083Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "xstateState": "coding",
+  "executionPhase": "coding",
+  "lastEvent": {
+    "eventId": "025c90df-5ec0-4fdd-9e7a-307ce07058e5",
+    "sequence": 6,
+    "type": "QA_PASSED",
+    "timestamp": "2026-03-24T21:38:46.261011+00:00"
+  },
+  "phases": [
+    {
+      "id": "phase-1-core-model",
+      "name": "Core Data Model \u2014 SubZoneView + Permanents Zone",
+      "type": "implementation",
+      "description": "Build the foundation: add permanent_subtype to Card, create SubZoneView class, refactor Player.__init__ to use a single permanents Zone with sub-zone property accessors, and update all Player helper methods. After this phase, player.items/auras/allies/tokens/soul still work as SubZoneView instances while the underlying storage is a single permanents Zone.",
+      "depends_on": [],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add permanent_subtype field to Card dataclass",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/card.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/card.py lines 72-76 (zone tracking fields)"
+          ],
+          "notes": "Add `permanent_subtype: Optional[str] = None` to the Card dataclass after the zone tracking fields (around line 76). This is a lightweight string tag ('Item', 'Aura', 'Ally', 'Token', 'Soul') used by SubZoneView._matches() to filter cards. Must not break Card serialization (to_dict/from_dict). Also add it to Card.to_dict() output and Card.remember_last_known_state() if relevant.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from engine.card import Card; c = Card(slug='test', name='Test'); c.permanent_subtype = 'Item'; assert c.permanent_subtype == 'Item'; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Create SubZoneView class in engine/state.py",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/state.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/state.py lines 34-120 (Zone class API \u2014 SubZoneView must mirror this interface)",
+            "spec.md lines 228-266 (SubZoneView reference design)"
+          ],
+          "notes": "Create SubZoneView class ABOVE the Player class in state.py (after Zone class, around line 120). Must support: .cards (filtered list), .add() (sets permanent_subtype then delegates to parent), .remove() (delegates to parent), .find(), .find_all(), .extend(), .name (returns subtype name for backward compat), .owner_id, .is_public, .slugs, .top, .to_dict(), __len__, __bool__, __iter__, __repr__. The _matches() method should use permanent_subtype as the PRIMARY filter to avoid duplicates (e.g., aura tokens have both 'Token' and 'Aura' in types). Soul uses permanent_subtype='Soul' exclusively since soul cards retain their original types.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from engine.state import Zone, SubZoneView; from engine.card import Card; z = Zone('permanents', 1); sv = SubZoneView(z, 'Item'); c = Card(slug='test', name='Test', types=['Item']); sv.add(c); assert len(sv) == 1; assert c.zone == 'permanents'; assert c.permanent_subtype == 'Item'; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Refactor Player.__init__ to use single permanents Zone with sub-zone properties",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/state.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/state.py lines 206-210 (current 5 separate zones to replace)",
+            "engine/state.py lines 234-238 (weapon property pattern)",
+            "engine/state.py lines 256-262 (equipment property pattern)"
+          ],
+          "notes": "Replace `self.items = Zone('items', player_id)` etc. with `self.permanents = Zone('permanents', player_id)`. Add @property methods for items, auras, allies, tokens, soul that return SubZoneView(self.permanents, 'Item'/'Aura'/'Ally'/'Token'/'Soul'). The properties should create new SubZoneView instances each time (stateless, cheap).",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from engine.state import Player; from engine.card import Card; p = Player(1, Card(slug='hero', name='Hero', types=['Hero'], base_life=40, base_intellect=4)); c = Card(slug='gold', name='Gold', types=['Token','Item']); p.items.add(c); assert c in p.permanents.cards; assert c in p.items.cards; assert c not in p.auras.cards; assert c.zone == 'permanents'; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-1-4",
+          "description": "Update Player helper methods: all_zones, zone_by_name, arena_cards, to_dict, allies_exhausted serialization",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/state.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/state.py lines 240-246 (arena_cards \u2014 replace items/auras/allies/soul/tokens with permanents)",
+            "engine/state.py lines 264-268 (all_zones \u2014 replace 5 zones with permanents)",
+            "engine/state.py lines 270-279 (zone_by_name \u2014 add 'permanents' key, map old names to sub-views)",
+            "engine/state.py lines 299-340 (to_dict \u2014 serialize permanents zone, retain sub-zone keys for backward compat)"
+          ],
+          "notes": "all_zones(): replace items/auras/allies/soul/tokens with single permanents. arena_cards: replace 5 zone lists with permanents. zone_by_name(): add 'permanents' mapping to self.permanents Zone; keep 'items'/'auras'/'allies'/'tokens'/'soul' mapping to self.items/self.auras etc. (SubZoneView properties). to_dict(): add 'permanents' key with self.permanents.to_dict(); keep 'items'/'auras'/'allies'/'tokens'/'soul' keys for backward compat using SubZoneView.to_dict(). allies_exhausted serialization in to_dict (lines 339-340): update to use self.allies (SubZoneView).",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from engine.state import Player; from engine.card import Card; p = Player(1, Card(slug='hero', name='Hero', types=['Hero'], base_life=40, base_intellect=4)); assert p.zone_by_name('permanents') is p.permanents; assert p.zone_by_name('items') is not None; d = p.to_dict(); assert 'permanents' in d; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-effects-keywords",
+      "name": "Engine Effects & Zone Constants",
+      "type": "implementation",
+      "description": "Update zone-name string checks in effects.py (Ward, Arcane Barrier, Spellvoid, Quell, Arcane Shelter) and zone constants + token dispatch in keywords.py. These are the most critical string-based changes since card.zone is now 'permanents' instead of 'items'/'auras'/etc.",
+      "depends_on": [
+        "phase-1-core-model"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Update effects.py \u2014 replace 5 zone-name string tuples with 'permanents'",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/effects.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/effects.py lines 278-281 (Ward zone check pattern)"
+          ],
+          "notes": "Five _condition() functions in effects.py check `source_card.zone in ('head', 'chest', 'arms', 'legs', 'weapon', 'items', 'auras', 'allies', 'tokens', 'hero')`. Replace the individual sub-zone names with 'permanents'. The updated tuple should be: ('head', 'chest', 'arms', 'legs', 'weapon', 'permanents', 'hero'). Locations: Ward (line 278), Arcane Barrier (line 310), Spellvoid (line 344), Quell (line 375), Arcane Shelter (line 407). Note: 'soul' was already missing from these tuples in the original code.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import ast; src = open('engine/effects.py').read(); assert src.count('\\\"permanents\\\"') >= 5; assert '\\\"items\\\"' not in src or src.count('\\\"items\\\"') == 0; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Update keywords.py \u2014 ARENA_ZONE_NAMES constant and token creation dispatch",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/card_effects/keywords.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/card_effects/keywords.py lines 37-42 (ARENA_ZONE_NAMES)",
+            "engine/card_effects/keywords.py lines 1028-1035 (token dispatch)"
+          ],
+          "notes": "1) ARENA_ZONE_NAMES (line 38-42): replace 'items', 'auras', 'allies', 'tokens', 'soul' with 'permanents'. New frozenset: {'head', 'chest', 'arms', 'legs', 'weapon', 'hero', 'permanents', 'combat chain'}. 2) Token dispatch (lines 1028-1035): player.auras.add(token) / player.items.add(token) / player.tokens.add(token) \u2014 these calls still work via SubZoneView, so NO code change needed for the dispatch itself. Only update if any explicit zone-name string reference exists. 3) Check Charge keyword (~line 776) for any soul zone references.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from engine.card_effects.keywords import ARENA_ZONE_NAMES; assert 'permanents' in ARENA_ZONE_NAMES; assert 'items' not in ARENA_ZONE_NAMES; assert 'auras' not in ARENA_ZONE_NAMES; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-card-effects",
+      "name": "Engine Card Effects \u2014 Triggers & Registry",
+      "type": "implementation",
+      "description": "Update triggers.py (~15 zone mutation references) and registry.py (4 item/aura condition checks). Most of these use the .add()/.remove()/.cards API which SubZoneView already supports, so changes are minimal \u2014 mainly verifying compatibility and fixing any zone-name string comparisons.",
+      "depends_on": [
+        "phase-1-core-model"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Update triggers.py \u2014 verify/fix ~15 zone mutation references",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/card_effects/triggers.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/card_effects/triggers.py line 1931 (player.items.add \u2014 Gold-Baited Hook)",
+            "engine/card_effects/triggers.py line 2693 (zone list iteration with player.items/auras/allies)"
+          ],
+          "notes": "All 15 references use SubZoneView-compatible APIs: .add(), .remove(), .cards, iteration. Key locations: line 1931 (items.add gold), line 2227/2239 (auras.cards check + remove), line 2374/2397/2417 (auras.cards membership), line 2603/2610 (list(auras.cards) + remove), line 2626 (auras.cards sigil count), line 2693 (zone list with items/auras/allies \u2014 SubZoneView supports .cards so works), line 2931 (auras.cards check), line 2971/2978 (auras.cards filter + remove), line 3154/3164 (items.cards silver search + remove). Most should work WITHOUT changes because SubZoneView mirrors Zone API. Only fix if zone-name string comparisons exist (check for card.zone == 'items' etc.).",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import engine.card_effects.triggers; print('triggers.py imports OK')\"",
+            "expected": "triggers.py imports OK"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Update registry.py \u2014 fix 4 item/aura condition checks",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/card_effects/registry.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/card_effects/registry.py line 45 (auras.cards sigil check)",
+            "engine/card_effects/registry.py line 96 (items.cards gold check)",
+            "engine/card_effects/registry.py line 106 (items.remove gold)",
+            "engine/card_effects/registry.py line 151 (items.cards gold check)"
+          ],
+          "notes": "All 4 references use .cards (list access) and .remove() which SubZoneView supports. These should work WITHOUT changes. Verify by checking for any zone-name string comparisons. If registry checks card.zone values, those need updating from 'items'/'auras' to 'permanents'.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import engine.card_effects.registry; print('registry.py imports OK')\"",
+            "expected": "registry.py imports OK"
+          },
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-actions-engine",
+      "name": "Engine Actions & Game Loop",
+      "type": "implementation",
+      "description": "Update actions.py (ACTIVATE_ITEM enumeration, defense logic) and engine.py (allies_exhausted reset). These use .cards enumeration which SubZoneView supports, but may have zone-name string checks.",
+      "depends_on": [
+        "phase-1-core-model"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Update actions.py \u2014 ACTIVATE_ITEM enumeration and defense card logic",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/actions.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/actions.py line 383 (player.items.cards enumeration)",
+            "engine/actions.py line 716 (player.items.cards enumeration)"
+          ],
+          "notes": "Lines 383 and 716 enumerate player.items.cards for ACTIVATE_ITEM action generation. SubZoneView.cards returns filtered list, so these work WITHOUT changes. Lines 476-477 are commented-out allies code \u2014 no change needed. Verify no zone-name string comparisons exist (card.zone == 'items' etc.).",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import engine.actions; print('actions.py imports OK')\"",
+            "expected": "actions.py imports OK"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Update engine.py \u2014 allies_exhausted reset",
+          "service": "engine",
+          "files_to_modify": [
+            "engine/engine.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/engine.py line 215 (allies_exhausted = [False] * len(player.allies.cards))"
+          ],
+          "notes": "Line 215: `player.allies_exhausted = [False] * len(player.allies.cards)`. After refactor, `player.allies` returns SubZoneView with .cards property. `len(player.allies.cards)` works. NO change needed \u2014 verify SubZoneView compatibility.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import engine.engine; print('engine.py imports OK')\"",
+            "expected": "engine.py imports OK"
+          },
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "phase-5-integration",
+      "name": "Encoder & RL Agent Integration",
+      "type": "implementation",
+      "description": "Update encoder (gamestate_embedder, card_embedder) and RL agent (talishar_adapter) to work with unified permanents zone. The embedder already conceptually treats permanents as one group; the adapter needs to route loaded cards through sub-zone views.",
+      "depends_on": [
+        "phase-1-core-model"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-5-1",
+          "description": "Update gamestate_embedder.py \u2014 simplify permanents aggregation",
+          "service": "encoder",
+          "files_to_modify": [
+            "encoder/gamestate_embedder.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "encoder/gamestate_embedder.py lines 213-218 (permanent_cards aggregation)"
+          ],
+          "notes": "Lines 213-218 currently manually concatenate items+auras+allies+soul+tokens. Replace with `list(player.permanents.cards)` \u2014 the unified zone already holds all permanents. This is a simplification, not a functional change.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import ast; src = open('encoder/gamestate_embedder.py').read(); assert 'player.permanents' in src; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-5-2",
+          "description": "Update card_embedder.py \u2014 update zone name vocabulary",
+          "service": "encoder",
+          "files_to_modify": [
+            "encoder/card_embedder.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "encoder/card_embedder.py lines 71-79 (CARD_ZONES vocabulary)"
+          ],
+          "notes": "CARD_ZONES list (line 71-79) already includes 'permanent' (singular). Need to add 'permanents' (plural, the actual zone name) and optionally keep old names as aliases for backward compatibility with pre-existing embeddings. The zone vocabulary change means N_ZONES may change \u2014 verify no downstream hardcoded dimensions break.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from encoder.card_embedder import CARD_ZONES; assert 'permanents' in CARD_ZONES; print('OK')\"",
+            "expected": "OK"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-5-3",
+          "description": "Update talishar_adapter.py \u2014 route loaded cards through sub-zone views",
+          "service": "rl_agents",
+          "files_to_modify": [
+            "rl_agents/talishar_adapter.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/talishar_adapter.py lines 1160-1166 (permanent zone loading)",
+            "rl_agents/talishar_adapter.py lines 1314-1364 (soul, aura, item, ally zone loading)"
+          ],
+          "notes": "14 zone add() calls: player.soul.add(), player.auras.add(), player.items.add(), player.tokens.add(), player.allies.add() (plus opponent equivalents). These all use SubZoneView.add() which works \u2014 SubZoneView sets permanent_subtype and delegates to permanents Zone. NO functional changes needed. Line 1363-1364: allies_exhausted uses player.allies.cards \u2014 SubZoneView.cards works. Verify any zone-name string arguments to _load_zone_cards() are updated if they check card.zone.",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import rl_agents.talishar_adapter; print('talishar_adapter.py imports OK')\"",
+            "expected": "talishar_adapter.py imports OK"
+          },
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "phase-6-tests-validation",
+      "name": "Tests & Validation",
+      "type": "cleanup",
+      "description": "Update existing tests, create new unit tests for SubZoneView/permanents zone, and run full regression suite. This is the final validation phase.",
+      "depends_on": [
+        "phase-2-effects-keywords",
+        "phase-3-card-effects",
+        "phase-4-actions-engine",
+        "phase-5-integration"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-6-1",
+          "description": "Update test_talishar_adapter.py \u2014 fix soul zone assertion",
+          "service": "tests",
+          "files_to_modify": [
+            "tests/test_talishar_adapter.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "tests/test_talishar_adapter.py lines 175-180 (soul zone assertions)"
+          ],
+          "notes": "Line 177: `assert player.soul.cards[0].zone == 'soul'` must change to `assert player.soul.cards[0].zone == 'permanents'`. Also verify lines 175-176 (soul.cards length and slug) still pass. Lines 179-180 (auras.cards) should work via SubZoneView.",
+          "verification": {
+            "type": "command",
+            "command": "python -m pytest tests/test_talishar_adapter.py -v --tb=short -x",
+            "expected": "All tests pass"
+          },
+          "status": "completed"
+        },
+        {
+          "id": "subtask-6-2",
+          "description": "Create test_permanents_zone.py \u2014 comprehensive unit tests for SubZoneView and permanents zone",
+          "service": "tests",
+          "files_to_modify": [],
+          "files_to_create": [
+            "tests/test_permanents_zone.py"
+          ],
+          "patterns_from": [
+            "tests/test_talishar_adapter.py (test structure pattern)",
+            "spec.md lines 341-369 (QA acceptance test list)"
+          ],
+          "notes": "Create comprehensive unit tests covering: SubZoneView filtering (add via items, appears in permanents and items.cards), add/remove isolation (items \u2260 auras), Soul sub-zone (permanent_subtype='Soul'), empty sub-zones ([] / len==0 / bool==False), zone_by_name backward compat ('items' \u2192 SubZoneView, 'permanents' \u2192 Zone), card.zone tracking (== 'permanents'), card.permanent_subtype tracking, to_dict serialization, SubZoneView.to_dict(), all_zones includes permanents, arena_cards includes permanents, token dispatch via sub-zone views.",
+          "verification": {
+            "type": "command",
+            "command": "python -m pytest tests/test_permanents_zone.py -v --tb=short",
+            "expected": "All tests pass"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-6-3",
+          "description": "Full regression test run \u2014 verify all existing tests still pass",
+          "service": "tests",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "notes": "Run the complete test suite: `python -m pytest tests/ -v`. All existing tests must pass with no regressions. Also run the engine smoke test: `python -c 'from engine.engine import new_game; from engine.deck import load_deck; from engine.card import CardDB; db = CardDB(); print(\"Engine loads OK\")'`.",
+          "verification": {
+            "type": "command",
+            "command": "python -m pytest tests/ -v --tb=short",
+            "expected": "All tests pass with no failures"
+          },
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 6,
+    "total_subtasks": 16,
+    "services_involved": [
+      "engine",
+      "encoder",
+      "rl_agents",
+      "tests"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 4,
+      "parallel_groups": [
+        {
+          "phases": [
+            "phase-2-effects-keywords",
+            "phase-3-card-effects",
+            "phase-4-actions-engine",
+            "phase-5-integration"
+          ],
+          "reason": "All depend only on phase-1-core-model, each modifies different file sets with zero overlap"
+        }
+      ],
+      "recommended_workers": 2,
+      "speedup_estimate": "1.5x faster than sequential (phases 2-5 parallelized in pairs)"
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 006 --parallel 2"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "unit",
+      "integration"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All existing tests pass (python -m pytest tests/ -v)",
+      "New test_permanents_zone.py passes with full SubZoneView coverage",
+      "card.zone == 'permanents' for all cards in unified zone",
+      "card.permanent_subtype correctly set for all sub-zone filtering",
+      "Zone name strings updated in effects.py (5 locations), keywords.py (ARENA_ZONE_NAMES)",
+      "SubZoneView supports full Zone-like API (add, remove, find, find_all, extend, iterate, len, bool, cards, slugs, to_dict)",
+      "No import failures or runtime errors",
+      "Serialization (to_dict) backward compatible"
+    ],
+    "verification_steps": [
+      {
+        "name": "Engine Smoke Test",
+        "command": "python -c \"from engine.engine import new_game; from engine.deck import load_deck; from engine.card import CardDB; db = CardDB(); print('Engine loads OK')\"",
+        "expected_outcome": "Engine loads OK",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Unit Tests",
+        "command": "python -m pytest tests/test_permanents_zone.py -v",
+        "expected_outcome": "All tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Regression Tests",
+        "command": "python -m pytest tests/ -v --tb=short",
+        "expected_outcome": "All tests pass with no failures",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      }
+    ],
+    "reasoning": "Medium risk cross-cutting refactor affecting game state representation. Requires unit tests for SubZoneView operations and regression tests to verify all existing functionality preserved. No security or infrastructure concerns \u2014 pure code refactor."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/test_permanents_zone.py -v"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/ -v --tb=short"
+      ],
+      "services_to_test": [
+        "engine",
+        "encoder",
+        "rl_agents"
+      ]
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    }
+  },
+  "qa_signoff": {
+    "status": "approved",
+    "qa_session": 3,
+    "issues_found": [
+      {
+        "description": "None. All 3 critical issues from QA Session 2 verified fixed."
+      }
+    ],
+    "tests_passed": {},
+    "timestamp": "2026-03-24T21:38:41.043684+00:00",
+    "ready_for_qa_revalidation": false
+  },
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "error",
+      "timestamp": "2026-03-24T21:30:54.637277+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "QA agent did not update implementation_plan.json"
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "status": "rejected",
+      "timestamp": "2026-03-24T21:34:22.735007+00:00",
+      "issues": [
+        {
+          "description": "3 critical: (1) effects.py equipment zone names removed from 5 condition tuples - only \"permanents\" remains, breaking Ward/Arcane Barrier/Spellvoid/Quell/Arcane Shelter for equipment; (2) keywords.py effect_charge uses player.permanents.add() instead of player.soul.add(), skipping Soul subtype tagging; (3) keywords.py _create_token uses player.permanents.add() for all tokens instead of routing through sub-zone views, causing duplicate sub-zone membership for aura tokens"
+        }
+      ],
+      "duration_seconds": 208.1
+    },
+    {
+      "iteration": 3,
+      "status": "approved",
+      "timestamp": "2026-03-24T21:38:46.259511+00:00",
+      "issues": [],
+      "duration_seconds": 147.44
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 3,
+    "last_iteration": 3,
+    "last_status": "approved",
+    "issues_by_type": {
+      "unknown": 2
+    }
+  },
+  "last_updated": "2026-03-24T21:38:41.043684+00:00"
+}
