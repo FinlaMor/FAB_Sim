@@ -118,6 +118,45 @@ class Zone:
             'cards': [card.to_dict() for card in self.cards]
         }
 
+class SubZoneView:
+    """A filtered, mutable view over a parent Zone, selecting cards by type tag."""
+
+    def __init__(self, parent: Zone, subtype: str):
+        self.parent = parent
+        self.subtype = subtype  # e.g., "Item", "Aura", "Ally", "Token", "Soul"
+
+    @property
+    def cards(self) -> list[Card]:
+        return [c for c in self.parent.cards if self._matches(c)]
+
+    def add(self, card: Card, is_public=None) -> None:
+        card.permanent_subtype = self.subtype
+        self.parent.add(card, is_public)
+
+    def remove(self, card: Card) -> bool:
+        return self.parent.remove(card)
+
+    def find(self, slug: str) -> Optional[Card]:
+        return next((c for c in self.cards if c.slug == slug), None)
+
+    def find_all(self, slug: str) -> list[Card]:
+        return [c for c in self.cards if c.slug == slug]
+
+    def extend(self, cards) -> None:
+        for card in cards:
+            self.add(card)
+
+    def _matches(self, card: Card) -> bool:
+        if self.subtype == "Soul":
+            return getattr(card, 'permanent_subtype', None) == "Soul"
+        return self.subtype in getattr(card, 'types', []) or getattr(card, 'permanent_subtype', None) == self.subtype
+
+    def __len__(self): return len(self.cards)
+    def __bool__(self): return bool(self.cards)
+    def __iter__(self): return iter(list(self.cards))
+    def __repr__(self): return f"SubZoneView({self.parent.name!r}, {self.subtype!r}, {[c.slug for c in self.cards]})"
+
+
 class EventManager:
     def __init__(self):
         self.listeners: dict = {}
