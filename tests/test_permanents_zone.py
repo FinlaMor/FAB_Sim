@@ -305,3 +305,21 @@ def test_token_added_via_tokens_subzone():
     assert token in p.tokens.cards
     assert token.permanent_subtype == "Token"
     assert token.zone == "permanents"
+
+
+def test_multi_typed_card_isolation():
+    """A card with multiple types should only appear in the sub-zone it was added to."""
+    p = _make_player()
+    # Card has both Token and Aura types
+    c = Card(slug="spectral-shield", name="Spectral Shield", types=["Token", "Aura"])
+    p.auras.add(c)
+    assert c in p.auras.cards, "Card should be in auras"
+    assert c not in p.tokens.cards, "Card should NOT appear in tokens"
+    assert c.permanent_subtype == "Aura"
+
+    # And the reverse: add via tokens
+    c2 = Card(slug="spectral-shield-2", name="Spectral Shield 2", types=["Token", "Aura"])
+    p.tokens.add(c2)
+    assert c2 in p.tokens.cards, "Card should be in tokens"
+    assert c2 not in p.auras.cards, "Card should NOT appear in auras"
+    assert c2.permanent_subtype == "Token"

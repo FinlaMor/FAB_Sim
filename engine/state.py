@@ -147,9 +147,7 @@ class SubZoneView:
             self.add(card)
 
     def _matches(self, card: Card) -> bool:
-        if self.subtype == "Soul":
-            return getattr(card, 'permanent_subtype', None) == "Soul"
-        return self.subtype in getattr(card, 'types', []) or getattr(card, 'permanent_subtype', None) == self.subtype
+        return getattr(card, 'permanent_subtype', None) == self.subtype
 
     def __len__(self): return len(self.cards)
     def __bool__(self): return bool(self.cards)
