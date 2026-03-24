@@ -776,6 +776,38 @@ def effect_charge(state: GameState, player_id: int, card: Card) -> None:
     player.soul.add(card)
 
 
+def effect_reload(state: GameState, player_id: int) -> None:
+    """8.5.15: Put a card from hand on top of deck, then draw a card."""
+    player = state.players[player_id]
+    if not player.hand.cards:
+        return
+    slugs = [c.slug for c in player.hand.cards]
+    choice = _ask_player(state, player_id, slugs,
+                         context="Reload: choose a card to put on top of deck")
+    card = player.hand.find(choice)
+    if card is None:
+        card = player.hand.cards[0]
+    player.hand.remove(card)
+    player.deck.cards.insert(0, card)
+    card.zone = "deck"
+    _draw_cards(player, 1)
+
+
+def effect_banish_top_deck(state: GameState, player_id: int, count: int = 1,
+                           face_up: bool = True) -> list:
+    """8.5.1b: Banish the top N cards of deck."""
+    player = state.players[player_id]
+    banished = []
+    for _ in range(count):
+        if not player.deck.cards:
+            break
+        card = player.deck.pop_top()
+        if card is not None:
+            player.banished.add(card, is_public=face_up)
+            banished.append(card)
+    return banished
+
+
 def effect_mark(state: GameState, target_player_id: int) -> None:
     """8.5.50: Mark a hero — gives them the marked condition (9.3).
     Cleared when hit by opponent (9.3.3) or hero ceases to exist."""
