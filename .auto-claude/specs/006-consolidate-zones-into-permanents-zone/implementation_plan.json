@@ -398,7 +398,7 @@
             "command": "python -m pytest tests/ -v --tb=short",
             "expected": "All tests pass with no failures"
           },
-          "status": "pending"
+          "status": "completed"
         }
       ]
     }
