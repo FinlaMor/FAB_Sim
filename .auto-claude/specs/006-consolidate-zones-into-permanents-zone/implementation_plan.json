@@ -3,16 +3,16 @@
   "workflow_type": "refactor",
   "workflow_rationale": "Architectural refactor of existing zone infrastructure to align with FAB Comprehensive Rules CR 3.0.5. No new game features — existing behavior must be preserved via SubZoneView backward compatibility. The change adds a new zone model alongside the old (via SubZoneView), migrates consumers, then the old separate Zone instances are simply removed from Player.__init__.",
   "created_at": "2026-03-24T20:41:22.179Z",
-  "updated_at": "2026-03-24T21:14:55.217Z",
+  "updated_at": "2026-03-24T21:45:00.727Z",
   "status": "in_progress",
   "planStatus": "in_progress",
   "xstateState": "coding",
   "executionPhase": "coding",
   "lastEvent": {
-    "eventId": "2d392a78-6339-4884-82e6-a2e0730476a9",
-    "sequence": 1,
-    "type": "PLANNING_COMPLETE",
-    "timestamp": "2026-03-24T20:58:54.833149+00:00"
+    "eventId": "025c90df-5ec0-4fdd-9e7a-307ce07058e5",
+    "sequence": 6,
+    "type": "QA_PASSED",
+    "timestamp": "2026-03-24T21:38:46.261011+00:00"
   },
   "phases": [
     {
@@ -290,7 +290,7 @@
             "command": "python -c \"import ast; src = open('encoder/gamestate_embedder.py').read(); assert 'player.permanents' in src; print('OK')\"",
             "expected": "OK"
           },
-          "status": "pending"
+          "status": "completed"
         },
         {
           "id": "subtask-5-2",
@@ -309,7 +309,7 @@
             "command": "python -c \"from encoder.card_embedder import CARD_ZONES; assert 'permanents' in CARD_ZONES; print('OK')\"",
             "expected": "OK"
           },
-          "status": "pending"
+          "status": "completed"
         },
         {
           "id": "subtask-5-3",
@@ -329,7 +329,7 @@
             "command": "python -c \"import rl_agents.talishar_adapter; print('talishar_adapter.py imports OK')\"",
             "expected": "talishar_adapter.py imports OK"
           },
-          "status": "pending"
+          "status": "completed"
         }
       ]
     },
@@ -511,5 +511,56 @@
       "checks": []
     }
   },
-  "qa_signoff": null
+  "qa_signoff": {
+    "status": "approved",
+    "qa_session": 3,
+    "issues_found": [
+      {
+        "description": "None. All 3 critical issues from QA Session 2 verified fixed."
+      }
+    ],
+    "tests_passed": {},
+    "timestamp": "2026-03-24T21:38:41.043684+00:00",
+    "ready_for_qa_revalidation": false
+  },
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "error",
+      "timestamp": "2026-03-24T21:30:54.637277+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "QA agent did not update implementation_plan.json"
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "status": "rejected",
+      "timestamp": "2026-03-24T21:34:22.735007+00:00",
+      "issues": [
+        {
+          "description": "3 critical: (1) effects.py equipment zone names removed from 5 condition tuples - only \"permanents\" remains, breaking Ward/Arcane Barrier/Spellvoid/Quell/Arcane Shelter for equipment; (2) keywords.py effect_charge uses player.permanents.add() instead of player.soul.add(), skipping Soul subtype tagging; (3) keywords.py _create_token uses player.permanents.add() for all tokens instead of routing through sub-zone views, causing duplicate sub-zone membership for aura tokens"
+        }
+      ],
+      "duration_seconds": 208.1
+    },
+    {
+      "iteration": 3,
+      "status": "approved",
+      "timestamp": "2026-03-24T21:38:46.259511+00:00",
+      "issues": [],
+      "duration_seconds": 147.44
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 3,
+    "last_iteration": 3,
+    "last_status": "approved",
+    "issues_by_type": {
+      "unknown": 2
+    }
+  },
+  "last_updated": "2026-03-24T21:38:41.043684+00:00"
 }
