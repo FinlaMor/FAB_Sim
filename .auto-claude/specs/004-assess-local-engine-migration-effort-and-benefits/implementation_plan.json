@@ -52,7 +52,7 @@
           },
           "status": "completed",
           "notes": "Full gap analysis produced. 4,561 total cards: 118 custom CARD_TRIGGERS (42 match slug_index, 76 use different naming), 28 triggering + 15 passthrough keyword bases handling 1,287 cards, 110 vanilla cards. 3,135 cards (68.7%) uncovered and need implementation. Report at docs/reports/card_coverage_gap_analysis.md, analysis script at scripts/gap_analysis.py.",
-          "updated_at": "2026-03-24T20:00:00+00:00"
+          "updated_at": "2026-03-24T19:50:37.591588+00:00"
         },
         {
           "id": "subtask-1-3",
@@ -71,7 +71,9 @@
             "type": "manual",
             "instructions": "Verify each pain point references specific evidence from the source files (line numbers, error messages, or documented metrics like '28/32 games timed out')"
           },
-          "status": "pending"
+          "status": "completed",
+          "notes": "Cataloged 17 pain points across 6 categories (reliability, resource costs, setup complexity, scalability, debugging, maintenance) with line-number evidence. Key findings: 87.5% game timeout rate, MySQL crashes, 3-6GB RAM for 32 instances, ~780 lines of HTTP adapter code, silent action rejections, non-deterministic behavior. Report at docs/reports/talishar_pain_points.md.",
+          "updated_at": "2026-03-24T20:00:00.000000+00:00"
         }
       ]
     },
@@ -101,7 +103,9 @@
             "type": "manual",
             "instructions": "Verify tier classification by checking 5 sample cards per tier: read their functional_text from slug_index.json and confirm the complexity assignment is reasonable given the existing trigger patterns in triggers.py"
           },
-          "status": "pending"
+          "status": "completed",
+          "notes": "Classified 3,135 uncovered cards: Simple 861 (535 unique), Medium 1,493 (888 unique), Complex 781 (574 unique). Total effort: ~1,152 developer-hours (~28.8 weeks). Report at docs/reports/complexity_tier_analysis.md, script at scripts/complexity_tiers.py.",
+          "updated_at": "2026-03-24T21:00:00.000000+00:00"
         },
         {
           "id": "subtask-2-2",
@@ -312,16 +316,16 @@
     }
   },
   "qa_signoff": null,
-  "status": "in_progress",
-  "planStatus": "in_progress",
+  "status": "error",
+  "planStatus": "pending",
   "xstateState": "coding",
-  "executionPhase": "coding",
-  "updated_at": "2026-03-24T19:45:03.290Z",
+  "executionPhase": "failed",
+  "updated_at": "2026-03-24T19:53:27.567Z",
   "lastEvent": {
     "eventId": "715a6648-c01e-46bf-8ec5-3cd20349985f",
     "sequence": 0,
     "type": "PLANNING_COMPLETE",
     "timestamp": "2026-03-24T19:42:02.911713+00:00"
   },
-  "last_updated": "2026-03-24T19:44:28.916143+00:00"
+  "last_updated": "2026-03-24T19:50:37.591588+00:00"
 }
