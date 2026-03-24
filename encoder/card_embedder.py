@@ -73,8 +73,7 @@ CARD_ZONES = [
     "head", "chest", "arms", "legs", "weapon",
     "weapon1", "weapon2",
     "soul",
-    "hero", "pitch", "stack", "combat chain", "inventory", "permanent",
-    "items", "auras", "allies", "tokens",
+    "hero", "pitch", "stack", "combat chain", "inventory", "permanents",
     "equipment",
 ]
 
