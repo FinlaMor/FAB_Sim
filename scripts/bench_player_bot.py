@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import argparse
 import glob
+import json
+import math
 import os
 import random
 import sys
@@ -44,6 +46,43 @@ from rl_agents.game_backends import (
 
 _DECKS_DIR = os.path.join(_ROOT, "decks")
 _CARD_DB_PATH = os.path.join(_ROOT, "card_data", "slug_index.json")
+
+
+# ---------------------------------------------------------------------------
+# Statistical helpers (stdlib only — no scipy dependency)
+# ---------------------------------------------------------------------------
+
+def _binomial_test_pvalue(wins: int, n: int, p0: float = 0.5) -> float:
+    """Two-sided binomial test p-value using normal approximation.
+
+    For large *n* this is accurate; for small *n* it is conservative enough
+    for our benchmark purposes.
+    """
+    if n == 0:
+        return 1.0
+    observed = wins / n
+    se = math.sqrt(p0 * (1 - p0) / n)
+    if se == 0:
+        return 0.0 if observed != p0 else 1.0
+    z = abs(observed - p0) / se
+    # Two-sided p-value via complementary error function
+    p_value = math.erfc(z / math.sqrt(2))
+    return p_value
+
+
+def _wilson_confidence_interval(
+    wins: int, n: int, z: float = 1.96,
+) -> tuple[float, float]:
+    """Wilson score 95 % confidence interval for a proportion."""
+    if n == 0:
+        return (0.0, 1.0)
+    p_hat = wins / n
+    denom = 1 + z * z / n
+    centre = (p_hat + z * z / (2 * n)) / denom
+    margin = z * math.sqrt((p_hat * (1 - p_hat) + z * z / (4 * n)) / n) / denom
+    lo = max(0.0, centre - margin)
+    hi = min(1.0, centre + margin)
+    return (lo, hi)
 
 
 def _discover_decks() -> list[str]:
@@ -96,6 +135,8 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--device", default="cpu",
                         help="Torch device for IQL inference (default: cpu)")
+    parser.add_argument("--json", action="store_true",
+                        help="Output results as JSON (includes stats and CI)")
     args = parser.parse_args()
 
     seed = args.seed if args.seed is not None else random.randint(0, 2**31)
@@ -182,9 +223,27 @@ def main() -> int:
         return 1
 
     win_rate = iql_wins / completed
-    print(f"\n[bench] completed={completed}  iql_wins={iql_wins}  win_rate={win_rate:.3f}")
-    # Machine-readable line parsed by run_pipeline.py
-    print(f"PLAYER_BOT_WIN_RATE {win_rate:.4f}")
+    ci_lo, ci_hi = _wilson_confidence_interval(iql_wins, completed)
+    p_value = _binomial_test_pvalue(iql_wins, completed, p0=0.5)
+
+    if args.json:
+        result_obj = {
+            "completed": completed,
+            "iql_wins": iql_wins,
+            "win_rate": round(win_rate, 4),
+            "ci_95_lower": round(ci_lo, 4),
+            "ci_95_upper": round(ci_hi, 4),
+            "p_value": round(p_value, 6),
+            "significant": p_value < 0.05,
+            "seed": seed,
+            "checkpoint": args.checkpoint,
+        }
+        print(json.dumps(result_obj, indent=2))
+    else:
+        print(f"\n[bench] completed={completed}  iql_wins={iql_wins}  win_rate={win_rate:.3f}")
+        print(f"[bench] 95% CI: [{ci_lo:.3f}, {ci_hi:.3f}]  p-value: {p_value:.4f}")
+        # Machine-readable line parsed by run_pipeline.py
+        print(f"PLAYER_BOT_WIN_RATE {win_rate:.4f}")
     return 0
 
 

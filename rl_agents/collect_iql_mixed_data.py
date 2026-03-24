@@ -25,9 +25,11 @@ from encoder.gamestate_embedder import GameStateEmbedder, gamestate_to_features
 from rl_agents.dataset_adapter import build_iql_tensors_from_replay_db
 from rl_agents.embedder_bundle import BUNDLE_FILENAME, save_embedder_bundle
 from rl_agents.game_backends import GameRunRequest, add_game_backend_args, build_game_backend
-from rl_agents.utils.card_helpers import card_slug as _card_slug, normalise_action_for_embedder as _normalise_action_for_embedder
+from rl_agents.utils.card_helpers import card_slug as _card_slug, normalise_action_for_embedder as _normalise_action_for_embedder, safe_int as _safe_int
 from rl_agents.utils.matchups import DECK_BY_HERO, MATCHUP_SPECS
 from rl_agents.utils.seed import resolve_base_seed as _resolve_base_seed
+
+AGENT_MODE_CHOICES = ["random-vs-random", "heuristic-vs-random", "heuristic-vs-heuristic"]
 
 
 def _serialise_action(action: Action) -> dict:
@@ -179,6 +181,68 @@ class RandomEmbedderRecorderAgent:
         return choice
 
 
+class HeuristicEmbedderRecorderAgent(RandomEmbedderRecorderAgent):
+    """Heuristic policy agent that records transitions + embeddings.
+
+    Uses greedy attack-first heuristic logic (same strategy as HeuristicBot)
+    while recording state/action embeddings via the parent class machinery.
+    """
+
+    def __init__(self, slug_index_path: str = "card_data/slug_index.json", **kwargs):
+        super().__init__(**kwargs)
+        self._card_stats_cache: dict[str, dict] = {}
+        path = Path(slug_index_path)
+        if path.exists():
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            by_slug = raw.get("by_slug", {})
+            for slug, card in by_slug.items():
+                self._card_stats_cache[slug] = {
+                    "power": _safe_int(card.get("power"), 0),
+                    "defense": _safe_int(card.get("defense"), 0),
+                    "cost": _safe_int(card.get("cost"), 0),
+                    "pitch": _safe_int(card.get("pitch"), 0),
+                    "types": card.get("types", []),
+                }
+
+    def _get_stats(self, action: Action) -> dict:
+        slug = _card_slug(action.card) or ""
+        return self._card_stats_cache.get(slug, {"power": 0, "defense": 0, "cost": 0, "pitch": 0, "types": []})
+
+    def _choose_action(self, state: GameState, options: list[Action]) -> Action:
+        from engine.state import Step
+
+        step = state.step
+
+        # --- Action phase: play highest-power attack ---
+        if step == Step.ACTION:
+            attacks = [
+                a for a in options
+                if a.type in (ActionType.PLAY_CARD, ActionType.ATTACK_WEAPON)
+                and self._get_stats(a)["power"] > 0
+            ]
+            if attacks:
+                return max(attacks, key=lambda a: self._get_stats(a)["power"])
+
+        # --- Defend phase: block with equipment first, then weakest hand cards ---
+        if step == Step.COMBAT_DEFEND:
+            eq_blocks = [a for a in options if a.type == ActionType.DEFEND_EQUIPMENT]
+            card_blocks = [a for a in options if a.type == ActionType.DEFEND_CARDS]
+            if eq_blocks:
+                return max(eq_blocks, key=lambda a: self._get_stats(a)["defense"])
+            if card_blocks:
+                return max(card_blocks, key=lambda a: (
+                    self._get_stats(a)["defense"],
+                    -self._get_stats(a)["power"],
+                ))
+
+        # --- Reaction phase: apply sink-below guard then fall back to heuristic ---
+        if step == Step.COMBAT_REACTION:
+            return super()._choose_action(state, options)
+
+        # Fall back to random for all other phases
+        return self.rng.choice(list(options))
+
+
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Collect Kayo-mirror IQL replay data")
     parser.add_argument(
@@ -221,6 +285,13 @@ def _parse_args() -> argparse.Namespace:
         type=int,
         default=3,
         help="Max Sink Below defense-reaction plays per player per chain link before forcing non-Sink actions",
+    )
+    parser.add_argument(
+        "--agent-mode",
+        type=str,
+        choices=AGENT_MODE_CHOICES,
+        default="random-vs-random",
+        help="Agent pairing: random-vs-random, heuristic-vs-random, heuristic-vs-heuristic",
     )
     add_game_backend_args(parser)
     return parser.parse_args()
@@ -278,6 +349,7 @@ def main() -> int:
     print(f"sink_cap/window   : {args.max_sink_below_per_window}")
     print(f"base_seed         : {base_seed}")
     print(f"torch_seed        : {torch_seed}")
+    print(f"agent_mode        : {args.agent_mode}")
     print(f"game_backend      : {game_backend.name}")
     print(f"output_db         : {db_path}")
 
@@ -292,9 +364,7 @@ def main() -> int:
             step_counter = [0]
 
             seed_offset = base_seed + global_game_idx * 10
-            p1_agent = RandomEmbedderRecorderAgent(
-                player_id=1,
-                seed=seed_offset + 1,
+            common_kwargs = dict(
                 game_id=game_id,
                 replay_db=replay_db,
                 step_counter=step_counter,
@@ -303,17 +373,37 @@ def main() -> int:
                 max_decisions_per_game=args.max_decisions_per_game,
                 max_sink_below_per_window=args.max_sink_below_per_window,
             )
-            p2_agent = RandomEmbedderRecorderAgent(
-                player_id=2,
-                seed=seed_offset + 2,
-                game_id=game_id,
-                replay_db=replay_db,
-                step_counter=step_counter,
-                action_embedder=action_embedder,
-                state_embedder=state_embedder,
-                max_decisions_per_game=args.max_decisions_per_game,
-                max_sink_below_per_window=args.max_sink_below_per_window,
-            )
+
+            p1_use_heuristic = args.agent_mode in ("heuristic-vs-random", "heuristic-vs-heuristic")
+            p2_use_heuristic = args.agent_mode == "heuristic-vs-heuristic"
+
+            if p1_use_heuristic:
+                p1_agent = HeuristicEmbedderRecorderAgent(
+                    slug_index_path=str(SLUG_INDEX_PATH),
+                    player_id=1,
+                    seed=seed_offset + 1,
+                    **common_kwargs,
+                )
+            else:
+                p1_agent = RandomEmbedderRecorderAgent(
+                    player_id=1,
+                    seed=seed_offset + 1,
+                    **common_kwargs,
+                )
+
+            if p2_use_heuristic:
+                p2_agent = HeuristicEmbedderRecorderAgent(
+                    slug_index_path=str(SLUG_INDEX_PATH),
+                    player_id=2,
+                    seed=seed_offset + 2,
+                    **common_kwargs,
+                )
+            else:
+                p2_agent = RandomEmbedderRecorderAgent(
+                    player_id=2,
+                    seed=seed_offset + 2,
+                    **common_kwargs,
+                )
 
             final_state = game_backend.run_game(
                 GameRunRequest(

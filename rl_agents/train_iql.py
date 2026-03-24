@@ -73,6 +73,16 @@ def _build_parser() -> argparse.ArgumentParser:
         help="'terminal' = sparse ±1 at game end; 'rtg' = discounted reward-to-go for every transition",
     )
     parser.add_argument(
+        "--filter-timeout",
+        action="store_true",
+        help="Exclude games that ended on turn cap (timed-out / low-quality draws)",
+    )
+    parser.add_argument(
+        "--normalize-rewards",
+        action="store_true",
+        help="Normalize rewards to zero mean and unit variance after all reward processing",
+    )
+    parser.add_argument(
         "--disable-advantage-normalization",
         action="store_true",
         help="Disable batch-wise advantage normalization before actor weighting",
@@ -89,6 +99,26 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--out-dir", type=str, default="data_collection/iql_runs")
     parser.add_argument("--run-name", type=str, default="")
     parser.add_argument("--resume-from", type=str, default="", help="Path to checkpoint to resume training from")
+    parser.add_argument("--experiment-name", type=str, default="", help="Experiment name for grouping runs (stored in metrics)")
+    parser.add_argument(
+        "--lr-schedule",
+        type=str,
+        choices=["constant", "cosine", "linear"],
+        default="constant",
+        help="Learning rate schedule: constant, cosine, or linear decay",
+    )
+    parser.add_argument("--lr-warmup-steps", type=int, default=0, help="Number of linear warmup steps before the LR schedule takes effect")
+    parser.add_argument(
+        "--early-stopping-patience",
+        type=int,
+        default=0,
+        help="Stop training if eval loss does not improve for this many eval cycles. 0 disables early stopping.",
+    )
+    parser.add_argument(
+        "--auto-eval",
+        action="store_true",
+        help="Run evaluation automatically after training completes",
+    )
     return parser
 
 
@@ -104,6 +134,8 @@ def _load_payload(args: argparse.Namespace) -> dict:
             next_state_same_player=(args.next_state_mode == "same-player"),
             reward_mode=args.reward_mode,
             gamma=args.gamma,
+            filter_timeout=args.filter_timeout,
+            normalize_rewards=args.normalize_rewards,
         )
 
     required = {"states", "actions", "rewards", "next_states", "dones", "state_dim", "action_dim"}
@@ -193,6 +225,8 @@ def main() -> int:
         trainable_embedder=args.trainable_embedder,
         embedder_hidden_dim=args.embedder_hidden_dim,
         embedder_layers=args.embedder_layers,
+        lr_schedule=args.lr_schedule,
+        lr_warmup_steps=args.lr_warmup_steps,
     )
 
     # Resume from checkpoint if specified (P2-19)
@@ -217,7 +251,31 @@ def main() -> int:
 
     history = trainer.fit(dataset=dataset, num_steps=args.steps, log_every=args.log_every, eval_ratio=args.eval_ratio)
 
-    interrupted = len(history) > 0 and history[-1].get("step", args.steps) < args.steps
+    # Early stopping based on eval loss plateau
+    early_stopped = False
+    if args.early_stopping_patience > 0 and len(history) > 0:
+        best_eval_loss = float("inf")
+        patience_counter = 0
+        stop_step = None
+        for entry in history:
+            eval_loss = entry.get("eval_loss")
+            if eval_loss is None:
+                continue
+            if eval_loss < best_eval_loss:
+                best_eval_loss = eval_loss
+                patience_counter = 0
+            else:
+                patience_counter += 1
+            if patience_counter >= args.early_stopping_patience:
+                stop_step = entry.get("step")
+                break
+        if stop_step is not None:
+            early_stopped = True
+            print(f"[iql] early_stopping triggered at step={stop_step} best_eval_loss={best_eval_loss:.6f}", flush=True)
+            # Trim history to the stop point
+            history = [h for h in history if h.get("step", 0) <= stop_step]
+
+    interrupted = len(history) > 0 and history[-1].get("step", args.steps) < args.steps and not early_stopped
     ckpt_name = "checkpoint_interrupted.pt" if interrupted else "checkpoint_final.pt"
     ckpt_path = run_dir / ckpt_name
     trainer.save_checkpoint(
@@ -237,8 +295,12 @@ def main() -> int:
         },
     )
 
+    experiment_name = args.experiment_name or ""
+
     metrics = {
         "run_name": run_name,
+        "experiment_name": experiment_name,
+        "early_stopped": early_stopped,
         "dataset": {
             "num_transitions": len(dataset),
             "state_dim": config.state_dim,
@@ -259,6 +321,19 @@ def main() -> int:
 
     print(f"[iql] checkpoint: {ckpt_path}", flush=True)
     print(f"[iql] metrics: {metrics_path}", flush=True)
+
+    if args.auto_eval and args.eval_ratio > 0 and history:
+        # Extract final eval metrics from training history
+        eval_entries = [h for h in history if h.get("eval_loss") is not None]
+        if eval_entries:
+            final_eval = eval_entries[-1]
+            eval_metrics = {k: v for k, v in final_eval.items() if k.startswith("eval_") or k == "step"}
+            print(f"[iql] auto_eval results: {json.dumps(eval_metrics, indent=2)}", flush=True)
+            eval_path = run_dir / "eval_results.json"
+            with open(eval_path, "w", encoding="utf-8") as f:
+                json.dump(eval_metrics, f, indent=2)
+            print(f"[iql] eval_results: {eval_path}", flush=True)
+
     return 0
 
 
