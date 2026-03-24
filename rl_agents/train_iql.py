@@ -73,6 +73,16 @@ def _build_parser() -> argparse.ArgumentParser:
         help="'terminal' = sparse ±1 at game end; 'rtg' = discounted reward-to-go for every transition",
     )
     parser.add_argument(
+        "--filter-timeout",
+        action="store_true",
+        help="Exclude games that ended on turn cap (timed-out / low-quality draws)",
+    )
+    parser.add_argument(
+        "--normalize-rewards",
+        action="store_true",
+        help="Normalize rewards to zero mean and unit variance after all reward processing",
+    )
+    parser.add_argument(
         "--disable-advantage-normalization",
         action="store_true",
         help="Disable batch-wise advantage normalization before actor weighting",
@@ -104,6 +114,8 @@ def _load_payload(args: argparse.Namespace) -> dict:
             next_state_same_player=(args.next_state_mode == "same-player"),
             reward_mode=args.reward_mode,
             gamma=args.gamma,
+            filter_timeout=args.filter_timeout,
+            normalize_rewards=args.normalize_rewards,
         )
 
     required = {"states", "actions", "rewards", "next_states", "dones", "state_dim", "action_dim"}

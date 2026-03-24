@@ -12,20 +12,55 @@ from torch.utils.data import Dataset
 from data_collection.replay_db import ReplayDB
 
 
-def _resolve_game_ids(db_path: str, game_ids: Optional[list[int]] = None) -> list[int]:
-    if game_ids:
-        return sorted(set(int(g) for g in game_ids))
+def _resolve_game_ids(
+    db_path: str,
+    game_ids: Optional[list[int]] = None,
+    filter_timeout: bool = False,
+) -> list[int]:
+    """Resolve which game IDs to include in the dataset.
 
+    Args:
+        db_path: Path to the ReplayDB sqlite file.
+        game_ids: Optional explicit subset. If provided, timeout filtering is
+            still applied when *filter_timeout* is True.
+        filter_timeout: If True, exclude games where ``ended_on_turn_cap=1``.
+    """
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     try:
+        if game_ids:
+            candidates = sorted(set(int(g) for g in game_ids))
+            if not filter_timeout:
+                return candidates
+            # Filter explicit game IDs against timeout flag
+            placeholders = ",".join("?" for _ in candidates)
+            rows = conn.execute(
+                f"""
+                SELECT game_id FROM games
+                WHERE game_id IN ({placeholders})
+                  AND (ended_on_turn_cap IS NULL OR ended_on_turn_cap = 0)
+                """,
+                candidates,
+            ).fetchall()
+            filtered = [int(r[0]) for r in rows]
+            excluded = len(candidates) - len(filtered)
+            if excluded:
+                print(
+                    f"[dataset] filter_timeout: excluded {excluded}/{len(candidates)} "
+                    f"timed-out games from explicit game_ids",
+                    flush=True,
+                )
+            return sorted(filtered)
+
+        timeout_clause = "AND (g.ended_on_turn_cap IS NULL OR g.ended_on_turn_cap = 0)" if filter_timeout else ""
         rows = conn.execute(
-            """
+            f"""
             SELECT DISTINCT t.game_id
             FROM transitions t
             JOIN embeddings e ON e.transition_id = t.id
             JOIN games g ON g.game_id = t.game_id
             WHERE g.winner IS NOT NULL
+            {timeout_clause}
             ORDER BY t.game_id
             """
         ).fetchall()
@@ -71,6 +106,8 @@ def build_iql_tensors_from_replay_db(
     next_state_same_player: bool = True,
     reward_mode: str = "terminal",
     gamma: float = 0.99,
+    filter_timeout: bool = False,
+    normalize_rewards: bool = False,
 ) -> dict:
     """Build IQL tensors from ReplayDB embeddings.
 
@@ -84,6 +121,10 @@ def build_iql_tensors_from_replay_db(
             ``gamma^(steps_remaining) * outcome``, giving every transition a
             non-zero training signal.
         gamma: Discount factor used when ``reward_mode='rtg'``.
+        filter_timeout: If True, exclude games that ended on turn cap
+            (``ended_on_turn_cap=1``). These games are often low-quality draws.
+        normalize_rewards: If True, normalize rewards to zero mean and unit
+            variance after all other reward processing (RTG, etc.).
     """
     db = ReplayDB(db_path)
     try:
@@ -96,7 +137,7 @@ def build_iql_tensors_from_replay_db(
         if reward_mode not in ("terminal", "rtg"):
             raise ValueError(f"Unknown reward_mode: {reward_mode!r}. Choose 'terminal' or 'rtg'.")
 
-        selected_games = _resolve_game_ids(db_path, game_ids)
+        selected_games = _resolve_game_ids(db_path, game_ids, filter_timeout=filter_timeout)
         if not selected_games:
             raise ValueError("No games with embeddings found in replay DB")
 
@@ -165,6 +206,22 @@ def build_iql_tensors_from_replay_db(
         if reward_mode == "rtg":
             r_list = _apply_rtg(r_list, d_list, gamma)
 
+        if normalize_rewards:
+            r_tensor = torch.tensor(r_list, dtype=torch.float32)
+            r_mean = r_tensor.mean().item()
+            r_std = r_tensor.std().item()
+            if r_std > 1e-8:
+                r_list = ((r_tensor - r_mean) / r_std).tolist()
+                print(
+                    f"[dataset] reward_normalization: mean={r_mean:.4f} std={r_std:.4f}",
+                    flush=True,
+                )
+            else:
+                print(
+                    f"[dataset] reward_normalization: skipped (std={r_std:.2e} too small)",
+                    flush=True,
+                )
+
         return {
             "states": torch.stack(s_list),
             "actions": torch.stack(a_list),
@@ -177,6 +234,8 @@ def build_iql_tensors_from_replay_db(
             "game_ids": selected_games,
             "transitions_loaded": transitions_loaded,
             "reward_mode": reward_mode,
+            "filter_timeout": filter_timeout,
+            "normalize_rewards": normalize_rewards,
         }
     finally:
         db.close()
