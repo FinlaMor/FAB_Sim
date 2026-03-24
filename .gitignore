@@ -87,3 +87,9 @@ ollama_test_out.txt
 # --- OS ---
 .DS_Store
 Thumbs.db
+
+# Auto Claude generated files
+.auto-claude-status
+.worktrees/
+.security-key
+logs/security/
