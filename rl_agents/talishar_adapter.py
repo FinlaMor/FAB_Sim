@@ -1312,9 +1312,9 @@ def talishar_state_to_observed_game_state(
     for card in _load_zone_cards(state_view.get("opponentBanish", []), card_db, opponent.player_id, "banished", is_public=True):
         opponent.banished.add(card, is_public=True)
 
-    for card in _load_zone_cards(state_view.get("playerSoul", []), card_db, player.player_id, "soul", is_public=True):
+    for card in _load_zone_cards(state_view.get("playerSoul", []), card_db, player.player_id, "permanents", is_public=True):
         player.soul.add(card, is_public=True)
-    for card in _load_zone_cards(state_view.get("opponentSoul", []), card_db, opponent.player_id, "soul", is_public=True):
+    for card in _load_zone_cards(state_view.get("opponentSoul", []), card_db, opponent.player_id, "permanents", is_public=True):
         opponent.soul.add(card, is_public=True)
 
     for card in _load_zone_cards(state_view.get("playerInventory", []), card_db, player.player_id, "inventory", is_public=False):
@@ -1332,25 +1332,25 @@ def talishar_state_to_observed_game_state(
     if not any((opponent_auras, opponent_items, opponent_allies)) and isinstance(state_view.get("opponentPermanents"), list):
         opponent_items = state_view.get("opponentPermanents", [])
 
-    for card in _load_zone_cards(player_auras, card_db, player.player_id, "auras", is_public=True):
+    for card in _load_zone_cards(player_auras, card_db, player.player_id, "permanents", is_public=True):
         player.auras.add(card, is_public=True)
-    for card in _load_zone_cards(opponent_auras, card_db, opponent.player_id, "auras", is_public=True):
+    for card in _load_zone_cards(opponent_auras, card_db, opponent.player_id, "permanents", is_public=True):
         opponent.auras.add(card, is_public=True)
 
-    for card in _load_zone_cards(player_items, card_db, player.player_id, "items", is_public=True):
+    for card in _load_zone_cards(player_items, card_db, player.player_id, "permanents", is_public=True):
         if "Token" in (card.types or []) or "Token" in (card.subtypes or []):
             player.tokens.add(card, is_public=True)
         else:
             player.items.add(card, is_public=True)
-    for card in _load_zone_cards(opponent_items, card_db, opponent.player_id, "items", is_public=True):
+    for card in _load_zone_cards(opponent_items, card_db, opponent.player_id, "permanents", is_public=True):
         if "Token" in (card.types or []) or "Token" in (card.subtypes or []):
             opponent.tokens.add(card, is_public=True)
         else:
             opponent.items.add(card, is_public=True)
 
-    for card in _load_zone_cards(player_allies, card_db, player.player_id, "allies", is_public=True):
+    for card in _load_zone_cards(player_allies, card_db, player.player_id, "permanents", is_public=True):
         player.allies.add(card, is_public=True)
-    for card in _load_zone_cards(opponent_allies, card_db, opponent.player_id, "allies", is_public=True):
+    for card in _load_zone_cards(opponent_allies, card_db, opponent.player_id, "permanents", is_public=True):
         opponent.allies.add(card, is_public=True)
 
     _attach_equipment(player, state_view.get("playerEquipment", []), card_db)
