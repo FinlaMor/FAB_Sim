@@ -1,0 +1,327 @@
+{
+  "feature": "Assess local engine migration effort and benefits",
+  "workflow_type": "investigation",
+  "workflow_rationale": "This task produces an analysis document, not code changes. It requires reading and cross-referencing multiple codebase files to quantify the migration effort from Talishar Docker backend to local Python engine, then writing a decision-making document with effort estimates and recommendations.",
+  "phases": [
+    {
+      "id": "phase-1-data-gathering",
+      "name": "Data Gathering — Engine State & Card Coverage",
+      "type": "investigation",
+      "description": "Read engine source files and card data to inventory the local engine's current state and quantify the card effect coverage gap. This phase produces raw data that feeds into the analysis.",
+      "depends_on": [],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Inventory local engine completeness — catalog which game phases, event types, action types, and mechanics are fully implemented vs. stubbed or missing in engine/engine.py, actions.py, effects.py, and state.py",
+          "service": "engine",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/engine.py",
+            "engine/actions.py",
+            "engine/effects.py",
+            "engine/state.py"
+          ],
+          "expected_output": "Structured inventory of engine completeness: (1) Complete game phases list with status, (2) All supported event types, (3) All supported ActionTypes, (4) Known bugs/TODOs found in code comments, (5) Missing game mechanics (allies, evo upgrade, transform, transcend, etc.)",
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify the inventory references actual code constructs (function names, class names, enum values) found in the engine source files. Spot-check 3-5 claims against the source."
+          },
+          "status": "completed",
+          "notes": "Produced comprehensive inventory: all 13 game phases implemented, 14/17 ActionTypes functional, 13 event types, full effect system. Key gaps: ally mechanics, evo/transform/transcend, soul/token zones unused, weapon2 not in action generation.",
+          "updated_at": "2026-03-24T19:44:28.916143+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Quantify card effect coverage gap — parse slug_index.json to enumerate all 4,561 cards, cross-reference against CARD_TRIGGERS in triggers.py (118 slugs), keyword auto-handling in build_keyword_triggers() (~107 keyword-only cards), and DB seed data (~80 slugs). Produce a complete gap analysis with exact counts.",
+          "service": "engine",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [
+            "card_data/slug_index.json",
+            "engine/card_effects/triggers.py",
+            "engine/card_effects/keywords.py",
+            "engine/card_effects/db/seed_data.sql"
+          ],
+          "expected_output": "Card effect gap table: (1) Total cards by type (hero, token, vanilla, keyword-only, custom-effect), (2) Implemented count from CARD_TRIGGERS, (3) Covered by keyword auto-handling, (4) Covered by DB seed data, (5) Total missing, (6) Unique base names after color dedup, (7) Effective unique implementations needed",
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import json; d=json.load(open('card_data/slug_index.json')); print(f'Total slugs: {len(d[chr(98)+chr(121)+chr(95)+chr(115)+chr(108)+chr(117)+chr(103)])}')\"",
+            "expected": "Total slugs: 4561"
+          },
+          "status": "completed",
+          "notes": "Full gap analysis produced. 4,561 total cards: 118 custom CARD_TRIGGERS (42 match slug_index, 76 use different naming), 28 triggering + 15 passthrough keyword bases handling 1,287 cards, 110 vanilla cards. 3,135 cards (68.7%) uncovered and need implementation. Report at docs/reports/card_coverage_gap_analysis.md, analysis script at scripts/gap_analysis.py.",
+          "updated_at": "2026-03-24T20:00:00+00:00"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Catalog Talishar operational pain points and costs — read HANDOFF.md, game_backends.py (TalisharGameBackend), run_talishar_games.py, and docker-compose.multi.yml to document all reliability issues, resource costs, setup complexity, and known limitations of the Talishar backend",
+          "service": "rl_agents",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [
+            "HANDOFF.md",
+            "rl_agents/game_backends.py",
+            "scripts/run_talishar_games.py",
+            "third_party/Talishar_official/docker-compose.multi.yml"
+          ],
+          "expected_output": "Categorized list of Talishar pain points: (1) Reliability issues (timeouts, MySQL crashes, memory leaks), (2) Resource costs (RAM, CPU, ports), (3) Setup complexity (Docker, compose, port mgmt), (4) Scalability limits (32 container cap), (5) Debugging difficulty (HTTP logs vs Python debugger), (6) Maintenance burden (PHP codebase we don't control)",
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify each pain point references specific evidence from the source files (line numbers, error messages, or documented metrics like '28/32 games timed out')"
+          },
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-deep-analysis",
+      "name": "Deep Analysis — Complexity Tiers, DB Accelerator, Integration Impact",
+      "type": "investigation",
+      "description": "Perform deeper analysis using the raw data from Phase 1: categorize missing card effects by complexity, evaluate the DB-driven approach as an accelerator, and map all integration changes needed for migration.",
+      "depends_on": [
+        "phase-1-data-gathering"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Categorize missing card effects by complexity tier — analyze functional_text of uncovered cards in slug_index.json and classify into Simple (stat mods, draw/discard, gain life — template-able, ~15 min each), Medium (conditional triggers, token creation, zone manipulation — ~30 min each), and Complex (multi-step effects, player choices, replacement effects, new mechanics — ~60+ min each). Sample at least 50 cards from each tier to validate classification methodology.",
+          "service": "engine",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [
+            "card_data/slug_index.json",
+            "engine/card_effects/triggers.py",
+            "engine/card_effects/keywords.py"
+          ],
+          "expected_output": "Complexity tier breakdown: (1) Count per tier (simple/medium/complex), (2) 10+ example cards per tier with rationale, (3) Per-tier time estimate, (4) Total effort estimate in developer-hours/weeks, (5) Methodology statement explaining classification criteria",
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify tier classification by checking 5 sample cards per tier: read their functional_text from slug_index.json and confirm the complexity assignment is reasonable given the existing trigger patterns in triggers.py"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Evaluate DB-driven approach as implementation accelerator — analyze schema.sql, seed_data.sql, loader.py, and db.py to assess: (1) what percentage of missing card effects could be handled declaratively via DB rows vs. requiring custom Python, (2) how many of the loader's generic effect executors already exist (gain_life, draw, deal_damage, etc.), (3) what new generic executors would be needed, (4) estimated speedup factor vs. hand-coding every trigger in Python",
+          "service": "engine",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [
+            "engine/card_effects/db/schema.sql",
+            "engine/card_effects/db/seed_data.sql",
+            "engine/card_effects/db/loader.py",
+            "engine/card_effects/db/db.py"
+          ],
+          "expected_output": "DB accelerator assessment: (1) Percentage of simple/medium cards handleable via DB rows, (2) List of existing generic effect executors in loader.py, (3) List of new executors needed, (4) Estimated time to implement missing executors, (5) Speedup factor estimate (e.g., '3x faster for simple cards'), (6) Recommendation on DB-driven vs. hardcoded approach",
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify the list of existing generic executors matches what's actually in loader.py. Cross-check that the claimed coverage percentage is consistent with the complexity tier breakdown from subtask-2-1"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-2-3",
+          "description": "Map all integration changes needed for migration — identify every file outside engine/ that would need modification if LocalEngineBackend becomes the primary backend. Cover: game_backends.py (backend selection default), data collection scripts (run_talishar_games.py replacement), embedder compatibility (does gamestate_embedder.py depend on Talishar state format?), training pipeline (talishar_iql.py, collect_iql_mixed_data.py), and deck validation.",
+          "service": "rl_agents",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/game_backends.py",
+            "rl_agents/talishar_adapter.py",
+            "scripts/run_talishar_games.py",
+            "rl_agents/collect_iql_mixed_data.py",
+            "rl_agents/talishar_iql.py",
+            "encoder/gamestate_embedder.py",
+            "encoder/action_embedder.py"
+          ],
+          "expected_output": "Integration change map: (1) File-by-file list of changes needed, (2) Effort estimate per file, (3) Risk assessment per change, (4) Dependencies between changes, (5) Whether existing tests would break, (6) New scripts/adapters that need writing",
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify each file listed actually exists and the claimed dependency on Talishar is accurate by checking imports and function calls"
+          },
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-document-writing",
+      "name": "Write Analysis Document",
+      "type": "implementation",
+      "description": "Synthesize all findings from Phase 1 and Phase 2 into a comprehensive, well-structured analysis document at docs/reports/ENGINE_MIGRATION_ANALYSIS.md.",
+      "depends_on": [
+        "phase-2-deep-analysis"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Write the complete ENGINE_MIGRATION_ANALYSIS.md document at docs/reports/ENGINE_MIGRATION_ANALYSIS.md. The document must include all 7 required sections: (1) Executive Summary, (2) Migration Cost/Benefit Analysis with comparison table across 7+ dimensions, (3) Pain Point Enumeration (categorized), (4) Benefit Analysis (5+ concrete benefits with justification), (5) Card Effect Gap Analysis with breakdown by complexity tier, (6) Effort Estimate for full card effect coverage with methodology and assumptions, (7) Recommendations with clear path forward and timeline. Use actual numbers from the codebase investigation — no speculative claims without data. Include the DB-driven approach assessment. Factor in color variant deduplication.",
+          "service": "engine",
+          "files_to_modify": [],
+          "files_to_create": [
+            "docs/reports/ENGINE_MIGRATION_ANALYSIS.md"
+          ],
+          "patterns_from": [
+            "docs/reports/ENGINE_COMPLIANCE_AUDIT_2026-03-11_POST-FIX.md",
+            "docs/decisions/ARCHITECTURE_DECISION.md"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"f=open('docs/reports/ENGINE_MIGRATION_ANALYSIS.md'); c=f.read(); f.close(); sections=['Executive Summary','Migration Cost','Pain Point','Benefit Analysis','Card Effect Gap','Effort Estimate','Recommendation']; found=[s for s in sections if s in c]; print(f'Sections found: {len(found)}/{len(sections)}'); print('All required sections present' if len(found)==len(sections) else f'Missing: {[s for s in sections if s not in c]}')\"",
+            "expected": "Sections found: 7/7\nAll required sections present"
+          },
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-verification",
+      "name": "Verify Data Accuracy",
+      "type": "cleanup",
+      "description": "Verify all numerical claims and file references in the analysis document against the actual codebase. Run the QA acceptance tests from the spec.",
+      "depends_on": [
+        "phase-3-document-writing"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Run all QA data accuracy checks defined in the spec: (1) Verify slug count matches 4561, (2) Verify trigger count matches ~118, (3) Verify engine line count matches ~1269, (4) Verify keyword count is ~158, (5) Verify all file paths referenced in the document exist, (6) Verify effort estimate methodology is stated and assumptions are explicit, (7) Verify comparison table covers 7+ dimensions, (8) Verify recommendations are supported by evidence in the analysis. Fix any inaccuracies found.",
+          "service": "engine",
+          "files_to_modify": [
+            "docs/reports/ENGINE_MIGRATION_ANALYSIS.md"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import json; d=json.load(open('card_data/slug_index.json')); slugs=len(d['by_slug']); names=len(d['by_name']); print(f'Slugs: {slugs}, Names: {names}'); assert slugs == 4561, f'Expected 4561, got {slugs}'; print('PASS: All counts verified')\"",
+            "expected": "Slugs: 4561, Names: 2904\nPASS: All counts verified"
+          },
+          "status": "pending"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 4,
+    "total_subtasks": 8,
+    "services_involved": [
+      "engine",
+      "rl_agents",
+      "card_data"
+    ],
+    "deliverable": "docs/reports/ENGINE_MIGRATION_ANALYSIS.md — comprehensive analysis document",
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "No parallelism — investigation phases are sequential (each builds on previous findings)"
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 004 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "low",
+    "skip_validation": false,
+    "minimal_mode": true,
+    "test_creation_phase": "none",
+    "test_types_required": [],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "Analysis document exists at docs/reports/ENGINE_MIGRATION_ANALYSIS.md",
+      "All 7 required sections are present (Executive Summary, Migration Cost/Benefit, Pain Points, Benefits, Card Effect Gap, Effort Estimate, Recommendations)",
+      "Card counts match slug_index.json (4561 total slugs)",
+      "Trigger count matches triggers.py (~118 unique slugs)",
+      "All file paths referenced in the document exist in the codebase",
+      "Effort estimate has explicit methodology and stated assumptions",
+      "Comparison table covers 7+ dimensions",
+      "Recommendations are supported by evidence from the analysis",
+      "Color variant deduplication is factored into effort estimates",
+      "DB-driven approach is evaluated as potential accelerator"
+    ],
+    "verification_steps": [
+      {
+        "name": "Document Structure Check",
+        "command": "python -c \"f=open('docs/reports/ENGINE_MIGRATION_ANALYSIS.md'); c=f.read(); f.close(); sections=['Executive Summary','Migration Cost','Pain Point','Benefit Analysis','Card Effect Gap','Effort Estimate','Recommendation']; found=[s for s in sections if s in c]; print(f'{len(found)}/{len(sections)} sections found')\"",
+        "expected_outcome": "7/7 sections found",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Slug Count Accuracy",
+        "command": "python -c \"import json; d=json.load(open('card_data/slug_index.json')); print(f'Slugs: {len(d[\"by_slug\"])}')\"",
+        "expected_outcome": "Slugs: 4561",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "File References Valid",
+        "command": "python -c \"import os; files=['engine/engine.py','engine/card_effects/triggers.py','engine/card_effects/keywords.py','engine/card_effects/registry.py','rl_agents/game_backends.py','card_data/slug_index.json','HANDOFF.md']; missing=[f for f in files if not os.path.exists(f)]; print(f'Missing: {len(missing)}') if missing else print('All referenced files exist')\"",
+        "expected_outcome": "All referenced files exist",
+        "type": "test",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Low risk investigation task producing a document, not code. Validation focuses on factual accuracy of claims rather than functional testing. No automated test suite needed — verification is data accuracy checks."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    },
+    "document_verification": {
+      "required": true,
+      "checks": [
+        "All 7 required sections present in ENGINE_MIGRATION_ANALYSIS.md",
+        "Card counts match actual slug_index.json data (4561 slugs, 2904 names)",
+        "Trigger count matches actual CARD_TRIGGERS entries (~118)",
+        "Effort estimate broken down by simple/medium/complex tiers",
+        "Per-tier time assumptions stated explicitly",
+        "Color variant deduplication factored in (4240 → ~2800 unique)",
+        "DB-driven approach evaluated with specific coverage estimate",
+        "Comparison table has 7+ dimensions",
+        "Recommendations supported by quantitative evidence",
+        "No speculative claims without supporting data"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "xstateState": "coding",
+  "executionPhase": "coding",
+  "updated_at": "2026-03-24T19:45:03.290Z",
+  "lastEvent": {
+    "eventId": "715a6648-c01e-46bf-8ec5-3cd20349985f",
+    "sequence": 0,
+    "type": "PLANNING_COMPLETE",
+    "timestamp": "2026-03-24T19:42:02.911713+00:00"
+  },
+  "last_updated": "2026-03-24T19:44:28.916143+00:00"
+}
