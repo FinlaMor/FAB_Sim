@@ -210,7 +210,7 @@ class PlayerStateEmbedder(nn.Module):
         
         # 12. Permanents zone embedding (sum pool) + explicit count.
         # Sum pooling preserves board scale; count keeps cardinality explicit.
-        permanent_cards = list(player.permanents.cards)
+        permanent_cards = list(player.permanents.cards) + list(player.soul.cards)
         if permanent_cards:
             perm_embs = [self.embed_card(card, player_counters) for card in permanent_cards]
             permanents_emb = sum(perm_embs)

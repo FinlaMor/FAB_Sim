@@ -83,19 +83,20 @@ def test_auras_does_not_include_items():
 # Soul sub-zone
 # ---------------------------------------------------------------------------
 
-def test_soul_subzone():
+def test_soul_is_independent_zone():
+    """Soul is its own Zone, not a SubZoneView of permanents."""
     p = _make_player()
     card = Card(slug="soul_card", name="Soul Card", types=["Action"])
     p.soul.add(card)
-    assert card.permanent_subtype == "Soul"
     assert card in p.soul.cards
-    assert card in p.permanents.cards
+    assert card.zone == "soul"
+    # Soul cards are NOT in the permanents zone
+    assert card not in p.permanents.cards
 
 
-def test_soul_does_not_match_by_type():
-    """Soul filtering uses permanent_subtype exclusively, not types."""
+def test_soul_zone_independent_from_items():
+    """Items added to permanents do not appear in soul."""
     p = _make_player()
-    # Card with 'Soul' in types but added via items should NOT appear in soul
     item = Card(slug="item1", name="Item1", types=["Item"])
     p.items.add(item)
     assert item not in p.soul.cards
@@ -160,11 +161,12 @@ def test_card_permanent_subtype_set():
     assert card.permanent_subtype == "Item"
 
 
-def test_card_permanent_subtype_soul():
+def test_card_soul_zone_tracking():
+    """Cards added to soul have card.zone == 'soul'."""
     p = _make_player()
     card = Card(slug="action1", name="Action", types=["Action"])
     p.soul.add(card)
-    assert card.permanent_subtype == "Soul"
+    assert card.zone == "soul"
 
 
 # ---------------------------------------------------------------------------
@@ -220,11 +222,14 @@ def test_all_zones_includes_permanents():
     assert "permanents" in zone_names
 
 
-def test_all_zones_does_not_include_old_zone_names():
+def test_all_zones_does_not_include_old_subzone_names():
     p = _make_player()
     zone_names = [z.name for z in p.all_zones()]
-    for old_name in ("items", "auras", "allies", "tokens", "soul"):
+    # items/auras/allies/tokens are SubZoneViews, not in all_zones
+    for old_name in ("items", "auras", "allies", "tokens"):
         assert old_name not in zone_names
+    # soul IS its own Zone and should be in all_zones
+    assert "soul" in zone_names
 
 
 # ---------------------------------------------------------------------------

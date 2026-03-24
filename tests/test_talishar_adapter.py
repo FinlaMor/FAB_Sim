@@ -174,7 +174,7 @@ def test_talishar_state_adapter_loads_visibility_sensitive_zones() -> None:
 
     assert len(player.soul.cards) == 1
     assert player.soul.cards[0].slug == "big_bully_red"
-    assert player.soul.cards[0].zone == "permanents"
+    assert player.soul.cards[0].zone == "soul"
 
     assert len(player.auras.cards) == 1
     assert player.auras.cards[0].counters["plus_power"] == 1

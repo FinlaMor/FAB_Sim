@@ -276,7 +276,7 @@ def _make_ward(source_card: Card, amount: int) -> ReplacementEffect:
         target_pid = event.get("target_player_id")
         cid = source_card.controller if source_card.controller is not None else source_card.owner
         return target_pid == cid and source_card.zone in (
-            "head", "chest", "arms", "legs", "weapon", "permanents", "hero",
+            "head", "chest", "arms", "legs", "weapon", "permanents", "soul", "hero",
         )
 
     def _replace(event, state):
@@ -307,7 +307,7 @@ def _make_arcane_barrier(source_card: Card, amount: int) -> ReplacementEffect:
         target_pid = event.get("target_player_id")
         cid = source_card.controller if source_card.controller is not None else source_card.owner
         return target_pid == cid and source_card.zone in (
-            "head", "chest", "arms", "legs", "weapon", "permanents", "hero",
+            "head", "chest", "arms", "legs", "weapon", "permanents", "soul", "hero",
         )
 
     def _replace(event, state):
@@ -340,7 +340,7 @@ def _make_spellvoid(source_card: Card, amount: int) -> ReplacementEffect:
         cid = source_card.controller if source_card.controller is not None else source_card.owner
         # Must still be in an arena zone (not already destroyed)
         return target_pid == cid and source_card.zone in (
-            "head", "chest", "arms", "legs", "weapon", "permanents", "hero",
+            "head", "chest", "arms", "legs", "weapon", "permanents", "soul", "hero",
         )
 
     def _replace(event, state):
@@ -370,7 +370,7 @@ def _make_quell(source_card: Card, amount: int) -> ReplacementEffect:
         target_pid = event.get("target_player_id")
         cid = source_card.controller if source_card.controller is not None else source_card.owner
         return target_pid == cid and source_card.zone in (
-            "head", "chest", "arms", "legs", "weapon", "permanents", "hero",
+            "head", "chest", "arms", "legs", "weapon", "permanents", "soul", "hero",
         )
 
     def _replace(event, state):
@@ -401,7 +401,7 @@ def _make_arcane_shelter(source_card: Card, amount: int) -> ReplacementEffect:
         target_pid = event.get("target_player_id")
         cid = source_card.controller if source_card.controller is not None else source_card.owner
         return target_pid == cid and source_card.zone in (
-            "head", "chest", "arms", "legs", "weapon", "permanents", "hero",
+            "head", "chest", "arms", "legs", "weapon", "permanents", "soul", "hero",
         )
 
     def _replace(event, state):

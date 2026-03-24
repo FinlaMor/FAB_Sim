@@ -1312,9 +1312,9 @@ def talishar_state_to_observed_game_state(
     for card in _load_zone_cards(state_view.get("opponentBanish", []), card_db, opponent.player_id, "banished", is_public=True):
         opponent.banished.add(card, is_public=True)
 
-    for card in _load_zone_cards(state_view.get("playerSoul", []), card_db, player.player_id, "permanents", is_public=True):
+    for card in _load_zone_cards(state_view.get("playerSoul", []), card_db, player.player_id, "soul", is_public=True):
         player.soul.add(card, is_public=True)
-    for card in _load_zone_cards(state_view.get("opponentSoul", []), card_db, opponent.player_id, "permanents", is_public=True):
+    for card in _load_zone_cards(state_view.get("opponentSoul", []), card_db, opponent.player_id, "soul", is_public=True):
         opponent.soul.add(card, is_public=True)
 
     for card in _load_zone_cards(state_view.get("playerInventory", []), card_db, player.player_id, "inventory", is_public=False):
