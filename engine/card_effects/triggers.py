@@ -3362,6 +3362,194 @@ def _under_the_trap_door_on_play(card, event, state):
 
 
 # ---------------------------------------------------------------------------
+# Batch 2: Simple data-driven cards using existing template builders
+# Color variants are deduplicated — grouped by base card name.
+# ---------------------------------------------------------------------------
+
+# -- on_play_deal_arcane: "Deal N arcane damage." --
+_arcane_damage_cards = {
+    "aether_dart_red": 3, "aether_dart_yellow": 2, "aether_dart_blue": 1,
+    "aether_hail_red": 4, "aether_hail_yellow": 3, "aether_hail_blue": 2,
+    "arcanic_crackle_red": 1, "arcanic_crackle_yellow": 1, "arcanic_crackle_blue": 1,
+    "emeritus_scolding_red": 4, "emeritus_scolding_yellow": 3, "emeritus_scolding_blue": 2,
+    "forked_lightning_red": 2,
+    "frosting_red": 3, "frosting_yellow": 2, "frosting_blue": 1,
+    "glyph_destruction_nodes_yellow": 3, "glyph_power_spell_red": 4,
+    "ice_bolt_red": 5, "ice_bolt_yellow": 4, "ice_bolt_blue": 3,
+    "scalding_rain_red": 4, "scalding_rain_yellow": 3, "scalding_rain_blue": 2,
+    "singe_red": 1, "singe_yellow": 1, "singe_blue": 1,
+    "strike_twice_red": 3,
+    "vexing_malice_red": 2, "vexing_malice_yellow": 2, "vexing_malice_blue": 2,
+    "voltic_bolt_red": 5, "voltic_bolt_yellow": 4, "voltic_bolt_blue": 3,
+    "zap_red": 3, "zap_yellow": 2, "zap_blue": 1,
+}
+for _slug, _amt in _arcane_damage_cards.items():
+    CARD_TRIGGERS[_slug] = [on_play_deal_arcane(_amt)]
+
+# -- on_hit_draw: "When this hits, draw a card." --
+for _slug in ["snatch_red", "snatch_yellow", "snatch_blue"]:
+    CARD_TRIGGERS[_slug] = [on_hit_draw(1)]
+
+# -- on_hit_arcane: "When this hits, deal N arcane damage." --
+_hit_arcane_cards = {
+    "herald_of_ravages_red": 1, "herald_of_ravages_yellow": 1, "herald_of_ravages_blue": 1,
+    "static_shock_red": 1, "static_shock_yellow": 1,
+}
+for _slug, _amt in _hit_arcane_cards.items():
+    CARD_TRIGGERS[_slug] = [on_hit_arcane(_amt)]
+
+# -- on_hit_create_token: "When this hits, create N [token]." --
+# Runechant tokens
+_hit_runechant_cards = {
+    "flail_of_agony": 1,
+    "meat_and_greet_red": 1, "meat_and_greet_yellow": 1, "meat_and_greet_blue": 1,
+    "runic_reaping_red": 3, "runic_reaping_yellow": 2, "runic_reaping_blue": 1,
+}
+for _slug, _count in _hit_runechant_cards.items():
+    CARD_TRIGGERS[_slug] = [on_hit_create_token("runechant", _count)]
+
+# Gold tokens
+_hit_gold_cards = [
+    "strike_gold_red", "strike_gold_yellow", "strike_gold_blue",
+    "performance_bonus_red", "performance_bonus_yellow", "performance_bonus_blue",
+    "pilfer_the_wreck_red", "pilfer_the_wreck_yellow", "pilfer_the_wreck_blue",
+]
+for _slug in _hit_gold_cards:
+    CARD_TRIGGERS[_slug] = [on_hit_create_token("gold", 1)]
+
+# Bloodrot Pox tokens
+_hit_bloodrot_cards = [
+    "infect_red", "infect_yellow", "infect_blue",
+    "infecting_shot_red", "infecting_shot_yellow", "infecting_shot_blue",
+    "lace_with_bloodrot_red", "spike_with_bloodrot_red",
+]
+for _slug in _hit_bloodrot_cards:
+    CARD_TRIGGERS[_slug] = [on_hit_create_token("bloodrot_pox", 1)]
+
+# Frailty tokens
+_hit_frailty_cards = [
+    "lace_with_frailty_red", "spike_with_frailty_red",
+    "wither_red", "wither_yellow", "wither_blue",
+    "withering_shot_red", "withering_shot_yellow", "withering_shot_blue",
+]
+for _slug in _hit_frailty_cards:
+    CARD_TRIGGERS[_slug] = [on_hit_create_token("frailty", 1)]
+
+# Spectral Shield tokens
+_hit_spectral_shield_cards = [
+    "herald_of_protection_red", "herald_of_protection_yellow", "herald_of_protection_blue",
+]
+for _slug in _hit_spectral_shield_cards:
+    CARD_TRIGGERS[_slug] = [on_hit_create_token("spectral_shield", 1)]
+
+# Ponder tokens
+_hit_ponder_cards = [
+    "destructive_deliberation_red", "destructive_deliberation_yellow",
+    "destructive_deliberation_blue",
+]
+for _slug in _hit_ponder_cards:
+    CARD_TRIGGERS[_slug] = [on_hit_create_token("ponder", 1)]
+
+# -- on_hit_discard: "When this hits, they discard a card." --
+for _slug in ["double_trouble_red", "double_trouble_yellow", "double_trouble_blue"]:
+    CARD_TRIGGERS[_slug] = [on_hit_banish_top(2)]
+
+# -- on_hit_intimidate: "When this hits, intimidate." --
+for _slug in ["battered_beaten_and_broken_yellow", "splatter_skull_red"]:
+    CARD_TRIGGERS[_slug] = [on_hit_intimidate()]
+
+# -- on_play_create_token: "Create N [token]." --
+# Runechant tokens
+_play_runechant_cards = {
+    "read_the_runes_red": 3, "read_the_runes_yellow": 2, "read_the_runes_blue": 1,
+    "spellblade_strike_red": 1, "spellblade_strike_yellow": 1, "spellblade_strike_blue": 1,
+}
+for _slug, _count in _play_runechant_cards.items():
+    CARD_TRIGGERS[_slug] = [on_play_create_token("runechant", _count)]
+
+# Seismic Surge tokens
+_play_seismic_cards = {
+    "seismic_stir_red": 3, "seismic_stir_yellow": 2, "seismic_stir_blue": 1,
+    "seismic_eruption_yellow": 3,
+}
+for _slug, _count in _play_seismic_cards.items():
+    CARD_TRIGGERS[_slug] = [on_play_create_token("seismic_surge", _count)]
+
+# Spectral Shield tokens
+_play_spectral_shield_cards = {
+    "prismatic_shield_red": 3, "prismatic_shield_yellow": 2, "prismatic_shield_blue": 1,
+}
+for _slug, _count in _play_spectral_shield_cards.items():
+    CARD_TRIGGERS[_slug] = [on_play_create_token("spectral_shield", _count)]
+
+# Frostbite tokens
+_play_frostbite_cards = {
+    "arctic_incarceration_red": 3, "arctic_incarceration_yellow": 2,
+    "arctic_incarceration_blue": 1,
+}
+for _slug, _count in _play_frostbite_cards.items():
+    CARD_TRIGGERS[_slug] = [on_play_create_token("frostbite", _count)]
+
+# -- on_play_intimidate: "Intimidate." --
+_play_intimidate_cards = [
+    "bad_breath_red", "bad_breath_yellow", "bad_breath_blue",
+    "clearing_bellow_blue",
+    "high_roller_red", "high_roller_yellow", "high_roller_blue",
+]
+for _slug in _play_intimidate_cards:
+    CARD_TRIGGERS[_slug] = [on_play_intimidate()]
+
+# -- on_play_opt: "Opt N." --
+_play_opt_cards = {
+    "blood_tribute_red": 3, "blood_tribute_yellow": 2, "blood_tribute_blue": 1,
+    "dimenxxional_gateway_red": 3, "dimenxxional_gateway_yellow": 2,
+    "dimenxxional_gateway_blue": 1,
+    "gaze_the_ages_blue": 2,
+    "whisper_of_the_oracle_red": 4, "whisper_of_the_oracle_yellow": 3,
+    "whisper_of_the_oracle_blue": 2,
+}
+for _slug, _count in _play_opt_cards.items():
+    CARD_TRIGGERS[_slug] = [on_play_opt(_count)]
+
+# -- on_play_amp: "Amp N." --
+_play_amp_cards = {
+    "exploding_aether_red": 3, "exploding_aether_yellow": 2, "exploding_aether_blue": 1,
+    "high_voltage_blue": 1,
+    "kindle_red": 1,
+}
+for _slug, _count in _play_amp_cards.items():
+    CARD_TRIGGERS[_slug] = [on_play_amp(_count)]
+
+# -- on_play_shuffle: "Shuffle your deck." --
+for _slug in ["remembrance_yellow", "save_the_thought_red",
+              "save_the_thought_yellow", "save_the_thought_blue"]:
+    CARD_TRIGGERS[_slug] = [on_play_shuffle()]
+
+# -- crush_trigger: "Crush — [EFFECT]." --
+CARD_TRIGGERS["hostile_encroachment_red"] = [
+    crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),
+]
+CARD_TRIGGERS["short_shrift_yellow"] = [
+    crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),
+]
+CARD_TRIGGERS["crippling_crush_red"] = [
+    crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 2)),
+]
+
+# -- reprise_trigger: "Reprise — [EFFECT]." --
+CARD_TRIGGERS["glint_the_quicksilver_blue"] = [
+    reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+]
+
+# -- foreboding_bolt: "Deal N damage." (on play, generic damage) --
+_play_damage_cards = {
+    "foreboding_bolt_red": 4, "foreboding_bolt_yellow": 3, "foreboding_bolt_blue": 2,
+}
+for _slug, _amt in _play_damage_cards.items():
+    CARD_TRIGGERS[_slug] = [on_play_deal_damage(_amt)]
+
+
+# ---------------------------------------------------------------------------
 # Registry — builds triggers for a card from keywords + card-specific
 # ---------------------------------------------------------------------------
 
