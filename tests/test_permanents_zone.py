@@ -83,15 +83,15 @@ def test_auras_does_not_include_items():
 # Soul sub-zone
 # ---------------------------------------------------------------------------
 
-def test_soul_is_independent_zone():
-    """Soul is its own Zone, not a SubZoneView of permanents."""
+def test_soul_is_subzone_of_permanents():
+    """Soul is a SubZoneView of permanents — soul cards live in the arena."""
     p = _make_player()
     card = Card(slug="soul_card", name="Soul Card", types=["Action"])
     p.soul.add(card)
     assert card in p.soul.cards
-    assert card.zone == "soul"
-    # Soul cards are NOT in the permanents zone
-    assert card not in p.permanents.cards
+    assert card.zone == "permanents"
+    # Soul cards ARE in the permanents zone
+    assert card in p.permanents.cards
 
 
 def test_soul_zone_independent_from_items():
@@ -162,11 +162,12 @@ def test_card_permanent_subtype_set():
 
 
 def test_card_soul_zone_tracking():
-    """Cards added to soul have card.zone == 'soul'."""
+    """Cards added to soul have card.zone == 'permanents' (unified zone)."""
     p = _make_player()
     card = Card(slug="action1", name="Action", types=["Action"])
     p.soul.add(card)
-    assert card.zone == "soul"
+    assert card.zone == "permanents"
+    assert card.permanent_subtype == "Soul"
 
 
 # ---------------------------------------------------------------------------
@@ -228,8 +229,8 @@ def test_all_zones_does_not_include_old_subzone_names():
     # items/auras/allies/tokens are SubZoneViews, not in all_zones
     for old_name in ("items", "auras", "allies", "tokens"):
         assert old_name not in zone_names
-    # soul IS its own Zone and should be in all_zones
-    assert "soul" in zone_names
+    # soul is now a SubZoneView, not in all_zones
+    assert "soul" not in zone_names
 
 
 # ---------------------------------------------------------------------------

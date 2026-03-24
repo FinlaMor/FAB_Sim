@@ -254,8 +254,7 @@ class Player:
         self.auras = SubZoneView(self.permanents, "Aura")
         self.allies = SubZoneView(self.permanents, "Ally")
         self.tokens = SubZoneView(self.permanents, "Token")
-        # Soul is NOT a permanent — it's cards placed under the hero card (CR 11.5.2)
-        self.soul = Zone("soul", player_id)
+        self.soul = SubZoneView(self.permanents, "Soul")
         self.hero_zone = Zone("hero", player_id)
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
 
@@ -287,7 +286,7 @@ class Player:
 
     @property
     def arena_cards(self) -> list[Card]:
-        arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2, self.permanents, self.soul, self.hero_zone]
+        arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2, self.permanents, self.hero_zone]
         cards = []
         for z in arena_zones:
             cards.extend(z.cards)
@@ -312,7 +311,7 @@ class Player:
     def all_zones(self) -> list[Zone]:
         return [self.hand, self.deck, self.graveyard, self.arsenal, self.banished,
                 self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2,
-                self.permanents, self.soul,
+                self.permanents,
                 self.inventory, self.hero_zone, self.pitch]
 
     def zone_by_name(self, name: str) -> Optional[Zone]:
