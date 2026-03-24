@@ -156,6 +156,14 @@ class SubZoneView:
     def __iter__(self): return iter(list(self.cards))
     def __repr__(self): return f"SubZoneView({self.parent.name!r}, {self.subtype!r}, {[c.slug for c in self.cards]})"
 
+    def to_dict(self) -> dict:
+        """Convert the SubZoneView to a dictionary representation."""
+        return {
+            'name': f"{self.parent.name}:{self.subtype}",
+            'owner_id': self.parent.owner_id,
+            'cards': [card.to_dict() for card in self.cards]
+        }
+
 
 class EventManager:
     def __init__(self):
@@ -315,8 +323,8 @@ class Player:
             "chest": self.chest, "arms": self.arms, "legs": self.legs,
             "weapon": self.weapon1, "weapon1": self.weapon1, "weapon2": self.weapon2,
             "permanents": self.permanents,
-            "items": self.permanents, "auras": self.permanents,
-            "allies": self.permanents, "soul": self.permanents, "tokens": self.permanents,
+            "items": self.items, "auras": self.auras,
+            "allies": self.allies, "soul": self.soul, "tokens": self.tokens,
             "inventory": self.inventory, "hero": self.hero_zone, "pitch": self.pitch,
         }.get(name)
 
@@ -365,6 +373,8 @@ class Player:
             "legs": self.legs.to_dict(),
             "weapon1":	self.weapon1.to_dict(),
             "weapon2":	self.weapon2.to_dict(),
+            "permanents":	self.permanents.to_dict(),
+            # Backward-compat sub-zone keys
             "items":	self.items.to_dict(),
             "auras":	self.auras.to_dict(),
             "allies":	self.allies.to_dict(),
