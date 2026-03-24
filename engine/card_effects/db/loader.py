@@ -292,6 +292,86 @@ def _make_condition(condition_type: str, condition_params: dict,
         zone = condition_params.get("zone", "")
         return lambda c, e, s, _z=zone: c.zone == _z
 
+    if condition_type == "player_is_non_active":
+        def _cond(c, e, s):
+            from engine.card_effects.keywords import _controller_id
+            return _controller_id(c) != s.active_player
+        return _cond
+
+    if condition_type == "controller_has_card_type":
+        card_type = condition_params.get("card_type", "")
+        zone = condition_params.get("zone", "")
+        def _cond(c, e, s, _ct=card_type, _z=zone):
+            from engine.card_effects.keywords import _controller_id
+            player = s.players[_controller_id(c)]
+            zone_obj = getattr(player, _z, None) if _z else None
+            if zone_obj is not None and hasattr(zone_obj, 'cards'):
+                return any(getattr(cc, 'card_type', '') == _ct for cc in zone_obj.cards)
+            return False
+        return _cond
+
+    if condition_type == "opponent_has_supertype":
+        supertype = condition_params.get("supertype", "")
+        zone = condition_params.get("zone", "")
+        def _cond(c, e, s, _st=supertype, _z=zone):
+            from engine.card_effects.keywords import _controller_id
+            opp = s.players[3 - _controller_id(c)]
+            zone_obj = getattr(opp, _z, None) if _z else None
+            if zone_obj is not None and hasattr(zone_obj, 'cards'):
+                return any(getattr(cc, 'supertype', '') == _st for cc in zone_obj.cards)
+            return False
+        return _cond
+
+    if condition_type == "attacking_hero_is":
+        hero_name = condition_params.get("hero", "")
+        def _cond(c, e, s, _h=hero_name):
+            if not s.combat:
+                return False
+            attacker = s.players[s.combat.attacker]
+            return getattr(attacker, 'hero_slug', '') == _h or getattr(attacker, 'hero_name', '') == _h
+        return _cond
+
+    if condition_type == "defending_hero_is":
+        hero_name = condition_params.get("hero", "")
+        def _cond(c, e, s, _h=hero_name):
+            if not s.combat:
+                return False
+            defender = s.players[s.combat.defender]
+            return getattr(defender, 'hero_slug', '') == _h or getattr(defender, 'hero_name', '') == _h
+        return _cond
+
+    if condition_type == "reprise_check":
+        def _cond(c, e, s):
+            from engine.card_effects.keywords import reprise_check
+            return reprise_check(s)
+        return _cond
+
+    if condition_type == "crush_check":
+        def _cond(c, e, s):
+            from engine.card_effects.keywords import crush_check
+            return crush_check(e, s)
+        return _cond
+
+    if condition_type == "combo_check":
+        combo_names = condition_params.get("combo_names", [])
+        def _cond(c, e, s, _cn=combo_names):
+            from engine.card_effects.keywords import combo_check
+            return combo_check(s, _cn)
+        return _cond
+
+    if condition_type == "surge_check":
+        amount = condition_params.get("amount", 1)
+        def _cond(c, e, s, _amt=amount):
+            from engine.card_effects.keywords import surge_check
+            return surge_check(e, _amt)
+        return _cond
+
+    if condition_type == "rupture_check":
+        def _cond(c, e, s):
+            from engine.card_effects.keywords import rupture_check
+            return rupture_check(s)
+        return _cond
+
     # Unknown condition — always True (safe fallback)
     return None
 
