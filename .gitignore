@@ -1,9 +1,28 @@
 # --- Card data (LSS IP — do not redistribute) ---
-card_data/slug_index.json
-card_data/slug_index_backup*.json
+card_data/
 
-# --- Model weights ---
+# --- Training data & databases ---
+data/
+data_collection/
+games.db
+*.db
+!engine/card_effects/db/schema.sql
+!engine/card_effects/db/seed_data.sql
+
+# --- Proprietary Q&A pairs ---
+offline_agents/distillation/rules_qa.jsonl
+offline_agents/distillation/cards_qa.jsonl
+offline_agents/distillation/training_data.jsonl
+
+# --- RAG vector store ---
+offline_agents/rag/chroma_db/
+
+# --- Model weights & checkpoints ---
 models/
+checkpoints/
+
+# --- Third-party vendored code ---
+third_party/
 
 # --- Python ---
 __pycache__/
@@ -21,14 +40,14 @@ venv/
 dist/
 build/
 
-# --- Local DB (contains seeded card effects) ---
-engine/card_effects/db/*.db
-
-# --- Claude Code ---
+# --- Claude Code / Auto Claude ---
 .claude/
+.auto-claude/
+.auto-claude-security.json
+.claude_settings.json
 
 # --- IDE ---
-.vscode/settings.json
+.vscode/
 .idea/
 .cursor/
 
@@ -36,6 +55,10 @@ engine/card_effects/db/*.db
 random_game_output.txt
 card_data/ability_analysis_output.txt
 ROADMAP.md
+debug.txt
+dml_warnings.txt
+complexity_assessment.json
+decks/generated/
 
 # --- Local analysis reports ---
 ACTION_EMBEDDER_*.md
@@ -46,16 +69,8 @@ RULES_AUDIT_REPORT_*.md
 SEED*_AUDIT_REPORT_*.md
 SEEDED_*_AUDIT*.md
 
-# --- Local data (large, generated, or runtime) ---
-data_collection/
-data/
-checkpoints/
-decks/generated/
-logs/
-
-# --- Local third-party checkouts ---
-third_party/Talishar/
-third_party/Talishar_official/
+# --- Draft / scratch ---
+draft/
 
 # --- Temp / debug scripts ---
 debug_modal_verb.py
@@ -68,21 +83,7 @@ check_*.py
 # --- Local probe/debug outputs ---
 ollama_*_out.txt
 ollama_test_out.txt
-*.log
-talishar_random_hero_*.txt
-talishar_random_hero_*.json
 
 # --- OS ---
 .DS_Store
 Thumbs.db
-
-# Auto Claude data directory
-.auto-claude/
-
-# Auto Claude generated files
-.auto-claude-security.json
-.auto-claude-status
-.claude_settings.json
-.worktrees/
-.security-key
-logs/security/
