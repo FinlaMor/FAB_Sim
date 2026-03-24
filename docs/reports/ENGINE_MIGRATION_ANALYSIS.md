@@ -8,14 +8,14 @@
 
 ## 1. Executive Summary
 
-FAB_Sim currently relies on a Talishar Docker PHP backend for game simulation, which suffers from **87.5% timeout rates** under parallel load, MySQL crashes, 6 GB RAM consumption for 32 instances, and an opaque third-party codebase we do not control. A local Python engine (`engine/engine.py`, 9,088 lines) exists with a complete game loop, combat system, and effect framework — but only **2.8% card effect coverage** (118 of ~4,240 custom-effect cards implemented).
+FAB_Sim currently relies on a Talishar Docker PHP backend for game simulation, which suffers from **87.5% timeout rates** under parallel load, MySQL crashes, 6 GB RAM consumption for 32 instances, and an opaque third-party codebase we do not control. A local Python engine (`engine/engine.py`, 9,088 lines) exists with a complete game loop, combat system, and effect framework — but only **36.8% total card coverage** (118 custom triggers of ~3,002 custom-effect cards implemented, plus 1,559 cards covered by keyword auto-handling, vanilla status, or hero/token type).
 
 **Key findings:**
 
 - **Migration integration effort:** ~15 hours to switch the ML pipeline from Talishar to LocalEngineBackend
-- **Card effect gap:** 3,135 uncovered cards requiring ~1,152 developer-hours (~29 weeks) for full coverage
-- **DB-driven acceleration:** Could reduce effort by ~25% (saving ~287 hours) by using declarative database rows for ~33% of cards
-- **Color variant deduplication:** Reduces unique implementations from 3,135 cards to ~1,997 base names
+- **Card effect gap:** 2,884 uncovered cards requiring ~1,061 developer-hours (~27 weeks) for full coverage
+- **DB-driven acceleration:** Could reduce effort by ~25% (saving ~264 hours) by using declarative database rows for ~33% of cards
+- **Color variant deduplication:** Reduces unique implementations from 2,884 cards to ~1,838 base names
 - **Recommendation:** Begin phased migration immediately — the local engine is already viable for hero-subset training, and Talishar's reliability issues make it unsuitable as a long-term production dependency
 
 ---
@@ -26,7 +26,7 @@ FAB_Sim currently relies on a Talishar Docker PHP backend for game simulation, w
 
 | Dimension | Talishar Docker Backend | Local Python Engine | Winner |
 |-----------|------------------------|--------------------:|--------|
-| **Game Fidelity** | Complete rules engine (all cards) | 2.8% custom card effects; full game loop and keywords | Talishar |
+| **Game Fidelity** | Complete rules engine (all cards) | 36.8% total card coverage; full game loop and keywords | Talishar |
 | **Speed** | ~30s/game via HTTP; ~500ms/action under load | ~1–5s/game in-process; no network overhead | Local (6–30×) |
 | **Parallelism** | 32 Docker containers max; 87.5% timeout at full load | Unlimited Python processes; ~100 MB each | Local |
 | **RAM Usage** | 3–6 GB for 32 instances (96 containers: web+MySQL+Redis) | ~100 MB per process; 32 processes ≈ 3.2 GB | Local (2×) |
@@ -34,7 +34,7 @@ FAB_Sim currently relies on a Talishar Docker PHP backend for game simulation, w
 | **Debugging** | Opaque HTTP errors; PHP stack traces; non-deterministic | Python debugger; deterministic replay; full state access | Local |
 | **Maintenance** | Third-party PHP codebase; 780-line HTTP adapter | Python codebase we fully own; ~9,088 lines total | Local |
 | **Setup** | Docker Compose, port management, manual pruning, PHP patches | `pip install` only; no containers | Local |
-| **Card Coverage** | All cards in the Flesh and Blood card pool | 118 custom triggers + 1,274 keyword-auto-handled + 110 vanilla = 1,426 cards (31.3%) | Talishar |
+| **Card Coverage** | All cards in the Flesh and Blood card pool | 118 custom triggers + 1,274 keyword-auto-handled + 110 vanilla + 175 hero/token = 1,677 cards (36.8%) | Talishar |
 | **Scalability** | Hard cap 32 games; effective recommendation 8–16 | Limited only by CPU cores and RAM | Local |
 
 **Summary:** Local engine wins on 8 of 10 dimensions. Talishar's only advantage is card coverage fidelity — the gap that must be closed for full migration.
@@ -62,7 +62,7 @@ Switching the ML pipeline from Talishar to LocalEngineBackend requires changes t
 
 | # | Pain Point | Category | Impact |
 |---|-----------|----------|--------|
-| 1 | **97.2% of custom-effect cards unimplemented** — only 118 of 4,240 cards have custom triggers | Missing Features | Games with unimplemented cards silently skip effects, producing incorrect game states |
+| 1 | **93.4% of custom-effect cards unimplemented** — only 118 of 3,002 non-hero/token/vanilla/keyword cards have custom triggers | Missing Features | Games with unimplemented cards silently skip effects, producing incorrect game states |
 | 2 | **Ally mechanics not implemented** — no support for ally zone permanents, ally activation, or ally combat | Missing Mechanics | Any deck using ally cards cannot function correctly |
 | 3 | **Evo Upgrade / Transform / Transcend missing** — card type transformation mechanics have no engine support | Missing Mechanics | Entire Evo hero archetype is non-functional |
 | 4 | **Soul and token zones unused** — zone infrastructure exists in `state.py` but no game mechanics interact with them | Missing Mechanics | Cards referencing these zones will malfunction |
@@ -136,17 +136,17 @@ Switching the ML pipeline from Talishar to LocalEngineBackend requires changes t
 | Token cards (no effect implementation needed) | 39 | 0.9% | Skip |
 | Vanilla cards (no functional text) | 110 | 2.4% | Covered |
 | Keyword-only cards (auto-handled by `build_keyword_triggers()`) | 1,274 | 27.9% | Covered |
-| Custom triggers implemented (`CARD_TRIGGERS`) | 42 | 0.9% | Covered |
-| **Uncovered cards needing custom effect code** | **3,135** | **68.7%** | **Gap** |
+| Custom triggers implemented (`CARD_TRIGGERS`) | 118 | 2.6% | Covered |
+| **Uncovered cards needing custom effect code** | **2,884** | **63.2%** | **Gap** |
 
-### Complexity Tier Breakdown (3,135 Uncovered Cards)
+### Complexity Tier Breakdown (2,884 Uncovered Cards)
 
 | Tier | Cards | Unique Base Names (after color dedup) | Est. Time/Card | Total Hours |
 |------|-------|---------------------------------------|----------------|-------------|
-| **Simple** — stat modifiers, draw/discard, gain life, go again grants | 861 | 535 | 15 min | 134 hours |
-| **Medium** — token creation, counters, conditionals, zone manipulation | 1,493 | 888 | 30 min | 444 hours |
-| **Complex** — player choices, replacement effects, transforms, tutoring, cost modification | 781 | 574 | 60+ min | 574 hours |
-| **Total** | **3,135** | **1,997** | — | **1,152 hours** |
+| **Simple** — stat modifiers, draw/discard, gain life, go again grants | 792 | 492 | 15 min | 123 hours |
+| **Medium** — token creation, counters, conditionals, zone manipulation | 1,373 | 817 | 30 min | 409 hours |
+| **Complex** — player choices, replacement effects, transforms, tutoring, cost modification | 719 | 529 | 60+ min | 529 hours |
+| **Total** | **2,884** | **1,838** | — | **1,061 hours** |
 
 ### Classification Methodology
 
@@ -158,7 +158,7 @@ Switching the ML pipeline from Talishar to LocalEngineBackend requires changes t
 
 The 4,561 slugs in `slug_index.json` reduce to **2,904 unique base names** after removing color suffixes (red/yellow/blue). Many color variants share identical effect logic — only the numeric parameters (damage, defense, cost) differ.
 
-For the 3,135 uncovered cards, deduplication yields **~1,997 unique base implementations** needed. This is the actual implementation target, not 3,135.
+For the 2,884 uncovered cards, deduplication yields **~1,838 unique base implementations** needed. This is the actual implementation target, not 2,884.
 
 ---
 
@@ -168,16 +168,16 @@ For the 3,135 uncovered cards, deduplication yields **~1,997 unique base impleme
 
 | Approach | Total Effort | Timeline (1 dev) | Timeline (3 devs) |
 |----------|-------------|-------------------|-------------------|
-| **All Python (current pattern)** | 1,152 hours | ~29 weeks | ~10 weeks |
-| **Hybrid: DB-driven + Python** | ~865 hours | ~22 weeks | ~7.5 weeks |
+| **All Python (current pattern)** | 1,061 hours | ~27 weeks | ~9 weeks |
+| **Hybrid: DB-driven + Python** | ~797 hours | ~20 weeks | ~7 weeks |
 
 ### DB-Driven Acceleration Assessment
 
 The `engine/card_effects/db/` subsystem provides a declarative alternative to hand-coding Python triggers:
 
 **Current state:**
-- Schema is defined (`schema.sql`, 16,077 lines)
-- Seed data exists (`seed_data.sql`, 52,505 lines, ~148 rows across ~80 slugs)
+- Schema is defined (`schema.sql`, 278 lines)
+- Seed data exists (`seed_data.sql`, 426 lines, ~148 rows across ~135 slugs)
 - Loader (`loader.py`) supports 16 effect types and 11 condition checkers
 - **Critical issue:** All 148 seed rows use `effect_type = 'custom'` — the generic executors are not yet leveraged
 
@@ -185,17 +185,17 @@ The `engine/card_effects/db/` subsystem provides a declarative alternative to ha
 
 | Tier | % DB-eligible | Unique Bases Covered | Time Saved |
 |------|--------------|---------------------|------------|
-| Simple | ~68% | 360–375 | ~90 hours |
-| Medium | ~30% | 220–310 | ~155 hours |
-| Complex | ~4% | ≤30 | ~42 hours |
-| **Total** | **~33%** | **~655** | **~287 hours** |
+| Simple | ~68% | 330–345 | ~83 hours |
+| Medium | ~30% | 200–285 | ~143 hours |
+| Complex | ~4% | ≤28 | ~38 hours |
+| **Total** | **~33%** | **~603** | **~264 hours** |
 
 **Prerequisites to unlock DB acceleration (~6 hours):**
 - Add 8 missing effect executors: `deal_physical`, `discard`, `grant_keyword`, `remove_counter`, `banish_top_deck`, `reload`, `opt`, `charge` (~3 hours)
 - Add 13 missing condition checkers (~3 hours)
 - Call `init_db()` at startup and unify DB + Python trigger systems
 
-**Net savings:** ~287 hours saved − 6 hours setup = **281 hours net savings (24.4% reduction)**.
+**Net savings:** ~264 hours saved − 6 hours setup = **258 hours net savings (24.3% reduction)**.
 
 ### Methodology and Assumptions
 
@@ -205,7 +205,7 @@ The `engine/card_effects/db/` subsystem provides a declarative alternative to ha
    - Medium cards require custom logic within existing framework → 30 minutes
    - Complex cards require new condition/effect types or engine extensions → 60+ minutes
 
-2. **Color variant deduplication** reduces implementation target from 3,135 to ~1,997 unique bases. Time estimates already reflect this (counted by unique base, not by slug).
+2. **Color variant deduplication** reduces implementation target from 2,884 to ~1,838 unique bases. Time estimates already reflect this (counted by unique base, not by slug).
 
 3. **Engine extension work** not included in per-card estimates:
    - Ally mechanics implementation: ~40 hours
@@ -218,22 +218,22 @@ The `engine/card_effects/db/` subsystem provides a declarative alternative to ha
 
 | Component | Hours |
 |-----------|-------|
-| Card effects (hybrid DB + Python) | 865 |
+| Card effects (hybrid DB + Python) | 797 |
 | Engine mechanic extensions | 112 |
 | Integration migration | 15 |
 | Testing and validation | 80 |
-| **Grand total** | **~1,072 hours** |
+| **Grand total** | **~1,004 hours** |
 
 ### Phased Effort Breakdown
 
 | Phase | Scope | Effort | Cumulative Coverage |
 |-------|-------|--------|-------------------|
-| **Phase 0: Integration switch** | Swap default backend, update scripts | 15 hours | 31.3% (existing) |
+| **Phase 0: Integration switch** | Swap default backend, update scripts | 15 hours | 36.8% (existing) |
 | **Phase 1: DB bootstrap** | Unlock DB acceleration, populate simple cards | 100 hours | ~45% |
 | **Phase 2: Core hero decks** | Implement effects for top 10 competitive heroes (~200 cards) | 120 hours | ~55% |
 | **Phase 3: Medium tier bulk** | Template-driven implementation of medium-complexity cards | 300 hours | ~75% |
 | **Phase 4: Complex cards + engine extensions** | Allies, Evo, Transform, remaining complex effects | 400 hours | ~90% |
-| **Phase 5: Long tail** | Niche/rare cards, edge cases, validation | 137 hours | ~100% |
+| **Phase 5: Long tail** | Niche/rare cards, edge cases, validation | 126 hours | ~100% |
 
 ---
 
@@ -259,7 +259,7 @@ For RL training purposes, **~55% card coverage** (top 10 hero decks fully implem
 
 ### DB-Driven Approach: Use It
 
-The DB-driven approach is a clear accelerator. The 6-hour investment to unlock generic executors yields a **47:1 return** (281 hours saved). Prioritize this in Phase 1.
+The DB-driven approach is a clear accelerator. The 6-hour investment to unlock generic executors yields a **43:1 return** (258 hours saved). Prioritize this in Phase 1.
 
 ### Talishar: Deprecate, Don't Delete
 
@@ -269,11 +269,11 @@ Keep Talishar as a validation oracle for card interaction correctness testing, b
 
 | Milestone | Timeline | Coverage |
 |-----------|----------|----------|
-| Backend switch (no Docker) | Week 1 | 31.3% |
+| Backend switch (no Docker) | Week 1 | 36.8% |
 | Simple cards via DB | Week 4 | 45% |
 | Top hero decks playable | Week 8 | 55% |
 | Medium tier complete | Week 16 | 75% |
-| Full coverage | Week 27 | ~100% |
+| Full coverage | Week 25 | ~100% |
 
 ---
 
@@ -287,11 +287,11 @@ Keep Talishar as a validation oracle for card interaction correctness testing, b
 | `engine/actions.py` | 826 | Legal action generation, ActionType enum |
 | `engine/effects.py` | 427 | ContinuousEffect, ReplacementEffect, EffectManager |
 | `engine/deck.py` | 250 | Deck loading, player creation |
-| `engine/card_effects/triggers.py` | 3,439 | Per-card triggered abilities (42 unique slugs in CARD_TRIGGERS) |
+| `engine/card_effects/triggers.py` | 3,439 | Per-card triggered abilities (118 unique slugs in CARD_TRIGGERS) |
 | `engine/card_effects/keywords.py` | 1,059 | Keyword mechanic implementations (~25 keywords) |
 | `engine/card_effects/registry.py` | 513 | Equipment activation, hero-specific effects |
-| `engine/card_effects/db/schema.sql` | 16,077 | DB-driven trigger schema |
-| `engine/card_effects/db/seed_data.sql` | 52,505 | Pre-populated trigger data (~148 rows, ~80 slugs) |
+| `engine/card_effects/db/schema.sql` | 278 | DB-driven trigger schema |
+| `engine/card_effects/db/seed_data.sql` | 426 | Pre-populated trigger data (~148 rows, ~135 slugs) |
 | `rl_agents/game_backends.py` | — | Backend selection: LocalEngineBackend vs TalisharGameBackend |
 
 ## Appendix B: Data Sources
