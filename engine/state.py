@@ -242,11 +242,13 @@ class Player:
         # CR 3.0.2: "Each player has two weapon zones"
         self.weapon1 = Zone("weapon1", player_id)
         self.weapon2 = Zone("weapon2", player_id)
-        self.items = Zone("items", player_id) # \\
-        self.auras = Zone("auras", player_id)#  || Actual rules text is 'permanent' zone for these four. split out for convenience.
-        self.allies = Zone("allies", player_id)#||
-        self.tokens = Zone("tokens", player_id)#//
-        self.soul = Zone("soul", player_id)
+        # CR: single permanents zone with sub-zone views
+        self.permanents = Zone("permanents", player_id)
+        self.items = SubZoneView(self.permanents, "Item")
+        self.auras = SubZoneView(self.permanents, "Aura")
+        self.allies = SubZoneView(self.permanents, "Ally")
+        self.tokens = SubZoneView(self.permanents, "Token")
+        self.soul = SubZoneView(self.permanents, "Soul")
         self.hero_zone = Zone("hero", player_id)
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
 
@@ -278,7 +280,7 @@ class Player:
 
     @property
     def arena_cards(self) -> list[Card]:
-        arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2, self.items, self.auras, self.allies, self.soul, self.tokens, self.hero_zone]
+        arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2, self.permanents, self.hero_zone]
         cards = []
         for z in arena_zones:
             cards.extend(z.cards)
@@ -303,7 +305,7 @@ class Player:
     def all_zones(self) -> list[Zone]:
         return [self.hand, self.deck, self.graveyard, self.arsenal, self.banished,
                 self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2,
-                self.items, self.auras, self.allies, self.soul, self.tokens,
+                self.permanents,
                 self.inventory, self.hero_zone, self.pitch]
 
     def zone_by_name(self, name: str) -> Optional[Zone]:
@@ -312,8 +314,9 @@ class Player:
             "arsenal": self.arsenal, "banished": self.banished, "head": self.head,
             "chest": self.chest, "arms": self.arms, "legs": self.legs,
             "weapon": self.weapon1, "weapon1": self.weapon1, "weapon2": self.weapon2,
-            "items": self.items, "auras": self.auras,
-            "allies": self.allies, "soul": self.soul, "tokens": self.tokens,
+            "permanents": self.permanents,
+            "items": self.permanents, "auras": self.permanents,
+            "allies": self.permanents, "soul": self.permanents, "tokens": self.permanents,
             "inventory": self.inventory, "hero": self.hero_zone, "pitch": self.pitch,
         }.get(name)
 
