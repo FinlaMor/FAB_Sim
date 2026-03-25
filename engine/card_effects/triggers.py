@@ -6136,6 +6136,1777 @@ CARD_TRIGGERS["groundbreaker_crix"] = [
 
 
 # ---------------------------------------------------------------------------
+# Batch 4 continued: Complex Custom Cards — multi-step effects, choices
+# ---------------------------------------------------------------------------
+
+# ===== BRUTE: draw-then-discard-random pattern =====
+
+def _draw_then_discard_random(state, player_id, draw_count=1):
+    """Draw card(s), then discard a random card. Returns discarded card or None."""
+    from engine.card_effects.keywords import _draw_cards
+    player = state.players[player_id]
+    _draw_cards(player, draw_count)
+    discarded = effect_discard(state, player_id, 1, random_discard=True)
+    return discarded[0] if discarded else None
+
+
+def _bare_fangs_effect(card, event, state, bonus):
+    """When attacks, draw then discard random. If 6+ power discarded, +N power."""
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    discarded = _draw_then_discard_random(state, cid)
+    if discarded and discarded.power is not None and discarded.power >= 6:
+        state.combat.attack_power += bonus
+
+for _slug, _bonus in [("bare_fangs_red", 2), ("bare_fangs_yellow", 2),
+                       ("bare_fangs_blue", 2)]:
+    CARD_TRIGGERS[_slug] = [
+        TriggerDef(event_type="attacking",
+                   effect_fn=lambda c, e, s, b=_bonus: _bare_fangs_effect(c, e, s, b)),
+    ]
+
+
+# -- alpha_rampage: discard random + intimidate on attack --
+def _alpha_rampage_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    effect_intimidate(state, 3 - cid, card)
+
+CARD_TRIGGERS["alpha_rampage_red"] = [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: effect_discard(s, _controller_id(c), 1, random_discard=True)),
+    TriggerDef(event_type="attacking", effect_fn=_alpha_rampage_attack),
+]
+
+
+# -- barraging_big_horn: discard random + dominate if < 2 non-equip defenders --
+def _barraging_big_horn_on_play(card, event, state):
+    effect_discard(state, _controller_id(card), 1, random_discard=True)
+
+def _barraging_big_horn_defend(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    non_equip = [d for d in state.combat.defending_cards
+                 if not any(t in (d.types or []) for t in ["Equipment", "Weapon"])]
+    if len(non_equip) < 2:
+        if 'dominate' not in state.combat.keywords:
+            state.combat.keywords.append('dominate')
+
+for _slug in ["barraging_big_horn_red", "barraging_big_horn_yellow",
+              "barraging_big_horn_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        TriggerDef(event_type="on_play", effect_fn=_barraging_big_horn_on_play),
+        TriggerDef(event_type="defend", effect_fn=_barraging_big_horn_defend),
+    ]
+
+
+# -- bloodrush_bellow: discard random, brute attacks +2, if 6+ draw --
+def _bloodrush_bellow_effect(card, event, state, draw_count):
+    cid = _controller_id(card)
+    discarded = effect_discard(state, cid, 1, random_discard=True)
+    state.players[cid].current_turn_effects.append("brute_attacks_plus_2")
+    if discarded and discarded[0].power is not None and discarded[0].power >= 6:
+        effect_draw(state, cid, draw_count)
+
+for _slug, _d in [("bloodrush_bellow_red", 2), ("bloodrush_bellow_yellow", 2),
+                   ("bloodrush_bellow_blue", 2)]:
+    CARD_TRIGGERS[_slug] = [
+        TriggerDef(event_type="on_play",
+                   effect_fn=lambda c, e, s, d=_d: _bloodrush_bellow_effect(c, e, s, d)),
+    ]
+
+
+# -- beaten_trackers: on random discard of 6+ power, may destroy for AP --
+def _beaten_trackers_discard(card, event, state):
+    if not hasattr(event, 'data'):
+        return
+    discarded = event.data.get('card')
+    if not discarded or discarded.power is None or discarded.power < 6:
+        return
+    cid = _controller_id(card)
+    choice = _ask_player(state, cid, [True, False],
+                         context="Beaten Trackers: destroy to gain 1 action point?")
+    if choice:
+        _move_to_graveyard(card, state)
+        effect_gain_action_point(state, cid)
+
+CARD_TRIGGERS["beaten_trackers"] = [
+    TriggerDef(event_type="card_discarded",
+               condition_fn=lambda c, e, s: c.zone in ("arms", "legs", "chest", "head"),
+               effect_fn=_beaten_trackers_discard),
+]
+
+
+# -- berserk: continuous discard-6+-banish-reveal effect --
+CARD_TRIGGERS["berserk_yellow"] = [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append("berserk_active")),
+]
+
+
+# -- cast_bones: reveal top 6, might per 6+ power --
+def _cast_bones_effect(card, event, state, count):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    n = min(count, len(player.deck.cards))
+    might = sum(1 for c in player.deck.cards[:n] if c.power is not None and c.power >= 6)
+    if might > 0:
+        create_token(state, cid, "might", might)
+
+CARD_TRIGGERS["cast_bones_red"] = [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _cast_bones_effect(c, e, s, 6)),
+]
+
+
+# -- bone_vizier: when destroyed, reveal top, if 6+ put in hand --
+def _bone_vizier_destroyed(card, event, state):
+    if not hasattr(event, 'data') or event.data.get('card') != card:
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if player.deck.cards and player.deck.cards[0].power is not None and player.deck.cards[0].power >= 6:
+        top = player.deck.pop_top()
+        player.hand.add(top)
+
+CARD_TRIGGERS["bone_vizier"] = [
+    TriggerDef(event_type="card_destroyed", effect_fn=_bone_vizier_destroyed),
+]
+
+
+# -- bonebreaker_bellow: if beaten chest, extra bonus --
+def _bonebreaker_bellow_effect(card, event, state, base_bonus, extra_bonus):
+    cid = _controller_id(card)
+    beaten = "beaten_chest_this_turn" in state.players[cid].current_turn_effects
+    bonus = extra_bonus if beaten else base_bonus
+    state.players[cid].current_turn_effects.append(f"next_brute_attack_plus_{bonus}")
+
+for _slug, _b, _x in [("bonebreaker_bellow_red", 2, 4), ("bonebreaker_bellow_yellow", 2, 3),
+                        ("bonebreaker_bellow_blue", 1, 2)]:
+    CARD_TRIGGERS[_slug] = [
+        TriggerDef(event_type="on_play",
+                   effect_fn=lambda c, e, s, b=_b, x=_x: _bonebreaker_bellow_effect(c, e, s, b, x)),
+    ]
+
+
+# -- lay_down_the_challenge: intimidate, if opp has more cards draw --
+def _lay_down_challenge_effect(card, event, state):
+    cid = _controller_id(card)
+    tid = 3 - cid
+    effect_intimidate(state, tid, card)
+    if len(state.players[tid].hand.cards) > len(state.players[cid].hand.cards):
+        effect_draw(state, cid, 1)
+
+CARD_TRIGGERS["lay_down_the_challenge_yellow"] = [
+    TriggerDef(event_type="on_play", effect_fn=_lay_down_challenge_effect),
+]
+
+
+# -- no_fear: banish 6+ power cards for power bonus --
+def _no_fear_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    banished_count = 0
+    while True:
+        eligible = [c for c in player.hand.cards if c.power is not None and c.power >= 6 and c.slug != card.slug]
+        if not eligible:
+            break
+        choice = _ask_player(state, cid, [True, False], context="No Fear: banish another 6+ power card?")
+        if not choice:
+            break
+        pick = _ask_player(state, cid, [c.slug for c in eligible], context="Choose card to banish")
+        target = next((c for c in eligible if c.slug == pick), eligible[0])
+        player.hand.remove(target)
+        effect_banish(state, target, face_up=True, banisher_id=cid)
+        banished_count += 1
+    if banished_count > 0:
+        card.effects.append(("base_power", lambda base, n=banished_count: base + n * 2))
+
+CARD_TRIGGERS["no_fear_red"] = [
+    TriggerDef(event_type="on_play", effect_fn=_no_fear_effect, is_optional=True),
+]
+
+
+# -- pack_call: reveal top, if 6+ stays, else bottom --
+def _pack_call_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if player.deck.cards and not (player.deck.cards[0].power is not None and player.deck.cards[0].power >= 6):
+        top = player.deck.cards.pop(0)
+        player.deck.cards.append(top)
+
+for _slug in ["pack_call_red", "pack_call_yellow", "pack_call_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_pack_call_effect)]
+
+
+# -- mini_meataxe / ravenous_meataxe: draw then discard random on attack --
+def _meataxe_attack(card, event, state):
+    if not state.combat or state.combat.attack_card != card:
+        return
+    _draw_then_discard_random(state, _controller_id(card))
+
+for _slug in ["mini_meataxe", "ravenous_meataxe"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_meataxe_attack)]
+
+
+# -- reincarnate: when discarded at random, put on bottom of deck --
+def _reincarnate_discard(card, event, state):
+    if not hasattr(event, 'data') or event.data.get('card') != card:
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if card in player.graveyard.cards:
+        player.graveyard.remove(card)
+        player.deck.add_bottom(card)
+
+for _slug in ["reincarnate_red", "reincarnate_yellow", "reincarnate_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="card_discarded", effect_fn=_reincarnate_discard)]
+
+
+# -- dig_up_dinner: 3 random from graveyard, shuffle 6+ attacks back --
+def _dig_up_dinner_effect(card, event, state):
+    import random as rng
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if len(player.graveyard.cards) < 3:
+        return
+    chosen = rng.sample(list(player.graveyard.cards), 3)
+    for c in chosen:
+        if "Attack" in (c.types or []) and c.power is not None and c.power >= 6:
+            player.graveyard.remove(c)
+            player.deck.cards.append(c)
+    effect_shuffle(state, cid)
+
+CARD_TRIGGERS["dig_up_dinner_blue"] = [
+    TriggerDef(event_type="on_play", effect_fn=_dig_up_dinner_effect),
+]
+
+
+# ===== WARRIOR: choose-one patterns =====
+
+# -- art_of_war: choose 2 from 3 modes --
+def _art_of_war_effect(card, event, state):
+    cid = _controller_id(card)
+    modes = ["attack_plus_1", "next_go_again", "untap_equipment"]
+    chosen = []
+    for i in range(2):
+        remaining = [m for m in modes if m not in chosen]
+        if not remaining:
+            break
+        pick = _ask_player(state, cid, remaining, context=f"Art of War: choose mode {i+1}/2")
+        chosen.append(pick)
+    for mode in chosen:
+        if mode == "attack_plus_1":
+            state.players[cid].current_turn_effects.append("attack_actions_plus_1_pd")
+        elif mode == "next_go_again":
+            state.players[cid].current_turn_effects.append("next_attack_go_again")
+        elif mode == "untap_equipment":
+            state.players[cid].current_turn_effects.append("untap_equipment")
+
+CARD_TRIGGERS["art_of_war_yellow"] = [
+    TriggerDef(event_type="on_play", effect_fn=_art_of_war_effect),
+]
+
+
+# ===== NINJA: combo + choose name =====
+
+# -- be_like_water: on hit, pay r, choose name --
+def _be_like_water_hit(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    choice = _ask_player(state, cid, [True, False], context="Be Like Water: pay {r} to choose a name?")
+    if not choice or state.players[cid].resources < 1:
+        return
+    state.players[cid].resources -= 1
+    name = _ask_player(state, cid, ["head_jab", "surging_strike", "twin_twisters"],
+                       context="Choose name for this card")
+    card.gained_name = name
+
+for _slug in ["be_like_water_red", "be_like_water_yellow", "be_like_water_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="hit", effect_fn=_be_like_water_hit)]
+
+
+# ===== RUNEBLADE: Runechant interactions =====
+
+# -- amplify_the_arknight: cost r less per Runechant --
+def _amplify_arknight_on_play(card, event, state):
+    cid = _controller_id(card)
+    rc = sum(1 for c in state.players[cid].permanents.cards if c.slug == "runechant")
+    if rc > 0:
+        state.players[cid].current_turn_effects.append(f"cost_reduction_{rc}")
+
+for _slug in ["amplify_the_arknight_red", "amplify_the_arknight_yellow", "amplify_the_arknight_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_amplify_arknight_on_play)]
+
+
+# -- arknight_ascendancy: on hit create X Runechants --
+def _arknight_ascendancy_hit(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    rc = sum(1 for c in state.players[cid].permanents.cards if c.slug == "runechant")
+    create_token(state, cid, "runechant", max(1, rc))
+
+CARD_TRIGGERS["arknight_ascendancy_red"] = [
+    TriggerDef(event_type="hit", effect_fn=_arknight_ascendancy_hit),
+]
+
+
+# -- become_the_arknight: discard action, if attack search runeblade non-attack --
+def _become_the_arknight_effect(card, event, state):
+    from engine.card_effects.keywords import effect_search_deck
+    cid = _controller_id(card)
+    player = state.players[cid]
+    actions = [c for c in player.hand.cards if "Action" in (c.types or [])]
+    if not actions:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Become the Arknight: discard an action card?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in actions], context="Choose action card to discard")
+    chosen = next((c for c in actions if c.slug == pick), actions[0])
+    is_attack = "Attack" in (chosen.types or [])
+    player.hand.remove(chosen)
+    player.graveyard.add(chosen)
+    if is_attack:
+        found = effect_search_deck(state, cid, condition=lambda c: "Runeblade" in (c.types or []) and "Attack" not in (c.types or []))
+        if found:
+            player.deck.cards.remove(found)
+            player.hand.add(found)
+            effect_shuffle(state, cid)
+
+CARD_TRIGGERS["become_the_arknight_blue"] = [
+    TriggerDef(event_type="on_play", effect_fn=_become_the_arknight_effect),
+]
+
+
+# -- bequest_the_vast_beyond: next runeblade costs r less per runechant --
+def _bequest_effect(card, event, state):
+    cid = _controller_id(card)
+    rc = sum(1 for c in state.players[cid].permanents.cards if c.slug == "runechant")
+    state.players[cid].current_turn_effects.append(f"next_runeblade_cost_minus_{rc}")
+
+CARD_TRIGGERS["bequest_the_vast_beyond_red"] = [
+    TriggerDef(event_type="on_play", effect_fn=_bequest_effect),
+]
+
+
+# ===== ILLUSIONIST: soul + aura interactions =====
+
+# -- archangel attacks: banish from soul for token creation --
+def _archangel_attack_effect(card, event, state, token_type, count):
+    if not state.combat or state.combat.attack_card != card:
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if not player.soul.cards:
+        return
+    choice = _ask_player(state, cid, [True, False], context=f"{card.name}: banish from soul?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in player.soul.cards], context="Choose soul card")
+    target = next((c for c in player.soul.cards if c.slug == pick), player.soul.cards[0])
+    player.soul.remove(target)
+    effect_banish(state, target, face_up=True, banisher_id=cid)
+    create_token(state, cid, token_type, count)
+
+CARD_TRIGGERS["aegis_archangel_of_protection"] = [
+    TriggerDef(event_type="attacking", effect_fn=lambda c, e, s: _archangel_attack_effect(c, e, s, "spectral_shield", 2)),
+]
+CARD_TRIGGERS["bellona_archangel_of_war"] = [
+    TriggerDef(event_type="attacking", effect_fn=lambda c, e, s: _archangel_attack_effect(c, e, s, "might", 1)),
+]
+
+
+# -- avalon: banish from soul, put yellow from graveyard on bottom --
+def _avalon_attack(card, event, state):
+    if not state.combat or state.combat.attack_card != card:
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if not player.soul.cards:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Avalon: banish from soul?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in player.soul.cards], context="Choose soul card")
+    target = next((c for c in player.soul.cards if c.slug == pick), player.soul.cards[0])
+    player.soul.remove(target)
+    effect_banish(state, target, face_up=True, banisher_id=cid)
+    yellows = [c for c in player.graveyard.cards if c.pitch == 2]
+    if yellows:
+        pick2 = _ask_player(state, cid, [c.slug for c in yellows], context="Choose yellow graveyard card for bottom of deck")
+        chosen = next((c for c in yellows if c.slug == pick2), yellows[0])
+        player.graveyard.remove(chosen)
+        player.deck.add_bottom(chosen)
+
+CARD_TRIGGERS["avalon_archangel_of_rebirth"] = [
+    TriggerDef(event_type="attacking", effect_fn=_avalon_attack),
+]
+
+
+# -- blasmophet: banish shadow from hand, then banish from opp hand --
+def _blasmophet_attack(card, event, state):
+    if not state.combat or state.combat.attack_card != card:
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    shadows = [c for c in player.hand.cards if "Shadow" in (c.types or [])]
+    if not shadows:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Blasmophet: banish Shadow from hand?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in shadows], context="Choose Shadow card")
+    target = next((c for c in shadows if c.slug == pick), shadows[0])
+    player.hand.remove(target)
+    effect_banish(state, target, face_up=True, banisher_id=cid)
+    opp_id = 3 - cid
+    opp = state.players[opp_id]
+    if opp.hand.cards:
+        pick2 = _ask_player(state, opp_id, [c.slug for c in opp.hand.cards], context="Blasmophet: choose card to banish")
+        chosen = next((c for c in opp.hand.cards if c.slug == pick2), opp.hand.cards[0])
+        opp.hand.remove(chosen)
+        effect_banish(state, chosen, face_up=True, banisher_id=cid)
+
+CARD_TRIGGERS["blasmophet_the_soul_harvester"] = [
+    TriggerDef(event_type="attacking", effect_fn=_blasmophet_attack),
+]
+
+
+# -- beckoning_light: charge soul, if yellow then attacks on-hit draw --
+def _beckoning_light_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    hand_cards = [c for c in player.hand.cards if c.slug != card.slug]
+    if not hand_cards:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Beckoning Light: charge a card to soul?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in hand_cards], context="Choose card to charge")
+    target = next((c for c in hand_cards if c.slug == pick), hand_cards[0])
+    is_yellow = target.pitch == 2
+    player.hand.remove(target)
+    player.soul.add(target)
+    if is_yellow:
+        state.players[cid].current_turn_effects.append("attacks_on_hit_draw_1")
+
+for _slug in ["beckoning_light_red", "beckoning_light_yellow", "beckoning_light_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_beckoning_light_effect, is_optional=True)]
+
+
+# -- beacon_of_victory: banish X from soul, +X power --
+def _beacon_of_victory_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    banished = 0
+    while player.soul.cards:
+        choice = _ask_player(state, cid, [True, False], context="Beacon of Victory: banish another soul card?")
+        if not choice:
+            break
+        pick = _ask_player(state, cid, [c.slug for c in player.soul.cards], context="Choose soul card")
+        target = next((c for c in player.soul.cards if c.slug == pick), player.soul.cards[0])
+        player.soul.remove(target)
+        effect_banish(state, target, face_up=True, banisher_id=cid)
+        banished += 1
+    if banished > 0 and state.combat:
+        state.combat.attack_power += banished
+
+CARD_TRIGGERS["beacon_of_victory_yellow"] = [
+    TriggerDef(event_type="on_play", effect_fn=_beacon_of_victory_effect),
+]
+
+
+# ===== RANGER: arsenal manipulation =====
+
+# -- barbed_castaway: put arrow into arsenal --
+def _barbed_castaway_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    arrows = [c for c in player.hand.cards if "Arrow" in (c.types or [])]
+    if not arrows:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Barbed Castaway: put arrow into arsenal?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in arrows], context="Choose arrow")
+    target = next((c for c in arrows if c.slug == pick), arrows[0])
+    player.hand.remove(target)
+    player.arsenal.add(target)
+
+CARD_TRIGGERS["barbed_castaway"] = [
+    TriggerDef(event_type="on_play", effect_fn=_barbed_castaway_effect, is_optional=True),
+]
+
+
+# ===== DRACONIC: chain link counting, phoenix flame =====
+
+def _draconic_chain_link_count(state, cid):
+    """Count draconic chain links controlled by player."""
+    count = 0
+    if state.combat and state.combat.attack_card and state.combat.attack_card.controller == cid:
+        if "Draconic" in (state.combat.attack_card.types or []):
+            count += 1
+    for link in getattr(state, 'chain_links', []):
+        ac = getattr(link, 'attack_card', None)
+        if ac and ac.controller == cid and "Draconic" in (ac.types or []):
+            count += 1
+    return count
+
+
+# -- blood_runs_deep: each dagger deals 1 on hit --
+def _blood_runs_deep_hit(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    daggers = _find_controlled_daggers(state.players[cid], state, exclude_card=card)
+    for dagger in daggers:
+        effect_deal_damage(state, 3 - cid, 1, dagger, "generic")
+
+CARD_TRIGGERS["blood_runs_deep_red"] = [
+    TriggerDef(event_type="hit", effect_fn=_blood_runs_deep_hit),
+]
+
+for _slug in ["blood_drop_red", "blood_line_red"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: None)]
+
+
+# -- dromai: pitch red -> create ash --
+def _dromai_pitch(card, event, state):
+    if not hasattr(event, 'data'):
+        return
+    pitched = event.data.get('card')
+    if pitched and pitched.pitch == 1:
+        create_token(state, _controller_id(card), "ash")
+
+for _slug in ["dromai", "dromai_ash_artist"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="card_pitched", effect_fn=_dromai_pitch)]
+
+
+# -- blistering_blade: if 2+ draconic chain links, extra bonus --
+def _blistering_blade_attack(card, event, state, base, extra):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    bonus = extra if _draconic_chain_link_count(state, cid) >= 2 else base
+    state.combat.attack_power += bonus
+
+for _slug, _b, _x in [("blistering_blade_red", 1, 3), ("blistering_blade_yellow", 1, 2),
+                        ("blistering_blade_blue", 0, 1)]:
+    CARD_TRIGGERS[_slug] = [
+        TriggerDef(event_type="attacking",
+                   effect_fn=lambda c, e, s, b=_b, x=_x: _blistering_blade_attack(c, e, s, b, x)),
+    ]
+
+
+# -- burning_blade_dance: if 2+ draconic chain links, go again --
+def _burning_blade_dance_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    if _draconic_chain_link_count(state, _controller_id(card)) >= 2:
+        if 'go_again' not in state.combat.keywords:
+            state.combat.keywords.append('go_again')
+
+for _slug in ["burning_blade_dance_red", "burning_blade_dance_yellow", "burning_blade_dance_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_burning_blade_dance_attack)]
+
+
+# -- flamecall_awakening: search for phoenix flame --
+def _flamecall_awakening_effect(card, event, state):
+    from engine.card_effects.keywords import effect_search_deck
+    cid = _controller_id(card)
+    player = state.players[cid]
+    found = effect_search_deck(state, cid, condition=lambda c: "phoenix_flame" in c.slug)
+    if found:
+        player.deck.cards.remove(found)
+        player.hand.add(found)
+        effect_shuffle(state, cid)
+
+for _slug in ["flamecall_awakening_red", "flamecall_awakening_yellow", "flamecall_awakening_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_flamecall_awakening_effect)]
+
+
+# -- inflame: return phoenix flame from graveyard --
+def _inflame_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    phoenixes = [c for c in player.graveyard.cards if "phoenix_flame" in c.slug]
+    if not phoenixes:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Inflame: return Phoenix Flame from graveyard?")
+    if choice:
+        player.graveyard.remove(phoenixes[0])
+        player.hand.add(phoenixes[0])
+
+for _slug in ["inflame_red", "inflame_yellow", "inflame_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_inflame_effect, is_optional=True)]
+
+
+# -- burn_away: banish phoenix flame as cost, gain power --
+def _burn_away_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    pfs = [c for c in player.hand.cards if "phoenix_flame" in c.slug]
+    if not pfs:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Burn Away: banish Phoenix Flame for +2 power?")
+    if not choice:
+        return
+    player.hand.remove(pfs[0])
+    effect_banish(state, pfs[0], face_up=True, banisher_id=cid)
+    if state.combat:
+        state.combat.attack_power += 2
+
+for _slug in ["burn_away_red", "burn_away_yellow", "burn_away_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_burn_away_effect, is_optional=True)]
+
+
+# -- flameborn_retribution: if dealt damage, may return phoenix flame --
+def _flameborn_retribution_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if "dealt_damage_this_turn" not in player.current_turn_effects:
+        return
+    pfs = [c for c in player.graveyard.cards if "phoenix_flame" in c.slug]
+    if pfs:
+        choice = _ask_player(state, cid, [True, False], context="Return Phoenix Flame from graveyard?")
+        if choice:
+            player.graveyard.remove(pfs[0])
+            player.hand.add(pfs[0])
+
+for _slug in ["flameborn_retribution_red", "flameborn_retribution_yellow", "flameborn_retribution_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_flameborn_retribution_effect)]
+
+
+# -- flamescale_furnace: gain r per red in pitch zone --
+CARD_TRIGGERS["flamescale_furnace"] = [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: effect_gain_resources(s, _controller_id(c),
+                          sum(1 for x in s.players[_controller_id(c)].pitch.cards if x.pitch == 1))),
+]
+
+
+# ===== EQUIPMENT: conditional destroy effects =====
+
+# -- aether_crackers: when your attack hits, may destroy for 1 arcane --
+def _aether_crackers_hit(card, event, state):
+    if not state.combat:
+        return
+    cid = _controller_id(card)
+    if state.combat.attack_card.controller != cid:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Aether Crackers: destroy for 1 arcane?")
+    if choice:
+        _move_to_graveyard(card, state)
+        effect_deal_arcane(state, 3 - cid, 1, card)
+
+CARD_TRIGGERS["aether_crackers"] = [
+    TriggerDef(event_type="hit", effect_fn=_aether_crackers_hit, is_optional=True),
+]
+
+
+# -- bloodied_helm: arsenal to bottom, draw --
+def _bloodied_helm_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if not player.arsenal.cards:
+        return
+    opts = [c.slug for c in player.arsenal.cards] + ["decline"]
+    pick = _ask_player(state, cid, opts, context="Bloodied Helm: put arsenal card on bottom to draw?")
+    if pick == "decline":
+        return
+    target = next((c for c in player.arsenal.cards if c.slug == pick), None)
+    if target:
+        player.arsenal.remove(target)
+        player.deck.add_bottom(target)
+        effect_draw(state, cid, 1)
+
+CARD_TRIGGERS["bloodied_helm"] = [
+    TriggerDef(event_type="on_play", effect_fn=_bloodied_helm_effect, is_optional=True),
+]
+
+
+# -- bloodsheath_skeleta: destroy for cost reduction --
+CARD_TRIGGERS["bloodsheath_skeleta"] = [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: (
+        _move_to_graveyard(c, s),
+        s.players[_controller_id(c)].current_turn_effects.append("next_attack_cost_1_less"),
+        s.players[_controller_id(c)].current_turn_effects.append("next_nonattack_cost_1_less"),
+    )),
+]
+
+
+# -- attention_grabbers: when defends, remove suspense counter for +2d --
+def _attention_grabbers_defend(card, event, state):
+    if not state.combat or card not in state.combat.defending_cards:
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    auras = [c for c in player.permanents.cards if player.counters.get((c.slug, c.zone, "suspense"), 0) > 0]
+    if not auras:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Attention Grabbers: remove suspense for +2 defense?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in auras], context="Choose aura")
+    target = next((c for c in auras if c.slug == pick), auras[0])
+    effect_remove_counter(state, target, "suspense", 1)
+    card.effects.append(("base_defense", lambda base: base + 2))
+
+CARD_TRIGGERS["attention_grabbers"] = [
+    TriggerDef(event_type="defend", effect_fn=_attention_grabbers_defend, is_optional=True),
+]
+
+
+# -- alluvion_constellas: first arcane prevent, add energy counter --
+CARD_TRIGGERS["alluvion_constellas"] = [
+    TriggerDef(event_type="arcane_damage_prevented",
+               effect_fn=lambda c, e, s: effect_put_counter(s, c, "energy", 1)
+               if s.players[_controller_id(c)].counters.get((c.slug, c.zone, "energy"), 0) < 4 else None),
+]
+
+
+# -- crown_of_seeds / crown_of_everbloom: face-down arsenal to bottom, draw --
+def _crown_seeds_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    facedown = [c for c in player.arsenal.cards if not c.is_public]
+    if not facedown:
+        return
+    opts = [c.slug for c in facedown] + ["decline"]
+    pick = _ask_player(state, cid, opts, context="Crown: put face-down arsenal on bottom to draw?")
+    if pick == "decline":
+        return
+    target = next((c for c in facedown if c.slug == pick), None)
+    if target:
+        player.arsenal.remove(target)
+        player.deck.add_bottom(target)
+        effect_draw(state, cid, 1)
+
+for _slug in ["crown_of_seeds", "crown_of_everbloom"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_crown_seeds_effect, is_optional=True)]
+
+
+# ===== SHADOW: banish/soul =====
+
+# -- blood_dripping_frenzy: banish hand, draw per blood debt --
+def _blood_dripping_frenzy_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    bd_count = 0
+    for c in list(player.hand.cards):
+        player.hand.remove(c)
+        has_bd = any("blood debt" == k.lower() for k in (c.keywords or []))
+        if has_bd:
+            bd_count += 1
+        effect_banish(state, c, face_up=True, banisher_id=cid)
+    if bd_count > 0:
+        effect_draw(state, cid, bd_count)
+    state.players[cid].current_turn_effects.append("brute_shadow_attacks_plus_1")
+
+CARD_TRIGGERS["blood_dripping_frenzy_blue"] = [
+    TriggerDef(event_type="on_play", effect_fn=_blood_dripping_frenzy_effect),
+]
+
+
+# ===== EARTH: arsenal manipulation, decompose =====
+
+# -- blessing_of_deliverance: on enter, draw if pitch has cost 3+ --
+def _blessing_deliverance_enter(card, event, state):
+    cid = _controller_id(card)
+    if any(c.cost is not None and c.cost >= 3 for c in state.players[cid].pitch.cards):
+        effect_draw(state, cid, 1)
+
+for _slug in ["blessing_of_deliverance_red", "blessing_of_deliverance_yellow", "blessing_of_deliverance_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="enters_arena", effect_fn=_blessing_deliverance_enter)]
+
+
+# -- break_ground: put arsenal on bottom, draw --
+def _break_ground_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if not player.arsenal.cards:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Break Ground: arsenal to bottom for draw?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in player.arsenal.cards], context="Choose arsenal card")
+    target = next((c for c in player.arsenal.cards if c.slug == pick), player.arsenal.cards[0])
+    player.arsenal.remove(target)
+    player.deck.add_bottom(target)
+    effect_draw(state, cid, 1)
+
+for _slug in ["break_ground_red", "break_ground_yellow", "break_ground_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_break_ground_effect)]
+
+
+# -- awakening: create seismic surges equal to health difference --
+def _awakening_effect(card, event, state):
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    diff = state.players[opp_id].health - state.players[cid].health
+    if diff > 0:
+        create_token(state, cid, "seismic_surge", diff)
+
+CARD_TRIGGERS["awakening_blue"] = [
+    TriggerDef(event_type="on_play", effect_fn=_awakening_effect),
+]
+
+
+# ===== ASSASSIN: contract, look-at, mark =====
+
+# -- arakni_trapdoor: search deck, banish face-down, if trap play until next turn --
+def _arakni_trapdoor_effect(card, event, state):
+    from engine.card_effects.keywords import effect_search_deck
+    cid = _controller_id(card)
+    player = state.players[cid]
+    found = effect_search_deck(state, cid, condition=lambda c: True)
+    if found:
+        player.deck.cards.remove(found)
+        effect_banish(state, found, face_up=False, banisher_id=cid)
+        if "Trap" in (found.types or []):
+            state.players[cid].current_turn_effects.append(f"play_trap_{found.slug}")
+        effect_shuffle(state, cid)
+
+CARD_TRIGGERS["arakni_trapdoor"] = [
+    TriggerDef(event_type="on_play", effect_fn=_arakni_trapdoor_effect),
+]
+
+
+# -- bonds_of_attraction: hit -> banish top deck, then banish from graveyard --
+def _bonds_of_attraction_hit(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    tid = 3 - cid
+    target = state.players[tid]
+    if target.deck.cards:
+        top = target.deck.pop_top()
+        effect_banish(state, top, face_up=True, banisher_id=cid)
+    if target.graveyard.cards:
+        pick = _ask_player(state, tid, [c.slug for c in target.graveyard.cards],
+                           context="Bonds of Attraction: choose graveyard card to banish")
+        chosen = next((c for c in target.graveyard.cards if c.slug == pick), target.graveyard.cards[0])
+        target.graveyard.remove(chosen)
+        effect_banish(state, chosen, face_up=True, banisher_id=cid)
+
+for _slug in ["bonds_of_attraction_red", "bonds_of_attraction_yellow", "bonds_of_attraction_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="hit", effect_fn=_bonds_of_attraction_hit)]
+
+
+# -- coercive_tendency: look at top 3 of opp deck, reorder --
+def _coercive_tendency_effect(card, event, state):
+    cid = _controller_id(card)
+    opp = state.players[3 - cid]
+    n = min(3, len(opp.deck.cards))
+    if n == 0:
+        return
+    top = opp.deck.cards[:n]
+    reordered = []
+    remaining = list(top)
+    for i in range(n):
+        pick = _ask_player(state, cid, [c.slug for c in remaining],
+                           context=f"Coercive Tendency: choose card {i+1} from top")
+        chosen = next((c for c in remaining if c.slug == pick), remaining[0])
+        reordered.append(chosen)
+        remaining.remove(chosen)
+    for i in range(n):
+        opp.deck.cards[i] = reordered[i]
+
+CARD_TRIGGERS["coercive_tendency_blue"] = [
+    TriggerDef(event_type="on_play", effect_fn=_coercive_tendency_effect),
+]
+
+
+# -- codex cards: multi-hero effects --
+def _codex_bloodrot_effect(card, event, state):
+    for pid in state.players:
+        player = state.players[pid]
+        if not player.hand.cards:
+            continue
+        pick = _ask_player(state, pid, [c.slug for c in player.hand.cards],
+                           context="Codex of Bloodrot: put card face-down into arsenal")
+        chosen = next((c for c in player.hand.cards if c.slug == pick), player.hand.cards[0])
+        player.hand.remove(chosen)
+        player.arsenal.add(chosen)
+
+CARD_TRIGGERS["codex_of_bloodrot_yellow"] = [TriggerDef(event_type="on_play", effect_fn=_codex_bloodrot_effect)]
+
+
+def _codex_frailty_effect(card, event, state):
+    for pid in state.players:
+        player = state.players[pid]
+        attacks = [c for c in player.graveyard.cards if "Attack" in (c.types or [])]
+        if not attacks:
+            continue
+        pick = _ask_player(state, pid, [c.slug for c in attacks],
+                           context="Codex of Frailty: choose attack from graveyard")
+        chosen = next((c for c in attacks if c.slug == pick), attacks[0])
+        player.graveyard.remove(chosen)
+        player.deck.add_bottom(chosen)
+
+CARD_TRIGGERS["codex_of_frailty_yellow"] = [TriggerDef(event_type="on_play", effect_fn=_codex_frailty_effect)]
+
+
+def _codex_inertia_effect(card, event, state):
+    for pid in state.players:
+        player = state.players[pid]
+        if player.deck.cards:
+            top = player.deck.pop_top()
+            player.arsenal.add(top)
+
+CARD_TRIGGERS["codex_of_inertia_yellow"] = [TriggerDef(event_type="on_play", effect_fn=_codex_inertia_effect)]
+
+
+# -- cut_to_the_chase: look at opp top, may put bottom --
+def _cut_to_the_chase_effect(card, event, state):
+    cid = _controller_id(card)
+    opp = state.players[3 - cid]
+    if not opp.deck.cards:
+        return
+    choice = _ask_player(state, cid, ["top", "bottom"],
+                         context=f"Cut to the Chase: opp top is {opp.deck.cards[0].slug}. Top or bottom?")
+    if choice == "bottom":
+        top = opp.deck.cards.pop(0)
+        opp.deck.cards.append(top)
+
+for _slug in ["cut_to_the_chase_red", "cut_to_the_chase_yellow", "cut_to_the_chase_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_cut_to_the_chase_effect)]
+
+
+# -- bite: when attacks, target dagger deals 1 --
+def _bite_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    daggers = _find_controlled_daggers(state.players[cid], state, exclude_card=card)
+    if not daggers:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Bite: have dagger deal 1 damage?")
+    if not choice:
+        return
+    dagger = daggers[0] if len(daggers) == 1 else next(
+        (d for d in daggers if d.slug == _ask_player(state, cid, [d.slug for d in daggers], context="Choose dagger")),
+        daggers[0])
+    effect_deal_damage(state, 3 - cid, 1, dagger, "generic")
+
+for _slug in ["bite_red", "bite_yellow", "bite_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_bite_attack, is_optional=True)]
+
+
+# -- hunter_or_hunted: banish top of opp deck --
+CARD_TRIGGERS["hunter_or_hunted_blue"] = [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: (
+        effect_banish(s, s.players[3 - _controller_id(c)].deck.pop_top(), face_up=True, banisher_id=_controller_id(c))
+        if s.players[3 - _controller_id(c)].deck.cards else None)),
+]
+
+
+# ===== BARD: multi-hero =====
+
+# -- interlude: choose hero, prevent damage, if other hero gain life --
+def _interlude_effect(card, event, state, amount):
+    cid = _controller_id(card)
+    hero_ids = list(state.players.keys())
+    pick = _ask_player(state, cid, hero_ids, context="Interlude: choose hero to prevent damage for")
+    state.players[pick].current_turn_effects.append(f"prevent_{amount}")
+    if pick != cid:
+        effect_gain_life(state, cid, 1)
+
+for _slug, _amt in [("interlude_red", 4), ("interlude_yellow", 3), ("interlude_blue", 2)]:
+    CARD_TRIGGERS[_slug] = [
+        TriggerDef(event_type="on_play", effect_fn=lambda c, e, s, a=_amt: _interlude_effect(c, e, s, a)),
+    ]
+
+
+# -- encore: return bard attack from graveyard --
+def _encore_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    bard_attacks = [c for c in player.graveyard.cards if "Bard" in (c.types or []) and "Attack" in (c.types or [])]
+    if not bard_attacks:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in bard_attacks], context="Encore: return Bard attack to hand")
+    chosen = next((c for c in bard_attacks if c.slug == pick), bard_attacks[0])
+    player.graveyard.remove(chosen)
+    player.hand.add(chosen)
+
+CARD_TRIGGERS["encore_yellow"] = [TriggerDef(event_type="on_play", effect_fn=_encore_effect)]
+
+
+# -- tales_of_adventure: each other hero creates unique token --
+def _tales_of_adventure_effect(card, event, state):
+    cid = _controller_id(card)
+    chosen_tokens = []
+    available = ["might", "quicken", "vigor", "agility"]
+    for pid in state.players:
+        if pid == cid:
+            continue
+        remaining = [t for t in available if t not in chosen_tokens]
+        if not remaining:
+            break
+        pick = _ask_player(state, pid, remaining, context="Tales of Adventure: choose token")
+        chosen_tokens.append(pick)
+        create_token(state, pid, pick)
+
+CARD_TRIGGERS["tales_of_adventure_blue"] = [TriggerDef(event_type="on_play", effect_fn=_tales_of_adventure_effect)]
+
+
+# ===== GUARDIAN: for-each, conditional =====
+
+# -- arrogant_showboating: might per defending card --
+def _arrogant_showboating_effect(card, event, state):
+    if not state.combat:
+        return
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    count = sum(1 for d in state.combat.defending_cards if d.controller == opp_id or d.owner == opp_id)
+    if count > 0:
+        create_token(state, cid, "might", count)
+
+CARD_TRIGGERS["arrogant_showboating_blue"] = [TriggerDef(event_type="on_play", effect_fn=_arrogant_showboating_effect)]
+
+
+# -- big_blue_sky: +1d per blue pitched this turn --
+def _big_blue_sky_defend(card, event, state):
+    cid = _controller_id(card)
+    blue = sum(1 for c in state.players[cid].pitch.cards if c.pitch == 3)
+    if blue > 0:
+        card.effects.append(("base_defense", lambda base, n=blue: base + n))
+
+CARD_TRIGGERS["big_blue_sky_blue"] = [
+    TriggerDef(event_type="defend",
+               condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,
+               effect_fn=_big_blue_sky_defend),
+]
+
+
+# -- battered_not_broken: prevent 2, create might --
+CARD_TRIGGERS["battered_not_broken_red"] = [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append("prevent_2_create_might")),
+]
+
+
+# ===== MECHANOLOGIST =====
+
+# -- bank_breaker: may banish from under it on attack --
+def _bank_breaker_attack(card, event, state):
+    if not state.combat or state.combat.attack_card != card:
+        return
+    underneath = getattr(card, 'underneath', [])
+    if not underneath:
+        return
+    cid = _controller_id(card)
+    choice = _ask_player(state, cid, [True, False], context="Bank Breaker: banish card from under it?")
+    if choice:
+        target = underneath.pop(0)
+        effect_banish(state, target, face_up=True, banisher_id=cid)
+
+CARD_TRIGGERS["bank_breaker"] = [TriggerDef(event_type="attacking", effect_fn=_bank_breaker_attack, is_optional=True)]
+
+
+# ===== SHIYANA =====
+
+# -- alluring_inducement: reveal opp hand, choose attack name --
+def _alluring_inducement_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    opp = state.players[3 - cid]
+    attacks = [c for c in opp.hand.cards if "Attack" in (c.types or []) and "Action" in (c.types or [])]
+    if attacks:
+        pick = _ask_player(state, cid, [c.slug for c in attacks], context="Alluring Inducement: choose attack name")
+        card.gained_name = pick
+
+CARD_TRIGGERS["alluring_inducement_yellow"] = [TriggerDef(event_type="attacking", effect_fn=_alluring_inducement_attack)]
+
+
+# ===== BETSY: wager =====
+def _betsy_wager(card, event, state):
+    if not state.combat:
+        return
+    cid = _controller_id(card)
+    if state.players[cid].resources < 2:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Betsy: pay {r}{r} for +1 power and overpower?")
+    if choice:
+        state.players[cid].resources -= 2
+        state.combat.attack_power += 1
+        if 'overpower' not in state.combat.keywords:
+            state.combat.keywords.append('overpower')
+
+for _slug in ["betsy", "betsy_skin_in_the_game"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_betsy_wager, is_optional=True)]
+
+
+# ===== DICE / GAMBLE =====
+
+# -- barkbone_strapping: roll d6, gain half resources --
+CARD_TRIGGERS["barkbone_strapping"] = [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: effect_gain_resources(s, _controller_id(c), roll_die(s, _controller_id(c), 6) // 2)),
+]
+
+# -- reckless_charge: roll d6, if 6 gain +3 power --
+def _reckless_charge_effect(card, event, state):
+    cid = _controller_id(card)
+    if roll_die(state, cid, 6) == 6:
+        card.effects.append(("base_power", lambda base: base + 3))
+
+CARD_TRIGGERS["reckless_charge_blue"] = [TriggerDef(event_type="on_play", effect_fn=_reckless_charge_effect)]
+
+# -- ready_to_roll: bonus die this turn --
+CARD_TRIGGERS["ready_to_roll_blue"] = [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append("roll_bonus_die")),
+]
+
+
+# ===== WIZARD: arcane + reveal =====
+
+# -- dracona_optimai: reveal top 3, arcane = 2x red count --
+def _dracona_optimai_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    n = min(3, len(player.deck.cards))
+    red = sum(1 for c in player.deck.cards[:n] if c.pitch == 1)
+    if red > 0:
+        effect_deal_arcane(state, 3 - cid, red * 2, card)
+
+CARD_TRIGGERS["dracona_optimai"] = [TriggerDef(event_type="on_play", effect_fn=_dracona_optimai_effect)]
+
+
+# -- dominia: reveal top, if red banish from opp hand --
+def _dominia_effect(card, event, state):
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    opp = state.players[opp_id]
+    if not opp.deck.cards:
+        return
+    if opp.deck.cards[0].pitch == 1 and opp.hand.cards:
+        pick = _ask_player(state, cid, [c.slug for c in opp.hand.cards], context="Dominia: banish from their hand")
+        chosen = next((c for c in opp.hand.cards if c.slug == pick), opp.hand.cards[0])
+        opp.hand.remove(chosen)
+        effect_banish(state, chosen, face_up=True, banisher_id=cid)
+
+CARD_TRIGGERS["dominia"] = [TriggerDef(event_type="on_play", effect_fn=_dominia_effect)]
+
+
+# -- kyloria: gain control of item or deal arcane --
+def _kyloria_effect(card, event, state):
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    opp = state.players[opp_id]
+    items = [c for c in opp.permanents.cards if "Item" in (c.types or [])]
+    if items:
+        pick = _ask_player(state, cid, [c.slug for c in items], context="Kyloria: choose item to take")
+        chosen = next((c for c in items if c.slug == pick), items[0])
+        opp.permanents.remove(chosen)
+        chosen.controller = cid
+        state.players[cid].permanents.add(chosen)
+    else:
+        effect_deal_arcane(state, opp_id, 2, card)
+
+CARD_TRIGGERS["kyloria"] = [TriggerDef(event_type="on_play", effect_fn=_kyloria_effect)]
+
+
+# ===== AMULET / SEARCH =====
+
+# -- amulet_of_havencall: search for Rally the Rearguard --
+def _amulet_havencall_effect(card, event, state):
+    from engine.card_effects.keywords import effect_search_deck
+    cid = _controller_id(card)
+    _move_to_graveyard(card, state)
+    found = effect_search_deck(state, cid, condition=lambda c: "rally_the_rearguard" in c.slug)
+    if found:
+        player = state.players[cid]
+        player.deck.cards.remove(found)
+        if state.combat:
+            state.combat.defending_cards.append(found)
+            found.zone = "combat chain"
+        effect_shuffle(state, cid)
+
+CARD_TRIGGERS["amulet_of_havencall_blue"] = [TriggerDef(event_type="on_play", effect_fn=_amulet_havencall_effect)]
+
+
+# -- belittle: reveal small attack, search for same name --
+def _belittle_effect(card, event, state):
+    from engine.card_effects.keywords import effect_search_deck
+    cid = _controller_id(card)
+    player = state.players[cid]
+    smalls = [c for c in player.hand.cards if "Attack" in (c.types or []) and c.power is not None and c.power <= 3]
+    if not smalls:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Belittle: reveal small attack to search?")
+    if not choice:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in smalls], context="Choose attack to reveal")
+    chosen = next((c for c in smalls if c.slug == pick), smalls[0])
+    base = chosen.slug.rsplit('_', 1)[0] if '_' in chosen.slug else chosen.slug
+    found = effect_search_deck(state, cid, condition=lambda c, bn=base: bn in c.slug)
+    if found:
+        player.deck.cards.remove(found)
+        player.hand.add(found)
+        effect_shuffle(state, cid)
+
+for _slug in ["belittle_red", "belittle_yellow", "belittle_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_belittle_effect, is_optional=True)]
+
+
+# ===== CHAOS: multi-hero =====
+
+# -- concoct_disorder: each hero puts top face-down into arsenal --
+def _concoct_disorder_effect(card, event, state):
+    cards_put = 0
+    for pid in state.players:
+        player = state.players[pid]
+        if player.deck.cards:
+            top = player.deck.pop_top()
+            player.arsenal.add(top)
+            cards_put += 1
+    if cards_put >= 2:
+        create_token(state, _controller_id(card), "copper", cards_put)
+
+for _slug in ["concoct_disorder_red", "concoct_disorder_yellow", "concoct_disorder_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_concoct_disorder_effect)]
+
+
+# -- descend_into_madness: banish random from opp hand --
+CARD_TRIGGERS["descend_into_madness_blue"] = [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c), c)),
+]
+
+
+# ===== MISC COMPLEX =====
+
+# -- adaptive_plating: modular equip --
+CARD_TRIGGERS["adaptive_plating"] = [
+    TriggerDef(event_type="defend",
+               condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,
+               effect_fn=lambda c, e, s: None),
+]
+
+# -- barbed_barrage: pay rrr for additional target --
+def _barbed_barrage_effect(card, event, state):
+    cid = _controller_id(card)
+    if state.players[cid].resources < 3:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Barbed Barrage: pay {r}{r}{r} for additional target?")
+    if choice:
+        state.players[cid].resources -= 3
+        state.players[cid].current_turn_effects.append("barbed_barrage_additional_target")
+
+CARD_TRIGGERS["barbed_barrage_red"] = [TriggerDef(event_type="on_play", effect_fn=_barbed_barrage_effect, is_optional=True)]
+
+
+# -- blood_splattered_vest: dagger hit -> gain r, stain counters --
+def _blood_splattered_vest_hit(card, event, state):
+    if not hasattr(event, 'data'):
+        return
+    hit_card = event.data.get('card')
+    if not hit_card or "Dagger" not in (hit_card.types or []):
+        return
+    cid = _controller_id(card)
+    if hit_card.owner != cid:
+        return
+    choice = _ask_player(state, cid, [True, False], context="Blood Splattered Vest: gain {r}?")
+    if choice:
+        effect_gain_resources(state, cid, 1)
+        effect_put_counter(state, card, "stain", 1)
+        key = (card.slug, card.zone, "stain")
+        if state.players[cid].counters.get(key, 0) >= 3:
+            _move_to_graveyard(card, state)
+
+CARD_TRIGGERS["blood_splattered_vest"] = [TriggerDef(event_type="hit", effect_fn=_blood_splattered_vest_hit, is_optional=True)]
+
+
+# -- coat_of_allegiance: destroy for r, restrict to draconic --
+CARD_TRIGGERS["coat_of_allegiance"] = [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: (
+        _move_to_graveyard(c, s),
+        effect_gain_resources(s, _controller_id(c), 2),
+        s.players[_controller_id(c)].current_turn_effects.append("only_draconic_this_turn"),
+    )),
+]
+
+
+# -- battlefield_beacon: choose modes per soul banished --
+def _battlefield_beacon_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    banished = sum(1 for eff in state.players[cid].current_turn_effects if eff.startswith("soul_banished_"))
+    if banished == 0:
+        return
+    modes = ["create_ash", "plus_1_power", "go_again"]
+    for _ in range(min(banished, 3)):
+        if not modes:
+            break
+        pick = _ask_player(state, cid, modes, context="Battlefield Beacon: choose mode")
+        if pick == "create_ash":
+            create_token(state, cid, "ash")
+        elif pick == "plus_1_power" and state.combat:
+            state.combat.attack_power += 1
+        elif pick == "go_again" and state.combat:
+            if 'go_again' not in state.combat.keywords:
+                state.combat.keywords.append('go_again')
+
+CARD_TRIGGERS["battlefield_beacon_yellow"] = [TriggerDef(event_type="attacking", effect_fn=_battlefield_beacon_attack)]
+
+
+# -- azalea hero abilities (already in HERO_ACTIVATION but need triggers for specialization) --
+# Heroes are handled via registry.py, skip here
+
+
+# -- arakni_tarantula: dagger hit -> opp loses 1 life --
+# (Already defined above in earlier Batch 4 section)
+
+
+# ===== ADDITIONAL COMPLEX: Azalea, various ranger =====
+
+# -- azalea: put arsenal on bottom, top of deck face up into arsenal (hero ability) --
+# Handled by HERO_ACTIVATION_CONDITIONS in registry.py
+
+
+# ===== ADDITIONAL MISC =====
+
+# -- barbed_barrage: multi-target variant for yellow/blue --
+for _slug in ["barbed_barrage_yellow", "barbed_barrage_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_barbed_barrage_effect, is_optional=True)]
+
+
+# -- blood_splattered variants (already handled above) --
+
+# -- bore_down: "if you control 2+ item, draw a card" --
+def _bore_down_effect(card, event, state, draw_count):
+    cid = _controller_id(card)
+    items = sum(1 for c in state.players[cid].permanents.cards if "Item" in (c.types or []))
+    if items >= 2:
+        effect_draw(state, cid, draw_count)
+
+for _slug, _d in [("bore_down_red", 1), ("bore_down_yellow", 1), ("bore_down_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, d=_d: _bore_down_effect(c, e, s, d))]
+
+
+# -- brandish: "if you've attacked with a weapon, +1 power" --
+def _brandish_effect(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    if "attacked_with_weapon" in state.players[cid].current_turn_effects:
+        state.combat.attack_power += 1
+
+for _slug in ["brandish_red", "brandish_yellow", "brandish_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_brandish_effect)]
+
+
+# -- cerebral_mindstep: "if you've dealt arcane this turn, draw" --
+def _cerebral_mindstep_effect(card, event, state, draw_count):
+    cid = _controller_id(card)
+    if "dealt_arcane" in state.players[cid].current_turn_effects:
+        effect_draw(state, cid, draw_count)
+
+for _slug, _d in [("cerebral_mindstep_red", 1), ("cerebral_mindstep_yellow", 1),
+                   ("cerebral_mindstep_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, d=_d: _cerebral_mindstep_effect(c, e, s, d))]
+
+
+# -- chains_of_eminence: "if you have 2+ auras, this has go again" --
+def _chains_of_eminence_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    auras = sum(1 for c in state.players[cid].permanents.cards if "Aura" in (c.types or []))
+    if auras >= 2 and 'go_again' not in state.combat.keywords:
+        state.combat.keywords.append('go_again')
+
+for _slug in ["chains_of_eminence_red", "chains_of_eminence_yellow", "chains_of_eminence_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_chains_of_eminence_attack)]
+
+
+# -- come_to_fight: "if you have less life, +2 power" --
+def _come_to_fight_attack(card, event, state, bonus):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    if state.players[cid].health < state.players[3 - cid].health:
+        state.combat.attack_power += bonus
+
+for _slug, _b in [("come_to_fight_red", 2), ("come_to_fight_yellow", 2), ("come_to_fight_blue", 2)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking",
+                            effect_fn=lambda c, e, s, b=_b: _come_to_fight_attack(c, e, s, b))]
+
+
+# -- consuming_volition: "deal arcane equal to cards in opp pitch zone" --
+def _consuming_volition_effect(card, event, state):
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    amount = len(state.players[opp_id].pitch.cards)
+    if amount > 0:
+        effect_deal_arcane(state, opp_id, amount, card)
+
+for _slug in ["consuming_volition_red", "consuming_volition_yellow", "consuming_volition_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_consuming_volition_effect)]
+
+
+# -- critically_wounded: "if you have less life, draw 2" --
+def _critically_wounded_effect(card, event, state):
+    cid = _controller_id(card)
+    if state.players[cid].health < state.players[3 - cid].health:
+        effect_draw(state, cid, 2)
+
+CARD_TRIGGERS["critically_wounded_blue"] = [TriggerDef(event_type="on_play", effect_fn=_critically_wounded_effect)]
+
+
+# -- deep_blue: "if you have no cards in hand, +2 power" --
+def _deep_blue_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    if not state.players[cid].hand.cards:
+        state.combat.attack_power += 2
+
+for _slug in ["deep_blue_red", "deep_blue_yellow", "deep_blue_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_deep_blue_attack)]
+
+
+# -- double_strike: "if you've attacked this turn, +power and go again" --
+def _double_strike_attack(card, event, state, bonus):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    if "attacked_this_turn" in state.players[cid].current_turn_effects:
+        state.combat.attack_power += bonus
+        if 'go_again' not in state.combat.keywords:
+            state.combat.keywords.append('go_again')
+
+for _slug, _b in [("double_strike_red", 2), ("double_strike_yellow", 2), ("double_strike_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking",
+                            effect_fn=lambda c, e, s, b=_b: _double_strike_attack(c, e, s, b))]
+
+
+# -- enlightened_strike: "if you've played non-attack this turn, +2 and draw" --
+def _enlightened_strike_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    if "played_nonattack_this_turn" in state.players[cid].current_turn_effects:
+        state.combat.attack_power += 2
+        effect_draw(state, cid, 1)
+
+CARD_TRIGGERS["enlightened_strike"] = [TriggerDef(event_type="attacking", effect_fn=_enlightened_strike_attack)]
+
+
+# -- fate_foreseen: defense reaction, put on top of deck, +d --
+def _fate_foreseen_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if not player.hand.cards:
+        return
+    opts = [c.slug for c in player.hand.cards] + ["decline"]
+    pick = _ask_player(state, cid, opts, context="Fate Foreseen: put a card on top of deck?")
+    if pick == "decline":
+        return
+    target = next((c for c in player.hand.cards if c.slug == pick), None)
+    if target:
+        player.hand.remove(target)
+        player.deck.cards.insert(0, target)
+        target.zone = "deck"
+
+for _slug in ["fate_foreseen_red", "fate_foreseen_yellow", "fate_foreseen_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_fate_foreseen_effect)]
+
+
+# -- feisty_locals: "for each defending card, this gets +1 power" --
+def _feisty_locals_defend(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    count = len(state.combat.defending_cards)
+    if count > 0:
+        state.combat.attack_power += count
+
+for _slug in ["feisty_locals_red", "feisty_locals_yellow", "feisty_locals_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="defend", effect_fn=_feisty_locals_defend)]
+
+
+# -- flex: "if you control might, this has go again" --
+def _flex_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    has_might = any(c.slug == "might" for c in state.players[cid].permanents.cards)
+    if has_might and 'go_again' not in state.combat.keywords:
+        state.combat.keywords.append('go_again')
+
+for _slug in ["flex_red", "flex_yellow", "flex_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_flex_attack)]
+
+
+# -- forked_lightning: "deal 2 arcane to each opposing hero" (multi-target) --
+def _forked_lightning_effect(card, event, state, amount):
+    cid = _controller_id(card)
+    for pid in state.players:
+        if pid != cid:
+            effect_deal_arcane(state, pid, amount, card)
+
+for _slug, _amt in [("forked_lightning_red", 2), ("forked_lightning_yellow", 2),
+                     ("forked_lightning_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, a=_amt: _forked_lightning_effect(c, e, s, a))]
+
+
+# -- give_and_take: "draw then discard equal number of cards" --
+def _give_and_take_effect(card, event, state, count):
+    cid = _controller_id(card)
+    effect_draw(state, cid, count)
+    effect_discard(state, cid, count)
+
+for _slug, _c in [("give_and_take_red", 3), ("give_and_take_yellow", 2), ("give_and_take_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, ct=_c: _give_and_take_effect(c, e, s, ct))]
+
+
+# -- high_octane: "attacks gain +1 power, at end of turn lose 1 life per attack" --
+def _high_octane_effect(card, event, state):
+    cid = _controller_id(card)
+    state.players[cid].current_turn_effects.append("high_octane_attacks_plus_1")
+
+for _slug in ["high_octane_red", "high_octane_yellow", "high_octane_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_high_octane_effect)]
+
+
+# -- last_ditch_effort: "if no cards in hand, +3 power" --
+def _last_ditch_attack(card, event, state, bonus):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    if not state.players[_controller_id(card)].hand.cards:
+        state.combat.attack_power += bonus
+
+for _slug, _b in [("last_ditch_effort_red", 3), ("last_ditch_effort_yellow", 2),
+                   ("last_ditch_effort_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking",
+                            effect_fn=lambda c, e, s, b=_b: _last_ditch_attack(c, e, s, b))]
+
+
+# -- lead_the_charge: "if no cards in hand, go again" --
+def _lead_the_charge_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    if not state.players[_controller_id(card)].hand.cards:
+        if 'go_again' not in state.combat.keywords:
+            state.combat.keywords.append('go_again')
+
+for _slug in ["lead_the_charge_red", "lead_the_charge_yellow", "lead_the_charge_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_lead_the_charge_attack)]
+
+
+# -- life_for_a_life: "if you've been dealt damage, deal that much arcane" --
+def _life_for_a_life_effect(card, event, state, amount):
+    cid = _controller_id(card)
+    if "dealt_damage_this_turn" in state.players[cid].current_turn_effects:
+        effect_deal_arcane(state, 3 - cid, amount, card)
+
+for _slug, _a in [("life_for_a_life_red", 4), ("life_for_a_life_yellow", 3), ("life_for_a_life_blue", 2)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, a=_a: _life_for_a_life_effect(c, e, s, a))]
+
+
+# -- nerves_of_steel: "if you've been dealt damage, +defense" --
+def _nerves_of_steel_defend(card, event, state, bonus):
+    if not state.combat or card not in state.combat.defending_cards:
+        return
+    cid = _controller_id(card)
+    if "dealt_damage_this_turn" in state.players[cid].current_turn_effects:
+        card.effects.append(("base_defense", lambda base, n=bonus: base + n))
+
+for _slug, _b in [("nerves_of_steel_red", 3), ("nerves_of_steel_yellow", 2), ("nerves_of_steel_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="defend",
+                            effect_fn=lambda c, e, s, b=_b: _nerves_of_steel_defend(c, e, s, b))]
+
+
+# -- oath_of_the_arknight: "if runechant, +1 power and 'on hit create runechant'" --
+def _oath_arknight_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    if any(c.slug == "runechant" for c in state.players[cid].permanents.cards):
+        state.combat.attack_power += 1
+        state.players[cid].current_turn_effects.append("oath_arknight_hit_create_runechant")
+
+for _slug in ["oath_of_the_arknight_red", "oath_of_the_arknight_yellow", "oath_of_the_arknight_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_oath_arknight_attack)]
+
+
+# -- overblast: "deal X arcane where X = number of wizard non-attack actions played this turn" --
+def _overblast_effect(card, event, state, base):
+    cid = _controller_id(card)
+    wizard_count = sum(1 for eff in state.players[cid].current_turn_effects if eff == "played_wizard_nonattack")
+    effect_deal_arcane(state, 3 - cid, base + wizard_count, card)
+
+for _slug, _b in [("overblast_red", 4), ("overblast_yellow", 3), ("overblast_blue", 2)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, b=_b: _overblast_effect(c, e, s, b))]
+
+
+# -- phantasmal_footsteps: "when this defends, may put it on bottom of deck instead of graveyard" --
+def _phantasmal_footsteps_defend(card, event, state):
+    if not state.combat or card not in state.combat.defending_cards:
+        return
+    cid = _controller_id(card)
+    choice = _ask_player(state, cid, [True, False],
+                         context="Phantasmal Footsteps: put on bottom of deck instead of graveyard?")
+    if choice:
+        state.players[cid].current_turn_effects.append(f"bottom_instead_{card.slug}")
+
+CARD_TRIGGERS["phantasmal_footsteps"] = [
+    TriggerDef(event_type="defend", effect_fn=_phantasmal_footsteps_defend, is_optional=True),
+]
+
+
+# -- plunder_run: "when hits, banish top of deck, play it this turn" --
+def _plunder_run_hit(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if player.deck.cards:
+        top = player.deck.pop_top()
+        effect_banish(state, top, face_up=True, banisher_id=cid)
+        state.players[cid].current_turn_effects.append(f"may_play_{top.slug}")
+
+for _slug in ["plunder_run_red", "plunder_run_yellow", "plunder_run_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="hit", effect_fn=_plunder_run_hit)]
+
+
+# -- push_forward: "draw, then if weapon hit, draw again" --
+def _push_forward_effect(card, event, state):
+    cid = _controller_id(card)
+    effect_draw(state, cid, 1)
+    if "weapon_hit_this_turn" in state.players[cid].current_turn_effects:
+        effect_draw(state, cid, 1)
+
+for _slug in ["push_forward_red", "push_forward_yellow", "push_forward_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_push_forward_effect)]
+
+
+# -- razor_reflex: "target attack gets +2 power and go again" --
+def _razor_reflex_effect(card, event, state, bonus):
+    if state.combat:
+        state.combat.attack_power += bonus
+        if 'go_again' not in state.combat.keywords:
+            state.combat.keywords.append('go_again')
+
+for _slug, _b in [("razor_reflex_red", 3), ("razor_reflex_yellow", 2), ("razor_reflex_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, b=_b: _razor_reflex_effect(c, e, s, b))]
+
+
+# -- remembrance: "put attack from graveyard on bottom of deck" --
+def _remembrance_effect(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    attacks = [c for c in player.graveyard.cards if "Attack" in (c.types or [])]
+    if not attacks:
+        return
+    pick = _ask_player(state, cid, [c.slug for c in attacks], context="Remembrance: return attack to bottom of deck")
+    chosen = next((c for c in attacks if c.slug == pick), attacks[0])
+    player.graveyard.remove(chosen)
+    player.deck.add_bottom(chosen)
+
+for _slug in ["remembrance_red", "remembrance_yellow", "remembrance_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_remembrance_effect)]
+
+
+# -- second_swing: "if you've attacked with weapon, this gets go again" --
+def _second_swing_attack(card, event, state):
+    if not state.combat or state.combat.attack_card.slug != card.slug:
+        return
+    cid = _controller_id(card)
+    if "attacked_with_weapon" in state.players[cid].current_turn_effects:
+        if 'go_again' not in state.combat.keywords:
+            state.combat.keywords.append('go_again')
+
+for _slug in ["second_swing_red", "second_swing_yellow", "second_swing_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="attacking", effect_fn=_second_swing_attack)]
+
+
+# -- sharpen_steel: "target weapon gets +1 attack this turn" --
+def _sharpen_steel_effect(card, event, state, bonus):
+    cid = _controller_id(card)
+    state.players[cid].current_turn_effects.append(f"weapon_attack_plus_{bonus}")
+
+for _slug, _b in [("sharpen_steel_red", 3), ("sharpen_steel_yellow", 2), ("sharpen_steel_blue", 1)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, b=_b: _sharpen_steel_effect(c, e, s, b))]
+
+
+# -- spinal_crush: "crush - if this deals 4+ damage, opp puts hand on bottom of deck" --
+def _spinal_crush_crush(card, event, state):
+    tid = 3 - _controller_id(card)
+    target = state.players[tid]
+    for c in list(target.hand.cards):
+        target.hand.remove(c)
+        target.deck.add_bottom(c)
+
+CARD_TRIGGERS["spinal_crush"] = [crush_trigger(_spinal_crush_crush)]
+
+
+# -- steelblade_supremacy: "when weapon hits, draw" --
+def _steelblade_supremacy_effect(card, event, state):
+    cid = _controller_id(card)
+    state.players[cid].current_turn_effects.append("weapon_hit_draw_1")
+
+for _slug in ["steelblade_supremacy_red", "steelblade_supremacy_yellow", "steelblade_supremacy_blue"]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play", effect_fn=_steelblade_supremacy_effect)]
+
+
+# -- timesnap_potion: "gain action point, draw, then put on top of deck" --
+def _timesnap_potion_effect(card, event, state):
+    cid = _controller_id(card)
+    _move_to_graveyard(card, state)
+    effect_gain_action_point(state, cid)
+    effect_draw(state, cid, 1)
+
+CARD_TRIGGERS["timesnap_potion"] = [TriggerDef(event_type="on_play", effect_fn=_timesnap_potion_effect)]
+
+
+# -- tome_of_fyendal: "gain 2 life, draw a card" --
+def _tome_of_fyendal_effect(card, event, state):
+    cid = _controller_id(card)
+    effect_gain_life(state, cid, 2)
+    effect_draw(state, cid, 1)
+
+CARD_TRIGGERS["tome_of_fyendal"] = [TriggerDef(event_type="on_play", effect_fn=_tome_of_fyendal_effect)]
+
+
+# -- unmovable: "the next N damage is prevented, if you do create N might" --
+def _unmovable_effect(card, event, state, prevent):
+    cid = _controller_id(card)
+    state.players[cid].current_turn_effects.append(f"prevent_{prevent}_create_might")
+
+for _slug, _p in [("unmovable_red", 4), ("unmovable_yellow", 3), ("unmovable_blue", 2)]:
+    CARD_TRIGGERS[_slug] = [TriggerDef(event_type="on_play",
+                            effect_fn=lambda c, e, s, p=_p: _unmovable_effect(c, e, s, p))]
+
+
+# -- warrior_general: "if you've attacked with weapon, attacks +1 and draw on hit" --
+def _warrior_general_effect(card, event, state):
+    cid = _controller_id(card)
+    if "attacked_with_weapon" in state.players[cid].current_turn_effects:
+        state.players[cid].current_turn_effects.append("attacks_plus_1")
+        state.players[cid].current_turn_effects.append("attacks_on_hit_draw_1")
+
+CARD_TRIGGERS["warrior_general_red"] = [TriggerDef(event_type="on_play", effect_fn=_warrior_general_effect)]
+
+
+# ---------------------------------------------------------------------------
 # Registry — builds triggers for a card from keywords + card-specific
 # ---------------------------------------------------------------------------
 
