@@ -183,6 +183,315 @@ HERO_ACTIVATION_CONDITIONS = {
     },
 }
 
+# ---------------------------------------------------------------------------
+# Hero ability helper functions for new entries
+# ---------------------------------------------------------------------------
+
+def _bravo_dominate_effect(action, player, state):
+    """Bravo: Until end of turn, attack action cards with cost 3+ get dominate. Go again."""
+    player.current_turn_effects.append("bravo_dominate_cost3")
+    player.action_points += 1
+
+
+def _bravo_flattering_effect(action, player, state):
+    """Bravo, Flattering Showman: Turn face-down arsenal face-up. If crush, +2 power and dominate. Go again."""
+    if player.arsenal.top is not None and not player.arsenal_face_up:
+        player.arsenal_face_up = True
+        card = player.arsenal.top
+        if "Crush" in (card.card_keywords or []):
+            player.current_turn_effects.append("bravo_flattering_crush_bonus")
+    player.action_points += 1
+
+
+def _dorinthea_weapon_hit_effect(action, player, state):
+    """Dorinthea: When weapon hits, may attack additional time with it this turn."""
+    player.current_turn_effects.append("dorinthea_extra_weapon_attack")
+
+
+def _chane_soul_shackle_effect(action, player, state):
+    """Chane: Create Soul Shackle token, next Runeblade/Shadow action gets go again. Go again."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("soul_shackle", player.player_id)
+    player.auras.add(token)
+    player.current_turn_effects.append("chane_next_action_go_again")
+    player.action_points += 1
+
+
+def _chane_pay_cost(player, state):
+    """Chane's cost: Create a Soul Shackle token (the token IS the cost)."""
+    return True  # Token creation is the cost+effect combined
+
+
+def _azalea_arsenal_swap_effect(action, player, state):
+    """Azalea: Put arsenal card on bottom of deck, put top of deck face-up into arsenal."""
+    if player.arsenal.top is not None:
+        old_card = player.arsenal.top
+        player.arsenal.remove(old_card)
+        player.deck.add_bottom(old_card)
+        if len(player.deck.cards) > 0:
+            new_card = player.deck.draw_top()
+            player.arsenal.add(new_card)
+            player.arsenal_face_up = True
+            # If it's an arrow, it gets +1 power this turn
+            if "Arrow" in (new_card.types or []):
+                player.current_turn_effects.append("azalea_arrow_bonus")
+
+
+def _aurora_create_embodiment_effect(action, player, state):
+    """Aurora: Create an Embodiment of Lightning token."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("embodiment_of_lightning", player.player_id)
+    player.auras.add(token)
+    player.current_turn_effects.append("aurora_used")
+
+
+def _kayo_strongarm_effect(action, player, state):
+    """Kayo, Strongarm: Same as Kayo — set target attack action card's base power to 6."""
+    _kayo_set_6_base_power(action, player, state)
+
+
+def _lexi_arsenal_faceup_effect(action, player, state):
+    """Lexi: Turn face-down arsenal card face-up. If it's an arrow, it gets +1 power. Go again."""
+    if player.arsenal.top is not None and not player.arsenal_face_up:
+        player.arsenal_face_up = True
+        card = player.arsenal.top
+        if "Arrow" in (card.types or []):
+            player.current_turn_effects.append("lexi_arrow_bonus")
+    player.action_points += 1
+
+
+def _fai_phoenix_flame_effect(action, player, state):
+    """Fai: Return a Phoenix Flame from graveyard to hand."""
+    phoenix_flames = [c for c in player.graveyard.cards if c.slug == "phoenix_flame"]
+    if phoenix_flames:
+        flame = phoenix_flames[0]
+        player.graveyard.remove(flame)
+        player.hand.add(flame)
+    player.current_turn_effects.append("fai_used")
+
+
+def _kano_look_and_banish_effect(action, player, state):
+    """Kano: Look at top card of deck. If it's a non-attack action, banish it and may play it this turn."""
+    if len(player.deck.cards) > 0:
+        top_card = player.deck.cards[-1]  # peek
+        types = top_card.types or []
+        if "Action" in types and "Attack" not in types:
+            player.deck.draw_top()
+            player.banished.add(top_card)
+            player.current_turn_effects.append(("kano_banished_playable", top_card.slug))
+    player.current_turn_effects.append("kano_used")
+
+
+# Add new hero activation conditions
+HERO_ACTIVATION_CONDITIONS.update({
+    # Bravo / Bravo, Showstopper:
+    # Action - {r}{r}: Until end of turn, attack action cards with cost 3+ get dominate. Go again
+    "bravo": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "condition_fn": lambda player, state: True,
+        "effect_fn": _bravo_dominate_effect,
+    },
+    "bravo_showstopper": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "condition_fn": lambda player, state: True,
+        "effect_fn": _bravo_dominate_effect,
+    },
+    # Bravo, Flattering Showman:
+    # Action - {r}{r}, {t}: Turn face-down arsenal face-up. If crush, +2 power and dominate. Go again
+    "bravo_flattering_showman": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": True,
+        "condition_fn": lambda player, state: (
+            not player.hero.tapped
+            and player.arsenal.top is not None
+            and not player.arsenal_face_up
+        ),
+        "effect_fn": _bravo_flattering_effect,
+    },
+    # Dorinthea / Dorinthea, Ironsong:
+    # Once per turn Effect - When weapon hits, may attack additional time with it this turn
+    "dorinthea": {
+        "timing": "instant",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "dorinthea_used" not in player.current_turn_effects
+        ),
+        "effect_fn": _dorinthea_weapon_hit_effect,
+    },
+    "dorinthea_ironsong": {
+        "timing": "instant",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "dorinthea_used" not in player.current_turn_effects
+        ),
+        "effect_fn": _dorinthea_weapon_hit_effect,
+    },
+    # Chane / Chane, Bound by Shadow:
+    # Once per Turn Action - Create a Soul Shackle token: Next Runeblade/Shadow action gets go again. Go again
+    "chane": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "chane_used" not in player.current_turn_effects
+        ),
+        "effect_fn": _chane_soul_shackle_effect,
+    },
+    "chane_bound_by_shadow": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "chane_used" not in player.current_turn_effects
+        ),
+        "effect_fn": _chane_soul_shackle_effect,
+    },
+    # Azalea / Azalea, Ace in the Hole:
+    # Once per Turn Action - 0: Arsenal swap (bottom old, face-up new from deck top)
+    "azalea": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "azalea_used" not in player.current_turn_effects
+            and player.arsenal.top is not None
+        ),
+        "effect_fn": _azalea_arsenal_swap_effect,
+    },
+    "azalea_ace_in_the_hole": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "azalea_used" not in player.current_turn_effects
+            and player.arsenal.top is not None
+        ),
+        "effect_fn": _azalea_arsenal_swap_effect,
+    },
+    # Aurora / Aurora, Shooting Star:
+    # Once per Turn Instant - {r}{r}: Create Embodiment of Lightning token (if played Lightning this turn)
+    "aurora": {
+        "timing": "instant",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "aurora_used" not in player.current_turn_effects
+            and any("lightning_played" in str(e) for e in player.current_turn_effects)
+        ),
+        "effect_fn": _aurora_create_embodiment_effect,
+    },
+    "aurora_shooting_star": {
+        "timing": "instant",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "aurora_used" not in player.current_turn_effects
+            and any("lightning_played" in str(e) for e in player.current_turn_effects)
+        ),
+        "effect_fn": _aurora_create_embodiment_effect,
+    },
+    # Kayo, Strongarm (young hero):
+    # Instant - {r}{r}{r}{r}, {t}: Set target attack action card's base power to 6
+    "kayo_strongarm": {
+        "timing": "instant",
+        "cost": 4,
+        "requires_tap": True,
+        "condition_fn": lambda player, state: not player.hero.tapped,
+        "target_fn": _kayo_find_targets,
+        "effect_fn": _kayo_strongarm_effect,
+    },
+    # Lexi / Lexi, Livewire:
+    # Once per Turn Action - 0: Turn face-down arsenal face-up. If arrow, +1 power. Go again
+    "lexi": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "lexi_used" not in player.current_turn_effects
+            and player.arsenal.top is not None
+            and not player.arsenal_face_up
+        ),
+        "effect_fn": _lexi_arsenal_faceup_effect,
+    },
+    "lexi_livewire": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "lexi_used" not in player.current_turn_effects
+            and player.arsenal.top is not None
+            and not player.arsenal_face_up
+        ),
+        "effect_fn": _lexi_arsenal_faceup_effect,
+    },
+    # Fai / Fai, Rising Rebellion:
+    # Once per Turn Instant - {r}{r}{r}: Return a Phoenix Flame from graveyard to hand
+    "fai": {
+        "timing": "instant",
+        "cost": 3,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "fai_used" not in player.current_turn_effects
+            and any(c.slug == "phoenix_flame" for c in player.graveyard.cards)
+        ),
+        "effect_fn": _fai_phoenix_flame_effect,
+    },
+    "fai_rising_rebellion": {
+        "timing": "instant",
+        "cost": 3,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "fai_used" not in player.current_turn_effects
+            and any(c.slug == "phoenix_flame" for c in player.graveyard.cards)
+        ),
+        "effect_fn": _fai_phoenix_flame_effect,
+    },
+    # Kano / Kano, Dracai of Aether:
+    # Once per Turn Instant - {r}{r}{r}: Look at top card, if non-attack action banish it (may play this turn)
+    "kano": {
+        "timing": "instant",
+        "cost": 3,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "kano_used" not in player.current_turn_effects
+            and len(player.deck.cards) > 0
+        ),
+        "effect_fn": _kano_look_and_banish_effect,
+    },
+    "kano_dracai_of_aether": {
+        "timing": "instant",
+        "cost": 3,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "kano_used" not in player.current_turn_effects
+            and len(player.deck.cards) > 0
+        ),
+        "effect_fn": _kano_look_and_banish_effect,
+    },
+})
+
+
 def _scabskin_roll_d6(action, player, state):
     """Once per turn Action - 0: Roll d6, gain AP equal to half rounded down."""
     import random as rng
