@@ -1024,6 +1024,59 @@ def _electrostatic_next_attack_apply(attack_card, player, state):
     """Electrostatic Discharge: next attack action with cost ≤1 gets +3{p}."""
     attack_card.effects.append(("base_power", lambda base: base + 3))
 
+def _next_attack_go_again_apply(attack_card, player, state):
+    """Grant go again to the next attack."""
+    if "Go again" not in (attack_card.keywords or []):
+        if not hasattr(attack_card, 'keywords') or attack_card.keywords is None:
+            attack_card.keywords = []
+        attack_card.keywords.append("Go again")
+
+def _next_attack_cost_1_less_apply(attack_card, player, state):
+    """Reduce next attack's cost by 1."""
+    attack_card.effects.append(("cost", lambda c: max(0, c - 1)))
+
+def _equip_next_attack_cost_minus2_apply(attack_card, player, state):
+    """Equipment effect: reduce next attack's cost by 2."""
+    attack_card.effects.append(("cost", lambda c: max(0, c - 2)))
+
+def _bravo_dominate_cost3_apply(attack_card, player, state):
+    """Bravo: attack actions with cost 3+ gain dominate."""
+    if "Action" in (attack_card.types or []) and (attack_card.cost or 0) >= 3:
+        if "Dominate" not in (attack_card.keywords or []):
+            if not hasattr(attack_card, 'keywords') or attack_card.keywords is None:
+                attack_card.keywords = []
+            attack_card.keywords.append("Dominate")
+
+def _craterhoof_dominate_apply(attack_card, player, state):
+    """Craterhoof: next attack gains dominate."""
+    if "Dominate" not in (attack_card.keywords or []):
+        if not hasattr(attack_card, 'keywords') or attack_card.keywords is None:
+            attack_card.keywords = []
+        attack_card.keywords.append("Dominate")
+
+def _azalea_arrow_bonus_apply(attack_card, player, state):
+    """Azalea: Arrow from arsenal gets +1 power."""
+    if "Arrow" in (attack_card.types or []):
+        attack_card.effects.append(("base_power", lambda base: base + 1))
+
+def _lexi_arrow_bonus_apply(attack_card, player, state):
+    """Lexi: Arrow gets +1 power."""
+    if "Arrow" in (attack_card.types or []):
+        attack_card.effects.append(("base_power", lambda base: base + 1))
+
+def _chane_next_action_go_again_apply(attack_card, player, state):
+    """Chane: next attack action gains go again."""
+    if "Action" in (attack_card.types or []):
+        if "Go again" not in (attack_card.keywords or []):
+            if not hasattr(attack_card, 'keywords') or attack_card.keywords is None:
+                attack_card.keywords = []
+            attack_card.keywords.append("Go again")
+
+def _dorinthea_extra_weapon_attack_apply(attack_card, player, state):
+    """Dorinthea: grants an additional weapon attack this turn (flag consumed by engine)."""
+    # This is a flag-based effect; the engine checks for it separately.
+    pass
+
 TURN_ATTACK_EFFECTS = {
     "next_attack_6_base_power": {
         "apply_fn": _next_attack_6_base_power_apply,
@@ -1070,6 +1123,58 @@ TURN_ATTACK_EFFECTS = {
             "Attack" in attack_card.types and "Action" in attack_card.types
         ),
         "apply_fn": lambda attack_card, player, state: attack_card.effects.append(("base_power", lambda base: base + 3)),
+    },
+    "next_attack_go_again": {
+        "apply_fn": _next_attack_go_again_apply,
+    },
+    "next_attack_cost_1_less": {
+        "apply_fn": _next_attack_cost_1_less_apply,
+    },
+    "equip_next_attack_cost_-2": {
+        "apply_fn": _equip_next_attack_cost_minus2_apply,
+    },
+    "bravo_dominate_cost3": {
+        "condition_fn": lambda attack_card, player, state: (
+            "Attack" in attack_card.types and "Action" in attack_card.types
+            and (attack_card.cost or 0) >= 3
+        ),
+        "apply_fn": _bravo_dominate_cost3_apply,
+    },
+    "craterhoof_dominate": {
+        "apply_fn": _craterhoof_dominate_apply,
+    },
+    "azalea_arrow_bonus": {
+        "condition_fn": lambda attack_card, player, state: "Arrow" in attack_card.types,
+        "apply_fn": _azalea_arrow_bonus_apply,
+    },
+    "lexi_arrow_bonus": {
+        "condition_fn": lambda attack_card, player, state: "Arrow" in attack_card.types,
+        "apply_fn": _lexi_arrow_bonus_apply,
+    },
+    "chane_next_action_go_again": {
+        "condition_fn": lambda attack_card, player, state: (
+            "Attack" in attack_card.types and "Action" in attack_card.types
+        ),
+        "apply_fn": _chane_next_action_go_again_apply,
+    },
+    "dorinthea_extra_weapon_attack": {
+        "apply_fn": _dorinthea_extra_weapon_attack_apply,
+    },
+}
+
+# ---------------------------------------------------------------------------
+# TURN_DEFEND_EFFECTS — consumed when a card is used to defend
+# Signature: condition_fn(defend_card, player, state) -> bool
+#            apply_fn(defend_card, player, state) -> None
+# ---------------------------------------------------------------------------
+TURN_DEFEND_EFFECTS = {
+    "bravo_flattering_crush_bonus": {
+        "condition_fn": lambda defend_card, player, state: (
+            "Crush" in (defend_card.keywords or [])
+        ),
+        "apply_fn": lambda defend_card, player, state: defend_card.effects.append(
+            ("base_defense", lambda base: base + 2)
+        ),
     },
 }
 
@@ -1121,7 +1226,26 @@ ATTACK_REACTION_CONDITIONS = {
 }
 
 DEFENSE_REACTION_CONDITIONS = {
-
+    # Fate Foreseen: playable as defense reaction whenever there's an active attack
+    "fate_foreseen_red": lambda combat: combat is not None and combat.attack_card is not None,
+    "fate_foreseen_yellow": lambda combat: combat is not None and combat.attack_card is not None,
+    "fate_foreseen_blue": lambda combat: combat is not None and combat.attack_card is not None,
+    # Sink Below: standard defense reaction
+    "sink_below_red": lambda combat: combat is not None and combat.attack_card is not None,
+    "sink_below_yellow": lambda combat: combat is not None and combat.attack_card is not None,
+    "sink_below_blue": lambda combat: combat is not None and combat.attack_card is not None,
+    # Unmovable: standard defense reaction
+    "unmovable_red": lambda combat: combat is not None and combat.attack_card is not None,
+    "unmovable_yellow": lambda combat: combat is not None and combat.attack_card is not None,
+    "unmovable_blue": lambda combat: combat is not None and combat.attack_card is not None,
+    # Staunch Response: standard defense reaction
+    "staunch_response_red": lambda combat: combat is not None and combat.attack_card is not None,
+    "staunch_response_yellow": lambda combat: combat is not None and combat.attack_card is not None,
+    "staunch_response_blue": lambda combat: combat is not None and combat.attack_card is not None,
+    # Sigil of Solace: standard defense reaction (gain life)
+    "sigil_of_solace_red": lambda combat: combat is not None and combat.attack_card is not None,
+    "sigil_of_solace_yellow": lambda combat: combat is not None and combat.attack_card is not None,
+    "sigil_of_solace_blue": lambda combat: combat is not None and combat.attack_card is not None,
 }
 
 # ---------------------------------------------------------------------------
