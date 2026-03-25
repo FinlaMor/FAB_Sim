@@ -776,6 +776,38 @@ def effect_charge(state: GameState, player_id: int, card: Card) -> None:
     player.soul.add(card)
 
 
+def effect_reload(state: GameState, player_id: int) -> None:
+    """8.5.15: Put a card from hand on top of deck, then draw a card."""
+    player = state.players[player_id]
+    if not player.hand.cards:
+        return
+    slugs = [c.slug for c in player.hand.cards]
+    choice = _ask_player(state, player_id, slugs,
+                         context="Reload: choose a card to put on top of deck")
+    card = player.hand.find(choice)
+    if card is None:
+        card = player.hand.cards[0]
+    player.hand.remove(card)
+    player.deck.cards.insert(0, card)
+    card.zone = "deck"
+    _draw_cards(player, 1)
+
+
+def effect_banish_top_deck(state: GameState, player_id: int, count: int = 1,
+                           face_up: bool = True) -> list:
+    """8.5.1b: Banish the top N cards of deck."""
+    player = state.players[player_id]
+    banished = []
+    for _ in range(count):
+        if not player.deck.cards:
+            break
+        card = player.deck.pop_top()
+        if card is not None:
+            player.banished.add(card, is_public=face_up)
+            banished.append(card)
+    return banished
+
+
 def effect_mark(state: GameState, target_player_id: int) -> None:
     """8.5.50: Mark a hero — gives them the marked condition (9.3).
     Cleared when hit by opponent (9.3.3) or hero ceases to exist."""
@@ -836,6 +868,124 @@ def effect_retrieve_dagger(state: GameState, player_id: int) -> bool:
     dagger.controller = player_id
     player.weapon.add(dagger)
     return True
+
+
+# ---------------------------------------------------------------------------
+# Zone interaction helpers — reusable soul / banish / arsenal / graveyard ops
+# ---------------------------------------------------------------------------
+
+def effect_banish_from_soul(state: GameState, player_id: int,
+                            count: int = 1, face_up: bool = True) -> list:
+    """Banish card(s) from player's soul zone. Agent picks which cards.
+    Returns list of banished cards."""
+    player = state.players[player_id]
+    if not hasattr(player, 'soul') or not player.soul.cards:
+        return []
+    banished = []
+    for _ in range(min(count, len(player.soul.cards))):
+        if not player.soul.cards:
+            break
+        if len(player.soul.cards) == 1:
+            target = player.soul.cards[0]
+        else:
+            pick = _ask_player(state, player_id,
+                               [c.slug for c in player.soul.cards],
+                               context="Choose a card from your soul to banish")
+            target = next((c for c in player.soul.cards if c.slug == pick),
+                          player.soul.cards[0])
+        player.soul.remove(target)
+        effect_banish(state, target, face_up=face_up, banisher_id=player_id)
+        banished.append(target)
+    return banished
+
+
+def effect_move_to_soul(state: GameState, card: Card, player_id: int) -> None:
+    """Move a card into a player's soul zone (8.5.29 charge variant)."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.soul.add(card)
+
+
+def effect_retrieve_from_graveyard(state: GameState, player_id: int,
+                                   condition=None,
+                                   destination: str = "hand") -> Card:
+    """Retrieve a card from graveyard matching condition.
+    destination: 'hand', 'deck_top', 'deck_bottom', 'arsenal'.
+    Agent picks which card. Returns the card or None."""
+    player = state.players[player_id]
+    candidates = list(player.graveyard.cards)
+    if condition:
+        candidates = [c for c in candidates if condition(c)]
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        chosen = candidates[0]
+    else:
+        pick = _ask_player(state, player_id,
+                           [c.slug for c in candidates],
+                           context="Choose a card from your graveyard")
+        chosen = next((c for c in candidates if c.slug == pick),
+                      candidates[0])
+    player.graveyard.remove(chosen)
+    if destination == "hand":
+        player.hand.add(chosen)
+    elif destination == "deck_top":
+        player.deck.cards.insert(0, chosen)
+        chosen.zone = "deck"
+        chosen.is_public = False
+    elif destination == "deck_bottom":
+        player.deck.cards.append(chosen)
+        chosen.zone = "deck"
+        chosen.is_public = False
+    elif destination == "arsenal":
+        player.arsenal.add(chosen)
+        chosen.face_down = True
+        chosen.is_public = False
+    return chosen
+
+
+def effect_banish_from_hand(state: GameState, player_id: int,
+                            count: int = 1, face_up: bool = True,
+                            banisher_id: int = None) -> list:
+    """Banish card(s) from a player's hand. Agent picks which.
+    Returns list of banished cards."""
+    player = state.players[player_id]
+    banished = []
+    for _ in range(min(count, len(player.hand.cards))):
+        if not player.hand.cards:
+            break
+        if len(player.hand.cards) == 1:
+            target = player.hand.cards[0]
+        else:
+            pick = _ask_player(state, player_id,
+                               [c.slug for c in player.hand.cards],
+                               context="Choose a card from your hand to banish")
+            target = next((c for c in player.hand.cards if c.slug == pick),
+                          player.hand.cards[0])
+        player.hand.remove(target)
+        effect_banish(state, target, face_up=face_up,
+                      banisher_id=banisher_id or player_id)
+        banished.append(target)
+    return banished
+
+
+def effect_arsenal_to_hand(state: GameState, player_id: int) -> Card:
+    """Move a card from arsenal back to hand. Agent picks which.
+    Returns the card or None."""
+    player = state.players[player_id]
+    if not hasattr(player, 'arsenal') or not player.arsenal.cards:
+        return None
+    if len(player.arsenal.cards) == 1:
+        target = player.arsenal.cards[0]
+    else:
+        pick = _ask_player(state, player_id,
+                           [c.slug for c in player.arsenal.cards],
+                           context="Choose an arsenal card to return to hand")
+        target = next((c for c in player.arsenal.cards if c.slug == pick),
+                      player.arsenal.cards[0])
+    player.arsenal.remove(target)
+    player.hand.add(target)
+    return target
 
 
 # ---------------------------------------------------------------------------
@@ -1036,6 +1186,58 @@ def _create_token(state: GameState, player: Player, token_slug: str,
 
         tokens.append(token)
     return tokens
+
+
+def effect_reveal_top(state: GameState, player_id: int, count: int = 1) -> list:
+    """Reveal the top N cards of a player's deck. Returns list of revealed cards."""
+    player = state.players[player_id]
+    revealed = []
+    for i in range(min(count, len(player.deck.cards))):
+        card = player.deck.cards[i]
+        card.is_public = True
+        revealed.append(card)
+    return revealed
+
+
+def effect_look_top(state: GameState, player_id: int, count: int = 1) -> list:
+    """Look at the top N cards of a player's deck. Returns list of cards (not public)."""
+    player = state.players[player_id]
+    return player.deck.cards[:min(count, len(player.deck.cards))]
+
+
+def effect_put_top_deck(state: GameState, card: Card, player_id: int) -> None:
+    """Put a card on top of a player's deck."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.deck.cards.insert(0, card)
+    card.zone = "deck"
+    card.is_public = False
+
+
+def effect_put_bottom_deck(state: GameState, card: Card, player_id: int) -> None:
+    """Put a card on the bottom of a player's deck."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.deck.cards.append(card)
+    card.zone = "deck"
+    card.is_public = False
+
+
+def effect_return_to_hand(state: GameState, card: Card, player_id: int) -> None:
+    """Return a card to a player's hand."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.hand.add(card)
+
+
+def effect_put_arsenal(state: GameState, card: Card, player_id: int,
+                       face_up: bool = False) -> None:
+    """Put a card into a player's arsenal."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.arsenal.add(card)
+    card.face_down = not face_up
+    card.is_public = face_up
 
 
 def create_token(state: GameState, player_id: int, token_slug: str,

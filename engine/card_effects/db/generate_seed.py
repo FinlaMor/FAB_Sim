@@ -136,6 +136,57 @@ def gen_card_triggers() -> list[str]:
     return lines
 
 
+# ---------------------------------------------------------------------------
+# Data-driven triggers — simple cards expressed purely via DB types,
+# bypassing CARD_TRIGGERS entirely. Each tuple is:
+#   (slug, event_type, condition_type, condition_params, effect_type, effect_params,
+#    is_optional, intra_card_order)
+# These cards are loaded by loader.py at runtime using built-in executors/checkers.
+# ---------------------------------------------------------------------------
+DATA_DRIVEN_TRIGGERS: list[tuple] = [
+    # blink_blue: "Gain 1 action point."
+    ("blink_blue", "on_play", "none", "{}", "grant_go_again", "{}", 0, 0),
+    # canopy_shelter_blue: "When this defends, create a Might token."
+    ("canopy_shelter_blue", "defend", "none", "{}", "create_token",
+     '{"token":"might","count":1}', 0, 0),
+    # macho_grande (color variants): "Dominate" (standalone functional text)
+    ("macho_grande_blue", "attacking", "none", "{}", "dominate", "{}", 0, 0),
+    ("macho_grande_red", "attacking", "none", "{}", "dominate", "{}", 0, 0),
+    ("macho_grande_yellow", "attacking", "none", "{}", "dominate", "{}", 0, 0),
+]
+
+
+def gen_data_driven_triggers() -> list[str]:
+    """Generate INSERT statements for data-driven triggers that don't need
+    custom Python functions — they rely entirely on built-in effect executors
+    and condition checkers in loader.py."""
+    if not DATA_DRIVEN_TRIGGERS:
+        return []
+
+    lines = ["", "-- ===========================================================================",
+             "-- DATA-DRIVEN TRIGGERS (simple cards without custom Python functions)",
+             "-- ==========================================================================="]
+
+    current_slug = None
+    for entry in DATA_DRIVEN_TRIGGERS:
+        slug, event_type, cond_type, cond_params, eff_type, eff_params, is_optional, order = entry
+        if slug != current_slug:
+            lines.append(f"")
+            lines.append(f"-- {slug}")
+            current_slug = slug
+
+        lines.append(
+            f"INSERT INTO card_triggers "
+            f"(slug, event_type, condition_type, condition_params, condition_fn, "
+            f"effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES "
+            f"('{_esc(slug)}', '{_esc(event_type)}', '{_esc(cond_type)}', "
+            f"'{_esc(cond_params)}', NULL, "
+            f"'{_esc(eff_type)}', '{_esc(eff_params)}', NULL, {is_optional}, {order});"
+        )
+
+    return lines
+
+
 def gen_equipment_activations() -> list[str]:
     from engine.card_effects.registry import (
         EQUIPMENT_ACTIVATION_CONDITIONS,
@@ -192,7 +243,9 @@ def gen_equipment_activations() -> list[str]:
 
         # Effect
         if eff_fn is None:
-            eff_type = 'none'
+            # No explicit effect function — skip this slug if it has no effect
+            # (condition-only entries are not valid equipment_activations rows)
+            eff_type = 'custom'
             eff_fn_val = 'NULL'
         else:
             fn_name = _fn_name(eff_fn)
@@ -263,6 +316,7 @@ def generate(out_path: pathlib.Path | None = None) -> None:
     ]
     sections.append(gen_token_keywords())
     sections.append(gen_card_triggers())
+    sections.append(gen_data_driven_triggers())
     sections.append(gen_equipment_activations())
     sections.append(gen_turn_attack_effects())
 
@@ -278,7 +332,8 @@ def generate(out_path: pathlib.Path | None = None) -> None:
     equip_rows = sum(1 for l in all_lines if l.startswith("INSERT OR REPLACE INTO equipment_activations"))
     tae_rows = sum(1 for l in all_lines if l.startswith("INSERT OR REPLACE INTO turn_attack_effects"))
     print(f"Generated {out_path}")
-    print(f"  card_triggers:         {trigger_rows} rows")
+    dd_rows = len(DATA_DRIVEN_TRIGGERS)
+    print(f"  card_triggers:         {trigger_rows} rows (incl. {dd_rows} data-driven)")
     print(f"  equipment_activations: {equip_rows} rows")
     print(f"  turn_attack_effects:   {tae_rows} rows")
 

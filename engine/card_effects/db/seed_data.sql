@@ -13,14 +13,153 @@ INSERT OR REPLACE INTO token_keywords VALUES ('aether_ashwing',   'Arcane Barrie
 -- CARD TRIGGERS (auto-generated from CARD_TRIGGERS dict)
 -- ===========================================================================
 
+-- absorb_in_aether_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('absorb_in_aether_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- absorb_in_aether_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('absorb_in_aether_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- absorb_in_aether_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('absorb_in_aether_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- adaptive_plating
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('adaptive_plating', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: None),"}', NULL, 0, 0);
+
+-- aegis_archangel_of_protection
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aegis_archangel_of_protection', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"attacking\", effect_fn=lambda c, e, s: _archangel_attack_effect(c, e, s, \"spectral_shield\", 2)),"}', NULL, 0, 0);
+
+-- aether_arc_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_arc_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
 -- aether_bindings_of_the_third_age
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_bindings_of_the_third_age', 'leaves_arena', 'none', '{}', NULL, 'custom', '{}', '_aether_bindings_sigil_leave', 0, 0);
+
+-- aether_crackers
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_crackers', 'hit', 'none', '{}', NULL, 'custom', '{}', '_aether_crackers_hit', 1, 0);
+
+-- aether_dart_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_dart_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_dart_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_dart_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_dart_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_dart_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_flare_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_flare_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_flare_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_flare_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_flare_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_flare_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_hail_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_hail_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_hail_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_hail_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_hail_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_hail_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_quickening_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_quickening_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_quickening_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 1);
+
+-- aether_quickening_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_quickening_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_quickening_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 1);
+
+-- aether_quickening_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_quickening_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_quickening_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 1);
+
+-- aether_spindle_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_spindle_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_spindle_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_spindle_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- aether_spindle_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_spindle_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
 
 -- aether_wildfire_red
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aether_wildfire_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_aether_wildfire_on_play', 0, 0);
 
+-- air_of_a_comeback
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('air_of_a_comeback', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_air_of_comeback_on_play', 0, 0);
+
+-- alluring_inducement_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('alluring_inducement_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_alluring_inducement_attack', 0, 0);
+
+-- alluvion_constellas
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('alluvion_constellas', 'arcane_damage_prevented', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_put_counter(s, c, \"energy\", 1)"}', NULL, 0, 0);
+
+-- alpha_rampage_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('alpha_rampage_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_discard(s, _controller_id(c), 1, random_discard=True)),"}', NULL, 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('alpha_rampage_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_alpha_rampage_attack', 0, 1);
+
+-- already_dead_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_already_dead_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_blue', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_already_dead_contract', 0, 1);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_already_dead_hit', 0, 2);
+
+-- already_dead_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_already_dead_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_red', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_already_dead_contract', 0, 1);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_already_dead_hit', 0, 2);
+
+-- already_dead_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_already_dead_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_yellow', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_already_dead_contract', 0, 1);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('already_dead_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_already_dead_hit', 0, 2);
+
+-- amplify_the_arknight_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('amplify_the_arknight_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_amplify_arknight_on_play', 0, 0);
+
+-- amplify_the_arknight_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('amplify_the_arknight_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_amplify_arknight_on_play', 0, 0);
+
+-- amplify_the_arknight_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('amplify_the_arknight_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_amplify_arknight_on_play', 0, 0);
+
+-- amulet_of_havencall_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('amulet_of_havencall_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_amulet_havencall_effect', 0, 0);
+
+-- annexation_of_all_things_known_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annexation_of_all_things_known_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- annexation_of_grandeur_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annexation_of_grandeur_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arena\")),"}', NULL, 0, 0);
+
+-- annexation_of_the_forge_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annexation_of_the_forge_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"equipment\")),"}', NULL, 0, 0);
+
+-- annihilate_the_armed_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_blue', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_contract', 0, 1);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_hit', 0, 2);
+
+-- annihilate_the_armed_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_red', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_contract', 0, 1);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_hit', 0, 2);
+
+-- annihilate_the_armed_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_yellow', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_contract', 0, 1);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('annihilate_the_armed_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_annihilate_armed_hit', 0, 2);
+
 -- apex_bonebreaker
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('apex_bonebreaker', 'defend', 'custom', '{}', '_apex_defend_condition', 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), \"might\"),"}', NULL, 0, 0);
+
+-- arakni
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arakni', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_arakni_on_play', 0, 0);
+
+-- arakni_huntsman
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arakni_huntsman', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_arakni_on_play', 0, 0);
 
 -- arakni_marionette
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arakni_marionette', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_arakni_marionette_attack_buff', 0, 0);
@@ -28,11 +167,255 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arakni_marionette', 'combat_chain_close', 'none', '{}', NULL, 'custom', '{}', '_arakni_marionette_chain_close_cleanup', 0, 2);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arakni_marionette', 'start_of_end_phase', 'none', '{}', NULL, 'custom', '{}', '_arakni_marionette_end_phase', 0, 3);
 
+-- arakni_tarantula
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arakni_tarantula', 'hit', 'none', '{}', NULL, 'custom', '{}', '_arakni_tarantula_hit', 0, 0);
+
+-- arakni_trapdoor
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arakni_trapdoor', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_arakni_trapdoor_effect', 0, 0);
+
+-- arc_lightning_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arc_lightning_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_arc_lightning_on_play', 0, 0);
+
+-- arcane_polarity_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcane_polarity_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcane_polarity_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcane_polarity_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcane_polarity_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcane_polarity_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcane_twining_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcane_twining_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcane_twining_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcane_twining_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcane_twining_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcane_twining_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcanic_crackle_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcanic_crackle_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcanic_crackle_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcanic_crackle_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcanic_crackle_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcanic_crackle_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- arcanite_skullcap
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arcanite_skullcap', 'defend', 'none', '{}', NULL, 'custom', '{}', '_arcanite_skullcap_defend', 0, 0);
+
+-- arctic_incarceration_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arctic_incarceration_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- arctic_incarceration_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arctic_incarceration_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- arctic_incarceration_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arctic_incarceration_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- arena_medic
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arena_medic', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_arena_medic_on_play', 0, 0);
+
+-- arknight_ascendancy_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arknight_ascendancy_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_arknight_ascendancy_hit', 0, 0);
+
+-- arrogant_showboating_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('arrogant_showboating_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_arrogant_showboating_effect', 0, 0);
+
 -- art_of_desire_body
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('art_of_desire_body', 'hit', 'none', '{}', NULL, 'custom', '{}', '_art_of_desire_body_hit', 0, 0);
 
+-- art_of_desire_mind_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('art_of_desire_mind_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_art_of_desire_mind_hit', 0, 0);
+
+-- art_of_desire_soul_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('art_of_desire_soul_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_art_of_desire_soul_hit', 0, 0);
+
+-- art_of_war_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('art_of_war_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_art_of_war_effect', 0, 0);
+
+-- aspect_of_tiger_body_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aspect_of_tiger_body_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- aspect_of_tiger_mind_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aspect_of_tiger_mind_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- aspect_of_tiger_soul_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('aspect_of_tiger_soul_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- attention_grabbers
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('attention_grabbers', 'defend', 'none', '{}', NULL, 'custom', '{}', '_attention_grabbers_defend', 1, 0);
+
+-- attune_with_cosmic_vibrations_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('attune_with_cosmic_vibrations_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_attune_cosmic_attacking', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('attune_with_cosmic_vibrations_blue', 'defend', 'none', '{}', NULL, 'custom', '{}', '_attune_cosmic_defending', 0, 1);
+
+-- avalon_archangel_of_rebirth
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('avalon_archangel_of_rebirth', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_avalon_attack', 0, 0);
+
+-- awakening_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('awakening_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_awakening_effect', 0, 0);
+
+-- azvolai
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('azvolai', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_azvolai_attacking', 0, 0);
+
+-- back_heel_kick_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('back_heel_kick_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- back_heel_kick_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('back_heel_kick_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- back_heel_kick_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('back_heel_kick_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- bad_breath_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bad_breath_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- bad_breath_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bad_breath_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- bad_breath_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bad_breath_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- ball_breaker
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ball_breaker', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_ball_breaker_attacking', 0, 0);
+
+-- ball_lightning_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ball_lightning_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_ball_lightning_on_play', 0, 0);
+
+-- ball_lightning_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ball_lightning_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_ball_lightning_on_play', 0, 0);
+
+-- ball_lightning_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ball_lightning_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_ball_lightning_on_play', 0, 0);
+
+-- bank_breaker
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bank_breaker', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_bank_breaker_attack', 1, 0);
+
+-- barbed_barrage_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barbed_barrage_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_barbed_barrage_effect', 1, 0);
+
+-- barbed_barrage_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barbed_barrage_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_barbed_barrage_effect', 1, 0);
+
+-- barbed_barrage_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barbed_barrage_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_barbed_barrage_effect', 1, 0);
+
+-- barbed_castaway
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barbed_castaway', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_barbed_castaway_effect', 1, 0);
+
+-- bare_fangs_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bare_fangs_blue', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_bonus: _bare_fangs_effect(c, e, s, b)),"}', NULL, 0, 0);
+
+-- bare_fangs_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bare_fangs_red', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_bonus: _bare_fangs_effect(c, e, s, b)),"}', NULL, 0, 0);
+
+-- bare_fangs_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bare_fangs_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_bonus: _bare_fangs_effect(c, e, s, b)),"}', NULL, 0, 0);
+
+-- barkbone_strapping
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barkbone_strapping', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_gain_resources(s, _controller_id(c), roll_die(s, _controller_id(c), 6) // 2)),"}', NULL, 0, 0);
+
+-- barraging_big_horn_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barraging_big_horn_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_barraging_big_horn_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barraging_big_horn_blue', 'defend', 'none', '{}', NULL, 'custom', '{}', '_barraging_big_horn_defend', 0, 1);
+
+-- barraging_big_horn_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barraging_big_horn_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_barraging_big_horn_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barraging_big_horn_red', 'defend', 'none', '{}', NULL, 'custom', '{}', '_barraging_big_horn_defend', 0, 1);
+
+-- barraging_big_horn_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barraging_big_horn_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_barraging_big_horn_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('barraging_big_horn_yellow', 'defend', 'none', '{}', NULL, 'custom', '{}', '_barraging_big_horn_defend', 0, 1);
+
+-- basalt_boots
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('basalt_boots', 'defend', 'none', '{}', NULL, 'custom', '{}', '_basalt_boots_defend', 0, 0);
+
+-- batter_to_a_pulp_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('batter_to_a_pulp_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"equipment\")),"}', NULL, 0, 0);
+
+-- battered_beaten_and_broken_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('battered_beaten_and_broken_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- battered_not_broken_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('battered_not_broken_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append(\"prevent_2_create_might\")),"}', NULL, 0, 0);
+
 -- battering_bolt
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('battering_bolt', 'hit', 'none', '{}', NULL, 'custom', '{}', '_battering_bolt_hit', 0, 0);
+
+-- battlefield_beacon_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('battlefield_beacon_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_battlefield_beacon_attack', 0, 0);
+
+-- be_like_water_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('be_like_water_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_be_like_water_hit', 0, 0);
+
+-- be_like_water_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('be_like_water_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_be_like_water_hit', 0, 0);
+
+-- be_like_water_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('be_like_water_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_be_like_water_hit', 0, 0);
+
+-- beacon_of_victory_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beacon_of_victory_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_beacon_of_victory_effect', 0, 0);
+
+-- beaming_blade
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beaming_blade', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_beaming_blade_attacking', 0, 0);
+
+-- beaten_trackers
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beaten_trackers', 'card_discarded', 'custom', '{"lambda":"condition_fn=lambda c, e, s: c.zone in (\"arms\", \"legs\", \"chest\", \"head\"),"}', NULL, 'custom', '{}', '_beaten_trackers_discard', 0, 0);
+
+-- beckon_applause
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beckon_applause', 'defend', 'none', '{}', NULL, 'custom', '{}', '_beckon_applause_defend', 0, 0);
+
+-- beckoning_light_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beckoning_light_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_beckoning_light_effect', 1, 0);
+
+-- beckoning_light_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beckoning_light_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_beckoning_light_effect', 1, 0);
+
+-- beckoning_light_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beckoning_light_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_beckoning_light_effect', 1, 0);
+
+-- become_the_arknight_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('become_the_arknight_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_become_the_arknight_effect', 0, 0);
+
+-- belittle_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('belittle_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_belittle_effect', 1, 0);
+
+-- belittle_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('belittle_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_belittle_effect', 1, 0);
+
+-- belittle_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('belittle_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_belittle_effect', 1, 0);
+
+-- bellona_archangel_of_war
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bellona_archangel_of_war', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"attacking\", effect_fn=lambda c, e, s: _archangel_attack_effect(c, e, s, \"might\", 1)),"}', NULL, 0, 0);
+
+-- bequest_the_vast_beyond_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bequest_the_vast_beyond_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bequest_effect', 0, 0);
+
+-- berserk_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('berserk_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append(\"berserk_active\")),"}', NULL, 0, 0);
+
+-- beseech_the_demigon_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beseech_the_demigon_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_beseech_demigon_on_play', 0, 0);
+
+-- beseech_the_demigon_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beseech_the_demigon_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_beseech_demigon_on_play', 0, 0);
+
+-- beseech_the_demigon_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('beseech_the_demigon_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_beseech_demigon_on_play', 0, 0);
+
+-- betsy
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('betsy', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_betsy_wager', 1, 0);
+
+-- betsy_skin_in_the_game
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('betsy_skin_in_the_game', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_betsy_wager', 1, 0);
+
+-- big_blue_sky_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('big_blue_sky_blue', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_big_blue_sky_defend', 0, 0);
 
 -- big_bully
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('big_bully', 'attacking', 'custom', '{}', '_is_this_attacking', 'custom', '{}', '_big_bully_attacking', 0, 0);
@@ -40,45 +423,498 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- big_game_trophy_shot
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('big_game_trophy_shot', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_big_game_trophy_on_play', 0, 0);
 
+-- bite_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bite_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_bite_attack', 1, 0);
+
+-- bite_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bite_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_bite_attack', 1, 0);
+
+-- bite_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bite_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_bite_attack', 1, 0);
+
+-- biting_blade_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('biting_blade_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- biting_blade_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('biting_blade_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- biting_blade_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('biting_blade_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- blackout_kick_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blackout_kick_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- blackout_kick_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blackout_kick_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- blackout_kick_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blackout_kick_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- blackstone_greaves
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blackstone_greaves', 'defend', 'none', '{}', NULL, 'custom', '{}', '_blackstone_greaves_defend', 0, 0);
+
 -- blacktek_whisperers
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blacktek_whisperers', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_blacktek_whisperers_start_turn', 0, 0);
+
+-- blasmophet_the_soul_harvester
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blasmophet_the_soul_harvester', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_blasmophet_attack', 0, 0);
 
 -- blast_to_oblivion
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blast_to_oblivion', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_blast_to_oblivion_attack', 0, 0);
 
+-- blessing_of_deliverance
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blessing_of_deliverance', 'enters_arena', 'none', '{}', NULL, 'custom', '{}', '_blessing_deliverance_enter', 0, 0);
+
+-- blessing_of_deliverance_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blessing_of_deliverance_blue', 'enters_arena', 'none', '{}', NULL, 'custom', '{}', '_blessing_deliverance_enter', 0, 0);
+
+-- blessing_of_deliverance_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blessing_of_deliverance_red', 'enters_arena', 'none', '{}', NULL, 'custom', '{}', '_blessing_deliverance_enter', 0, 0);
+
+-- blessing_of_deliverance_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blessing_of_deliverance_yellow', 'enters_arena', 'none', '{}', NULL, 'custom', '{}', '_blessing_deliverance_enter', 0, 0);
+
+-- blessing_of_focus
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blessing_of_focus', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_blessing_focus_start', 0, 0);
+
+-- blinding_of_the_old_ones_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blinding_of_the_old_ones_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
 -- blink
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blink', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_gain_action_point(s, _controller_id(c))),"}', NULL, 0, 0);
 
+-- blistering_blade_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blistering_blade_blue', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b, x=_x: _blistering_blade_attack(c, e, s, b, x)),"}', NULL, 0, 0);
+
+-- blistering_blade_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blistering_blade_red', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b, x=_x: _blistering_blade_attack(c, e, s, b, x)),"}', NULL, 0, 0);
+
+-- blistering_blade_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blistering_blade_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b, x=_x: _blistering_blade_attack(c, e, s, b, x)),"}', NULL, 0, 0);
+
+-- blizzard_bolt_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blizzard_bolt_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_blizzard_bolt_on_play', 0, 0);
+
+-- blizzard_bolt_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blizzard_bolt_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_blizzard_bolt_on_play', 0, 0);
+
+-- blizzard_bolt_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blizzard_bolt_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_blizzard_bolt_on_play', 0, 0);
+
+-- blood_dripping_frenzy_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blood_dripping_frenzy_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_blood_dripping_frenzy_effect', 0, 0);
+
+-- blood_drop_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blood_drop_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"CARD_TRIGGERS[_slug] = [TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s: None)]"}', NULL, 0, 0);
+
+-- blood_line_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blood_line_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"CARD_TRIGGERS[_slug] = [TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s: None)]"}', NULL, 0, 0);
+
+-- blood_runs_deep_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blood_runs_deep_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_blood_runs_deep_hit', 0, 0);
+
+-- blood_splattered_vest
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blood_splattered_vest', 'hit', 'none', '{}', NULL, 'custom', '{}', '_blood_splattered_vest_hit', 1, 0);
+
+-- blood_tribute_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blood_tribute_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- blood_tribute_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blood_tribute_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- blood_tribute_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blood_tribute_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- bloodied_helm
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bloodied_helm', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bloodied_helm_effect', 1, 0);
+
+-- bloodrush_bellow_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bloodrush_bellow_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _bloodrush_bellow_effect(c, e, s, d)),"}', NULL, 0, 0);
+
+-- bloodrush_bellow_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bloodrush_bellow_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _bloodrush_bellow_effect(c, e, s, d)),"}', NULL, 0, 0);
+
+-- bloodrush_bellow_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bloodrush_bellow_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _bloodrush_bellow_effect(c, e, s, d)),"}', NULL, 0, 0);
+
+-- bloodsheath_skeleta
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bloodsheath_skeleta', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s: (\n        _move_to_graveyard(c, s),\n        s.players[_controller_id(c)].current_turn_effects.append(\"next_attack_cost_1_less\"),\n        s.pl"}', NULL, 0, 0);
+
 -- blue_fin_harpoon
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blue_fin_harpoon', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _go_fish_hit(c, e, s,\n                   lambda card: card.pitch == 3)),"}', NULL, 0, 0);
+
+-- bolting_blade_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bolting_blade_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bolting_blade_on_play', 0, 0);
+
+-- bolting_blade_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bolting_blade_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bolting_blade_on_play', 0, 0);
+
+-- bolting_blade_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bolting_blade_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bolting_blade_on_play', 0, 0);
+
+-- boltyn
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('boltyn', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_boltyn_attacking', 0, 0);
+
+-- bonds_of_agony
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_agony', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_bonds_agony_attacking', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_agony', 'hit', 'none', '{}', NULL, 'custom', '{}', '_bonds_agony_hit', 0, 1);
+
+-- bonds_of_ancestry_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_ancestry_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- bonds_of_ancestry_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_ancestry_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- bonds_of_ancestry_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_ancestry_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- bonds_of_attraction
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_attraction', 'hit', 'none', '{}', NULL, 'custom', '{}', '_bonds_attraction_hit', 0, 0);
+
+-- bonds_of_attraction_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_attraction_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_bonds_of_attraction_hit', 0, 0);
+
+-- bonds_of_attraction_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_attraction_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_bonds_of_attraction_hit', 0, 0);
+
+-- bonds_of_attraction_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_attraction_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_bonds_of_attraction_hit', 0, 0);
+
+-- bonds_of_memory
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonds_of_memory', 'hit', 'none', '{}', NULL, 'custom', '{}', '_bonds_memory_hit', 0, 0);
+
+-- bone_vizier
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bone_vizier', 'card_destroyed', 'none', '{}', NULL, 'custom', '{}', '_bone_vizier_destroyed', 0, 0);
+
+-- bonebreaker_bellow_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonebreaker_bellow_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b, x=_x: _bonebreaker_bellow_effect(c, e, s, b, x)),"}', NULL, 0, 0);
+
+-- bonebreaker_bellow_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonebreaker_bellow_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b, x=_x: _bonebreaker_bellow_effect(c, e, s, b, x)),"}', NULL, 0, 0);
+
+-- bonebreaker_bellow_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bonebreaker_bellow_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b, x=_x: _bonebreaker_bellow_effect(c, e, s, b, x)),"}', NULL, 0, 0);
 
 -- booze
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('booze', 'enters_arena', 'none', '{}', NULL, 'custom', '{}', '_booze_enters_arena', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('booze', 'leaves_arena', 'none', '{}', NULL, 'custom', '{}', '_booze_leaves_arena', 0, 1);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('booze', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_booze_start_of_turn', 0, 2);
 
+-- bore_down_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bore_down_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _bore_down_effect(c, e, s, d))]"}', NULL, 0, 0);
+
+-- bore_down_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bore_down_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _bore_down_effect(c, e, s, d))]"}', NULL, 0, 0);
+
+-- bore_down_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bore_down_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _bore_down_effect(c, e, s, d))]"}', NULL, 0, 0);
+
+-- boulder_drop_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('boulder_drop_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- boulder_drop_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('boulder_drop_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- boulder_drop_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('boulder_drop_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- bounding_demigon_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bounding_demigon_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bounding_demigon_on_play', 0, 0);
+
+-- bounding_demigon_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bounding_demigon_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bounding_demigon_on_play', 0, 0);
+
+-- bounding_demigon_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bounding_demigon_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bounding_demigon_on_play', 0, 0);
+
+-- brain_freeze_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('brain_freeze_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_brain_freeze_on_play', 0, 0);
+
+-- brain_freeze_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('brain_freeze_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_brain_freeze_on_play', 0, 0);
+
+-- brain_freeze_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('brain_freeze_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_brain_freeze_on_play', 0, 0);
+
+-- brainstorm_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('brainstorm_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_brainstorm_on_play', 0, 0);
+
+-- brandish_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('brandish_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_brandish_effect', 0, 0);
+
+-- brandish_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('brandish_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_brandish_effect', 0, 0);
+
+-- brandish_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('brandish_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_brandish_effect', 0, 0);
+
+-- bravo_flattering_showman
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bravo_flattering_showman', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bravo_flattering_action', 0, 0);
+
+-- bravo_star_of_the_show
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bravo_star_of_the_show', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_bravo_star_start', 0, 0);
+
+-- break_ground_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('break_ground_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_break_ground_effect', 0, 0);
+
+-- break_ground_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('break_ground_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_break_ground_effect', 0, 0);
+
+-- break_ground_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('break_ground_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_break_ground_effect', 0, 0);
+
+-- break_tide_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('break_tide_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- breaker_helm_protos
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('breaker_helm_protos', 'defend', 'none', '{}', NULL, 'custom', '{}', '_breaker_helm_defend', 0, 0);
+
+-- breaking_point_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('breaking_point_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: rupture_check(s),"}', NULL, 'custom', '{"lambda":"rupture_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arsenal\")),"}', NULL, 0, 0);
+
+-- breed_anger_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('breed_anger_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- breed_anger_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('breed_anger_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- breed_anger_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('breed_anger_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- brevant_civic_protector
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('brevant_civic_protector', 'protect', 'none', '{}', NULL, 'custom', '{}', '_brevant_protect', 0, 0);
+
+-- briar
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('briar', 'damage_dealt', 'none', '{}', NULL, 'custom', '{}', '_briar_damage', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('briar', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_briar_on_play', 0, 1);
+
+-- briar_warden_of_thorns
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('briar_warden_of_thorns', 'damage_dealt', 'none', '{}', NULL, 'custom', '{}', '_briar_damage', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('briar_warden_of_thorns', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_briar_on_play', 0, 1);
+
+-- buckling_blow_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('buckling_blow_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_put_counter(\n            s, 3 - _controller_id(c), \"defense_minus_1\", 1)),"}', NULL, 0, 0);
+
+-- buckling_blow_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('buckling_blow_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_put_counter(\n            s, 3 - _controller_id(c), \"defense_minus_1\", 1)),"}', NULL, 0, 0);
+
+-- buckling_blow_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('buckling_blow_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_put_counter(\n            s, 3 - _controller_id(c), \"defense_minus_1\", 1)),"}', NULL, 0, 0);
+
+-- bulls_eye_bracers
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('bulls_eye_bracers', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_bulls_eye_on_play', 0, 0);
+
+-- burn_away_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('burn_away_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_burn_away_effect', 1, 0);
+
+-- burn_away_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('burn_away_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_burn_away_effect', 1, 0);
+
+-- burn_away_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('burn_away_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_burn_away_effect', 1, 0);
+
+-- burn_bare
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('burn_bare', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- burning_blade_dance_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('burning_blade_dance_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_burning_blade_dance_attack', 0, 0);
+
+-- burning_blade_dance_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('burning_blade_dance_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_burning_blade_dance_attack', 0, 0);
+
+-- burning_blade_dance_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('burning_blade_dance_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_burning_blade_dance_attack', 0, 0);
+
+-- buzz_bolt_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('buzz_bolt_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_buzz_bolt_on_play', 0, 0);
+
+-- buzz_bolt_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('buzz_bolt_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_buzz_bolt_on_play', 0, 0);
+
+-- buzz_bolt_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('buzz_bolt_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_buzz_bolt_on_play', 0, 0);
+
+-- buzzard_helm
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('buzzard_helm', 'defend', 'none', '{}', NULL, 'custom', '{}', '_buzzard_helm_defend', 0, 0);
+
+-- cadaverous_contraband_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cadaverous_contraband_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_cadaverous_hit', 0, 0);
+
+-- cadaverous_contraband_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cadaverous_contraband_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_cadaverous_hit', 0, 0);
+
+-- cadaverous_contraband_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cadaverous_contraband_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_cadaverous_hit', 0, 0);
+
+-- call_for_backup_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('call_for_backup_blue', 'defend', 'none', '{}', NULL, 'custom', '{}', '_call_for_backup_defend', 0, 0);
+
+-- call_for_backup_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('call_for_backup_red', 'defend', 'none', '{}', NULL, 'custom', '{}', '_call_for_backup_defend', 0, 0);
+
+-- call_for_backup_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('call_for_backup_yellow', 'defend', 'none', '{}', NULL, 'custom', '{}', '_call_for_backup_defend', 0, 0);
+
+-- call_to_the_grave_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('call_to_the_grave_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_call_grave_on_play', 0, 0);
+
+-- call_to_the_grave_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('call_to_the_grave_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_call_grave_on_play', 0, 0);
+
+-- call_to_the_grave_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('call_to_the_grave_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_call_grave_on_play', 0, 0);
+
+-- cartilage_crush_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cartilage_crush_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- cartilage_crush_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cartilage_crush_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- cartilage_crush_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cartilage_crush_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- cast_bones_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cast_bones_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_cast_bones_on_play', 0, 0);
+
+-- cast_bones_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cast_bones_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s: _cast_bones_effect(c, e, s, 6)),"}', NULL, 0, 0);
+
+-- cast_bones_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cast_bones_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_cast_bones_on_play', 0, 0);
+
 -- catch_of_the_day
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('catch_of_the_day', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_catch_of_the_day_on_play', 0, 0);
+
+-- cerebral_mindstep_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cerebral_mindstep_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _cerebral_mindstep_effect(c, e, s, d))]"}', NULL, 0, 0);
+
+-- cerebral_mindstep_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cerebral_mindstep_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _cerebral_mindstep_effect(c, e, s, d))]"}', NULL, 0, 0);
+
+-- cerebral_mindstep_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cerebral_mindstep_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, d=_d: _cerebral_mindstep_effect(c, e, s, d))]"}', NULL, 0, 0);
 
 -- chain_of_brutality
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chain_of_brutality', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_chain_of_brutality_attacking', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chain_of_brutality', 'hit', 'none', '{}', NULL, 'custom', '{}', '_chain_of_brutality_hit', 0, 1);
 
+-- chains_of_eminence_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_eminence_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_chains_of_eminence_attack', 0, 0);
+
+-- chains_of_eminence_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_eminence_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_chains_of_eminence_attack', 0, 0);
+
+-- chains_of_eminence_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_eminence_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_chains_of_eminence_attack', 0, 0);
+
+-- chains_of_mephetis_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_mephetis_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_chains_mephetis_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_mephetis_blue', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_chains_mephetis_start_turn', 0, 1);
+
+-- chains_of_mephetis_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_mephetis_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_chains_mephetis_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_mephetis_red', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_chains_mephetis_start_turn', 0, 1);
+
+-- chains_of_mephetis_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_mephetis_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_chains_mephetis_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chains_of_mephetis_yellow', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_chains_mephetis_start_turn', 0, 1);
+
 -- channel_lightning_valley
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('channel_lightning_valley', 'damage_dealt', 'none', '{}', NULL, 'custom', '{}', '_channel_lightning_damage', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('channel_lightning_valley', 'start_of_end_phase', 'custom', '{"lambda":"condition_fn=lambda c, e, s: c in s.players[_controller_id(c)].auras.cards,"}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: channel_upkeep(c, \"Lightning\", s),"}', NULL, 0, 1);
 
+-- chart_the_high_seas_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chart_the_high_seas_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_chart_high_seas_on_play', 0, 0);
+
+-- chart_the_high_seas_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chart_the_high_seas_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_chart_high_seas_on_play', 0, 0);
+
+-- chart_the_high_seas_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chart_the_high_seas_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_chart_high_seas_on_play', 0, 0);
+
+-- chase_the_tail_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chase_the_tail_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
 -- cheating_scoundrel
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cheating_scoundrel', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_cheating_scoundrel_on_play', 0, 0);
+
+-- chokeslam_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chokeslam_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- chokeslam_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chokeslam_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- chokeslam_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chokeslam_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- chorus_of_the_amphitheater_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chorus_of_the_amphitheater_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- chorus_of_the_amphitheater_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chorus_of_the_amphitheater_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- chorus_of_the_amphitheater_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('chorus_of_the_amphitheater_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- cindra
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cindra', 'hit', 'none', '{}', NULL, 'custom', '{}', '_cindra_hit', 0, 0);
+
+-- cindra_dracai_of_retribution
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cindra_dracai_of_retribution', 'hit', 'none', '{}', NULL, 'custom', '{}', '_cindra_hit', 0, 0);
+
+-- cintari_saber
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cintari_saber', 'defend', 'none', '{}', NULL, 'custom', '{}', '_cintari_saber_defend', 0, 0);
+
+-- civic_duty
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('civic_duty', 'defend', 'none', '{}', NULL, 'custom', '{}', '_civic_duty_defend', 0, 0);
+
+-- civic_guide
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('civic_guide', 'defend', 'none', '{}', NULL, 'custom', '{}', '_civic_guide_defend', 0, 0);
+
+-- civic_peak
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('civic_peak', 'defend', 'none', '{}', NULL, 'custom', '{}', '_civic_peak_defend', 0, 0);
+
+-- civic_steps
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('civic_steps', 'defend', 'none', '{}', NULL, 'custom', '{}', '_civic_steps_defend', 0, 0);
+
+-- clearing_bellow_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('clearing_bellow_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
 
 -- cloud_cover
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cloud_cover', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_cloud_cover_on_play', 0, 0);
 
+-- coat_of_allegiance
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('coat_of_allegiance', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s: (\n        _move_to_graveyard(c, s),\n        effect_gain_resources(s, _controller_id(c), 2),\n        s.players[_controller_id(c)].current_turn"}', NULL, 0, 0);
+
+-- codex_of_bloodrot_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('codex_of_bloodrot_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_codex_bloodrot_effect', 0, 0);
+
 -- codex_of_frailty
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('codex_of_frailty', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_codex_of_frailty_on_play', 0, 0);
 
+-- codex_of_frailty_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('codex_of_frailty_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_codex_frailty_effect', 0, 0);
+
 -- codex_of_inertia
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('codex_of_inertia', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_codex_of_inertia_on_play', 0, 0);
+
+-- codex_of_inertia_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('codex_of_inertia_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_codex_inertia_effect', 0, 0);
+
+-- coercive_tendency_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('coercive_tendency_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_coercive_tendency_effect', 0, 0);
+
+-- come_to_fight_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('come_to_fight_blue', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _come_to_fight_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- come_to_fight_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('come_to_fight_red', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _come_to_fight_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- come_to_fight_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('come_to_fight_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _come_to_fight_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- comeback_kicks
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('comeback_kicks', 'crowd_cheers', 'none', '{}', NULL, 'custom', '{}', '_comeback_kicks_cheered', 0, 0);
 
 -- comet_storm__shock
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('comet_storm__shock', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_comet_storm_on_play', 0, 0);
@@ -87,11 +923,77 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('command_and_conquer', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_cnc_attacking', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('command_and_conquer', 'hit', 'none', '{}', NULL, 'custom', '{}', '_cnc_on_hit', 0, 1);
 
+-- concoct_disorder_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('concoct_disorder_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_concoct_disorder_effect', 0, 0);
+
+-- concoct_disorder_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('concoct_disorder_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_concoct_disorder_effect', 0, 0);
+
+-- concoct_disorder_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('concoct_disorder_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_concoct_disorder_effect', 0, 0);
+
 -- consign_to_cosmos__shock
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('consign_to_cosmos__shock', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_consign_to_cosmos_on_play', 0, 0);
 
+-- consuming_volition_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('consuming_volition_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_consuming_volition_effect', 0, 0);
+
+-- consuming_volition_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('consuming_volition_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_consuming_volition_effect', 0, 0);
+
+-- consuming_volition_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('consuming_volition_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_consuming_volition_effect', 0, 0);
+
+-- crane_dance_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crane_dance_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- crane_dance_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crane_dance_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- crane_dance_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crane_dance_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- cranial_crush_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cranial_crush_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- crippling_crush_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crippling_crush_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 2)),"}', NULL, 0, 0);
+
+-- critically_wounded_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('critically_wounded_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_critically_wounded_effect', 0, 0);
+
 -- crown_of_dominion
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crown_of_dominion', 'enters_arena', 'none', '{}', NULL, 'custom', '{}', '_crown_of_dominion_equip', 0, 0);
+
+-- crown_of_everbloom
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crown_of_everbloom', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_crown_seeds_effect', 1, 0);
+
+-- crown_of_seeds
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crown_of_seeds', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_crown_seeds_effect', 1, 0);
+
+-- crows_nest
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crows_nest', 'enters_arsenal', 'none', '{}', NULL, 'custom', '{}', '_crows_nest_arsenal', 0, 0);
+
+-- cruel_ambition_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cruel_ambition_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- crush_confidence_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crush_confidence_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- crush_confidence_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crush_confidence_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- crush_confidence_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crush_confidence_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- crush_the_weak_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crush_the_weak_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- crush_the_weak_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crush_the_weak_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- crush_the_weak_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('crush_the_weak_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
 
 -- current_funnel
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('current_funnel', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_current_funnel_on_play', 0, 0);
@@ -105,21 +1007,289 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- cut_from_the_same_cloth_yellow
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cut_from_the_same_cloth_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _cut_from_cloth_on_play(c, e, s, 3)),"}', NULL, 0, 0);
 
+-- cut_to_the_chase_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cut_to_the_chase_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_cut_to_the_chase_effect', 0, 0);
+
+-- cut_to_the_chase_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cut_to_the_chase_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_cut_to_the_chase_effect', 0, 0);
+
+-- cut_to_the_chase_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cut_to_the_chase_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_cut_to_the_chase_effect', 0, 0);
+
+-- cyclone_roundhouse_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('cyclone_roundhouse_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- dampen_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dampen_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- dampen_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dampen_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- dampen_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dampen_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- data_doll_mkii
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('data_doll_mkii', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_data_doll_banished', 0, 0);
+
 -- death_touch
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('death_touch', 'hit', 'none', '{}', NULL, 'custom', '{}', '_death_touch_hit', 0, 0);
 
+-- debilitate_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('debilitate_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- debilitate_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('debilitate_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- debilitate_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('debilitate_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- deep_blue_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('deep_blue_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_deep_blue_attack', 0, 0);
+
+-- deep_blue_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('deep_blue_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_deep_blue_attack', 0, 0);
+
+-- deep_blue_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('deep_blue_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_deep_blue_attack', 0, 0);
+
+-- descend_into_madness_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('descend_into_madness_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c), c)),"}', NULL, 0, 0);
+
+-- descendent_gustwave_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('descendent_gustwave_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- descendent_gustwave_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('descendent_gustwave_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- descendent_gustwave_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('descendent_gustwave_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- destructive_aethertide_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('destructive_aethertide_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- destructive_deliberation_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('destructive_deliberation_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- destructive_deliberation_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('destructive_deliberation_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- destructive_deliberation_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('destructive_deliberation_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- dig_up_dinner_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dig_up_dinner_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_dig_up_dinner_effect', 0, 0);
+
+-- dimenxxional_gateway_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dimenxxional_gateway_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- dimenxxional_gateway_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dimenxxional_gateway_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- dimenxxional_gateway_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dimenxxional_gateway_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- disable_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('disable_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arsenal\")),"}', NULL, 0, 0);
+
+-- disable_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('disable_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arsenal\")),"}', NULL, 0, 0);
+
+-- disable_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('disable_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arsenal\")),"}', NULL, 0, 0);
+
+-- disenchantment_of_the_old_ones_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('disenchantment_of_the_old_ones_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arena\")),"}', NULL, 0, 0);
+
+-- dishonor_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dishonor_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),"}', NULL, 0, 0);
+
+-- dominia
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dominia', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_dominia_effect', 0, 0);
+
+-- double_strike_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('double_strike_blue', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _double_strike_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- double_strike_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('double_strike_red', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _double_strike_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- double_strike_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('double_strike_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _double_strike_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- double_trouble_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('double_trouble_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- double_trouble_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('double_trouble_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- double_trouble_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('double_trouble_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- dracona_optimai
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dracona_optimai', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_dracona_optimai_effect', 0, 0);
+
+-- dread_scythe
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dread_scythe', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_dread_scythe_attacking', 0, 0);
+
+-- dreadbore
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dreadbore', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_dreadbore_on_play', 0, 0);
+
+-- drive_brake
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('drive_brake', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_drive_brake_banished', 0, 0);
+
+-- dromai
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dromai', 'card_pitched', 'none', '{}', NULL, 'custom', '{}', '_dromai_pitch', 0, 0);
+
+-- dromai_ash_artist
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dromai_ash_artist', 'card_pitched', 'none', '{}', NULL, 'custom', '{}', '_dromai_pitch', 0, 0);
+
+-- duskblade
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('duskblade', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_duskblade_attacking', 0, 0);
+
+-- dynastic_diadem
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('dynastic_diadem', 'defend', 'none', '{}', NULL, 'custom', '{}', '_dynastic_diadem_defend', 0, 0);
+
+-- earth_form_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('earth_form_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- earth_form_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('earth_form_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- earth_form_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('earth_form_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- earthlore_bounty
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('earthlore_bounty', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_earthlore_defend', 0, 0);
+
+-- echo_casque
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('echo_casque', 'beat_chest', 'none', '{}', NULL, 'custom', '{}', '_echo_casque_chest_beat', 0, 0);
+
 -- electromagnetic_somersault
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('electromagnetic_somersault', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_em_somersault_on_play', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('electromagnetic_somersault', 'combat_chain_close', 'none', '{}', NULL, 'custom', '{}', '_em_somersault_chain_close', 0, 1);
 
 -- electrostatic_discharge
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('electrostatic_discharge', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_electrostatic_on_play', 0, 0);
+
+-- emeritus_scolding_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('emeritus_scolding_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- emeritus_scolding_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('emeritus_scolding_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- emeritus_scolding_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('emeritus_scolding_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- enact_vengeance_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('enact_vengeance_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arsenal\")),"}', NULL, 0, 0);
+
+-- encore_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('encore_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_encore_effect', 0, 0);
+
+-- enlightened_strike
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('enlightened_strike', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_enlightened_strike_attack', 0, 0);
 
 -- etchings_of_arcana
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('etchings_of_arcana', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_etchings_on_play', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('etchings_of_arcana', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, 4),"}', NULL, 'custom', '{}', '_etchings_surge', 0, 1);
 
+-- etchings_of_arcana_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('etchings_of_arcana_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- etchings_of_arcana_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('etchings_of_arcana_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- etchings_of_arcana_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('etchings_of_arcana_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- eternal_inferno_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('eternal_inferno_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- exploding_aether_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('exploding_aether_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_amp(s, _controller_id(c), amount),"}', NULL, 0, 0);
+
+-- exploding_aether_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('exploding_aether_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_amp(s, _controller_id(c), amount),"}', NULL, 0, 0);
+
+-- exploding_aether_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('exploding_aether_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_amp(s, _controller_id(c), amount),"}', NULL, 0, 0);
+
+-- fang
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fang', 'hit', 'none', '{}', NULL, 'custom', '{}', '_fang_hit', 0, 0);
+
+-- fang_dracai_of_blades
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fang_dracai_of_blades', 'hit', 'none', '{}', NULL, 'custom', '{}', '_fang_hit', 0, 0);
+
+-- fate_foreseen_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fate_foreseen_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_fate_foreseen_effect', 0, 0);
+
+-- fate_foreseen_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fate_foreseen_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_fate_foreseen_effect', 0, 0);
+
+-- fate_foreseen_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fate_foreseen_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_fate_foreseen_effect', 0, 0);
+
+-- fault_line_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fault_line_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arsenal\")),"}', NULL, 0, 0);
+
+-- feisty_locals_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('feisty_locals_blue', 'defend', 'none', '{}', NULL, 'custom', '{}', '_feisty_locals_defend', 0, 0);
+
+-- feisty_locals_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('feisty_locals_red', 'defend', 'none', '{}', NULL, 'custom', '{}', '_feisty_locals_defend', 0, 0);
+
+-- feisty_locals_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('feisty_locals_yellow', 'defend', 'none', '{}', NULL, 'custom', '{}', '_feisty_locals_defend', 0, 0);
+
+-- find_center_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('find_center_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- fist_pump
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fist_pump', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_fist_pump_banished', 0, 0);
+
+-- flail_of_agony
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flail_of_agony', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- flameborn_retribution_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flameborn_retribution_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_flameborn_retribution_effect', 0, 0);
+
+-- flameborn_retribution_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flameborn_retribution_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_flameborn_retribution_effect', 0, 0);
+
+-- flameborn_retribution_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flameborn_retribution_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_flameborn_retribution_effect', 0, 0);
+
+-- flamecall_awakening_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flamecall_awakening_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_flamecall_awakening_effect', 0, 0);
+
+-- flamecall_awakening_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flamecall_awakening_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_flamecall_awakening_effect', 0, 0);
+
+-- flamecall_awakening_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flamecall_awakening_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_flamecall_awakening_effect', 0, 0);
+
+-- flamescale_furnace
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flamescale_furnace', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_gain_resources(s, _controller_id(c),\n                          sum(1 for x in s.players[_controller_id(c)].pitch.cards if x.pitch == 1))),"}', NULL, 0, 0);
+
 -- flash_of_brilliance
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flash_of_brilliance', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_flash_brilliance_defend', 1, 0);
+
+-- flatten_the_field_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flatten_the_field_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(\n            s, 3 - _controller_id(c), zone=\"arena\", card_name=\"seismic_surge\")),"}', NULL, 0, 0);
+
+-- flatten_the_field_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flatten_the_field_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(\n            s, 3 - _controller_id(c), zone=\"arena\", card_name=\"seismic_surge\")),"}', NULL, 0, 0);
+
+-- flatten_the_field_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flatten_the_field_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(\n            s, 3 - _controller_id(c), zone=\"arena\", card_name=\"seismic_surge\")),"}', NULL, 0, 0);
+
+-- flex_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flex_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_flex_attack', 0, 0);
+
+-- flex_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flex_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_flex_attack', 0, 0);
+
+-- flex_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flex_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_flex_attack', 0, 0);
 
 -- flick_knives
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flick_knives', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_flick_knives_on_play', 0, 0);
@@ -127,11 +1297,101 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- flittering_charge
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flittering_charge', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_flittering_charge_on_play', 0, 0);
 
+-- flood_of_force_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('flood_of_force_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- fluster_fist_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fluster_fist_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- fluster_fist_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fluster_fist_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- fluster_fist_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fluster_fist_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- foreboding_bolt_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('foreboding_bolt_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- foreboding_bolt_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('foreboding_bolt_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- foreboding_bolt_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('foreboding_bolt_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- forked_lightning_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('forked_lightning_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, a=_amt: _forked_lightning_effect(c, e, s, a))]"}', NULL, 0, 0);
+
+-- forked_lightning_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('forked_lightning_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, a=_amt: _forked_lightning_effect(c, e, s, a))]"}', NULL, 0, 0);
+
+-- forked_lightning_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('forked_lightning_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, a=_amt: _forked_lightning_effect(c, e, s, a))]"}', NULL, 0, 0);
+
 -- frailty_trap
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('frailty_trap', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_frailty_trap_defend', 0, 0);
 
+-- frosting_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('frosting_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- frosting_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('frosting_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- frosting_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('frosting_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
 -- fyendals_spring_tunic
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('fyendals_spring_tunic', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_fst_start_of_turn', 1, 0);
+
+-- galaxxi_black
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('galaxxi_black', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_galaxxi_attacking', 0, 0);
+
+-- gauntlets_of_the_boreal_domain
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('gauntlets_of_the_boreal_domain', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_gauntlets_boreal_on_play', 0, 0);
+
+-- gavel_of_natural_order
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('gavel_of_natural_order', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_gavel_on_play', 0, 0);
+
+-- gaze_the_ages_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('gaze_the_ages_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- ghostly_touch
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ghostly_touch', 'card_destroyed', 'none', '{}', NULL, 'custom', '{}', '_ghostly_touch_destroyed', 0, 0);
+
+-- give_and_take_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('give_and_take_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, ct=_c: _give_and_take_effect(c, e, s, ct))]"}', NULL, 0, 0);
+
+-- give_and_take_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('give_and_take_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, ct=_c: _give_and_take_effect(c, e, s, ct))]"}', NULL, 0, 0);
+
+-- give_and_take_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('give_and_take_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, ct=_c: _give_and_take_effect(c, e, s, ct))]"}', NULL, 0, 0);
+
+-- glint_the_quicksilver_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glint_the_quicksilver_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- gloves_of_azure_waves
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('gloves_of_azure_waves', 'defend', 'none', '{}', NULL, 'custom', '{}', '_gloves_azure_defend', 0, 0);
+
+-- glyph_destruction_nodes_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glyph_destruction_nodes_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- glyph_overlay_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glyph_overlay_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glyph_overlay_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_gain_life(s, _controller_id(c), 1)),"}', NULL, 0, 1);
+
+-- glyph_overlay_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glyph_overlay_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glyph_overlay_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_gain_life(s, _controller_id(c), 1)),"}', NULL, 0, 1);
+
+-- glyph_overlay_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glyph_overlay_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glyph_overlay_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_gain_life(s, _controller_id(c), 1)),"}', NULL, 0, 1);
+
+-- glyph_power_spell_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('glyph_power_spell_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- goblet_of_bloodrun_wine_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('goblet_of_bloodrun_wine_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
 
 -- gold_the_tip
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('gold_the_tip', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_gold_the_tip_on_play', 0, 0);
@@ -151,27 +1411,219 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- gone_in_a_flash
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('gone_in_a_flash', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_gone_in_a_flash_attack', 0, 0);
 
+-- grains_of_bloodspill
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('grains_of_bloodspill', 'hit', 'none', '{}', NULL, 'custom', '{}', '_grains_bloodspill_hit', 0, 0);
+
 -- graphene_chelicera
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('graphene_chelicera', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_dagger_buffs_on_attack', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('graphene_chelicera', 'hit', 'none', '{}', NULL, 'custom', '{}', '_dagger_turn_hit_effects', 0, 1);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('graphene_chelicera', 'hit', 'none', '{}', NULL, 'custom', '{}', '_hunters_klaive_hit', 0, 2);
+
+-- great_library_of_solana
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('great_library_of_solana', 'start_of_end_phase', 'none', '{}', NULL, 'custom', '{}', '_great_library_end', 0, 0);
+
+-- grind_them_down_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('grind_them_down_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_banish(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- grind_them_down_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('grind_them_down_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_banish(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- grind_them_down_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('grind_them_down_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_banish(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- groundbreaker_crix
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('groundbreaker_crix', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_groundbreaker_attacking', 0, 0);
+
+-- gustwave_of_the_second_wind_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('gustwave_of_the_second_wind_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- hammer_of_havenhold
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hammer_of_havenhold', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_hammer_havenhold_attacking', 0, 0);
+
+-- hard_knuckle
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hard_knuckle', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_hard_knuckle_on_play', 0, 0);
+
+-- hatchet_of_body
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hatchet_of_body', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_hatchet_body_attacking', 0, 0);
+
+-- hatchet_of_mind
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hatchet_of_mind', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_hatchet_mind_attacking', 0, 0);
+
+-- headbutt_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('headbutt_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_put_counter(\n        s, 3 - _controller_id(c), \"defense_minus_1\", 1)),"}', NULL, 0, 0);
+
+-- healing_balm_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('healing_balm_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, _a=_amt: effect_gain_life(s, _controller_id(c), _a),"}', NULL, 0, 0);
+
+-- healing_balm_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('healing_balm_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, _a=_amt: effect_gain_life(s, _controller_id(c), _a),"}', NULL, 0, 0);
+
+-- healing_balm_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('healing_balm_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, _a=_amt: effect_gain_life(s, _controller_id(c), _a),"}', NULL, 0, 0);
+
+-- heavy_industry_ram_stop
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('heavy_industry_ram_stop', 'defend', 'none', '{}', NULL, 'custom', '{}', '_heavy_industry_ram_defend', 0, 0);
+
+-- heavy_industry_surveillance
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('heavy_industry_surveillance', 'defend', 'none', '{}', NULL, 'custom', '{}', '_heavy_industry_surv_defend', 0, 0);
+
+-- helm_of_lignum_vitae
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('helm_of_lignum_vitae', 'defend', 'none', '{}', NULL, 'custom', '{}', '_helm_lignum_defend', 0, 0);
+
+-- herald_of_protection_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('herald_of_protection_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- herald_of_protection_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('herald_of_protection_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- herald_of_protection_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('herald_of_protection_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- herald_of_ravages_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('herald_of_ravages_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- herald_of_ravages_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('herald_of_ravages_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- herald_of_ravages_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('herald_of_ravages_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- herons_flight_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('herons_flight_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- hexagore_the_death_hydra
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hexagore_the_death_hydra', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_hexagore_attacking', 0, 0);
+
+-- high_octane_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('high_octane_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_high_octane_effect', 0, 0);
+
+-- high_octane_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('high_octane_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_high_octane_effect', 0, 0);
+
+-- high_octane_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('high_octane_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_high_octane_effect', 0, 0);
+
+-- high_riser
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('high_riser', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_high_riser_attacking', 0, 0);
+
+-- high_roller_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('high_roller_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- high_roller_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('high_roller_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- high_roller_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('high_roller_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- high_voltage_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('high_voltage_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_amp(s, _controller_id(c), amount),"}', NULL, 0, 0);
+
+-- hocus_pocus_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hocus_pocus_blue', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- hocus_pocus_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hocus_pocus_red', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- hocus_pocus_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hocus_pocus_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- hooves_of_the_shadowbeast
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hooves_of_the_shadowbeast', 'card_banished', 'none', '{}', NULL, 'custom', '{}', '_hooves_banished', 0, 0);
+
+-- hostile_encroachment_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hostile_encroachment_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- humble_entrance_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('humble_entrance_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- hundred_winds_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hundred_winds_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- hundred_winds_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hundred_winds_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- hundred_winds_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hundred_winds_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- hunter_or_hunted_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hunter_or_hunted_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s: (\n        effect_banish(s, s.players[3 - _controller_id(c)].deck.pop_top(), face_up=True, banisher_id=_controller_id(c))\n        if s.players"}', NULL, 0, 0);
 
 -- hunters_klaive
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hunters_klaive', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_dagger_buffs_on_attack', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hunters_klaive', 'hit', 'none', '{}', NULL, 'custom', '{}', '_hunters_klaive_hit', 0, 1);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hunters_klaive', 'hit', 'none', '{}', NULL, 'custom', '{}', '_dagger_turn_hit_effects', 0, 2);
 
+-- hurricane_technique_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('hurricane_technique_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- ice_bolt_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ice_bolt_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- ice_bolt_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ice_bolt_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- ice_bolt_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ice_bolt_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
 -- inertia_trap
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('inertia_trap', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_inertia_trap_defend', 0, 0);
+
+-- infect_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('infect_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- infect_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('infect_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- infect_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('infect_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- infecting_shot_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('infecting_shot_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- infecting_shot_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('infecting_shot_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- infecting_shot_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('infecting_shot_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
 
 -- infiltrate
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('infiltrate', 'hit', 'none', '{}', NULL, 'custom', '{}', '_infiltrate_hit', 0, 0);
 
+-- inflame_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('inflame_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_inflame_effect', 1, 0);
+
+-- inflame_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('inflame_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_inflame_effect', 1, 0);
+
+-- inflame_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('inflame_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_inflame_effect', 1, 0);
+
 -- insult_to_injury
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('insult_to_injury', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_insult_to_injury_effect', 0, 0);
 
+-- interlude_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('interlude_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s, a=_amt: _interlude_effect(c, e, s, a)),"}', NULL, 0, 0);
+
+-- interlude_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('interlude_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s, a=_amt: _interlude_effect(c, e, s, a)),"}', NULL, 0, 0);
+
+-- interlude_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('interlude_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"TriggerDef(event_type=\"on_play\", effect_fn=lambda c, e, s, a=_amt: _interlude_effect(c, e, s, a)),"}', NULL, 0, 0);
+
+-- ironsong_response_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ironsong_response_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- ironsong_response_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ironsong_response_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- ironsong_response_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ironsong_response_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
 -- kayo_underhanded_cheat
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('kayo_underhanded_cheat', 'crowd_boos', 'custom', '{"lambda":"condition_fn=lambda c, e, s: hasattr(e, ''data'') and e.data.get(''player_id'') == _controller_id(c),"}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), \"vigor\"),"}', NULL, 0, 0);
+
+-- kindle_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('kindle_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_amp(s, _controller_id(c), amount),"}', NULL, 0, 0);
 
 -- king_kraken_harpoon
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('king_kraken_harpoon', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _go_fish_hit(c, e, s,\n                   lambda card: (\"Action\" in (card.types or [])\n                                 and \"Attack\" not in (card.types or [])))),"}', NULL, 0, 0);
@@ -184,8 +1636,44 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('kiss_of_death', 'hit', 'none', '{}', NULL, 'custom', '{}', '_kiss_of_death_hit', 0, 1);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('kiss_of_death', 'hit', 'none', '{}', NULL, 'custom', '{}', '_dagger_turn_hit_effects', 0, 2);
 
+-- knock_em_off_their_feet_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('knock_em_off_their_feet_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_lose_life(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- kyloria
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('kyloria', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_kyloria_effect', 0, 0);
+
+-- lace_with_bloodrot_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lace_with_bloodrot_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- lace_with_frailty_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lace_with_frailty_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
 -- lair_of_the_spider
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lair_of_the_spider', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_lair_of_spider_defend', 0, 0);
+
+-- last_ditch_effort_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('last_ditch_effort_blue', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _last_ditch_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- last_ditch_effort_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('last_ditch_effort_red', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _last_ditch_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- last_ditch_effort_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('last_ditch_effort_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _last_ditch_attack(c, e, s, b))]"}', NULL, 0, 0);
+
+-- lava_burst_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lava_burst_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: rupture_check(s),"}', NULL, 'custom', '{"lambda":"rupture_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- lay_down_the_challenge_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lay_down_the_challenge_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_lay_down_challenge_effect', 0, 0);
+
+-- lead_the_charge_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lead_the_charge_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_lead_the_charge_attack', 0, 0);
+
+-- lead_the_charge_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lead_the_charge_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_lead_the_charge_attack', 0, 0);
+
+-- lead_the_charge_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lead_the_charge_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_lead_the_charge_attack', 0, 0);
 
 -- leave_no_witnesses
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('leave_no_witnesses', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_leave_no_witnesses_on_play', 0, 0);
@@ -193,8 +1681,38 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('leave_no_witnesses', 'hit', 'none', '{}', NULL, 'custom', '{}', '_leave_no_witnesses_hit', 0, 2);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('leave_no_witnesses', 'combat_chain_close', 'none', '{}', NULL, 'custom', '{}', '_leave_no_witnesses_chain_close', 0, 3);
 
+-- life_for_a_life_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('life_for_a_life_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, a=_a: _life_for_a_life_effect(c, e, s, a))]"}', NULL, 0, 0);
+
+-- life_for_a_life_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('life_for_a_life_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, a=_a: _life_for_a_life_effect(c, e, s, a))]"}', NULL, 0, 0);
+
+-- life_for_a_life_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('life_for_a_life_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, a=_a: _life_for_a_life_effect(c, e, s, a))]"}', NULL, 0, 0);
+
+-- light_up_the_leaves_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('light_up_the_leaves_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- lightning_form_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lightning_form_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- lightning_form_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lightning_form_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- lightning_form_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lightning_form_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- liquefy_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('liquefy_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: rupture_check(s),"}', NULL, 'custom', '{"lambda":"rupture_trigger(lambda c, e, s: effect_put_counter(\n        s, 3 - _controller_id(c), \"defense_minus_1\", 1)),"}', NULL, 0, 0);
+
 -- looking_for_a_scrap
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('looking_for_a_scrap', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_looking_scrap_on_play', 1, 0);
+
+-- lord_of_wind_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('lord_of_wind_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_shuffle(s, _controller_id(c))),"}', NULL, 0, 0);
+
+-- mangle_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mangle_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"equipment\")),"}', NULL, 0, 0);
 
 -- mark_of_the_black_widow
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mark_of_the_black_widow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_mark_black_widow_hit', 0, 0);
@@ -202,9 +1720,27 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- mask_of_deceit
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mask_of_deceit', 'defend', 'none', '{}', NULL, 'custom', '{}', '_mask_of_deceit_defend', 0, 0);
 
+-- mauling_qi_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mauling_qi_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- meat_and_greet_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('meat_and_greet_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- meat_and_greet_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('meat_and_greet_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- meat_and_greet_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('meat_and_greet_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
 -- mind_warp
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mind_warp', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_mind_warp_on_play', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mind_warp', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, 3),"}', NULL, 'custom', '{}', '_mind_warp_surge', 0, 1);
+
+-- mind_warp_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mind_warp_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- mini_meataxe
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mini_meataxe', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_meataxe_attack', 0, 0);
 
 -- mocking_blow_blue
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mocking_blow_blue', 'attacking', 'custom', '{}', '_is_this_attacking', 'custom', '{"lambda":"effect_fn=lambda c, e, s: _mocking_blow_attacking(c, e, s, 2)),"}', NULL, 0, 0);
@@ -215,8 +1751,20 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- mocking_blow_yellow
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mocking_blow_yellow', 'attacking', 'custom', '{}', '_is_this_attacking', 'custom', '{"lambda":"effect_fn=lambda c, e, s: _mocking_blow_attacking(c, e, s, 3)),"}', NULL, 0, 0);
 
+-- mugenshi_release_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('mugenshi_release_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
 -- murderous_rabble
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('murderous_rabble', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_murderous_rabble_attack', 0, 0);
+
+-- nerves_of_steel_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('nerves_of_steel_blue', 'defend', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _nerves_of_steel_defend(c, e, s, b))]"}', NULL, 0, 0);
+
+-- nerves_of_steel_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('nerves_of_steel_red', 'defend', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _nerves_of_steel_defend(c, e, s, b))]"}', NULL, 0, 0);
+
+-- nerves_of_steel_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('nerves_of_steel_yellow', 'defend', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _nerves_of_steel_defend(c, e, s, b))]"}', NULL, 0, 0);
 
 -- nights_embrace
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('nights_embrace', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_nights_embrace_on_play', 0, 0);
@@ -227,12 +1775,54 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- nimby
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('nimby', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_nimby_effect', 1, 0);
 
+-- no_fear_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('no_fear_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_no_fear_effect', 1, 0);
+
 -- null__shock
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('null__shock', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_null_shock_on_play', 0, 0);
+
+-- oath_of_the_arknight_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('oath_of_the_arknight_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_oath_arknight_attack', 0, 0);
+
+-- oath_of_the_arknight_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('oath_of_the_arknight_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_oath_arknight_attack', 0, 0);
+
+-- oath_of_the_arknight_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('oath_of_the_arknight_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_oath_arknight_attack', 0, 0);
 
 -- offensive_behavior
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('offensive_behavior', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_offensive_behavior_attack', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('offensive_behavior', 'hit', 'none', '{}', NULL, 'custom', '{}', '_offensive_behavior_hit', 0, 1);
+
+-- onetwo_punch_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('onetwo_punch_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),"}', NULL, 0, 0);
+
+-- onetwo_punch_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('onetwo_punch_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),"}', NULL, 0, 0);
+
+-- onetwo_punch_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('onetwo_punch_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),"}', NULL, 0, 0);
+
+-- open_the_center_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_center_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- open_the_center_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_center_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- open_the_center_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_center_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- open_the_flood_gates_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_flood_gates_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_flood_gates_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s, d=_draw: effect_draw(s, _controller_id(c), d)),"}', NULL, 0, 1);
+
+-- open_the_flood_gates_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_flood_gates_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_flood_gates_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s, d=_draw: effect_draw(s, _controller_id(c), d)),"}', NULL, 0, 1);
+
+-- open_the_flood_gates_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_flood_gates_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('open_the_flood_gates_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s, d=_draw: effect_draw(s, _controller_id(c), d)),"}', NULL, 0, 1);
 
 -- orbweaver_spinneret_blue
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('orbweaver_spinneret_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _orb_weaver_on_play(c, e, s, 1)),"}', NULL, 0, 0);
@@ -247,34 +1837,340 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('oscilio_constella_intelligence', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_oscilio_track_lightning', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('oscilio_constella_intelligence', 'combat_chain_close', 'none', '{}', NULL, 'custom', '{}', '_oscilio_chain_close_cleanup', 0, 1);
 
+-- out_for_blood_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('out_for_blood_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_gain_action_point(s, _controller_id(c))),"}', NULL, 0, 0);
+
+-- out_for_blood_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('out_for_blood_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_gain_action_point(s, _controller_id(c))),"}', NULL, 0, 0);
+
+-- out_for_blood_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('out_for_blood_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_gain_action_point(s, _controller_id(c))),"}', NULL, 0, 0);
+
+-- overblast_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overblast_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _overblast_effect(c, e, s, b))]"}', NULL, 0, 0);
+
+-- overblast_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overblast_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _overblast_effect(c, e, s, b))]"}', NULL, 0, 0);
+
+-- overblast_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overblast_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _overblast_effect(c, e, s, b))]"}', NULL, 0, 0);
+
 -- overcrowded
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overcrowded', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_overcrowded_attack', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overcrowded', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_overcrowded_defend', 0, 1);
 
+-- overflow_the_aetherwell_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overflow_the_aetherwell_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overflow_the_aetherwell_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_gain_resources(s, _controller_id(c), 2)),"}', NULL, 0, 1);
+
+-- overflow_the_aetherwell_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overflow_the_aetherwell_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overflow_the_aetherwell_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_gain_resources(s, _controller_id(c), 2)),"}', NULL, 0, 1);
+
+-- overflow_the_aetherwell_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overflow_the_aetherwell_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overflow_the_aetherwell_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_gain_resources(s, _controller_id(c), 2)),"}', NULL, 0, 1);
+
+-- overpower_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overpower_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- overpower_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overpower_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- overpower_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('overpower_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- pack_call_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pack_call_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_pack_call_effect', 0, 0);
+
+-- pack_call_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pack_call_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_pack_call_effect', 0, 0);
+
+-- pack_call_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pack_call_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_pack_call_effect', 0, 0);
+
 -- pain_in_the_backside
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pain_in_the_backside', 'hit', 'none', '{}', NULL, 'custom', '{}', '_pain_in_backside_hit', 0, 0);
+
+-- perennial_aetherbloom_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('perennial_aetherbloom_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- perennial_aetherbloom_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('perennial_aetherbloom_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- perennial_aetherbloom_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('perennial_aetherbloom_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- performance_bonus_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('performance_bonus_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- performance_bonus_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('performance_bonus_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- performance_bonus_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('performance_bonus_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- phantasmal_footsteps
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('phantasmal_footsteps', 'defend', 'none', '{}', NULL, 'custom', '{}', '_phantasmal_footsteps_defend', 1, 0);
+
+-- photon_splicing_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('photon_splicing_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- photon_splicing_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('photon_splicing_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- photon_splicing_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('photon_splicing_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
 
 -- pick_up_the_point
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pick_up_the_point', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_pick_up_the_point_attack', 1, 0);
 
+-- pilfer_the_wreck_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pilfer_the_wreck_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- pilfer_the_wreck_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pilfer_the_wreck_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- pilfer_the_wreck_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pilfer_the_wreck_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- pint_of_strong_and_stout_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pint_of_strong_and_stout_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- pledge_fealty_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pledge_fealty_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- plunder_run_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('plunder_run_blue', 'hit', 'none', '{}', NULL, 'custom', '{}', '_plunder_run_hit', 0, 0);
+
+-- plunder_run_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('plunder_run_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_plunder_run_hit', 0, 0);
+
+-- plunder_run_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('plunder_run_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_plunder_run_hit', 0, 0);
+
+-- pop_the_bubble_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pop_the_bubble_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- pop_the_bubble_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pop_the_bubble_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- pop_the_bubble_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pop_the_bubble_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
 -- portside_exchange
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('portside_exchange', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_portside_exchange_on_play', 0, 0);
+
+-- pouncing_qi_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pouncing_qi_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- pouncing_qi_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pouncing_qi_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- pouncing_qi_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pouncing_qi_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- pounding_gale_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pounding_gale_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),"}', NULL, 0, 0);
+
+-- prismatic_shield_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prismatic_shield_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- prismatic_shield_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prismatic_shield_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- prismatic_shield_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prismatic_shield_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- prognosticate_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prognosticate_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prognosticate_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_opt(s, _controller_id(c), 1)),"}', NULL, 0, 1);
+
+-- prognosticate_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prognosticate_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prognosticate_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_opt(s, _controller_id(c), 1)),"}', NULL, 0, 1);
+
+-- prognosticate_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prognosticate_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('prognosticate_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: effect_opt(s, _controller_id(c), 1)),"}', NULL, 0, 1);
 
 -- pummel
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pummel', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_pummel_effect', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('pummel', 'hit', 'none', '{}', NULL, 'custom', '{}', '_pummel_hit_check', 0, 1);
 
+-- push_forward_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('push_forward_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_push_forward_effect', 0, 0);
+
+-- push_forward_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('push_forward_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_push_forward_effect', 0, 0);
+
+-- push_forward_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('push_forward_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_push_forward_effect', 0, 0);
+
+-- put_em_in_their_place_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('put_em_in_their_place_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- qi_unleashed_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('qi_unleashed_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- qi_unleashed_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('qi_unleashed_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- qi_unleashed_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('qi_unleashed_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- ravenous_meataxe
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ravenous_meataxe', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_meataxe_attack', 0, 0);
+
+-- razor_reflex_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('razor_reflex_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _razor_reflex_effect(c, e, s, b))]"}', NULL, 0, 0);
+
+-- razor_reflex_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('razor_reflex_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _razor_reflex_effect(c, e, s, b))]"}', NULL, 0, 0);
+
+-- razor_reflex_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('razor_reflex_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _razor_reflex_effect(c, e, s, b))]"}', NULL, 0, 0);
+
+-- read_the_runes_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('read_the_runes_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- read_the_runes_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('read_the_runes_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- read_the_runes_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('read_the_runes_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- ready_to_roll_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('ready_to_roll_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append(\"roll_bonus_die\")),"}', NULL, 0, 0);
+
 -- reckless_arithmetic
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('reckless_arithmetic', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_reckless_arithmetic_effect', 0, 0);
+
+-- reckless_charge_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('reckless_charge_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_reckless_charge_effect', 0, 0);
+
+-- recoil_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('recoil_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- recoil_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('recoil_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- recoil_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('recoil_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
 
 -- red_fin_harpoon
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('red_fin_harpoon', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _go_fish_hit(c, e, s,\n                   lambda card: card.pitch == 1)),"}', NULL, 0, 0);
 
+-- red_hot_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('red_hot_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: rupture_check(s),"}', NULL, 'custom', '{"lambda":"rupture_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- reincarnate_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('reincarnate_blue', 'card_discarded', 'none', '{}', NULL, 'custom', '{}', '_reincarnate_discard', 0, 0);
+
+-- reincarnate_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('reincarnate_red', 'card_discarded', 'none', '{}', NULL, 'custom', '{}', '_reincarnate_discard', 0, 0);
+
+-- reincarnate_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('reincarnate_yellow', 'card_discarded', 'none', '{}', NULL, 'custom', '{}', '_reincarnate_discard', 0, 0);
+
+-- remembrance_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('remembrance_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_remembrance_effect', 0, 0);
+
+-- remembrance_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('remembrance_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_remembrance_effect', 0, 0);
+
+-- remembrance_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('remembrance_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_remembrance_effect', 0, 0);
+
+-- renounce_grandeur_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('renounce_grandeur_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- retrace_the_past_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('retrace_the_past_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- reverberate_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('reverberate_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- reverberate_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('reverberate_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- reverberate_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('reverberate_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
 -- riches_of_tropal_dhani
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('riches_of_tropal_dhani', 'card_pitched', 'none', '{}', NULL, 'custom', '{}', '_riches_pitched', 0, 0);
 
+-- rise_up_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rise_up_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: rupture_check(s),"}', NULL, 'custom', '{"lambda":"rupture_trigger(lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- rising_knee_thrust_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rising_knee_thrust_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- rising_knee_thrust_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rising_knee_thrust_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- rising_knee_thrust_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rising_knee_thrust_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- rousing_aether_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rousing_aether_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- rousing_aether_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rousing_aether_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- rousing_aether_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rousing_aether_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- rout_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rout_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- runic_reaping_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('runic_reaping_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- runic_reaping_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('runic_reaping_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- runic_reaping_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('runic_reaping_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- rushing_river_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rushing_river_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- rushing_river_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rushing_river_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- rushing_river_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('rushing_river_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- sap_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sap_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- sap_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sap_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- sap_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sap_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- save_the_thought_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('save_the_thought_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_shuffle(s, _controller_id(c)),"}', NULL, 0, 0);
+
+-- save_the_thought_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('save_the_thought_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_shuffle(s, _controller_id(c)),"}', NULL, 0, 0);
+
+-- save_the_thought_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('save_the_thought_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_shuffle(s, _controller_id(c)),"}', NULL, 0, 0);
+
 -- savor_bloodshed
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('savor_bloodshed', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_savor_bloodshed_on_play', 0, 0);
+
+-- scalding_rain_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('scalding_rain_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- scalding_rain_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('scalding_rain_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- scalding_rain_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('scalding_rain_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
 
 -- scar_tissue_blue
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('scar_tissue_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _scar_tissue_on_play(c, e, s, 1)),"}', NULL, 0, 0);
@@ -294,12 +2190,54 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- sea_floor_salvage
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sea_floor_salvage', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_sea_floor_salvage_on_play', 0, 0);
 
+-- searing_touch_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('searing_touch_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: rupture_check(s),"}', NULL, 'custom', '{"lambda":"rupture_trigger(lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),"}', NULL, 0, 0);
+
+-- second_swing_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('second_swing_blue', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_second_swing_attack', 0, 0);
+
+-- second_swing_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('second_swing_red', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_second_swing_attack', 0, 0);
+
+-- second_swing_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('second_swing_yellow', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_second_swing_attack', 0, 0);
+
+-- seek_vengeance_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('seek_vengeance_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- seek_vengeance_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('seek_vengeance_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- seismic_eruption_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('seismic_eruption_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- seismic_stir_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('seismic_stir_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- seismic_stir_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('seismic_stir_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- seismic_stir_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('seismic_stir_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
 -- shallow_water_shark_harpoon
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('shallow_water_shark_harpoon', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_shallow_water_attack', 0, 0);
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('shallow_water_shark_harpoon', 'hit', 'none', '{}', NULL, 'custom', '{}', '_shallow_water_hit', 0, 1);
 
+-- sharpen_steel_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sharpen_steel_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _sharpen_steel_effect(c, e, s, b))]"}', NULL, 0, 0);
+
+-- sharpen_steel_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sharpen_steel_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _sharpen_steel_effect(c, e, s, b))]"}', NULL, 0, 0);
+
+-- sharpen_steel_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sharpen_steel_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, b=_b: _sharpen_steel_effect(c, e, s, b))]"}', NULL, 0, 0);
+
 -- shifting_tides
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('shifting_tides', 'start_of_turn', 'none', '{}', NULL, 'custom', '{}', '_shifting_tides_start_turn', 0, 0);
+
+-- short_shrift_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('short_shrift_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),"}', NULL, 0, 0);
 
 -- show_of_strength
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('show_of_strength', 'defend', 'custom', '{}', '_is_this_attacking', 'custom', '{}', '_show_of_strength_defend', 0, 0);
@@ -334,11 +2272,101 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- sigil_of_solace
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sigil_of_solace', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_gain_life(s, _controller_id(c), 3),"}', NULL, 0, 0);
 
+-- sigil_of_solace_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sigil_of_solace_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, _a=_amt: effect_gain_life(s, _controller_id(c), _a),"}', NULL, 0, 0);
+
+-- sigil_of_solace_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sigil_of_solace_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, _a=_amt: effect_gain_life(s, _controller_id(c), _a),"}', NULL, 0, 0);
+
+-- sigil_of_solace_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sigil_of_solace_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, _a=_amt: effect_gain_life(s, _controller_id(c), _a),"}', NULL, 0, 0);
+
+-- sigil_of_suffering_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sigil_of_suffering_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- sigil_of_suffering_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sigil_of_suffering_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- sigil_of_suffering_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sigil_of_suffering_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- singe_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('singe_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- singe_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('singe_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- singe_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('singe_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- singing_steelblade_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('singing_steelblade_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
 -- sink_below
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sink_below', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_sink_below_effect', 0, 0);
 
+-- small_problem_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('small_problem_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arena\")),"}', NULL, 0, 0);
+
+-- smashback_alehorn_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('smashback_alehorn_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- smelting_of_the_old_ones_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('smelting_of_the_old_ones_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"equipment\")),"}', NULL, 0, 0);
+
+-- snapback_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('snapback_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- snapback_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('snapback_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- snapback_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('snapback_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
 -- snarky_prick
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('snarky_prick', 'attacking', 'none', '{}', NULL, 'custom', '{}', '_snarky_prick_effect', 0, 0);
+
+-- snatch_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('snatch_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_draw(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- snatch_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('snatch_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_draw(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- snatch_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('snatch_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_draw(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- sonic_boom_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sonic_boom_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- spellblade_strike_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spellblade_strike_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- spellblade_strike_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spellblade_strike_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- spellblade_strike_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spellblade_strike_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- spike_with_bloodrot_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spike_with_bloodrot_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- spike_with_frailty_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spike_with_frailty_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- spinal_crush
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spinal_crush', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{}', '_spinal_crush_crush', 0, 0);
+
+-- spinning_wheel_kick_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spinning_wheel_kick_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- spinning_wheel_kick_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spinning_wheel_kick_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- spinning_wheel_kick_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spinning_wheel_kick_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- splatter_skull_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('splatter_skull_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
 
 -- spreading_plague
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('spreading_plague', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_spreading_plague_on_play', 0, 0);
@@ -352,11 +2380,54 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- stains_of_the_redback_yellow
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('stains_of_the_redback_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _stains_on_play(c, e, s, 2)),"}', NULL, 0, 0);
 
+-- star_struck_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('star_struck_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),"}', NULL, 0, 0);
+
+-- static_shock_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('static_shock_red', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- static_shock_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('static_shock_yellow', 'hit', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
 -- steal_victory
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('steal_victory', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_steal_victory_effect', 0, 0);
 
+-- steelblade_supremacy_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('steelblade_supremacy_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_steelblade_supremacy_effect', 0, 0);
+
+-- steelblade_supremacy_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('steelblade_supremacy_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_steelblade_supremacy_effect', 0, 0);
+
+-- steelblade_supremacy_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('steelblade_supremacy_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_steelblade_supremacy_effect', 0, 0);
+
+-- strike_gold_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('strike_gold_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- strike_gold_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('strike_gold_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- strike_gold_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('strike_gold_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- strike_twice_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('strike_twice_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- stroke_of_foresight_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('stroke_of_foresight_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- stroke_of_foresight_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('stroke_of_foresight_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- stroke_of_foresight_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('stroke_of_foresight_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
 -- sunken_treasure
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('sunken_treasure', 'defend', 'custom', '{"lambda":"condition_fn=lambda c, e, s: s.combat and c in s.combat.defending_cards,"}', NULL, 'custom', '{}', '_sunken_treasure_defend', 1, 0);
+
+-- swell_tidings_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('swell_tidings_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('swell_tidings_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(5, lambda c, e, s: create_token(s, _controller_id(c), \"ponder\")),"}', NULL, 0, 1);
 
 -- swing_big
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('swing_big', 'combat_chain_close', 'none', '{}', NULL, 'custom', '{}', '_swing_big_close', 0, 0);
@@ -364,8 +2435,14 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- take_up_the_mantle
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('take_up_the_mantle', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_take_up_mantle_on_play', 0, 0);
 
+-- tales_of_adventure_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('tales_of_adventure_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_tales_of_adventure_effect', 0, 0);
+
 -- tarantula_toxin
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('tarantula_toxin', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_tarantula_toxin_on_play', 0, 0);
+
+-- tempest_palm_gustwave_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('tempest_palm_gustwave_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
 
 -- temporal_wobble
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('temporal_wobble', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_temporal_wobble_on_play', 0, 0);
@@ -376,6 +2453,21 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- throw_caution_to_the_wind
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('throw_caution_to_the_wind', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_throw_caution_on_play', 0, 0);
 
+-- tiger_swipe_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('tiger_swipe_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- timekeepers_whim_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('timekeepers_whim_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- timekeepers_whim_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('timekeepers_whim_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- timekeepers_whim_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('timekeepers_whim_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- timesnap_potion
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('timesnap_potion', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_timesnap_potion_effect', 0, 0);
+
 -- to_the_point_blue
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('to_the_point_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _to_the_point_on_play(c, e, s, 1, 2)),"}', NULL, 0, 0);
 
@@ -384,6 +2476,33 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 
 -- to_the_point_yellow
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('to_the_point_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _to_the_point_on_play(c, e, s, 2, 3)),"}', NULL, 0, 0);
+
+-- tome_of_fyendal
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('tome_of_fyendal', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_tome_of_fyendal_effect', 0, 0);
+
+-- trailblazing_aether_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('trailblazing_aether_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('trailblazing_aether_blue', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 1);
+
+-- trailblazing_aether_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('trailblazing_aether_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('trailblazing_aether_red', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 1);
+
+-- trailblazing_aether_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('trailblazing_aether_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('trailblazing_aether_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: surge_check(e, amount),"}', NULL, 'custom', '{"lambda":"surge_trigger(_amt, lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 1);
+
+-- unified_decree_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('unified_decree_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: reprise_check(s),"}', NULL, 'custom', '{"lambda":"reprise_trigger(lambda c, e, s: effect_opt(s, _controller_id(c), 1)),"}', NULL, 0, 0);
+
+-- unmovable_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('unmovable_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, p=_p: _unmovable_effect(c, e, s, p))]"}', NULL, 0, 0);
+
+-- unmovable_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('unmovable_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, p=_p: _unmovable_effect(c, e, s, p))]"}', NULL, 0, 0);
+
+-- unmovable_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('unmovable_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s, p=_p: _unmovable_effect(c, e, s, p))]"}', NULL, 0, 0);
 
 -- up_sticks_and_run_blue
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('up_sticks_and_run_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _up_sticks_on_play(c, e, s, 2)),"}', NULL, 0, 0);
@@ -394,33 +2513,203 @@ INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, c
 -- up_sticks_and_run_yellow
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('up_sticks_and_run_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _up_sticks_on_play(c, e, s, 3)),"}', NULL, 0, 0);
 
+-- vengeance_never_rests_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('vengeance_never_rests_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- vexing_malice_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('vexing_malice_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- vexing_malice_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('vexing_malice_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- vexing_malice_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('vexing_malice_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- voltic_bolt_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('voltic_bolt_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- voltic_bolt_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('voltic_bolt_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- voltic_bolt_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('voltic_bolt_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- warrior_general_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('warrior_general_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_warrior_general_effect', 0, 0);
+
+-- wee_wrecking_ball_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('wee_wrecking_ball_yellow', 'damage_dealt', 'custom', '{"lambda":"condition_fn=lambda c, e, s: crush_check(e, s),"}', NULL, 'custom', '{"lambda":"crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone=\"arsenal\")),"}', NULL, 0, 0);
+
+-- whelming_gustwave_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('whelming_gustwave_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- whelming_gustwave_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('whelming_gustwave_red', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- whelming_gustwave_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('whelming_gustwave_yellow', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: go_again(c, e, s)),"}', NULL, 0, 0);
+
+-- whisper_of_the_oracle_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('whisper_of_the_oracle_blue', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- whisper_of_the_oracle_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('whisper_of_the_oracle_red', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- whisper_of_the_oracle_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('whisper_of_the_oracle_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: effect_opt(s, _controller_id(c), count),"}', NULL, 0, 0);
+
+-- winds_of_eternity_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('winds_of_eternity_blue', 'on_play', 'custom', '{"lambda":"condition_fn=lambda c, e, s: combo_check(s, combo_names),"}', NULL, 'custom', '{"lambda":"lambda c, e, s: effect_shuffle(s, _controller_id(c))),"}', NULL, 0, 0);
+
+-- wither_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('wither_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- wither_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('wither_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- wither_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('wither_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- withering_shot_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('withering_shot_blue', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- withering_shot_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('withering_shot_red', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
+-- withering_shot_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('withering_shot_yellow', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),"}', NULL, 0, 0);
+
 -- yellow_fin_harpoon
 INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('yellow_fin_harpoon', 'hit', 'none', '{}', NULL, 'custom', '{"lambda":"effect_fn=lambda c, e, s: _go_fish_hit(c, e, s,\n                   lambda card: card.pitch == 2)),"}', NULL, 0, 0);
+
+-- zap_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('zap_blue', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- zap_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('zap_red', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+-- zap_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('zap_yellow', 'on_play', 'none', '{}', NULL, 'custom', '{}', '_effect', 0, 0);
+
+
+-- ===========================================================================
+-- DATA-DRIVEN TRIGGERS (simple cards without custom Python functions)
+-- ===========================================================================
+
+-- blink_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('blink_blue', 'on_play', 'none', '{}', NULL, 'grant_go_again', '{}', NULL, 0, 0);
+
+-- canopy_shelter_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('canopy_shelter_blue', 'defend', 'none', '{}', NULL, 'create_token', '{"token":"might","count":1}', NULL, 0, 0);
+
+-- macho_grande_blue
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('macho_grande_blue', 'attacking', 'none', '{}', NULL, 'dominate', '{}', NULL, 0, 0);
+
+-- macho_grande_red
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('macho_grande_red', 'attacking', 'none', '{}', NULL, 'dominate', '{}', NULL, 0, 0);
+
+-- macho_grande_yellow
+INSERT INTO card_triggers (slug, event_type, condition_type, condition_params, condition_fn, effect_type, effect_params, effect_fn, is_optional, intra_card_order) VALUES ('macho_grande_yellow', 'attacking', 'none', '{}', NULL, 'dominate', '{}', NULL, 0, 0);
 
 
 -- ===========================================================================
 -- EQUIPMENT ACTIVATIONS (auto-generated)
 -- ===========================================================================
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('achilles_accelerator', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('aether_bindings_of_the_third_age', NULL, NULL, 'custom', '{}', NULL, 'custom', '_aether_bindings_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('aether_ironweave', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('aqua_seeing_shell', 3, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('barkbone_strapping', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('blacktek_whisperers', NULL, NULL, 'none', '{}', NULL, 'custom', '_blacktek_whisperers_ar_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('blade_cuff', 2, NULL, 'custom', '{}', NULL, 'custom', '_blade_cuff_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('blood_drop_brocade', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('blood_scent', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('bloodied_boots', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('bloodied_gauntlet', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('bloodied_strapping', NULL, NULL, 'custom', '{}', NULL, 'custom', '_bloodied_strapping_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('bloodtorn_bodice', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('blossom_of_spring', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('blue_sea_tricorn', 3, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('braveforge_bracers', 1, NULL, 'custom', '{}', NULL, 'custom', '_braveforge_bracers_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('bruised_leather', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('buccaneers_bounty', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('calming_gesture', NULL, NULL, 'custom', '{}', NULL, 'custom', '_calming_gesture_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('captains_coat', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('carrion_crown', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('coat_of_allegiance', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('coat_of_frost', NULL, NULL, 'custom', '{}', NULL, 'custom', '_coat_of_frost_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('compass_of_sunken_depths', NULL, NULL, 'custom', '{}', NULL, 'custom', '_compass_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('coronet_peak', 3, NULL, 'custom', '{}', NULL, 'custom', '_coronet_peak_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('courage_of_bladehold', NULL, NULL, 'custom', '{}', NULL, 'custom', '_courage_of_bladehold_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('cracker_jax', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('crater_fist', 3, NULL, 'custom', '{}', NULL, 'custom', '_crater_fist_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('craterhoof', 3, NULL, 'custom', '{}', NULL, 'custom', '_craterhoof_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('deep_blue', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('double_cross_strap', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('dream_weavers', NULL, NULL, 'custom', '{}', NULL, 'custom', '_dream_weavers_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('enchanted_quiver', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('fiddledee', NULL, NULL, 'custom', '{}', NULL, 'custom', '_fiddledee_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('fish_fingers', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('flat_trackers', NULL, NULL, 'custom', '{}', NULL, 'custom', '_flat_trackers_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('four_finger_gloves', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('fyendals_spring_tunic', NULL, NULL, 'custom', '{}', NULL, 'custom', '_fst_spend_energy');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('gallantry_gold', 1, NULL, 'custom', '{}', NULL, 'custom', '_gallantry_gold_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('garland_of_spring', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('gauntlet_of_boulderhold', 3, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('glory_seeker', 3, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('goldbaited_hook', NULL, NULL, 'custom', '{}', NULL, 'custom', '_goldbaited_hook_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('goliath_gauntlet', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('hammerhead_harpoon_cannon', 4, NULL, 'custom', '{}', NULL, 'custom', '_hammerhead_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('heartened_cross_strap', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('heavy_industry_gear_shift', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('hope_merchants_hood', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('inklined_cloak', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('ironhide_plate', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('ironrot_gauntlet', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('ironrot_helm', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('ironrot_legs', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('lightning_greaves', 1, NULL, 'custom', '{}', NULL, 'custom', '_lightning_greaves_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('monstrous_veil', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('nullrune_boots', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('nullrune_gloves', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('nullrune_hood', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('nullrune_robe', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('old_knocker', NULL, NULL, 'custom', '{}', NULL, 'custom', '_old_knocker_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('popped_collar_polo', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('predatory_plating', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('quiver_of_abyssal_depths', 3, NULL, 'custom', '{}', NULL, 'custom', '_quiver_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('robe_of_rapture', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('rust_belt', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('sash_of_sandikai', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('scabskin_leathers', NULL, NULL, 'none', '{}', NULL, 'custom', '_scabskin_roll_d6');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('sealace_sarong', NULL, NULL, 'custom', '{}', NULL, 'custom', '_sealace_effect');
-INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('skullbone_crosswrap', NULL, NULL, 'custom', '{}', NULL, 'none', NULL);
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('shock_frock', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('skullbone_crosswrap', NULL, NULL, 'custom', '{}', NULL, 'custom', NULL);
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('skullhorn', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('spellfire_cloak', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('threadbare_tunic', NULL, NULL, 'custom', '{}', NULL, 'custom', '_effect');
+INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('time_skippers', 3, NULL, 'custom', '{}', NULL, 'custom', '_effect');
 INSERT OR REPLACE INTO equipment_activations (slug, activation_cost, activation_cost_fn, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('volzar_the_lightning_rod', NULL, '_volzar_activation_cost', 'custom', '{}', NULL, 'custom', '_volzar_effect');
 
 
 -- ===========================================================================
 -- TURN ATTACK EFFECTS (auto-generated from TURN_ATTACK_EFFECTS dict)
 -- ===========================================================================
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('azalea_arrow_bonus', 'custom', '{}', NULL, 'custom', '_azalea_arrow_bonus_apply');
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('bravo_dominate_cost3', 'custom', '{}', NULL, 'custom', '_bravo_dominate_cost3_apply');
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('chane_next_action_go_again', 'custom', '{}', NULL, 'custom', '_chane_next_action_go_again_apply');
 INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('cheating_scoundrel_next_attack_+3', 'custom', '{}', NULL, 'custom', '_cheating_scoundrel_next_attack_apply');
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('craterhoof_dominate', 'any', '{}', NULL, 'custom', '_craterhoof_dominate_apply');
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('dorinthea_extra_weapon_attack', 'any', '{}', NULL, 'custom', '_dorinthea_extra_weapon_attack_apply');
 INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('electrostatic_next_attack_+3', 'custom', '{}', NULL, 'custom', '_electrostatic_next_attack_apply');
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('equip_next_attack_+1', 'any', '{}', NULL, 'custom', NULL);
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('equip_next_attack_+2', 'custom', '{}', NULL, 'custom', NULL);
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('equip_next_attack_+3', 'custom', '{}', NULL, 'custom', NULL);
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('equip_next_attack_cost_-2', 'any', '{}', NULL, 'custom', '_equip_next_attack_cost_minus2_apply');
 INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('goldbaited_hook_next_pirate_hit_gold', 'custom', '{}', NULL, 'custom', '_goldbaited_hook_next_pirate_apply');
 INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('hammerhead_next_arrow_+4', 'custom', '{}', NULL, 'custom', '_hammerhead_next_arrow_apply');
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('lexi_arrow_bonus', 'custom', '{}', NULL, 'custom', '_lexi_arrow_bonus_apply');
 INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('next_attack_6_base_power', 'any', '{}', NULL, 'custom', '_next_attack_6_base_power_apply');
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('next_attack_cost_1_less', 'any', '{}', NULL, 'custom', '_next_attack_cost_1_less_apply');
+INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('next_attack_go_again', 'any', '{}', NULL, 'custom', '_next_attack_go_again_apply');
 INSERT OR REPLACE INTO turn_attack_effects (flag, condition_type, condition_params, condition_fn, effect_type, effect_fn) VALUES ('nimblism_next_attack_plus1', 'custom', '{}', NULL, 'custom', '_nimblism_next_attack_plus1_apply');

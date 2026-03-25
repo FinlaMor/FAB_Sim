@@ -49,7 +49,14 @@ CREATE TABLE IF NOT EXISTS card_triggers (
     -- Misc:
     --   'charged'                    — CR 8.5.29: a card was moved to a hero's soul via charge
     --   'crowd_boos'                 — crowd boos event (showstopper mechanic)
+    --   'crowd_cheers'               — crowd cheers event (showstopper mechanic)
     --   'gold_created'               — a Gold token was created
+    --   'card_banished'              — a card was banished (contract mechanic, etc.)
+    --   'card_discarded'             — a card was discarded
+    --   'enters_arsenal'             — a card enters the arsenal zone
+    --   'beat_chest'                 — beat chest event (Brute mechanic)
+    --   'arcane_damage_prevented'    — arcane damage was prevented (e.g. Arcane Barrier)
+    --   'protect'                    — protect event (Guardian mechanic)
     event_type      TEXT    NOT NULL,
 
     -- Guard condition evaluated before effect fires. Valid values:

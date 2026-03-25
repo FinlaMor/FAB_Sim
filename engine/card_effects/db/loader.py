@@ -145,6 +145,77 @@ def _make_effect(effect_type: str, effect_params: dict,
                 state.combat.attack_power = (state.combat.attack_power or 0) + _amt
         return _fn
 
+    if effect_type == "discard":
+        amt = effect_params.get("amount", 1)
+        random_discard = effect_params.get("random", False)
+        def _fn(card, event, state, _amt=amt, _rand=random_discard):
+            from engine.card_effects.keywords import effect_discard, _controller_id
+            effect_discard(state, _controller_id(card), _amt, random_discard=_rand)
+        return _fn
+
+    if effect_type == "deal_physical":
+        amt = effect_params.get("amount", 0)
+        tgt = effect_params.get("target", "opponent")
+        def _fn(card, event, state, _amt=amt, _tgt=tgt):
+            from engine.card_effects.keywords import effect_deal_damage, _controller_id
+            cid = _controller_id(card)
+            target_id = (3 - cid) if _tgt == "opponent" else cid
+            effect_deal_damage(state, target_id, _amt, card, damage_type="physical")
+        return _fn
+
+    if effect_type == "grant_keyword":
+        kw = effect_params.get("keyword", "")
+        def _fn(card, event, state, _kw=kw):
+            if state.combat:
+                if _kw not in state.combat.keywords:
+                    state.combat.keywords.append(_kw)
+        return _fn
+
+    if effect_type == "remove_counter":
+        ctype = effect_params.get("counter_type", "")
+        amt = effect_params.get("amount", 1)
+        def _fn(card, event, state, _ct=ctype, _amt=amt):
+            from engine.card_effects.keywords import effect_remove_counter
+            effect_remove_counter(state, card, _ct, _amt)
+        return _fn
+
+    if effect_type == "banish_top_deck":
+        amt = effect_params.get("amount", 1)
+        face_up = effect_params.get("face_up", True)
+        def _fn(card, event, state, _amt=amt, _fu=face_up):
+            from engine.card_effects.keywords import effect_banish_top_deck, _controller_id
+            effect_banish_top_deck(state, _controller_id(card), _amt, face_up=_fu)
+        return _fn
+
+    if effect_type == "reload":
+        def _fn(card, event, state):
+            from engine.card_effects.keywords import effect_reload, _controller_id
+            effect_reload(state, _controller_id(card))
+        return _fn
+
+    if effect_type == "opt":
+        amt = effect_params.get("amount", 1)
+        def _fn(card, event, state, _amt=amt):
+            from engine.card_effects.keywords import effect_opt, _controller_id
+            effect_opt(state, _controller_id(card), _amt)
+        return _fn
+
+    if effect_type == "charge":
+        def _fn(card, event, state):
+            from engine.card_effects.keywords import effect_charge, _controller_id
+            cid = _controller_id(card)
+            player = state.players[cid]
+            if player.hand.cards:
+                slugs = [c.slug for c in player.hand.cards]
+                from engine.card_effects.keywords import _ask_player
+                choice = _ask_player(state, cid, slugs,
+                                     context="Choose a card to charge (put into soul)")
+                chosen = player.hand.find(choice)
+                if chosen is None:
+                    chosen = player.hand.cards[0]
+                effect_charge(state, cid, chosen)
+        return _fn
+
     # Unknown / unhandled effect — no-op with warning
     def _noop(card, event, state, _et=effect_type):
         pass  # unknown effect_type: silently skip
@@ -220,6 +291,86 @@ def _make_condition(condition_type: str, condition_params: dict,
     if condition_type == "card_in_zone":
         zone = condition_params.get("zone", "")
         return lambda c, e, s, _z=zone: c.zone == _z
+
+    if condition_type == "player_is_non_active":
+        def _cond(c, e, s):
+            from engine.card_effects.keywords import _controller_id
+            return _controller_id(c) != s.active_player
+        return _cond
+
+    if condition_type == "controller_has_card_type":
+        card_type = condition_params.get("card_type", "")
+        zone = condition_params.get("zone", "")
+        def _cond(c, e, s, _ct=card_type, _z=zone):
+            from engine.card_effects.keywords import _controller_id
+            player = s.players[_controller_id(c)]
+            zone_obj = getattr(player, _z, None) if _z else None
+            if zone_obj is not None and hasattr(zone_obj, 'cards'):
+                return any(getattr(cc, 'card_type', '') == _ct for cc in zone_obj.cards)
+            return False
+        return _cond
+
+    if condition_type == "opponent_has_supertype":
+        supertype = condition_params.get("supertype", "")
+        zone = condition_params.get("zone", "")
+        def _cond(c, e, s, _st=supertype, _z=zone):
+            from engine.card_effects.keywords import _controller_id
+            opp = s.players[3 - _controller_id(c)]
+            zone_obj = getattr(opp, _z, None) if _z else None
+            if zone_obj is not None and hasattr(zone_obj, 'cards'):
+                return any(getattr(cc, 'supertype', '') == _st for cc in zone_obj.cards)
+            return False
+        return _cond
+
+    if condition_type == "attacking_hero_is":
+        hero_name = condition_params.get("hero", "")
+        def _cond(c, e, s, _h=hero_name):
+            if not s.combat:
+                return False
+            attacker = s.players[s.combat.attacker]
+            return getattr(attacker, 'hero_slug', '') == _h or getattr(attacker, 'hero_name', '') == _h
+        return _cond
+
+    if condition_type == "defending_hero_is":
+        hero_name = condition_params.get("hero", "")
+        def _cond(c, e, s, _h=hero_name):
+            if not s.combat:
+                return False
+            defender = s.players[s.combat.defender]
+            return getattr(defender, 'hero_slug', '') == _h or getattr(defender, 'hero_name', '') == _h
+        return _cond
+
+    if condition_type == "reprise_check":
+        def _cond(c, e, s):
+            from engine.card_effects.keywords import reprise_check
+            return reprise_check(s)
+        return _cond
+
+    if condition_type == "crush_check":
+        def _cond(c, e, s):
+            from engine.card_effects.keywords import crush_check
+            return crush_check(e, s)
+        return _cond
+
+    if condition_type == "combo_check":
+        combo_names = condition_params.get("combo_names", [])
+        def _cond(c, e, s, _cn=combo_names):
+            from engine.card_effects.keywords import combo_check
+            return combo_check(s, _cn)
+        return _cond
+
+    if condition_type == "surge_check":
+        amount = condition_params.get("amount", 1)
+        def _cond(c, e, s, _amt=amount):
+            from engine.card_effects.keywords import surge_check
+            return surge_check(e, _amt)
+        return _cond
+
+    if condition_type == "rupture_check":
+        def _cond(c, e, s):
+            from engine.card_effects.keywords import rupture_check
+            return rupture_check(s)
+        return _cond
 
     # Unknown condition — always True (safe fallback)
     return None
