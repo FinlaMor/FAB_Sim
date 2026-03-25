@@ -57,6 +57,9 @@ from engine.card_effects.keywords import (
     effect_put_bottom_deck, effect_return_to_hand, effect_put_arsenal,
     effect_search_deck, effect_banish_top_deck, effect_reload,
     effect_freeze, _ask_player, _remove_from_current_zone,
+    effect_banish_from_soul, effect_move_to_soul,
+    effect_retrieve_from_graveyard, effect_banish_from_hand,
+    effect_arsenal_to_hand,
 )
 
 
@@ -681,6 +684,74 @@ def on_defend_gain_resources(amount: int) -> TriggerDef:
         event_type="defend",
         effect_fn=lambda c, e, s: effect_gain_resources(s, _controller_id(c), amount),
     )
+
+
+# ---------------------------------------------------------------------------
+# Zone-interaction template builders
+# ---------------------------------------------------------------------------
+
+def on_play_banish_from_soul(count: int = 1, bonus_fn: Callable = None) -> TriggerDef:
+    """Template: "When you play this, banish N card(s) from your soul. [BONUS]."."""
+    def _effect(c, e, s):
+        cid = _controller_id(c)
+        banished = effect_banish_from_soul(s, cid, count)
+        if bonus_fn and banished:
+            bonus_fn(c, e, s, banished)
+    return TriggerDef(event_type="on_play", effect_fn=_effect, is_optional=True)
+
+
+def on_play_charge_soul() -> TriggerDef:
+    """Template: "When you play this, put a card from hand into your soul."."""
+    def _effect(c, e, s):
+        cid = _controller_id(c)
+        player = s.players[cid]
+        hand_cards = [h for h in player.hand.cards if h.slug != c.slug]
+        if not hand_cards:
+            return
+        pick = _ask_player(s, cid, [h.slug for h in hand_cards],
+                           context="Choose a card from hand to put into your soul")
+        target = next((h for h in hand_cards if h.slug == pick), hand_cards[0])
+        effect_move_to_soul(s, target, cid)
+    return TriggerDef(event_type="on_play", effect_fn=_effect, is_optional=True)
+
+
+def on_play_retrieve_graveyard(condition=None, destination: str = "hand") -> TriggerDef:
+    """Template: "When you play this, put a card from graveyard into [DEST]."."""
+    def _effect(c, e, s):
+        cid = _controller_id(c)
+        effect_retrieve_from_graveyard(s, cid, condition=condition,
+                                       destination=destination)
+    return TriggerDef(event_type="on_play", effect_fn=_effect, is_optional=True)
+
+
+def on_hit_banish_from_hand(count: int = 1) -> TriggerDef:
+    """Template: "When this hits, opponent banishes N card(s) from hand."."""
+    def _effect(c, e, s):
+        if not s.combat or s.combat.attack_card.slug != c.slug:
+            return
+        target_id = 3 - _controller_id(c)
+        cid = _controller_id(c)
+        effect_banish_from_hand(s, target_id, count, face_up=True,
+                                banisher_id=cid)
+    return TriggerDef(event_type="hit", effect_fn=_effect)
+
+
+def on_play_arsenal_to_hand() -> TriggerDef:
+    """Template: "When you play this, put a card from arsenal into hand."."""
+    def _effect(c, e, s):
+        cid = _controller_id(c)
+        effect_arsenal_to_hand(s, cid)
+    return TriggerDef(event_type="on_play", effect_fn=_effect, is_optional=True)
+
+
+def on_hit_put_arsenal() -> TriggerDef:
+    """Template: "When this hits, put this into your arsenal."."""
+    def _effect(c, e, s):
+        if not s.combat or s.combat.attack_card.slug != c.slug:
+            return
+        cid = _controller_id(c)
+        effect_put_arsenal(s, c, cid, face_up=False)
+    return TriggerDef(event_type="hit", effect_fn=_effect)
 
 
 # ---------------------------------------------------------------------------
