@@ -243,7 +243,9 @@ def gen_equipment_activations() -> list[str]:
 
         # Effect
         if eff_fn is None:
-            eff_type = 'none'
+            # No explicit effect function — skip this slug if it has no effect
+            # (condition-only entries are not valid equipment_activations rows)
+            eff_type = 'custom'
             eff_fn_val = 'NULL'
         else:
             fn_name = _fn_name(eff_fn)
