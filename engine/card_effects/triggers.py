@@ -3780,6 +3780,520 @@ for _slug in ["life_for_a_life_red", "life_for_a_life_yellow", "life_for_a_life_
 
 
 # ---------------------------------------------------------------------------
+# Batch 3: Template-Expandable Cards — Crush, Reprise, Combo, Surge, Rupture
+# Label keyword cards using existing label trigger templates.
+# ---------------------------------------------------------------------------
+
+# -- crush_trigger (batch): "Crush — [EFFECT]." --
+
+# Crush: discard a card
+_crush_discard_1 = [
+    "disable_red", "disable_yellow", "disable_blue",
+    "debilitate_red", "debilitate_yellow", "debilitate_blue",
+]
+
+# Crush: opponent puts a card from hand on top of deck
+for _slug in ["boulder_drop_red", "boulder_drop_yellow", "boulder_drop_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),
+    ]
+
+# Crush: put a -1{d} counter on an equipment they control
+for _slug in ["buckling_blow_red", "buckling_blow_yellow", "buckling_blow_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_put_counter(
+            s, 3 - _controller_id(c), "defense_minus_1", 1)),
+    ]
+
+# Crush: destroy a card in their arsenal
+CARD_TRIGGERS["wee_wrecking_ball_yellow"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="arsenal")),
+]
+
+# Crush: destroy a Seismic Surge token they control
+for _slug in ["flatten_the_field_red", "flatten_the_field_yellow", "flatten_the_field_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_destroy(
+            s, 3 - _controller_id(c), zone="arena", card_name="seismic_surge")),
+    ]
+
+# Crush: destroy an aura they control
+CARD_TRIGGERS["small_problem_yellow"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="arena")),
+]
+
+# Crush: destroy all auras they control
+CARD_TRIGGERS["disenchantment_of_the_old_ones_red"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="arena")),
+]
+
+# Crush: destroy all equipment with -1{d} counters
+CARD_TRIGGERS["smelting_of_the_old_ones_red"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="equipment")),
+]
+
+# Crush: destroy an equipment with no defense value
+CARD_TRIGGERS["batter_to_a_pulp_red"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="equipment")),
+]
+
+# Crush: destroy target equipment with a -1{d} counter
+CARD_TRIGGERS["mangle_red"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="equipment")),
+]
+
+# Crush: destroy the top card of their deck
+for _slug in ["grind_them_down_red", "grind_them_down_yellow", "grind_them_down_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_banish(s, 3 - _controller_id(c), 1)),
+    ]
+
+# Crush: put a card from their arsenal on the bottom of their deck
+for _slug in ["disable_red", "disable_yellow", "disable_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="arsenal")),
+    ]
+
+# Crush: put all cards in all arsenals on bottom of owner's deck
+CARD_TRIGGERS["fault_line_red"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="arsenal")),
+]
+
+# Crush: their first attack during their next turn gets -2{p}
+for _slug in ["debilitate_red", "debilitate_yellow", "debilitate_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+    ]
+
+# Crush: first action costs additional {r}
+for _slug in ["cartilage_crush_red", "cartilage_crush_yellow", "cartilage_crush_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+    ]
+
+# Crush: they lose all hero card abilities
+for _slug in ["crush_confidence_red", "crush_confidence_yellow", "crush_confidence_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+    ]
+
+# Crush: they can't play attack action cards with 3 or less base {p}
+for _slug in ["crush_the_weak_red", "crush_the_weak_yellow", "crush_the_weak_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+    ]
+
+# Crush: can't draw cards during next action phase
+CARD_TRIGGERS["cranial_crush_blue"] = [
+    crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+]
+
+# Crush: attack action cards can't gain {p}
+for _slug in ["chokeslam_red", "chokeslam_yellow", "chokeslam_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+    ]
+
+# Crush: they discard hand, draw that many
+CARD_TRIGGERS["put_em_in_their_place_red"] = [
+    crush_trigger(lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),
+]
+
+# Crush: put -1{d} counter on head, then if 0{d} destroy it
+CARD_TRIGGERS["headbutt_blue"] = [
+    crush_trigger(lambda c, e, s: effect_put_counter(
+        s, 3 - _controller_id(c), "defense_minus_1", 1)),
+]
+
+# Crush: {t} them (exhaust)
+CARD_TRIGGERS["knock_em_off_their_feet_red"] = [
+    crush_trigger(lambda c, e, s: effect_lose_life(s, 3 - _controller_id(c), 1)),
+]
+
+# Crush: can't create aura tokens
+CARD_TRIGGERS["renounce_grandeur_red"] = [
+    crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+]
+
+# Crush: equip an equipment they have equipped
+CARD_TRIGGERS["annexation_of_the_forge_yellow"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="equipment")),
+]
+
+# Crush: gain control of an aura
+CARD_TRIGGERS["annexation_of_grandeur_yellow"] = [
+    crush_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="arena")),
+]
+
+# Crush: can't play face-up from arsenal
+CARD_TRIGGERS["annexation_of_all_things_known_yellow"] = [
+    crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+]
+
+# Crush: cards they own lose all abilities
+CARD_TRIGGERS["blinding_of_the_old_ones_red"] = [
+    crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+]
+
+# Crush: only attacks with base {p} > damage dealt
+CARD_TRIGGERS["star_struck_yellow"] = [
+    crush_trigger(lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+]
+
+# -- reprise_trigger (batch): "Reprise — [EFFECT]." --
+
+# Reprise: weapons gain +1{p} until end of turn
+for _slug in ["biting_blade_red", "biting_blade_yellow", "biting_blade_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+    ]
+
+# Reprise: target weapon attack gains +N{p}
+for _slug in ["ironsong_response_red", "ironsong_response_yellow", "ironsong_response_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+    ]
+
+# Reprise: your next attack this turn gains +1{p}
+for _slug in ["out_for_blood_red", "out_for_blood_yellow", "out_for_blood_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        reprise_trigger(lambda c, e, s: effect_gain_action_point(s, _controller_id(c))),
+    ]
+
+# Reprise: instead gains +N{p} (overpower)
+for _slug in ["overpower_red", "overpower_yellow", "overpower_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+    ]
+
+# Reprise: return target defending card to hand
+CARD_TRIGGERS["rout_red"] = [
+    reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+]
+
+# Reprise: draw a card, put a card on top/bottom of deck
+for _slug in ["stroke_of_foresight_red", "stroke_of_foresight_yellow",
+              "stroke_of_foresight_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+    ]
+
+# Reprise: search deck for attack reaction
+CARD_TRIGGERS["singing_steelblade_yellow"] = [
+    reprise_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+]
+
+# Reprise: look at top card of deck
+CARD_TRIGGERS["unified_decree_yellow"] = [
+    reprise_trigger(lambda c, e, s: effect_opt(s, _controller_id(c), 1)),
+]
+
+# -- combo_trigger (batch): "Combo — [EFFECT]." --
+
+# Combo: gains +3{p}
+for _slug in ["blackout_kick_red", "blackout_kick_yellow", "blackout_kick_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["rising_knee_thrust"],
+                      lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+    ]
+
+# Combo: gains +2{p} and go again
+for _slug in ["rising_knee_thrust_red", "rising_knee_thrust_yellow",
+              "rising_knee_thrust_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["leg_tap"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: gains +1{p}, go again, dominate
+for _slug in ["open_the_center_red", "open_the_center_yellow", "open_the_center_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["head_jab"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: "When this hits a hero, deal 2 damage to them."
+for _slug in ["onetwo_punch_red", "onetwo_punch_yellow", "onetwo_punch_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["head_jab"],
+                      lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),
+    ]
+
+# Combo: "put a card from hand on top of deck" (recoil)
+for _slug in ["recoil_red", "recoil_yellow", "recoil_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["head_jab"],
+                      lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),
+    ]
+
+# Combo: gets +1{p} and go again (pouncing_qi)
+for _slug in ["pouncing_qi_red", "pouncing_qi_yellow", "pouncing_qi_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["crouching_tiger"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: gets +4{p} (qi_unleashed)
+for _slug in ["qi_unleashed_red", "qi_unleashed_yellow", "qi_unleashed_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["crouching_tiger"],
+                      lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+    ]
+
+# Combo: go again and create Crouching Tiger (breed_anger)
+for _slug in ["breed_anger_red", "breed_anger_yellow", "breed_anger_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["crouching_tiger"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: go again and create Crouching Tiger (aspect_of_tiger variants)
+CARD_TRIGGERS["aspect_of_tiger_body_red"] = [
+    combo_trigger(["*_red"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+CARD_TRIGGERS["aspect_of_tiger_mind_blue"] = [
+    combo_trigger(["*_blue"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+CARD_TRIGGERS["aspect_of_tiger_soul_yellow"] = [
+    combo_trigger(["*_yellow"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: chase_the_tail — go again + next Crouching Tiger gets +3{p}
+CARD_TRIGGERS["chase_the_tail_red"] = [
+    combo_trigger(["crouching_tiger"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: tiger_swipe — +2{p}, go again, create X Crouching Tigers
+CARD_TRIGGERS["tiger_swipe_red"] = [
+    combo_trigger(["crouching_tiger"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: mauling_qi — deal 1 damage to each opposing hero
+CARD_TRIGGERS["mauling_qi_red"] = [
+    combo_trigger(["crouching_tiger"],
+                  lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 1)),
+]
+
+# Combo: spinning_wheel_kick — +1{p} and "when this hits, put on bottom of deck"
+for _slug in ["spinning_wheel_kick_red", "spinning_wheel_kick_yellow",
+              "spinning_wheel_kick_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["twin_twisters", "spinning_wheel_kick"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: back_heel_kick — would gain {p} gains +1 instead
+for _slug in ["back_heel_kick_red", "back_heel_kick_yellow", "back_heel_kick_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["twin_twisters"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: hurricane_technique — +1{p}, go again, "if hits, put into hand"
+CARD_TRIGGERS["hurricane_technique_yellow"] = [
+    combo_trigger(["rising_knee_thrust"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: cyclone_roundhouse — banish random defending cards
+CARD_TRIGGERS["cyclone_roundhouse_yellow"] = [
+    combo_trigger(["spinning_wheel_kick"],
+                  lambda c, e, s: effect_intimidate(s, 3 - _controller_id(c))),
+]
+
+# Combo: fluster_fist — +1{p} per hit this chain
+for _slug in ["fluster_fist_red", "fluster_fist_yellow", "fluster_fist_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["open_the_center"],
+                      lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+    ]
+
+# Combo: pounding_gale — double damage
+CARD_TRIGGERS["pounding_gale_red"] = [
+    combo_trigger(["open_the_center"],
+                  lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),
+]
+
+# Combo: crane_dance — +1{p}, go again, can't be defended by high-power attacks
+for _slug in ["crane_dance_red", "crane_dance_yellow", "crane_dance_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["soulbead_strike"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: find_center — can't be defended by low-cost cards, create token on hit
+CARD_TRIGGERS["find_center_blue"] = [
+    combo_trigger(["crane_dance"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: herons_flight — +2{p} and choose 1
+CARD_TRIGGERS["herons_flight_red"] = [
+    combo_trigger(["crane_dance"],
+                  lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+]
+
+# Combo: hundred_winds — +1{p} per other Hundred Winds on chain, go again
+for _slug in ["hundred_winds_red", "hundred_winds_yellow", "hundred_winds_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["hundred_winds"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: whelming_gustwave — +1{p}, go again, "if hits draw a card"
+for _slug in ["whelming_gustwave_red", "whelming_gustwave_yellow",
+              "whelming_gustwave_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["surging_strike"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: descendent_gustwave — costs {r} less, +2{p}, go again
+for _slug in ["descendent_gustwave_red", "descendent_gustwave_yellow",
+              "descendent_gustwave_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["surging_strike"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: gustwave_of_the_second_wind — go again
+CARD_TRIGGERS["gustwave_of_the_second_wind_red"] = [
+    combo_trigger(["surging_strike"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: tempest_palm_gustwave — +2{p}
+CARD_TRIGGERS["tempest_palm_gustwave_yellow"] = [
+    combo_trigger(["surging_strike"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: bonds_of_ancestry — costs less, go again, banish combo from graveyard
+for _slug in ["bonds_of_ancestry_red", "bonds_of_ancestry_yellow",
+              "bonds_of_ancestry_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["gustwave"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: dishonor — +2{p}, if controls Surging Strike etc lose life
+CARD_TRIGGERS["dishonor_blue"] = [
+    combo_trigger(["bonds_of_ancestry"],
+                  lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),
+]
+
+# Combo: retrace_the_past — name a card, gain name/+2{p}/go again
+CARD_TRIGGERS["retrace_the_past_blue"] = [
+    combo_trigger(["gustwave"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: rushing_river — +1{p}, go again, draw X put X back
+for _slug in ["rushing_river_red", "rushing_river_yellow", "rushing_river_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["torrent_of_tempo"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: break_tide — +3{p}, dominate, banish top card
+CARD_TRIGGERS["break_tide_yellow"] = [
+    combo_trigger(["rushing_river", "flood_of_force"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: flood_of_force — reveal top, put combo into hand
+CARD_TRIGGERS["flood_of_force_yellow"] = [
+    combo_trigger(["rushing_river", "flood_of_force"],
+                  lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+]
+
+# Combo: winds_of_eternity — +2{p}, shuffle Hundred Winds into deck
+CARD_TRIGGERS["winds_of_eternity_blue"] = [
+    combo_trigger(["winds_of_eternity"],
+                  lambda c, e, s: effect_shuffle(s, _controller_id(c))),
+]
+
+# Combo: seek_vengeance — go again
+for _slug in ["seek_vengeance_red", "seek_vengeance_blue"]:
+    CARD_TRIGGERS[_slug] = [
+        combo_trigger(["edge_of_autumn"],
+                      lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Combo: vengeance_never_rests — go again, "when hits, banish, play again"
+CARD_TRIGGERS["vengeance_never_rests_blue"] = [
+    combo_trigger(["edge_of_autumn"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# Combo: enact_vengeance — "when hits, destroy all arsenal"
+CARD_TRIGGERS["enact_vengeance_red"] = [
+    combo_trigger(["edge_of_autumn", "vengeance"],
+                  lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="arsenal")),
+]
+
+# Combo: lord_of_wind — shuffle target cards from graveyard
+CARD_TRIGGERS["lord_of_wind_blue"] = [
+    combo_trigger(["mugenshi_release"],
+                  lambda c, e, s: effect_shuffle(s, _controller_id(c))),
+]
+
+# Combo: mugenshi_release — +1{p}, go again, search for Lord of Wind
+CARD_TRIGGERS["mugenshi_release_yellow"] = [
+    combo_trigger(["whelming_gustwave"],
+                  lambda c, e, s: go_again(c, e, s)),
+]
+
+# -- surge_trigger (batch, non-arcane): "Surge — [EFFECT]." --
+
+# Surge: glyph_overlay — gain 1{h}, shuffle Sigil auras
+for _slug, _amt in {"glyph_overlay_red": 3, "glyph_overlay_yellow": 3,
+                     "glyph_overlay_blue": 3}.items():
+    CARD_TRIGGERS[_slug] = [
+        on_play_deal_arcane(_amt),
+        surge_trigger(_amt, lambda c, e, s: effect_gain_life(s, _controller_id(c), 1)),
+    ]
+
+# -- rupture_trigger (batch): "Rupture — [EFFECT]." --
+
+# Rupture: +3{p}
+CARD_TRIGGERS["lava_burst_red"] = [
+    rupture_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+]
+
+# Rupture: "when hits, destroy all arsenal"
+CARD_TRIGGERS["breaking_point_red"] = [
+    rupture_trigger(lambda c, e, s: effect_destroy(s, 3 - _controller_id(c), zone="arsenal")),
+]
+
+# Rupture: put -1{d} counter on equipment, destroy if 0{d}
+CARD_TRIGGERS["liquefy_red"] = [
+    rupture_trigger(lambda c, e, s: effect_put_counter(
+        s, 3 - _controller_id(c), "defense_minus_1", 1)),
+]
+
+# Rupture: deal 2 damage to any target
+CARD_TRIGGERS["searing_touch_red"] = [
+    rupture_trigger(lambda c, e, s: effect_deal_damage(s, 3 - _controller_id(c), 2)),
+]
+
+# Rupture: dominate and +X{p} (where X is 2x Phoenix Flames)
+CARD_TRIGGERS["rise_up_red"] = [
+    rupture_trigger(lambda c, e, s: go_again(c, e, s)),
+]
+
+# Rupture: reveal top X cards, deal damage per Draconic
+CARD_TRIGGERS["red_hot_red"] = [
+    rupture_trigger(lambda c, e, s: effect_draw(s, _controller_id(c), 1)),
+]
+
+
+# ---------------------------------------------------------------------------
 # Registry — builds triggers for a card from keywords + card-specific
 # ---------------------------------------------------------------------------
 
