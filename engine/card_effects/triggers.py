@@ -3550,6 +3550,160 @@ for _slug, _amt in _play_damage_cards.items():
 
 
 # ---------------------------------------------------------------------------
+# Batch 2 continued: Additional simple on-hit / on-play effect cards
+# ---------------------------------------------------------------------------
+
+# -- on_play_gain_life: "Gain N{h}." --
+_play_gain_life_cards = {
+    "healing_balm_red": 3, "healing_balm_yellow": 2, "healing_balm_blue": 1,
+    "sigil_of_solace_red": 3, "sigil_of_solace_yellow": 2, "sigil_of_solace_blue": 1,
+}
+for _slug, _amt in _play_gain_life_cards.items():
+    CARD_TRIGGERS[_slug] = [TriggerDef(
+        event_type="on_play",
+        effect_fn=lambda c, e, s, _a=_amt: effect_gain_life(s, _controller_id(c), _a),
+    )]
+
+# -- on_play_opt (additions): "Opt N." --
+for _slug in ["fate_foreseen_red", "fate_foreseen_yellow", "fate_foreseen_blue"]:
+    CARD_TRIGGERS[_slug] = [on_play_opt(1)]
+
+# -- on_play_create_token (additions) --
+CARD_TRIGGERS["cruel_ambition_red"] = [on_play_create_token("might", 3)]
+CARD_TRIGGERS["humble_entrance_blue"] = [on_play_create_token("toughness", 3)]
+CARD_TRIGGERS["pledge_fealty_red"] = [on_play_create_token("fealty", 1)]
+
+# Multi-token create: "Create an X and a Y token."
+def _create_two_tokens(token1: str, token2: str):
+    """Template: 'Create a [token1] and a [token2] token.'"""
+    def _effect(c, e, s):
+        cid = _controller_id(c)
+        create_token(s, cid, token1)
+        create_token(s, cid, token2)
+    return TriggerDef(event_type="on_play", effect_fn=_effect)
+
+CARD_TRIGGERS["goblet_of_bloodrun_wine_blue"] = [_create_two_tokens("agility", "vigor")]
+CARD_TRIGGERS["pint_of_strong_and_stout_blue"] = [_create_two_tokens("might", "vigor")]
+CARD_TRIGGERS["smashback_alehorn_blue"] = [_create_two_tokens("agility", "might")]
+
+# -- on_attack_create_runechant: "When this attacks, create a Runechant." --
+for _slug in ["hocus_pocus_red", "hocus_pocus_yellow", "hocus_pocus_blue"]:
+    CARD_TRIGGERS[_slug] = [on_attack_create_token("runechant", 1)]
+
+# -- on_hit_create_token (additions): "When this hits, create an Embodiment of X." --
+for _slug in ["earth_form_red", "earth_form_yellow", "earth_form_blue"]:
+    CARD_TRIGGERS[_slug] = [on_hit_create_token("embodiment_of_earth", 1)]
+for _slug in ["lightning_form_red", "lightning_form_yellow", "lightning_form_blue"]:
+    CARD_TRIGGERS[_slug] = [on_hit_create_token("embodiment_of_lightning", 1)]
+
+# -- on_play_deal_arcane (additions): cards that deal arcane + have secondary effects --
+# For cards with "Deal N arcane" + "Instant - Discard this: Amp 1" (discard is separate activated ability)
+_arcane_with_discard_amp = {
+    "arcane_twining_red": 3, "arcane_twining_yellow": 2, "arcane_twining_blue": 1,
+    "photon_splicing_red": 4, "photon_splicing_yellow": 3, "photon_splicing_blue": 2,
+}
+for _slug, _amt in _arcane_with_discard_amp.items():
+    CARD_TRIGGERS[_slug] = [on_play_deal_arcane(_amt)]
+
+# "Deal N arcane" + "Instant - Discard this: [other activated ability]"
+_arcane_with_discard_other = {
+    "chorus_of_the_amphitheater_red": 4, "chorus_of_the_amphitheater_yellow": 3,
+    "chorus_of_the_amphitheater_blue": 2,
+    "burn_bare": 6,
+    "light_up_the_leaves_red": 6,
+}
+for _slug, _amt in _arcane_with_discard_other.items():
+    CARD_TRIGGERS[_slug] = [on_play_deal_arcane(_amt)]
+
+# "Deal N arcane" + secondary continuous effect (rousing aether, aether flare, etc.)
+# These still deal arcane damage on play; secondary effect is a continuous modifier
+_arcane_with_secondary = {
+    "aether_flare_red": 3, "aether_flare_yellow": 2, "aether_flare_blue": 1,
+    "rousing_aether_red": 4, "rousing_aether_yellow": 3, "rousing_aether_blue": 2,
+    "snapback_red": 3, "snapback_yellow": 2, "snapback_blue": 1,
+    "timekeepers_whim_red": 5, "timekeepers_whim_yellow": 4, "timekeepers_whim_blue": 3,
+    "dampen_red": 4, "dampen_yellow": 3, "dampen_blue": 2,
+    "reverberate_red": 3, "reverberate_yellow": 2, "reverberate_blue": 1,
+    "sigil_of_suffering_red": 1, "sigil_of_suffering_yellow": 1, "sigil_of_suffering_blue": 1,
+    "aether_arc_blue": 1,
+    "sonic_boom_yellow": 3,
+    "aether_spindle_red": 4, "aether_spindle_yellow": 3, "aether_spindle_blue": 2,
+}
+for _slug, _amt in _arcane_with_secondary.items():
+    CARD_TRIGGERS[_slug] = [on_play_deal_arcane(_amt)]
+
+# -- arcane + surge: "Deal N arcane damage. Surge - If this deals more than N, [EFFECT]." --
+# Surge: go again
+_arcane_surge_go_again = {
+    "aether_quickening_red": 4, "aether_quickening_yellow": 3, "aether_quickening_blue": 2,
+    "trailblazing_aether_red": 3, "trailblazing_aether_yellow": 2, "trailblazing_aether_blue": 1,
+}
+for _slug, _amt in _arcane_surge_go_again.items():
+    CARD_TRIGGERS[_slug] = [
+        on_play_deal_arcane(_amt),
+        surge_trigger(_amt, lambda c, e, s: go_again(c, e, s)),
+    ]
+
+# Surge: draw 2
+_arcane_surge_draw = {
+    "open_the_flood_gates_red": (3, 2), "open_the_flood_gates_yellow": (2, 2),
+    "open_the_flood_gates_blue": (1, 2),
+}
+for _slug, (_amt, _draw) in _arcane_surge_draw.items():
+    CARD_TRIGGERS[_slug] = [
+        on_play_deal_arcane(_amt),
+        surge_trigger(_amt, lambda c, e, s, d=_draw: effect_draw(s, _controller_id(c), d)),
+    ]
+
+# Surge: gain resources
+_arcane_surge_resources = {
+    "overflow_the_aetherwell_red": 3, "overflow_the_aetherwell_yellow": 2,
+    "overflow_the_aetherwell_blue": 1,
+}
+for _slug, _amt in _arcane_surge_resources.items():
+    CARD_TRIGGERS[_slug] = [
+        on_play_deal_arcane(_amt),
+        surge_trigger(_amt, lambda c, e, s: effect_gain_resources(s, _controller_id(c), 2)),
+    ]
+
+# Surge: opt 1
+_arcane_surge_opt = {
+    "prognosticate_red": 3, "prognosticate_yellow": 2, "prognosticate_blue": 1,
+}
+for _slug, _amt in _arcane_surge_opt.items():
+    CARD_TRIGGERS[_slug] = [
+        on_play_deal_arcane(_amt),
+        surge_trigger(_amt, lambda c, e, s: effect_opt(s, _controller_id(c), 1)),
+    ]
+
+# Surge: create ponder token
+CARD_TRIGGERS["swell_tidings_red"] = [
+    on_play_deal_arcane(5),
+    surge_trigger(5, lambda c, e, s: create_token(s, _controller_id(c), "ponder")),
+]
+
+# Surge: self-recur (banish, play again) — approximate as arcane only
+CARD_TRIGGERS["eternal_inferno_red"] = [on_play_deal_arcane(4)]
+
+# Surge: other complex effects — register arcane damage at minimum
+for _slug, _amt in {
+    "destructive_aethertide_blue": 1,
+    "etchings_of_arcana_red": 3, "etchings_of_arcana_yellow": 2, "etchings_of_arcana_blue": 1,
+    "mind_warp_yellow": 2,
+    "perennial_aetherbloom_red": 3, "perennial_aetherbloom_yellow": 2,
+    "perennial_aetherbloom_blue": 1,
+    "pop_the_bubble_red": 3, "pop_the_bubble_yellow": 2, "pop_the_bubble_blue": 1,
+    "sap_red": 3, "sap_yellow": 2, "sap_blue": 1,
+}.items():
+    CARD_TRIGGERS[_slug] = [on_play_deal_arcane(_amt)]
+
+# -- on_hit_gain_life: "When this hits, gain N{h}." --
+# life_for_a_life: "When this hits, gain 1{h}."
+for _slug in ["life_for_a_life_red", "life_for_a_life_yellow", "life_for_a_life_blue"]:
+    CARD_TRIGGERS[_slug] = [on_hit_gain_life(1)]
+
+
+# ---------------------------------------------------------------------------
 # Registry — builds triggers for a card from keywords + card-specific
 # ---------------------------------------------------------------------------
 
