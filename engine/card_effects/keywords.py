@@ -1070,6 +1070,58 @@ def _create_token(state: GameState, player: Player, token_slug: str,
     return tokens
 
 
+def effect_reveal_top(state: GameState, player_id: int, count: int = 1) -> list:
+    """Reveal the top N cards of a player's deck. Returns list of revealed cards."""
+    player = state.players[player_id]
+    revealed = []
+    for i in range(min(count, len(player.deck.cards))):
+        card = player.deck.cards[i]
+        card.is_public = True
+        revealed.append(card)
+    return revealed
+
+
+def effect_look_top(state: GameState, player_id: int, count: int = 1) -> list:
+    """Look at the top N cards of a player's deck. Returns list of cards (not public)."""
+    player = state.players[player_id]
+    return player.deck.cards[:min(count, len(player.deck.cards))]
+
+
+def effect_put_top_deck(state: GameState, card: Card, player_id: int) -> None:
+    """Put a card on top of a player's deck."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.deck.cards.insert(0, card)
+    card.zone = "deck"
+    card.is_public = False
+
+
+def effect_put_bottom_deck(state: GameState, card: Card, player_id: int) -> None:
+    """Put a card on the bottom of a player's deck."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.deck.cards.append(card)
+    card.zone = "deck"
+    card.is_public = False
+
+
+def effect_return_to_hand(state: GameState, card: Card, player_id: int) -> None:
+    """Return a card to a player's hand."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.hand.add(card)
+
+
+def effect_put_arsenal(state: GameState, card: Card, player_id: int,
+                       face_up: bool = False) -> None:
+    """Put a card into a player's arsenal."""
+    _remove_from_current_zone(card, state)
+    player = state.players[player_id]
+    player.arsenal.add(card)
+    card.face_down = not face_up
+    card.is_public = face_up
+
+
 def create_token(state: GameState, player_id: int, token_slug: str,
                  count: int = 1) -> list:
     """Public interface for token creation."""
