@@ -603,6 +603,82 @@ def rupture_trigger(effect_fn: Callable) -> TriggerDef:
     )
 
 
+def on_defend_draw(count: int = 1) -> TriggerDef:
+    """Template: "When this defends, draw N card(s)."."""
+    return TriggerDef(
+        event_type="defend",
+        effect_fn=lambda c, e, s: effect_draw(s, _controller_id(c), count),
+    )
+
+
+def on_defend_create_token(token_slug: str, count: int = 1) -> TriggerDef:
+    """Template: "When this defends, create N token(s)."."""
+    return TriggerDef(
+        event_type="defend",
+        effect_fn=lambda c, e, s: create_token(s, _controller_id(c), token_slug, count),
+    )
+
+
+def on_hit_lose_life(amount: int) -> TriggerDef:
+    """Template: "When this hits, opponent loses N life."."""
+    def _effect(c, e, s):
+        target_id = 3 - _controller_id(c)
+        effect_lose_life(s, target_id, amount)
+    return TriggerDef(event_type="hit", effect_fn=_effect)
+
+
+def on_play_discard(count: int = 1, target: str = "opponent") -> TriggerDef:
+    """Template: "When you play this, target discards N card(s)."."""
+    def _effect(c, e, s):
+        if target == "self":
+            tid = _controller_id(c)
+        else:
+            tid = 3 - _controller_id(c)
+        effect_discard(s, tid, count)
+    return TriggerDef(event_type="on_play", effect_fn=_effect)
+
+
+def on_play_gain_life(amount: int) -> TriggerDef:
+    """Template: "When you play this, gain N life."."""
+    return TriggerDef(
+        event_type="on_play",
+        effect_fn=lambda c, e, s: effect_gain_life(s, _controller_id(c), amount),
+    )
+
+
+def on_hit_go_again() -> TriggerDef:
+    """Template: "When this hits, gain go again."."""
+    return TriggerDef(
+        event_type="hit",
+        effect_fn=lambda c, e, s: effect_gain_action_point(s, _controller_id(c)),
+    )
+
+
+def on_attack_go_again_conditional(condition_fn: Callable) -> TriggerDef:
+    """Template: "When this attacks, if [CONDITION], gain go again."."""
+    return TriggerDef(
+        event_type="attacking",
+        condition_fn=condition_fn,
+        effect_fn=lambda c, e, s: effect_gain_action_point(s, _controller_id(c)),
+    )
+
+
+def on_play_mark() -> TriggerDef:
+    """Template: "When you play this, mark."."""
+    return TriggerDef(
+        event_type="on_play",
+        effect_fn=lambda c, e, s: effect_mark(s, _controller_id(c), c),
+    )
+
+
+def on_defend_gain_resources(amount: int) -> TriggerDef:
+    """Template: "When this defends, gain N resource(s)."."""
+    return TriggerDef(
+        event_type="defend",
+        effect_fn=lambda c, e, s: effect_gain_resources(s, _controller_id(c), amount),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Card-specific triggers — keyed by slug
 # Covers cards with unique text that can't use templates.
