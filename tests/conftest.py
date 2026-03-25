@@ -90,5 +90,5 @@ def pytest_generate_tests(metafunc):
 
         with open(SLUG_INDEX_PATH, "r", encoding="utf-8") as f:
             slug_index = json.load(f)
-        slugs = sorted(slug_index.keys())
+        slugs = sorted(slug_index["by_slug"].keys())
         metafunc.parametrize("card_slug", slugs)
