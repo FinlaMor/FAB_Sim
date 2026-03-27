@@ -2,10 +2,10 @@
   "feature": "Organize project folder — archive non-essentials",
   "workflow_type": "feature",
   "workflow_rationale": "Structural reorganization task that moves ~50 GB of non-essential files into archive/ while preserving RL training pipeline, draft bot, and core infrastructure. Although no new code is written, the moves must be carefully sequenced and verified.",
-  "status": "in_progress",
-  "planStatus": "in_progress",
-  "xstateState": "coding",
-  "executionPhase": "coding",
+  "status": "human_review",
+  "planStatus": "review",
+  "xstateState": "human_review",
+  "executionPhase": "complete",
   "lastEvent": {
     "eventId": "b5ed269b-4a32-4649-86b8-60dd1e6ec3e7",
     "sequence": 1,
@@ -249,7 +249,7 @@
             "command": "python -c \"from rl_agents.iql import IQL; from engine.engine import new_game; from encoder.gamestate_embedder import GameStateEmbedder; from draft.draft_bot import HeuristicDraftBot; print('ALL_IMPORTS_OK')\"",
             "expected": "ALL_IMPORTS_OK"
           },
-          "status": "pending",
+          "status": "completed",
           "notes": "This is the critical verification step. If imports fail, something essential was accidentally archived. Also run the test suite (excluding Talishar-specific and transformer-specific tests that depend on archived modules). Test files themselves stay in tests/ per the spec."
         }
       ]
@@ -386,6 +386,7 @@
     }
   },
   "qa_signoff": null,
-  "updated_at": "2026-03-27T02:51:57.972Z",
-  "last_updated": "2026-03-27T02:42:53.205959+00:00"
+  "updated_at": "2026-03-27T02:55:42.794Z",
+  "last_updated": "2026-03-27T02:42:53.205959+00:00",
+  "reviewReason": "completed"
 }
