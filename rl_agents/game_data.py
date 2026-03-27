@@ -29,6 +29,7 @@ import sqlite3
 import threading
 import uuid
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Any
 
 
@@ -326,6 +327,69 @@ class TransitionCollector:
             self._transitions.append(t)
             self._step += 1
 
+    def record_simple(
+        self,
+        player_id: int,
+        reward: float = 0.0,
+        done: bool = False,
+        turn_number: int = 0,
+        p1_hp: int = 0,
+        p2_hp: int = 0,
+    ) -> None:
+        """Record a simplified transition for local-engine games.
+
+        Stores only the core RL tuple (game_id, step, player_id, reward,
+        done) without requiring full Talishar JSON states.  All
+        denormalized columns are filled with safe defaults.
+        """
+        with self._lock:
+            t = Transition(
+                game_id=self.game_id,
+                step=self._step,
+                player_id=player_id,
+                turn_number=turn_number,
+                state={},
+                available_actions=[],
+                action_taken={},
+                action_index=-1,
+                next_state=None,
+                reward=reward,
+                done=done,
+                p1_hp=p1_hp,
+                p2_hp=p2_hp,
+                decision_type="other",
+                hp_delta=0,
+                opp_hp_delta=0,
+                cards_in_deck=None,
+                opp_cards_in_deck=None,
+                num_actions=0,
+                action_points=None,
+                turn_phase="",
+                card_id=None,
+                in_combat_chain=False,
+                combat_chain_attack=None,
+                combat_chain_defense=None,
+                is_turn_player=True,
+                hand_size=None,
+                opp_hand_size=None,
+                resources=None,
+                graveyard_size=None,
+                opp_graveyard_size=None,
+                banished_size=None,
+                opp_banished_size=None,
+                pitch_zone_size=None,
+                opp_pitch_zone_size=None,
+                equipment_count=None,
+                opp_equipment_count=None,
+                has_arsenal=False,
+                opp_has_arsenal=False,
+                chain_link_count=0,
+                has_go_again=False,
+                combat_keywords=None,
+            )
+            self._transitions.append(t)
+            self._step += 1
+
     def finalize(self, winner: int | None) -> None:
         """Retroactively set terminal rewards and backfill computed columns.
 
@@ -512,11 +576,20 @@ class GameDataStore:
 
     def __init__(self, db_path: str = "data/talishar_games.db"):
         self.db_path = db_path
-        os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+        if db_path != ":memory:":
+            os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
         self._local = threading.local()
         conn = self._get_conn()
         conn.executescript(_SCHEMA_SQL)
         conn.commit()
+
+    @classmethod
+    def create_fresh(cls, base_dir: str = "data", prefix: str = "local_pipeline") -> "GameDataStore":
+        """Create a new GameDataStore with a unique timestamped database path."""
+        os.makedirs(base_dir, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        db_path = os.path.join(base_dir, f"{prefix}_{timestamp}.db")
+        return cls(db_path)
 
     def _get_conn(self) -> sqlite3.Connection:
         if not hasattr(self._local, "conn") or self._local.conn is None:
@@ -622,6 +695,48 @@ class GameDataStore:
         )
 
         conn.commit()
+
+    def record_local_game(
+        self,
+        collector: TransitionCollector,
+        game_state: Any,
+        p1_deck_file: str,
+        p2_deck_file: str,
+        seed: int | None = None,
+    ) -> None:
+        """Save a game played via the local engine.
+
+        Converts the local engine's final ``GameState`` into a ``DeckMeta``
+        and delegates to :meth:`save_game`.  The *game_state* object is
+        expected to have ``.winner``, ``.turn_number``, and
+        ``.players[1].health`` / ``.players[2].health`` attributes (matching
+        ``engine.state.GameState``).
+        """
+        p1 = game_state.players[1]
+        p2 = game_state.players[2]
+
+        # Build minimal decklists – the local engine doesn't expose the
+        # original list in the same format as Talishar, so we store the
+        # hero name and the deck file path for traceability.
+        p1_decklist = {"hero": getattr(p1, "hero_name", getattr(p1, "name", ""))}
+        p2_decklist = {"hero": getattr(p2, "hero_name", getattr(p2, "name", ""))}
+
+        meta = DeckMeta(
+            game_id=collector.game_id,
+            p1_deck_file=p1_deck_file,
+            p2_deck_file=p2_deck_file,
+            p1_decklist=p1_decklist,
+            p2_decklist=p2_decklist,
+            winner=game_state.winner,
+            p1_final_hp=p1.health,
+            p2_final_hp=p2.health,
+            turn_count=game_state.turn_number,
+            ended_on_turn_cap=False,
+            total_actions=len(collector.transitions),
+            seed=seed,
+            mode="local",
+        )
+        self.save_game(collector, meta)
 
     def game_count(self) -> int:
         conn = self._get_conn()
