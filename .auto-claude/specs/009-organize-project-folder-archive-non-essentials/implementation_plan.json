@@ -162,7 +162,7 @@
             "command": "test ! -f scripts/run_talishar_games.py && test ! -f scripts/preprocess_talishar.py && test ! -f scripts/fix_db_rewards.py && ls scripts/run_pipeline.py scripts/run_experiment.py scripts/bench_player_bot.py > /dev/null 2>&1 && ls archive/scripts/run_talishar_games.py archive/scripts/preprocess_talishar.py > /dev/null 2>&1 && echo 'SCRIPTS_OK'",
             "expected": "SCRIPTS_OK"
           },
-          "status": "pending",
+          "status": "completed",
           "notes": "Use 'git mv' for each file. All 7 files are tracked. Leave scripts/.venv, run_pipeline.py, run_experiment.py, train_deck_evaluator.py, generate_heuristic_decks.py, scrape_fablazing.py, bench_player_bot.py, compute_card_usage.py, sweep_hyperparams.py in place."
         },
         {
@@ -386,6 +386,6 @@
     }
   },
   "qa_signoff": null,
-  "updated_at": "2026-03-27T02:49:23.204Z",
+  "updated_at": "2026-03-27T02:50:10.236Z",
   "last_updated": "2026-03-27T02:42:53.205959+00:00"
 }
