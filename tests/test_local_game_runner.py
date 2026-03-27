@@ -72,7 +72,7 @@ def test_mixed_opponents() -> None:
     for _ in range(50):
         agent = pool.sample_agent(rng, player_id=1, seed=0)
         types_seen.add(type(agent).__name__)
-    assert "HeuristicBot" in types_seen, "Expected HeuristicBot in sampled agents"
+    assert "LocalHeuristicAgent" in types_seen, "Expected LocalHeuristicAgent in sampled agents"
     assert "RandomAgent" in types_seen, "Expected RandomAgent in sampled agents"
 
 
@@ -88,7 +88,7 @@ def test_opponent_pool_no_checkpoints() -> None:
         agent = pool.sample_agent(rng, player_id=1, seed=0)
         types_seen.add(type(agent).__name__)
     # Only heuristic and random should be present (nonexistent checkpoint ignored)
-    assert types_seen <= {"HeuristicBot", "RandomAgent"}
+    assert types_seen <= {"LocalHeuristicAgent", "RandomAgent"}
     assert len(types_seen) == 2
 
 

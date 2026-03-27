@@ -698,11 +698,12 @@ class GameDataStore:
 
     def record_local_game(
         self,
-        collector: TransitionCollector,
+        collector: TransitionCollector | None,
         game_state: Any,
         p1_deck_file: str,
         p2_deck_file: str,
         seed: int | None = None,
+        game_id: int | None = None,
     ) -> None:
         """Save a game played via the local engine.
 
@@ -711,9 +712,15 @@ class GameDataStore:
         expected to have ``.winner``, ``.turn_number``, and
         ``.players[1].health`` / ``.players[2].health`` attributes (matching
         ``engine.state.GameState``).
+
+        If *collector* is ``None`` a stub collector with no transitions is
+        created automatically, using *game_id* for identification.
         """
         p1 = game_state.players[1]
         p2 = game_state.players[2]
+
+        if collector is None:
+            collector = TransitionCollector(game_id=game_id or 0)
 
         # Build minimal decklists – the local engine doesn't expose the
         # original list in the same format as Talishar, so we store the

@@ -128,9 +128,19 @@ def step_validate_decks(args) -> list[str]:
     t0 = time.time()
 
     from rl_agents.deck_validator import validate_all_decks
+    from engine.card import CardDB
+    from config import SLUG_INDEX_PATH
+    import json
+
+    # Load card_db and slug_index for validation
+    if args._card_db is None:
+        args._card_db = CardDB(str(SLUG_INDEX_PATH))
+    with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
+        si_data = json.load(f)
+    slug_index = si_data.get("by_slug", si_data)
 
     deck_dir = str(GENERATED_DIR)
-    valid_paths, invalid_report = validate_all_decks(deck_dir)
+    valid_paths, invalid_report = validate_all_decks(deck_dir, args._card_db, slug_index)
 
     elapsed = time.time() - t0
 

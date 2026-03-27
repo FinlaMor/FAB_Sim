@@ -26,7 +26,6 @@ from encoder.action_embedder import ActionEmbedder
 from encoder.card_embedder import SlugVocab
 from encoder.gamestate_embedder import GameStateEmbedder, gamestate_to_features
 from rl_agents.game_backends import GameRunRequest, LocalEngineBackend
-from rl_agents.heuristic_bot import HeuristicBot
 from rl_agents.random_agent import RandomAgent
 from rl_agents.utils.card_helpers import (
     card_slug as _card_slug,
@@ -96,6 +95,36 @@ class GameResults:
 
 
 # ---------------------------------------------------------------------------
+class LocalHeuristicAgent:
+    """Simple heuristic agent for the local engine.
+
+    Prefers attack actions over non-attacks, and non-pass actions over pass.
+    Falls back to random choice among equally ranked options.
+    """
+
+    def __init__(self, seed: int = 0):
+        self._rng = random.Random(seed)
+
+    def __call__(self, state: GameState, options, context=None):
+        if not options:
+            return None
+        if len(options) == 1:
+            return options[0]
+
+        # For Action choices, rank: attacks > non-pass > pass
+        if isinstance(options[0], Action):
+            attacks = [a for a in options if a.type in (
+                ActionType.ATTACK_WEAPON, ActionType.PLAY_CARD,
+            )]
+            non_pass = [a for a in options if a.type != ActionType.PASS]
+            if attacks:
+                return self._rng.choice(attacks)
+            if non_pass:
+                return self._rng.choice(non_pass)
+        return self._rng.choice(options)
+
+
+# ---------------------------------------------------------------------------
 # OpponentPool
 # ---------------------------------------------------------------------------
 
@@ -142,7 +171,7 @@ class OpponentPool:
     def _build_agent(self, entry: dict, player_id: int, seed: int) -> Any:
         agent_type = entry["type"]
         if agent_type == "heuristic":
-            return HeuristicBot(seed=seed)
+            return LocalHeuristicAgent(seed=seed)
         elif agent_type == "random":
             return RandomAgent(seed=seed)
         elif agent_type == "iql_policy":
@@ -426,13 +455,13 @@ def run_games(
             # Record to GameDataStore if available
             if game_data_store is not None:
                 try:
-                    from rl_agents.game_data import TransitionCollector
                     game_data_store.record_local_game(
                         collector=None,
                         game_state=game_state,
                         p1_deck_file=p1_deck,
                         p2_deck_file=p2_deck,
                         seed=game_seed,
+                        game_id=game_id,
                     )
                 except Exception:
                     pass  # Non-critical; replay DB is the primary store
