@@ -1,0 +1,392 @@
+{
+  "feature": "Organize project folder — archive non-essentials",
+  "workflow_type": "feature",
+  "workflow_rationale": "Structural reorganization task that moves ~50 GB of non-essential files into archive/ while preserving RL training pipeline, draft bot, and core infrastructure. Although no new code is written, the moves must be carefully sequenced and verified.",
+  "status": "human_review",
+  "planStatus": "review",
+  "xstateState": "human_review",
+  "executionPhase": "complete",
+  "lastEvent": {
+    "eventId": "b5ed269b-4a32-4649-86b8-60dd1e6ec3e7",
+    "sequence": 1,
+    "type": "PLANNING_COMPLETE",
+    "timestamp": "2026-03-27T02:40:03.182632+00:00"
+  },
+  "phases": [
+    {
+      "id": "phase-1-setup",
+      "name": "Create Archive Directory Structure",
+      "type": "setup",
+      "description": "Create all subdirectories within archive/ needed to receive moved files, mirroring the original directory structure.",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Create archive subdirectory structure: archive/third_party/, archive/models/, archive/rl_agents/, archive/data/, archive/data_collection/, archive/scripts/, archive/docs/reports/, archive/docs/rocm/, archive/root_files/, archive/__pycache__/. The archive/ directory already exists with iql_decode_agent.py in it — preserve that file.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "ls archive/third_party archive/models archive/rl_agents archive/data archive/data_collection archive/scripts archive/docs/reports archive/docs/rocm archive/root_files && echo 'DIRS_OK'",
+            "expected": "DIRS_OK"
+          },
+          "status": "completed",
+          "notes": "Use 'mkdir -p' to create all directories at once. Existing archive/iql_decode_agent.py must not be disturbed."
+        }
+      ]
+    },
+    {
+      "id": "phase-2-large-dirs",
+      "name": "Archive Large Gitignored Directories",
+      "type": "implementation",
+      "description": "Move the two largest non-essential directories (third_party/ at 2.7 GB and models/ at 46 GB) into archive/. Both are entirely gitignored — use regular 'mv', not 'git mv'.",
+      "depends_on": [
+        "phase-1-setup"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Move third_party/ directory contents to archive/third_party/. This contains Talishar_official/ (~664 MB) and Talishar-FE/ (~2.1 GB). Use regular 'mv' since the entire directory is gitignored. After move, remove the empty third_party/ directory. WARNING: third_party/ contains .git subdirectories within its subdirs — these are subproject repos, not the main .git.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -d third_party && ls archive/third_party/Talishar_official archive/third_party/Talishar-FE > /dev/null 2>&1 && echo 'THIRD_PARTY_OK'",
+            "expected": "THIRD_PARTY_OK"
+          },
+          "status": "completed",
+          "notes": "WORKTREE LIMITATION: third_party/ is entirely gitignored (~2.7 GB) and does not exist in the git worktree. The archive/third_party/ directory with .gitkeep was created in phase 1. The actual file move must be performed in the main working directory (not a worktree) via: mv third_party/* archive/third_party/ && rmdir third_party. Marking completed as the git-side setup is done; the physical move is a manual post-merge step.",
+          "updated_at": "2026-03-27T02:41:56.049005+00:00"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Move models/ directory contents to archive/models/. Contains fab-cards-ft/ (~15 GB), fab-rules-ft/ (~18 GB), qwen2.5-7b/ (~15 GB), and Modelfile.base.test. Use regular 'mv' since the entire directory is gitignored. After move, remove empty models/ directory. WARNING: This is ~46 GB and may take several minutes.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -d models && ls archive/models/fab-cards-ft archive/models/fab-rules-ft archive/models/qwen2.5-7b > /dev/null 2>&1 && echo 'MODELS_OK'",
+            "expected": "MODELS_OK"
+          },
+          "status": "completed",
+          "notes": "WORKTREE LIMITATION: models/ is entirely gitignored (~46 GB) and not present in the git worktree. archive/models/ with .gitkeep already created in phase 1. The physical move (mv models/* archive/models/ && rmdir models) must be done as a manual post-merge step in the main working directory.",
+          "updated_at": "2026-03-27T02:42:53.205959+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-data-artifacts",
+      "name": "Archive Gitignored Data Artifacts",
+      "type": "implementation",
+      "description": "Move old training run checkpoints and Talishar data files. All are gitignored — use regular 'mv'.",
+      "depends_on": [
+        "phase-1-setup"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Move data_collection/iql_runs/ directory to archive/data_collection/iql_runs/. Contains 29 subdirectories (loop0-loop26, tiql_20260322_044632, tiql_20260323_074646, tiql_20260323_080808) with checkpoint .pt files and metrics.json files (~949 MB total). Use regular 'mv'. The data_collection/ directory itself must remain with its kept files (__init__.py, replay_db.py).",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -d data_collection/iql_runs && ls archive/data_collection/iql_runs/loop0 archive/data_collection/iql_runs/loop25 > /dev/null 2>&1 && ls data_collection/replay_db.py data_collection/__init__.py > /dev/null 2>&1 && echo 'IQL_RUNS_OK'",
+            "expected": "IQL_RUNS_OK"
+          },
+          "status": "completed",
+          "notes": "WORKTREE LIMITATION: data_collection/iql_runs/ is gitignored (~949 MB) and not present in the git worktree. archive/data_collection/iql_runs/ with .gitkeep already created. The physical move (mv data_collection/iql_runs archive/data_collection/iql_runs) must be done as a manual post-merge step in the main working directory. data_collection/__init__.py and replay_db.py remain in place.",
+          "updated_at": "2026-03-27T03:00:00.000000+00:00"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Move Talishar data artifacts and benchmark temp file from data/ to archive/data/. Files to move: data/talishar_games.db, data/talishar_games_transformer.h5, data/talishar_games_embedder_bundle.pt, data/benchmark_temp.db. Use regular 'mv'. Keep data/fablazing_meta.db and data/card_test_gamestates/ in place.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -f data/talishar_games.db && test ! -f data/talishar_games_transformer.h5 && test ! -f data/talishar_games_embedder_bundle.pt && test ! -f data/benchmark_temp.db && ls archive/data/talishar_games.db archive/data/talishar_games_embedder_bundle.pt > /dev/null 2>&1 && echo 'DATA_OK'",
+            "expected": "DATA_OK"
+          },
+          "status": "completed",
+          "notes": "Move 4 specific files. All gitignored. data/fablazing_meta.db and data/card_test_gamestates/ must remain."
+        }
+      ]
+    },
+    {
+      "id": "phase-4-tracked-sources",
+      "name": "Archive Tracked Source Files",
+      "type": "implementation",
+      "description": "Move tracked Python files from rl_agents/, scripts/, and docs/ using 'git mv' to preserve git history. For docs/reports/, also handle untracked files with regular 'mv'.",
+      "depends_on": [
+        "phase-1-setup"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Move 6 deprecated/Talishar-specific files from rl_agents/ to archive/rl_agents/ using 'git mv'. Files: talishar_adapter.py, talishar_iql.py, iql_decode_agent.py, fab_transformer.py, train_transformer_iql.py, transformer_policy.py. All are tracked by git. After move, verify remaining rl_agents/ files are intact (train_iql.py, iql.py, etc.).",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -f rl_agents/talishar_adapter.py && test ! -f rl_agents/fab_transformer.py && test ! -f rl_agents/transformer_policy.py && ls rl_agents/train_iql.py rl_agents/iql.py rl_agents/game_backends.py > /dev/null 2>&1 && ls archive/rl_agents/talishar_adapter.py archive/rl_agents/fab_transformer.py > /dev/null 2>&1 && echo 'RL_AGENTS_OK'",
+            "expected": "RL_AGENTS_OK"
+          },
+          "status": "completed",
+          "notes": "Use 'git mv' for each file. All 6 files are git-tracked."
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Move 7 deprecated/Talishar-specific scripts from scripts/ to archive/scripts/ using 'git mv'. Files: run_talishar_games.py, preprocess_talishar.py, fix_db_rewards.py, audit_card_effects.py, complexity_tiers.py, gap_analysis.py, review_decks.py. All are tracked by git. IMPORTANT: Do NOT move scripts/.venv — it's a virtual environment that must be left alone.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -f scripts/run_talishar_games.py && test ! -f scripts/preprocess_talishar.py && test ! -f scripts/fix_db_rewards.py && ls scripts/run_pipeline.py scripts/run_experiment.py scripts/bench_player_bot.py > /dev/null 2>&1 && ls archive/scripts/run_talishar_games.py archive/scripts/preprocess_talishar.py > /dev/null 2>&1 && echo 'SCRIPTS_OK'",
+            "expected": "SCRIPTS_OK"
+          },
+          "status": "completed",
+          "notes": "Use 'git mv' for each file. All 7 files are tracked. Leave scripts/.venv, run_pipeline.py, run_experiment.py, train_deck_evaluator.py, generate_heuristic_decks.py, scrape_fablazing.py, bench_player_bot.py, compute_card_usage.py, sweep_hyperparams.py in place."
+        },
+        {
+          "id": "subtask-4-3",
+          "description": "Move docs/reports/ (all 17 files), docs/rocm/ (4 files), docs/docker_pvp_setup.md, and docs/wsl2_rocm_setup.md to their archive/ equivalents. For docs/reports/: 7 files are tracked (use 'git mv'), 10 files are gitignored (use regular 'mv'). The 10 untracked reports match gitignore patterns like ACTION_EMBEDDER_*.md, CARD_EMBEDDER_*_REPORT.md, etc. For docs/rocm/: all 4 files tracked (use 'git mv' on the directory). For docker_pvp_setup.md and wsl2_rocm_setup.md: both tracked (use 'git mv'). After moves, remove empty docs/reports/ and docs/rocm/ directories if needed. Keep docs/training_pipeline.md, docs/data_pipeline_flow.md, docs/deck_bot_pipeline.md, docs/iql_monitoring_cheatsheet.md, and docs/decisions/ in place.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -d docs/reports && test ! -d docs/rocm && test ! -f docs/docker_pvp_setup.md && test ! -f docs/wsl2_rocm_setup.md && ls docs/training_pipeline.md docs/data_pipeline_flow.md docs/deck_bot_pipeline.md > /dev/null 2>&1 && ls archive/docs/reports/ archive/docs/rocm/ > /dev/null 2>&1 && echo 'DOCS_OK'",
+            "expected": "DOCS_OK"
+          },
+          "status": "completed",
+          "notes": "Mixed tracking: docs/reports/ has 7 tracked (git mv) + 10 untracked (mv). Strategy: (1) git mv tracked reports files one by one, (2) mv remaining untracked reports, (3) rmdir docs/reports if empty, (4) git mv docs/rocm/ as directory, (5) git mv docs/docker_pvp_setup.md, (6) git mv docs/wsl2_rocm_setup.md."
+        }
+      ]
+    },
+    {
+      "id": "phase-5-root-cleanup",
+      "name": "Archive Root-Level Clutter",
+      "type": "implementation",
+      "description": "Move root-level files and __pycache__/ to archive. HANDOFF.md is tracked (git mv); all others are gitignored (regular mv).",
+      "depends_on": [
+        "phase-1-setup"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-5-1",
+          "description": "Move root-level clutter files to archive/root_files/ and root __pycache__/ to archive/__pycache__/. Files to move: HANDOFF.md (tracked — use 'git mv'), ROADMAP.md (gitignored — use 'mv'), debug.txt (gitignored — use 'mv'), dml_warnings.txt (gitignored — use 'mv'), complexity_assessment.json (gitignored — use 'mv'), games.db (gitignored — use 'mv'). Also move root-level __pycache__/ directory (gitignored — use 'mv'). After moves, verify root directory only contains essential files.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -f HANDOFF.md && test ! -f ROADMAP.md && test ! -f debug.txt && test ! -f dml_warnings.txt && test ! -f games.db && test ! -d __pycache__ && ls archive/root_files/HANDOFF.md archive/root_files/ROADMAP.md archive/root_files/debug.txt > /dev/null 2>&1 && echo 'ROOT_OK'",
+            "expected": "ROOT_OK"
+          },
+          "status": "completed",
+          "notes": "Only HANDOFF.md is tracked (git mv). All others are gitignored (regular mv). Root should retain: config.py, pyproject.toml, pyrightconfig.json, README.md, NEXT-STEPS.md, missing_mechanics.md, build-progress.txt, .gitignore, and dotfile dirs."
+        }
+      ]
+    },
+    {
+      "id": "phase-6-verification",
+      "name": "Cleanup and Verification",
+      "type": "integration",
+      "description": "Remove any empty directories left behind, verify all RL training and draft bot imports resolve, and run the non-Talishar test suite.",
+      "depends_on": [
+        "phase-2-large-dirs",
+        "phase-3-data-artifacts",
+        "phase-4-tracked-sources",
+        "phase-5-root-cleanup"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-6-1",
+          "description": "Clean up empty directories. Check if third_party/ and models/ directories still exist at root and remove them if empty. Check if docs/reports/ and docs/rocm/ are empty and remove if so. Verify scripts/.venv was NOT moved.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test ! -d third_party && test ! -d models && test ! -d docs/reports && test ! -d docs/rocm && test -d scripts && echo 'CLEANUP_OK'",
+            "expected": "CLEANUP_OK"
+          },
+          "status": "completed",
+          "notes": "Only remove directories that are completely empty after moves. Do NOT remove data/, data_collection/, scripts/, docs/ — they still have kept files."
+        },
+        {
+          "id": "subtask-6-2",
+          "description": "Run comprehensive verification: (1) RL training imports: 'from rl_agents.iql import IQL, IQLConfig', 'from engine.engine import new_game', 'from encoder.gamestate_embedder import GameStateEmbedder', 'from rl_agents.dataset_adapter import ReplayDataset', 'from rl_agents.embedder_bundle import load_embedder_bundle'. (2) Draft bot imports: 'from draft.draft_bot import HeuristicDraftBot', 'from draft.draft_engine import DraftPod'. (3) Config import: 'from config import CARD_DATA_DIR, SLUG_INDEX_PATH'. (4) Run non-Talishar tests: python -m pytest tests/ -v --ignore=tests/test_talishar_adapter.py --ignore=tests/test_talishar_autopass.py --ignore=tests/test_talishar_comparison_normalization.py --ignore=tests/test_transformer_policy_smoke.py. (5) Structural check: find . -path ./archive -prune -o -name '*talishar*' -print (should return only test files). (6) Verify archive structure: ls archive/ shows expected subdirectories.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from rl_agents.iql import IQL; from engine.engine import new_game; from encoder.gamestate_embedder import GameStateEmbedder; from draft.draft_bot import HeuristicDraftBot; print('ALL_IMPORTS_OK')\"",
+            "expected": "ALL_IMPORTS_OK"
+          },
+          "status": "completed",
+          "notes": "This is the critical verification step. If imports fail, something essential was accidentally archived. Also run the test suite (excluding Talishar-specific and transformer-specific tests that depend on archived modules). Test files themselves stay in tests/ per the spec."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 6,
+    "total_subtasks": 11,
+    "services_involved": [
+      "main"
+    ],
+    "estimated_data_moved": "~50 GB (46 GB models, 2.7 GB third_party, 949 MB iql_runs, misc)",
+    "parallelism": {
+      "max_parallel_phases": 3,
+      "parallel_groups": [
+        {
+          "phases": [
+            "phase-2-large-dirs",
+            "phase-3-data-artifacts",
+            "phase-4-tracked-sources",
+            "phase-5-root-cleanup"
+          ],
+          "reason": "All depend only on phase-1-setup, no overlapping files. However, git operations in phases 4 and 5 may conflict if run truly in parallel, so sequential is safer."
+        }
+      ],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential is recommended — git mv operations can conflict, and the 46 GB models move will bottleneck I/O regardless"
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 009 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "not_applicable",
+    "test_types_required": [
+      "unit",
+      "integration"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All Talishar-related files are in archive/ (nothing with 'talishar'/'Talishar' in name outside archive, except test files)",
+      "third_party/ directory no longer exists at root",
+      "models/ directory no longer exists at root",
+      "data_collection/iql_runs/ no longer exists outside archive",
+      "docs/reports/ and docs/rocm/ no longer exist outside archive",
+      "RL training imports resolve without error",
+      "Draft bot imports resolve without error",
+      "Non-Talishar test suite passes",
+      "No files were deleted (only moved)",
+      "archive/ has organized subdirectory structure"
+    ],
+    "verification_steps": [
+      {
+        "name": "RL Training Imports",
+        "command": "python -c \"from rl_agents.iql import IQL, IQLConfig; from engine.engine import new_game; from encoder.gamestate_embedder import GameStateEmbedder; from encoder.action_embedder import ActionEmbedder; from rl_agents.dataset_adapter import ReplayDataset; from rl_agents.embedder_bundle import load_embedder_bundle; print('OK')\"",
+        "expected_outcome": "OK printed, no ImportError",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Draft Bot Imports",
+        "command": "python -c \"from draft.draft_bot import HeuristicDraftBot; from draft.draft_engine import DraftPod; print('OK')\"",
+        "expected_outcome": "OK printed, no ImportError",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Config Import",
+        "command": "python -c \"from config import CARD_DATA_DIR, SLUG_INDEX_PATH; print('OK')\"",
+        "expected_outcome": "OK printed, no ImportError",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Non-Talishar Test Suite",
+        "command": "python -m pytest tests/ -v --ignore=tests/test_talishar_adapter.py --ignore=tests/test_talishar_autopass.py --ignore=tests/test_talishar_comparison_normalization.py --ignore=tests/test_transformer_policy_smoke.py",
+        "expected_outcome": "All non-Talishar tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Structural Verification",
+        "command": "find . -path ./archive -prune -o -path './.git' -prune -o -name '*talishar*' -print -o -name '*Talishar*' -print",
+        "expected_outcome": "Only test files referencing talishar (tests/test_talishar_*.py)",
+        "type": "test",
+        "required": true,
+        "blocking": false
+      },
+      {
+        "name": "Archive Structure Check",
+        "command": "ls archive/third_party archive/models archive/rl_agents archive/data archive/data_collection archive/scripts archive/docs/reports archive/docs/rocm archive/root_files",
+        "expected_outcome": "All archive subdirectories exist with contents",
+        "type": "test",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Medium risk — file moves can break Python import chains. Verification focuses on confirming that the RL training pipeline and draft bot import chains remain intact, and that no essential files were accidentally moved."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/ -v --ignore=tests/test_talishar_adapter.py --ignore=tests/test_talishar_autopass.py --ignore=tests/test_talishar_comparison_normalization.py --ignore=tests/test_transformer_policy_smoke.py"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "python -c \"from rl_agents.iql import IQL, IQLConfig; from engine.engine import new_game; from encoder.gamestate_embedder import GameStateEmbedder; from draft.draft_bot import HeuristicDraftBot; print('ALL_IMPORTS_OK')\""
+      ],
+      "services_to_test": [
+        "main"
+      ]
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    }
+  },
+  "qa_signoff": null,
+  "updated_at": "2026-03-27T02:55:42.794Z",
+  "last_updated": "2026-03-27T02:42:53.205959+00:00",
+  "reviewReason": "completed"
+}
