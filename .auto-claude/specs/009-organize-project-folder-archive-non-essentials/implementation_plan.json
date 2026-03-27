@@ -177,7 +177,7 @@
             "command": "test ! -d docs/reports && test ! -d docs/rocm && test ! -f docs/docker_pvp_setup.md && test ! -f docs/wsl2_rocm_setup.md && ls docs/training_pipeline.md docs/data_pipeline_flow.md docs/deck_bot_pipeline.md > /dev/null 2>&1 && ls archive/docs/reports/ archive/docs/rocm/ > /dev/null 2>&1 && echo 'DOCS_OK'",
             "expected": "DOCS_OK"
           },
-          "status": "pending",
+          "status": "completed",
           "notes": "Mixed tracking: docs/reports/ has 7 tracked (git mv) + 10 untracked (mv). Strategy: (1) git mv tracked reports files one by one, (2) mv remaining untracked reports, (3) rmdir docs/reports if empty, (4) git mv docs/rocm/ as directory, (5) git mv docs/docker_pvp_setup.md, (6) git mv docs/wsl2_rocm_setup.md."
         }
       ]
@@ -204,7 +204,7 @@
             "command": "test ! -f HANDOFF.md && test ! -f ROADMAP.md && test ! -f debug.txt && test ! -f dml_warnings.txt && test ! -f games.db && test ! -d __pycache__ && ls archive/root_files/HANDOFF.md archive/root_files/ROADMAP.md archive/root_files/debug.txt > /dev/null 2>&1 && echo 'ROOT_OK'",
             "expected": "ROOT_OK"
           },
-          "status": "pending",
+          "status": "completed",
           "notes": "Only HANDOFF.md is tracked (git mv). All others are gitignored (regular mv). Root should retain: config.py, pyproject.toml, pyrightconfig.json, README.md, NEXT-STEPS.md, missing_mechanics.md, build-progress.txt, .gitignore, and dotfile dirs."
         }
       ]
@@ -234,7 +234,7 @@
             "command": "test ! -d third_party && test ! -d models && test ! -d docs/reports && test ! -d docs/rocm && test -d scripts && echo 'CLEANUP_OK'",
             "expected": "CLEANUP_OK"
           },
-          "status": "pending",
+          "status": "completed",
           "notes": "Only remove directories that are completely empty after moves. Do NOT remove data/, data_collection/, scripts/, docs/ — they still have kept files."
         },
         {
@@ -386,6 +386,6 @@
     }
   },
   "qa_signoff": null,
-  "updated_at": "2026-03-27T02:50:10.236Z",
+  "updated_at": "2026-03-27T02:51:57.972Z",
   "last_updated": "2026-03-27T02:42:53.205959+00:00"
 }
