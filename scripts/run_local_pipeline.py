@@ -239,6 +239,259 @@ def step_upload_data(args) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Pipeline steps (stages 4-7)
+# ---------------------------------------------------------------------------
+
+def step_train_player_bot(args, loop_num: int) -> None:
+    """Stage 4: Train IQL player bot on collected transitions."""
+    n_transitions = args._game_data_store.transition_count()
+    min_transitions = 500  # minimum to begin training
+
+    if n_transitions < min_transitions:
+        print()
+        print("=" * 70)
+        print(f"  Stage 4: Train player bot — SKIPPED "
+              f"({n_transitions} transitions, need {min_transitions}+)")
+        print("=" * 70)
+        print()
+        return
+
+    replay_db_path = args._replay_db.db_path if hasattr(args._replay_db, 'db_path') else str(
+        ROOT / "data" / "replay.db"
+    )
+    out_dir = str(CHECKPOINT_DIR / "iql" / f"loop{loop_num}")
+
+    cmd = [
+        PYTHON, "-m", "rl_agents.train_iql",
+        "--db-path", str(replay_db_path),
+        "--steps", str(args.iql_steps),
+        "--batch-size", "256",
+        "--device", args.iql_device,
+        "--out-dir", out_dir,
+    ]
+
+    label = f"Stage 4: Train IQL player bot (loop {loop_num})"
+    run_step(label, cmd, allow_fail=True)
+
+    # Check for checkpoint
+    ckpt = Path(out_dir) / "checkpoint_final.pt"
+    if ckpt.exists():
+        print_summary("Player bot training results", {
+            "Transitions used": n_transitions,
+            "Checkpoint": str(ckpt),
+        })
+    else:
+        print("  WARNING: IQL training produced no checkpoint.")
+
+
+def step_train_deck_bot(args, loop_num: int) -> None:
+    """Stage 5: Train deck evaluator on game outcomes."""
+    n_games = args._game_data_store.game_count()
+    min_games = 10  # minimum to begin training
+
+    if n_games < min_games:
+        print()
+        print("=" * 70)
+        print(f"  Stage 5: Train deck evaluator — SKIPPED "
+              f"({n_games} games, need {min_games}+)")
+        print("=" * 70)
+        print()
+        return
+
+    game_data_db = args._game_data_store.db_path if hasattr(
+        args._game_data_store, 'db_path'
+    ) else str(ROOT / "data" / "game_data.db")
+
+    cmd = [
+        PYTHON, str(ROOT / "scripts" / "train_deck_evaluator.py"),
+        "--games-db", str(game_data_db),
+    ]
+
+    # Resume from existing checkpoint if available
+    ckpt = find_best_checkpoint("deck_eval_finetune") or find_best_checkpoint("deck_eval_bootstrap")
+    if ckpt:
+        cmd.extend(["--resume", str(ckpt)])
+
+    label = f"Stage 5: Train deck evaluator (loop {loop_num})"
+    run_step(label, cmd, allow_fail=True)
+
+    new_ckpt = find_best_checkpoint("deck_eval_finetune")
+    if new_ckpt:
+        print_summary("Deck evaluator training results", {
+            "Games used": n_games,
+            "Checkpoint": str(new_ckpt),
+        })
+
+
+def step_evolve_decks(args, loop_num: int) -> None:
+    """Stage 6: Evolve decks using the trained evaluator."""
+    ckpt = find_best_checkpoint("deck_eval_finetune") or find_best_checkpoint("deck_eval_bootstrap")
+    if not ckpt:
+        print()
+        print("=" * 70)
+        print("  Stage 6: Evolve decks — SKIPPED (no evaluator checkpoint)")
+        print("=" * 70)
+        print()
+        return
+
+    cmd = [
+        PYTHON, "-m", "rl_agents.deck_search", "export",
+        "--checkpoint", str(ckpt),
+        "--output-dir", str(GENERATED_DIR),
+    ]
+
+    label = f"Stage 6: Evolve decks (loop {loop_num})"
+    run_step(label, cmd, allow_fail=True)
+
+    n_decks = len(list(GENERATED_DIR.glob("*.txt"))) if GENERATED_DIR.exists() else 0
+    print_summary("Deck evolution results", {
+        "Deck files": n_decks,
+        "Output dir": str(GENERATED_DIR),
+    })
+
+
+def step_benchmark(args, loop_num: int) -> None:
+    """Stage 7: Benchmark player bot vs random, heuristic, and previous checkpoint."""
+    print()
+    print("=" * 70)
+    print(f"  Stage 7: Benchmark (loop {loop_num})")
+    print("=" * 70)
+    print()
+
+    t0 = time.time()
+
+    # Find the latest IQL checkpoint
+    iql_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
+    current_ckpt = iql_dir / "checkpoint_final.pt"
+    if not current_ckpt.exists():
+        current_ckpt = find_best_checkpoint("player_bot")
+    if not current_ckpt or not current_ckpt.exists():
+        print("  No player bot checkpoint found — skipping benchmark.")
+        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        return
+
+    from rl_agents.game_backends import LocalEngineBackend, GameRunRequest
+    from rl_agents.random_agent import RandomAgent
+    from rl_agents.heuristic_bot import HeuristicBot
+
+    if args._card_db is None:
+        from engine.card import CardDB
+        from config import SLUG_INDEX_PATH
+        args._card_db = CardDB(str(SLUG_INDEX_PATH))
+
+    backend = LocalEngineBackend()
+    n_bench = 10  # games per opponent type
+    results_table: dict[str, str] = {}
+
+    # Collect valid decks for benchmarking
+    deck_files = sorted(GENERATED_DIR.glob("*.txt")) if GENERATED_DIR.exists() else []
+    if len(deck_files) < 2:
+        print("  Not enough decks for benchmark — need at least 2.")
+        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        return
+
+    import random as _random
+    rng = _random.Random(args.seed + loop_num * 999)
+
+    def _run_bench_games(p1_agent, p2_agent, label: str) -> float:
+        """Run n_bench games and return P1 win rate."""
+        wins = 0
+        completed = 0
+        for i in range(n_bench):
+            d1, d2 = rng.sample(deck_files, 2)
+            try:
+                req = GameRunRequest(
+                    p1_deck=str(d1),
+                    p2_deck=str(d2),
+                    p1_agent=p1_agent,
+                    p2_agent=p2_agent,
+                    card_db=args._card_db,
+                    p1_seed=args.seed + i,
+                    p2_seed=args.seed + i + 1,
+                    max_turns=args.max_turns,
+                )
+                result = backend.run_game(req)
+                completed += 1
+                if hasattr(result, 'winner') and result.winner == 1:
+                    wins += 1
+            except Exception as e:
+                print(f"    {label} game {i}: error — {e}")
+        rate = wins / completed if completed > 0 else 0.0
+        return rate
+
+    # Load IQL agent for benchmarking
+    try:
+        from rl_agents.evaluate_iql_vs_random import IQLPolicyAgent
+        from rl_agents.embedder_bundle import load_embedder_bundle
+
+        embedder_bundle = args._embedder_bundle
+        if embedder_bundle is None:
+            # Try loading from checkpoint
+            import torch
+            ckpt_data = torch.load(str(current_ckpt), map_location="cpu", weights_only=False)
+            embedder_bundle = (ckpt_data.get("extra") or {}).get("embedder_bundle")
+
+        if embedder_bundle is None:
+            print("  No embedder bundle available — skipping benchmark.")
+            print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+            return
+
+        iql_agent = IQLPolicyAgent(
+            checkpoint_path=str(current_ckpt),
+            player_id=1,
+            device=args.iql_device,
+            seed=args.seed,
+            embedder_bundle=embedder_bundle,
+        )
+    except Exception as e:
+        print(f"  Failed to load IQL agent: {e}")
+        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        return
+
+    # Benchmark vs random
+    random_agent = RandomAgent(seed=args.seed + 100)
+    rate_vs_random = _run_bench_games(iql_agent, random_agent, "vs_random")
+    results_table["vs Random"] = f"{rate_vs_random:.1%} ({n_bench} games)"
+
+    # Benchmark vs heuristic
+    heuristic_agent = HeuristicBot(seed=args.seed + 200)
+    rate_vs_heuristic = _run_bench_games(iql_agent, heuristic_agent, "vs_heuristic")
+    results_table["vs Heuristic"] = f"{rate_vs_heuristic:.1%} ({n_bench} games)"
+
+    # Benchmark vs previous checkpoint (if exists)
+    prev_loop = loop_num - 1
+    prev_ckpt = CHECKPOINT_DIR / "iql" / f"loop{prev_loop}" / "checkpoint_final.pt"
+    if prev_loop >= 0 and prev_ckpt.exists():
+        try:
+            prev_agent = IQLPolicyAgent(
+                checkpoint_path=str(prev_ckpt),
+                player_id=2,
+                device=args.iql_device,
+                seed=args.seed + 300,
+                embedder_bundle=embedder_bundle,
+            )
+            rate_vs_prev = _run_bench_games(iql_agent, prev_agent, "vs_previous")
+            results_table["vs Previous"] = f"{rate_vs_prev:.1%} ({n_bench} games)"
+        except Exception as e:
+            results_table["vs Previous"] = f"error — {e}"
+    else:
+        results_table["vs Previous"] = "skipped (no prior checkpoint)"
+
+    elapsed = time.time() - t0
+
+    # Print win rate summary table
+    print()
+    print("  ┌─────────────────────┬──────────────────────────┐")
+    print("  │ Opponent            │ Win Rate                 │")
+    print("  ├─────────────────────┼──────────────────────────┤")
+    for opp, rate_str in results_table.items():
+        print(f"  │ {opp:<19} │ {rate_str:<24} │")
+    print("  └─────────────────────┴──────────────────────────┘")
+
+    print(f"\n  [OK] Stage 7: Benchmark ({elapsed:.1f}s)")
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -324,7 +577,38 @@ def main():
     args._game_data_store = game_data_store
     args._replay_db = replay_db
     args._card_db = None       # lazily loaded in step_run_games
-    args._embedder_bundle = None  # lazily loaded
+    args._embedder_bundle = None  # initialized below
+
+    # Initialize embedder bundle (create from scratch if missing)
+    bundle_path = CHECKPOINT_DIR / "embedder_bundle.pt"
+    if bundle_path.exists():
+        from rl_agents.embedder_bundle import load_embedder_bundle
+        args._embedder_bundle = load_embedder_bundle(str(bundle_path))
+        print(f"  Loaded embedder bundle from {bundle_path}")
+    else:
+        try:
+            from engine.card import CardDB
+            from config import SLUG_INDEX_PATH
+            from encoder.card_embedder import SlugVocab
+            from encoder.action_embedder import ActionEmbedder
+            from encoder.gamestate_embedder import GameStateEmbedder
+            from rl_agents.embedder_bundle import build_embedder_bundle, save_embedder_bundle
+
+            card_db = CardDB(str(SLUG_INDEX_PATH))
+            args._card_db = card_db
+            slug_vocab = SlugVocab.from_card_db(card_db)
+            d_model = 128
+            action_embedder = ActionEmbedder(
+                d_model=d_model, slug_vocab_size=slug_vocab.size, slug_vocab=slug_vocab,
+            )
+            state_embedder = GameStateEmbedder(
+                d_model=d_model, slug_vocab_size=slug_vocab.size, slug_vocab=slug_vocab,
+            )
+            args._embedder_bundle = build_embedder_bundle(action_embedder, state_embedder)
+            save_embedder_bundle(str(bundle_path), action_embedder, state_embedder)
+            print(f"  Created fresh embedder bundle at {bundle_path}")
+        except Exception as e:
+            print(f"  WARNING: Could not create embedder bundle: {e}")
 
     pipeline_start = time.time()
 
@@ -401,7 +685,38 @@ def main():
         if _interrupted:
             break
 
-        # Stages 4-7 will be added in Part 2
+        # Stage 4: Train player bot (IQL)
+        if not args.skip_player_train:
+            step_train_player_bot(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Player bot training")
+
+        # Stage 5: Train deck evaluator
+        if not args.skip_deck_train:
+            step_train_deck_bot(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Deck evaluator training")
+
+        # Stage 6: Evolve decks
+        if not args.skip_evolve:
+            step_evolve_decks(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Deck evolution")
+
+        # Stage 7: Benchmark
+        if not args.skip_benchmark:
+            step_benchmark(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Benchmark")
+
         loop_num += 1
 
     # -----------------------------------------------------------------------
