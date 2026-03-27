@@ -147,7 +147,7 @@
             "command": "test ! -f rl_agents/talishar_adapter.py && test ! -f rl_agents/fab_transformer.py && test ! -f rl_agents/transformer_policy.py && ls rl_agents/train_iql.py rl_agents/iql.py rl_agents/game_backends.py > /dev/null 2>&1 && ls archive/rl_agents/talishar_adapter.py archive/rl_agents/fab_transformer.py > /dev/null 2>&1 && echo 'RL_AGENTS_OK'",
             "expected": "RL_AGENTS_OK"
           },
-          "status": "pending",
+          "status": "completed",
           "notes": "Use 'git mv' for each file. All 6 files are git-tracked."
         },
         {
@@ -386,6 +386,6 @@
     }
   },
   "qa_signoff": null,
-  "updated_at": "2026-03-27T02:48:22.067Z",
+  "updated_at": "2026-03-27T02:49:23.204Z",
   "last_updated": "2026-03-27T02:42:53.205959+00:00"
 }

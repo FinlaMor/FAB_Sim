@@ -3,7 +3,7 @@
   "spec": "009-organize-project-folder-archive-non-essentials",
   "state": "building",
   "subtasks": {
-    "completed": 5,
+    "completed": 6,
     "total": 11,
     "in_progress": 1,
     "failed": 0
@@ -18,8 +18,8 @@
     "max": 1
   },
   "session": {
-    "number": 6,
+    "number": 7,
     "started_at": "2026-03-26T22:40:12.891929"
   },
-  "last_update": "2026-03-26T22:48:22.120844"
+  "last_update": "2026-03-26T22:49:23.257287"
 }
