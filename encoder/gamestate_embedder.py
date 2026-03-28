@@ -19,7 +19,8 @@ Player State Features (per player):
 - Zone sizes: hand, deck, graveyard, arsenal, banished, pitch, inventory (7-dim)
 - Equipment slots: head, chest, arms, legs, weapon1, weapon2 (6 * d_model from CardEmbedder)
 - Permanents zone: sum-pooled embedding of items, auras, allies, soul, tokens (1 * d_model) + count scalar
-- Total per player: 28 + len(COUNTER_TYPES) + 7*d_model
+- Hero card: hero identity embedding (1 * d_model)
+- Total per player: 28 + len(COUNTER_TYPES) + 8*d_model
 
 Global State Features:
 - Turn number: 1-dim normalized
@@ -34,7 +35,7 @@ Global State Features:
 - Total global: 218 + len(CARD_KEYWORDS) + 11*d_model
 
 Total State Embedding:
-2*(28 + len(COUNTER_TYPES) + 7*d_model) + (218 + len(CARD_KEYWORDS) + 11*d_model)
+2*(28 + len(COUNTER_TYPES) + 8*d_model) + (218 + len(CARD_KEYWORDS) + 11*d_model)
 With d_model=128 and current registries: 3628 dimensions
 
 Note: legality checking is intentionally out of scope for embeddings. The engine and
@@ -79,8 +80,9 @@ class PlayerStateEmbedder(nn.Module):
     - Zone sizes: hand, deck, graveyard, arsenal, banished, pitch, inventory (7-dim)
     - Equipment cards: head, chest, arms, legs, weapon1, weapon2 (6 * d_model)
     - Permanents zone cards: items, auras, allies, soul, tokens (1 * d_model aggregated)
+    - Hero card: hero identity embedding (1 * d_model)
 
-    Total: (28 + len(COUNTER_TYPES)) scalar features + 7*d_model card features
+    Total: (28 + len(COUNTER_TYPES)) scalar features + 8*d_model card features
     """
     
     def __init__(self, d_model: int = 128, card_embedder: Optional[CardEmbedder] = None, slug_vocab_size: int = 4563, slug_vocab: Optional[SlugVocab] = None):
@@ -114,14 +116,14 @@ class PlayerStateEmbedder(nn.Module):
         return emb.squeeze(0)  # Remove batch dim
     
     def get_output_dim(self) -> int:
-        """Total output dimension: 28 + len(COUNTER_TYPES) + 7*d_model
-        Breakdown: health(1) + intellect(1) + resources(1) + action_points(1) + 
+        """Total output dimension: 28 + len(COUNTER_TYPES) + 8*d_model
+        Breakdown: health(1) + intellect(1) + resources(1) + action_points(1) +
                    weapon_exhausted(1) + hero_power_exhausted(1) + arsenal_face_up(1) + marked(1) +
-                   counters(len(COUNTER_TYPES)) + zone_sizes(7) + equipment_cards(6*d_model) + equipment_exhausted(6) + 
-                   equipment_tapped(6) + permanents_zone(d_model) + permanents_count(1)
-        With d_model=128 and current counter registry: 967 dimensions
+                   counters(len(COUNTER_TYPES)) + zone_sizes(7) + equipment_cards(6*d_model) + equipment_exhausted(6) +
+                   equipment_tapped(6) + permanents_zone(d_model) + permanents_count(1) + hero_card(d_model)
+        With d_model=128 and current counter registry: 1095 dimensions
         """
-        return 28 + len(COUNTER_TYPES) + 7 * self.d_model
+        return 28 + len(COUNTER_TYPES) + 8 * self.d_model
     
     def forward(self, player: Player, player_counters: Optional[dict] = None) -> torch.Tensor:
         """Convert Player to embedding tensor.
@@ -220,7 +222,11 @@ class PlayerStateEmbedder(nn.Module):
             permanents_count = 0.0
         features.append(permanents_emb)
         features.append(torch.tensor([permanents_count]))
-        
+
+        # 13. Hero card embedding (d_model dimensions)
+        hero_emb = self.embed_card(player.hero, player_counters)
+        features.append(hero_emb)
+
         # Concatenate all features
         player_embedding = torch.cat(features)
         
