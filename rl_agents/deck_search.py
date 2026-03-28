@@ -850,8 +850,9 @@ def select_match_deck(
     """Select the best ~60 deck cards from the pool for a specific matchup.
 
     Uses pool.flex_depth to split cards into core (always included) and
-    flex (matchup-dependent). Core cards are the highest-frequency cards
-    in the pool; flex slots are filled by sampling from remaining pool cards.
+    flex (matchup-dependent). Core cards are those with the highest copy
+    counts in the pool; flex slots are filled by sampling from remaining
+    pool cards.
 
     Args:
         pool: The 80-card registered pool.
@@ -859,7 +860,7 @@ def select_match_deck(
         model: Deck evaluator model.
         vocab: Card vocabulary.
         device: Torch device.
-        card_db: HeroCardDB for frequency-based core ordering (optional).
+        card_db: HeroCardDB (unused, kept for API compatibility).
         n_candidates: Number of candidate decks to score.
         seed: Random seed.
     """
@@ -875,14 +876,10 @@ def select_match_deck(
     for s in pool.deck_slugs:
         slug_counts[s] = slug_counts.get(s, 0) + 1
 
-    # Order cards by quality: use fablazing frequency if available, else copy count
-    if card_db is not None:
-        freqs = card_db.get_card_frequencies(pool.hero_slug)
-        ordered = sorted(slug_counts.keys(),
-                         key=lambda s: freqs.get(s, 0.0), reverse=True)
-    else:
-        ordered = sorted(slug_counts.keys(),
-                         key=lambda s: slug_counts[s], reverse=True)
+    # Order cards by copy count — cards with more copies are treated as higher
+    # priority core cards (the player "invested" more deck slots in them).
+    ordered = sorted(slug_counts.keys(),
+                     key=lambda s: slug_counts[s], reverse=True)
 
     # Split into core and flex based on flex_depth
     core_size = pool.core_size
