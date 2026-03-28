@@ -193,6 +193,7 @@ def validate_deck_legality(
     slug_index: dict,
     hero_keywords: list[str] | None = None,
     hero_name: str = "",
+    banned_slugs: frozenset[str] | None = None,
 ) -> list[str]:
     """Check every card in a deck for FAB class/talent legality.
 
@@ -224,6 +225,12 @@ def validate_deck_legality(
     all_cards = list(deck_cards) + list(equipment)
     for card in all_cards:
         slug = card.get("card_slug") or card.get("slug", "")
+
+        # ── banned card check ────────────────────────────────────────────
+        if banned_slugs and slug in banned_slugs:
+            entry_b = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
+            name_b = (entry_b.get("name", slug) if entry_b else slug)
+            violations.append(f"{name_b!r} ({slug}): banned in this format")
         entry = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
         if not entry:
             continue  # not in slug_index → cannot verify, skip
