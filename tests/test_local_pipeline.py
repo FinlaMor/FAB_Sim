@@ -552,3 +552,151 @@ def test_turn_1_fallback(tmp_path) -> None:
     ).fetchone()
     assert r1[0] == pytest.approx(1.5), f"Expected 1.5, got {r1[0]}"
     rdb.close()
+
+
+# ---------------------------------------------------------------------------
+# (g) Integration: test_run_games_populates_rewards
+# ---------------------------------------------------------------------------
+
+@pytest.mark.slow
+def test_run_games_populates_rewards(tmp_path) -> None:
+    """Full pipeline: run_games() populates non-zero rewards in transitions."""
+    import torch
+    from engine.card import CardDB
+    from config import SLUG_INDEX_PATH
+    from rl_agents.local_game_runner import run_games, OpponentPool
+    from rl_agents.embedder_bundle import load_embedder_bundle, resolve_embedder_bundle_path
+
+    deck_paths = _get_deck_paths(2)
+    card_db = CardDB(SLUG_INDEX_PATH)
+
+    # Locate an embedder bundle checkpoint
+    bundle_path = resolve_embedder_bundle_path(
+        explicit_path=os.path.join(ROOT, "checkpoints", "embedder_bundle.pt"),
+    )
+    if bundle_path is None:
+        pytest.skip("No embedder_bundle.pt checkpoint found")
+    embedder_bundle = load_embedder_bundle(bundle_path)
+
+    replay_path = str(tmp_path / "replay_rewards.db")
+    rdb = ReplayDB(replay_path)
+
+    pool = OpponentPool()
+
+    results = run_games(
+        deck_pairs=[(deck_paths[0], deck_paths[1])],
+        opponent_pool=pool,
+        card_db=card_db,
+        replay_db=rdb,
+        game_data_store=None,
+        embedder_bundle=embedder_bundle,
+        max_turns=50,
+        seed=42,
+    )
+
+    assert len(results.results) == 1, "Expected 1 game result"
+    assert not results.errors, f"Unexpected errors: {results.errors}"
+
+    # Check that non-zero rewards exist in the transitions table
+    conn = sqlite3.connect(replay_path)
+    nonzero = conn.execute(
+        "SELECT COUNT(*) FROM transitions WHERE reward != 0.0"
+    ).fetchone()[0]
+    terminal = conn.execute(
+        "SELECT COUNT(*) FROM transitions WHERE done = 1"
+    ).fetchone()[0]
+    conn.close()
+    rdb.close()
+
+    assert nonzero > 0, "Expected non-zero rewards after run_games()"
+    assert terminal == 2, f"Expected 2 terminal transitions (one per player), got {terminal}"
+
+
+# ---------------------------------------------------------------------------
+# (h) Integration: test_dataset_adapter_reads_shaped_rewards
+# ---------------------------------------------------------------------------
+
+def test_dataset_adapter_reads_shaped_rewards(tmp_path) -> None:
+    """build_iql_tensors_from_replay_db returns non-zero rewards from shaped data."""
+    import torch
+    from rl_agents.dataset_adapter import build_iql_tensors_from_replay_db
+    from rl_agents.local_game_runner import _assign_game_rewards
+
+    replay_path = str(tmp_path / "replay_shaped.db")
+    rdb = ReplayDB(replay_path)
+    state_dim, action_dim = 128, 128
+
+    # Create a game with combat rewards
+    gid = rdb.start_game("H1", "H2")
+    for step in range(6):
+        pid = (step % 2) + 1
+        tid = rdb.insert_transition(
+            gid, step, player_id=pid, phase="action",
+            obs={"turn": (step // 2) + 1}, action={"type": "pass"},
+        )
+        rdb.store_embeddings(tid, torch.randn(state_dim), torch.randn(action_dim))
+    rdb.finalize_game(gid, winner=1, turns=3, ended_on_turn_cap=0)
+    rdb.flush()
+
+    # Assign rewards with combat on turn 2
+    combat_log = {
+        2: [{"attacker_id": 1, "attack_power": 8, "net_damage": 5, "hit": True}],
+    }
+    _assign_game_rewards(rdb, gid, combat_log, winner=1, normalizer=10.0)
+    rdb.close()
+
+    payload = build_iql_tensors_from_replay_db(replay_path)
+    assert payload["num_transitions"] > 0
+    rewards = payload["rewards"]
+    assert (rewards != 0.0).any().item(), "Expected non-zero shaped rewards in tensor"
+
+
+# ---------------------------------------------------------------------------
+# (i) Integration: test_rtg_composes_with_shaped_rewards
+# ---------------------------------------------------------------------------
+
+def test_rtg_composes_with_shaped_rewards(tmp_path) -> None:
+    """RTG mode propagates shaped (non-terminal) rewards backwards correctly."""
+    import torch
+    from rl_agents.dataset_adapter import build_iql_tensors_from_replay_db
+    from rl_agents.local_game_runner import _assign_game_rewards
+
+    replay_path = str(tmp_path / "replay_rtg.db")
+    rdb = ReplayDB(replay_path)
+    state_dim, action_dim = 128, 128
+
+    # Create a game with enough transitions for RTG propagation
+    gid = rdb.start_game("H1", "H2")
+    for step in range(8):
+        pid = (step % 2) + 1
+        tid = rdb.insert_transition(
+            gid, step, player_id=pid, phase="action",
+            obs={"turn": (step // 2) + 1}, action={"type": "pass"},
+        )
+        rdb.store_embeddings(tid, torch.randn(state_dim), torch.randn(action_dim))
+    rdb.finalize_game(gid, winner=1, turns=4, ended_on_turn_cap=0)
+    rdb.flush()
+
+    # Assign shaped rewards: combat on turn 3
+    combat_log = {
+        3: [{"attacker_id": 1, "attack_power": 6, "net_damage": 6, "hit": True}],
+    }
+    _assign_game_rewards(rdb, gid, combat_log, winner=1, normalizer=10.0)
+    rdb.close()
+
+    # Load with terminal mode first
+    payload_terminal = build_iql_tensors_from_replay_db(replay_path, reward_mode="terminal")
+    # Load with RTG mode
+    payload_rtg = build_iql_tensors_from_replay_db(replay_path, reward_mode="rtg")
+
+    r_term = payload_terminal["rewards"]
+    r_rtg = payload_rtg["rewards"]
+
+    # RTG should have more non-zero entries than terminal (back-propagation)
+    nonzero_term = (r_term != 0.0).sum().item()
+    nonzero_rtg = (r_rtg != 0.0).sum().item()
+    assert nonzero_rtg >= nonzero_term, (
+        f"RTG should have >= non-zero rewards than terminal: {nonzero_rtg} vs {nonzero_term}"
+    )
+    # RTG rewards should differ from terminal rewards (shaped base + discount)
+    assert not torch.allclose(r_term, r_rtg), "RTG rewards should differ from terminal rewards"
