@@ -497,7 +497,6 @@ def step_finetune(args, resume_ckpt: Path, loop_num: int = 0) -> Path:
         "--epochs", str(args.finetune_epochs),
         "--batch-size", str(args.batch_size),
         "--seed", str(args.seed + loop_num),
-        "--meta-db", str(META_DB),
     ]
 
     label = "Step 5: Fine-tune on game outcomes"
@@ -524,7 +523,6 @@ def step_export_decks(args, checkpoint: Path, loop_num: int = 0) -> None:
     cmd = [
         PYTHON, "-m", "rl_agents.deck_search", "export",
         "--checkpoint", str(checkpoint),
-        "--meta-db", str(META_DB),
         "--output-dir", str(GENERATED_DIR),
         "--pop-size", str(args.pool_pop),
         "--generations", str(args.pool_gens),
@@ -549,7 +547,6 @@ def step_tournament(args, checkpoint: Path, loop_num: int = 0) -> None:
     cmd = [
         PYTHON, "-m", "rl_agents.deck_search", "tournament",
         "--checkpoint", str(checkpoint),
-        "--meta-db", str(META_DB),
         "--players", str(args.players),
         "--rounds", str(args.rounds),
         "--pool-pop", str(args.pool_pop),
@@ -828,8 +825,8 @@ def main():
     print("#  Pipeline Complete")
     print("#" * 70)
 
-    n_heroes = db_row_count(META_DB, "heroes")
-    n_cards = db_row_count(META_DB, "card_stats")
+    n_heroes = db_row_count(META_DB, "heroes") if META_DB.exists() else 0
+    n_cards = db_row_count(META_DB, "card_stats") if META_DB.exists() else 0
     n_games = db_row_count(GAMES_DB, "decks")
     n_decks = len(list(GENERATED_DIR.glob("*.txt"))) if GENERATED_DIR.exists() else 0
 
