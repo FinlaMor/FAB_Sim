@@ -36,7 +36,7 @@ Global State Features:
 
 Total State Embedding:
 2*(28 + len(COUNTER_TYPES) + 8*d_model) + (218 + len(CARD_KEYWORDS) + 11*d_model)
-With d_model=128 and current registries: 3628 dimensions
+With d_model=128 and current registries: 3884 dimensions
 
 Note: legality checking is intentionally out of scope for embeddings. The engine and
 legal action generator are responsible for enforcing legal play before states/actions
@@ -789,12 +789,12 @@ class GameStateEmbedder(nn.Module):
     """Full game state embedder combining player and global state.
     
     Architecture (Round 10 + Layer System + Counter Expansion + Event/Effect History):
-    - Active player state: 28 + len(COUNTER_TYPES) + 7*d_model
-    - Inactive player state: 28 + len(COUNTER_TYPES) + 7*d_model
+    - Active player state: 28 + len(COUNTER_TYPES) + 8*d_model
+    - Inactive player state: 28 + len(COUNTER_TYPES) + 8*d_model
     - Global state: 218 + len(CARD_KEYWORDS) + 11*d_model
 
-    Total: 274 + 2*len(COUNTER_TYPES) + len(CARD_KEYWORDS) + 25*d_model
-    With d_model=128 and current registries: 3628 dimensions
+    Total: 274 + 2*len(COUNTER_TYPES) + len(CARD_KEYWORDS) + 27*d_model
+    With d_model=128 and current registries: 3884 dimensions
     
     The embedder provides a rich representation of the full game state
     suitable for deep RL value networks and policy networks.
@@ -817,7 +817,7 @@ class GameStateEmbedder(nn.Module):
     
     def get_output_dim(self) -> int:
         """Total output dimension with shared schema registries."""
-        return 274 + (2 * len(COUNTER_TYPES)) + len(CARD_KEYWORDS) + (25 * self.d_model)
+        return 274 + (2 * len(COUNTER_TYPES)) + len(CARD_KEYWORDS) + (27 * self.d_model)
 
     def get_schema_metadata(self) -> dict[str, object]:
         """Return schema metadata bundle for checkpoint compatibility checks."""

@@ -100,6 +100,11 @@ def _load_deck_fabrary(lines: list[str], card_db: CardDB) -> dict:
 
         if in_arena:
             card = card_db.get(slug)
+            if card is None and slug.endswith(("_r", "_y", "_b")):
+                # Fablazing uses short color codes (_r/_y/_b); try the base slug.
+                card = card_db.get(slug[:-2])
+                if card is not None:
+                    slug = slug[:-2]
             if card is None:
                 continue
             if "Weapon" in card.types:

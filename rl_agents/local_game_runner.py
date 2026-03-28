@@ -496,12 +496,19 @@ def _build_embedders(embedder_bundle: dict) -> tuple[ActionEmbedder, GameStateEm
 
     card_sd = embedder_bundle.get("card_embedder_state_dict", {})
     card_prefixed = {f"card_embedder.{k}": v for k, v in card_sd.items()}
+
+    def _filter_by_shape(model, sd):
+        """Skip entries whose shape doesn't match the model (handles stale bundles)."""
+        model_sd = model.state_dict()
+        return {k: v for k, v in sd.items()
+                if k in model_sd and model_sd[k].shape == v.shape}
+
     action_embedder.load_state_dict(
-        {**card_prefixed, **embedder_bundle["action_embedder_state_dict"]},
+        _filter_by_shape(action_embedder, {**card_prefixed, **embedder_bundle["action_embedder_state_dict"]}),
         strict=False,
     )
     state_embedder.load_state_dict(
-        {**card_prefixed, **embedder_bundle["state_embedder_state_dict"]},
+        _filter_by_shape(state_embedder, {**card_prefixed, **embedder_bundle["state_embedder_state_dict"]}),
         strict=False,
     )
     action_embedder.eval()

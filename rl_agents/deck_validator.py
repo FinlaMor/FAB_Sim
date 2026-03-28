@@ -52,10 +52,6 @@ def validate_single_deck(
     equipment: dict = deck_data.get("equipment", {})
     cards: list = deck_data.get("cards", [])
 
-    # ── (b) weapon check ──────────────────────────────────────────────────
-    if not weapon_slug:
-        violations.append("Deck has no weapon.")
-
     # ── (c) equipment check ───────────────────────────────────────────────
     if not equipment:
         violations.append("Deck has no equipment.")

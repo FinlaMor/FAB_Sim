@@ -534,8 +534,8 @@ def build_parser() -> argparse.ArgumentParser:
     train_g = parser.add_argument_group("training settings")
     train_g.add_argument("--iql-steps", type=int, default=20000,
                          help="IQL training steps per loop (default: 20000)")
-    train_g.add_argument("--iql-device", default="cpu",
-                         help="Torch device for IQL training/inference (default: cpu)")
+    train_g.add_argument("--iql-device", default="dml",
+                         help="Torch device for IQL training/inference (default: dml)")
 
     # Loop settings
     loop_g = parser.add_argument_group("loop settings")
