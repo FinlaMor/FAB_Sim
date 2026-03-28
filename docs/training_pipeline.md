@@ -121,6 +121,10 @@ python -m rl_agents.collect_iql_mixed_data \
 
 ## Part 3 — Train the Deck Bot
 
+> **Note:** Fablazing data (`data/fablazing_meta.db`) is used **only** in Part 3 steps 3.1–3.3
+> (scraping and bootstrap training). It is not used during fine-tuning (3.4), IQL training
+> (Part 4), or any downstream phases — those rely solely on game outcome data.
+
 ### 3.1 Scrape meta data (do this first, and after each new set)
 
 ```bash
@@ -327,9 +331,10 @@ docker compose -f docker-compose.multi.yml build
 cd ../..
 ```
 
-### 7.2 Re-scrape fablazing
+### 7.2 Re-scrape fablazing (bootstrap only)
 
-New set → new cards appear in play-rate data:
+New set → new cards appear in play-rate data. This only affects **bootstrap training**
+and heuristic deck generation — fine-tuning and IQL training do not use fablazing data.
 
 ```bash
 python scripts/scrape_fablazing.py
@@ -347,7 +352,7 @@ python scripts/scrape_fablazing.py --summary
 python scripts/generate_heuristic_decks.py --all --mutate 3
 ```
 
-This rebuilds `decks/generated/` using updated fablazing play rates. Old decks with rotated cards will fail legality checks and be dropped automatically.
+This rebuilds `decks/generated/` using updated fablazing play rates (used for bootstrap labels only). Old decks with rotated cards will fail legality checks and be dropped automatically.
 
 ### 7.4 Re-bootstrap the deck evaluator
 
@@ -457,7 +462,7 @@ docker compose -f docker-compose.multi.yml build
 |------|---------|
 | Start 32 containers | `docker compose -f docker-compose.multi.yml up -d web-{0..31}` (from `third_party/Talishar_official`) |
 | Collect 1000 games (32 containers) | See Part 2.1 above |
-| Scrape fablazing | `python scripts/scrape_fablazing.py` |
+| Scrape fablazing (bootstrap only) | `python scripts/scrape_fablazing.py` |
 | Generate decks | `python scripts/generate_heuristic_decks.py --all --mutate 3` |
 | Bootstrap deck bot | `python scripts/train_deck_evaluator.py --bootstrap --model set_transformer --epochs 100` |
 | Fine-tune deck bot | `python scripts/train_deck_evaluator.py --games-db data/talishar_games.db --resume checkpoints/deck_eval_bootstrap_best.pt` |

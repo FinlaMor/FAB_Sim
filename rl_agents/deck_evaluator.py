@@ -126,14 +126,34 @@ class CardVocab:
 
 
 # ---------------------------------------------------------------------------
-# Meta distribution — hero sampling weights from fablazing match counts
+# Meta distribution — hero sampling weights
+# (fablazing_meta.db is only used during bootstrap; at runtime callers may
+#  pass db_path=None to get uniform weights)
 # ---------------------------------------------------------------------------
 
-def load_meta_weights(db_path: str | Path, fmt: str = "cc") -> dict[str, float]:
+def uniform_meta_weights() -> dict[str, float]:
+    """Return an empty dict representing uniform (unbiased) hero weights.
+
+    Callers should treat an empty dict as "sample all heroes uniformly".
+    """
+    return {}
+
+
+def load_meta_weights(
+    db_path: Optional[str | Path],
+    fmt: str = "cc",
+) -> dict[str, float]:
     """Load hero meta share as sampling weights (proportional to match count).
 
-    Returns dict mapping hero_slug -> weight (sums to 1.0).
+    If *db_path* is ``None``, returns uniform weights (empty dict) so that
+    non-bootstrap code paths never touch the database.
+
+    Returns dict mapping hero_slug -> weight (sums to 1.0), or empty dict
+    for uniform weighting.
     """
+    if db_path is None:
+        return uniform_meta_weights()
+
     conn = sqlite3.connect(str(db_path))
     rows = conn.execute(
         "SELECT hero_slug, total_matches FROM heroes WHERE format = ?",

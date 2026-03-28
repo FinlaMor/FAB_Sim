@@ -17,7 +17,7 @@ Archetype discovery via flex_depth:
     tight or wide pools win for each hero automatically.
 
 Tournament simulation:
-    - 200-300 players, hero distribution matches fablazing meta percentages
+    - 200-300 players, uniform hero distribution (or custom weights)
     - Each player builds an 80-card pool via evolutionary search
     - Swiss pairings, matchup-specific deck selection before each round
 
@@ -43,7 +43,6 @@ from rl_agents.deck_evaluator import (
     CardVocab,
     build_evaluator,
     load_checkpoint,
-    load_meta_weights,
 )
 
 SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
@@ -414,6 +413,106 @@ class HeroCardDB:
             self.hero_weapons[hero] = weap
 
         conn.close()
+
+    @classmethod
+    def from_slug_index(cls, path: str | Path | None = None) -> "HeroCardDB":
+        """Build a HeroCardDB from slug_index.json instead of fablazing DB.
+
+        Uses card type information to classify cards into equipment, weapons,
+        and deck cards. Hero-card legality is determined by class/talent subset
+        check (non-DESCRIPTOR types). All cards get default frequency/win_rate
+        since no meta data is available.
+        """
+        obj = cls.__new__(cls)
+        obj.hero_cards = {}
+        obj.hero_equipment = {}
+        obj.hero_weapons = {}
+
+        idx_path = Path(path) if path else SLUG_INDEX_PATH
+        if not idx_path.exists():
+            obj._slug_idx = {}
+            return obj
+
+        with open(idx_path, encoding="utf-8") as f:
+            raw = json.load(f)
+        slug_idx = raw.get("by_slug", {})
+        obj._slug_idx = slug_idx
+
+        _ARMOR_SLOTS = {"head", "chest", "arms", "legs"}
+        _WEAPON_KEYWORDS = {"weapon", "1h", "2h", "sword", "axe", "bow", "dagger",
+                            "hammer", "staff", "scepter", "scythe", "claw", "club",
+                            "flail", "gun", "pistol", "cannon", "polearm", "book",
+                            "orb", "fiddle", "lute", "brush", "wrench", "rock",
+                            "scroll", "item"}
+        _EQUIP_KEYWORD = "equipment"
+
+        def _default_entry(slug: str, card_type: str, equip_subtype: str = "") -> dict:
+            return {
+                "slug": slug,
+                "name": slug,
+                "type": card_type,
+                "equipment_subtype": equip_subtype,
+                "frequency": 0.5,
+                "avg_copies": 2.0,
+                "win_rate": 0.5,
+            }
+
+        def _non_descriptor_types(types: list[str]) -> frozenset:
+            return frozenset(t.lower() for t in types if t.lower() not in DESCRIPTOR)
+
+        # Identify heroes and build per-card classification
+        heroes: dict[str, dict] = {}  # hero_slug -> slug_idx entry
+        all_cards: list[tuple[str, dict]] = []  # (slug, entry) for non-hero cards
+
+        for slug, entry in slug_idx.items():
+            types_lower = [t.lower() for t in entry.get("types", [])]
+            if "hero" in types_lower:
+                heroes[slug] = entry
+            else:
+                all_cards.append((slug, entry))
+
+        # Classify each non-hero card
+        for hero_slug, hero_entry in heroes.items():
+            hero_classes = _non_descriptor_types(hero_entry.get("types", []))
+
+            equip: list[dict] = []
+            weap: list[dict] = []
+            deck: list[dict] = []
+
+            for card_slug, card_entry in all_cards:
+                card_types_lower = [t.lower() for t in card_entry.get("types", [])]
+                card_classes = _non_descriptor_types(card_entry.get("types", []))
+
+                # Legality: card's class/talent types must be subset of hero's
+                if card_classes and not card_classes <= hero_classes:
+                    continue
+
+                # Classify by type keywords
+                is_equipment = _EQUIP_KEYWORD in card_types_lower
+                armor_slot = ""
+                for s in _ARMOR_SLOTS:
+                    if s in card_types_lower:
+                        armor_slot = s
+                        break
+                is_weapon = any(t in _WEAPON_KEYWORDS for t in card_types_lower) and not armor_slot
+
+                if is_weapon:
+                    # Determine handedness
+                    if "2h" in card_types_lower:
+                        sub = "weapon-2h"
+                    else:
+                        sub = "weapon-1h"
+                    weap.append(_default_entry(card_slug, "equipment", sub))
+                elif is_equipment or armor_slot:
+                    equip.append(_default_entry(card_slug, "equipment", armor_slot))
+                else:
+                    deck.append(_default_entry(card_slug, "deck"))
+
+            obj.hero_cards[hero_slug] = deck
+            obj.hero_equipment[hero_slug] = equip
+            obj.hero_weapons[hero_slug] = weap
+
+        return obj
 
     def get_candidate_slugs(self, hero_slug: str) -> tuple[list[str], list[str], list[str]]:
         """Return (equipment_slugs, weapon_slugs, deck_card_slugs) available for this hero."""
@@ -876,8 +975,9 @@ def select_match_deck(
     """Select the best ~60 deck cards from the pool for a specific matchup.
 
     Uses pool.flex_depth to split cards into core (always included) and
-    flex (matchup-dependent). Core cards are the highest-frequency cards
-    in the pool; flex slots are filled by sampling from remaining pool cards.
+    flex (matchup-dependent). Core cards are those with the highest copy
+    counts in the pool; flex slots are filled by sampling from remaining
+    pool cards.
 
     Args:
         pool: The 80-card registered pool.
@@ -885,7 +985,7 @@ def select_match_deck(
         model: Deck evaluator model.
         vocab: Card vocabulary.
         device: Torch device.
-        card_db: HeroCardDB for frequency-based core ordering (optional).
+        card_db: HeroCardDB (unused, kept for API compatibility).
         n_candidates: Number of candidate decks to score.
         seed: Random seed.
     """
@@ -901,14 +1001,10 @@ def select_match_deck(
     for s in pool.deck_slugs:
         slug_counts[s] = slug_counts.get(s, 0) + 1
 
-    # Order cards by quality: use fablazing frequency if available, else copy count
-    if card_db is not None:
-        freqs = card_db.get_card_frequencies(pool.hero_slug)
-        ordered = sorted(slug_counts.keys(),
-                         key=lambda s: freqs.get(s, 0.0), reverse=True)
-    else:
-        ordered = sorted(slug_counts.keys(),
-                         key=lambda s: slug_counts[s], reverse=True)
+    # Order cards by copy count — cards with more copies are treated as higher
+    # priority core cards (the player "invested" more deck slots in them).
+    ordered = sorted(slug_counts.keys(),
+                     key=lambda s: slug_counts[s], reverse=True)
 
     # Split into core and flex based on flex_depth
     core_size = pool.core_size
@@ -1772,7 +1868,8 @@ def main():
     search_p = sub.add_parser("search", help="Search for best pool(s) for a single hero")
     search_p.add_argument("--hero", required=True, help="Hero slug")
     search_p.add_argument("--checkpoint", required=True, type=Path)
-    search_p.add_argument("--meta-db", type=Path, default=Path("data/fablazing_meta.db"))
+    search_p.add_argument("--meta-db", type=Path, default=None,
+                          help="(deprecated) ignored, card data comes from slug_index.json")
     search_p.add_argument("--pop-size", type=int, default=100)
     search_p.add_argument("--generations", type=int, default=50)
     search_p.add_argument("--seed", type=int, default=random.randint(0, 1_000_000))
@@ -1780,7 +1877,8 @@ def main():
     # Export evolved pools as deck files
     export_p = sub.add_parser("export", help="Evolve pools for all heroes and export as deck files")
     export_p.add_argument("--checkpoint", required=True, type=Path)
-    export_p.add_argument("--meta-db", type=Path, default=Path("data/fablazing_meta.db"))
+    export_p.add_argument("--meta-db", type=Path, default=None,
+                          help="(deprecated) ignored, card data comes from slug_index.json")
     export_p.add_argument("--output-dir", type=Path, default=Path("decks/generated"))
     export_p.add_argument("--pop-size", type=int, default=50)
     export_p.add_argument("--generations", type=int, default=20)
@@ -1789,7 +1887,8 @@ def main():
     # Tournament simulation
     tourney_p = sub.add_parser("tournament", help="Simulate a Swiss tournament")
     tourney_p.add_argument("--checkpoint", required=True, type=Path)
-    tourney_p.add_argument("--meta-db", type=Path, default=Path("data/fablazing_meta.db"))
+    tourney_p.add_argument("--meta-db", type=Path, default=None,
+                          help="(deprecated) ignored, card data comes from slug_index.json")
     tourney_p.add_argument("--players", type=int, default=256)
     tourney_p.add_argument("--rounds", type=int, default=5)
     tourney_p.add_argument("--pool-pop", type=int, default=50)
@@ -1805,6 +1904,17 @@ def main():
         parser.print_help()
         return
 
+    # Deprecation warning for --meta-db
+    if getattr(args, "meta_db", None) is not None:
+        import warnings
+        warnings.warn(
+            "--meta-db is deprecated and ignored; card data is now loaded "
+            "from slug_index.json and meta weights are derived from the "
+            "checkpoint vocab.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
     # Load model
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ckpt = load_checkpoint(args.checkpoint)
@@ -1814,8 +1924,14 @@ def main():
     model = model.to(device)
     model.eval()
 
-    card_db = HeroCardDB(args.meta_db)
-    meta_weights = load_meta_weights(args.meta_db)
+    card_db = HeroCardDB.from_slug_index()
+
+    # Build uniform meta weights from checkpoint vocab hero slugs
+    hero_slugs = [
+        slug for slug in vocab._hero2idx
+        if slug not in ("<PAD>", "<UNK>")
+    ]
+    meta_weights = {h: 1.0 for h in hero_slugs}
 
     if args.command == "search":
         print(f"Searching for best pool(s): {args.hero}")
