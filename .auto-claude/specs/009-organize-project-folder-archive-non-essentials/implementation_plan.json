@@ -2,9 +2,9 @@
   "feature": "Organize project folder — archive non-essentials",
   "workflow_type": "feature",
   "workflow_rationale": "Structural reorganization task that moves ~50 GB of non-essential files into archive/ while preserving RL training pipeline, draft bot, and core infrastructure. Although no new code is written, the moves must be carefully sequenced and verified.",
-  "status": "human_review",
-  "planStatus": "review",
-  "xstateState": "human_review",
+  "status": "done",
+  "planStatus": "completed",
+  "xstateState": "done",
   "executionPhase": "complete",
   "lastEvent": {
     "eventId": "b5ed269b-4a32-4649-86b8-60dd1e6ec3e7",
@@ -386,7 +386,6 @@
     }
   },
   "qa_signoff": null,
-  "updated_at": "2026-03-27T02:55:42.794Z",
-  "last_updated": "2026-03-27T02:42:53.205959+00:00",
-  "reviewReason": "completed"
+  "updated_at": "2026-03-27T10:48:16.442Z",
+  "last_updated": "2026-03-27T02:42:53.205959+00:00"
 }

@@ -22,7 +22,8 @@ CARD_TYPE_TO_ZONE: dict[str, tuple[str, Step]] = {
     "Equipment": ("equipment", Step.ACTION),  # resolved to head/chest/arms/legs
     "Attack": ("hand", Step.COMBAT_ATTACK),
     "Attack Reaction": ("hand", Step.COMBAT_REACTION),
-    "Defense Reaction": ("hand", Step.COMBAT_DEFEND),
+    "Defense Reaction": ("hand", Step.COMBAT_REACTION),  # placed in defender (P2) hand; DRs legal in reaction step
+    "Block": ("hand", Step.COMBAT_DEFEND),               # placed in defender (P2) hand
     "Instant": ("hand", Step.ACTION),
     "Action": ("hand", Step.ACTION),
     "Aura": ("permanents", Step.ACTION),
@@ -30,6 +31,12 @@ CARD_TYPE_TO_ZONE: dict[str, tuple[str, Step]] = {
     "Ally": ("permanents", Step.ACTION),
     "Token": ("permanents", Step.ACTION),
     "Landmark": ("permanents", Step.ACTION),
+    "Demi-Hero": ("hero", Step.ACTION),
+    # Mentors live face-down in arsenal; the test state places them there so
+    # start-of-turn flip triggers can be tested.
+    "Mentor": ("arsenal", Step.ACTION),
+    # Figments are Light Illusionist Instants — treat like any other instant.
+    "Figment": ("hand", Step.ACTION),
 }
 
 # Equipment subtype to zone mapping
@@ -84,7 +91,7 @@ class GameStateFactory:
                 if type_key == "Equipment":
                     # Resolve to specific equipment slot
                     for subtype, slot in _EQUIPMENT_SLOT_MAP.items():
-                        if subtype in subtypes:
+                        if subtype in types:
                             return slot, step
                     # Default to head if no subtype match
                     return "head", step
@@ -120,21 +127,44 @@ class GameStateFactory:
         # Determine placement
         zone_name, step = self._resolve_zone_and_step(card)
 
-        # Configure card ownership
-        card.owner = 1
-        card.controller = 1
+        # Defense Reaction and Block cards belong to the defending player.
+        # Per FAB rules only the defender can play DRs/Blocks.  We model this
+        # by placing the card in P2's hand while P1 is the attacker.
+        card_types = card.types or []
+        is_defender_card = (
+            "Defense Reaction" in card_types or "Block" in card_types
+        )
 
-        # Set player resources to card cost
-        if card.base_cost is not None:
-            p1.resources = card.base_cost
-
-        # Place card in the correct zone
-        target_zone = p1.zone_by_name(zone_name)
-        if target_zone is not None:
-            target_zone.add(card)
+        if is_defender_card:
+            # Card is owned/controlled by the defender (P2)
+            card.owner = 2
+            card.controller = 2
+            # Give the defender resources to pay for the card
+            if card.base_cost is not None:
+                p2.resources = card.base_cost
+            # Place card in P2's zone
+            target_zone = p2.zone_by_name(zone_name)
+            if target_zone is not None:
+                target_zone.add(card)
+            else:
+                p2.hand.add(card)
         else:
-            # Fallback to hand
-            p1.hand.add(card)
+            # Configure card ownership for P1
+            card.owner = 1
+            card.controller = 1
+            # Mentors start face-down in arsenal (flip at start of turn per card text)
+            if "Mentor" in card_types:
+                card.face_down = True
+            # Set player resources to card cost
+            if card.base_cost is not None:
+                p1.resources = card.base_cost
+            # Place card in the correct zone
+            target_zone = p1.zone_by_name(zone_name)
+            if target_zone is not None:
+                target_zone.add(card)
+            else:
+                # Fallback to hand
+                p1.hand.add(card)
 
         # Set up CombatState for attack/reaction cards
         combat = None
@@ -145,6 +175,11 @@ class GameStateFactory:
                 types=["Attack", "Action"],
                 base_power=3,
             )
+            # For Defense Reactions (placed at COMBAT_REACTION step), defending
+            # must already be declared so CombatState is consistent.
+            # Block cards stay at COMBAT_DEFEND with defending_declared=False so
+            # the engine offers them via _legal_defend_step.
+            defending_declared = "Defense Reaction" in card_types
             combat = CombatState(
                 attacker_id=1,
                 link_id=1,
@@ -152,7 +187,12 @@ class GameStateFactory:
                 attack_card=attack_card,
                 keywords=list(attack_card.keywords),
                 base_attack_power=attack_card.base_power or 0,
+                defending_declared=defending_declared,
             )
+
+        # For defender cards the priority player is the defender (P2); this is
+        # needed so that legal_actions() correctly offers the DR/Block to P2.
+        priority_player = 2 if is_defender_card else 1
 
         state = GameState(
             players={1: p1, 2: p2},
@@ -165,5 +205,6 @@ class GameStateFactory:
             winner=None,
             card_db=self._card_db,
         )
+        state.priority_player = priority_player
 
         return state

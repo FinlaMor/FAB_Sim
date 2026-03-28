@@ -1,0 +1,2755 @@
+Home  Rules and Policy  Release Notes  Tales of Aria
+
+# Tales of Aria
+
+# General Notes
+
+Tales of Aria contains 238 cards. (136 commons, 54 rares, 27 majestics, 6 legendaries, 1 fabled and 14 tokens)
+
+Tales Of Aria becomes legal for tournaments on its official release date: 24 September, 2021.
+
+Icon Abbreviations
+
+Within this document the following abbreviations are used to represent game icons which appear in the printed text box of cards:
+
+{r} Resource Point
+
+{p} Power
+
+{d} Defense Value
+
+{h} Life
+
+{i} Intellect (of a hero card)
+
+## New Set Theme
+
+Elemental
+
+Elemental is the new talent featured in Tales of Aria. There are currently three elements that exist, Earth, Ice and Lightning.
+
+Tales of Aria introduces cards with the Elemental card type, which can be played by any Elemental hero. It also introduces Elemental Class cards, which can be played only by Elemental heroes of that specific class.
+
+Tales of Aria also includes cards that represent each of the 3 elements (Earth, Ice, Lightning), which can only be included in a deck if that hero has that specific essence. A hero’s essence can be found as a keyword in their text box.
+
+Here’s an example of all the cards an Elemental Runeblade with essence of Earth and essence of Lightning could include in their deck:
+
+Runeblade cards
+
+Elemental cards
+
+Elemental Runeblade cards
+
+Earth cards
+
+Lightning cards
+
+Generic cards
+
+General notes:
+
+You may play Elemental cards in your deck even if they have a fusion ability of a different element. For example an Elemental action card with Earth fusion can be played in a deck, even if the hero does not have essence of Earth, however an Earth card cannot be played in a deck without essence of Earth.
+
+An Elemental Class card, such as an Elemental Guardian card, can only be included in a deck if the hero is both Elemental and Guardian.
+
+Your hero must have the essence of Earth to put Earth cards in your deck.
+
+Your hero must have the essence of Ice to put Ice cards in your deck.
+
+Your hero must have the essence of Lightning to put Lightning cards in your deck.
+
+## New Card Type
+
+Equipment – Off-hand
+
+Off-hand is a new card type that exists on shields in Tales of Aria. Off-hand cards are placed in the second weapon zone at the start of the game and can be used to defend as long as it has a defense value.
+
+Example Card:
+
+Rotten Old Buckler
+
+Guardian Equipment – Off-hand
+
+Blade Break (If you defend with Rotten Old Buckler, destroy it when the combat chain closes.)
+
+Defense: 1
+
+You cannot use a 2h weapon and an off-hand. You can use a 1h weapon and an off-hand.
+
+You may start with at most one off-hand is the weapon zone at the start of the game.
+
+You cannot use two off-hand equipment.
+
+You may defend with off-hand equipment as long as it has a defense value.
+
+## New Keywords
+
+Fusion
+
+Fusion is a new keyword that fuses one or more elements with an elemental card to give an additional effect.
+
+Example Card:
+
+Entwine Lightning
+
+Pitch: 1
+
+Cost: 0
+
+Elemental Action – Attack
+
+Lightning Fusion (As an additional cost to play Entwine Lightning, you may reveal a Lightning card from your hand.)
+
+If Entwine Lightning was fused, it gains go again.
+
+Power: 4
+
+Defense: 2
+
+You cannot reveal a card you are using to pitch to play the card. You pay resource costs before additional costs.
+
+You may still play the card without paying the additional cost of Fusion.
+
+You cannot reveal multiple cards to Fusion unless the card states you can (i.e a card with dual Fusion).
+
+You cannot reveal a card that does not fit the criteria i.e you cannot reveal an Ice card to a Lightning Fusion card.
+
+An Elemental card with Lightning Fusion is not a Lightning card/Element card. E.g you cannot fuse an Entwine Lightning with Entwine Lightning.
+
+Defending with a card is not the same as playing and therefore you cannot fuse while defending with a card with fusion. Note, defense reactions are played in order to defend, paying their cost to do so. You can fuse a defense reaction card that has Fusion.
+
+——————————————————————————————————————————-
+
+Channel
+
+Channel is a new keyword that uses Element cards to maintain a powerful aura that requires a larger commitment each turn to maintain the channel.
+
+Example Card:
+
+Channel Mount Heroic
+
+Pitch: 1
+
+Cost: 3
+
+Earth Action – Aura
+
+Go again
+
+Attack action cards you control have +3{p}.
+
+Channel Earth – At the beginning of your end phase, put an age counter on Channel Mount Heroic then destroy it unless you put an Earth card from your pitch zone on the bottom of your deck for each age counter on it.
+
+Defense: 3
+
+Cards with the keyword ‘Fusion’ are not classified as their respective element. E.g a card with Lightning Fusion is not considered to be a Lightning card. Therefore cannot be used to pay the cost of ‘Channel’.
+
+You choose the order of the cards you put on the bottom of your deck. The cards that are put to the bottom are open information to your opponent while the order of the cards are hidden information from your opponent.
+
+——————————————————————————————————————————-
+
+Essence
+
+Essence is a new keyword that exists on Elemental hero cards showing what Elements that hero specializes in and what Element cards can be included in the deck.
+
+Example Card:
+
+Briar, Warden of Thorns // Briar
+
+Elemental Runeblade Hero
+
+Essence of Earth and Lightning (You may have Earth and Lightning cards in your deck.)
+
+Whenever an attack action card you control deals damage to an opposing hero, create an Embodiment of Earth token.
+
+Whenever you play your second ‘non-attack’ action card each turn, create an Embodiment of Lightning token.
+
+Intellect: 4
+
+Life: 20/40
+
+An Elemental Runeblade with essence of Earth and essence of Lightning can play with Generic cards, Elemental cards, Runeblade cards, Earth cards, Lightning cards and Elemental Runeblade cards. (Note: You cannot play with any card with the supertype Ice, as you do not have the supertype Ice or essence of Ice on your hero)
+
+Your hero must have the essence of Earth for you to play Earth cards but any Elemental hero can play Elemental cards with Earth Fusion. (You wouldn’t have any Earth cards to fuse it though)
+
+——————————————————————————————————————————-
+
+## Returning Keywords
+
+Arcane Barrier X
+
+Arcane Barrier is one of the most common ways to prevent arcane damage. If you would be dealt arcane damage you may pay X{r} instead to prevent X arcane damage that source will deal.
+
+Example Card:
+
+Heart of Ice
+
+Ice Equipment – Chest
+
+Once per Turn Action – {r}: Cards and activated abilities cost opponents an additional {r} to play or activate this turn. Go again
+
+Arcane Barrier 1 (If your hero would be dealt arcane damage, you may pay {r} instead. If you do, prevent 1 arcane damage that source would deal.)
+
+Blade Break (If you defend with Heart of Ice, destroy it when the combat chain closes.)
+
+You can have multiple instances of arcane barrier.
+
+You can only prevent one arcane damage per arcane barrier per source.
+
+You can prevent arcane damage you do to yourself.
+
+Players cannot respond to the prevention.
+
+To fully prevent a card dealing 3 arcane damage, you would require 3 arcane barrier and 3 resources to prevent it. To fully prevent 3 Runechant tokens (3 instances of 1 damage). You would require 1 arcane barrier and 3 resources to prevent it.
+
+Preventing arcane damage does not destroy the equipment with arcane barrier (unless otherwise specified).
+
+——————————————————————————————————————————-
+
+Blade Break
+
+Equipment that are fragile and break after being used to defend. If you defend with a card with Blade Break, destroy it when the combat chain closes.
+
+Example Card:
+
+New Horizon
+
+Ranger Equipment – Head
+
+If you have a face up card in your arsenal, you have an additional arsenal zone.
+
+If New Horizon is destroyed, destroy all cards in your arsenal.
+
+Blade Break (If you defend with New Horizon, destroy it when the combat chain closes.)
+
+{2D}
+
+When you defend with a card it remains on the combat chain until the chain closes, therefore you cannot defend with an equipment multiple times on the same combat chain.
+
+When this card is destroyed, it is sent to your graveyard.
+
+The ability becomes a layer on the chain when the combat chain closes.
+
+——————————————————————————————————————————-
+
+Dominate
+
+An attack that is difficult to defend. Cards with dominate cannot be defended with more than 1 card from the defending hero’s hand.
+
+Example Card:
+
+Glacial Footsteps
+
+Pitch: 1
+
+Cost: 6
+
+Elemental Guardian Action – Attack
+
+Ice Fusion (As an additional cost to play Glacial Footsteps, you may reveal an Ice card from your hand.)
+
+If Glacial Footsteps was fused, it gains dominate. (The defending hero can’t defend {name} with more than 1 card from their hand.)
+
+Power: 10
+
+Defense: 3
+
+You can still defend with equipment and defense reactions played from arsenal in addition to up to 1 card from hand.
+
+Playing a defense reaction from your hand counts towards the 1 card from your hand restriction. You cannot defend with a card in your hand then play a defense reaction from your hand.
+
+——————————————————————————————————————————-
+
+Go again
+
+Go again allows multiple actions to be played in a turn when usually playing an action with use up your action point, and therefore end your turn. A card with go again gives the controller of that card or activated ability 1 action point when it resolves.
+
+Example Card:
+
+Call Down the Lightning
+
+Pitch: 1
+
+Cost: 0
+
+Lightning Action – Attack
+
+If Call Down the Lightning is played from arsenal, it gains go again.
+
+Power: 4
+
+Defense: 2
+
+When an action with go again resolves, its controller gains 1 action point.
+
+Multiple instances of go again on the same card or activated ability do not stack. If a card or activated ability has multiple instances of go again when it resolves its controller gains 1 action point only.
+
+If an action with go again does not resolve, its controller does not gain 1 action point.
+
+——————————————————————————————————————————-
+
+Reload
+
+Reload is a Ranger mechanic that allows you to put a card from your hand face down into your arsenal when the card resolves.
+
+Example Card:
+
+Over Flex
+
+Pitch: 3
+
+Cost: 1
+
+Ranger Action
+
+Your next arrow attack this turn gains +2{p}.
+
+Reload (If you have no cards in your arsenal, you may put a card from your hand face down into your arsenal.)
+
+Go again
+
+Defense: 2
+
+You may elect to put no cards from your hand to your arsenal.
+
+Your arsenal must be empty to put a card into your arsenal. (Even if you have an empty arsenal zone)
+
+——————————————————————————————————————————-
+
+Spellvoid
+
+Spellvoid is a new keyword primarily on equipment or items. Spellvoid is a one time use effect that prevents arcane damage.
+
+Shock Charmers
+
+Lightning Equipment – Arms
+
+Instant – {r}{r}: The next time an attack action card you control hits a hero this turn, it deals 1 damage to them.
+
+Spellvoid 2 (If your hero would be dealt arcane damage, you may destroy Shock Charmers instead. If you do, prevent 2 arcane damage that source would deal.)
+
+Defense: 0
+
+Spellvoid does not go on the chain as it is not a trigger. It is a replacement effect. There is no time to respond after the decision to destroy the card and prevent that damage.
+
+Spellvoid is optional. You choose whether to use spellvoid or not at the time the arcane damage resolves.
+
+If a card has Spellvoid 2 but only prevents 1 arcane damage, there will not be a leftover prevention shield. Note: It can only defend arcane damage from a single source, Spellvoid 2 cannot prevent one arcane damage each from two different sources.
+
+——————————————————————————————————————————-
+
+# Card-specific Notes
+
+Korshem, Crossroads of the Elements
+
+Once upon a time, inspired adventures from across Rathe, would seek the fabled land of Aria. All who made it through the veil, unbeknownst to them, found themselves at Korshem. For those who revealed their true intent, the land provided for them a splendid bounty. For those who did not, the land lay silent, and soon they would depart.
+
+In keeping with the theme of Tales of Aria, telling “the tales of Aria”, the fabled card of this set has a special storybook style applied to it. When playing official Flesh and Blood tournaments, please refer to the official card text below for Korshem, Crossroads of the Elements.
+
+Card text as printed:
+
+Cost: 1
+
+Elemental Action – Landmark
+
+When you arrive at the legendary Korshem, go again. Whenever a hero reveals a card, they gain {r}, or gain 1{h}, or their next attack this day gains +1{p}, or the next action card they defend with this day gains +1{d}.
+
+At sunset each day, depart Korshem if no hero gained {r}, {h}, {p}, or {d}.
+
+Official card text:
+
+Cost: 1
+
+Elemental Action – Landmark
+
+Legendary (You may only have 1 Korshem, Crossroads of the Elements in your deck.)
+
+Go again
+
+Whenever a hero reveals 1 or more cards, they choose 1; Gain {r}, or gain 1{h}, or their next attack this turn gains +1{p}, or the next action card they defend with this turn gains +1{d}.
+
+At the beginning of the end phase, if no hero has gained {r} or {h} from a card effect and no card or token controlled by a hero has had {p} or {d} increased this turn, destroy Korshem, Crossroads of the Elements.
+
+When playing official Flesh and Blood events, refer to the official card text.
+
+You may only have 1 Korshem, Crossroads of the Elements in your deck as it is Legendary. This applies to all formats including booster draft and sealed deck.
+
+You cannot pitch Korshem, Crossroads of the Elements, as it does not have a pitch value.
+
+Korshem, Crossroads of the Elements is an action card. It costs an action point to play it.
+
+Korshem, Crossroads of the Elements is a Landmark. There can only be one Landmark in the arena at any given time. When a Landmark enters the arena while another is in the arena, the previous Landmark is destroyed and put into the graveyard.
+
+A Landmark stays in the arena after it is played. It remains in the arena until it is destroyed.
+
+If a card is revealed as an additional cost to play an attack action card, for example fusion, and the mode selected from Korshem is “their next attack this turn gains +1{p}”, the current attack would not gain +1{p}.
+
+If more than one card is revealed from an additional cost, such as from dual fusion, or from the resolution of an effect, Korshem triggers only once, and only one mode can be chosen.
+
+When 1 or more cards are revealed as an additional cost, Korshem will trigger. When 1 or more cards are revealed as part of the resolution of an effect (from a card, activated ability, or trigger), Korshem will trigger. If a card or activated ability both revealed a card as an additional cost, and again upon resolution, Korshem would trigger twice, once when the cost is paid, and again when the effect resolves.
+
+Gaining {r} from pitching a card does not prevent Korshem from being destroyed at the end of the turn, only gaining {r}, {h}, {p}, or {d} from card effects (such as resolution, triggered, activated, and static abilities) are relevant.
+
+If you have a continuous effect that increases {p} or {d} and then play/defend with a card that the effect applies to, this does not prevent Korshem from being destroyed at the end of the turn. This is because the card comes under your control with the effect applied, and therefore the {p} or {d} has not increased while it was under your control. If the continuous effect becomes active AFTER the card comes under your control, then the {p} or {d} may increase from the effect which would prevent Korshem from being destroyed at the end of the turn.
+
+——————————————————————————————————————————-
+
+## Heroes and Weapons
+
+Briar, Warden of Thorns // Briar
+
+Elemental Runeblade Hero
+
+Essence of Earth and Lightning (You may have Earth and Lightning cards in your deck.)
+
+Whenever an attack action card you control deals damage to an opposing hero, create an Embodiment of Earth token.
+
+Whenever you play your second ‘non-attack’ action card each turn, create an Embodiment of Lightning token.
+
+Intellect: 4
+
+Life: 20/40
+
+The first ability includes hitting with the attack action as well as dealing damage or arcane damage.
+
+If there are multiple instances of damage on an attack action it would create multiple Embodiments of Earth. (I.e “Deal 1 arcane damage. Deal 1 arcane damage.)
+
+One instance of two damage would still only create one Embodiment of Earth. (I,e Deal 2 arcane damage.)
+
+Playing a ‘non-attack’ action card as though it was an instant still counts as playing a ‘non-attack’ action card.
+
+You still create an Embodiment of Lightning token when you play your second ‘non-attack’ action card each turn even if you already control one.
+
+An Embodiment of Earth token is an Elemental aura with “‘Non-attack’ action cards you control have +1{d} while defending. At the beginning of your action phase, destroy Embodiment of Earth.”
+
+An Embodiment of Lightning token is an Elemental aura with “When you play an attack action card, destroy Embodiment of Lightning and the attack gains go again.”
+
+——————————————————————————————————————————-
+
+Duskblade
+
+Runeblade Weapon – Sword (2H)
+
+Once per Turn Action – {r}: Attack
+
+Whenever you attack with Duskblade, if you’ve played an attack action card and a ‘non-attack’ action card this turn, put a +1{p} counter on Duskblade.
+
+At the beginning of your end phase, if you haven’t played an attack action card and a ‘non-attack’ action card this turn, remove all +1{p} counters from Duskblade.
+
+A +1{p} counter is a permanent effect that increases the power of Duskblade (until the counter is removed).
+
+You do not have to attack with Duskblade to prevent the +1{p} counters from being removed. You just need to have played an attack action and a ‘non-attack’ action card.
+
+——————————————————————————————————————————-
+
+Lexi, Livewire // Lexi
+
+Elemental Ranger Hero
+
+Essence of Ice and Lightning (You may have Ice and Lightning cards in your deck.)
+
+Once per Turn Action – Turn a face down card in your arsenal face up: If it’s a Lightning card, your next attack this turn gains go again. If it’s an Ice card, create a Frostbite token under target hero’s control. Go again
+
+Intellect: 4
+
+Life: 20/40
+
+You may turn a face down card face up even if it’s not a Lightning or Ice card.
+
+If you turn a card that’s Lightning and Ice you would get both effects.
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.“
+
+——————————————————————————————————————————-
+
+Oldhim, Grandfather of Eternity // Oldhim
+
+Elemental Guardian Hero
+
+Essence of Earth and Ice (You may have Earth and Ice cards in your deck.)
+
+Once per Turn Defense Reaction – {r}{r}{r}: If an Earth card is pitched this way, prevent the next 2 damage that would be dealt to Oldhim this turn. If an Ice card is pitched this way, the attacking hero puts a card from their hand on top of their deck.
+
+Intellect: 4
+
+Life: 20/40
+
+You cannot pitch a card if there is not a cost to be played. You cannot pitch a card for a cost if there are already sufficient resources available to you.
+
+You must pitch the card as part of the cost to pay for the ability to gain the effect. Having an Ice or Earth card in your pitch zone that you pitched for a different cost does not grant the effect.
+
+You can pitch multiple cards to this effect. If an Earth card and an Ice card is pitched this way you would get both effects. If multiple Earth cards are pitched you would still only prevent the next 2 damage.
+
+If a card pitched is both Ice and Earth you would gain both effects.
+
+You may only activate Defense Reaction during the reaction step.
+
+The prevention lasts until the end of the turn, it does not need to prevent damage during the current chain link. You may activate the ability during the reaction step even if there is no damage that would be dealt to you.
+
+This prevents all types of damage including damage from attacks, arcane damage and damage. This does not prevent loss of life.
+
+The attacking hero picks what card from their hand goes on top of their deck.
+
+Both players can respond to the ability with reactions and instants. For example, in response to the Ice part happening, the attacking player can play the last attack reaction out of their hand.
+
+——————————————————————————————————————————-
+
+Rosetta Thorn
+
+Runeblade Weapon – (2H)
+
+Once per Turn Action – {r}: Attack
+
+Whenever you attack with Rosetta Thorn, if you’ve played an attack action card and a ‘non-attack’ action card this turn, deal 2 arcane damage to target hero.
+
+The arcane damage is a single source of damage. For example, since Rosetta Thorn does 2 arcane damage you would require arcane barrier 2 (or two arcane barrier 1) to fully prevent it.
+
+You may still attack with Rosetta Thorn even if you have not played an attack action and a ‘non-attack’ action card this turn.
+
+——————————————————————————————————————————-
+
+Shiver
+
+Elemental Ranger Weapon – Bow (2H)
+
+Once per Turn Instant – {r}: You may put an arrow card from your hand face up into an empty arsenal zone you control. If you do, choose 1;
+
+– It gains +1{p} until end of turn.
+
+– It gains dominate until end of turn. (The defending hero can’t defend the attack with more than 1 card from their hand.)
+
+You may activate this during your opponent’s turn.
+
+You may activate this and not put a card from your hand into your arsenal.
+
+——————————————————————————————————————————-
+
+Titan’s Fist
+
+Guardian Weapon – Hammer (1H)
+
+Once per Turn Action – {r}{r}{r}: Attack
+
+If there is a card with cost 3 or greater in your pitch zone, Titan’s Fist has +1{p}.
+
+Titan’s Fist checks your pitch zone constantly, not just when it attacks. If the criteria is met after the attack is made, it will get the +1{p} bonus.
+
+The cost of a card is located on the top right corner of a card.
+
+You cannot pitch a card if there is not a cost to be played. You cannot pitch a card for a cost if there are already sufficient resources available to you.
+
+You may start the game with up to two Titan’s Fist in the arena as they are 1H weapons.
+
+——————————————————————————————————————————-
+
+Voltaire, Strike Twice
+
+Elemental Ranger Weapon – Bow (2H)
+
+Twice per Turn Instant – {r}: You may put an arrow card from your hand face up into an empty arsenal zone you control. If you do, choose 1;
+
+– It gains +1{p} until end of turn.
+
+– It gains go again until end of turn.
+
+You may activate this during your opponent’s turn.
+
+You may activate this and not put a card from your hand into your arsenal.
+
+Twice per Turn Instant means you can use this ability up to twice per turn.
+
+——————————————————————————————————————————-
+
+Winter’s Wail
+
+Elemental Guardian Weapon – Hammer (1H)
+
+Once per Turn Action – {r}{r}{r}: Attack
+
+If an Ice card is pitched this way, Winter’s Wail gains “If this hits a hero, create a Frostbite token under their control.”
+
+You cannot pitch a card if there is not a cost to be played. You cannot pitch a card for a cost if there are already sufficient resources available to you.
+
+You must pitch an Ice card as part of the cost to pay for the attack to gain the bonus. Having an Ice card in your pitch zone that you pitched for a different cost does not grant Winter’s Wail the bonus.
+
+You do not need to pay the entire cost with Ice cards. You can use leftover resources in addition to pitching an Ice card to pay the rest of the cost.
+
+You may start the game with up to two Winter’s Wail in the arena as they are 1H weapons.
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}. At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.“
+
+——————————————————————————————————————————-
+
+## Tokens
+
+Frostbite
+
+Elemental Token – Aura
+
+Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.
+
+Triggered abilities and static abilities do not get affected by this.
+
+When determining resource cost you declare if an alternate cost is being paid, then apply effects that increase resource point costs (such as Frostbite) then apply effects that reduce resource point costs before paying for the cost.
+
+When you play a card or activate an ability, the trigger of frostbite being destroyed will be put as a layer on the chain. If the player with the Frostbite wants to respond by playing or activating another ability they would still have that Frostbite under their control so it would cost an additional {r}. (It is recommended to let the Frostbite being destroyed trigger resolve first before doing anything else).
+
+——————————————————————————————————————————-
+
+Embodiment of Earth
+
+Elemental Token – Aura
+
+‘Non-attack’ action cards you control have +1{d} while defending.
+
+At the beginning of your action phase, destroy Embodiment of Earth.
+
+Multiple Embodiments of Earth stack. For example, if you control two Embodiment of Earth and you block with a base 2{d} non-attack action, it would have 4{d}.
+
+This affects all non-attack action cards you defend with, not just the first card you defend with.
+
+——————————————————————————————————————————-
+
+Embodiment of Lightning
+
+Elemental Token – Aura
+
+When you play an attack action card, destroy Embodiment of Lightning and the attack gains go again.
+
+Multiple Embodiment of Lightning will still be destroyed when you play an attack action card. You will only gain 1 action point upon resolution as multiple instances of go again do not stack.
+
+Weapon attacks do not trigger Embodiment of Lightning. If you attack with a weapon with an Embodiment of Lightning in play, it would not get destroyed or grant your attack go again.
+
+——————————————————————————————————————————-
+
+## Equipment and Generic Cards
+
+Coat of Frost
+
+Ice Equipment – Chest
+
+Action – Destroy Coat of Frost: Create a Frostbite token under target hero’s control. Go again
+
+Defense: 0
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite “
+
+You may target yourself with this ability.
+
+Both players can respond to the ability before the Frostbite token is created.
+
+——————————————————————————————————————————-
+
+Cracker Jax
+
+Generic Equipment – Arms
+
+Action – Destroy Cracker Jax: The next attack action card you play this turn gains +1{p}. Go again
+
+Defense: 0
+
+The attack action card does not gain go again. Cracker Jax’s activated ability requires an action point to use and provides an action point from go again upon resolution.
+
+This does not affect weapon attacks.
+
+.
+
+——————————————————————————————————————————-
+
+Crown of Seeds
+
+Earth Equipment – Head
+
+Once per Turn Instant – {r}, put a face down card from your arsenal on the bottom of your deck: Draw a card and prevent the next 1 damage that would be dealt to your hero this turn.
+
+Defense: 0
+
+You cannot activate Crown of Seeds if you do not have a face down card in your arsenal.
+
+The card in your arsenal must be face down for you to activate Crown of Seeds.
+
+This prevents all types of damage including damage from attacks, arcane damage and damage. This does not prevent loss of life.
+
+If you do not have any cards in your deck when you activate this, you would put your card in your arsenal to the bottom of your deck then draw the same card.
+
+——————————————————————————————————————————-
+
+Deep Blue
+
+Generic Equipment – Chest
+
+Action – Put a card from your hand on the bottom of your deck, destroy Deep Blue: Gain {r}{r}{r}. Go again
+
+Defense: 0
+
+You do not reveal the card you put on the bottom of your deck.
+
+Putting a card on the bottom of your deck from your hand is part of the cost.
+
+You cannot activate Deep Blue if there are no cards in your hand.
+
+——————————————————————————————————————————-
+
+Heart of Ice
+
+Ice Equipment – Chest
+
+Once per Turn Action – {r}: Cards and activated abilities cost opposing heroes additional {r} this turn. Go again
+
+Arcane Barrier 1 (If your hero would be dealt arcane damage, you may pay {r} instead. If you do, prevent 1 arcane damage that source would deal.)
+
+Blade Break (If you defend with Heart of Ice, destroy it when the combat chain closes.)
+
+Defense: 1
+
+This does not affect triggered or passive abilities.
+
+Defending with a card does not require an additional {r} as it is not played or activated.
+
+Defense reactions are played and therefore require an additional {r} when Heart of Ice is active.
+
+This affects all cards and activated abilities for opponents for the turn, not just the first one.
+
+——————————————————————————————————————————-
+
+Honing Hood
+
+Ranger Equipment – Head
+
+Instant – Destroy Honing Hood: Return all cards in your arsenal to your hand, then put a card from your hand face down into your arsenal.
+
+Defense: 0
+
+You may use Honing Hood even if there are no cards in your arsenal.
+
+You must put a card from your hand face down into an empty arsenal zone. (Assuming you have at least one card in your hand).
+
+——————————————————————————————————————————-
+
+Mark of Lightning
+
+Lightning Equipment – Arms
+
+Whenever a Lightning or Elemental attack you control is defended by a card from hand, you may destroy Mark of Lightning. If you do, the attack deals 1 damage to the defending hero.
+
+Defense: 0
+
+The effect is triggered during the defending window after the defending player has decided to defend with cards in hand, or during the reaction window when the defending player plays a defense reaction from hand.
+
+The damage is not arcane and cannot be defended with cards in hand or by arcane barrier. It can be stopped by prevention effects that prevent any kind of damage.
+
+——————————————————————————————————————————-
+
+New Horizon
+
+Ranger Equipment – Head
+
+While you have a face up card in your arsenal, you have an additional arsenal zone.
+
+When New Horizon is destroyed, destroy all cards in your arsenal.
+
+Blade Break (If you defend with New Horizon, destroy it when the combat chain closes.)
+
+Defense: 2
+
+The additional arsenal zone can be represented next to your current arsenal zone.
+
+An additional arsenal zone is considered empty until it has a card in it.
+
+Cards that destroy all cards in your arsenal would destroy both cards if you have two cards in the arsenal due to New Horizon.
+
+You cannot turn a card in your arsenal face-up unless a card instructs you to do so.
+
+——————————————————————————————————————————-
+
+Plume of Evergrowth
+
+Earth Equipment – Head
+
+Instant – {r}{r}{r}, destroy Plume of Evergrowth: Return target Earth action card or Earth instant card from your graveyard to your hand.
+
+Defense: 0
+
+An Elemental card with Earth Fusion is not an Earth card.
+
+You must have a legal target to activate and resolve this effect.
+
+——————————————————————————————————————————-
+
+Ragamuffin’s Hat
+
+Generic Equipment – Head
+
+Instant – Destroy Ragamuffin’s Hat: Draw a card then put a card from your hand on the top or bottom of your deck. Activate this ability only if you have 1 card in hand.
+
+Defense: 0
+
+There is no priority during the resolution of an ability. For example, you cannot play or activate an ability after drawing the card but before putting a card on the top or bottom.
+
+The ability still resolves even if you no longer have 1 card in hand at the time it resolves. (As long as you had 1 card in hand when you activated it.)
+
+Your opponent knows if you put the card on the top or bottom of your deck. (But not what the card is.)
+
+——————————————————————————————————————————-
+
+Rampart of the Ram’s Head
+
+Guardian Equipment – Off-hand
+
+Whenever you defend with Rampart of the Ram’s Head, you may pay {r}. If you do, it gains +1{d} until end of turn.
+
+Defense: 0
+
+An Off-hand goes in the second weapon zone. You cannot have a 2h and an Off-hand at the same time.
+
+You can defend with an equipment as long as it’s in the equipment or weapon zone.
+
+Rampart of the Ram’s Head does not have Battleworn. It will not gain a -1{d} counter from defending.
+
+You pay the {r} after declaring all cards you are defending within the defending window.
+
+Rampart of the Ram’s Head gains +1{d} and lasts until end of turn. If it were to defend again in the same turn (For example if the combat chain closes) it would still have it’s {d}. (And the ability will trigger again and you may pay another {r}.)
+
+——————————————————————————————————————————-
+
+Rotten Old Buckler
+
+Guardian Equipment – Off-hand
+
+Blade Break (If you defend with Rotten Old Buckler, destroy it when the combat chain closes.)
+
+Defense: 1
+
+An Off-hand goes in the second weapon zone. You cannot have a 2h and an Off-hand at the same time.
+
+Equipment goes to the graveyard when destroyed.
+
+——————————————————————————————————————————-
+
+Runaways
+
+Generic Equipment – Legs
+
+Instant – Destroy Runaways: Prevent the next 1 damage that would be dealt to your hero this turn. Activate this ability only if your hero has been dealt damage this turn.
+
+Defense: 0
+
+You cannot use this during a resolution of a card. For example if a card says “Deal 2 arcane damage. Deal 2 arcane damage.” you cannot take two then use this as a card must fully resolve first.
+
+This prevents all types of damage including damage from attacks, arcane damage and damage. This does not prevent loss of life.
+
+Loss of life is not the same as being dealt damage.
+
+——————————————————————————————————————————-
+
+Shock Charmers
+
+Lightning Equipment – Arms
+
+Instant – {r}{r}: The next time an attack action card you control hits a hero this turn, it deals 1 damage to them.
+
+Spellvoid 2 (If your hero would be dealt arcane damage, you may destroy Shock Charmers instead. If you do, prevent 2 arcane damage that source would deal.)
+
+Defense: 0
+
+You may activate Shock Charmers as many times as you have the resources for.
+
+Each instance of dealing 1 damage is separate. However it is still from a single source.
+
+This only cares about the next attack action you control that hits, if an attack action card is played after activating this but is fully defended, the next attack action card that hits this turn would still have this effect.
+
+If you use spellvoid 2 to prevent one arcane damage, there will be no left over prevention.
+
+Spellvoid 2 can only prevent 2 arcane damage from a single source. It cannot prevent 2 sources of 1 arcane damage.
+
+——————————————————————————————————————————-
+
+Spellbound Creepers
+
+Runeblade Equipment – Legs
+
+Once per Turn Instant – {r}, put a bind counter on Spellbound Creepers: You may play your next ‘non-attack’ action card this turn as though it were an instant. Activate this ability only if you have attacked or defended with an attack action card this turn.
+
+At the beginning of your end phase, destroy Spellbound Creepers unless you have dealt arcane damage equal to or greater than the number of bind counters on Spellbound Creepers.
+
+Blade Break (If you defend with Spellbound Creepers, destroy it when the combat chain closes.)
+
+Defense: 1
+
+If the non-attack action card played has go again, you will still gain an action point after it resolves even if it was played as though it was an instant. This would net gain you an action point. You can not gain action points on your opponents turn.
+
+Players do not have priority during the end phase.
+
+You do not need to do all the arcane damage in one go. Spellbind Creepers only cares about the total arcane damage dealt throughout the turn.
+
+——————————————————————————————————————————-
+
+Sutcliffe’s Suede Hides
+
+Runeblade Equipment – Legs
+
+Attack Reaction – {r}, destroy Sutcliffe’s Suede Hides: Target attack action card gains go again. Activate this ability only if you have played a ‘non-attack’ action card this turn.
+
+Defense: 0
+
+If this is used on an attack with go again, you will only gain 1 action point upon chain link resolution as multiple instances of go again do not stack.
+
+——————————————————————————————————————————-
+
+## Elemental Cards
+
+Entwine Earth
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Elemental Action – Attack
+
+Earth Fusion (As an additional cost to play Entwine Earth, you may reveal an Earth card from your hand.)
+
+If Entwine Earth was fused, it gains +2{p}.
+
+Power: 4/5/6
+
+Defense: 2
+
+You may play this card in any Elemental hero even if the hero does not have the essence of Earth as this is an Elemental card not an Earth card.
+
+——————————————————————————————————————————-
+
+Entwine Ice
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Action – Attack
+
+Ice Fusion (As an additional cost to play Entwine Ice, you may reveal an Ice card from your hand.)
+
+If Entwine Ice was fused, it gains dominate. (The defending hero can’t defend Entwine Ice with more than 1 card from their hand.)
+
+Power: 3/4/5
+
+Defense: 2
+
+You may play this card in any Elemental hero even if the hero does not have the essence of Ice as this is an Elemental card not an Ice card.
+
+——————————————————————————————————————————-
+
+Entwine Lightning
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Elemental Action – Attack
+
+Lightning Fusion (As an additional cost to play Entwine Lightning, you may reveal a Lightning card from your hand.)
+
+If Entwine Lightning was fused, it gains go again.
+
+Power: 2/3/4
+
+Defense: 2
+
+You may play this card in any Elemental hero even if it does not have essence of Lightning as this is an Elemental card not a Lightning card.
+
+——————————————————————————————————————————-
+
+Exposed to the Elements
+
+Pitch: 3
+
+Cost: 2
+
+Elemental Instant
+
+Earth and/or Ice Fusion (As an additional cost to play Exposed to the Elements, you may reveal an Earth and/or Ice card from your hand.)
+
+If Exposed to the Elements was fused with an Earth card, put a -1{d} counter on target equipment.
+
+If Exposed to the Elements was fused with an Ice card, destroy an equipment with 0{d} controlled by target hero unless they pay {r}{r}.
+
+Defense: –
+
+You cannot defend with Exposed to the Elements as it does not have a defense value.
+
+You may play this card in any Elemental hero even if it does not have the essence of Earth and Ice.
+
+You may fuse this with just one card with a single Element, if you do you will only gain the fused effect of that one element..
+
+You may fuse this with just one Earth and Ice card, if you do you will gain both fused effects.
+
+You choose what card to destroy when this card resolves. The effects on the card resolve in order so you can put a -1[d} counter on a 1{d} equipment followed by the second ability.
+
+Your opponent decides if they want to pay {r}{r} before you select the equipment.
+
+——————————————————————————————————————————-
+
+Fulminate
+
+Pitch: 2
+
+Cost: 2
+
+Elemental Action
+
+Earth and/or Lightning Fusion (As an additional cost to play Fulminate, you may reveal an Earth and/or Lightning card from your hand.)
+
+If Fulminate was fused with an Earth card, attack action cards you control gain +3{p} this turn.
+
+If Fulminate was fused with a Lightning card, attack action cards you control gain go again this turn.
+
+Go again
+
+Defense: 2
+
+You may play this card in any Elemental hero even if it does not have the essence of Earth and Lightning.
+
+You may fuse this with just one card with a single Element, if you do you will only gain the fused effect of that one element..
+
+You may fuse this with just one Earth and Lightning card, if you do you will gain both fused effects.
+
+——————————————————————————————————————————-
+
+Flashfreeze
+
+Pitch: 1
+
+Cost: 1
+
+Elemental Action
+
+Ice and/or Lightning Fusion (As an additional cost to play Flashfreeze, you may reveal an Ice and/or Lightning card from your hand.)
+
+If Flashfreeze was fused with an Ice card, attacks you control this turn gain “When you attack with this, it gains dominate, unless the defending hero pays {r}{r}.”
+
+If Flashfreeze was fused with a Lightning card, attacks you control this turn gain “If this hits a hero, deal 3 damage to them.”
+
+Go again
+
+Defense: 2
+
+You may play this card in any Elemental hero even if it does not have the essence of Ice and Lightning.
+
+You may fuse this with just one card with a single Element, if you do you will only gain the fused effect of that one element..
+
+You may fuse this with just one Ice and Lightning card, if you do you will gain both fused effects.
+
+The defending hero chooses whether they pay {r}{r} when the attack becomes a layer on the chain.
+
+——————————————————————————————————————————-
+
+Invigorate
+
+PItch: 3/2/1
+
+Cost: 0
+
+Elemental Action
+
+The next attack you fuse this turn gains +2/3/4{p}.
+
+Go again
+
+Defense: 2
+
+If the next attack is not fused, it would not grant the bonus. If you then later play an attack with fuse it would gain the bonus as it is the next attack you fuse this turn.
+
+——————————————————————————————————————————-
+
+Rejuvenate
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Action
+
+Gain 1/2/3{g}
+
+If you’ve fused this turn, you may play Rejuvenate as though it were an instant.
+
+Defense: 2
+
+You may still play Rejuvenate as an action regardless if you have fused or not.
+
+——————————————————————————————————————————-
+
+## Elemental Guardian Cards and Guardian Cards
+
+Awakening
+
+Pitch: 3
+
+Cost: 2
+
+Elemental Guardian Instant
+
+Earth Fusion (As an additional cost to play Awakening, you may reveal an Earth card from your hand.)
+
+If you have less {h} than an opposing hero, create Seismic Surge tokens equal to the difference. If Awakening was fused, instead create twice that many Seismic Surge tokens.
+
+Search your deck for a Guardian attack action card with cost less than or equal to the number of Seismic Surge tokens you control, reveal it, put it into your hand, then shuffle your deck.
+
+Defense: –
+
+The green symbol on Awakening refers to life.
+
+Difference refers to the difference in life. For example, if you are on higher life when you play Awakening, you will not gain any Seismic Surge tokens.
+
+A Seismic Surge token is a Guardian Aura with “At the beginning of your action phase, destroy Seismic Surge then the next Guardian attack action card you play this turn costs {r} less to play.”
+
+——————————————————————————————————————————-
+
+Biting Gale
+
+Pitch: 1/2/3
+
+Cost: 2
+
+Elemental Guardian Defense Reaction
+
+Ice Fusion (As an additional cost to play Biting Gale, you may reveal an Ice card from your hand.)
+
+If Biting Gale was fused, the attacking hero discards a card unless they pay {r}{r}.
+
+Defense: 2/3/4
+
+Since defense reactions can’t defend in the defending window and must be played in the reaction window, you must pay Biting Gale’s cost to play it.
+
+The attacking hero decides if they want to pay {r}{r} when biting Gale resolves (and becomes a defending card on the chain link)
+
+If you have no cards in hand, you can still elect to discard a card instead of paying {r}{r}.
+
+——————————————————————————————————————————-
+
+Emerging Avalanche
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Elemental Guardian Action – Aura
+
+Ice Fusion (As an additional cost to play Emerging Avalanche, you may reveal an Ice card from your hand.)
+
+Go again
+
+When Emerging Avalanche enters the arena, if it was fused, create a Frostbite token under target hero control.
+
+At the beginning of your action phase, destroy Emerging Avalanche then the next attack action card you play this turn gains +3{p}.
+
+Defense: 3
+
+Emerging Avalanche must be destroyed at the beginning of your action phase, it is not optional.
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.“
+
+——————————————————————————————————————————-
+
+Embolden
+
+Pitch: 3/2/1
+
+Cost: 4
+
+Guardian Action – Attack
+
+Go again
+
+When Embolden enters the arena, if you control another non-token aura, draw a card.
+
+At the beginning of your action phase, destroy Embolden then the next Guardian attack action card you play this turn gains +3/4/5{p}.
+
+Defense: 3
+
+Embolden must be destroyed at the beginning of your action phase, it is not optional.
+
+Embolden only affects Guardian attack actions. It does not affect weapon attacks or non-Guardian attack actions.
+
+A non-token aura is an aura that is not a token. (Tokens have T before the set-code at the middle bottom of the card.)
+
+——————————————————————————————————————————-
+
+Endless Winter
+
+Pitch: 1
+
+Cost: 4
+
+Elemental Guardian Action – Attack
+
+Oldhim Specialization (You may only have Endless Winter in your deck if your hero is Oldhim.)
+
+Ice Fusion (As an additional cost to play Endless Winter, you may reveal an Ice card from your hand.)
+
+If Endless Winter was fused, whenever the defending hero adds a defending card to this chain link, create a Frostbite token under their control.
+
+If Endless Winter hits a hero, until the end of their next turn, whenever they activate an ability, create a Frostbite token under their control.
+
+Power: 8
+
+Defense: 3
+
+You may only play Endless Winter in your deck if your hero is Oldhim, Grandfather of Eternity or Oldhim (Young hero).
+
+If the defending hero defends with 2 cards (while Endless Winter is fused) they would create two Frostbites.
+
+Defense reactions become a defending card when they resolve. You would get a Frostbite token when the defense reaction becomes a defending card.
+
+Endless Winter’s second ability gives a Frostbite token after an ability is activated. This would not affect the cost of the ability.
+
+Playing a card is not the same as activating an ability. Playing a card while under Endless Winter’s effect would not create a Frostbite token.
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.“
+
+——————————————————————————————————————————-
+
+Entangle
+
+Pitch: 3/2/1
+
+Cost: 3
+
+Elemental Guardian Action – Attack
+
+Earth Fusion (As an additional cost to play Entangle, you may reveal an Earth card from your hand.)
+
+If Entangle was fused, it gains “If this hits a hero, their first attack during their next turn has -2{p}.”
+
+Power: 5/6/7
+
+Defense: 3
+
+This affects all attacks including attack actions and weapon attacks.
+
+——————————————————————————————————————————-
+
+Glacial Footsteps
+
+Pitch: 3/2/1
+
+Cost: 6
+
+Elemental Guardian Action – Attack
+
+Ice Fusion (As an additional cost to play Glacial Footsteps, you may reveal an Ice card from your hand.)
+
+If Glacial Footsteps was fused, it gains dominate. (The defending hero can’t defend Glacial Footsteps with more than 1 card from their hand.)
+
+Power: 8/9/10
+
+Defense: 3
+
+Playing a defense reaction from your hand counts towards the 1 card from your hand restriction. You cannot defend with a card in your hand then play a defense reaction from your hand. (Assuming Glacial Footsteps has dominate.)
+
+——————————————————————————————————————————-
+
+Mulch
+
+PItch: 3/2/1
+
+Cost: 4
+
+Elemental Guardian Action – Attack
+
+Earth Fusion (As an additional cost to play Mulch, you may reveal an Earth card from your hand.)
+
+If Mulch was fused, it gains “If this hits a hero, put a card from their arsenal on the bottom of their deck.”
+
+Power 6/7/8
+
+Defense: 3
+
+If the defending hero has multiple cards in their arsenal the attacking player chooses which one is put on the bottom of their deck.
+
+——————————————————————————————————————————-
+
+Oaken Old
+
+Pitch: 1
+
+Cost: 3
+
+Elemental Guardian Action – Attack
+
+Earth and Ice Fusion (As an additional cost to play Oaken Old, you may reveal an Earth and an Ice card from your hand.)
+
+If Oaken Old was fused, it gains +2{p}, dominate, and “If this hits a hero, they put 2 random cards from their hand on the bottom of their deck in any order.”
+
+Power: 7
+
+Defense: 3
+
+You have to reveal both an Earth and an Ice card to fuse Oaken Old.
+
+You may pay the additional cost to fuse this by revealing a single Earth and Ice card.
+
+The hero putting the two cards in their hand on the bottom of the deck chooses the order. The order is not known to other players.
+
+——————————————————————————————————————————-
+
+Snow Under
+
+Pitch: 3/2/1
+
+Cost: 3
+
+Elemental Guardian Action – Attack
+
+Ice Fusion (As an additional cost to play Snow Under, you may reveal an Ice card from your hand.)
+
+If Snow Under was fused, it gains “If Snow Under hits a hero, create a Frostbite token under their control.”
+
+Power: 5/6/7
+
+Defense: 3
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.“
+
+——————————————————————————————————————————-
+
+Strength of Sequoia
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Elemental Guardian Action – Attack
+
+Earth Fusion (As an additional cost to play Strength of Sequoia, you may reveal an Earth card from your hand.)
+
+Go again
+
+When Strength of Sequoia enters the arena, if it was fused, create a Seismic Surge token.
+
+At the beginning of your action phase, destroy Strength of Sequoia then the next attack action card you play this turn gains +1/2/3{p}.
+
+Defense: 3
+
+Strength of Sequoia must be destroyed at the beginning of your action phase, it is not optional.
+
+A Seismic Surge token is a Guardian Aura with “At the beginning of your action phase, destroy Seismic Surge then the next Guardian attack action card you play this turn costs {r} less to play.”
+
+——————————————————————————————————————————-
+
+Tear Asunder
+
+Pitch: 3
+
+Cost: 3
+
+Guardian Action
+
+Your next Guardian attack this turn gains +1{p}, dominate, and “If this hits a hero, they discard 2 cards.”
+
+Go again
+
+Defense: 3
+
+This affects all Guardian attacks including Guardian weapon attacks and Guardian attack actions.
+
+The defending hero picks which 2 cards they discard.
+
+If the defending hero only has 1 card in hand, they discard their entire hand.
+
+——————————————————————————————————————————-
+
+Thump
+
+Pitch: 3/2/1
+
+Cost: 4
+
+Guardian Action – Attack
+
+While Thump’s {p} is greater than its base {p}, it gains dominate and “If this hits a hero, they discard a card.” (The defending hero can’t defend Thump with more than 1 card from their hand.)
+
+Power: 4/5/6
+
+Defense: 3
+
+The base power is located at the bottom left corner of a card.
+
+The defending player decides what card to discard.
+
+Thump can gain dominate during the defending window or reaction window. If cards have already defended Thump then Thump gains dominate, the defending cards would be unaffected.
+
+If Thump is defended by at least one card from hand, Thump gains dominate – the defending player would not be able to defend with any more cards from hand.
+
+——————————————————————————————————————————-
+
+Turn Timber
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Elemental Guardian Defense Reaction
+
+Earth Fusion (As an additional cost to play Turn Timber, you may reveal an Earth card from your hand.)
+
+If Turn Timber was fused, it gains +2{d}.
+
+Defense: 4/5/6
+
+Since defense reactions can’t defend in the defending window and must be played in the reaction window, you must pay Turn Timber’s cost to play it.
+
+——————————————————————————————————————————-
+
+## Elemental Ranger Cards and Ranger Cards
+
+Bolt’n Shot
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Ranger Action – Arrow Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+If Bolt’n’ Shot’s {p} is greater than its base {p}, it has go again and “If this hits, reload.” (If you have no cards in your arsenal, you may put a card from your hand face down into your arsenal.)
+Power: 2/3/4
+
+Defense: 3
+
+The base power is located at the bottom left corner of a card.
+
+You cannot reload if you have a card in your arsenal even if there is an additional empty arsenal spot.
+
+——————————————————————————————————————————-
+
+Blizzard Bolt
+
+PItch: 3/2/1
+
+Cost: 1
+
+Elemental Ranger Action – Arrow Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+Ice Fusion (As an additional cost to play Blizzard Bolt, you may reveal an Ice card from your hand.)
+
+If Blizzard Bolt was fused, whenever an attack deals damage to a hero this turn, create a Frostbite token under their control.
+
+Power: 3/4/5
+
+Defense: 3
+
+This affects any and all instances of damage this card deals including “deal 1 damage”
+
+Even if the attack deals 5 damage, it would still only create 1 Frostbite.
+
+If an attack has multiple instances of dealing damage it would create multiple Frostbites. (E.g a card has “If this hits deal 1 damage” “If this hits deal 1 damage”.)
+
+This affects all attacks this turn and does not require this attack to be on the combat chain.
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.“
+
+——————————————————————————————————————————-
+
+Buzz Bolt
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Ranger Action – Arrow Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+Lightning Fusion (As an additional cost to play Buzz Bolt, you may reveal a Lightning card from your hand.)
+
+If Buzz Bolt was fused, whenever an attack hits a hero this turn, it deals 1 damage to them.
+
+Power: 3/4/5
+
+Defense: 3
+
+This affects all attacks this turn and does not require this attack to be on the same combat chain.
+
+The attack that hits deals the 1 damage. The one damage does not cause “on-hit” to trigger but does cause “When this attack deals damage..”
+
+The damage dealt is not arcane. It cannot be defended by cards or arcane barrier. It can be prevented by cards that prevent any damage.
+
+——————————————————————————————————————————-
+
+Chilling Icevein
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Ranger Action – Arrow Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+Ice Fusion (As an additional cost to play Chilling Icevein, you may reveal an Ice card from your hand.)
+
+If Chilling Icevein was fused, whenever an attack deals damage to a hero this turn, they discard a card unless they pay {r}.
+
+Power: 3/4/5
+
+Defense: 3
+
+This affects any and all instances of damage this card deals including “deal 1 damage”.
+
+Even if the attack deals 5 damage, it would still only trigger once.
+
+If an attack has multiple instances of dealing damage it would trigger multiple times (E.g a card has “If this hits deal 1 damage” “If this hits deal 1 damage”.
+
+This affects all attacks this turn and does not require this attack to be on the combat chain.
+
+The hero dealt damage by Chilling Icevein decides if they discard a card or pay {r} when the ability resolves.
+
+If you have no cards in your hand you may still elect to discard a card instead of paying {r}.
+
+——————————————————————————————————————————-
+
+Cold Wave
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Ranger Action – Arrow Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+Ice Fusion (As an additional cost to play Cold Wave, you may reveal an Ice card from your hand.)
+
+If Cold Wave was fused, cards and activated abilities cost opposing heroes an additional {r} this turn.
+
+Power: 3/4/5
+Defense: 3
+
+Defense Reactions are played and therefore would require an additional {r} to play. (Assuming Cold Wave was fused)
+
+This affects all attacks this turn and does not require this attack to be on the combat chain.
+
+——————————————————————————————————————————-
+
+Flake Out
+
+PItch: 3/2/1
+
+Cost: 0
+
+Elemental Ranger Action – Arrow Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+Ice Fusion (As an additional cost to play Flake Out, you may reveal an Ice card from your hand.)
+
+If Flake Out was fused, it gains dominate. (The defending hero can’t defend Flake Out with more than 1 card from their hand.)
+
+Power: 3/4/5
+
+Defense: 3
+
+Playing a defense reaction from your hand counts towards the 1 card from your hand restriction. You cannot defend with a card in your hand then play a defense reaction from your hand. (Assuming Flake Out has dominate.)
+
+——————————————————————————————————————————-
+
+Frazzle
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Elemental Ranger Action – Arrow Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+Lightning Fusion (As an additional cost to play Frazzle, you may reveal a Lightning card from your hand.)
+
+If Frazzle was fused, whenever an attack would deal damage this turn, instead it deals that much damage plus 1.
+
+Power: 3/4/5
+
+Defense: 3
+
+Multiple instances of “deal 1 damage” will all separately be affected by this effect.
+
+If the entire damage is defended or prevented the extra damage won’t apply. For example if Frazzle is 5 power and is defended by 5 defense, the defending player would not take any damage as Frazzle did not deal any damage.
+
+This affects all attacks this turn and does not require this attack to be on the combat chain.
+
+——————————————————————————————————————————-
+
+Frost Lock
+
+Pitch: 3
+
+Cost: 1
+
+Elemental Ranger Action – Arrow Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+Ice Fusion (As an additional cost to play Frost Lock, you may reveal an Ice card from your hand.)
+
+Cards and activated abilities cost opposing heros an additional {r} this turn.
+
+If Frost Lock was fused, it gains +1{p} and “If this hits a hero, until the end of their next turn they can’t pitch or play cards with base cost 0.”
+
+Power: 3
+
+Defense: 3
+
+Defense Reactions are played and therefore would require an additional {r} to play.
+
+You cannot pitch or play cards with cost X or XX, as X is determined to be zero until it becomes a layer on the chain.
+
+You can pitch cards with no cost (such as Heart of Fyendal) as it has no cost, not zero cost.
+
+Even if the card has an additional cost i.e from frostbites, you cannot play the card if it has cost 0.
+
+If a card has a cost of 1 and it reduced to 0 for any reason, you can still play the card as it’s base cost is not 0.
+
+Defense Reactions are played. If you are under Frost Lock’s second effect you would not be able to play defense reactions with cost 0.
+
+This affects all attacks this turn and does not require this attack to be on the combat chain.
+
+The opposing heroes can respond to Frost Lock with playing cards and activated abilities. Cards and activated abilities only cost an additional {r} once Frost Lock resolves and becomes attacking on the combat chain.
+
+——————————————————————————————————————————-
+
+Ice Storm
+
+Pitch: 1
+
+Cost: 0
+
+Elemental Ranger Action
+
+Ice and Lightning Fusion (As an additional cost to play Ice Storm, you may reveal an Ice and a Lightning card from your hand.)
+
+Your next arrow attack this turn gains +3{p}.
+
+If Ice Storm was fused, your next arrow attack this turn gains “If this hits a hero, deal 1 damage to them” and “Whenever this attack deals damage to a hero, create that many Frostbite tokens under their control.”
+
+Go again
+
+Defense: 2
+
+You have to reveal both, an Ice and a Lightning card to fuse Ice Storm.
+
+You may pay the additional cost to fuse this by revealing a single Ice and Lightning card.
+
+This affects any and all instances of damage this card deals including “deal 1 damage”.
+
+If the attack deals 5 damage, they would create 5 Frostbites.
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.“
+
+——————————————————————————————————————————-
+
+Light it Up
+
+Pitch: 2
+
+Cost: 1
+
+Elemental Ranger Action – Attack
+
+Lexi Specialization (You may only have Light it Up in your deck if your hero is Lexi.)
+
+Lightning Fusion (As an additional cost to play Light it Up, you may reveal a Lightning card from your hand.)
+
+If Light it Up was fused, it gains “If this hits a hero, deal 1 damage to them for each equipment they control.”
+
+If Light it Up deals damage to a hero equal to or greater than the number of equipment they control, equipment they control lose and can’t gain activated abilities until the end of their next turn.
+
+Power: 4
+Defense: 3
+
+You may only play Light it Up in your deck if your hero is Lexi, Livewire or Lexi (Young hero).
+
+Light it Up’s first ability is a single instance of damage, even if they have multiple equipment. (For example if the defending hero controls 4 equipment, Light it Up would deal 4 damage not 4 instances of 4)
+
+Equipment on the combat chain are still considered equipment they control. (Temper and Blade Break happen when the combat chain closes).
+
+Equipment only loses activated abilities, this does not include passive or triggered abilities. (This does not make equipment lose Battleworn, Blade Break or Temper.)
+
+Light it Up only checks if damage equal to or greater than the number of equipment is dealt, it does not care about damage previously dealt by Light it Up nor does it “add” the damage dealt by different instances.
+
+——————————————————————————————————————————-
+
+Over Flex
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Ranger Action
+
+Your next arrow attack this turn gains +2/3/4{p}.
+
+Reload (If you have no cards in your arsenal, you may put a card from your hand face down into your arsenal.)
+
+Go again
+
+Defense: 2
+
+You cannot reload if you have a card in your arsenal even if there is an additional empty arsenal slot.
+
+——————————————————————————————————————————-
+
+Seek and Destroy
+
+Pitch: 1
+
+Cost: 0
+
+Ranger Action
+
+Your next arrow attack this turn gains +3{p} and “If this hits a hero, at the beginning of their next end phase, they discard all cards in their hand and destroy all cards in their arsenal.”
+
+Go again
+
+Defense: 2
+
+This effect happens before you elect to arsenal a card and draw back up to your intellect.
+
+Players do not have priority during the end phase and therefore players cannot respond to this ability.
+
+——————————————————————————————————————————-
+
+Snap Shot
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Elemental Ranger Action – Attack
+
+(Arrows can only be played from arsenal and only if you control a bow.)
+
+Lightning Fusion (As an additional cost to play Snap Shot, you may reveal a Lightning card from your hand.)
+
+If Snap Shot was fused, you may activate abilities of bows you control an additional time this turn and as though they were an instant.
+
+Power: 2/3/4
+
+Defense: 3
+
+You still need to pay the resource cost of the bow when it is activated as an instant.
+
+If a bow has not been activated yet, then Snap Shot is fused, you would choose if you would be using the bow’s original action/instant use, or the additional time use granted by Snap Shot.
+
+If the bow’s activated ability is an action and has not been activated yet, then Snap Shot is fused, and you use the bow’s original action use, it would still be an action and not an instant.
+
+——————————————————————————————————————————-
+
+## Elemental Runeblade Cards and Runeblade Cards
+
+Bramble Spark
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Elemental Runeblade Action
+
+Earth Fusion (As an additional cost to play Bramble Spark, you may reveal an Earth card from your hand.)
+
+The next attack action card you play this turn gains “When you attack with this, deal 1 arcane damage to target hero.”
+
+If Bramble Spark was fused, the next attack action card you play this turn gains +1/2/3{p}.
+
+Go again
+
+Defense: 2
+
+If Bramble Spark is fused, the next attack action you play would gain both effects.
+
+Each instance of “Deal 1 arcane damage to target hero” is separate and therefore would trigger multiple instances of dealing damage e.g Briar’s ability to make Embodiments of Earth.
+
+——————————————————————————————————————————-
+
+Blossoming Spellblade
+
+Pitch: 1
+
+Cost: 2
+
+Elemental Runeblade Action – Attack
+
+Earth and Lightning Fusion (As an additional cost to play Blossoming Spellblade, you may reveal an Earth and a Lightning card from your hand.)
+
+If Blossoming Spellblade was fused, it gains “Whenever this deals damage to an opposing hero, you may banish a ‘non-attack’ action card from your graveyard. If you do, you may play it this turn as though it were an instant and if it would be put into your graveyard, instead banish it.”
+
+When you attack with Blossoming Spellblade, if it was fused, deal 1 arcane damage to target hero.
+
+Power: 6
+
+Defense: 3
+
+You have to reveal both, an Earth and a Lightning card to fuse Blossoming Spellblade.
+
+You may pay the additional cost to fuse this by revealing a single Earth and Lightning card.
+
+This affects any and all instances of damage this card deals including “deal 1 (arcane) damage”.
+
+Even if the attack deals 6 damage, it would still only trigger once.
+
+If an attack has multiple instances of dealing damage it would trigger multiple times (E.g a card has “If this hits deal 1 damage” “If this hits deal 1 damage”.
+
+You choose the card to banish when the ability resolves.
+
+You do not have to play the card straight away. You can play it anytime during your turn. (You do not have priority during the end of turn.)
+
+If the non-attack action card played has go again, you will still gain an action point after it resolves even if it was played as though it was an instant. This would net gain you an action point.
+
+——————————————————————————————————————————-
+
+Explosive Growth
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Runeblade Action – Attack
+
+Earth Fusion (As an additional cost to play Explosive Growth, you may reveal an Earth card from your hand.)
+
+If Explosive Growth was fused, whenever it deals damage, attacks gain +1{p} this combat chain.
+When you attack with Explosive Growth, deal 1 arcane damage to target hero.
+
+Power: 1/2/3
+
+Defense: 3
+
+This affects any and all instances of damage this card deals including “deal 1 (arcane) damage”.
+
+Even if the attack deals 6 damage, it would still only trigger once.
+
+If an attack has multiple instances of dealing damage it would trigger multiple times (E.g a card has “If this hits deal 1 damage” “If this hits deal 1 damage”.
+
+The attack does arcane damage, it resolves and becomes a layer on the chain so it would gain it’s +{p} before the attack does damage. (Assuming it is fused and the arcane damage deals damage.)
+
+The second ability affects the entire combat chain and includes weapon attacks.
+
+——————————————————————————————————————————-
+
+Flicker Wisp
+
+Pitch: 2
+
+Cost: 0
+
+Elemental Runeblade Action
+
+Lightning Fusion (As an additional cost to play Flicker Wisp, you may reveal a Lightning card from your hand.)
+
+If Flicker Wisp was fused, until end of turn, action card effects you control that deal arcane damage, instead deal that much arcane damage plus 1.
+
+Deal 1 arcane damage to target hero.
+
+Go again
+
+Defense: 2
+
+Multiple instances of arcane damage on the same source will be affected separately. For example if a card has “Deal 1 arcane damage. Deal 1 arcane damage” both would deal 2 each.
+
+If a card deals 2 arcane damage it would require arcane barrier 2 (or arcane barrier 1 x 2) to prevent as it is from a single source.
+
+This only affects action cards, this does not include other sources such as weapons that deal arcane damage or token auras that deal arcane damage.
+
+——————————————————————————————————————————-
+
+Force Of Nature
+
+Pitch: 3
+
+Cost: 0
+
+Elemental Runeblade Action
+
+Briar Specialization (You may only have Force of Nature in your deck if your hero is Briar.)
+
+Earth Fusion (As an additional cost to play Force of Nature, you may reveal an Earth card from your hand.)
+
+Whenever an attack action card you control hits this turn, if its {p} is greater than its base {p}, draw a card.
+
+If Force of Nature was fused, your next attack this turn gains +1{p}.
+
+Go again
+
+Defense: 3
+
+You may only play Force of Nature in your deck if your hero is Briar, Warden of Thorns or Briar (young hero).
+
+The base power is located at the bottom left corner of the card.
+
+——————————————————————————————————————————-
+
+Inspire Lightning
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Runeblade Action
+
+Lightning Fusion (As an additional cost to play Inspire Lightning, you may reveal a Lightning card from your hand.)
+
+If Inspire Lightning was fused, deal 1/2/3 arcane damage to target hero.
+
+Defense: 2
+
+You may still play Inspire Lightning even if you do not fuse. It would not have any effect.
+
+Inspire Lighting is a single source of arcane damage. If a card deals 2 arcane damage it would require arcane barrier 2 (or two arcane barrier 1) to prevent as it is from a single source.
+
+——————————————————————————————————————————-
+
+Rites of Lightning
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Runeblade Action – Attack
+
+Lightning Fusion (As an additional cost to play Rites of Lightning, you may reveal a Lightning card from your hand.)
+
+When you attack with Rites of Lightning, if it was fused, deal 1 arcane damage to target hero.
+
+If you have dealt arcane damage this turn, Rites of Lightning gains go again.
+
+Power: 3/4/5
+
+Defense: 3
+
+Rites of Lightning has go again as long as you’ve dealt arcane damage this turn, it does not matter if Rites of Lightning did the damage.
+
+Rites of Lightning does not require an opposing hero to be dealt arcane damage, if you have dealt arcane damage to yourself, it would gain go again.
+
+If RItes of Lightning is fused, and deals 1 arcane damage to a hero, it would gain go again from it’s second ability.
+
+——————————————————————————————————————————-
+
+Rites of Replenishment
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Elemental Runeblade Action – Attack
+
+Earth Fusion (As an additional cost to play Rites of Replenishment, you may reveal an Earth card from your hand.)
+
+When you attack with Rites of Replenishment, if you have dealt arcane damage this turn, you may put a ‘non-attack’ action card from your graveyard on the bottom of your deck.
+
+When you attack with Rites of Replenishment, if it was fused, you may put an attack action card from your graveyard on the bottom of your deck.
+
+Power: 4/5/6
+
+Defense: 3
+
+You put the non-attack action card to the bottom of your deck first, then the attack action card. (Assuming both abilities are active.)
+
+——————————————————————————————————————————-
+
+Sigil of Suffering
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Runeblade Defense Reaction
+
+Deal 1 arcane damage to the attacking hero.
+
+If you have dealt arcane damage this turn, Sigil of Suffering gains +1{d}.
+
+Defense: 1/2/3
+
+Sigil of Suffering is a defense reaction and must be played during the reaction window as the defending player.
+
+Sigil of Suffering checks if you have done arcane damage this turn, it does not need to be arcane damage done by Sigil of Suffering nor does the damage need to be dealt to an opposing hero for it to gain +1{d}.
+
+——————————————————————————————————————————-
+
+Sting of Sorcery
+
+Pitch: 3
+
+Cost: 0
+
+Runeblade Action – Aura
+
+Go again
+
+Attack action cards you control gain “When you attack with this, deal 1 arcane damage to target hero.”
+
+At the beginning of your end phase, destroy Sting of Sorcery.
+
+Defense: 2
+
+The arcane damage is dealt by the attack action card that has the triggered ability “When you attack with this, deal 1 arcane damage to target hero.”, it is not dealt by Sting of Sorcery.
+
+Arcane damage effect is triggered and dealt when the attack action card resolves and becomes attacking, not when it is played.
+
+——————————————————————————————————————————-
+
+Stir the Wildwood
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Elemental Runeblade Action – Attack
+
+Earth Fusion (As an additional cost to play Stir the Wildwood, you may reveal an Earth card from your hand.)
+
+If you have dealt arcane damage to an opposing hero this turn, Stir the Wildwood gains +2{p}.
+
+If Stir the Wildwood was fused, it gains +2{p}.
+
+Power: 3/4/5
+
+Defense: 3
+
+If you have dealt arcane damage and fused Stir the of Wildwood it gains +4{p}.
+
+——————————————————————————————————————————-
+
+Vela Flash
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Elemental Runeblade Action – Attack
+
+Lightning Fusion (As an additional cost to play Vela Flash, you may reveal a Lightning card from your hand.)
+
+If Vela Flash was fused, you may play your next ‘non-attack’ action card this turn as though it were an instant.
+
+Power: 3/4/5
+
+Defense: 3
+
+If the non-attack action card played has go again, you will still gain an action point after it resolves even if it was played as though it was an instant. This would net gain you an action point.
+
+——————————————————————————————————————————-
+
+## Earth Cards
+
+Amulet of Earth
+
+Pitch: 3
+
+Cost: 0
+
+Earth Action – Item
+
+Go again
+
+Instant – Destroy Amulet of Earth: Attack action cards you control gain +1{p} and +1{d} this turn. Activate this ability only if you have Earth fused this turn.
+
+Defense: –
+
+This affects attacking cards and defending cards you control. It does not affect cards in your hand.
+
+You cannot defend with Amulet of Earth as it does not a defense value.
+
+——————————————————————————————————————————-
+
+Autumn’s Touch (Red)
+
+Pitch: 1/2/3
+
+Cost: 3
+
+Earth Action – Attack
+
+Power: 5/6/7
+
+Defense: 3
+
+——————————————————————————————————————————-
+
+Break Ground
+
+Pitch: 1/2/3
+
+Cost: 3
+
+Earth Action – Attack
+
+When you attack with Break Ground, you may put a card from your arsenal on the bottom of your deck. If you do, draw a card.
+
+Power: 5/6/7
+
+Defense: 2
+
+You cannot play Break Ground from your arsenal and put itself on the bottom of your deck.
+
+——————————————————————————————————————————
+
+Burgeoning
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Earth Action – Attack
+
+If Burgeoning is played from arsenal, it gains +1{p}.
+
+Power: 4/5/6
+
+Defense: 2
+
+You may still play Burgeoning from your hand. It would not gain the +1{p}.
+
+——————————————————————————————————————————-
+
+Channel Mount Heroic
+
+Pitch: 1
+
+Cost: 3
+
+Earth Action – Aura
+
+Go again
+
+Attack action cards you control have +3{p}.
+
+Channel Earth – At the beginning of your end phase, put an flow counter on Channel Mount Heroic then destroy it unless you put an Earth card from your pitch zone on the bottom of your deck for each flow counter on it.
+
+Defense: 3
+
+This affects both attacking and defending attack action cards you control. (Notably when they are on the combat chain.)
+
+If Channel Mount Heroic is removed before damage is dealt, while an attack action card is still on the chain, the attack would lose the +3{p} from Channel Mount Heroic.
+
+The words “you control” means cards you own (and have not lost control of), as well as tokens and effects created by cards you control, as well as cards, tokens and effects you have gained control of, and which are in any zone that makes up the arena and not “under” another card or token such as being in your hero’s soul.
+
+This does not affect attack action cards in your hand, deck, graveyard or banished zone as it is not considered “you control” as those zones are not located in the arena.
+
+Only Earth Element cards count towards Channel Earth. Elemental cards with Earth fusion do not.
+
+——————————————————————————————————————————
+
+Evergreen
+
+Pitch: 3/2/1
+
+Cost: 3
+
+Earth Action – Attack
+
+If Evergreen is played from arsenal, put it on the bottom of your deck when the combat chain closes.
+
+Power: 5/6/7
+
+Defense: 2
+
+Evergreen’s effect is not optional. If it is played from the arsenal it must be put on the bottom of your deck when the chain link resolves.
+
+——————————————————————————————————————————-
+
+Sow Tomorrow
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Earth Action
+
+Put target Earth or Elemental action card with cost 0/1/2 or greater from your graveyard on the bottom of your deck. Banish Sow Tomorrow.
+
+If Sow Tomorrow is played from arsenal, draw a card.
+
+Go again
+
+Defense: 2
+
+You must have a target to play this card. You cannot play this card if there is not a legal target in the graveyard.
+
+——————————————————————————————————————————-
+
+Summerwood Shelter
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Earth Instant
+
+Target defending Earth or Elemental action card gains +2/3/4{d}.
+
+Defense: –
+
+You can only target an attack action card that is defending. Cards that defended previous chains on the combat chain are still considered to be defending cards.
+
+You can target a defending attack action card on a previous chain link. It would not reduce the damage dealt on a chain link that has already resolved.
+
+You can only play Summerwood Shelter if there is a legal target.
+
+You cannot defend with Summerwood Shelter as it does not have a defense value.
+
+——————————————————————————————————————————-
+
+Tome of Harvests
+
+Pitch: 3
+
+Cost: 3
+
+Earth Action
+
+As an additional cost to play Tome of Harvests, put a card from your arsenal on the bottom of your deck.
+
+Draw 3 cards.
+
+Go again
+
+Defense: 2
+
+You cannot play Tome of Harvest if you do not have a card in arsenal.
+
+You cannot put Tome of Harvest from your arsenal on the bottom of your deck as you play it from your arsenal.
+
+It is possible to draw the card you put on the bottom of your deck as an additional cost if there are less than 3 cards in your deck when you play Tome of Harvest.
+
+——————————————————————————————————————————-
+
+Weave Earth
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Earth Action
+
+The next Earth or Elemental attack action card you play this turn gains +1/2/3{p}.
+
+If it’s fused, instead it gains +2/3/4{p}.
+
+Go again
+
+defense: 2
+
+If the next attack is not Earth or Elemental it will not gain the bonus, if you then play a Earth or Elemental attack this turn it will then gain the bonus.
+
+——————————————————————————————————————————-
+
+## Ice Cards
+
+Amulet of Ice
+
+Pitch: 3
+
+Cost: 0
+
+Ice Action – Item
+
+Go again
+
+Instant – Destroy Amulet of Ice: Target hero discards a card unless they pay {r}{r}. Activate this ability only if you have Ice fused this turn.
+
+Defense: –
+
+You cannot defend with Amulet of Ice as it does not have a defense value.
+
+You may use this on your opponent’s turn as long as you have Ice fused.
+
+You may elect to discard a card even if you have no cards in your hand. You are not forced to pay the {r}{r}.
+
+——————————————————————————————————————————-
+
+Blizzard
+
+Pitch: 3
+
+Cost: 0
+
+Ice Instant
+
+Target attack loses and can’t gain go again unless the attacking hero pays {r}{r}.
+
+Defense: –
+
+The attacking player decides whether to pay {r}{r} when Blizzard resolves.
+
+You may target a weapon attack with this.
+
+You may target an attack without go again.
+
+——————————————————————————————————————————-
+
+Channel Lake Frigid
+
+PItch: 3
+
+Cost: 2
+
+Ice Action – Aura
+
+Go again
+
+Cards and activated abilities cost opposing heroes an additional {r}.
+
+Channel Ice – At the beginning of your end phase, put a flow counter on Channel Lake Frigid then destroy it unless you put an Ice card from your pitch zone on the bottom of your deck for each flow counter on it.
+
+Defense: 3
+
+This does not affect defending with cards. (Except defense reactions.)
+
+Defense reactions are played and therefore require an additional {r} when Channel Lake Frigid is in play.
+
+This does not include triggered or passive abilities.
+
+This includes weapon attacks as they are activated abilities.
+
+Only Ice Element cards count towards Channel Ice. Elemental cards with Ice fusion do not.
+
+——————————————————————————————————————————-
+
+Chill to the Bone
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Ice Action
+
+The next time an Ice or Elemental attack hits a hero this turn, create 1/2/3 Frostbite tokens under their control.
+
+Go again
+
+Defense: 2
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.”
+
+A weapon attack counts as long as it is an Elemental weapon attack.
+
+——————————————————————————————————————————-
+
+Frost Fang
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Ice Action – Attack
+
+If Frost Fang hits a hero, they discard a card unless they pay {r}{r}.
+
+Power: 3/4/5
+
+Defense: 2
+
+They can still elect to discard a card even if they do not have any cards in hand.
+
+——————————————————————————————————————————-
+
+Ice Quake
+
+PItch: 3/2/1
+
+Cost: 1
+
+Ice Action
+
+Your next attack this turn gains +1/2/3{p}.
+
+Whenever an attack hits a hero this turn, create a Frostbite token under their control.
+
+Go again
+
+Defense: 2
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.”
+
+The second ability applies to all attacks this turn, not just the next attack.
+
+——————————————————————————————————————————-
+
+Icy Encounter
+
+Pitch: 3/2/1
+
+Cost: 2
+
+Ice Action – Attack
+
+If Icy Encounter hits a hero, create a Frostbite token under their control.
+
+Power: 4/5/6
+
+Defense: 2
+
+A Frostbite token is an Elemental Aura with “Cards and activated abilities you control cost an additional {r}.
+
+At the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.”
+
+——————————————————————————————————————————-
+
+Polar Blast
+
+PItch: 3/2/1
+
+Cost: 1
+
+Ice Action
+
+Target opposing hero may pay {r}/{r}{r}/{r}{r}{r}. If they don’t your next attack this turn gains dominate. (The defending hero can’t defend the attack with more than 1 card from their hand.)
+
+If Polar Blast is played from arsenal, draw a card.
+
+Go again
+
+Defense: 2
+
+The hero decides whether to pay the resource cost at the time Polar Blast resolves not at the time of the attack.
+
+You may attack a different hero than the hero you targeted even if the card was granted dominate.
+
+——————————————————————————————————————————-
+
+Weave Ice
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Ice Action
+
+The next Ice or Elemental attack action card you play this turn gains +1/2/3{p}.
+
+If it’s fused, it gains dominate. (The defending hero can’t defend the attack with more than 1 card from their hand.)
+
+Go again
+
+Defense: 2
+
+If the next attack is not Ice or Elemental it will not gain the bonus, if you then play a Ice or Elemental attack this turn it will then gain the bonus.
+
+——————————————————————————————————————————-
+
+Winter’s Bite
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Ice Action
+
+Target hero discards a card unless they pay {r}/{r}{r}/{r}{r}{r}.
+
+Go again
+
+Defense: 2
+
+If the target hero has no cards in hand they can still elect to discard a card instead of paying {r}.
+
+——————————————————————————————————————————-
+
+## Lightning Cards
+
+Amulet of Lightning
+
+PItch: 3
+
+Cost: 0
+
+Lightning Action – Item
+
+Go again
+
+Instant – Destroy Amulet of Lightning: Target action card gains go again. Activate this ability only if you have Lightning fused this turn.
+
+Defense: –
+
+You cannot defend with Amulet of Lightning as it does not have a defense value.
+
+You can target a non-attack action card with Amulet of Lightning.
+
+You can target a card that has not been Lightning fused, as long as you have Lightning fused this turn.
+
+——————————————————————————————————————————-
+
+Ball Lightning
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Lighting Action – Attack
+
+Whenever a Lightning or Elemental action card would deal damage this combat chain, instead it deals that much damage plus 1.
+
+Go again
+
+Power: 1/2/3
+
+Defense: 0
+
+This affects all instances of damage including if an Elemental or Lightning action card gained “deal 1 damage”.
+
+Playing a non-attack action closes the combat chain, therefore Ball Lightning’s replacement effect does not apply to non-attack action cards. This does apply non-attack actions that are played as though it was an instant when the combat chain is still open.
+
+Ball Lighting does have a defense value (0 is a value) and can defend. (This is different than if there was no defense value)
+
+——————————————————————————————————————————-
+
+Blink
+
+Pitch: 3
+
+Cost 0
+
+Lighting Instant
+
+Gain 1 action point. (You can only gain action points during your action phase.)
+
+Defense: –
+
+You can only spend action points during your action phase.
+
+——————————————————————————————————————————-
+
+Channel Thunder Steppe
+
+Pitch: 2
+
+Cost: 1
+
+Lighting Action – Aura
+
+Go again
+
+Whenever you play an action card, you may pay {r}. If you do, it gains go again.
+
+Channel Lightning – At the beginning of your end phase, put a flow counter on Channel Thunder Steppe then destroy it unless you put a Lightning card from your pitch zone on the bottom of your deck for each flow counter on it.
+
+Defense: 3
+
+Multiple instances of go again do not stack.
+
+You can give a non-attack action go again.
+
+Only Lightning Element cards count towards Channel Lightning. Elemental cards with Lightning fusion do not.
+
+——————————————————————————————————————————-
+
+Electrify
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Lightning Action
+
+The next time an attack action card hits a hero this turn, it deals 1/2/3 damage to them.
+
+If Electrify is played from arsenal, draw a card.
+
+Go again
+
+Defense: 2
+
+The attack action is the card doing the damage.
+
+The damage is not arcane damage.
+
+——————————————————————————————————————————-
+
+Flash
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Lightning Action
+
+The next action card you play this turn with cost 0/1/2 or greater gains go again.
+
+Go again
+
+Defense: 2
+
+You may give a non-attack action card go again.
+
+——————————————————————————————————————————-
+
+Heaven’s Claws
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Lighting Action – Attack
+
+Whenever a Lightning or Elemental action card would deal damage this combat chain, instead it deals that much damage plus 1.
+
+Go again
+
+Power: 1/2/3
+
+Defense: 0
+
+——————————————————————————————————————————-
+
+Lightning Press
+
+Pitch: 3/2/1
+
+Cost: 0
+
+Lightning Instant
+
+Target attack action card with cost 1 or less gains +1/2/3{p}
+
+Defense: –
+
+You can target a defending attack action card.
+
+You cannot defend with Lightning Press as it does not have a defense value.
+
+You do not have to control the target.
+
+You can target attack action cards on previous chain links.
+
+——————————————————————————————————————————-
+
+Shock Striker
+
+Pitch: 3/2/1
+
+Cost: 1
+
+Lightning Action – Attack
+
+Once per Turn Instant – {r}{r}: Shock Striker gains “If Shock Striker hits a hero, deal 1 damage to them.”
+
+Defense: 2
+
+Shock Striker is the card doing the damage.
+
+The damage is not arcane damage.
+
+——————————————————————————————————————————-
+
+Weave Lightning
+
+Pitch:3/2/1
+
+Cost 0
+
+Lightning Action
+
+The next Lightning or Elemental attack action card you play this turn gains +1/2/3{p}. If it’s fused, it gains go again.
+
+Go again
+
+Defense: 2
+
+If the next attack is not Lightning or Elemental it will not gain the bonus, if you then play a Lightning or Elemental attack this turn it will then gain the bonus.
+
+——————————————————————————————————————————-
+
+Pulse of Candlehold
+
+Pitch: 2
+
+Cost: 0
+
+Earth/Lightning Action
+
+Legendary (You may only have 1 Pulse of Candlehold in your deck.)
+
+Put up to 2 target Earth, Lightning and/or Elemental action cards from your graveyard on top of your deck. Banish Pulse of Candlehold.
+
+Go again
+
+Defense: 3
+
+You may only have Pulse of Candlehold in your deck if your hero has essence of Earth and essence of Lightning. You must have both.
+
+You may pick 0, 1 or 2 targets.
+
+You choose the order of the cards on top of your deck.
+
+Your opponent does not see the order they go on top. (The cards are open information just not the order)
+
+——————————————————————————————————————————-
+
+Pulse of Isenloft
+
+Pitch: 3
+
+Cost: 2
+
+Earth/Ice Defense Reaction
+
+Legendary (You may only have 1 Pulse of Isenloft in your deck.)
+
+Earth, Ice, and Elemental action cards have +1{d} while defending this turn.
+
+Defense: 6
+
+You may only have Pulse of Isenloft in your deck if your hero has essence of Earth and essence of Ice. You must have both.
+
+Since defense reactions can’t defend in the defending window and must be played in the reaction window, you must pay Pulse of Isenloft’s cost to play it.
+
+Pulse of Isenloft is a Defense Reaction not an action card. It does not get +1[d} from it’s ability.
+
+——————————————————————————————————————————-
+
+Pulse of Volthaven
+
+Pitch: 1
+
+Cost: 0
+
+Ice/Lightning Instant
+
+Legendary (You may only have 1 Pulse of Volthaven
+
+in your deck.)
+
+Your next Ice, Lightning, or Elemental attack this turn gains +4{p}.
+
+Defense: –
+
+You may only have Pulse of Volthaven in your deck if your hero has essence of Ice and essence of Lightning. You must have both.
+
+If the next attack is not Ice, Lightning or Elemental it will not gain the bonus, if you then play a Ice, Lightning or Elemental attack this turn it will then gain the bonus.
+
+If you reveal Pulse of Volthaven to fuse an attack, you can not play Pulse of Volthaven to affect that same attack.
+
+——————————————————————————————————————————-

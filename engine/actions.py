@@ -471,12 +471,19 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                             pitch_cards=seq,
                         ))
 
-        # ATTACK_ALLY - Placeholder
-        # if player.action_points > 0:
-        #     for i, card in enumerate(player.allies.cards):
-        #         exhausted = player.allies_exhausted[i] if i < len(player.allies_exhausted) else False
-        #         if not exhausted:
-        #             actions.append(Action(type=ActionType.ATTACK_ALLY, card_idx=i))
+        # ATTACK_ALLY — allies can attack once per turn (CR 11.0)
+        if player.action_points > 0 and not state.stack_entries:
+            for i, ally_card in enumerate(player.allies.cards):
+                exhausted = player.allies_exhausted[i] if i < len(player.allies_exhausted) else False
+                if not exhausted and ally_card.power is not None and ally_card.power > 0:
+                    actions.append(Action(
+                        type=ActionType.ATTACK_ALLY,
+                        card_idx=i,
+                        card=ally_card,
+                        player_id=pp,
+                        is_attack_proxy=False,
+                        attack_source=ally_card,
+                    ))
 
     # DISCARD_ACTIVATE — "Instant - Discard this:" hand abilities (no pitch cost)
     for card in player.hand.cards:

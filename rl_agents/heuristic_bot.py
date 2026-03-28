@@ -1,160 +1,172 @@
-"""Simple heuristic bot that prioritises dealing attack damage.
+"""Heuristic bot for the local FAB game engine.
 
-Used to generate higher-quality training data for IQL — random-vs-random
-games have almost no strategic signal, but heuristic-vs-heuristic games
-reward attacking, blocking efficiently, and pitching correctly.
+Maximizes damage output on its turn and blocks efficiently with expendable
+cards.  Implements the local engine agent interface: __call__(state, actions).
 
 Strategy:
-  Main phase  → play the highest-power attack card that can be paid for
-  Block phase → block with the lowest-value card (preserve strong cards)
-  Otherwise   → fall back to random
-
-The bot loads the slug_index to look up card power/defense/cost by slug.
+  Action phase → play the highest-damage attack affordable; prefer Go Again
+                  chains to stack multiple attacks per turn.  Use weapon when
+                  it out-damages hand attacks.
+  Defend phase → pick the cheapest defense combo that covers incoming damage,
+                  preferring equipment over hand cards and sacrificing low-power
+                  cards first.
+  Reaction     → play the best attack/defense reaction available, else pass.
+  Otherwise    → pass (let the engine advance).
 """
 from __future__ import annotations
 
-import json
 import random
-from pathlib import Path
+from typing import Optional
 
-from rl_agents.utils.card_helpers import safe_int as _safe_int
+from engine.actions import Action, ActionType
+from engine.state import GameState, Step
 
 
 class HeuristicBot:
-    """Greedy attack-first heuristic agent for Talishar games."""
+    """Greedy damage-first heuristic agent for the local FAB engine."""
 
-    def __init__(
-        self,
-        slug_index_path: str = "card_data/slug_index.json",
-        seed: int | None = None,
-    ):
+    def __init__(self, seed: int | None = None):
         self._rng = random.Random(seed)
-        # Build slug → card stats lookup
-        self._cards: dict[str, dict] = {}
-        path = Path(slug_index_path)
-        if path.exists():
-            raw = json.loads(path.read_text(encoding="utf-8"))
-            by_slug = raw.get("by_slug", {})
-            for slug, card in by_slug.items():
-                self._cards[slug] = {
-                    "power": _safe_int(card.get("power"), 0),
-                    "defense": _safe_int(card.get("defense"), 0),
-                    "cost": _safe_int(card.get("cost"), 0),
-                    "pitch": _safe_int(card.get("pitch"), 0),
-                    "types": card.get("types", []),
-                }
 
-    def _card_stats(self, slug: str) -> dict:
-        return self._cards.get(slug, {"power": 0, "defense": 0, "cost": 0, "pitch": 0, "types": []})
+    # ------------------------------------------------------------------
+    # Engine agent interface
+    # ------------------------------------------------------------------
 
-    def _is_attack(self, slug: str) -> bool:
-        stats = self._card_stats(slug)
-        return "Attack" in stats["types"] and stats["power"] > 0
+    def __call__(self, state: GameState, actions, context=None):
+        if not isinstance(actions, (list, tuple)) or not actions:
+            return actions
 
-    def choose_talishar_action(self, state: dict, actions: list[dict], player_id: int) -> dict | None:
-        if not actions:
-            return None
+        # Non-Action choices (e.g. "who goes first?") — pick randomly
+        if not isinstance(actions[0], Action):
+            return self._rng.choice(list(actions))
 
-        phase = str((state.get("turnPhase") or {}).get("turnPhase") or "").upper()
+        step = state.step
 
-        # --- Main phase: play highest-power attack ---
-        if phase == "M":
-            return self._pick_main_phase(actions)
+        if step == Step.ACTION:
+            pick = self._pick_action_phase(state, actions)
+        elif step == Step.COMBAT_DEFEND:
+            pick = self._pick_defend_phase(state, actions)
+        elif step == Step.COMBAT_REACTION:
+            pick = self._pick_reaction_phase(state, actions)
+        else:
+            pick = None
 
-        # --- Pitch phase: pitch the lowest-value card ---
-        if phase == "P":
-            return self._pick_pitch_phase(actions)
+        if pick is not None:
+            return pick
 
-        # --- Block phase: block with lowest-power card ---
-        if phase == "B":
-            return self._pick_block_phase(state, actions)
-
-        # --- Everything else: fall back to random ---
-        return None  # signals caller to use random fallback
-
-    # ── Main Phase ──────────────────────────────────────────────────
-
-    def _pick_main_phase(self, actions: list[dict]) -> dict | None:
-        # Find attack cards from hand and equipment (weapon swings)
-        attack_actions = []
+        # Fallback: pass if available, else random
         for a in actions:
-            if a.get("type") not in ("hand", "equipment"):
-                continue
-            slug = a.get("cardNumber", "")
-            stats = self._card_stats(slug)
-            power = stats["power"]
-            if power > 0:
+            if a.type in (ActionType.PASS, ActionType.REACTION_PASS):
+                return a
+        return self._rng.choice(list(actions))
+
+    # ------------------------------------------------------------------
+    # Action phase — maximise damage output
+    # ------------------------------------------------------------------
+
+    def _pick_action_phase(self, state: GameState, actions: list[Action]) -> Optional[Action]:
+        attack_actions: list[Action] = []
+
+        for a in actions:
+            if a.type == ActionType.ATTACK_WEAPON:
                 attack_actions.append(a)
+            elif a.type in (ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL):
+                card = a.card
+                if card and card.is_attack and (card.power or 0) > 0:
+                    attack_actions.append(a)
 
-        if attack_actions:
-            # Pick the highest-power attack
-            return max(attack_actions, key=lambda a: self._card_stats(a.get("cardNumber", ""))["power"])
+        if not attack_actions:
+            return None  # nothing to attack with — fallback will pass
 
-        # No attacks available — check for non-attack hand actions (auras, etc.)
-        # Fall back to random
-        return None
+        # Score each attack action:
+        #   primary  = effective power (damage)
+        #   secondary = Go Again bonus (chaining = more total damage)
+        #   tertiary = fewer pitch cards (preserve hand for future attacks)
+        def attack_score(a: Action) -> tuple:
+            card = a.card
+            power = card.power or 0 if card else 0
+            go_again = 1 if (card and card.has_go_again) else 0
+            pitch_count = len(a.pitch_cards) if a.pitch_cards else 0
+            return (power, go_again, -pitch_count)
 
-    # ── Pitch Phase ─────────────────────────────────────────────────
+        return max(attack_actions, key=attack_score)
 
-    def _pick_pitch_phase(self, actions: list[dict]) -> dict | None:
-        # Pitch the card with the highest pitch value (blue=3 > yellow=2 > red=1)
-        # Among equal pitch, prefer pitching lowest-power cards
-        pitch_actions = []
-        for a in actions:
-            if a.get("type") != "hand":
-                continue
-            pitch_actions.append(a)
+    # ------------------------------------------------------------------
+    # Defend phase — block with cards we don't need
+    # ------------------------------------------------------------------
 
-        if pitch_actions:
-            # Higher pitch value = better to pitch; lower power = less loss
-            return max(pitch_actions, key=lambda a: (
-                self._card_stats(a.get("cardNumber", ""))["pitch"],
-                -self._card_stats(a.get("cardNumber", ""))["power"],
-            ))
-
-        return None
-
-    # ── Block Phase ─────────────────────────────────────────────────
-
-    def _pick_block_phase(self, state: dict, actions: list[dict]) -> dict | None:
-        # Check if we've already committed blockers
-        selected_defenders = bool((state.get("activeChainLink") or {}).get("reactions"))
-
-        if selected_defenders:
-            # Already blocking — finalize (done blocking / pass)
-            finalize = [a for a in actions
-                        if a.get("type") == "pass_phase"
-                        or _safe_int(a.get("mode"), -1) in (99, 101)]
-            if finalize:
-                return self._rng.choice(finalize)
+    def _pick_defend_phase(self, state: GameState, actions: list[Action]) -> Optional[Action]:
+        combat = state.combat
+        if combat is None:
             return None
 
-        # Pick block cards: prefer equipment first (preserves hand),
-        # then hand cards with highest defense but lowest power (sacrifice weak cards)
-        eq_blocks = []
-        hand_blocks = []
-        for a in actions:
-            if a.get("type") == "equipment":
-                eq_blocks.append(a)
-            elif a.get("type") == "hand":
-                hand_blocks.append(a)
+        incoming = combat.attack_power or 0
 
-        # Use equipment blocks first
-        if eq_blocks:
-            return max(eq_blocks, key=lambda a: self._card_stats(a.get("cardNumber", ""))["defense"])
+        # Separate defense actions from pass
+        defend_actions = [a for a in actions if a.type == ActionType.DEFEND_CARDS]
+        pass_action = next((a for a in actions if a.type == ActionType.PASS), None)
 
-        # Then hand cards: highest defense, lowest power (sacrifice weak cards)
-        if hand_blocks:
-            return max(hand_blocks, key=lambda a: (
-                self._card_stats(a.get("cardNumber", ""))["defense"],
-                -self._card_stats(a.get("cardNumber", ""))["power"],
-            ))
+        if not defend_actions:
+            return pass_action
 
-        # No block cards — try to finalize
-        finalize = [a for a in actions
-                    if a.get("type") == "pass_phase"
-                    or _safe_int(a.get("mode"), -1) in (99, 101)]
-        if finalize:
-            return self._rng.choice(finalize)
+        # If incoming damage is 0 or less, don't bother blocking
+        if incoming <= 0:
+            return pass_action
 
-        return None
+        # Score each defense combo:
+        #   We want to block enough damage without wasting good cards.
+        #   "Cards we don't need" = low power, high pitch (pitch fodder).
+        def defense_score(a: Action) -> tuple:
+            cards = a.card_list or []
+            total_def = sum((c.defense or 0) for c in cards)
+            # Total attack power we're giving up by blocking with these cards
+            power_sacrificed = sum((c.power or 0) for c in cards)
+            # Count of equipment vs hand cards (equipment = free blocks)
+            equip_count = sum(1 for c in cards if c.is_equipment)
+            hand_count = len(cards) - equip_count
+
+            # How well this covers the attack (capped at incoming)
+            effective_block = min(total_def, incoming)
+            # Wasted defense (over-blocking)
+            waste = max(0, total_def - incoming)
+
+            return (
+                effective_block,      # maximize damage prevented
+                -power_sacrificed,    # minimize power given up
+                equip_count,          # prefer equipment blocks
+                -hand_count,          # fewer hand cards used
+                -waste,               # minimize over-blocking
+            )
+
+        best = max(defend_actions, key=defense_score)
+
+        # Only block if it's worth it: block at least 1 damage
+        best_cards = best.card_list or []
+        best_def = sum((c.defense or 0) for c in best_cards)
+        if best_def <= 0:
+            return pass_action
+
+        return best
+
+    # ------------------------------------------------------------------
+    # Reaction phase — play best reaction, else pass
+    # ------------------------------------------------------------------
+
+    def _pick_reaction_phase(self, state: GameState, actions: list[Action]) -> Optional[Action]:
+        # Attack reactions: pick highest power boost
+        attack_reactions = [
+            a for a in actions
+            if a.type == ActionType.PLAY_ATTACK_REACTION and a.card
+        ]
+        if attack_reactions:
+            return max(attack_reactions, key=lambda a: a.card.power or 0)
+
+        # Defense reactions: pick highest defense
+        defense_reactions = [
+            a for a in actions
+            if a.type == ActionType.PLAY_DEFENSE_REACTION and a.card
+        ]
+        if defense_reactions:
+            return max(defense_reactions, key=lambda a: a.card.defense or 0)
+
+        return None  # fallback will pick REACTION_PASS

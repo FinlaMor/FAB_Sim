@@ -496,7 +496,7 @@ def arcane_shelter(card: Card, amount: int, state: GameState) -> int:
 def crush_check(event: Event, state: GameState) -> bool:
     """8.4.2: Check if attack dealt 4+ damage."""
     data = event.data if isinstance(event.data, dict) else {}
-    return data.get("damage_dealt", 0) >= 4
+    return data.get("damage", 0) >= 4
 
 
 def reprise_check(state: GameState) -> bool:
@@ -516,7 +516,7 @@ def combo_check(state: GameState, combo_names: list) -> bool:
 def surge_check(event: Event, amount: int) -> bool:
     """8.4.8: Check if this dealt N+ damage."""
     data = event.data if isinstance(event.data, dict) else {}
-    return data.get("damage_dealt", 0) >= amount
+    return data.get("damage", 0) >= amount
 
 
 def rupture_check(state: GameState) -> bool:
@@ -685,20 +685,74 @@ def effect_destroy(state: GameState, card: Card) -> None:
 
 def effect_opt(state: GameState, player_id: int, count: int,
                ) -> None:
-    """8.5.22: Look at top N of deck, put any on top or bottom.
-    Agent chooses ordering."""
+    """8.5.22: Look at the top N cards of deck. Put any number on the bottom
+    in any order, then put the rest on top in any order (CR 8.5.22).
+    Agent sees all N cards at once, chooses which go to bottom and in what order."""
     player = state.players[player_id]
     if not player.deck.cards:
         return
-    top_cards = player.deck.cards[:count]
-    for card in top_cards:
-        choice = _ask_player(state, player_id, ["top", "bottom"],
-                             context="Opt: put this card on top or bottom of deck?")
-        player.deck.cards.remove(card)
-        if choice == "top":
-            player.deck.cards.insert(0, card)
+    # Reveal up to N cards from the top
+    n = min(count, len(player.deck.cards))
+    top_cards = [player.deck.cards.pop(0) for _ in range(n)]
+
+    if not top_cards:
+        return
+
+    # Step 1: agent chooses which cards (if any) to put on bottom
+    # Offer each card as a slug; agent can select "none" to put nothing on bottom
+    remaining = list(top_cards)
+    bottom_cards = []
+
+    # Agent picks cards to send to the bottom, one at a time, until they select "done"
+    while remaining:
+        options = [c.slug for c in remaining] + ["done_putting_bottom"]
+        choice = _ask_player(state, player_id, options,
+                             context=f"Opt {count}: choose a card to put on the bottom (or done_putting_bottom to stop)")
+        if choice == "done_putting_bottom":
+            break
+        card = next((c for c in remaining if c.slug == choice), None)
+        if card is None:
+            break
+        remaining.remove(card)
+        bottom_cards.append(card)
+
+    # Step 2: order the remaining (top) cards — agent picks order for top
+    top_ordered = []
+    top_remaining = list(remaining)
+    while top_remaining:
+        if len(top_remaining) == 1:
+            top_ordered.append(top_remaining.pop(0))
         else:
-            player.deck.cards.append(card)
+            options = [c.slug for c in top_remaining]
+            choice = _ask_player(state, player_id, options,
+                                 context="Opt: choose which card to place next on top of deck (first chosen = topmost)")
+            card = next((c for c in top_remaining if c.slug == choice), top_remaining[0])
+            top_remaining.remove(card)
+            top_ordered.append(card)
+
+    # Step 3: order the bottom cards — agent picks order for bottom
+    bottom_ordered = []
+    bottom_remaining = list(bottom_cards)
+    while bottom_remaining:
+        if len(bottom_remaining) == 1:
+            bottom_ordered.append(bottom_remaining.pop(0))
+        else:
+            options = [c.slug for c in bottom_remaining]
+            choice = _ask_player(state, player_id, options,
+                                 context="Opt: choose which card to place next on the bottom of deck (first chosen = bottommost)")
+            card = next((c for c in bottom_remaining if c.slug == choice), bottom_remaining[0])
+            bottom_remaining.remove(card)
+            bottom_ordered.append(card)
+
+    # Put top cards back: insert in reverse order so first-chosen ends up on top
+    for card in reversed(top_ordered):
+        player.deck.cards.insert(0, card)
+        card.zone = "deck"
+
+    # Put bottom cards: first-chosen goes to absolute bottom
+    for card in bottom_ordered:
+        player.deck.cards.append(card)
+        card.zone = "deck"
 
 
 def effect_intimidate(state: GameState, target_player_id: int,
@@ -713,6 +767,23 @@ def effect_intimidate(state: GameState, target_player_id: int,
     card = target.hand.cards[idx]
     target.hand.remove(card)
     target.banished.add(card, is_public=False)  # add() updates zone tracking
+
+    # CR 8.5.10: register a one-shot delayed trigger to return the card at start of end phase
+    banished_card_ref = card
+
+    def _return_intimidated_card(event, game_state):
+        """Return the banished card to its owner's hand at start of end phase."""
+        # Only fire once — unregister after first call by removing this listener
+        listeners = game_state.event_manager.listeners.get('start_of_end_phase', [])
+        if _return_intimidated_card in listeners:
+            listeners.remove(_return_intimidated_card)
+        # Only return if still in banished zone (face-down, i.e. the intimidated card)
+        owner = game_state.players[target_player_id]
+        if banished_card_ref in owner.banished.cards:
+            owner.banished.remove(banished_card_ref)
+            owner.hand.add(banished_card_ref)
+
+    state.event_manager.register('start_of_end_phase', _return_intimidated_card)
     return card
 
 
@@ -776,21 +847,26 @@ def effect_charge(state: GameState, player_id: int, card: Card) -> None:
     player.soul.add(card)
 
 
-def effect_reload(state: GameState, player_id: int) -> None:
-    """8.5.15: Put a card from hand on top of deck, then draw a card."""
+def effect_reload(state: GameState, player_id: int, source_card: Card = None) -> bool:
+    """CR 8.5.23: Reload — Optional discrete effect.
+    If the player's arsenal is empty, they may move this card from hand to their arsenal face-down.
+    source_card: the card with Reload keyword (must be in hand).
+    Returns True if the card was moved to arsenal."""
     player = state.players[player_id]
-    if not player.hand.cards:
-        return
-    slugs = [c.slug for c in player.hand.cards]
-    choice = _ask_player(state, player_id, slugs,
-                         context="Reload: choose a card to put on top of deck")
-    card = player.hand.find(choice)
-    if card is None:
-        card = player.hand.cards[0]
-    player.hand.remove(card)
-    player.deck.cards.insert(0, card)
-    card.zone = "deck"
-    _draw_cards(player, 1)
+    # Arsenal must be empty
+    if player.arsenal.cards:
+        return False
+    # The source_card must be in hand
+    if source_card is None or source_card not in player.hand.cards:
+        return False
+    choice = _ask_player(state, player_id, [True, False],
+                         context="Reload: move this card from hand to arsenal face-down?")
+    if not choice:
+        return False
+    player.hand.remove(source_card)
+    player.arsenal.add(source_card, is_public=False)
+    source_card.face_down = True
+    return True
 
 
 def effect_banish_top_deck(state: GameState, player_id: int, count: int = 1,
@@ -1259,3 +1335,412 @@ def create_token(state: GameState, player_id: int, token_slug: str,
             Event(type='gold_created', data={'player_id': player_id, 'count': len(tokens)}),
             state)
     return tokens
+
+
+# ---------------------------------------------------------------------------
+# FIX 7: Missing keyword implementations
+# ---------------------------------------------------------------------------
+
+def resolve_wager(state: GameState, attacker_id: int, source: Card = None) -> int:
+    """CR 8.5.46: Wager — continuous effect on an attack resolved at chain link resolution.
+    If the attack hit, the attack's controller (attacker_id) wins the wager.
+    If it didn't hit, the other player wins.
+    Returns the winner's player_id.
+    The prize effect is card-specific; this function only determines who won."""
+    if not state.combat:
+        return attacker_id  # default to attacker if no combat state
+    # The hit flag is set on the chain link after damage calculation
+    # Look at the most recently closed chain link
+    if state.chain_links:
+        last_link = state.chain_links[-1]
+        winner_id = attacker_id if last_link.hit else (3 - attacker_id)
+    else:
+        # Fallback: check combat state directly
+        winner_id = attacker_id
+    state.event_manager.emit(
+        type('Event', (), {'type': 'wager_resolved',
+                           'data': {'winner': winner_id, 'source': source}})(),
+        state)
+    return winner_id
+
+
+def effect_wager(state: GameState, player_id: int, source: Card = None) -> bool:
+    """CR 8.5.46: Wager wrapper — resolves wager and returns True if player_id won.
+    Called at chain_link_resolve event. Prize effect is card-specific."""
+    winner = resolve_wager(state, player_id, source)
+    return winner == player_id
+
+
+def check_decompose(state: GameState, player_id: int) -> bool:
+    """CR 8.4.14: Decompose — check if the player can pay the cost.
+    Cost: banish 2 Earth cards and an action card from graveyard.
+    Returns True if the player has 2+ Earth cards and 1+ action card in graveyard."""
+    player = state.players[player_id]
+    earth_count = sum(1 for c in player.graveyard.cards if "Earth" in (c.types or []))
+    action_count = sum(1 for c in player.graveyard.cards
+                       if "Action" in (c.types or []) and "Earth" not in (c.types or []))
+    # Need at least 2 Earth + 1 non-Earth Action (to avoid double-counting)
+    # More lenient: 2+ Earth cards and at least 1 action card total
+    action_any = sum(1 for c in player.graveyard.cards if "Action" in (c.types or []))
+    return earth_count >= 2 and action_any >= 1
+
+
+def effect_decompose(state: GameState, card: Card, player_id: int) -> bool:
+    """CR 8.4.14: Decompose — optional cost/condition.
+    You may banish 2 Earth cards and an action card from your graveyard.
+    If you do, the card-specific effect fires (returns True).
+    Returns True if cost was paid."""
+    if not check_decompose(state, player_id):
+        return False
+    player = state.players[player_id]
+    choice = _ask_player(state, player_id, [True, False],
+                         context="Decompose: Banish 2 Earth cards and an action card from graveyard?")
+    if not choice:
+        return False
+    # Banish 2 Earth cards from graveyard
+    earth_cards = [c for c in player.graveyard.cards if "Earth" in (c.types or [])]
+    for i in range(min(2, len(earth_cards))):
+        if len(earth_cards) > i:
+            c = earth_cards[i]
+            player.graveyard.remove(c)
+            player.banished.add(c, is_public=True)
+    # Banish 1 action card from graveyard
+    action_cards = [c for c in player.graveyard.cards if "Action" in (c.types or [])]
+    if action_cards:
+        c = action_cards[0]
+        player.graveyard.remove(c)
+        player.banished.add(c, is_public=True)
+    return True
+
+
+def effect_transcend(state: GameState, player_id: int, source: Card = None) -> bool:
+    """CR 8.5.48: Transcend — put the transcend source into its owner's hand
+    with its back-face active (double-faced card mechanic).
+    Since the engine may not have full double-face support, move the card to hand
+    and mark it as transcended.
+    source: the card being transcended (moved from current zone to hand).
+    Returns True if transcend occurred."""
+    if source is None:
+        return False
+    player = state.players[player_id]
+    _remove_from_current_zone(source, state)
+    # Set transcended flag and mark it as front-face inactive (back-face active)
+    source.face_down = False
+    source.transcended = True
+    player.hand.add(source)
+    return True
+
+
+def effect_steal(state: GameState, stealer_id: int, victim_id: int,
+                 steal_from: str = "hand") -> Card:
+    """Steal: Take a card from opponent's hand or field and put it in stealer's hand/field.
+    steal_from: 'hand' or 'field' (items/auras zone)."""
+    stealer = state.players[stealer_id]
+    victim = state.players[victim_id]
+
+    if steal_from == "hand":
+        if not victim.hand.cards:
+            return None
+        # Random steal from hand (face-down, so random)
+        import random as rng
+        card = rng.choice(victim.hand.cards)
+        victim.hand.remove(card)
+        card.controller = stealer_id
+        stealer.hand.add(card)
+        return card
+    elif steal_from == "field":
+        stealable = list(victim.items.cards) + list(victim.auras.cards)
+        if not stealable:
+            return None
+        options = [c.slug for c in stealable]
+        pick = _ask_player(state, stealer_id, options,
+                           context="Steal: choose a card from opponent's field to take")
+        card = next((c for c in stealable if c.slug == pick), stealable[0])
+        _remove_from_current_zone(card, state)
+        card.controller = stealer_id
+        stealer.hand.add(card)
+        return card
+    return None
+
+
+def check_high_tide(state: GameState, player_id: int) -> bool:
+    """CR 8.4.18: High Tide — True if there are 2 or more blue (pitch value 3) cards
+    in the player's pitch zone this turn."""
+    player = state.players[player_id]
+    blue_count = sum(1 for c in player.pitch.cards if (c.base_pitch or 0) == 3)
+    return blue_count >= 2
+
+
+def check_mirage(card: Card, event, state: GameState) -> bool:
+    """CR 8.3.25: Mirage — check condition for triggering destruction.
+    Condition: this card is defending a non-Illusionist attack with 6 or more power.
+    Returns True if the Mirage card should be destroyed."""
+    if not state.combat:
+        return False
+    # This card must be in the defending cards
+    if card not in state.combat.defending_cards:
+        return False
+    # The attacking card must be non-Illusionist
+    attack = state.combat.attack_card
+    if attack is None:
+        return False
+    if "Illusionist" in (attack.types or []):
+        return False
+    # Attack power must be 6 or more
+    return (state.combat.attack_power or 0) >= 6
+
+
+def effect_mirage_destroy(card: Card, event, state: GameState) -> None:
+    """CR 8.3.25: Mirage — destroy this defending card."""
+    _move_to_graveyard(card, state)
+
+
+def effect_mirage(state: GameState, player_id: int, source: Card) -> Card:
+    """Mirage (CR 8.3.25): When this attacks, create an illusion token copy
+    that is destroyed at end of turn.
+    NOTE: This function is for the offensive illusion-copy flavor only.
+    The actual Mirage keyword (defensive triggered ability) is handled by
+    check_mirage() and effect_mirage_destroy()."""
+    from engine.card import Card as CardClass
+    player = state.players[player_id]
+    # Create a token copy of the source card
+    illusion = CardClass(
+        slug=f"{source.slug}_illusion",
+        name=f"{source.name} (Illusion)",
+        types=list(source.types or []) + ["Token", "Illusion"],
+        keywords=list(source.keywords or []) + ["Phantasm"],
+        base_power=source.base_power,
+        base_defense=source.base_defense,
+        base_cost=source.base_cost,
+        base_pitch=source.base_pitch,
+    )
+    illusion.owner = player_id
+    illusion.controller = player_id
+    illusion.is_public = True
+    player.tokens.add(illusion)
+
+    # Register end-of-turn destruction for the token
+    def _destroy_illusion(event, game_state):
+        listeners = game_state.event_manager.listeners.get('end_of_turn', [])
+        if _destroy_illusion in listeners:
+            listeners.remove(_destroy_illusion)
+        if illusion in player.tokens.cards:
+            player.tokens.remove(illusion)
+            player.graveyard.add(illusion)
+
+    state.event_manager.register('end_of_turn', _destroy_illusion)
+    return illusion
+
+
+def check_unity(state: GameState, card: Card) -> bool:
+    """CR 8.4.10: Unity — True if this card is part of a DEFEND_CARDS action that
+    includes at least one other hand card. This card must be in combat.defending_cards
+    AND at least one other card from hand is also defending."""
+    if not state.combat:
+        return False
+    defending = state.combat.defending_cards
+    if card not in defending:
+        return False
+    # Count defending cards that came from hand (prev_zone == "hand")
+    hand_defenders = [c for c in defending if c.prev_zone == "hand"]
+    # This card + at least one other hand card
+    return len(hand_defenders) >= 2
+
+
+def check_material(card: Card, state: GameState) -> bool:
+    """CR 8.4.5: Material — static condition: returns True if this card is currently
+    'under' a permanent (i.e. some permanent is stacked on top of it).
+    Implemented as: the card has a 'under_permanent' attribute set to True,
+    or is in a zone where it was placed under another permanent."""
+    return bool(getattr(card, 'under_permanent', False))
+
+
+def effect_material(state: GameState, player_id: int, source: Card = None) -> bool:
+    """CR 8.4.5: Material — static condition check (not a cost).
+    Returns True if source card is currently under a permanent.
+    The actual card effects are card-specific when this condition is True."""
+    if source is None:
+        return False
+    return check_material(source, state)
+
+
+def check_earth_bond(action, state: GameState) -> bool:
+    """CR 8.4.15: Earth Bond — True if at least one card pitched to play this action
+    has the 'Earth' supertype or type.
+    action: an Action object with a pitch_cards attribute (list of Card)."""
+    pitch_cards = getattr(action, 'pitch_cards', []) or []
+    for card in pitch_cards:
+        if "Earth" in (card.types or []) or "Earth" in (card.supertypes or []):
+            return True
+    return False
+
+
+def check_lightning_flow(state: GameState, player_id: int) -> bool:
+    """Lightning Flow: True if the player has played a Lightning card this turn."""
+    player = state.players[player_id]
+    return "played_lightning" in player.current_turn_effects
+
+
+def check_tower(card: Card, state: GameState) -> bool:
+    """CR 8.4.13: Tower — returns True if the card's current attack power is 13 or more.
+    This is a condition check only; actual effects are card-specific."""
+    # Compute current power: base_power plus any counter modifiers
+    controller = _get_controller(state, card)
+    base = card.base_power or 0
+    # Sum any power-modifying counters
+    bonus = 0
+    for (slug, zone, ctype), val in controller.counters.items():
+        if slug == card.slug and ctype in ("plus_attack", "plus_power"):
+            bonus += val
+    return (base + bonus) >= 13
+
+
+def check_solflare(event, state: GameState) -> bool:
+    """CR 8.4.9: Solflare — triggered when a card with Solflare is charged to soul.
+    Returns True when the event is a card_charged event for this card.
+    event: the card_charged event; event.data['card'] should be the charged card."""
+    data = event.data if isinstance(event.data, dict) else {}
+    charged_card = data.get('card')
+    if charged_card is None:
+        return False
+    return "Solflare" in (charged_card.keywords or [])
+
+
+def _cannon_activated_this_turn(state: GameState, player_id: int) -> bool:
+    """Return True if the player has activated a cannon this turn.
+    The engine sets 'activated_cannon' in current_turn_effects when a cannon ability fires.
+    """
+    player = state.players[player_id]
+    return "activated_cannon" in (player.current_turn_effects or [])
+
+
+def effect_go_fish(event, state: GameState, condition_fn=None) -> Card:
+    """CR 8.4.19: Go Fish — on-hit label ability.
+    When this hits a hero, the defending hero chooses and reveals a card from their hand.
+    If it meets condition_fn, they discard it and the attacker creates a Gold token.
+
+    Cannon upgrade (on all Go Fish cards):
+    If the attacker activated a cannon this turn, instead the attacker looks at the
+    defender's full hand and CHOOSES which card to reveal (not the defender).
+
+    condition_fn: callable(card) -> bool, card-specific condition. If None, always triggers.
+    Returns the revealed card (or None)."""
+    if not state.combat:
+        return None
+    attacker_id = state.combat.attacker_id
+    defender_id = 3 - attacker_id
+    defender = state.players[defender_id]
+    if not defender.hand.cards:
+        return None
+
+    if _cannon_activated_this_turn(state, attacker_id):
+        # Cannon upgrade: attacker sees all and chooses
+        options = [c.slug for c in defender.hand.cards]
+        pick = _ask_player(state, attacker_id, options,
+                           context="Go Fish (cannon): Look at opponent's hand and choose a card")
+    else:
+        # Standard: defender chooses which card to reveal
+        options = [c.slug for c in defender.hand.cards]
+        pick = _ask_player(state, defender_id, options,
+                           context="Go Fish: Choose a card from your hand to reveal")
+
+    revealed = defender.hand.find(pick)
+    if revealed is None:
+        revealed = defender.hand.cards[0]
+    revealed.is_public = True
+
+    # If condition met, defender discards and attacker gets Gold
+    if condition_fn is None or condition_fn(revealed):
+        defender.hand.remove(revealed)
+        defender.graveyard.add(revealed)
+        create_token(state, attacker_id, "gold", 1)
+    return revealed
+
+
+def check_heavy(state: GameState, player_id: int) -> bool:
+    """CR 8.4.17: Heavy — static condition: True if the player has exactly one weapon
+    equipped and no other weapons. Used by cards with the Heavy label keyword."""
+    player = state.players[player_id]
+    weapons = list(player.weapon1.cards) + list(player.weapon2.cards)
+    return len(weapons) == 1
+
+
+def check_essence(state: GameState, player_id: int,
+                  essence_type: str = None) -> bool:
+    """Essence: True if player controls or has in hand a card with the given Essence.
+    essence_type: 'Earth', 'Lightning', or None (any essence)."""
+    player = state.players[player_id]
+    all_cards = list(player.hand.cards) + player.arena_cards
+    for card in all_cards:
+        for kw in (card.keywords or []):
+            kw_lower = kw.lower()
+            if essence_type is None:
+                if "essence" in kw_lower:
+                    return True
+            else:
+                if f"essence ({essence_type.lower()})" in kw_lower or f"essence {essence_type.lower()}" in kw_lower:
+                    return True
+    return False
+
+
+# ---------------------------------------------------------------------------
+# Awaken keyword (CR 8.2.16) — transforms a Figment into its Angel Ally
+# ---------------------------------------------------------------------------
+
+# Figment slug -> corresponding Archangel (Angel Ally) slug
+FIGMENT_TO_ANGEL = {
+    "figment_of_erudition_yellow": "suraya_archangel_of_erudition",
+    "figment_of_judgment_yellow": "themis_archangel_of_judgment",
+    "figment_of_protection_yellow": "aegis_archangel_of_protection",
+    "figment_of_ravages_yellow": "sekem_archangel_of_ravages",
+    "figment_of_rebirth_yellow": "avalon_archangel_of_rebirth",
+    "figment_of_tenacity_yellow": "metis_archangel_of_tenacity",
+    "figment_of_triumph_yellow": "victoria_archangel_of_triumph",
+    "figment_of_war_yellow": "bellona_archangel_of_war",
+}
+
+
+def effect_awaken(state: GameState, player_id: int, target_figment: Card) -> bool:
+    """Awaken keyword (CR 8.2.16): transform a Figment in the arena into its Angel Ally.
+    Removes the Figment from permanents, creates the corresponding Angel Ally card,
+    puts it in permanents (allies sub-zone), and emits card_awakened event.
+    Returns True if awakening succeeded."""
+    if target_figment is None:
+        return False
+    player = state.players[player_id]
+    angel_slug = FIGMENT_TO_ANGEL.get(target_figment.slug)
+    if angel_slug is None:
+        return False
+
+    # Remove figment from permanents zone
+    if not player.permanents.remove(target_figment):
+        return False
+
+    # Create the Angel Ally card from CardDB if available, else a minimal stub
+    angel_card = None
+    card_db = getattr(state, 'card_db', None)
+    if card_db is not None:
+        try:
+            angel_card = card_db.get(angel_slug)
+        except Exception:
+            angel_card = None
+
+    if angel_card is None:
+        # Minimal stub so the engine doesn't crash
+        angel_card = Card(slug=angel_slug, name=angel_slug.replace("_", " ").title())
+        angel_card.types = ["Angel", "Ally"]
+
+    angel_card.owner = player_id
+    angel_card.controller = player_id
+    angel_card.is_public = True
+    angel_card.permanent_subtype = "Ally"
+    player.permanents.add(angel_card)
+
+    # Emit awakening event
+    from engine.state import Event
+    state.event_manager.emit(
+        Event(type='card_awakened',
+              data={'figment': target_figment, 'angel': angel_card,
+                    'player_id': player_id}),
+        state)
+    return True

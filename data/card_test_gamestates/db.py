@@ -50,16 +50,17 @@ def insert_gamestate(
     original_gamestate: str = "{}",
     post_gamestate: str = "{}",
     status: str = "pending",
+    error_message: str | None = None,
 ) -> None:
     """Insert a new card test gamestate row."""
     conn = get_db()
     conn.execute(
         """INSERT OR REPLACE INTO card_test_gamestates
            (card_slug, card_name, card_types, card_category,
-            original_gamestate, post_gamestate, status, updated_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+            original_gamestate, post_gamestate, status, error_message, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
         (card_slug, card_name, card_types, card_category,
-         original_gamestate, post_gamestate, status),
+         original_gamestate, post_gamestate, status, error_message),
     )
     conn.commit()
 

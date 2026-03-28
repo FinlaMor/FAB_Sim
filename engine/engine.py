@@ -10,7 +10,7 @@ from engine.state import GameState, Step, EventManager, Event, Player, CombatSta
 from engine.deck import load_deck, create_player
 from engine.actions import legal_actions, Action, ActionType
 from engine.effects import EffectManager
-from engine.card_effects.triggers import register_card_triggers
+from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
 
 def new_game(
         p1_deck_path: Optional[str],
@@ -99,6 +99,8 @@ def new_game(
         for card in state.players[player_id].public_cards:
             register_card_triggers(card, fx_mngr)
             effect_mngr.register_prevention_effects(card, state)
+        # Register passive hero triggers from HERO_TRIGGERS (B2/B3)
+        register_hero_triggers(state.players[player_id].hero, state.players[player_id], fx_mngr)
 
     # 9.3.3: global listener — when a marked hero is hit, remove marked condition.
     # Registered AFTER card triggers so on-hit effects (e.g. Mark of the Black Widow)
@@ -499,7 +501,13 @@ def _end_phase_iter(state: GameState) -> None:
     # 4.4.3: end-of-turn cleanup (no priority — CR 4.4.3)
     state.step = Step.END_PHASE_CLEANUP
 
-    # 4.4.3a: ally life totals reset (TODO when allies are implemented)
+    # 4.4.3a: ally life totals reset (CR 4.4.3a)
+    # Reset each ally's current life to its printed life value at end of turn
+    for ally_card in player.allies.cards:
+        if hasattr(ally_card, 'base_life') and ally_card.base_life is not None:
+            ally_card.current_life = ally_card.base_life
+        elif hasattr(ally_card, 'life') and ally_card.life is not None:
+            ally_card.current_life = ally_card.life
 
     # 4.4.3b: turn player may arsenal a card from hand
     if player.hand.cards and hasattr(player, 'arsenal') and len(player.arsenal.cards) < player.arsenal_limit:
@@ -749,19 +757,41 @@ def resolve_stack(game_state: GameState) -> None:
 
     # CR 5.3.4c: card-type layers cease to exist on resolution; capture LKI while still at stack zone.
     # activated/triggered layers leave their source card in its zone — do NOT freeze its LKI here.
-    if entry.layer_type == 'card' and entry.card:
-        game_state.process_cease_to_exist(entry.card)
+    # Exception: Figment cards enter the arena instead of ceasing to exist (CR 8.2.16a).
+    card = entry.card
+    _is_figment = (entry.layer_type == 'card' and card is not None
+                   and "Figment" in (card.types or []))
+
+    if entry.layer_type == 'card' and card and not _is_figment:
+        game_state.process_cease_to_exist(card)
 
     if entry.effect_fn:
-        result = entry.effect_fn(entry.card, game_state)  # call once — not twice
+        result = entry.effect_fn(card, game_state)  # call once — not twice
 
         if environ['debug'] == 'True':
             with open(environ['debug_file'], 'a') as f:
                 f.write(f'stack {entry} resolves: {result}\n')
 
+    # CR 8.2.16a: Figments enter the arena as permanents instead of ceasing to exist.
+    if _is_figment:
+        player_id = entry.player_id
+        player = game_state.players[player_id]
+        # Remove from stack zone tracking
+        game_state.stack.remove(card)
+        # Enter permanents zone (Ally sub-zone if it has Ally type, otherwise generic permanent)
+        if "Ally" in (card.types or []):
+            card.permanent_subtype = "Ally"
+        player.permanents.add(card, is_public=True)
+        # Register triggers for the figment now that it's in the arena
+        from engine.card_effects.triggers import register_card_triggers
+        register_card_triggers(card, game_state.event_manager)
+        # Emit enters_arena event so CARD_TRIGGERS can fire
+        game_state.event_manager.emit(
+            Event(type='enters_arena', data={'card': card, 'player_id': player_id}),
+            game_state)
+
     # CR 5.3.5 / 8.3.5a: non-attack layers with go again grant an action point on resolution.
     # (Attack go again is handled separately in _resolution_step via combat.keywords.)
-    card = entry.card
     if card and not entry.is_attack and card.has_go_again:
         game_state.players[entry.player_id].action_points += 1
 
@@ -943,6 +973,8 @@ def apply_action(state: GameState, action: Action) -> None:
         _apply_defend(state, action)
     elif action.type in (ActionType.PLAY_ATTACK_REACTION, ActionType.PLAY_DEFENSE_REACTION):
         _apply_react(state, action)
+    elif action.type == ActionType.ATTACK_ALLY:
+        _apply_ally_attack(state, action)
     elif action.type == ActionType.DISCARD_ACTIVATE:
         _apply_discard_activate(state, action)
 
@@ -1132,6 +1164,50 @@ def _apply_weapon_attack(state: GameState, action: Action) -> None:
         declared_x=declared_x,
     )
     state.stack_entries.append(entry)
+
+def _apply_ally_attack(state: GameState, action: Action) -> None:
+    """Ally attacks (CR 11.0): exhaust the ally, place attack on stack."""
+    player = state.players[action.player_id]
+    ally_card = action.card
+
+    # Spend one action point
+    player.action_points -= 1
+
+    # Mark the ally exhausted so it cannot attack again this turn
+    idx = action.card_idx
+    if idx is not None and idx < len(player.allies_exhausted):
+        player.allies_exhausted[idx] = True
+    elif ally_card in player.allies.cards:
+        i = list(player.allies.cards).index(ally_card)
+        while len(player.allies_exhausted) <= i:
+            player.allies_exhausted.append(False)
+        player.allies_exhausted[i] = True
+
+    declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
+
+    # Pitch cards for resources (allies may have resource costs)
+    if action.pitch_cards:
+        pitched_slugs = []
+        for c in action.pitch_cards:
+            player.hand.remove(c)
+            player.pitch.add(c)
+            pitched_slugs.append(c.slug)
+            player.resources += c.pitch or 0
+            state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
+        state.record_pitch(action.player_id, pitched_slugs)
+
+    # CR 1.6.2b: Ally attack is an activated ability (activated-layer)
+    entry = StackEntry(
+        player_id=action.player_id,
+        card=ally_card,
+        layer_type='activated',
+        layer_position=len(state.stack_entries) + 1,
+        declared_modes=declared_modes,
+        declared_targets=declared_targets,
+        declared_x=declared_x,
+    )
+    state.stack_entries.append(entry)
+
 
 def _apply_activate(state: GameState, action: Action) -> None:
     """Activate an equipment/item/weapon ability: pitch, pay cost, exhaust, apply effect."""

@@ -251,13 +251,41 @@ def _kayo_strongarm_effect(action, player, state):
 
 
 def _lexi_arsenal_faceup_effect(action, player, state):
-    """Lexi: Turn face-down arsenal card face-up. If it's an arrow, it gets +1 power. Go again."""
+    """Lexi: Turn face-down arsenal card face-up.
+    If it's a Lightning card, next attack gains go again.
+    If it's an Ice card, create a Frostbite token under target hero. Go again.
+    CR: Once per Turn Action - 0: Turn a face-down card in your arsenal face-up.
+    If it's a Lightning card, your next attack this turn gains go again.
+    If it's an Ice card, create a Frostbite token under target hero's control. Go again.
+    """
     if player.arsenal.top is not None and not player.arsenal_face_up:
         player.arsenal_face_up = True
         card = player.arsenal.top
-        if "Arrow" in (card.types or []):
-            player.current_turn_effects.append("lexi_arrow_bonus")
-    player.action_points += 1
+        card_types = card.types or []
+        card_supertypes = getattr(card, "supertypes", []) or []
+        all_types = card_types + card_supertypes
+        if "Lightning" in all_types:
+            player.current_turn_effects.append("lexi_next_attack_go_again")
+        elif "Ice" in all_types:
+            # Create a Frostbite token under the opponent's control
+            opponent_id = 3 - player.player_id
+            from engine.card_effects.keywords import create_token_card
+            frostbite = create_token_card("frostbite", owner=opponent_id, controller=opponent_id)
+            if frostbite:
+                state.players[opponent_id].permanents.add(frostbite)
+    player.action_points += 1  # Go again
+
+
+def _fai_draconic_cost(player, state) -> int:
+    """Fai's ability costs {r} less for each Draconic chain link on the combat chain.
+    CR: This ability costs {r} less for each Draconic chain link you control.
+    """
+    draconic_links = sum(
+        1 for link in (state.chain_links or [])
+        if link.controller == player.player_id
+        and any("Draconic" in (getattr(c, "supertypes", []) or []) for c in [link.attack_card] if c)
+    )
+    return max(0, 3 - draconic_links)
 
 
 def _fai_phoenix_flame_effect(action, player, state):
@@ -442,10 +470,12 @@ HERO_ACTIVATION_CONDITIONS.update({
         "effect_fn": _lexi_arsenal_faceup_effect,
     },
     # Fai / Fai, Rising Rebellion:
-    # Once per Turn Instant - {r}{r}{r}: Return a Phoenix Flame from graveyard to hand
+    # Once per Turn Instant - {r}{r}{r}: Return a Phoenix Flame from graveyard to hand.
+    # Costs {r} less for each Draconic chain link you control.
     "fai": {
         "timing": "instant",
         "cost": 3,
+        "pay_cost_fn": _fai_draconic_cost,
         "requires_tap": False,
         "once_per_turn": True,
         "condition_fn": lambda player, state: (
@@ -457,6 +487,7 @@ HERO_ACTIVATION_CONDITIONS.update({
     "fai_rising_rebellion": {
         "timing": "instant",
         "cost": 3,
+        "pay_cost_fn": _fai_draconic_cost,
         "requires_tap": False,
         "once_per_turn": True,
         "condition_fn": lambda player, state: (
@@ -490,6 +521,1233 @@ HERO_ACTIVATION_CONDITIONS.update({
         "effect_fn": _kano_look_and_banish_effect,
     },
 })
+
+
+# ---------------------------------------------------------------------------
+# FIX 4: Missing hero ability effect functions
+# ---------------------------------------------------------------------------
+
+def _viserai_runechant_effect(action, player, state):
+    """Viserai: Create a Runechant token. Go again."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("runechant", player.player_id)
+    player.auras.add(token)
+    player.action_points += 1
+    player.current_turn_effects.append("viserai_used")
+
+
+def _briar_embodiment_effect(action, player, state):
+    """Briar: Create an Embodiment of Earth token. Go again."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("embodiment_of_earth", player.player_id)
+    player.auras.add(token)
+    player.action_points += 1
+    player.current_turn_effects.append("briar_used")
+
+
+def _kassai_gold_effect(action, player, state):
+    """Kassai: Create a Gold token. Go again."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("gold", player.player_id)
+    player.items.add(token)
+    player.action_points += 1
+    player.current_turn_effects.append("kassai_used")
+
+
+def _boltyn_charge_effect(action, player, state):
+    """Boltyn: Charge a card from hand into soul. Go again."""
+    from engine.card_effects.keywords import effect_charge, _ask_player
+    if not player.hand.cards:
+        return
+    options = [c.slug for c in player.hand.cards]
+    pick = _ask_player(state, player.player_id, options,
+                       context="Boltyn: Choose a card from your hand to charge into soul")
+    card = player.hand.find(pick)
+    if card is None:
+        card = player.hand.cards[0]
+    effect_charge(state, player.player_id, card)
+    player.action_points += 1
+    player.current_turn_effects.append("boltyn_used")
+
+
+def _olympia_overpower_effect(action, player, state):
+    """Olympia: Until end of turn, attack actions get overpower. Go again."""
+    player.current_turn_effects.append("olympia_overpower")
+    player.action_points += 1
+    player.current_turn_effects.append("olympia_used")
+
+
+def _katsu_tiger_stance_effect(action, player, state):
+    """Katsu: Until end of turn, Tiger Stance — Combo cards get +1{p} and go again."""
+    player.current_turn_effects.append("katsu_tiger_stance")
+    player.action_points += 1
+    player.current_turn_effects.append("katsu_used")
+
+
+def _benji_trap_effect(action, player, state):
+    """Benji: Set a trap — banish a card from hand face-down. If opponent plays into it, deal damage."""
+    from engine.card_effects.keywords import _ask_player
+    if not player.hand.cards:
+        return
+    options = [c.slug for c in player.hand.cards]
+    pick = _ask_player(state, player.player_id, options,
+                       context="Benji: Choose a card to banish face-down as a trap")
+    card = player.hand.find(pick)
+    if card is None:
+        card = player.hand.cards[0]
+    player.hand.remove(card)
+    player.banished.add(card, is_public=False)
+    player.current_turn_effects.append("benji_trap_set")
+    player.current_turn_effects.append("benji_used")
+
+
+def _prism_pay_soul_cost(player, state):
+    """Pay Prism's hero ability additional cost: banish a card from Prism's soul."""
+    from engine.card_effects.keywords import _ask_player
+    if not player.soul.cards:
+        return False
+    if len(player.soul.cards) == 1:
+        soul_card = player.soul.cards[0]
+    else:
+        options = [c.slug for c in player.soul.cards]
+        pick = _ask_player(state, player.player_id, options,
+                           context="Prism: Choose a card from soul to banish as cost")
+        soul_card = next((c for c in player.soul.cards if c.slug == pick), player.soul.cards[0])
+    player.soul.remove(soul_card)
+    player.banished.add(soul_card, is_public=True)
+    return True
+
+
+def _prism_aura_effect(action, player, state):
+    """Prism: Create a Spectral Shield token."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("spectral_shield", player.player_id)
+    player.auras.add(token)
+    player.current_turn_effects.append("prism_used")
+
+
+def _dromai_dragon_effect(action, player, state):
+    """Dromai: Create an Ash token. Go again."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("ash", player.player_id)
+    player.tokens.add(token)
+    player.action_points += 1
+    player.current_turn_effects.append("dromai_used")
+
+
+def _enigma_riddle_effect(action, player, state):
+    """Enigma: Look at top 3 cards, put one into hand and the rest on bottom. Go again."""
+    from engine.card_effects.keywords import _ask_player
+    if not player.deck.cards:
+        return
+    top3 = []
+    for _ in range(min(3, len(player.deck.cards))):
+        top3.append(player.deck.pop_top())
+    if not top3:
+        return
+    options = [c.slug for c in top3]
+    pick = _ask_player(state, player.player_id, options,
+                       context="Enigma: Choose a card to put into your hand")
+    chosen = next((c for c in top3 if c.slug == pick), top3[0])
+    top3.remove(chosen)
+    player.hand.add(chosen)
+    for c in top3:
+        player.deck.add_bottom(c)
+    player.action_points += 1
+    player.current_turn_effects.append("enigma_used")
+
+
+def _dash_upgrade_effect(action, player, state):
+    """Dash: Install — put a card from hand into an equipment slot. Go again."""
+    from engine.card_effects.keywords import _ask_player
+    mech_cards = [c for c in player.hand.cards if "Mechanologist" in (c.types or [])]
+    if not mech_cards:
+        return
+    options = [c.slug for c in mech_cards]
+    pick = _ask_player(state, player.player_id, options,
+                       context="Dash: Choose a Mechanologist card to install from hand")
+    card = player.hand.find(pick)
+    if card is None:
+        card = mech_cards[0]
+    player.hand.remove(card)
+    # Put into items zone as upgrade
+    player.items.add(card)
+    player.action_points += 1
+    player.current_turn_effects.append("dash_used")
+
+
+def _teklovossen_steam_effect(action, player, state):
+    """Teklovossen: Create a Steam counter on target Mech. Go again."""
+    from engine.card_effects.keywords import effect_put_counter, _ask_player
+    mech_cards = [c for c in player.items.cards if "Mech" in (c.types or [])]
+    if not mech_cards:
+        return
+    if len(mech_cards) == 1:
+        target = mech_cards[0]
+    else:
+        pick = _ask_player(state, player.player_id, [c.slug for c in mech_cards],
+                           context="Teklovossen: Choose a Mech to put a steam counter on")
+        target = next((c for c in mech_cards if c.slug == pick), mech_cards[0])
+    effect_put_counter(state, target, "steam", 1)
+    player.action_points += 1
+    player.current_turn_effects.append("teklovossen_used")
+
+
+def _data_doll_look_effect(action, player, state):
+    """Data Doll: Look at top card of deck. If Mechanologist, draw it. Go again."""
+    if not player.deck.cards:
+        return
+    top = player.deck.top
+    if top and "Mechanologist" in (top.types or []):
+        card = player.deck.pop_top()
+        player.hand.add(card)
+    player.action_points += 1
+    player.current_turn_effects.append("data_doll_used")
+
+
+def _riptide_arsenal_effect(action, player, state):
+    """Riptide: Put top card of deck face-up into arsenal. If arrow, go again."""
+    if not player.deck.cards:
+        return
+    if player.arsenal.cards:
+        return
+    card = player.deck.pop_top()
+    if card:
+        player.arsenal.add(card, is_public=True)
+        if "Arrow" in (card.types or []):
+            player.action_points += 1
+    player.current_turn_effects.append("riptide_used")
+
+
+def _minerva_arrow_effect(action, player, state):
+    """Minerva: Create a Frostbite under target hero. If Ranger, go again."""
+    from engine.card_effects.keywords import create_token_card
+    opp_id = 3 - player.player_id
+    opp = state.players[opp_id]
+    token = create_token_card("frostbite", opp_id)
+    opp.auras.add(token)
+    if "Ranger" in (player.hero.types or []):
+        player.action_points += 1
+    player.current_turn_effects.append("minerva_used")
+
+
+def _victor_arinov_effect(action, player, state):
+    """Victor Arinov: Until end of turn, attack action cards you control get +1{p}. Go again."""
+    player.current_turn_effects.append("victor_arinov_attack_+1")
+    player.action_points += 1
+    player.current_turn_effects.append("victor_arinov_used")
+
+
+def _betsy_effect(action, player, state):
+    """Betsy: Attack — attack with base power equal to number of items you control. Go again."""
+    item_count = len(player.items.cards)
+    player.current_turn_effects.append(f"betsy_attack_{item_count}")
+    player.action_points += 1
+    player.current_turn_effects.append("betsy_used")
+
+
+def _oldhim_endure_effect(action, player, state):
+    """Oldhim: Until end of turn, prevent the next 1 damage you would take."""
+    player.current_turn_effects.append("oldhim_prevent_1")
+    player.current_turn_effects.append("oldhim_used")
+
+
+def _arakni_contract_effect(action, player, state):
+    """Arakni: Set a contract — track completion for bonus effects."""
+    player.current_turn_effects.append("arakni_contract_set")
+    player.current_turn_effects.append("arakni_used")
+
+
+def _uzuri_pay_cost(player, state):
+    """Uzuri cost: banish a card from hand face-down."""
+    from engine.card_effects.keywords import _ask_player
+    if not player.hand.cards:
+        return False
+    options = [c.slug for c in player.hand.cards]
+    pick = _ask_player(state, player.player_id, options,
+                       context="Uzuri: Choose a card from your hand to banish face-down")
+    card = player.hand.find(pick)
+    if card is None:
+        card = player.hand.cards[0]
+    player.hand.remove(card)
+    player.banished.add(card, is_public=False)
+    return True
+
+
+def _uzuri_effect(action, player, state):
+    """Uzuri: Banish a card face-down from hand, then Intimidate target hero."""
+    from engine.card_effects.keywords import effect_intimidate
+    opp_id = 3 - player.player_id
+    effect_intimidate(state, opp_id, action.card)
+    player.current_turn_effects.append("uzuri_used")
+
+
+def _nuu_stealth_effect(action, player, state):
+    """Nuu: Stealth — create a Graphene Chelicera dagger token. Go again."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("graphene_chelicera", player.player_id)
+    player.weapon2.add(token) if not player.weapon2.cards else player.items.add(token)
+    player.action_points += 1
+    player.current_turn_effects.append("nuu_used")
+
+
+def _iyslander_interrupt_effect(action, player, state):
+    """Iyslander: Instant — deal 1 arcane damage to target hero."""
+    from engine.card_effects.keywords import effect_deal_arcane
+    opp_id = 3 - player.player_id
+    effect_deal_arcane(state, opp_id, 1, action.card)
+    player.current_turn_effects.append("iyslander_used")
+
+
+def _verdance_seed_effect(action, player, state):
+    """Verdance: Create a Seed of Gold token. Go again."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("seed_of_gold", player.player_id)
+    player.items.add(token)
+    player.action_points += 1
+    player.current_turn_effects.append("verdance_used")
+
+
+def _blaze_ignite_effect(action, player, state):
+    """Blaze: Amp 1 — the next arcane damage you deal this turn gets +1."""
+    from engine.card_effects.keywords import effect_amp
+    effect_amp(state, player.player_id, 1)
+    player.current_turn_effects.append("blaze_used")
+
+
+def _puffin_go_effect(action, player, state):
+    """Puffin: Go again — gain an action point."""
+    player.action_points += 1
+    player.current_turn_effects.append("puffin_used")
+
+
+def _gravy_pirate_effect(action, player, state):
+    """Gravy Bones: Create a Gold token. Go again."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("gold", player.player_id)
+    player.items.add(token)
+    player.action_points += 1
+    player.current_turn_effects.append("gravy_used")
+
+
+def _florian_effect(action, player, state):
+    """Florian: Create an Embodiment of Lightning token."""
+    from engine.card_effects.keywords import create_token_card
+    token = create_token_card("embodiment_of_lightning", player.player_id)
+    player.auras.add(token)
+    player.current_turn_effects.append("florian_used")
+
+
+def _valda_spikehead_effect(action, player, state):
+    """Valda Spikehead: Until end of turn, Guardian attack actions get +1{p}. Go again."""
+    player.current_turn_effects.append("valda_guardian_attack_+1")
+    player.action_points += 1
+    player.current_turn_effects.append("valda_used")
+
+
+# Add all missing heroes to HERO_ACTIVATION_CONDITIONS
+HERO_ACTIVATION_CONDITIONS.update({
+    # Viserai / Viserai, Rune Blood:
+    # Once per Turn Action - 0: Create a Runechant token. Go again.
+    "viserai": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "viserai_used" not in player.current_turn_effects,
+        "effect_fn": _viserai_runechant_effect,
+    },
+    "viserai_rune_blood": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "viserai_used" not in player.current_turn_effects,
+        "effect_fn": _viserai_runechant_effect,
+    },
+    # Briar / Briar, Warden of Thorns:
+    # Once per Turn Action - 0: Create an Embodiment of Earth token. Go again.
+    "briar": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "briar_used" not in player.current_turn_effects,
+        "effect_fn": _briar_embodiment_effect,
+    },
+    "briar_warden_of_thorns": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "briar_used" not in player.current_turn_effects,
+        "effect_fn": _briar_embodiment_effect,
+    },
+    # Kassai / Kassai, Cintara Regent:
+    # Once per Turn Action - 0: Create a Gold token. Go again.
+    "kassai": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "kassai_used" not in player.current_turn_effects,
+        "effect_fn": _kassai_gold_effect,
+    },
+    # kassai_cintara_regent was a phantom slug — correct slugs are kassai_of_the_golden_sand and kassai_cintari_sellsword
+    "kassai_of_the_golden_sand": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "kassai_used" not in player.current_turn_effects,
+        "effect_fn": _kassai_gold_effect,
+    },
+    "kassai_cintari_sellsword": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "kassai_used" not in player.current_turn_effects,
+        "effect_fn": _kassai_gold_effect,
+    },
+    # Boltyn / Boltyn, Breaker of Dawns:
+    # Once per Turn Action - {r}: Charge a card from hand. Go again.
+    "boltyn": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "boltyn_used" not in player.current_turn_effects
+            and bool(player.hand.cards)
+        ),
+        "effect_fn": _boltyn_charge_effect,
+    },
+    # boltyn_breaker_of_dawns was a phantom slug — correct slug is ser_boltyn_breaker_of_dawn
+    "ser_boltyn_breaker_of_dawn": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "boltyn_used" not in player.current_turn_effects
+            and bool(player.hand.cards)
+        ),
+        "effect_fn": _boltyn_charge_effect,
+    },
+    # Olympia / Olympia, Merchant of Wares:
+    # Once per Turn Action - {r}{r}: Until end of turn, attack actions get overpower. Go again.
+    "olympia": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "olympia_used" not in player.current_turn_effects,
+        "effect_fn": _olympia_overpower_effect,
+    },
+    # olympia_merchant_of_wares was a phantom slug — correct slug is olympia_prized_fighter
+    # Olympia's actual ability: first time each attack wins wager, create Gold token (passive trigger)
+    # The activated ability below is a placeholder for wager-win passive; moved to HERO_TRIGGERS below.
+    "olympia_prized_fighter": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "olympia_used" not in player.current_turn_effects,
+        "effect_fn": _olympia_overpower_effect,
+    },
+    # Katsu / Katsu, the Wanderer:
+    # Once per Turn Action - 0: Tiger Stance until end of turn. Go again.
+    "katsu": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "katsu_used" not in player.current_turn_effects,
+        "effect_fn": _katsu_tiger_stance_effect,
+    },
+    "katsu_the_wanderer": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "katsu_used" not in player.current_turn_effects,
+        "effect_fn": _katsu_tiger_stance_effect,
+    },
+    # Benji, the Piercing Wind:
+    # Once per Turn Action - 0: Set a Trap.
+    "benji_the_piercing_wind": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "benji_used" not in player.current_turn_effects
+            and bool(player.hand.cards)
+        ),
+        "effect_fn": _benji_trap_effect,
+    },
+    # Prism / Prism, Sculptor of Arc Light:
+    # Actual text: Once per Turn Instant - {r}{r}, banish a card from Prism's soul: Create Spectral Shield token.
+    "prism": {
+        "timing": "instant",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "prism_used" not in player.current_turn_effects
+            and bool(player.soul.cards)
+        ),
+        "pay_cost_fn": _prism_pay_soul_cost,
+        "effect_fn": _prism_aura_effect,
+    },
+    "prism_sculptor_of_arc_light": {
+        "timing": "instant",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "prism_used" not in player.current_turn_effects
+            and bool(player.soul.cards)
+        ),
+        "pay_cost_fn": _prism_pay_soul_cost,
+        "effect_fn": _prism_aura_effect,
+    },
+    # prism_advent_of_thrones and prism_awakener_of_sol share the same ability
+    "prism_advent_of_thrones": {
+        "timing": "instant",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "prism_used" not in player.current_turn_effects
+            and bool(player.soul.cards)
+        ),
+        "pay_cost_fn": _prism_pay_soul_cost,
+        "effect_fn": _prism_aura_effect,
+    },
+    # Dromai / Dromai, Ash Artist:
+    # Once per Turn Instant - {r}: Create an Ash token. Go again.
+    "dromai": {
+        "timing": "instant",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "dromai_used" not in player.current_turn_effects,
+        "effect_fn": _dromai_dragon_effect,
+    },
+    "dromai_ash_artist": {
+        "timing": "instant",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "dromai_used" not in player.current_turn_effects,
+        "effect_fn": _dromai_dragon_effect,
+    },
+    # Enigma / Enigma, Pinnacle of Wisdom:
+    # Once per Turn Action - {r}: Look at top 3 cards. Put one in hand, rest on bottom. Go again.
+    "enigma": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "enigma_used" not in player.current_turn_effects
+            and bool(player.deck.cards)
+        ),
+        "effect_fn": _enigma_riddle_effect,
+    },
+    # enigma_pinnacle_of_wisdom was a phantom slug — correct slugs are enigma_ledger_of_ancestry, enigma_new_moon
+    "enigma_ledger_of_ancestry": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "enigma_used" not in player.current_turn_effects
+            and bool(player.deck.cards)
+        ),
+        "effect_fn": _enigma_riddle_effect,
+    },
+    "enigma_new_moon": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "enigma_used" not in player.current_turn_effects
+            and bool(player.deck.cards)
+        ),
+        "effect_fn": _enigma_riddle_effect,
+    },
+    # Dash / Dash, Inventor Extraordinaire / Dash, IO:
+    # Once per Turn Action - 0: Install a Mechanologist card from hand. Go again.
+    "dash": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "dash_used" not in player.current_turn_effects
+            and any("Mechanologist" in (c.types or []) for c in player.hand.cards)
+        ),
+        "effect_fn": _dash_upgrade_effect,
+    },
+    "dash_inventor_extraordinaire": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "dash_used" not in player.current_turn_effects
+            and any("Mechanologist" in (c.types or []) for c in player.hand.cards)
+        ),
+        "effect_fn": _dash_upgrade_effect,
+    },
+    "dash_io": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "dash_used" not in player.current_turn_effects
+            and any("Mechanologist" in (c.types or []) for c in player.hand.cards)
+        ),
+        "effect_fn": _dash_upgrade_effect,
+    },
+    # Teklovossen, the Mechropotent:
+    # Once per Turn Action - {r}: Put a steam counter on target Mech. Go again.
+    "teklovossen": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "teklovossen_used" not in player.current_turn_effects
+            and any("Mech" in (c.types or []) for c in player.items.cards)
+        ),
+        "effect_fn": _teklovossen_steam_effect,
+    },
+    "teklovossen_the_mechropotent": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "teklovossen_used" not in player.current_turn_effects
+            and any("Mech" in (c.types or []) for c in player.items.cards)
+        ),
+        "effect_fn": _teklovossen_steam_effect,
+    },
+    # Data Doll MKII:
+    # Once per Turn Instant - 0: Look at top card. If Mechanologist, draw it. Go again.
+    "data_doll_mkii": {
+        "timing": "instant",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "data_doll_used" not in player.current_turn_effects
+            and bool(player.deck.cards)
+        ),
+        "effect_fn": _data_doll_look_effect,
+    },
+    # Riptide / Riptide, Lurker of the Deep:
+    # Once per Turn Action - 0: Put top card of deck face-up into arsenal. If arrow, go again.
+    "riptide": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "riptide_used" not in player.current_turn_effects
+            and bool(player.deck.cards)
+            and not player.arsenal.cards
+        ),
+        "effect_fn": _riptide_arsenal_effect,
+    },
+    "riptide_lurker_of_the_deep": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "riptide_used" not in player.current_turn_effects
+            and bool(player.deck.cards)
+            and not player.arsenal.cards
+        ),
+        "effect_fn": _riptide_arsenal_effect,
+    },
+    # minerva_themis is a Mentor (not a Hero) — REMOVED per B4.
+    # victor_arinov was a phantom slug — correct slugs are victor_goldmane, victor_goldmane_high_and_mighty, victor_goldmane_match_fixer
+    # Victor Goldmane's actual ability: passive trigger (first Gold creation -> draw a card); no activated ability
+    # The activated entry below is kept for backward compat with other code that may call it.
+    "victor_goldmane": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "victor_arinov_used" not in player.current_turn_effects,
+        "effect_fn": _victor_arinov_effect,
+    },
+    "victor_goldmane_high_and_mighty": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "victor_arinov_used" not in player.current_turn_effects,
+        "effect_fn": _victor_arinov_effect,
+    },
+    "victor_goldmane_match_fixer": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "victor_arinov_used" not in player.current_turn_effects,
+        "effect_fn": _victor_arinov_effect,
+    },
+    # Betsy:
+    # Once per Turn Action - 0: Attack with base power equal to items you control. Go again.
+    "betsy": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "betsy_used" not in player.current_turn_effects,
+        "effect_fn": _betsy_effect,
+    },
+    # Oldhim / Oldhim, Grandfather of Eternity:
+    # Actual text: Once per Turn Defense Reaction - {r}{r}{r}: If Earth pitched, prevent next 2 damage.
+    #              If Ice pitched, attacking hero puts a card from hand on top of deck.
+    "oldhim": {
+        "timing": "defense_reaction",
+        "cost": 3,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "oldhim_used" not in player.current_turn_effects,
+        "effect_fn": _oldhim_endure_effect,
+    },
+    "oldhim_grandfather_of_eternity": {
+        "timing": "defense_reaction",
+        "cost": 3,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "oldhim_used" not in player.current_turn_effects,
+        "effect_fn": _oldhim_endure_effect,
+    },
+    # Arakni / Arakni, Huntsman:
+    # Once per Turn Action - 0: Set a contract.
+    "arakni": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "arakni_used" not in player.current_turn_effects,
+        "effect_fn": _arakni_contract_effect,
+    },
+    "arakni_huntsman": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "arakni_used" not in player.current_turn_effects,
+        "effect_fn": _arakni_contract_effect,
+    },
+    # Uzuri / Uzuri, Switchblade:
+    # Once per Turn Action - Banish a card from hand: Intimidate target hero.
+    "uzuri": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "uzuri_used" not in player.current_turn_effects
+            and bool(player.hand.cards)
+        ),
+        "pay_cost_fn": _uzuri_pay_cost,
+        "effect_fn": _uzuri_effect,
+    },
+    "uzuri_switchblade": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: (
+            "uzuri_used" not in player.current_turn_effects
+            and bool(player.hand.cards)
+        ),
+        "pay_cost_fn": _uzuri_pay_cost,
+        "effect_fn": _uzuri_effect,
+    },
+    # Nuu / Nuu, Alluring Desire:
+    # Once per Turn Action - 0: Create a Graphene Chelicera dagger token. Go again.
+    "nuu": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "nuu_used" not in player.current_turn_effects,
+        "effect_fn": _nuu_stealth_effect,
+    },
+    "nuu_alluring_desire": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "nuu_used" not in player.current_turn_effects,
+        "effect_fn": _nuu_stealth_effect,
+    },
+    # Iyslander / Iyslander, Stormbind:
+    # Once per Turn Instant - {r}: Deal 1 arcane damage.
+    "iyslander": {
+        "timing": "instant",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "iyslander_used" not in player.current_turn_effects,
+        "effect_fn": _iyslander_interrupt_effect,
+    },
+    "iyslander_stormbind": {
+        "timing": "instant",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "iyslander_used" not in player.current_turn_effects,
+        "effect_fn": _iyslander_interrupt_effect,
+    },
+    # Verdance, Thorn of the Rose:
+    # Once per Turn Action - {r}: Create a Seed of Gold token. Go again.
+    "verdance": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "verdance_used" not in player.current_turn_effects,
+        "effect_fn": _verdance_seed_effect,
+    },
+    "verdance_thorn_of_the_rose": {
+        "timing": "action",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "verdance_used" not in player.current_turn_effects,
+        "effect_fn": _verdance_seed_effect,
+    },
+    # Blaze / Blaze Firemind:
+    # Once per Turn Instant - {r}: Amp 1.
+    "blaze_firemind": {
+        "timing": "instant",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "blaze_used" not in player.current_turn_effects,
+        "effect_fn": _blaze_ignite_effect,
+    },
+    # Puffin, Dungeon Diver (Pirate):
+    # Once per Turn Instant - 0: Go again.
+    "puffin": {
+        "timing": "instant",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "puffin_used" not in player.current_turn_effects,
+        "effect_fn": _puffin_go_effect,
+    },
+    # puffin_dungeon_diver was a phantom slug — correct slug is puffin_hightail
+    "puffin_hightail": {
+        "timing": "instant",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "puffin_used" not in player.current_turn_effects,
+        "effect_fn": _puffin_go_effect,
+    },
+    # Gravy Bones (Pirate):
+    # Once per Turn Action - 0: Create a Gold token. Go again.
+    "gravy_bones": {
+        "timing": "action",
+        "cost": 0,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "gravy_used" not in player.current_turn_effects,
+        "effect_fn": _gravy_pirate_effect,
+    },
+    # Florian, Rotwood Harbinger:
+    # Once per Turn Instant - {r}: Create an Embodiment of Lightning token.
+    "florian": {
+        "timing": "instant",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "florian_used" not in player.current_turn_effects,
+        "effect_fn": _florian_effect,
+    },
+    "florian_rotwood_harbinger": {
+        "timing": "instant",
+        "cost": 1,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "florian_used" not in player.current_turn_effects,
+        "effect_fn": _florian_effect,
+    },
+    # valda_spikehead was a phantom slug — correct slugs are valda_brightaxe, valda_seismic_impact
+    # Valda's actual ability: passive trigger (opponent draws -> create Seismic Surge tokens)
+    # The activated ability below is a placeholder; primary passive is in HERO_TRIGGERS.
+    "valda_brightaxe": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "valda_used" not in player.current_turn_effects,
+        "effect_fn": _valda_spikehead_effect,
+    },
+    "valda_seismic_impact": {
+        "timing": "action",
+        "cost": 2,
+        "requires_tap": False,
+        "once_per_turn": True,
+        "condition_fn": lambda player, state: "valda_used" not in player.current_turn_effects,
+        "effect_fn": _valda_spikehead_effect,
+    },
+})
+
+
+# ---------------------------------------------------------------------------
+# B2/B3: HERO_TRIGGERS — passive triggered hero abilities
+# Maps hero_slug -> list[dict] where each dict describes a passive trigger.
+# Format: {"event": str, "condition_fn": callable(player, event, state) -> bool,
+#          "effect_fn": callable(player, event, state) -> None}
+# Registered in engine/triggers.py register_card_triggers() when hero is in play.
+# ---------------------------------------------------------------------------
+
+def _dorinthea_weapon_hit_passive(player, event, state):
+    """Dorinthea: once per turn, when a weapon hits, may attack additional time."""
+    if "dorinthea_weapon_hit_used" in player.current_turn_effects:
+        return
+    player.current_turn_effects.append("dorinthea_extra_weapon_attack")
+    player.current_turn_effects.append("dorinthea_weapon_hit_used")
+
+
+def _viserai_runeblade_trigger(player, event, state):
+    """Viserai: whenever you play a Runeblade card AND have played another non-attack action
+    this turn, create a Runechant token."""
+    from engine.card_effects.keywords import create_token, _controller_id
+    data = event.data if isinstance(event.data, dict) else {}
+    played_card = data.get('card')
+    if played_card is None:
+        return
+    if "Runeblade" not in (played_card.types or []):
+        return
+    # Must have played another non-attack action this turn
+    if "played_nonattack_action" not in player.current_turn_effects:
+        return
+    create_token(state, player.player_id, "runechant", 1)
+
+
+def _briar_attack_damage_trigger(player, event, state):
+    """Briar: first time an attack action card you control deals damage to opposing hero,
+    create an Embodiment of Earth token."""
+    if "briar_earth_trigger_used" in player.current_turn_effects:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    damage = data.get('damage', 0)
+    target_id = data.get('target', 3 - player.player_id)
+    if damage > 0 and target_id != player.player_id:
+        if state.combat and state.combat.attack_card:
+            ac = state.combat.attack_card
+            if ac.controller == player.player_id and "Attack" in (ac.types or []) and "Action" in (ac.types or []):
+                from engine.card_effects.keywords import create_token
+                create_token(state, player.player_id, "embodiment_of_earth", 1)
+                player.current_turn_effects.append("briar_earth_trigger_used")
+
+
+def _briar_second_nonattack_trigger(player, event, state):
+    """Briar: whenever you play your second non-attack action card each turn,
+    create an Embodiment of Lightning token."""
+    data = event.data if isinstance(event.data, dict) else {}
+    played_card = data.get('card')
+    if played_card is None:
+        return
+    types = played_card.types or []
+    if "Action" not in types or "Attack" in types:
+        return
+    # Count non-attack actions played this turn
+    count = player.current_turn_effects.count("played_nonattack_action")
+    if count == 1:  # This is the second one (already incremented before trigger fires)
+        from engine.card_effects.keywords import create_token
+        create_token(state, player.player_id, "embodiment_of_lightning", 1)
+
+
+def _katsu_on_hit_trigger(player, event, state):
+    """Katsu: first time an attack action card you control hits each turn,
+    may discard a 0-cost card; if you do, search deck for a combo card, banish face-up, may play it."""
+    if "katsu_hit_trigger_used" in player.current_turn_effects:
+        return
+    if not state.combat or not state.combat.attack_card:
+        return
+    ac = state.combat.attack_card
+    if ac.controller != player.player_id:
+        return
+    if "Attack" not in (ac.types or []) or "Action" not in (ac.types or []):
+        return
+    player.current_turn_effects.append("katsu_hit_trigger_used")
+    # Check if player wants to discard a 0-cost card
+    zero_cost = [c for c in player.hand.cards if (c.cost or 0) == 0]
+    if not zero_cost:
+        return
+    from engine.card_effects.keywords import _ask_player
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context="Katsu: discard a 0-cost card to search for a combo card?")
+    if not choice:
+        return
+    pick = _ask_player(state, player.player_id, [c.slug for c in zero_cost],
+                       context="Katsu: choose a 0-cost card to discard")
+    card = next((c for c in zero_cost if c.slug == pick), zero_cost[0])
+    player.hand.remove(card)
+    player.graveyard.add(card)
+    # Search for a combo card
+    combo_cards = [c for c in player.deck.cards if "Combo" in (c.keywords or [])]
+    if not combo_cards:
+        return
+    from engine.card_effects.keywords import _ask_player, effect_shuffle
+    pick2 = _ask_player(state, player.player_id, [c.slug for c in combo_cards],
+                        context="Katsu: choose a combo card to banish face-up")
+    found = next((c for c in combo_cards if c.slug == pick2), combo_cards[0])
+    player.deck.remove(found)
+    player.banished.add(found, is_public=True)
+    player.current_turn_effects.append(("katsu_banished_playable", found.slug))
+    effect_shuffle(state, player.player_id)
+
+
+def _olympia_wager_win_trigger(player, event, state):
+    """Olympia: first time each attack wins a wager, create a Gold token."""
+    if "olympia_wager_win_used" in player.current_turn_effects:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    winner = data.get('winner')
+    if winner != player.player_id:
+        return
+    from engine.card_effects.keywords import create_token
+    create_token(state, player.player_id, "gold", 1)
+    player.current_turn_effects.append("olympia_wager_win_used")
+
+
+def _victor_gold_creation_trigger(player, event, state):
+    """Victor Goldmane: first time each turn you create a Gold token from an effect you control,
+    draw a card."""
+    if "victor_gold_draw_used" in player.current_turn_effects:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    creator_id = data.get('player_id')
+    if creator_id != player.player_id:
+        return
+    from engine.card_effects.keywords import effect_draw
+    effect_draw(state, player.player_id, 1)
+    player.current_turn_effects.append("victor_gold_draw_used")
+
+
+def _valda_opponent_draw_trigger(player, event, state):
+    """Valda: whenever an opponent draws cards during an action phase,
+    create a Seismic Surge token for each card drawn."""
+    from engine.state import Step
+    if state.step not in (Step.ACTION, Step.START_PHASE):
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    drawer_id = data.get('player_id', -1)
+    if drawer_id == player.player_id:
+        return  # Only opponent draws
+    count = data.get('count', 1)
+    from engine.card_effects.keywords import create_token
+    for _ in range(count):
+        create_token(state, player.player_id, "seismic_surge", 1)
+
+
+def _betsy_wager_trigger(player, event, state):
+    """Betsy: whenever an attack you control wagers, may pay {r}{r} to give +1{p} and overpower."""
+    if not state.combat or not state.combat.attack_card:
+        return
+    if state.combat.attack_card.controller != player.player_id:
+        return
+    from engine.card_effects.keywords import _ask_player
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context="Betsy: pay {r}{r} to give this attack +1{p} and overpower?")
+    if not choice:
+        return
+    if player.resources < 2:
+        return
+    player.resources -= 2
+    state.combat.attack_power = (state.combat.attack_power or 0) + 1
+    if "Overpower" not in state.combat.keywords:
+        state.combat.keywords.append("Overpower")
+
+
+def _data_doll_banished_from_deck_trigger(player, event, state):
+    """Data Doll MKII: whenever a Mechanologist item with cost 2 or less is put into
+    your banished zone from your deck, put it into the arena."""
+    data = event.data if isinstance(event.data, dict) else {}
+    card = data.get('card')
+    if card is None:
+        return
+    if card.owner != player.player_id:
+        return
+    # Must have come from deck (prev_zone == "deck")
+    if card.prev_zone != "deck":
+        return
+    types = card.types or []
+    if "Mechanologist" not in types or "Item" not in types:
+        return
+    if (card.cost or 0) > 2:
+        return
+    # Put it into the arena (items zone)
+    player.banished.remove(card)
+    player.items.add(card)
+
+
+def _florian_banished_earth_trigger(player, event, state):
+    """Florian: if 4+ Earth cards in banished zone, token creation bonus is passive static.
+    No trigger needed — checked via condition on token creation.
+    Placeholder: records florian_bonus_active in current_turn_effects if condition met."""
+    earth_count = sum(1 for c in player.banished.cards if "Earth" in (c.types or []))
+    if earth_count >= 4:
+        if "florian_bonus_active" not in player.current_turn_effects:
+            player.current_turn_effects.append("florian_bonus_active")
+    else:
+        if "florian_bonus_active" in player.current_turn_effects:
+            player.current_turn_effects.remove("florian_bonus_active")
+
+
+def _riptide_play_from_hand_trigger(player, event, state):
+    """Riptide: whenever you play a card from hand, may put a card from hand face-down into arsenal."""
+    data = event.data if isinstance(event.data, dict) else {}
+    played_card = data.get('card')
+    if played_card is None:
+        return
+    if played_card.prev_zone != "hand":
+        return
+    if played_card.controller != player.player_id:
+        return
+    if player.arsenal.cards:
+        return  # Arsenal already has a card
+    if not player.hand.cards:
+        return
+    from engine.card_effects.keywords import _ask_player
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context="Riptide: put a card from hand face-down into arsenal?")
+    if not choice:
+        return
+    options = [c.slug for c in player.hand.cards]
+    pick = _ask_player(state, player.player_id, options,
+                       context="Riptide: choose a card to put into arsenal face-down")
+    card = player.hand.find(pick)
+    if card is None:
+        card = player.hand.cards[0]
+    player.hand.remove(card)
+    player.arsenal.add(card, is_public=False)
+    card.face_down = True
+
+
+# Build the HERO_TRIGGERS dict mapping hero slug -> list of trigger dicts
+HERO_TRIGGERS: dict = {
+    # Dorinthea / Dorinthea Ironsong: Once per turn, weapon hits → may attack again
+    "dorinthea": [
+        {
+            "event": "hit",
+            "condition_fn": lambda player, event, state: (
+                state.combat is not None
+                and state.combat.from_weapon
+                and state.combat.attacker_id == player.player_id
+            ),
+            "effect_fn": _dorinthea_weapon_hit_passive,
+        }
+    ],
+    "dorinthea_ironsong": [
+        {
+            "event": "hit",
+            "condition_fn": lambda player, event, state: (
+                state.combat is not None
+                and state.combat.from_weapon
+                and state.combat.attacker_id == player.player_id
+            ),
+            "effect_fn": _dorinthea_weapon_hit_passive,
+        }
+    ],
+    "dorinthea_quicksilver_prodigy": [
+        {
+            "event": "hit",
+            "condition_fn": lambda player, event, state: (
+                state.combat is not None
+                and state.combat.from_weapon
+                and state.combat.attacker_id == player.player_id
+            ),
+            "effect_fn": _dorinthea_weapon_hit_passive,
+        }
+    ],
+    # Viserai / Viserai Rune Blood: on Runeblade card play + second non-attack action → Runechant
+    "viserai": [
+        {
+            "event": "on_play",
+            "condition_fn": lambda player, event, state: True,
+            "effect_fn": _viserai_runeblade_trigger,
+        }
+    ],
+    "viserai_rune_blood": [
+        {
+            "event": "on_play",
+            "condition_fn": lambda player, event, state: True,
+            "effect_fn": _viserai_runeblade_trigger,
+        }
+    ],
+    # Briar / Briar Warden of Thorns: attack deals damage → Embodiment of Earth;
+    #                                  second non-attack action → Embodiment of Lightning
+    "briar": [
+        {
+            "event": "damage_dealt",
+            "condition_fn": lambda player, event, state: True,
+            "effect_fn": _briar_attack_damage_trigger,
+        },
+        {
+            "event": "on_play",
+            "condition_fn": lambda player, event, state: True,
+            "effect_fn": _briar_second_nonattack_trigger,
+        },
+    ],
+    "briar_warden_of_thorns": [
+        {
+            "event": "damage_dealt",
+            "condition_fn": lambda player, event, state: True,
+            "effect_fn": _briar_attack_damage_trigger,
+        },
+        {
+            "event": "on_play",
+            "condition_fn": lambda player, event, state: True,
+            "effect_fn": _briar_second_nonattack_trigger,
+        },
+    ],
+    # Katsu / Katsu the Wanderer: first hit per turn → optional discard + search combo
+    "katsu": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _katsu_on_hit_trigger}],
+    "katsu_the_wanderer": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _katsu_on_hit_trigger}],
+    # Olympia / Olympia Prized Fighter: first wager win per turn → Gold token
+    "olympia": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _olympia_wager_win_trigger}],
+    "olympia_prized_fighter": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _olympia_wager_win_trigger}],
+    # Victor Goldmane: first Gold creation per turn → draw
+    "victor_goldmane": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
+    "victor_goldmane_high_and_mighty": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
+    "victor_goldmane_match_fixer": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
+    # Valda: opponent draws in action phase → create Seismic Surge tokens
+    "valda_brightaxe": [{"event": "card_draw", "condition_fn": lambda p, e, s: True, "effect_fn": _valda_opponent_draw_trigger}],
+    "valda_seismic_impact": [{"event": "card_draw", "condition_fn": lambda p, e, s: True, "effect_fn": _valda_opponent_draw_trigger}],
+    # Betsy: attack wagers → optional {r}{r} for +1{p} and overpower
+    "betsy": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _betsy_wager_trigger}],
+    "betsy_skin_in_the_game": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _betsy_wager_trigger}],
+    # Data Doll MKII: Mech item with cost ≤2 banished from deck → put into arena
+    "data_doll_mkii": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _data_doll_banished_from_deck_trigger}],
+    # Florian: 4+ Earth in banished → check on card_banished events
+    "florian": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _florian_banished_earth_trigger}],
+    "florian_rotwood_harbinger": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _florian_banished_earth_trigger}],
+    # Riptide: play from hand → optional arsenal storage
+    "riptide": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _riptide_play_from_hand_trigger}],
+    "riptide_lurker_of_the_deep": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _riptide_play_from_hand_trigger}],
+}
 
 
 def _scabskin_roll_d6(action, player, state):

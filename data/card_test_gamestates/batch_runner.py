@@ -20,11 +20,15 @@ import config
 from data.card_test_gamestates.db import get_db, init_db, insert_gamestate
 from data.card_test_gamestates.gamestate_factory import GameStateFactory, serialize_gamestate
 from engine.card import CardDB, _derive_category
+from engine.actions import legal_actions, Action, ActionType
+from engine.engine import apply_action
+from engine.state import GameState, Step
 
 logger = logging.getLogger(__name__)
 
-# Card types where automated play-through is not yet supported
-UNSUPPORTED_TYPES = {"Mentor", "Figment"}
+# Card types where automated play-through is not yet supported.
+# Mentor and Figment are now supported via arsenal and hand placement respectively.
+UNSUPPORTED_TYPES: set[str] = set()
 
 
 def _load_slugs() -> list[dict]:
@@ -68,6 +72,71 @@ def _determine_status(
     return "generated", "success"
 
 
+def _apply_card_to_state(state: GameState, slug: str, card_db: CardDB) -> str | None:
+    """Apply the card identified by *slug* to *state* using the local engine.
+
+    Uses legal_actions() to find an action that plays *slug*, then calls
+    apply_action() to mutate the state in-place.
+
+    Returns:
+        None on success, or an error string describing what went wrong.
+
+    Engine integration notes
+    ------------------------
+    The engine's apply_action() is synchronous and mutates state in-place.
+    legal_actions() enumerates every legal move for the current priority player
+    in the current step.  We search that list for any action whose card matches
+    the target slug and call apply_action() for the first match found.
+
+    Supported action types: PLAY_CARD, PLAY_ATTACK_REACTION, PLAY_DEFENSE_REACTION,
+    PLAY_ARSENAL, DEFEND_CARDS, ACTIVATE_ITEM, ACTIVATE_EQUIPMENT, ACTIVATE_WEAPON,
+    ACTIVATE_HERO, DISCARD_ACTIVATE, PLAY_BANISH.
+
+    If no matching legal action is found (e.g. cost cannot be paid, card type not
+    yet modelled) the function records a descriptive engine_error and returns it so
+    the caller can store it in the error_message column.
+    """
+    try:
+        actions = legal_actions(state, card_db)
+    except Exception as exc:
+        return f"legal_actions error: {type(exc).__name__}: {exc}"
+
+    # For DEFEND_CARDS the card appears in action.card_list, not action.card.
+    target_action: Action | None = None
+    for action in actions:
+        if action.card is not None and action.card.slug == slug:
+            target_action = action
+            break
+        if action.type == ActionType.DEFEND_CARDS and action.card_list:
+            for c in action.card_list:
+                if c.slug == slug:
+                    target_action = action
+                    break
+        if target_action is not None:
+            break
+
+    if target_action is None:
+        # Gather available card slugs to provide a useful diagnostic.
+        available = sorted({
+            a.card.slug for a in actions if a.card is not None
+        })
+        return (
+            f"engine_error: no legal action found for '{slug}' "
+            f"at step {state.step}. "
+            f"Legal card slugs: {available[:20]}"
+        )
+
+    # apply_action requires player_id to be set (normally done by get_player_decision)
+    target_action.player_id = state.priority_player
+
+    try:
+        apply_action(state, target_action)
+    except Exception as exc:
+        return f"apply_action error: {type(exc).__name__}: {exc}"
+
+    return None
+
+
 def run_batch(
     slugs: list[dict],
     factory: GameStateFactory,
@@ -101,6 +170,8 @@ def run_batch(
     total = len(slugs)
     logger.info("Processing %d cards...", total)
 
+    card_db = factory._card_db
+
     for i, entry in enumerate(slugs, start=1):
         slug = entry.get("slug", "")
         name = entry.get("name", slug)
@@ -121,7 +192,15 @@ def run_batch(
                 before_dict = serialize_gamestate(state)
                 before_json = json.dumps(before_dict, default=str)
 
+                # Deep-copy the state so we can mutate it without affecting
+                # the original snapshot.
                 after_state = copy.deepcopy(state)
+
+                # Apply the card action to produce the real post-gamestate.
+                engine_error = _apply_card_to_state(after_state, slug, card_db)
+                if engine_error:
+                    error_msg = engine_error
+
                 after_dict = serialize_gamestate(after_state)
                 after_json = json.dumps(after_dict, default=str)
 
@@ -146,6 +225,7 @@ def run_batch(
                     original_gamestate=before_json,
                     post_gamestate=after_json,
                     status=db_status,
+                    error_message=error_msg,
                 )
             except Exception as exc:
                 logger.error("DB insert failed for %s: %s", slug, exc)

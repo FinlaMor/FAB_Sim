@@ -1,0 +1,2475 @@
+Home  Rules and Policy  Release Notes  Part the Mistveil
+
+# Part the Mistveil
+
+# General Notes
+
+Part the Mistveil contains 239 cards (240 in Japanese)
+
+Part the Mistveil becomes legal for tournaments on its official release date: 31 May, 2024
+
+Icons
+
+{r} Resource Point
+
+{c} Chi Point
+
+{p} Power
+
+{d} Defense Value
+
+{h} Life
+
+{i} Intellect
+
+## Returning Cards
+
+Welcome to Rathe
+
+Nimble Strike
+
+Nimblism
+
+Wounding Blow
+
+#### Dynasty
+
+Qi Unleashed
+
+Blessing of Qi
+
+Flex Claws
+
+Pouncing Qi
+
+Crouching Tiger
+
+## Returning Tokens
+
+Crucible of War
+
+Zen State
+
+#### Monarch
+
+Spectral Shield
+
+## New Keywords
+
+Chi (Mystic Resource – Chi)
+
+Chi is a subtype keyword.
+
+Resource cards with the subtype Chi can be pitched to gain {c} (chi points) which can be used to pay for {c} costs or {r} costs.
+
+When paying resource costs, any {c} the player has is used first before any {r} the player has. After using all available {c} and {r}, if additional {r} are required to fulfil the asset cost of playing a card, cards may be pitched as normal.
+
+Players lose any remaining {c} they have at the end of each turn at the same time they would lose their remaining {r} and action points.
+
+Effects that increase or decrease {r} costs do not modify the {c} costs.
+
+Transcend (Put this into its owner’s hand flipped.)
+
+Transcend is an effect keyword.
+
+If a card transcends, it is put into its owner’s hand flipped and you are considered to have transcended. A player can transcend multiple times in a game or even a turn.
+
+Cloaked (Equip this face-down.)
+
+Cloaked is an ability keyword.
+
+Cloaked is a game rule that changes how permanents are equipped. Cards with Cloaked that are equipped are placed face-down in the appropriate zone.
+
+Unless otherwise stated by the abilities themselves, abilities are not functional and cannot be activated/triggered/used while the equipment is face-down (e.g. Ward).
+
+If any Equipment with the Cloaked keyword remains equipped face-down through the end of the game, opponents in the game/tournament staff/judges at the event may ask its owner to reveal those face-down equipment cards. If asked, owners must turn the equipment face-up to allow the requesting party to validate the equipment card and the equipment zone its equipped to.
+
+Amp (The next time you would deal arcane damage this turn, instead deal that much plus 1.)
+
+Amp is an effect keyword.
+
+Amp generates a replacement effect that applies to any one event of arcane damage that the player controls. This can include arcane damage events that are generated from actions, weapons (e.g. Kraken’s Aethervein), heroes (e.g. Brainstorm), etc.
+
+If an effect would deal 0 arcane damage, it’s the same as no effect occurring, and therefore Amp does not apply to it.
+
+# Part the Mistveil Card Notes
+
+Mistcloak Gully // Inner Chi
+
+Mystic Instant – Landmark // Mystic Resource – Chi
+
+0{r} // (BLU 3{c})
+
+Legendary
+
+The first attack that targets you each turn gets -1{p}.
+
+At the beginning of each end phase, destroy this unless you’ve pitched, played, or defended with a blue card this turn. If you’ve pitched, played, and defended with a blue card this turn, transcend.
+
+Mistcloak Gully triggers at the beginning of each player’s end phase, not just the end phases of the player who controls it.
+
+When Mistcloak Gully’s trigger resolves, whether you’ve pitched, played or defended with a blue card is checked. If neither of these actions were performed by the controlling player that turn, Mistcloak Gully will be destroyed. If at least one of these actions were performed, then the trigger will look to see if all three actions were performed; if so, then you will transcend Mistcloak Gully into an Inner Chi and place it into it’s owner’s hand.
+
+In a multiplayer game, if the first attack that targets you during a turn has its target changed due to an effect (e.g. Taipanis) while you control a Mistcloak Gully, the attack against the new target will no longer have the -1{p) applied to it. If during the same turn, you become the target of another attack, the -1{p} debuff will not be applied since it is no longer the first attack that targets you this turn.
+
+During the end phase, if you control Mistcloak Gully that is owned by another player and you have played, pitched and defended with a blue card this turn, transcend Mistcloak Gully. The player who controls Mistcloak Gully performs the transcend effect and is considered to have transcended; however, the Inner Chi is placed into its owner’s hand.
+
+During the end phase, if you control Mistcloak Gully that is owned by another player and are reduced to 0{h} (e.g. Blood Debt) while Mistcloak Gully’s trigger is waiting to resolve on the stack, Mistcloak Gully is simply cleared. Before the next triggered layer on the stack begins to resolve as if all players passed priority in the end phase, players that have no remaining health lose the game, clear all objects they control, and remove all objects they own from the game. This includes any unresolved triggered-layers created by Mistcloak Gully as they would be controlled by the player who lost.
+
+—————————————————————
+
+## Mystic Assassin Cards
+
+Nuu, Alluring Desire | Nuu
+
+Mystic Assassin Hero | Mystic Assassin Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Your attacks with stealth get “When this chain link resolves, banish all action cards defending this.”
+
+Instant — {c}{c}{c}: Look at the top card of an opposing hero’s deck. If it’s blue, you may banish it. Until end of turn, you may play blue cards from that hero’s banished zone without paying their {r} cost.
+
+When Nuu’s activated ability resolves, until end of turn, you may play blue cards from that hero’s banished zone without paying their {r} cost. This includes any blue cards that already exist in that opponent’s banished zone when the effect becomes active, as well as any blue cards that are banished to that opponent’s banished zone after the effect becomes active that turn.
+
+When you play a blue card from an opposing hero’s banished zone due to the effect of Nuu’s activated ability, the card’s resource cost to play is set to 0. Then, any effects that increase resource costs are applied, followed by effects that decrease resource costs. For example, if you control a Frostbite, you would still have to pay {r} when playing a blue card from the opposing hero’s banished zone. You must still have the necessary action points to play any blue action cards from the banished zone.
+
+The “until end of turn” effect from resolving Nuu’s activated ability is not dependent on banishing a blue card from the preceding effect.
+
+If a card has a printed cost X for the value of their cost property and is played from the banished zone without paying its {r} cost, the value of X is set to 0. If an effect prevents you from playing cards with a base cost 0 (e.g. Frost Lock), you will not be able to play blue cards with cost X from the banished zone.
+
+Nuu’s ability only affects the printed, base resource cost you would typically pay to play a card and does not impact resource costs imposed by additional costs abilities (e.g. Lord of Wind) or effects (e.g. Frostbite, Channel Lake Frigid). If you play a card that requires the player to pay X resources for its additional cost, you would still need to specify the value of X and pay that many resources.
+
+In a multiplayer game, if you are currently attacking with a blue card on the combat chain owned by another player and that player is dealt lethal damage before the damage step of the active chain link, the combat chain will move to the close step. Before players remaining in the game receive priority, players that are dealt lethal damage lose the game, clear all objects they control, and remove all objects they own from the game.
+
+—————————————————————
+
+Beckoning Mistblade
+
+Mystic Assassin Weapon – Dagger (1H)
+
+1{p}
+
+Once per Turn Action — {r}{r}: Attack. Go again
+
+When this hits, your next blue attack this turn gets +1{p} and go again.
+
+—————————————————————
+
+Mask of Recurring Nightmares
+
+Mystic Assassin Equipment – Head
+
+2{d}
+
+Once per Turn Attack Reaction — {c}{c}{c}: Target defending hero banishes a card from their hand.
+
+Blade Break
+
+If you attack an ally controlled by an opposing hero, you will not be able to activate this as there is no defending hero that you can target.
+
+If you are attacking with an ally, you can not activate this as you are not the attacking hero.
+
+—————————————————————
+
+Heirloom of Snake Hide
+
+Mystic Assassin Equipment – Chest
+
+2{d}
+
+Cloaked
+
+While this is equipped face-down, at the start of your turn, if you have exactly 1{h}, you may turn this face-up.
+
+Battleworn
+
+Heirloom of Snake Hide’s triggered ability generates a triggered effect and is optional. Its owner may choose to generate its triggered effect as long as the card is equipped face-down in the arena at the beginning of its owner’s start phase. If they choose to do so, this card is made public and the triggered layer goes onto the stack.
+
+Heirloom of Snake Hide’s triggered ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to. Whether you have exactly 1{h} is checked on the resolution of the trigger.
+
+—————————————————————
+
+Arousing Wave
+
+Mystic Assassin Equipment – Arms
+
+1{d}
+
+Attack Reaction — {r}, destroy this: Create a Fang Strike in your hand.
+
+Battleworn
+
+—————————————————————
+
+Undertow Stilettos
+
+Mystic Assassin Equipment – Legs
+
+1{d}
+
+Attack Reaction — {r}, destroy this: Create a Slither in your hand.
+
+Battleworn
+
+—————————————————————
+
+Gorgon’s Gaze
+
+Mystic Assassin Attack Reaction
+
+(YEL) 2{r} 3{d}
+
+Create a Slither in your hand.
+
+Banish all defending attack action cards on the combat chain. If a Chi was pitched to play this, you may play the banished cards this combat chain without paying their {r} cost.
+
+When you play a card that was banished by Gorgon’s Gaze’s resolution ability, if a Chi was pitched to play this, that card’s resource cost to play is set to 0. Then, any effects that increase resource costs are applied, followed by effects that decrease resource costs. For example, if you control a Frostbite, you would still have to pay {r} when playing the banished card. You must still have the necessary action points to play attack action cards banished this way.
+
+To meet the condition “If a Chi was pitched to play this”, you must actively pitch a card with the Chi subtype to play the card. Using {c} (chi points) to pay the resource cost for this does not meet this condition.
+
+—————————————————————
+
+Siren’s Call
+
+Mystic Assassin Attack Reaction
+
+(RED) 1{r} 3{d}
+
+Look at the defending hero’s hand and choose a blue card. Add it to this chain link as a defending card. If you do, draw a card.
+
+If you attack an ally controlled by an opposing hero, you will not be able to look at that hero’s hand as there is no defending hero in this situation.
+
+You may choose a blue card without a defense property (e.g. Heart of Fyendal, Arknight Shard, etc.) and add it onto the active chain link as a defending card when resolving this card’s ability.
+
+You cannot put the chosen card onto the active chain link as a defending card if an effect is active in the game that would prevent that card from defending. For example, if the current attack has dominate, and the opponent has already a defending card from hand on the chain link, you would not be able to put the chosen card onto the chain link as a defending card.
+
+If a card is not added to the chain link, you do not draw a card.
+
+—————————————————————
+
+Sacred Art: Undercurrent Desires // Inner Chi
+
+Mystic Assassin Instant // Mystic Resource – Chi
+
+(BLU) 3{r} // (BLU 3{c})
+
+Legendary
+
+If you’ve played another blue card this turn, choose 3. Otherwise, choose 1;
+
+Create a Fang Strike and Slither in your hand.
+
+Banish up to 2 cards in an opposing hero’s graveyard.
+
+Transcend
+
+You choose the modes when you play this card. To be able to choose 3 modes, you must have already played another blue card this turn before playing this card.
+
+You may not choose the same mode more than once.
+
+If you’ve played another blue card this turn, you must choose all three modes. Otherwise, you must choose one of the modes.
+
+If you choose the 2nd mode, you may choose not to banish any cards in an opponent’s graveyard.
+
+—————————————————————
+
+Tide Chakra
+
+Mystic Assassin Attack Reaction
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Target Assassin or Mystic attack action card gets +3/2/1{p}. If you’ve transcended this turn, instead it gets +5/4/3{p}.
+
+To get the additional +{p}, you have to transcend before Tide Chakra’s layer resolves on the stack. If you do, the targeted Assassin or Mystic attack action card will get +5/4/3{p} instead of +3/2/1{p}.
+
+—————————————————————
+
+Hiss
+
+Mystic Assassin Attack Reaction
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Target Assassin or Mystic attack action card gets +3/2/1{p}.
+
+If you’ve pitched a blue card this turn, create a Slither in your hand.
+
+You will create a Slither in your hand if you’ve pitched a blue card by the time Hiss resolves on the stack, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+—————————————————————
+
+Intimate Inducement
+
+Mystic Assassin Attack Reaction
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+Target Assassin or Mystic attack action card gets +1{p}.
+
+Look at the top 4/3/2 cards of the defending hero’s deck and choose a card. If it’s blue, it has 0 base {d}. Put the chosen card onto the active chain link as a defending card and the rest on top in any order.
+
+While Intimate Inducement resolves, neither player receives priority until the entire card layer resolves is completed.
+
+If the number of cards that currently exists in the deck is less than the number specified by Intimate Inducement’s look effect, you will look at the remaining cards. For example, if you are instructed to look at the top 3 cards of the defending hero’s deck and they only have 2 remaining cards in their deck, you will look at both of those cards.
+
+If you attack an ally controlled by an opposing hero, you will not be able to look at the top of that hero’s deck as there is no defending hero in this situation.
+
+You may choose a card without a defense property (e.g. Heart of Fyendal, Pulping, etc.) and add it onto the active chain link as a defending card when resolving this card’s trigger. If you were to choose a blue card without a defense property, that chosen card would be added to the active chain link as a defending card and it receives the defense property with its base {d} set to 0.
+
+You cannot put the chosen card onto the active chain link as a defending card if an effect is active in the game that would prevent that card from defending. For example, if the current attack has overpower, and the opponent has already a defending action card from hand on the chain link, you would not be able to put the chosen action card onto the chain link as a defending card.
+
+—————————————————————
+
+Venomous Bite
+
+Mystic Assassin Attack Reaction
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Target Assassin or Mystic attack action card gets +3/2/1{p}.
+
+If you’ve pitched a blue card this turn, create a Fang Strike in your hand.
+
+You will create a Fang Strike in your hand if you’ve pitched a blue card by the time Venomous Bite resolves on the stack, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+—————————————————————
+
+Fang Strike
+
+Mystic Assassin Attack Reaction
+
+0{r}
+
+Ephemeral
+
+Target attack action card gets +1{p}.
+
+Fang Strike is a card with ephemeral. It cannot be included in your card-pool and you cannot start the game with this in your deck. If it were to be put into a graveyard from anywhere, instead it ceases to exist.
+
+—————————————————————
+
+Slither
+
+Mystic Assassin Attack Reaction
+
+0{r}
+
+Ephemeral
+
+Target attack action card gets go again.
+
+Slither is a card with ephemeral. It cannot be included in your card-pool and you cannot start the game with this in your deck. If it were to be put into a graveyard from anywhere, instead it ceases to exist.
+
+—————————————————————
+
+## Mystic Illusionist Cards
+
+Enigma, Ledger of Ancestry | Enigma
+
+Mystic Illusionist Hero | Mystic Illusionist Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Your first Spectral Shield attack each turn costs {r} less to activate.
+
+Once per Turn Instant — {c}{c}{c}: Create a Spectral Shield token with a +1{p} counter.
+
+When Enigma’s activated ability resolves, you will create a Spectral Shield token that will enter the arena with a +1{p} counter on it.
+
+Effects that cause a player’s cards and tokens to lose and can’t gain names (e.g. Amnesia) do not prevent Spectral Shield tokens from being created when resolving effects on other cards. Enigma’s activated ability will still resolve under these effects, resulting in a Spectral Shield token being created that will enter the arena with a +1{p} counter on it.
+
+If cards and tokens you own lose and can’t gain names (e.g. Amnesia), effects that use names will fail to find/identify objects with any specified names. Under this effect, your first attack with Spectral Shield in its name you activate will not cost {r} less to activate.
+
+—————————————————————
+
+Meridian Pathway
+
+Mystic Illusionist Equipment – Legs
+
+Instant — {c}{c}{c}: You may play auras this turn as though they were instants.
+
+Whenever you pitch a Chi, you may have this get ward 3 until end of turn.
+
+After resolving Meridian Pathway’s activated ability, you may choose to play auras as though they were instants. An aura card with the action type played as though it were an instant does not cost an action point and can be played whenever the player has priority, otherwise it is still considered to be an action card.
+
+On your turn, you may choose to play auras with the action type as though it were an action, even if you can play this as though it were an instant.
+
+If it is your action phase and you play an aura with go again as though it were an instant, you will gain an action point.
+
+If you activated Meridian Pathway’s ability while it has Ward 3, and it were destroyed before the activated ability’s layer resolves on the stack, it will resolve as normal.
+
+Whenever you pitch a Chi, a triggered layer will be created for each Chi pitched. For example, if you were to pitch 2 Chi cards to pay for the cost of card, a total of two triggered layers will be created (one triggered layer for each of the chi cards pitched). When each triggered layer resolves, you may choose to have Meridian Pathway get ward 3.
+
+If you would be dealt damage and the Meridian Pathway you control has multiple Ward 3 abilities on it, you would only be able to use one Ward 3 effect on that damage event which will destroy the Meridian Pathway and prevent 3 damage. As Meridian Pathway was destroyed, its other Ward 3 prevention effects would be unable to apply to that same damage event.
+
+—————————————————————
+
+Heirloom of Rabbit Hide
+
+Mystic Illusionist Equipment – Chest
+
+Cloaked
+
+While this is equipped face-down, at the start of your turn, if you have exactly 1{h}, you may turn this face-up.
+
+Ward 4
+
+Heirloom of Rabbit Hide’s triggered ability generates a triggered effect and is optional. Its owner may choose to generate its triggered effect as long as the card is equipped face-down in the arena at the beginning of its owner’s start phase. If they choose to do so, this card is made public and the triggered layer goes onto the stack.
+
+Heirloom of Rabbit Hide’s triggered ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to. Whether you have exactly 1{h} is checked on the resolution of the trigger.
+
+You can only apply the prevention effect from this card’s Ward ability to a damage event as long as this card is equipped face-up in the arena.
+
+—————————————————————
+
+Truths Retold
+
+Mystic Illusionist Equipment – Head
+
+Cloaked
+
+Instant — {r}, turn this face-up: Put an aura from your graveyard on the bottom of your deck.
+
+Ward 1
+
+Turning this card face-up is part of the cost of activating this ability. If you cannot turn this card face-up because it is already face-up in the Arena, you are unable to activate this ability.
+
+When Truths Retold’s activated ability resolves, you choose which aura from your graveyard that you will put on the bottom of your deck. If your deck zone is empty when this activated ability resolves, you will put 1 aura from your graveyard in your deck zone. That card would be the top card of your deck.
+
+You can only apply the prevention effect from this card’s Ward ability to a damage event as long as this card is equipped face-up in the arena.
+
+—————————————————————
+
+Uphold Tradition
+
+Mystic Illusionist Equipment – Arms
+
+Cloaked
+
+Instant — {r}, turn this face-up: Put a +1{p} counter on an aura you control with ward.
+
+Ward 1
+
+Turning this card face-up is part of the cost of activating this ability. If you cannot turn this card face-up because it is already face-up in the Arena, you are unable to activate this ability.
+
+When Uphold Tradition’s activated ability resolves, you choose which aura with ward you control that you would like to put a +1{p} counter on. In addition to any of the auras with ward you control in the arena, you may choose an aura with ward you control that is waiting to resolve on the stack.
+
+You can only apply the prevention effect from this card’s Ward ability to a damage event as long as this card is equipped face-up in the arena.
+
+—————————————————————
+
+Manifestation of Miragai
+
+Mystic Illusionist Instant – Aura
+
+(BLU) 3{r}
+
+This enters the arena with two +1{p} counters. If a Chi was pitched to play this, instead this enters the arena with four +1{p} counters.
+
+Ward X, where X is the number of +1{p} counters on this.
+
+When Manifestation of Miragai resolves on the stack, it will enter the arena with four +1{p} counters if you pitched a Chi to pay for any of this card’s costs. If you do not, it will enter the arena with just two +1{p} counters.
+
+Manifestation of Miragai’s Ward ability is continuously checking to see +1{p} counters it has on its object.
+
+If you were to apply Manifestation of Miragai’s Ward prevention effect to a damage of event, the amount of damage it would reduce would be equal to the number of +1{p} counters it has when it was destroyed as part of generating its prevention effect.
+
+If Manifestation of Miragai does not have any +1{p} counters, the value of X is 0. If you would be dealt damage and you would apply a Ward 0 prevention effect to that damage event, you would still destroy the object with the Ward 0 ability and the damage value of the event is not reduced.
+
+To meet the condition “If a Chi was pitched to play this”, you must actively pitch a card with the Chi subtype to play the card. Using {c} (chi points) to pay the resource cost for this does not meet this condition.
+
+—————————————————————
+
+Sacred Art: Immortal Lunar Shrine // Inner Chi
+
+Mystic Illusionist Instant // Mystic Resource – Chi
+
+(BLU) 3{r} // (BLU 3{c})
+
+Legendary
+
+If you’ve played another blue card this turn, choose 3. Otherwise, choose 1;
+
+Create 2 Spectral Shield tokens.
+
+Put a +1{p} counter on each aura with ward you control.
+
+Transcend
+
+You choose the modes when you play this card. To be able to choose 3 modes, you must have already played another blue card this turn before playing this card.
+
+You may not choose the same mode more than once.
+
+If you’ve played another blue card this turn, you must choose all three modes. Otherwise, you must choose one of the modes.
+
+You would put a +1{p} counter on each aura with ward you control, including the two Spectral Shield tokens created from resolving this ability’s first mode. If you control any auras on the stack that are waiting to resolve, you would put a +1{p} counter on those auras as well.
+
+—————————————————————
+
+Three Visits
+
+Mystic Illusionist Instant – Aura
+
+(RED) 3{r}
+
+Ward X, where X is three times the number of blue cards you’ve pitched this turn.
+
+Three Visits’ Ward ability is continuously checking to see how many blue cards you’ve pitched this turn, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+If you control two or more prevention effects, and both would apply to an event of damage, you may decide which of those prevention effects to apply first. If the first prevention effect would result in you pitching a blue card to pay for a resource cost (e.g. pitching a blue card for Arcane Barrier 3), the value of Three Visits’ Ward ability will change to 3 times the number of blue cards you’ve pitched this turn before it would apply itself to the damage event.
+
+If you have not pitched a blue card this turn, the value of X is 0. If you would be dealt damage and you would apply a Ward 0 prevention effect to that damage event, you would still destroy the object with the Ward 0 ability and the damage value of the event is not reduced.
+
+—————————————————————
+
+Moon Chakra
+
+Mystic Illusionist Instant
+
+(RED/YEL/BLU) 0{r}
+
+The next time you would be dealt damage this turn, prevent 3/2/1 of that damage. If you’ve transcended this turn, instead prevent 5/4/3.
+
+To get the additional value for the prevention effect, you have to transcend before Moon Chakra’s layer resolves on the stack. If you do, the next time you would be dealt damage this turn, prevent 5/4/3 of that damage instead of 3/2/1.
+
+This prevents damage from a single event of damage. Any leftover prevention amount does not carry over to another event of damage.
+
+—————————————————————
+
+Haze Shelter
+
+Mystic Illusionist Instant – Aura
+
+(RED/YEL/BLU) 2{r}
+
+Ward X, where X is 4/3/2 if you’ve pitched a blue card this turn, otherwise X is 1.
+
+Haze Shelter’s Ward ability is continuously checking to see if you’ve pitched a blue card this turn, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+If you control two or more prevention effects, and both would apply to an event of damage, you may decide which of those prevention effects to apply first. If the first prevention effect would result in you pitching your first blue card this turn to pay for a resource cost (e.g. pitching a blue card for Arcane Barrier 3), the value of Waning Vengeance’s Ward ability will change to 4/3/2 appropriately before it would apply itself to the damage event.
+
+—————————————————————
+
+Waning Vengeance
+
+Mystic Illusionist Instant – Aura
+
+(RED/YEL/BLU) 1{r}
+
+When this leaves the arena, if you’ve pitched a blue card this turn, create a Spectral Shield token.
+
+Ward 3/2/1
+
+Waning Vengeance triggers when it leaves the arena (for example, when it is destroyed, when it is banished, etc.). Whether you’ve pitched a blue card this turn is checked on the resolution of the trigger.
+
+You will create a Spectral Shield token if you’ve pitched a blue card by the time Waning Vengeance’s trigger resolves on the stack, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+If this card is destroyed as part of applying its Ward prevention effect to a damage event, the Ward prevention effect from the Spectral Shield that would be created for this card’s triggered effect will not apply to that same damage event. This is because that Spectral Shield token has not yet been generated from the trigger resolving on the stack. When this card is destroyed as part of applying the Ward effect, the trigger layer will only be added to the stack after the damage event is finalized and players once again receive priority.
+
+—————————————————————
+
+Waxing Specter
+
+Mystic Illusionist Instant – Aura
+
+(RED/YEL/BLU) 2{r}
+
+If you’ve pitched a blue card this turn, this enters the arena with a +1{p} counter.
+
+Ward 3/2/1
+
+Waxing Specter will enter the arena with a +1{p} counter if you’ve pitched a blue card by the time it resolves on the stack, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+—————————————————————
+
+## Mystic Ninja Cards
+
+Zen, Tamer of Purpose | Zen
+
+Mystic Ninja Hero | Mystic Ninja Hero – Young
+
+4{i} 40{h} | 4{i} 20{h}
+
+Once per Turn Instant — {c}{c}{c}: Create a Crouching Tiger in your hand. Search your deck for a card with combo, banish it, then shuffle. You may play it this turn.
+
+When Zen’s activated ability resolves, you will search your deck for a card with combo. You may choose to fail to find a card with combo even if your deck has one in it. If you choose to find a card with combo, you will reveal it and banish it. Regardless of whether you find a card with combo, you will still shuffle your deck.
+
+—————————————————————
+
+Twelve Petal Kāṣāya
+
+Mystic Ninja Equipment – Chest
+
+2{d}
+
+Whenever you transcend, you may gain {r}.
+
+Instant — {c}{c}{c}, destroy this: Create a Zen State token.
+
+Blade Break
+
+Twelve Petal Kāṣāya will trigger whenever you resolve a transcend effect on another card. When this trigger resolves, you may choose to gain {r}.
+
+—————————————————————
+
+Heirloom of Tiger Hide
+
+Mystic Ninja Equipment – Chest
+
+3{d}
+
+Cloaked
+
+While this is equipped face-down, at the start of your turn, if you have exactly 1{h}, you may turn this face-up.
+
+Blade Break
+
+Heirloom of Tiger Hide’s triggered ability generates a triggered effect and is optional. Its owner may choose to generate its triggered effect as long as the card is equipped face-down in the arena at the beginning of its owner’s start phase. If they choose to do so, this card is made public and the triggered layer goes onto the stack.
+
+Heirloom of Tiger Hide’s triggered ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to. Whether you have exactly 1{h} is checked on the resolution of the trigger.
+
+—————————————————————
+
+Stride of Reprisal
+
+Mystic Ninja Equipment – Legs
+
+1{d}
+
+When this defends, create a Crouching Tiger in your hand.
+
+Blade Break
+
+“When this defends” is an event-based trigger. Stride of Reprisal will trigger at the time it becomes a defending card (i.e. defends the attack) or when it is added as a defending card to the chain link by an effect.
+
+—————————————————————
+
+Tooth and Claw
+
+Mystic Ninja Action – Attack
+
+(RED) 0{r} 4{p} 3{d}
+
+When this attacks, you may reveal any number of Crouching Tigers from your hand. If you reveal 1 or more, this gets go again. 2 or more, this gets +1{p}. 3 or more, draw a card.
+
+Tooth and Claw triggers when it resolves on the stack and becomes an attacking card. This triggered effect is optional. You may decide to reveal any number of Crouching Tigers from your hand when the triggered effect begins to resolve.
+
+The number of Crouching Tigers you reveal from your hand when resolving this triggered effect will determine if the subsequent conditional effects are generated as part of the trigger resolving. If you resolve this trigger then reveal any number of Crouching Tigers from resolving a different effect, it will not cause Tooth and Claw to generate additional effects from its triggered ability.
+
+If you reveal 3 Crouching Tigers, you will also satisfy the conditions of revealing 2 and 1 Crocuhing Tigers to gain their effects
+
+—————————————————————
+
+Shifting Winds of the Mystic Beast
+
+Mystic Ninja Action
+
+(BLU) 1{r} 3{d}
+
+Whenever you play a Crouching Tiger this turn, name a card. It gets that name.
+
+If a Chi was pitched to play this, create 2 Crouching Tigers in your hand.
+
+Go again
+
+When Shifting Winds of the Mystic Beast resolves, it generates a continuous triggered effect that lasts for the remainder of the turn after it is generated. While the continuous triggered effect is active, it will create a triggered layer that will be added to the stack whenever a crouching tiger is played. When that triggered layer resolves, you must name a card that is legal in the format you are playing. The Crouching Tiger you played that caused this effect to trigger will get that name in addition to its original name.
+
+—————————————————————
+
+Sacred Art: Jade Tiger Domain // Inner Chi
+
+Mystic Ninja Instant // Mystic Resource – Chi
+
+(BLU) 3{r} // (BLU 3{c})
+
+Legendary
+
+If you’ve played another blue card this turn, choose 3. Otherwise, choose 1;
+
+Create 2 Crouching Tigers in your hand.
+
+Your Crouching Tigers get +1{p} this turn.
+
+Transcend
+
+You choose the modes when you play this card. To be able to choose 3 modes, you must have already played another blue card this turn before playing this card.
+
+You may not choose the same mode more than once.
+
+If you’ve played another blue card this turn, you must choose all three modes. Otherwise, you must choose at least one of the modes.
+
+If you choose the 2nd mode, Crouching Tigers you control get +1{p} this turn. You control Crouching Tigers that are in the arena or on the stack.
+
+—————————————————————
+
+Wind Chakra
+
+Mystic Ninja Action
+
+(RED/YEL/BLU) 3{d}
+
+The next Crouching Tiger you play this turn gets +3/2/1{p}. If you’ve transcended this turn, instead it gets +5/4/3{p}.
+
+Go again
+
+To get the additional +{p}, you have to transcend before Wind Chakra’s layer resolves on the stack. If you do, the next Crouching Tiger you play this turn will get +5/4/3 {p} instead of +3/2/1 {p}.
+
+—————————————————————
+
+Companion of the Claw
+
+Mystic Ninja Action – Attack
+
+(RED/YEL/BLU) 2{r} 4/3/2{p} 2{d}
+
+When this attacks, if you’ve pitched a blue card this turn, create a Crouching Tiger in your hand.
+
+Go again
+
+Companion of the Claw triggers when it resolves on the stack and becomes an attacking card. Whether you’ve pitched a blue card this turn is checked on the resolution of the trigger (during the attack step).
+
+You will create a Crouching Tiger in your hand if you’ve pitched a blue card by the time Companion of the Claw’s trigger resolves on the stack, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+—————————————————————
+
+Harmony of the Hunt
+
+Mystic Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 3/2/1{p} 2{d}
+
+When this attacks, if you’ve pitched a blue card this turn, create a Crouching Tiger in your hand.
+
+Go again
+
+Harmony of the Hunt triggers when it resolves on the stack and becomes an attacking card. Whether you’ve pitched a blue card this turn is checked on the resolution of the trigger (during the attack step).
+
+You will create a Crouching Tiger in your hand if you’ve pitched a blue card by the time Harmony of the Hunt’s trigger resolves on the stack, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+—————————————————————
+
+Tiger Form Incantation
+
+Mystic Ninja Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+The next Crouching Tiger you play this turn gets +3/2/1{p}.
+
+If you’ve pitched a blue card this turn, create a Crouching Tiger in your hand.
+
+Go again
+
+You will create a Crouching Tiger in your hand if you’ve pitched a blue card by the time Tiger Form Incantation resolves on the stack, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+—————————————————————
+
+## Mystic Cards
+
+Traverse the Universe
+
+Mystic Equipment – Head
+
+2{d}
+
+When this defends, search your deck for an Inner Chi, reveal it, put it into your hand, then shuffle.
+
+Blade Break
+
+“When this defends” is an event-based trigger. Traverse the Universe will trigger at the time it becomes a defending card (i.e. defends the attack) or when it is added as a defending card to the chain link by an effect.
+
+When Traverse the Universe’s triggered layer resolves, you will search your deck for an Inner Chi. You may choose to fail to find an Inner Chi even if your deck has one in it. If you choose to find an Inner Chi, you will reveal it and put it into your hand. Regardless of whether you find an Inner Chi, you will still shuffle your deck.
+
+—————————————————————
+
+Aqua Seeing Shell
+
+Mystic Equipment – Head
+
+1{d}
+
+Cloaked
+
+Instant — {r}{r}{r}, turn this face-up: Draw a card.
+
+At the start of your turn, destroy this.
+
+This card can be activated during the action phase of either player’s turn.
+
+Turning this card face-up is part of the cost of activating this ability. If you cannot turn this card face-up because it is already face-up in the Arena, you are unable to activate this ability.
+
+Aqua Seeing Shell triggers and resolves at the beginning of the start phase. This will only trigger if the card is face-up in the arena at the beginning of its owner’s Start Phase. During the start phase, neither player receives priority and its triggered layer can not be responded to.
+
+—————————————————————
+
+Koi Blessed Kimono
+
+Mystic Equipment – Chest
+
+Cloaked
+
+While this is equipped face-down, at the start of your turn, if you have exactly 1{h}, you may turn this face-up.
+
+When this is turned face-up, destroy it. Search your deck for an Inner Chi, reveal it, put it into your hand, then shuffle.
+
+Koi Blessed Kimono’s first triggered ability generates a triggered effect and is optional. Its owner may choose to generate its triggered effect as long as the card is equipped face-down in the arena at the beginning of its owner’s start phase. If they choose to do so, this card is made public and the triggered layer goes onto the stack.
+
+Koi Blessed Kimono’s first ability triggers and resolves at the beginning of the start phase. During the start phase, neither player receives priority and triggered layers can not be responded to. Whether you have exactly 1{h} is checked on the resolution of the trigger.
+
+Turning this card face-up is part of resolving this card’s first triggered effect. This will cause the second ability to trigger.
+
+Koi Blessed Kimono’s second ability triggers when it is turned face-up. When this triggered layer resolves, you will search your deck for an Inner Chi. You may choose to fail to find an Inner Chi even if your deck has one in it. If you choose to find an Inner Chi, you will reveal it and put it into your hand. Regardless of whether you find an Inner Chi, you will still shuffle your deck.
+
+—————————————————————
+
+Waves of Aqua Marine
+
+Mystic Equipment – Arms
+
+1{d}
+
+Cloaked
+
+Attack Reaction — {r}, turn this face-up: Target attack gets +1{p}.
+
+At the start of your turn, destroy this.
+
+This card can be activated in the reaction step of your turn as long as you are the attacking hero.
+
+Turning this card face-up is part of the cost of activating this ability. If you cannot turn this card face-up because it is already face-up in the Arena, you are unable to activate this ability.
+
+Waves of Aqua Marine triggers and resolves at the beginning of the start phase. This will only trigger if the card is face-up in the arena at the beginning of its owner’s Start Phase. During the start phase, neither player receives priority and its triggered layer can not be responded to.
+
+—————————————————————
+
+Aqua Laps
+
+Mystic Equipment – Legs
+
+1{d}
+
+Cloaked
+
+Attack Reaction — {r}, turn this face-up: Target attack gets go again.
+
+At the start of your turn, destroy this.
+
+This card can be activated in the reaction step of your turn as long as you are the attacking hero.
+
+Turning this card face-up is part of the cost of activating this ability. If you cannot turn this card face-up because it is already face-up in the Arena, you are unable to activate this ability.
+
+Aqua Laps triggers and resolves at the beginning of the start phase. This will only trigger if the card is face-up in the arena at the beginning of its owner’s Start Phase. During the start phase, neither player receives priority and its triggered layer can not be responded to.
+
+—————————————————————
+
+Skycrest Keikoi | Skybody Keikoi | Skyhold Keikoi | Skywalker Keikoi
+
+Mystic Equipment – Head | Mystic Equipment – Chest | Mystic Equipment – Arms | Mystic Equipment – Legs
+
+Cloaked
+
+Instant — Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this ability only while this is face-down.
+
+This card can be activated during the action phase of either player’s turn.
+
+You may only activate this ability while its source is face-down. When activating this card’s ability, its owner will make it public by showing its front face, then will destroy it as part of paying its activation cost. An object becoming public this way does not trigger any effects and cannot be replaced by any replacement effects.
+
+—————————————————————
+
+Attune with Cosmic Vibrations
+
+Mystic Action – Attack
+
+(BLU) 0{r} 2{p} 2{d}
+
+When this attacks a hero or defends a hero’s attack, reveal the top card of their deck. If the revealed card is blue, this gets +3{p} and +3{d}.
+
+When this card’s triggered effect resolves, you will reveal the top card of that hero’s deck. Neither player receives priority until the entire triggered effect, including this card getting +3{p} and +3{d} from the revealed card being blue, is completed.
+
+If the hero has no cards in their deck zone or an effect prevents you from revealing cards, you are not considered to have revealed a card on the top of their deck and the effect fails to generate. Attune with Cosmic Vibrations will not get the +{p} or +{d} in these situations.
+
+—————————————————————
+
+Cosmic Awakening
+
+Mystic Action – Attack
+
+(BLU) 9{r} *{p} 3{d}
+
+If 1 Chi was pitched to play this, Cosmic Awakening’s {p} is 10.
+
+If 2 Chi were pitched to play this, Cosmic Awakening’s {p} is 15.
+
+If 3 or more Chi were pitched to play this, Cosmic Awakening’s {p} is 20.
+
+Cosmic Awakening has a power property. Cosmic Awakening’s base {p} is defined by its property-static ability. Depending on how many Chi were pitched to play this, this card’s base {p} will change.
+
+If an effect requires the power value of a Cosmic Awakening that has not yet been played to be determined for the purposes of resolving the effect (e.g. Clash), the base {p} value of it will be 0.
+
+If an effect would apply to your “next attack” and is dependent on the power of cosmic awakening (eg. Water the Seeds) then the base {p} at the time of evaluation will be 0.
+
+—————————————————————
+
+Levels of Enlightenment
+
+Mystic Action – Attack
+
+(BLU) 1{r} 3{p} 3{d}
+
+When this attacks, choose 1 for each blue card you’ve pitched this turn;
+
+Draw a card.
+
+This gets +2{p}.
+
+This gets go again.
+
+Levels of Enlightenment triggers when it resolves on the stack and becomes an attacking card. You choose 1 mode for each blue card you’ve pitched this turn when that triggered layer is added to the stack, not when you play this card.
+
+You may not choose the same mode more than once.
+
+If you’ve pitched more than 3 blue cards this turn by the time you’ve added the triggered layer to the stack, you will select all the modes.
+
+—————————————————————
+
+Unravel Aggression
+
+Mystic Defense Reaction
+
+(BLU) 3{r} 5{d}
+
+If a Chi was pitched to play this, draw a card.
+
+You will draw a card when Unravel Aggression resolves and becomes a defending card on the chain link if you pitched a Chi to pay for any of this card’s costs.
+
+To meet the condition “If a Chi was pitched to play this”, you must actively pitch a card with the Chi subtype to play the card. Using {c} (chi points) to pay the resource cost for this does not meet this condition.
+
+—————————————————————
+
+Dense Blue Mist
+
+Mystic Instant
+
+(BLU) 1{r}
+
+Attacks that target you this turn get -1{p}.
+
+If a Chi was pitched to play this, effects don’t trigger if an attack hits you this turn.
+
+This prevents any effect that would trigger if an attack hits, including on-hit and on-damage effects. It does not prevent effects from triggering if the attack deals damage in other ways (in steps other than the damage step of combat), nor does it prevent effects that check if attacks previously hit (eg. wager).
+
+If an effect would trigger, but is prevented by this, it still counts towards the number of times it would trigger. For effects that say “The next time” or “The first time” that are prevented from triggering, they won’t trigger again because their conditions were already satisfied.
+
+To meet the condition “If a Chi was pitched to play this”, you must actively pitch a card with the Chi subtype to play the card. Using {c} (chi points) to pay the resource cost for this does not meet this condition.
+
+—————————————————————
+
+Orihon of Mystic Tenets
+
+Mystic Instant
+
+(BLU) 4{r}
+
+Legendary
+
+Draw 2 cards. If a Chi was pitched to play this, instead draw 3 cards.
+
+You cannot choose to draw only 2 cards if a Chi was pitched to play this.
+
+If you pay the cost of playing this card using already existing Chi points but do not pitch a Chi specifically to pay for any of this card’s costs, you will draw only 2 cards.
+
+To meet the condition “If a Chi was pitched to play this”, you must actively pitch a card with the Chi subtype to play the card. Using {c} (chi points) to pay the resource cost for this does not meet this condition.
+
+—————————————————————
+
+Second Tenet of Chi: Moon
+
+Mystic Action – Attack
+
+(BLU) 3{r} 5{p} 3{d}
+
+If you’ve transcended this turn, this gets “When this chain link resolves, draw a card.”
+
+Second Tenet of Chi: Moon will get the “When this chain link resolves, draw a card” triggered ability if you’ve transcended this turn, even after it becomes an attack on the combat chain. If you did not meet the condition when Second Tenet of Chi: Moon resolves and becomes an attack, but do so after it does, it gets the triggered ability.
+
+If Second Tenet of Chi: Moon gets the triggered ability before the resolution step, the attack’s controller will draw a card from the ability’s triggered effect when it resolves in the resolution step. If you get the triggered ability after the chain link resolves in the resolution step, the attack’s controller will not draw a card.
+
+—————————————————————
+
+Second Tenet of Chi: Tide
+
+Mystic Action – Attack
+
+(BLU) 3{r} 5{p} 3{d}
+
+If you’ve transcended this turn, this gets +2{p}.
+
+Second Tenet of Chi: Tide will get +2{p} if you’ve transcended this turn, even after it becomes an attack on the combat chain. If you did not meet the condition when Second Tenet of Chi: Tide resolves and becomes an attack, but do so after it does, it gets the +2{p}.
+
+If Second Tenet of Chi: Tide gets +2{p} from its ability after the damage step of its chain link has passed, you will not retroactively deal that extra power as damage.
+
+—————————————————————
+
+Second Tenet of Chi: Wind
+
+Mystic Action – Attack
+
+(BLU) 3{r} 5{p} 3{d}
+
+If you’ve transcended this turn, this gets go again.
+
+Second Tenet of Chi: Wind will get go again if you’ve transcended this turn, even after it becomes an attack on the combat chain. If you did not meet the condition when Second Tenet of Chi: Wind resolves and becomes an attack, but do so after it does, it gets go again.
+
+If Second Tenet of Chi: Wind gets go again before the link step, the attack’s controller will gain 1 action point from the go again. If you get Go Again during the link step, the attack’s controller will not gain 1 action point from the go again.
+
+—————————————————————
+
+Deep Blue Sea
+
+Mystic Action – Attack
+
+(BLU) 4{r} 5{p} 2{d}
+
+This gets +1{p} for each blue card you’ve pitched this turn.
+
+Deep Blue Sea will get +1{p} for each blue card you’ve pitched this turn even after it becomes an attack on the combat chain. If you had not previously pitched a blue card this turn when Deep Blue Sea resolves and becomes an attack, but do so after it does, it gets the +1{p}.
+
+Deep Blue Sea will get +1{p} for each blue card you’ve pitched this turn even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+If Deep Blue Sea gets additional {p} from its ability from pitching blue cards after the damage step of its chain link has passed, you will not retroactively deal that extra power as damage.
+
+—————————————————————
+
+Wide Blue Yonder
+
+Mystic Attack Reaction
+
+(BLU) 0{r} 2{d}
+
+Target attack gets +1{p} for each blue card you’ve pitched this turn.
+
+The targeted attack will get +1{p} for each blue card you’ve pitched this turn before Wide Blue Yonder resolves, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+If Wide Blue Yonder resolves, then you pitch additional blue cards, the targeted card will not get any additional +1{p} from this card’s ability.
+
+—————————————————————
+
+Big Blue Sky
+
+Mystic Defense Reaction
+
+(BLU) 0{r} 2{d}
+
+This gets +1{d} for each blue card you’ve pitched this turn.
+
+Big Blue Sky will get +1{d} for each blue card you’ve pitched this turn before this card resolves and becomes a defending card on the chain link, even if those pitched cards are no longer in the pitch zone (e.g. Potion of Deja Vu).
+
+If Big Blue Sky resolves and becomes a defending card on the chain link, then you pitch additional blue cards, this card will not get any additional +1{d} from its resolution ability.
+
+—————————————————————
+
+Droplet
+
+Mystic Action – Attack
+
+(BLU) 0{r} 2{p} 2{d}
+
+If you’ve played another blue card this turn, this gets +2{p}.
+
+Droplet will get +2{p} if you play another blue card (other than this one) this turn, even after it becomes an attack on the combat chain. If you did not meet the condition when Droplet resolves and becomes an attack, but do so after it does, it gets the +2{p}.
+
+If Droplet gets +2{p} from its ability after the damage step of its chain link has passed, you will not retroactively deal that extra power as damage.
+
+—————————————————————
+
+Rising Tide
+
+Mystic Action – Attack
+
+(BLU) 1{r} 3{p} 2{d}
+
+If you’ve played another blue card this turn, this gets +2{p}.
+
+Rising Tide will get +2{p} if you play another blue card (other than this one) this turn, even after it becomes an attack on the combat chain. If you did not meet the condition when Rising Tide resolves and becomes an attack, but do so after it does, it gets the +2{p}.
+
+If Rising Tide gets +2{p} from its ability after the damage step of its chain link has passed, you will not retroactively deal that extra power as damage.
+
+—————————————————————
+
+Spillover
+
+Mystic Action – Attack
+
+(BLU) 2{r} 4{p} 2{d}
+
+If you’ve played another blue card this turn, this gets +2{p}.
+
+Spillover will get +2{p} if you play another blue card (other than this one) this turn, even after it becomes an attack on the combat chain. If you did not meet the condition when Spillover resolves and becomes an attack, but do so after it does, it gets the +2{p}.
+
+If Spillover gets +2{p} from its ability after the damage step of its chain link has passed, you will not retroactively deal that extra power as damage.
+
+—————————————————————
+
+Tidal Surge
+
+Mystic Action – Attack
+
+(BLU) 3{r} 5{p} 2{d}
+
+If you’ve played another blue card this turn, this gets +2{p}.
+
+Tidal Surge will get +2{p} if you play another blue card (other than this one) this turn, even after it becomes an attack on the combat chain. If you did not meet the condition when Tidal Surge resolves and becomes an attack, but do so after it does, it gets the +2{p}.
+
+If Tidal Surge gets +2{p} from its ability after the damage step of its chain link has passed, you will not retroactively deal that extra power as damage.
+
+—————————————————————
+
+Wash Away
+
+Mystic Defense Reaction
+
+(BLU) 2{r} 3{d}
+
+If you’ve played another blue card this turn, this gets +2{d}.
+
+Wash Away will get +2{d} if you’ve played another blue card (other than this one) this turn before this card resolves and becomes a defending card on the chain link. If you did not meet the condition by the time Wash Away resolves but do so after it does, it will not get the +2{d}.
+
+—————————————————————
+
+First Tenet of Chi: Moon
+
+Mystic Action
+
+(BLU) 0{r} 3{d}
+
+Your next blue attack this turn gets “When this attacks, draw a card.”
+
+Go again
+
+—————————————————————
+
+First Tenet of Chi: Tide
+
+Mystic Action
+
+(BLU) 0{r} 3{d}
+
+Your next blue attack this turn gets +2{p}.
+
+Go again
+
+—————————————————————
+
+First Tenet of Chi: Wind
+
+Mystic Action
+
+(BLU) 0{r} 3{d}
+
+The next blue action card you play this turn gets go again.
+
+Go again
+
+—————————————————————
+
+A Drop in the Ocean // Inner Chi
+
+Mystic Instant // Mystic Resource – Chi
+
+(BLU) 0{r} // (BLU 3{c})
+
+Legendary
+
+Target attack gets -1{p}.
+
+If you’ve played another blue card this turn, transcend.
+
+This card will transcend into Inner Chi if you’ve played another blue card (other than this one) this turn before this card resolves.
+
+You can target an attack controlled by the opponent.
+
+If the attack-source of the active chain link is the targeted attack and that source is no longer on the combat chain by the time this card’s layer resolves, this card’s layer fails as there are no remaining targets for the targeted effect and this card does not transcend.
+
+You cannot target defending attack action cards because they are not attacks.
+
+—————————————————————
+
+Homage to Ancestors // Inner Chi
+
+Mystic Instant // Mystic Resource – Chi
+
+(BLU) 0{r} // (BLU 3{c})
+
+Legendary
+
+Gain 1{h}
+
+If you’ve played another blue card this turn, transcend.
+
+This card will transcend into Inner Chi if you’ve played another blue card (other than this one) this turn before this card resolves.
+
+—————————————————————
+
+Pass Over // Inner Chi
+
+Mystic Instant // Mystic Resource – Chi
+
+(BLU) 0{r} // (BLU 3{c})
+
+Legendary
+
+Banish target card from an opposing hero’s graveyard.
+
+If you’ve played another blue card this turn, transcend.
+
+This card will transcend into Inner Chi if you’ve played another blue card (other than this one) this turn before this card resolves.
+
+If there are no cards in your opponent’s graveyard, you cannot play this card since it does not have a legal target.
+
+If the targeted card is no longer in your opponent’s graveyard by the time this card’s layer resolves, this card’s layer fails as there are no remaining targets for the targeted effect and this card does not transcend.
+
+—————————————————————
+
+Path Well Traveled // Inner Chi
+
+Mystic Instant // Mystic Resource – Chi
+
+(BLU) 0{r} // (BLU 3{c})
+
+Legendary
+
+Target attack gets go again.
+
+If you’ve played another blue card this turn, transcend.
+
+This card will transcend into Inner Chi if you’ve played another blue card (other than this one) this turn before this card resolves.
+
+You can target an attack controlled by the opponent.
+
+If the attack gets go again before the link step, the attack’s controller will gain 1 action point from the go again. If you play and resolve this card during the link step, the attack’s controller will not gain 1 action point from the go again.
+
+If the attack-source of the active chain link is the targeted attack and that source is no longer on the combat chain by the time this card’s layer resolves, this card’s layer fails as there are no remaining targets for the targeted effect and this card does not transcend.
+
+—————————————————————
+
+Preserve Tradition // Inner Chi
+
+Mystic Instant // Mystic Resource – Chi
+
+(BLU) 0{r} // (BLU 3{c})
+
+Legendary
+
+Put target action card from your graveyard on the bottom of your deck.
+
+If you’ve played another blue card this turn, transcend.
+
+This card will transcend into Inner Chi if you’ve played another blue card (other than this one) this turn before this card resolves.
+
+If there are no cards in your graveyard, you cannot play this card since it does not have a legal target.
+
+If the targeted card is no longer in your graveyard by the time this card’s layer resolves, this card’s layer fails as there are no remaining targets for the targeted effect and this card does not transcend.
+
+—————————————————————
+
+Rising Sun, Setting Moon // Inner Chi
+
+Mystic Instant // Mystic Resource – Chi
+
+(BLU) 0{r} // (BLU 3{c})
+
+Legendary
+
+Draw a card, then put a card from your hand on the bottom of your deck.
+
+If you’ve played another blue card this turn, transcend.
+
+This card will transcend into Inner Chi if you’ve played another blue card (other than this one) this turn before this card resolves.
+
+There is no priority to play or activate abilities during the resolution of a layer.
+
+—————————————————————
+
+Stir the Pot // Inner Chi
+
+Mystic Instant // Mystic Resource – Chi
+
+(BLU) 0{r} // (BLU 3{c})
+
+Legendary
+
+Shuffle.
+
+If you’ve played another blue card this turn, transcend.
+
+This card will transcend into Inner Chi if you’ve played another blue card (other than this one) this turn before this card resolves.
+
+If you have no cards in your deck zone and you are required to shuffle, the zone is still considered shuffled.
+
+—————————————————————
+
+The Grain that Tips the Scale // Inner Chi
+
+Mystic Instant // Mystic Resource – Chi
+
+(BLU) 0{r} // (BLU 3{c})
+
+Legendary
+
+Target attack gets +1{p}.
+
+If you’ve played another blue card this turn, transcend.
+
+This card will transcend into Inner Chi if you’ve played another blue card (other than this one) this turn before this card resolves.
+
+You can target an attack controlled by the opponent.
+
+If the attack-source of the active chain link is the targeted attack and that source is no longer on the combat chain by the time this card’s layer resolves, this card’s layer fails as there are no remaining targets for the targeted effect and this card does not transcend.
+
+You cannot target defending attack action cards because they are not attacks.
+
+—————————————————————
+
+## Assassin Cards
+
+Bonds of Agony
+
+Assassin Action – Attack
+
+(BLU) 0{r} 1{p} 3{d}
+
+Stealth
+
+If you’ve played or activated 3 or more attack reactions this chain link, this gets +3{p} and “When this hits a hero, look at their hand and choose a card. Search their hand, deck, and graveyard and banish up to 3 cards with the same name as the chosen card. They shuffle.”
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+If the opponent has no cards in hand, or you cannot otherwise choose a card, you still search through their deck and they still shuffle. You can not banish any cards if you can’t choose a card from their hand.
+
+If an effect would trigger from banishing a card (e.g. contract), it would trigger for each card banished this way (i.e. up to 3 times), as long as the banished card meets the trigger condition.
+
+You do not have to banish the card chosen in the hand, but are allowed to include it as one of the chosen cards.
+
+If a players card have no name due to an effect (eg. amnesia) you will not be able banish any cards since they will not be able to share a name.
+
+—————————————————————
+
+Persuasive Prognosis
+
+Assassin Action – Attack
+
+(BLU) 0{r} 1{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck. Then look at their hand and banish a card with the same color as the banished card.
+
+Whenever this banishes an action card, gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Just a Nick
+
+Assassin Attack Reaction
+
+(RED) 0{r} 3{d}
+
+Choose 1 or both;
+
+Target attack action card with 1 or less base {p} gets +5{p}.
+
+Target attack with stealth gets “When this hits a hero, banish the top card of their deck.”
+
+You choose the modes when you play this card.
+
+You may not choose the same mode more than once.
+
+You must choose at least one of the modes or both modes.
+
+Base {p} is the printed {p} value on a card. (Located at the bottom left corner of a card.)
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered ability this gives to an attack with stealth does not trigger if you hit anything other than a hero (i.e. an ally).
+
+The triggered ability that Just a Nick gives to an attack with stealth may trigger any “whenever this banishes” triggered effects on that attack.
+
+—————————————————————
+
+Art of Desire: Body
+
+Assassin Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck.
+
+Whenever this banishes a red card, draw a card and gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Art of Desire: Soul
+
+Assassin Action – Attack
+
+(YEL) 0{r} 2{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck.
+
+Whenever this banishes a yellow card, draw a card and gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Art of Desire: Mind
+
+Assassin Action – Attack
+
+(BLU) 0{r} 1{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck.
+
+Whenever this banishes a blue card, draw a card and gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Bonds of Attraction
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck, then banish a card from their graveyard.
+
+Whenever this banishes a card, if this has banished another card with the same color, gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Bonds of Attraction triggers whenever it banishes a card (for example, there will be two triggered effects created from this triggered effect when you resolve this card’s “when this hits a hero” triggered effect and banish a card from the top of their deck and from their graveyard). Whether this card has banished another card with the same color is checked on the resolution of each of the triggers.
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Double Trouble
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+If you’ve played or activated 2 or more attack reactions this chain link, this gets +2{p} and “When this hits a hero, banish the top 2 cards of their deck.”
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+—————————————————————
+
+Bonds of Memory
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck, then banish a card from their graveyard.
+
+Whenever this banishes a card, if this has banished another card with the same name, gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Bonds of Memory’ second ability triggers whenever it banishes a card (for example, there will be two triggered effects created from this triggered effect when you resolve this card’s “when this hits a hero” triggered effect and banish a card from the top of their deck and from their graveyard). Whether this card has banished another card with the same name is checked on the resolution of each of the triggers.
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Desires of Flesh
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck.
+
+Whenever this banishes an attack action card, gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Impulsive Desire
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck.
+
+Whenever this banishes a reaction or instant card, gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Mind’s Desire
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+When this hits a hero, banish the top card of their deck.
+
+Whenever this banishes a non-attack action card, gain 1{h}.
+
+The card is banished face-up into the owner’s banished zone.
+
+The “when this hits” triggered effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Banishing a card from resolving a different card’s banish effect will not trigger this card’s “whenever this banishes” trigger effect and you will not gain 1{h}.
+
+—————————————————————
+
+Pick to Pieces
+
+Assassin Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 3{d}
+
+Stealth
+
+If you’ve played or activated an attack reaction this chain link, this gets +1{p} and “Damage that would be dealt by this can’t be prevented.”
+
+If Pick to Pieces attacks a hero, that hero may still defend the attack, and the total defense value of defending cards would still be considered against the power of the attack for damage calculation; however, prevention effects would not reduce any of the damage that would be dealt.
+
+—————————————————————
+
+## Illusionist Cards
+
+Illusionist
+
+Cosmo, Scroll of Ancestral Tapestry
+
+Illusionist Weapon – Scroll (2H)
+
+During your turn, auras you control with ward are weapons with base {p} equal to their ward and “Once per Turn Action — {r}: Attack”
+
+Your aura attacks with one or more +1{p} counters get go again.
+
+Your illusionist auras are considered to be weapons during your turn only, not just during your action phase (as with Iris of Reality or Luminaris) nor all the time (as with Reality Refractor).
+
+Cosmo has a static effect. If you attack with an aura with ward, and then give it one or more +1{p} counters, that aura’s attacks get go again.
+
+If you attack with an aura, the aura attack only has go again if another effect has given the attack go again from an effect (e.g. Cosmo’s static effect). The aura attack does not have go again just because the aura has go again from when it was played. For example, attacking with Burn them All does not mean its attacks will always have go again just because Burn them All has go again on it.
+
+If you give an aura attack go again after it has resolved and you’ve passed the link step for that chain link, you will not retroactively gain an action point from giving go again.
+
+Attacks with an aura with an aura retain the properties (such as color strip) of that aura.
+
+—————————————————————
+
+10,000 Year Reunion
+
+Illusionist Action – Aura
+
+(RED) 8{r} 3{d}
+
+You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion’s {r} cost.
+
+Ward 10
+
+If you play this card using its alternative cost, its resource cost to play is set to 0 and then any effects that increase and then decrease resource costs are applied. E.g. if you have a Frostbite, you would still have to pay {r} to play this card in addition to removing three +1{p} counters from among auras you control.
+
+—————————————————————
+
+Rage Specter
+
+Illusionist Action – Aura
+
+(BLU) 2{r} 3{d}
+
+When this enters the arena, if you control no other Illusionist auras, gain 1 action point.
+
+During your turn, this has ward 6. Otherwise, this has ward 1.
+
+Rage Specter triggers when it enters the arena (for example, when it resolves on the stack, when it is put into the arena by an effect, etc.). Whether you control an Illusionist aura is checked on the resolution of the trigger.
+
+This does not trigger if this becomes a defending card on the combat chain.
+
+—————————————————————
+
+Restless Coalescence
+
+Illusionist Instant – Aura
+
+(YEL) 0{r}
+
+When this enters the arena, move any number of +1{p} counters from auras you control onto this.
+
+Once per Turn Instant — Remove a +1{p} counter from this: Create a Spectral Shield token.
+
+Ward 2
+
+This does not trigger if this becomes a defending card on the combat chain.
+
+—————————————————————
+
+Astral Etchings
+
+Illusionist Action
+
+(RED/YEL/BLU) 1{r} 3{d}
+
+Put three/two/a +1{p} counters on target aura with ward you control.
+
+If you control a Spectral Shield, you may play this as though it were an instant.
+
+An action card played as though it were an instant does not cost an action point and can be played whenever the player has priority, otherwise it is still considered to be an action card.
+
+—————————————————————
+
+Essence of Ancestry: Body
+
+Illusionist Action – Aura
+
+(RED) 0{r} 3{d}
+
+When this leaves the arena, if you control no Illusionist auras, the next time you would be dealt damage by a red source this turn, prevent it.
+
+Ward 2
+
+Essence of Ancestry: Body triggers when it leaves the arena (for example, when it is destroyed, when it is banished, etc.). Whether you control an Illusionist aura is checked on the resolution of the trigger.
+
+This does not trigger if this is a defending card on a chain link then leaves the combat chain due to it closing or due to an effect.
+
+If you control no Illusionist auras when Essence of Ancestry: Body’s trigger resolves, it generates a prevention effect that applies to the next damage event this turn from a red source. The prevention effect will typically prevent all of that damage. The value of the damage is determined at the time the prevention effect is checked for when it is active. For example, an opponent resolves an Electrify (yellow) then hits you with a Snatch (red). If you generate Essence of Ancestry: Body’s prevention effect before Electrify’s trigger resolves in the resolution step, the prevention effect would prevent 2 damage that would’ve been dealt from Electrify’s triggered effect as the damage source would be the red Snatch.
+
+If this card is destroyed as part of applying its Ward prevention effect to a damage event from a red source, the prevention effect from the triggered ability will not apply to that same damage event. This is because that prevention effect has not yet been generated from the trigger resolving on the stack. When this card is destroyed as part of applying the Ward effect, the trigger layer will only be added to the stack after the damage event is finalized and players once again receive priority.
+
+—————————————————————
+
+Essence of Ancestry: Soul
+
+Illusionist Action – Aura
+
+(YEL) 0{r} 3{d}
+
+When this leaves the arena, if you control no Illusionist auras, the next time you would be dealt damage by a yellow source this turn, prevent it.
+
+Ward 2
+
+Essence of Ancestry: Soul triggers when it leaves the arena (for example, when it is destroyed, when it is banished, etc.). Whether you control an Illusionist aura is checked on the resolution of the trigger.
+
+This does not trigger if this is a defending card on a chain link then leaves the combat chain due to it closing or due to an effect.
+
+If you control no Illusionist auras when Essence of Ancestry: Soul’s trigger resolves, it generates a prevention effect that applies to the next damage event this turn from a yellow source. The prevention effect will typically prevent all of that damage. The value of the damage is determined at the time the prevention effect is checked for when it is active. For example, an opponent resolves an Electrify (red) then hits you with a Snatch (yellow). If you generate Essence of Ancestry: Soul’s prevention effect before Electrify’s trigger resolves in the resolution step, the prevention effect would prevent 3 damage that would’ve been dealt from Electrify’s triggered effect as the damage source would be the yellow Snatch.
+
+If this card is destroyed as part of applying its Ward prevention effect to a damage event from a yellow source, the prevention effect from the triggered ability will not apply to that same damage event. This is because that prevention effect has not yet been generated from the trigger resolving on the stack. When this card is destroyed as part of applying the Ward effect, the trigger layer will only be added to the stack after the damage event is finalized and players once again receive priority.
+
+—————————————————————
+
+Essence of Ancestry: Mind
+
+Illusionist Action – Aura
+
+(BLU) 0{r} 3{d}
+
+When this leaves the arena, if you control no Illusionist auras, the next time you would be dealt damage by a blue source this turn, prevent it.
+
+Ward 2
+
+Essence of Ancestry: Mind triggers when it leaves the arena (for example, when it is destroyed, when it is banished, etc.). Whether you control an Illusionist aura is checked on the resolution of the trigger.
+
+This does not trigger if this is a defending card on a chain link then leaves the combat chain due to it closing or due to an effect.
+
+If you control no Illusionist auras when Essence of Ancestry: Mind’s trigger resolves, it generates a prevention effect that applies to the next damage event this turn from a blue source. The prevention effect will typically prevent all of that damage. The value of the damage is determined at the time the prevention effect is checked for when it is active.For example, an opponent resolves an Electrify (yellow) then hits you with a Snatch (blue). If you generate Essence of Ancestry: Mind’s prevention effect before Electrify’s trigger resolves in the resolution step, the prevention effect would prevent 2 damage that would’ve been dealt from Electrify’s triggered effect as the damage source would be the blue Snatch.
+
+If this card is destroyed as part of applying its Ward prevention effect to a damage event from a blue source, the prevention effect from the triggered ability will not apply to that same damage event. This is because the prevention effect has not yet been generated from the trigger resolving on the stack. When this card is destroyed as part of applying the Ward effect, the trigger layer will only be added to the stack after the damage event is finalized and players once again receive priority.
+
+—————————————————————
+
+Haunting Specter
+
+Illusionist Action – Aura
+
+(RED/YEL/BLU) 2{r} 2{d}
+
+When this leaves the arena, create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.
+
+Ward 4/3/2
+
+Haunting Specter triggers when it leaves the arena (for example, when it is destroyed, when it is banished, etc.). When the trigger resolves, you will first create a Spectral Shield token, then whether you control an Illusionist aura is checked. If you do not control any other Illusionist auras other than the Spectral Shield token you just created, you will put a +1{p} counter on that Spectral Shield.
+
+This does not trigger if this is a defending card on a chain link then leaves the combat chain due to it closing or due to an effect.
+
+If you do not create a Spectral Shield token (e.g. applying Ripple Away’s replacement effect) as a part of resolving this card’s effect, but control only one other Illusionist token named Spectral Shield, you do not put the +1{p} counters on that other Spectral Shield.
+
+—————————————————————
+
+Sigil of Solitude
+
+Illusionist Action – Aura
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+At the start of your turn, if you control another Illusionist aura, destroy this.
+
+Ward 4/3/2
+
+Sigil of Solitude triggers and resolves in the start phase. There is no priority and it cannot be responded to. Whether you control an Illusionist aura is checked on the resolution of the trigger.
+
+—————————————————————
+
+Single Minded Determination
+
+Illusionist Action – Aura
+
+(RED/YEL/BLU) 2{r} 3{d}
+
+When this enters the arena, if you control no other Illusionist auras, put three/two/a +1{p} counters on this.
+
+Ward 2
+
+Single Minded Determination triggers when it enters the arena (for example, when it resolves on the stack, when it is put into the arena by an effect, etc.). Whether you control an Illusionist aura is checked on the resolution of the trigger.
+
+This does not trigger if this becomes a defending card on the combat chain.
+
+—————————————————————
+
+Solitary Companion
+
+Illusionist Action – Aura
+
+(RED/YEL/BLU) 0{r} 2{d}
+
+When this enters the arena, if you control no other Illusionist auras, create a Spectral Shield token.
+
+Ward 3/2/1
+
+Solitary Companion triggers when it enters the arena (for example, when it resolves on the stack, when it is put into the arena by an effect, etc.). Whether you control an Illusionist aura is checked on the resolution of the trigger.
+
+This does not trigger if this becomes a defending card on the combat chain.
+
+—————————————————————
+
+Spectral Manifestations
+
+Illusionist Action
+
+(RED/YEL/BLU) 2{r} 2{d}
+
+Create a Spectral Shield token, then if you control no other Illusionist auras, put three/two/a +1{p} counters on it.
+
+Go again
+
+You would put the +1{p} counters from resolving this card’s effect on the Spectral Shield you created as part of this card’s effect.
+
+If you do not create a Spectral Shield token (e.g. applying Ripple Away’s replacement effect) as part of resolving this card’s effect, but control only one other Illusionist token named Spectral Shield, you do not put the +1{p} counters on that other Spectral Shield.
+
+—————————————————————
+
+Vengeful Apparition
+
+Illusionist Action – Aura
+
+(RED/YEL/BLU) 0{r} 3{d}
+
+When this leaves the arena, if you control no Illusionist auras, you may play your next aura with cost 2/1/0 or less this turn as though it were an instant. If you do, it enters the arena with a +1{p} counter.
+
+Ward 1
+
+Vengeful Apparition triggers when it leaves the arena (for example, when it is destroyed, when it is banished, etc.). Whether you control an Illusionist aura is checked on the resolution of the trigger.
+
+This does not trigger if this is a defending card on a chain link then leaves the combat chain due to it closing or due to an effect.
+
+An aura card with the action type played as though it were an instant does not cost an action point and can be played whenever the player has priority, otherwise it is still considered to be an action card.
+
+—————————————————————
+
+## Ninja Cards
+
+Tiger Taming Khakkara
+
+Ninja Weapon – Staff (2H)
+
+2{p}
+
+Once per Turn Action — {r}{r}: Attack. Go again
+
+When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.
+
+—————————————————————
+
+Mask of Wizened Whiskers
+
+Ninja Equipment – Head
+
+1{d}
+
+When this defends, put a card with combo from your graveyard on the bottom of your deck.
+
+Blade Break
+
+“When this defends” is an event-based trigger. Mask of Wizened Whiskers will trigger at the time it becomes a defending card (i.e. defends the attack) or when it is added as a defending card to the chain link by an effect.
+
+—————————————————————
+
+Chase the Tail
+
+Ninja Action – Attack
+
+(RED) 1{r} 4{p} 3{d}
+
+Combo – When this attacks, if Crouching Tiger was the last attack this combat chain, this gets go again and the next Crouching Tiger you play this combat chain gets +3{p}.
+
+Chase the Tail triggers when it resolves on the stack and becomes an attacking card. Whether a Crouching Tiger was the last attack this combat chain before Chase the Tail is checked on the resolution of the trigger (during the attack step).
+
+—————————————————————
+
+Maul
+
+Ninja Attack Reaction
+
+(YEL) 0{r} 3{d}
+
+Choose 1 or both;
+
+Target attack action card with 1 or less base {p} gets +3{p}.
+
+Target Crouching Tiger gets “When this hits, create 2 Crouching Tigers in your banished zone. You may play them this turn.”
+
+You choose the modes when you play this card.
+
+You may not choose the same mode more than once.
+
+You must choose at least one of the modes or both modes.
+
+Base {p} is the printed {p} value on a card. (Located at the bottom left corner of a card.)
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Territorial Domain
+
+Ninja Defense Reaction
+
+(BLU) 0{r} 2{d}
+
+While this is defending, if you’ve created a Crouching Tiger this turn, this gets +3{d}.
+
+If you create a Crouching Tiger for the first time during the turn while Territorial Domain is defending, Territorial Domain will get +3{d}.
+
+Effects that cause a player’s cards and tokens to lose and can’t gain names (e.g. Amnesia) do not prevent Crouching Tigers from being created when resolving effects on other cards. The If-conditional effect inside of Territorial Domain’s while static ability could still be satisfied under these types of effects, resulting in Territorial Domain getting +3{p}.
+
+—————————————————————
+
+Aspect of Tiger: Body
+
+Ninja Action – Attack
+
+(RED) 0{r} 3{p} 3{d}
+
+Combo – When this attacks, if a red attack action card was the last attack this combat chain, this gets go again and create a Crouching Tiger in your banished zone. You may play it this turn.
+
+Aspect of Tiger: Body triggers when it resolves on the stack and becomes an attacking card. Whether a red attack action card was the last attack this combat chain before Aspect of the Tiger: Body is checked on the resolution of the trigger (during the attack step).
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Aspect of Tiger: Soul
+
+Ninja Action – Attack
+
+(YEL) 0{r} 2{p} 3{d}
+
+Combo – When this attacks, if a yellow attack action card was the last attack this combat chain, this gets go again and create a Crouching Tiger in your banished zone. You may play it this turn.
+
+Aspect of Tiger: Soul triggers when it resolves on the stack and becomes an attacking card. Whether a yellow attack action card was the last attack this combat chain before Aspect of the Tiger: Soul is checked on the resolution of the trigger (during the attack step).
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Aspect of Tiger: Mind
+
+Ninja Action – Attack
+
+(BLU) 0{r} 1{p} 3{d}
+
+Combo – When this attacks, if a blue attack action card was the last attack this combat chain, this gets go again and create a Crouching Tiger in your banished zone. You may play it this turn.
+
+Aspect of Tiger: Mind triggers when it resolves on the stack and becomes an attacking card. Whether a blue attack action card was the last attack this combat chain before Aspect of the Tiger: Mind is checked on the resolution of the trigger (during the attack step).
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Biting Breeze
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 0{r} 3/2/1{p} 2{d}
+
+When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.
+
+Go again
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Breed Anger
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 3{d}
+
+Combo – When this attacks, if Crouching Tiger was the last attack this combat chain, this gets go again and create a Crouching Tiger in your banished zone. You may play it this turn.
+
+Breed Anger triggers when it resolves on the stack and becomes an attacking card. Whether a Crouching Tiger was the last attack this combat chain before Breed Anger is checked on the resolution of the trigger (during the attack step).
+
+If you do not play Crouching Tiger the turn it was created by this card’s effect, it remains in the banished zone.
+
+—————————————————————
+
+Untamed
+
+Ninja Action – Attack
+
+(RED/YEL/BLU) 1{r} 4/3/2{p} 2{d}
+
+When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.
+
+Go again
+
+This effect applies to your next attack named Crouching Tiger you play this combat chain. For example, if you give an attack action card the name Crouching Tiger, this effect will apply to that attack.
+
+—————————————————————
+
+## Generic Cards
+
+Stonewall Gauntlet
+
+Generic Equipment – Arms
+
+1{d}
+
+When this defends an attack with {p} greater than its base, opposing attacks get -1{p} this combat chain.
+
+Blade Break
+
+“When this defends” is an event-based trigger. The power of the attack is checked at the time it becomes a defending card (i.e. defends the attack) or when it is added as a defending card to the chain link by an effect. If at that moment the attack its defending has {p} greater than its base, Stonewall Gauntlet will trigger.
+
+Base {p} is the printed {p} value on a card. (Located at the bottom left corner of a card.)
+
+—————————————————————
+
+Rowdy Locals
+
+Generic Action – Attack
+
+(BLU) 0{r} 2{p} 3{d}
+
+If this is defended by an action card, this gets +2{p}.
+
+When this hits a hero, discard a card. If you do, they discard a card.
+
+If this is defended by two or more action cards, it still only gets +2{p} in total.
+
+The effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+If this hits, discarding a card is mandatory (you must discard if you have a card in your hand).
+
+The opponent that was hit only discards if you successfully discard a card. If you have no cards in hand or otherwise can’t discard, the opponent does not discard.
+
+—————————————————————
+
+The Weakest Link
+
+Generic Action – Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+When this hits a hero, look at their hand and choose a card without base {d}. If you do, they discard it and you draw a card.
+
+Base {d} is the printed {d} value on a card. (Located at the bottom right corner of a card.)
+
+You must choose a card that does not have a printed {d} property. Cards that have 0{d} printed or cards that have asterisks (*) for their {d} value are considered to have a printed {d} value. If you do not choose a card, the hero hit by The Weakest Link does not discard any cards and you do not draw a card.
+
+The effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+—————————————————————
+
+Prismatic Leyline
+
+Generic Action
+
+(YEL) 0{r} 3{d}
+
+Your next red attack this turn gets +1{p}, your next yellow gets +2{p}, and your next blue gets +3{p}.
+
+Go again
+
+These effects apply to your next attack of each color (red, yellow, blue) this turn i.e. weapon attack (e.g. attacking with a yellow aura), ally attack (if the card’s active face has the correct color strip) or attack action card.
+
+—————————————————————
+
+Blanch
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 3{r} 7/6/5{p} 2{d}
+
+When this hits a hero, cards they own lose all colors until the end of their next turn.
+
+If you come under the effect of Blanch, the color of cards used in any historical actions taken beforehand are not affected by Blanch’s effect for the purposes of rules and effects. For example, if you defend with a blue card, then Blanch hits you, it does not change the fact if you defended with a blue card that turn.
+
+Cards you play that are owned by another hero do not lose their colors if you are under the effect of Blanch.
+
+The effect does not trigger if you hit anything other than a hero (i.e. an ally).
+
+Losing colors does not modify pitch values. Pitching a colorless card gives you the same number of {r} or {c} as it would if it did have a color.
+
+—————————————————————
+
+Emissary of Moon
+
+Generic Action – Attack
+
+(RED) 0{r} 4{p} 2{d}
+
+When this attacks, you may put a card from your hand on the bottom of your deck. If you do, draw a card.
+
+You may choose to put a card from your hand on the bottom of your deck when the triggered effect resolves on the stack. If you do, neither player receives priority until the entire triggered effect, including drawing a card, is completed.
+
+—————————————————————
+
+Emissary of Tides
+
+Generic Action – Attack
+
+(RED) 0{r} 4{p} 2{d}
+
+When this attacks, you may put a card from your hand on the bottom of your deck. If you do, this gets +2{p}.
+
+You may choose to put a card from your hand on the bottom of your deck when the triggered effect resolves on the stack. If you do, neither player receives priority until the entire triggered effect, including this card getting +2{p}, is completed.
+
+—————————————————————
+
+Emissary of Wind
+
+Generic Action – Attack
+
+(RED) 0{r} 4{p} 2{d}
+
+When this attacks, you may put a card from your hand on the bottom of your deck. If you do, this gets go again.
+
+You may choose to put a card from your hand on the bottom of your deck when the triggered effect resolves on the stack. If you do, neither player receives priority until the entire triggered effect, including this card getting go again, is completed.
+
+—————————————————————
+
+Gravekeeping
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 1{r} 5/4/3{p} 2{d}
+
+When this attacks a hero, you may banish a card from their graveyard.
+
+You may choose to banish a card from that hero’s graveyard when the triggered effect resolves on the stack. If you do so, which card you choose to banish is determined now when the triggered effect resolves, not when the triggered effect is added to the stack
+
+The effect does not trigger if you attack anything other than a hero (i.e. an ally).
+
+—————————————————————
+
+Battlefront Bastion
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 3{r} 7/6/5{p} 2{d}
+
+When this defends alone, prevent the next 1 damage that would be dealt to you this turn.
+
+“When this defends” is an event-based trigger. Battlefront Bastion will trigger if it is added to the chain link after its declared as the only defending card or if it is added by itself to the chain link by an effect (e.g. Pulsewave Harpoon). It will trigger regardless if there are already other defending cards on that active chain link.
+
+If Battlefront Bastion’s triggered effect resolves then another defending card is added to the chain link (e.g. a defense reaction is added), you will still prevent the next 1 damage that would be dealt to you this turn.
+
+In a multiplayer game, if you declare Battlefront Bastion as a defending card and another player declares an additional defending card (such as cards with Protect) against an attack that targets you, Battlefront Bastion will not trigger.
+
+In a multiplayer game, if your Battlefront Bastion is the only defending card that is declared and added to the active chain link in the Defend step against an attack that targets you and other players (e.g. Apocalypse Automaton), Battlefront Bastion will trigger regardless of how the other defending heroes declare defending cards for themselves against that attack.
+
+—————————————————————
+
+Fact-Finding Mission
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 2{r} 6/5/4{p} 2{d}
+
+When this hits a hero, you may look at a face-down card in their arsenal or equipment zones.
+
+You may choose to look at a face-down card in the arsenal or equipment zones when the triggered effect resolves on the stack. If you do so, which face-down card you choose to look at in either of those zones is determined when the triggered effect resolves, not when the triggered effect is added to the stack.
+
+The effect does not trigger if you attack anything other than a hero (i.e. an ally).
+
+—————————————————————
+
+Water the Seeds
+
+Generic Action – Attack
+
+(RED/YEL/BLU) 1{r} 3/2/1{p} 2{d}
+
+When this attacks, your next attack this combat chain with 1 or less base {p} gets +1{p}.
+
+Go again
+
+This effect applies to your next attack with 1 or less base {p} this combat chain i.e. weapon attack, ally attack or attack action card.
+
+Base {p} is the printed {p} value on a card. (Located at the bottom left corner of a card.)
+
+—————————————————————
+
+Evasive Leap
+
+Generic Defense Reaction
+
+(RED/YEL/BLU) 0{r} 3/2/1{d}
+
+—————————————————————
+
+## Expansion Slot Cards
+
+Visit Goldmane Estate
+
+Guardian Action
+
+(BLU) 1{r} 3{d}
+
+Victor Specialization
+
+Create a Gold token. Then if you control 3 or more Gold, create that many Might tokens.
+
+Go again
+
+Creating Might tokens from this card’s first effect is not dependent on creating the Gold token from its first effect. If you control 3 or more Gold (including Gold tokens and Aurum Aegis), you create that many Might tokens.
+
+Effects that cause a player’s cards and tokens to lose and can’t gain names (e.g. Amnesia) do not prevent the Gold tokens from being created when resolving Visit Goldmane Estate. However, after the tokens are created, they would lose and can’t gain any names until the effect expires. As a result, Might tokens would not be created for Visit Goldmane Estate’s conditional effect as that player would not control any tokens with the name “Gold”.
+
+—————————————————————
+
+Visit the Golden Anvil
+
+Warrior Action
+
+(BLU) 0{r} 3{d}
+
+Olympia Specialization
+
+As an additional cost to play this, destroy X Gold you control.
+
+Equip X weapons and/or equipment from your inventory.
+
+You may choose to destroy any card you control that’s considered a Gold. E.g. a Gold token, or Aurum Aegis.
+
+You choose the value of X when you play this card. You may choose X=0.
+
+You must be able to destroy X Gold you control. If you do not control X Gold for the chosen value of X, you can not play this.
+
+If cards and tokens you own lose and can’t gain names (e.g. Amnesia), you will not be able to pay the additional cost as you would not control any objects with the name Gold. If you control an Aurum Aegis, you would be able to destroy it to pay the additional cost in these situations.
+
+When resolving this card, you can choose to equip X total number of weapons and/or equipment. For example, if you declared X=2, you may choose to equip 2 weapons, or 2 equipment, or 1 of each.
+
+When resolving this card, you can choose to fail to find a weapon or equipment to equip from your inventory. The opponent will not be able to look at your inventory to validate whether you have a weapon or an equipment as the inventory is private.
+
+If a card in your inventory has both the weapon and equipment types (e.g. Parry Blade), you may have it count as either a weapon or equipment for the purposes of resolving this effect. For example, if you declared X=2, you can equip Parry Blade and one other weapon/equipment from your inventory.
+
+—————————————————————
+
+Supercell
+
+Mechanologist Action
+
+(BLU) X{r} 2{d}
+
+Put X steam counters on X target Hyper Drivers you control.
+
+Create a Hyper Driver token with X steam counters.
+
+If X is 3 or greater, you may shuffle a Construct Nitro Mechanoid from your banished zone into your deck.
+
+The cost value of X is determined at the time the card is declared to be played so that X targets can be declared, X resources can be paid, and the cost value for the purposes of effects (e.g. Frost Lock)
+
+You must have a target to play Supercell for any X>0. E.g. You cannot play Supercell with X=4 if there are not at least 4 Hyper Driver targets.
+
+You can still play Supercell if you declare X=0. Supercell will just create a Hyper Driver token with 0 steam counters in the arena. However, that Hyper Driver’s state-based triggered effect will trigger as it has no steam counters on it and will create a triggered-layer to be added to the stack. If that Hyper Driver still does not have at least one steam counter on it by the time the triggered effect resolves, it is destroyed and ceases to exist.
+
+Each targeted hyper driver will gain X steam counters. Eg. If X =3 you will add 3 counters to each hyper driver for a total of 9 counters.
+
+—————————————————————
+
+Evo Recall
+
+Mechanologist Instant Equipment – Evo Head
+
+(BLU) 0{r} 0{d}
+
+If you have a base head equipped, transform it into this, then equip this.
+
+When this is equipped, put up to 1 Mechanologist action card from your banished zone on top of your deck.
+
+Arcane Barrier 1
+
+This does not have the base subtype. It cannot transform into another Evo if that Evo’s transform effect is specifically looking for you having a base head equipped.
+
+If your deck zone is empty when this equipment’s triggered effect resolves, you can still put up to 1 Mechanologist action card from your banished zone in your deck zone. That card would be the top card of your deck.
+
+To use this card’s Arcane Barrier 1, this card must be equipped before you are dealt arcane damage. You cannot play this card while a layer on the stack with an arcane damage effect is in the middle of resolving.
+
+—————————————————————
+
+Evo Heartdrive
+
+Mechanologist Instant Equipment – Evo Chest
+
+(BLU) 0{r} 0{d}
+
+If you have a base chest equipped, transform it into this, then equip this.
+
+When this is equipped, the next attack action card you play this turn costs {r} less to play.
+
+Arcane Barrier 1
+
+This does not have the base subtype. It cannot transform into another Evo if that Evo’s transform effect is specifically looking for you having a base chest equipped.
+
+To use this card’s Arcane Barrier 1, this card must be equipped before you are dealt arcane damage. You cannot play this card while a layer on the stack with an arcane damage effect is in the middle of resolving.
+
+—————————————————————
+
+Evo Shortcircuit
+
+Mechanologist Instant Equipment – Evo Arms
+
+(BLU) 0{r} 0{d}
+
+If you have a base arms equipped, transform it into this, then equip this.
+
+When this is equipped, deal 1 damage to any target.
+
+Arcane Barrier 1
+
+This does not have the base subtype. It cannot transform into another Evo if that Evo’s transform effect is specifically looking for you having a base arms equipped.
+
+To use this card’s Arcane Barrier 1, this card must be equipped before you are dealt arcane damage. You cannot play this card while a layer on the stack with an arcane damage effect is in the middle of resolving.
+
+—————————————————————
+
+Evo Speedslip
+
+Mechanologist Instant Equipment – Evo Legs
+
+(BLU) 0{r} 0{d}
+
+If you have a base legs equipped, transform it into this, then equip this.
+
+When this is equipped, the next attack action card you play this turn gets boost.
+
+Arcane Barrier 1
+
+This does not have the base subtype. It cannot transform into another Evo if that Evo’s transform effect is specifically looking for you having a base legs equipped.
+
+To use this card’s Arcane Barrier 1, this card must be equipped before you are dealt arcane damage. You cannot play this card while a layer on the stack with an arcane damage effect is in the middle of resolving.
+
+An attack action card can have multiple instances of boost. If a card has multiple instances you must declare how many you will pay for before looking at the first card. You will not get multiple Action Points if multiple boosts are successful.
+
+—————————————————————
+
+Longdraw Half-Glove
+
+Ranger Equipment – Arms
+
+1{d}
+
+Instant — Destroy this, put 2 cards from your hand and/or arsenal on the bottom of your deck: Your next arrow attack this turn gets +4{p}.
+
+Battleworn
+
+In addition to destroying Longdraw Half-Glove, the cost to activate Longdraw Half-Glove is also putting a total of two cards from your hand and/or arsenal on the bottom of your deck. To fulfill this cost, you can either put two cards from hand, or two cards from arsenal, or 1 card each from hand and arsenal. You cannot activate Longdraw Half-Glove if you cannot pay the cost.
+
+—————————————————————
+
+Murky Water
+
+Ranger Action – Arrow Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+Riptide Specialization
+
+If this has an aim counter, it gets +1{p} and dominate.
+
+When this hits, you may banish face-down 3 traps from your graveyard. If you do, choose one at random and put it into your arsenal.
+
+Murky Water’s triggered effect is optional. You may decide to banish or not banish when the triggered effect begins to resolve.
+
+You may banish face-down 3 traps from your graveyard even if all your arsenal zones are already occupied by card. The effect of putting it into your arsenal fails and the randomly chosen face-down trap remains banished.
+
+You choose which 3 traps will be banished from your graveyard face-down when the trigger effect resolves. If you have 3 or more traps in your graveyard you must select three of them to banish face-down.
+
+You must have 3 or more traps in your graveyard to banish any traps at all. If you have less than 3 traps in your graveyard when resolving this triggered effect, you cannot choose to banish them.
+
+—————————————————————
+
+Kindle
+
+Wizard Instant
+
+(RED) 0{r}
+
+Amp 1
+
+If you have no cards in hand, draw a card.
+
+You will draw a card if you have no cards in hand when this card resolves.
+
+—————————————————————
+
+Dust from Stillwater Shrine
+
+Draconic Illusionist Action – Ash
+
+(RED) 0{r} 3{d}
+
+Material – While this is under a permanent other than Miragai, that permanent has phantasm.
+
+When this resolves as a layer on the stack, it becomes a permanent in the arena under the player’s control.
+
+If a Dust from the Stillwater Shrine is transformed into a dragon, it is put underneath that dragon and the dragon gains Phantasm unless the dragon is named Miragai.
+
+While this is underneath a card, it can not be targeted by effects and is not considered to be controlled by any player.
+
+If the card on top of this is destroyed or otherwise removed from the arena, this is put into the owner’s graveyard.
+
+—————————————————————
+
+Shadowrealm Horror
+
+Shadow Brute Action – Attack
+
+(RED) 2{r} 6{p} 3{d}
+
+As an additional cost to play this, banish 3 random cards in your graveyard.
+
+If 1 or more cards with 6 or more {p} are banished this way, this gets +1{p}. 2 or more, this gets go again. 3 or more, you may play a card banished this way this turn.
+
+Blood Debt
+
+Cards are first selected at random, then the player chooses the order that those cards are banished. E.g. If Diabolic Offering is selected at random, the player may choose to banish a 6{p} card first so that Diabolic Offering is banished with 6{p}.
+
+—————————————————————
+
+Eloquent Eulogy
+
+Shadow Runeblade Action – Attack
+
+(RED) 1{r} 4{p} 3{d}
+
+Rune Gate
+
+When the combat chain closes, if a hero has lost {h} this turn, create an Eloquence token.
+
+Blood Debt
+
+You may play this normally from hand or arsenal, even if you don’t control Runechants equal to or greater than its base cost.
+
+You may only play this from your banished zone (using the Rune Gate) if this card is face-up in your banished zone and you meet the condition for Rune Gate (control Runechants equal to or greater than its base cost). You may still play this from your banished zone if another effect allows you to play it. You may not play this from your banished zone if it is face-down.
+
+When you rune gate a card, its resource cost to play is set to 0 and then any effects that increase and then decrease resource costs are applied. E.g. if you have a Frostbite, you would still have to pay {r} to rune gate a card.
+
+Eloquent Eulogy only triggers if it is attacking on the combat chain when the combat chain closes. It does not trigger if it is defending on the combat chain, or if it has not resolved and become an attacking card (e.g. targeting a permanent with spectra).
+
+The condition of whether any hero has lost {h} this turn is checked at the time the triggered effect resolves.
+
+Taking any damage, losing life from effects, and paying life costs (e.g. Flail of Agony), are all considered having lost life this turn.
+
+If a hero has lost life, and then gained that much (or more) life in the same turn, a hero is still considered to have lost life this turn.
+
+—————————————————————
+
+## Gold Pack Cards
+
+Enigma, New Moon
+
+Mystic Illusionist Hero – Young
+
+4{i} 20{h}
+
+Equipment you own get cloaked.
+
+Instant — {c}{c}{c}: Turn target face-down equipment you have equipped face-up. If it has ward, create 3 Spectral Shield tokens.
+
+Turning target face-down equipment you have equipped face-up occurs when the activated ability’s layer resolves. Turning the equipment face-up is not part of the activated ability’s cost.
+
+If the targeted face-down equipment is turned face-up before the activated ability’s layer begins to resolve on the stack, that layer will fail to resolve and no Spectral Shields are created even if the equipment has ward.
+
+If the equipment has an ability that triggers when it is equipped, it will not trigger if it is equipped face-down (unless it explicitly states that it triggers when face-down). E.g. Crown of Dominion will not give you a Gold token when equipped face-down.
+
+—————————————————————
