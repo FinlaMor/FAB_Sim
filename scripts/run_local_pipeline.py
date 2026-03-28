@@ -1,0 +1,763 @@
+"""scripts/run_local_pipeline.py
+
+Local-engine training and evolution pipeline:
+    1. Validate decks           — check legality, weapon/equipment
+    2. Run games                — local engine with mixed opponents
+    3. Upload data              — verify DB has rows (data recorded during sim)
+    4. Train player model       — IQL on collected transitions
+    5. Train deck bot           — deck evaluator on game outcomes
+    6. Evolve decks             — evolutionary search with evaluator
+    7. Benchmark                — player bot vs random/heuristic/prev
+    8. Loop                     — repeat stages 1-7
+
+Usage:
+    # Single loop
+    python scripts/run_local_pipeline.py --games-per-loop 200
+
+    # Multi-loop with evolution
+    python scripts/run_local_pipeline.py --loops 5 --games-per-loop 200
+
+    # Loop forever until Ctrl+C
+    python scripts/run_local_pipeline.py --loop-forever --games-per-loop 100
+"""
+from __future__ import annotations
+
+import argparse
+import os
+import signal
+import subprocess
+import sqlite3
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+
+ROOT = Path(__file__).resolve().parent.parent
+CHECKPOINT_DIR = ROOT / "checkpoints"
+GENERATED_DIR = ROOT / "decks" / "generated"
+PYTHON = sys.executable
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+_interrupted = False
+
+
+def _handle_signal(sig, frame):
+    global _interrupted
+    _interrupted = True
+    print("\nPipeline interrupt received — finishing current step...")
+
+
+def run_step(description: str, cmd: list[str], allow_fail: bool = False) -> int:
+    """Run a subprocess step, printing its output in real time."""
+    print()
+    print("=" * 70)
+    print(f"  {description}")
+    print("=" * 70)
+    print(f"  CMD: {' '.join(cmd)}")
+    print()
+
+    t0 = time.time()
+    result = subprocess.run(cmd, cwd=str(ROOT))
+    elapsed = time.time() - t0
+
+    if result.returncode != 0:
+        status = f"FAILED (exit {result.returncode})"
+        if not allow_fail:
+            print(f"\n  {status} after {elapsed:.1f}s")
+            print(f"  Pipeline halted. Fix the error above and re-run.")
+            sys.exit(1)
+    else:
+        status = "OK"
+
+    print(f"\n  [{status}] {description} ({elapsed:.1f}s)")
+    return result.returncode
+
+
+def db_row_count(db_path: Path, table: str) -> int:
+    """Count rows in a SQLite table, or 0 if table/db doesn't exist."""
+    if not db_path.exists():
+        return 0
+    try:
+        conn = sqlite3.connect(str(db_path))
+        count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        conn.close()
+        return count
+    except Exception:
+        return 0
+
+
+def find_best_checkpoint(prefix: str) -> Path | None:
+    """Find the best checkpoint matching a prefix."""
+    best = CHECKPOINT_DIR / f"{prefix}_best.pt"
+    if best.exists():
+        return best
+    final = CHECKPOINT_DIR / f"{prefix}_final.pt"
+    if final.exists():
+        return final
+    return None
+
+
+def print_summary(label: str, items: dict[str, str | int | float]) -> None:
+    """Print a summary block."""
+    print()
+    print(f"  --- {label} ---")
+    for k, v in items.items():
+        print(f"  {k:<30} {v}")
+    print()
+
+
+# ---------------------------------------------------------------------------
+# Pipeline steps (stages 1-3)
+# ---------------------------------------------------------------------------
+
+def step_validate_decks(args) -> list[str]:
+    """Stage 1: Validate all generated decks for legality and equipment."""
+    print()
+    print("=" * 70)
+    print("  Stage 1: Validate decks")
+    print("=" * 70)
+    print()
+
+    t0 = time.time()
+
+    from rl_agents.deck_validator import validate_all_decks
+    from engine.card import CardDB
+    from config import SLUG_INDEX_PATH
+    import json
+
+    # Load card_db and slug_index for validation
+    if args._card_db is None:
+        args._card_db = CardDB(str(SLUG_INDEX_PATH))
+    with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
+        si_data = json.load(f)
+    slug_index = si_data.get("by_slug", si_data)
+
+    deck_dir = str(GENERATED_DIR)
+    valid_paths, invalid_report = validate_all_decks(deck_dir, args._card_db, slug_index)
+
+    elapsed = time.time() - t0
+
+    # Report invalid decks
+    if invalid_report:
+        print(f"  Invalid decks ({len(invalid_report)}):")
+        for deck_path, violations in invalid_report.items():
+            print(f"    {Path(deck_path).name}:")
+            for v in violations:
+                print(f"      - {v}")
+
+    if len(valid_paths) == 0:
+        print(f"\n  FATAL: Zero valid decks in {deck_dir}")
+        print(f"  Pipeline halted. Fix deck files and re-run.")
+        sys.exit(1)
+
+    print_summary("Deck validation results", {
+        "Valid decks": len(valid_paths),
+        "Invalid decks": len(invalid_report),
+        "Deck directory": deck_dir,
+        "Elapsed": f"{elapsed:.1f}s",
+    })
+
+    print(f"\n  [OK] Stage 1: Validate decks ({elapsed:.1f}s)")
+    return valid_paths
+
+
+def step_run_games(args, valid_decks: list[str], loop_num: int,
+                   opponent_pool) -> int:
+    """Stage 2: Run games via local engine with mixed opponents."""
+    print()
+    print("=" * 70)
+    label = "Stage 2: Run local-engine games"
+    if loop_num > 0:
+        label += f" (loop {loop_num})"
+    print(f"  {label}")
+    print("=" * 70)
+    print()
+
+    t0 = time.time()
+
+    from rl_agents.local_game_runner import MatchupScheduler, run_games
+
+    scheduler = MatchupScheduler()
+    deck_pairs = scheduler.schedule_matchups(valid_decks, args.games_per_loop)
+
+    print(f"  Scheduled {len(deck_pairs)} matchups across {len(valid_decks)} decks")
+
+    results = run_games(
+        deck_pairs=deck_pairs,
+        opponent_pool=opponent_pool,
+        card_db=args._card_db,
+        replay_db=args._replay_db,
+        game_data_store=args._game_data_store,
+        embedder_bundle=args._embedder_bundle,
+        max_turns=args.max_turns,
+        seed=args.seed + loop_num * 10000,
+    )
+
+    elapsed = time.time() - t0
+
+    n_games = args._game_data_store.game_count()
+    n_transitions = args._game_data_store.transition_count()
+
+    print_summary("Game collection results", {
+        "Games this batch": results.completed,
+        "Errors": results.failed,
+        "Total games in DB": n_games,
+        "Total transitions in DB": n_transitions,
+        "Elapsed": f"{elapsed:.1f}s",
+    })
+
+    print(f"\n  [OK] {label} ({elapsed:.1f}s)")
+    return n_games
+
+
+def step_upload_data(args) -> None:
+    """Stage 3: Verify data is recorded (no-op — data written during sim)."""
+    print()
+    print("=" * 70)
+    print("  Stage 3: Verify data upload")
+    print("=" * 70)
+    print()
+
+    t0 = time.time()
+
+    n_games = args._game_data_store.game_count()
+    n_transitions = args._game_data_store.transition_count()
+
+    if n_games == 0:
+        print("  WARNING: No games recorded in database.")
+    if n_transitions == 0:
+        print("  WARNING: No transitions recorded in database.")
+
+    elapsed = time.time() - t0
+
+    print_summary("Data verification", {
+        "Games in DB": n_games,
+        "Transitions in DB": n_transitions,
+        "Database": str(args._game_data_store.db_path)
+                    if hasattr(args._game_data_store, 'db_path') else "N/A",
+        "Elapsed": f"{elapsed:.1f}s",
+    })
+
+    print(f"\n  [OK] Stage 3: Verify data upload ({elapsed:.1f}s)")
+
+
+# ---------------------------------------------------------------------------
+# Pipeline steps (stages 4-7)
+# ---------------------------------------------------------------------------
+
+def step_train_player_bot(args, loop_num: int) -> None:
+    """Stage 4: Train IQL player bot on collected transitions."""
+    n_transitions = args._game_data_store.transition_count()
+    min_transitions = 500  # minimum to begin training
+
+    if n_transitions < min_transitions:
+        print()
+        print("=" * 70)
+        print(f"  Stage 4: Train player bot — SKIPPED "
+              f"({n_transitions} transitions, need {min_transitions}+)")
+        print("=" * 70)
+        print()
+        return
+
+    replay_db_path = args._replay_db.db_path if hasattr(args._replay_db, 'db_path') else str(
+        ROOT / "data" / "replay.db"
+    )
+    out_dir = str(CHECKPOINT_DIR / "iql" / f"loop{loop_num}")
+
+    cmd = [
+        PYTHON, "-m", "rl_agents.train_iql",
+        "--db-path", str(replay_db_path),
+        "--steps", str(args.iql_steps),
+        "--batch-size", "256",
+        "--device", args.iql_device,
+        "--out-dir", out_dir,
+    ]
+
+    label = f"Stage 4: Train IQL player bot (loop {loop_num})"
+    run_step(label, cmd, allow_fail=True)
+
+    # Check for checkpoint
+    ckpt = Path(out_dir) / "checkpoint_final.pt"
+    if ckpt.exists():
+        print_summary("Player bot training results", {
+            "Transitions used": n_transitions,
+            "Checkpoint": str(ckpt),
+        })
+    else:
+        print("  WARNING: IQL training produced no checkpoint.")
+
+
+def step_train_deck_bot(args, loop_num: int) -> None:
+    """Stage 5: Train deck evaluator on game outcomes."""
+    n_games = args._game_data_store.game_count()
+    min_games = 10  # minimum to begin training
+
+    if n_games < min_games:
+        print()
+        print("=" * 70)
+        print(f"  Stage 5: Train deck evaluator — SKIPPED "
+              f"({n_games} games, need {min_games}+)")
+        print("=" * 70)
+        print()
+        return
+
+    game_data_db = args._game_data_store.db_path if hasattr(
+        args._game_data_store, 'db_path'
+    ) else str(ROOT / "data" / "game_data.db")
+
+    cmd = [
+        PYTHON, str(ROOT / "scripts" / "train_deck_evaluator.py"),
+        "--games-db", str(game_data_db),
+    ]
+
+    # Resume from existing checkpoint if available
+    ckpt = find_best_checkpoint("deck_eval_finetune") or find_best_checkpoint("deck_eval_bootstrap")
+    if ckpt:
+        cmd.extend(["--resume", str(ckpt)])
+
+    label = f"Stage 5: Train deck evaluator (loop {loop_num})"
+    run_step(label, cmd, allow_fail=True)
+
+    new_ckpt = find_best_checkpoint("deck_eval_finetune")
+    if new_ckpt:
+        print_summary("Deck evaluator training results", {
+            "Games used": n_games,
+            "Checkpoint": str(new_ckpt),
+        })
+
+
+def step_evolve_decks(args, loop_num: int) -> None:
+    """Stage 6: Evolve decks using the trained evaluator."""
+    ckpt = find_best_checkpoint("deck_eval_finetune") or find_best_checkpoint("deck_eval_bootstrap")
+    if not ckpt:
+        print()
+        print("=" * 70)
+        print("  Stage 6: Evolve decks — SKIPPED (no evaluator checkpoint)")
+        print("=" * 70)
+        print()
+        return
+
+    cmd = [
+        PYTHON, "-m", "rl_agents.deck_search", "export",
+        "--checkpoint", str(ckpt),
+        "--output-dir", str(GENERATED_DIR),
+    ]
+
+    label = f"Stage 6: Evolve decks (loop {loop_num})"
+    run_step(label, cmd, allow_fail=True)
+
+    n_decks = len(list(GENERATED_DIR.glob("*.txt"))) if GENERATED_DIR.exists() else 0
+    print_summary("Deck evolution results", {
+        "Deck files": n_decks,
+        "Output dir": str(GENERATED_DIR),
+    })
+
+
+def step_benchmark(args, loop_num: int) -> None:
+    """Stage 7: Benchmark player bot vs random, heuristic, and previous checkpoint."""
+    print()
+    print("=" * 70)
+    print(f"  Stage 7: Benchmark (loop {loop_num})")
+    print("=" * 70)
+    print()
+
+    t0 = time.time()
+
+    # Find the latest IQL checkpoint
+    iql_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
+    current_ckpt = iql_dir / "checkpoint_final.pt"
+    if not current_ckpt.exists():
+        current_ckpt = find_best_checkpoint("player_bot")
+    if not current_ckpt or not current_ckpt.exists():
+        print("  No player bot checkpoint found — skipping benchmark.")
+        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        return
+
+    from rl_agents.game_backends import LocalEngineBackend, GameRunRequest
+    from rl_agents.random_agent import RandomAgent
+    from rl_agents.heuristic_bot import HeuristicBot
+
+    if args._card_db is None:
+        from engine.card import CardDB
+        from config import SLUG_INDEX_PATH
+        args._card_db = CardDB(str(SLUG_INDEX_PATH))
+
+    backend = LocalEngineBackend()
+    n_bench = 10  # games per opponent type
+    results_table: dict[str, str] = {}
+
+    # Collect valid decks for benchmarking
+    deck_files = sorted(GENERATED_DIR.glob("*.txt")) if GENERATED_DIR.exists() else []
+    if len(deck_files) < 2:
+        print("  Not enough decks for benchmark — need at least 2.")
+        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        return
+
+    import random as _random
+    rng = _random.Random(args.seed + loop_num * 999)
+
+    def _run_bench_games(p1_agent, p2_agent, label: str) -> float:
+        """Run n_bench games and return P1 win rate."""
+        wins = 0
+        completed = 0
+        for i in range(n_bench):
+            d1, d2 = rng.sample(deck_files, 2)
+            try:
+                req = GameRunRequest(
+                    p1_deck=str(d1),
+                    p2_deck=str(d2),
+                    p1_agent=p1_agent,
+                    p2_agent=p2_agent,
+                    card_db=args._card_db,
+                    p1_seed=args.seed + i,
+                    p2_seed=args.seed + i + 1,
+                    max_turns=args.max_turns,
+                )
+                result = backend.run_game(req)
+                completed += 1
+                if hasattr(result, 'winner') and result.winner == 1:
+                    wins += 1
+            except Exception as e:
+                print(f"    {label} game {i}: error — {e}")
+        rate = wins / completed if completed > 0 else 0.0
+        return rate
+
+    # Load IQL agent for benchmarking
+    try:
+        from rl_agents.evaluate_iql_vs_random import IQLPolicyAgent
+        from rl_agents.embedder_bundle import load_embedder_bundle
+
+        embedder_bundle = args._embedder_bundle
+        if embedder_bundle is None:
+            # Try loading from checkpoint
+            import torch
+            ckpt_data = torch.load(str(current_ckpt), map_location="cpu", weights_only=False)
+            embedder_bundle = (ckpt_data.get("extra") or {}).get("embedder_bundle")
+
+        if embedder_bundle is None:
+            print("  No embedder bundle available — skipping benchmark.")
+            print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+            return
+
+        iql_agent = IQLPolicyAgent(
+            checkpoint_path=str(current_ckpt),
+            player_id=1,
+            device=args.iql_device,
+            seed=args.seed,
+            embedder_bundle=embedder_bundle,
+        )
+    except Exception as e:
+        print(f"  Failed to load IQL agent: {e}")
+        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        return
+
+    # Benchmark vs random
+    random_agent = RandomAgent(seed=args.seed + 100)
+    rate_vs_random = _run_bench_games(iql_agent, random_agent, "vs_random")
+    results_table["vs Random"] = f"{rate_vs_random:.1%} ({n_bench} games)"
+
+    # Benchmark vs heuristic
+    heuristic_agent = HeuristicBot(seed=args.seed + 200)
+    rate_vs_heuristic = _run_bench_games(iql_agent, heuristic_agent, "vs_heuristic")
+    results_table["vs Heuristic"] = f"{rate_vs_heuristic:.1%} ({n_bench} games)"
+
+    # Benchmark vs previous checkpoint (if exists)
+    prev_loop = loop_num - 1
+    prev_ckpt = CHECKPOINT_DIR / "iql" / f"loop{prev_loop}" / "checkpoint_final.pt"
+    if prev_loop >= 0 and prev_ckpt.exists():
+        try:
+            prev_agent = IQLPolicyAgent(
+                checkpoint_path=str(prev_ckpt),
+                player_id=2,
+                device=args.iql_device,
+                seed=args.seed + 300,
+                embedder_bundle=embedder_bundle,
+            )
+            rate_vs_prev = _run_bench_games(iql_agent, prev_agent, "vs_previous")
+            results_table["vs Previous"] = f"{rate_vs_prev:.1%} ({n_bench} games)"
+        except Exception as e:
+            results_table["vs Previous"] = f"error — {e}"
+    else:
+        results_table["vs Previous"] = "skipped (no prior checkpoint)"
+
+    elapsed = time.time() - t0
+
+    # Print win rate summary table
+    print()
+    print("  ┌─────────────────────┬──────────────────────────┐")
+    print("  │ Opponent            │ Win Rate                 │")
+    print("  ├─────────────────────┼──────────────────────────┤")
+    for opp, rate_str in results_table.items():
+        print(f"  │ {opp:<19} │ {rate_str:<24} │")
+    print("  └─────────────────────┴──────────────────────────┘")
+
+    print(f"\n  [OK] Stage 7: Benchmark ({elapsed:.1f}s)")
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Run the local-engine training and evolution pipeline",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+    # Skip flags
+    skip = parser.add_argument_group("skip steps")
+    skip.add_argument("--skip-validate", action="store_true",
+                      help="Skip deck validation (use all decks)")
+    skip.add_argument("--skip-games", action="store_true",
+                      help="Skip game simulation")
+    skip.add_argument("--skip-player-train", action="store_true",
+                      help="Skip IQL player bot training")
+    skip.add_argument("--skip-deck-train", action="store_true",
+                      help="Skip deck evaluator training")
+    skip.add_argument("--skip-evolve", action="store_true",
+                      help="Skip deck evolution")
+    skip.add_argument("--skip-benchmark", action="store_true",
+                      help="Skip player bot benchmarking")
+
+    # Game settings
+    games_g = parser.add_argument_group("game settings")
+    games_g.add_argument("--games-per-loop", type=int, default=100,
+                         help="Games to simulate per loop iteration (default: 100)")
+    games_g.add_argument("--max-turns", type=int, default=200,
+                         help="Turn cap per game (default: 200)")
+
+    # Training settings
+    train_g = parser.add_argument_group("training settings")
+    train_g.add_argument("--iql-steps", type=int, default=20000,
+                         help="IQL training steps per loop (default: 20000)")
+    train_g.add_argument("--iql-device", default="cpu",
+                         help="Torch device for IQL training/inference (default: cpu)")
+
+    # Loop settings
+    loop_g = parser.add_argument_group("loop settings")
+    loop_g.add_argument("--loops", type=int, default=1,
+                        help="Number of pipeline loop iterations (default: 1)")
+    loop_g.add_argument("--loop-forever", action="store_true",
+                        help="Loop until interrupted (Ctrl+C)")
+
+    # General
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Global RNG seed (default: 42)")
+
+    return parser
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+
+    # Signal handling
+    signal.signal(signal.SIGINT, _handle_signal)
+    if sys.platform == "win32":
+        signal.signal(signal.SIGBREAK, _handle_signal)
+
+    CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
+    (ROOT / "data").mkdir(parents=True, exist_ok=True)
+
+    # Create fresh databases for this run
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    from rl_agents.game_data import GameDataStore
+    from data_collection.replay_db import ReplayDB
+
+    game_data_store = GameDataStore.create_fresh(
+        base_dir=str(ROOT / "data"),
+        prefix="local_pipeline",
+    )
+    replay_db_path = ROOT / "data" / f"replay_{timestamp}.db"
+    replay_db = ReplayDB(str(replay_db_path))
+
+    # Attach DB objects to args for easy passing
+    args._game_data_store = game_data_store
+    args._replay_db = replay_db
+    args._card_db = None       # lazily loaded in step_run_games
+    args._embedder_bundle = None  # initialized below
+
+    # Initialize embedder bundle (create from scratch if missing)
+    bundle_path = CHECKPOINT_DIR / "embedder_bundle.pt"
+    if bundle_path.exists():
+        from rl_agents.embedder_bundle import load_embedder_bundle
+        args._embedder_bundle = load_embedder_bundle(str(bundle_path))
+        print(f"  Loaded embedder bundle from {bundle_path}")
+    else:
+        try:
+            from engine.card import CardDB
+            from config import SLUG_INDEX_PATH
+            from encoder.card_embedder import SlugVocab
+            from encoder.action_embedder import ActionEmbedder
+            from encoder.gamestate_embedder import GameStateEmbedder
+            from rl_agents.embedder_bundle import build_embedder_bundle, save_embedder_bundle
+
+            card_db = CardDB(str(SLUG_INDEX_PATH))
+            args._card_db = card_db
+            slug_vocab = SlugVocab.from_card_db(card_db)
+            d_model = 128
+            action_embedder = ActionEmbedder(
+                d_model=d_model, slug_vocab_size=slug_vocab.size, slug_vocab=slug_vocab,
+            )
+            state_embedder = GameStateEmbedder(
+                d_model=d_model, slug_vocab_size=slug_vocab.size, slug_vocab=slug_vocab,
+            )
+            args._embedder_bundle = build_embedder_bundle(action_embedder, state_embedder)
+            save_embedder_bundle(str(bundle_path), action_embedder, state_embedder)
+            print(f"  Created fresh embedder bundle at {bundle_path}")
+        except Exception as e:
+            print(f"  WARNING: Could not create embedder bundle: {e}")
+
+    pipeline_start = time.time()
+
+    print()
+    print("#" * 70)
+    print("#  FAB Local Engine Pipeline")
+    print("#" * 70)
+    print()
+    print(f"  Seed:           {args.seed}")
+    print(f"  Loops:          {'∞' if args.loop_forever else args.loops}")
+    print(f"  Games/loop:     {args.games_per_loop}")
+    print(f"  Max turns:      {args.max_turns}")
+    print(f"  IQL steps:      {args.iql_steps}")
+    print(f"  IQL device:     {args.iql_device}")
+    print()
+
+    # Determine loop count
+    max_loops = args.loops if not args.loop_forever else float('inf')
+    loop_num = 0
+
+    while loop_num < max_loops:
+        if _interrupted:
+            break
+
+        if max_loops > 1:
+            print()
+            print("#" * 70)
+            loop_label = f"Loop {loop_num + 1}"
+            if not args.loop_forever:
+                loop_label += f"/{args.loops}"
+            print(f"#  {loop_label}")
+            print("#" * 70)
+
+        # Stage 1: Validate decks
+        if not args.skip_validate:
+            valid_decks = step_validate_decks(args)
+            if _interrupted:
+                break
+        else:
+            # Use all deck files without validation
+            valid_decks = sorted(
+                str(p) for p in GENERATED_DIR.glob("*.txt")
+            ) if GENERATED_DIR.exists() else []
+            if not valid_decks:
+                print("  FATAL: No deck files found in", GENERATED_DIR)
+                sys.exit(1)
+            print(f"\n  [SKIP] Deck validation — using {len(valid_decks)} decks")
+
+        # Stage 2: Run games
+        if not args.skip_games:
+            # Lazy-load card DB and embedder bundle
+            if args._card_db is None:
+                from engine.card import CardDB
+                from config import SLUG_INDEX_PATH
+                args._card_db = CardDB(str(SLUG_INDEX_PATH))
+
+            # Create opponent pool
+            from rl_agents.local_game_runner import OpponentPool
+            opponent_pool = OpponentPool(
+                heuristic_seed=args.seed + loop_num,
+                checkpoint_paths=None,  # TODO: collect prev checkpoints
+                device=args.iql_device,
+                embedder_bundle=args._embedder_bundle,
+            )
+
+            step_run_games(args, valid_decks, loop_num, opponent_pool)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Game simulation")
+
+        # Stage 3: Verify data
+        step_upload_data(args)
+        if _interrupted:
+            break
+
+        # Stage 4: Train player bot (IQL)
+        if not args.skip_player_train:
+            step_train_player_bot(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Player bot training")
+
+        # Stage 5: Train deck evaluator
+        if not args.skip_deck_train:
+            step_train_deck_bot(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Deck evaluator training")
+
+        # Stage 6: Evolve decks
+        if not args.skip_evolve:
+            step_evolve_decks(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Deck evolution")
+
+        # Stage 7: Benchmark
+        if not args.skip_benchmark:
+            step_benchmark(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Benchmark")
+
+        loop_num += 1
+
+    # -----------------------------------------------------------------------
+    # Final summary
+    # -----------------------------------------------------------------------
+    elapsed = time.time() - pipeline_start
+
+    print()
+    print("#" * 70)
+    print("#  Pipeline Complete")
+    print("#" * 70)
+
+    n_games = game_data_store.game_count()
+    n_transitions = game_data_store.transition_count()
+
+    print_summary("Final state", {
+        "Loops completed": loop_num,
+        "Games collected": n_games,
+        "Transitions collected": n_transitions,
+        "Total pipeline time": f"{elapsed:.1f}s ({elapsed/60:.1f}m)",
+    })
+
+    if _interrupted:
+        print("  (Pipeline was interrupted early)")
+
+    # Cleanup
+    game_data_store.close()
+    replay_db.close()
+
+    print()
+
+
+if __name__ == "__main__":
+    main()
