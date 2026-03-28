@@ -94,14 +94,14 @@ def _expand_hero_classes(
     """
     import re as _re
     classes: set[str] = {t.lower() for t in hero_types if t.lower() not in DESCRIPTOR}
-    for kw in hero_keywords:
-        kw_lower = kw.lower()
-        if "essence of" in kw_lower:
-            after = kw_lower.split("essence of", 1)[1]
-            for word in _re.split(r"[\s,]+", after):
-                word = word.strip()
-                if word and word not in ("and", "or", "the") and word in _ESSENCE_ELEMENTS:
-                    classes.add(word)
+    # Join all keywords so split entries like
+    # ['Essence of Earth', 'Ice', 'and Lightning'] are handled correctly.
+    combined = ", ".join(hero_keywords).lower()
+    for match in _re.finditer(r"essence of\s+(.+?)(?=essence of|$)", combined):
+        for word in _re.split(r"[\s,]+", match.group(1)):
+            word = word.strip()
+            if word and word not in ("and", "or", "the") and word in _ESSENCE_ELEMENTS:
+                classes.add(word)
     return frozenset(classes)
 
 
