@@ -65,7 +65,7 @@ def _is_fabrary_format(lines: list[str]) -> bool:
 
 def _load_deck_fabrary(lines: list[str], card_db: CardDB) -> dict:
     hero_slug: Optional[str] = None
-    weapon_slug: Optional[str] = None
+    weapons: list[str] = []  # all weapon slugs in arena order (count-expanded)
     equipment: dict[str, str] = {}
     cards: list[str] = []
 
@@ -108,8 +108,8 @@ def _load_deck_fabrary(lines: list[str], card_db: CardDB) -> dict:
             if card is None:
                 continue
             if "Weapon" in card.types:
-                if weapon_slug is None:
-                    weapon_slug = slug
+                for _ in range(count):
+                    weapons.append(slug)
             else:
                 for type_name, slot_name in _EQUIP_TYPE_TO_SLOT.items():
                     if type_name in card.types and slot_name not in equipment:
@@ -121,7 +121,8 @@ def _load_deck_fabrary(lines: list[str], card_db: CardDB) -> dict:
 
     return {
         "hero": hero_slug,
-        "weapon": weapon_slug,
+        "weapon": weapons[0] if weapons else None,
+        "weapons": weapons,
         "equipment": equipment,
         "cards": cards,
     }

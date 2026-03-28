@@ -54,9 +54,22 @@ def validate_single_deck(
 
     # ── (b) weapon check ──────────────────────────────────────────────────
     # Gravy Bones is the only CC-legal hero who intentionally runs no weapon.
+    # Kayo has a single weapon zone by design, so only one weapon is expected.
     _WEAPONLESS_HEROES: frozenset[str] = frozenset({"gravy_bones_shipwrecked_looter"})
-    if not weapon_slug and hero_slug not in _WEAPONLESS_HEROES:
+    _SINGLE_WEAPON_SLOT_HEROES: frozenset[str] = frozenset({"kayo_underhanded_cheat"})
+    weapons: list = deck_data.get("weapons", [weapon_slug] if weapon_slug else [])
+    # A 2H weapon occupies both weapon slots by FAB rules — one slug is sufficient.
+    weapon_is_2h = False
+    if weapons:
+        w_card = card_db.get(weapons[0])
+        weapon_is_2h = w_card is not None and "2H" in (w_card.types or [])
+    if not weapons and hero_slug not in _WEAPONLESS_HEROES:
         violations.append("Deck has no weapon.")
+    elif (len(weapons) < 2
+          and not weapon_is_2h
+          and hero_slug not in _WEAPONLESS_HEROES
+          and hero_slug not in _SINGLE_WEAPON_SLOT_HEROES):
+        violations.append("Deck has only one weapon (both weapon slots should be filled).")
 
     # ── (c) equipment check ───────────────────────────────────────────────
     if not equipment:
