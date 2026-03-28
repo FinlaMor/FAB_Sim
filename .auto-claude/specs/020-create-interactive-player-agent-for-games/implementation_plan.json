@@ -1,0 +1,227 @@
+{
+  "feature": "Interactive Human Player Agent for FAB Games",
+  "workflow_type": "feature",
+  "workflow_rationale": "New component (HumanAgent class + runner script) added to existing rl_agents/ module. No existing code changes needed; the new agent plugs into the existing engine agent interface.",
+  "phases": [
+    {
+      "id": "phase-1-human-agent",
+      "name": "HumanAgent Class",
+      "type": "implementation",
+      "description": "Create the HumanAgent class with game state display, human-readable action formatting, input validation, and the callable agent interface. This is the core interactive component.",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Create HumanAgent class in rl_agents/human_agent.py implementing the full interactive agent interface. Must include: (1) __call__(state, options, context) conforming to agent protocol, (2) _display_state() showing both players' health, human's hand with card details (name, cost, power, defense, pitch), equipment status, combat state, resources, action points, turn number, game step, (3) _format_action() producing human-readable action descriptions for all 17 ActionTypes (e.g., 'Play Wounding Blow [cost:2, power:6, pitch: card_a]' instead of raw repr), (4) _format_action_list() displaying numbered options grouped by type for long lists, (5) Input validation with re-prompting on non-numeric, out-of-range, or empty input, (6) Auto-select when only one legal action, (7) Non-Action option display and selection (start-player choice, trigger ordering), (8) Ctrl+C handling with clean 'Game aborted' message, (9) Hidden info enforcement (only show human's hand/arsenal, opponent's public info only).",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [
+            "rl_agents/human_agent.py"
+          ],
+          "patterns_from": [
+            "rl_agents/random_agent.py",
+            "rl_agents/heuristic_bot.py",
+            "engine/state.py",
+            "engine/actions.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from rl_agents.human_agent import HumanAgent; agent = HumanAgent(player_id=1); print('HumanAgent created OK')\"",
+            "expected": "HumanAgent created OK"
+          },
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-runner-script",
+      "name": "CLI Runner Script",
+      "type": "implementation",
+      "description": "Create the play_vs_iql.py CLI runner that sets up and executes human-vs-bot games with support for multiple opponent types, deck selection, and seat choice.",
+      "depends_on": [
+        "phase-1-human-agent"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Create rl_agents/play_vs_iql.py CLI runner script with: (1) argparse CLI with --checkpoint, --deck (default to first available deck), --seat (1 or 2), --opponent (iql|heuristic|random), --list-decks, --max-turns, --device, --embedder-bundle, --seed flags, (2) Deck resolution: search DECKS_DIR and DECKS_DIR/generated/ for deck files, support --list-decks to show available decks, (3) Opponent instantiation: IQLPolicyAgent (from evaluate_iql_vs_random.py) for 'iql', HeuristicBot for 'heuristic', RandomAgent for 'random', (4) IQL checkpoint + embedder bundle loading following evaluate_iql_vs_random.py pattern, (5) GameRunRequest setup with deck paths, agents, CardDB, seeds, max_turns, (6) Game execution via build_game_backend('local').run_game(req), (7) End-of-game summary: winner, turns played, final HP of both players, (8) Entry point: python -m rl_agents.play_vs_iql, (9) Top-level KeyboardInterrupt handling for clean abort.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [
+            "rl_agents/play_vs_iql.py"
+          ],
+          "patterns_from": [
+            "rl_agents/evaluate_iql_vs_random.py",
+            "rl_agents/game_backends.py",
+            "config.py",
+            "rl_agents/utils/matchups.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -m rl_agents.play_vs_iql --help",
+            "expected": "usage:"
+          },
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-testing",
+      "name": "Testing & Package Exports",
+      "type": "implementation",
+      "description": "Update package exports, create unit tests for HumanAgent, and verify no regressions in existing test suite.",
+      "depends_on": [
+        "phase-2-runner-script"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Update rl_agents/__init__.py to export HumanAgent. Create tests/test_human_agent.py with unit tests covering: (1) HumanAgent handles Action options with mocked stdin input, (2) HumanAgent handles non-Action options (strings, ints) with mocked input, (3) HumanAgent auto-selects when only one option exists (no input prompt), (4) HumanAgent returns empty/non-list options directly, (5) _display_state() produces output without errors for various GameState configurations (action phase, combat phase, empty hand, etc.), (6) _format_action() returns readable strings for all major ActionType values (PASS, PLAY_CARD, ATTACK_WEAPON, DEFEND_CARDS, DEFEND_EQUIPMENT, STORE_ARSENAL, etc.), (7) Input validation: non-numeric input causes re-prompt (use mock), out-of-range index causes re-prompt. Use unittest.mock.patch('builtins.input') for simulating user input. Use real GameState objects from conftest.py fixtures where available, or construct minimal mock states.",
+          "service": "main",
+          "files_to_modify": [
+            "rl_agents/__init__.py"
+          ],
+          "files_to_create": [
+            "tests/test_human_agent.py"
+          ],
+          "patterns_from": [
+            "tests/conftest.py",
+            "tests/test_engine_game.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -m pytest tests/test_human_agent.py -v",
+            "expected": "passed"
+          },
+          "status": "completed",
+          "notes": "Exported HumanAgent from rl_agents/__init__.py. Created tests/test_human_agent.py with 27 passing tests covering all required scenarios.",
+          "updated_at": "2026-03-28T23:37:48.033066+00:00"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Run the full existing test suite to verify no regressions. All pre-existing tests must continue to pass with the new files added.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "python -m pytest tests/ -x --timeout=120",
+            "expected": "passed"
+          },
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 3,
+    "total_subtasks": 4,
+    "services_involved": [
+      "main"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "No parallel speedup - single-service sequential dependency chain"
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 020 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "low",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "unit"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All existing tests pass (python -m pytest tests/ -x)",
+      "New HumanAgent unit tests pass",
+      "HumanAgent can be imported and instantiated",
+      "play_vs_iql.py --help shows usage",
+      "No modifications to engine/ or existing agent source files"
+    ],
+    "verification_steps": [
+      {
+        "name": "Import Verification",
+        "command": "python -c \"from rl_agents.human_agent import HumanAgent; print('OK')\"",
+        "expected_outcome": "OK printed without errors",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "CLI Help Verification",
+        "command": "python -m rl_agents.play_vs_iql --help",
+        "expected_outcome": "Usage info printed with all expected arguments",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Unit Tests",
+        "command": "python -m pytest tests/test_human_agent.py -v",
+        "expected_outcome": "All unit tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Regression Tests",
+        "command": "python -m pytest tests/ -x --timeout=120",
+        "expected_outcome": "All existing tests still pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      }
+    ],
+    "reasoning": "Low risk feature adding new files only. Unit tests verify HumanAgent logic with mocked input. Manual play-testing validates the interactive experience."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/test_human_agent.py -v"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    }
+  },
+  "qa_signoff": null,
+  "status": "human_review",
+  "planStatus": "review",
+  "xstateState": "human_review",
+  "executionPhase": "complete",
+  "updated_at": "2026-03-28T23:42:20.884Z",
+  "lastEvent": {
+    "eventId": "3ca118ae-c0c5-4fd5-ae32-0934ae6fbd64",
+    "sequence": 0,
+    "type": "PLANNING_COMPLETE",
+    "timestamp": "2026-03-28T23:31:31.863183+00:00"
+  },
+  "last_updated": "2026-03-28T23:37:48.033066+00:00",
+  "reviewReason": "completed"
+}

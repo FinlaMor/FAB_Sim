@@ -1,0 +1,75 @@
+=== AUTO-BUILD PROGRESS ===
+
+Project: Interactive Human Player Agent for FAB Games
+Workspace: .auto-claude/specs/020-create-interactive-player-agent-for-games
+Started: 2026-03-28
+
+Workflow Type: feature
+Rationale: New component (HumanAgent class + runner script) added to existing rl_agents/ module. No existing code needs to change; plugs into existing engine agent interface.
+
+Session 1 (Planner):
+- Created implementation_plan.json
+- Phases: 3
+- Total subtasks: 4
+- Created init.sh
+- Created build-progress.txt
+
+Phase Summary:
+- Phase 1 (HumanAgent Class): 1 subtask, depends on []
+  - subtask-1-1: Create HumanAgent with state display, action formatting, input validation
+- Phase 2 (CLI Runner Script): 1 subtask, depends on [phase-1-human-agent]
+  - subtask-2-1: Create play_vs_iql.py with CLI args, opponent setup, game execution
+- Phase 3 (Testing & Package Exports): 2 subtasks, depends on [phase-2-runner-script]
+  - subtask-3-1: Update __init__.py exports + create unit tests
+  - subtask-3-2: Run full regression test suite
+
+Services Involved:
+- main: Single Python service containing engine, rl_agents, encoder, tests
+
+Files to Create:
+- rl_agents/human_agent.py — HumanAgent class (core interactive agent)
+- rl_agents/play_vs_iql.py — CLI runner for human-vs-bot games
+- tests/test_human_agent.py — Unit tests for HumanAgent
+
+Files to Modify:
+- rl_agents/__init__.py — Add HumanAgent export
+
+Key Pattern References:
+- rl_agents/random_agent.py — UserInputAgent prototype, agent callable interface
+- rl_agents/heuristic_bot.py — Action vs non-Action dispatch, step-based logic
+- rl_agents/evaluate_iql_vs_random.py — IQLPolicyAgent setup, CLI args, GameRunRequest
+- engine/state.py — GameState, Player, Zone, CombatState data structures
+- engine/actions.py — Action, ActionType enum (17 types), __repr__ format
+
+Parallelism Analysis:
+- Max parallel phases: 1
+- Recommended workers: 1
+- Parallel groups: None (sequential single-service dependency chain)
+
+Verification Strategy:
+- Risk level: low
+- Test types: unit tests only
+- Security scan: not required
+- Key checks: import verification, CLI --help, unit tests, regression tests
+
+=== STARTUP COMMAND ===
+
+To continue building this spec, run:
+
+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 020 --parallel 1
+
+=== END SESSION 1 ===
+
+=== SESSION 2 (subtask-3-2) ===
+- Ran full test suite: 4827 passed, 175 failed, 2 skipped
+- All 175 failures are PRE-EXISTING (confirmed by checking out base commit 58f9b77)
+  - test_engine_game.py: collection error due to missing card_data/slug_index.json (gitignored proprietary data)
+  - test_talishar_adapter.py, test_talishar_comparison_normalization.py: similar data dependencies
+  - test_transformer_policy_smoke.py: missing rl_agents.transformer_policy module
+  - test_card_gamestates.py: 169 failures from card state factory issues
+  - test_loader_conditions.py: 2 failures (crush/surge check logic)
+  - test_talishar_autopass.py: 2 failures
+  - test_embedder_improvements.py: 1 failure
+- NO REGRESSIONS introduced by our changes (human_agent.py, play_vs_iql.py, test_human_agent.py, __init__.py)
+- subtask-3-2: COMPLETED
+=== END SESSION 2 ===

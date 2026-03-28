@@ -1,4 +1,3 @@
-from rl_agents.human_agent import HumanAgent
 from rl_agents.random_agent import RandomAgent, UserInputAgent
 
 # IQL imports are deferred because iql.py -> dataset_adapter.py -> data_collection.replay_db
@@ -9,7 +8,6 @@ from rl_agents.random_agent import RandomAgent, UserInputAgent
 #   from archive.rl_agents.transformer_policy import TransformerPolicyAgent, ...
 
 __all__ = [
-	"HumanAgent",
 	"RandomAgent",
 	"UserInputAgent",
 ]
