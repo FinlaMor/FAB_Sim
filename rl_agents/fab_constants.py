@@ -127,6 +127,34 @@ def _expand_hero_classes(
     return frozenset(classes)
 
 
+import json as _json
+from pathlib import Path as _Path
+
+_BANNED_CARDS_PATH = _Path(__file__).resolve().parent.parent / "card_data" / "banned_cards.json"
+
+
+def load_banned_cards(fmt: str) -> frozenset[str]:
+    """Return a frozenset of banned card slugs for the given format.
+
+    Args:
+        fmt: Format key (e.g. ``"cc"`` for Classic Constructed).
+
+    Returns:
+        A frozenset of card slug strings banned in the format.
+        Returns an empty frozenset if the file is missing or the format
+        key is not present.
+    """
+    if not _BANNED_CARDS_PATH.exists():
+        return frozenset()
+    try:
+        with open(_BANNED_CARDS_PATH, encoding="utf-8") as f:
+            data = _json.load(f)
+    except (ValueError, OSError):
+        return frozenset()
+    slugs = data.get(fmt, [])
+    return frozenset(slugs)
+
+
 import re as _re
 
 _SPEC_RE = _re.compile(r'\*\*(.+?)\s+Specialization\*\*', _re.IGNORECASE)
@@ -165,6 +193,7 @@ def validate_deck_legality(
     slug_index: dict,
     hero_keywords: list[str] | None = None,
     hero_name: str = "",
+    banned_slugs: frozenset[str] | None = None,
 ) -> list[str]:
     """Check every card in a deck for FAB class/talent legality.
 
@@ -196,6 +225,12 @@ def validate_deck_legality(
     all_cards = list(deck_cards) + list(equipment)
     for card in all_cards:
         slug = card.get("card_slug") or card.get("slug", "")
+
+        # ── banned card check ────────────────────────────────────────────
+        if banned_slugs and slug in banned_slugs:
+            entry_b = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
+            name_b = (entry_b.get("name", slug) if entry_b else slug)
+            violations.append(f"{name_b!r} ({slug}): banned in this format")
         entry = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
         if not entry:
             continue  # not in slug_index → cannot verify, skip
