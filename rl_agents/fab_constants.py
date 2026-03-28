@@ -163,13 +163,29 @@ def validate_deck_legality(
         entry = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
         if not entry:
             continue  # not in slug_index → cannot verify, skip
-        card_classes: frozenset[str] = frozenset(
-            t.lower() for t in entry.get("types", []) if t.lower() not in DESCRIPTOR
-        )
-        if card_classes and not card_classes <= hero_classes:
-            name = entry.get("name", slug)
-            violations.append(
-                f"{name!r} ({slug}): card types {set(card_classes)!r} "
-                f"not subset of hero types {set(hero_classes)!r}"
+        # Check for hybrid cards via ' / ' delimiter in type_text
+        type_text = entry.get("type_text", "")
+        hybrid = _parse_hybrid_supertypes(type_text)
+        if hybrid is not None:
+            left_classes, right_classes = hybrid
+            # Hybrid card is legal if EITHER side satisfies hero classes
+            left_ok = not left_classes or left_classes <= hero_classes
+            right_ok = not right_classes or right_classes <= hero_classes
+            if not left_ok and not right_ok:
+                name = entry.get("name", slug)
+                violations.append(
+                    f"{name!r} ({slug}): hybrid card types "
+                    f"{set(left_classes)!r} | {set(right_classes)!r} "
+                    f"— neither side subset of hero types {set(hero_classes)!r}"
+                )
+        else:
+            card_classes: frozenset[str] = frozenset(
+                t.lower() for t in entry.get("types", []) if t.lower() not in DESCRIPTOR
             )
+            if card_classes and not card_classes <= hero_classes:
+                name = entry.get("name", slug)
+                violations.append(
+                    f"{name!r} ({slug}): card types {set(card_classes)!r} "
+                    f"not subset of hero types {set(hero_classes)!r}"
+                )
     return violations
