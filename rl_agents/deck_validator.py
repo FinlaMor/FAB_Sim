@@ -12,7 +12,7 @@ from pathlib import Path
 
 from engine.card import CardDB
 from engine.deck import load_deck
-from rl_agents.fab_constants import validate_deck_legality
+from rl_agents.fab_constants import load_banned_cards, validate_deck_legality
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,7 @@ def validate_single_deck(
     deck_path: str,
     card_db: CardDB,
     slug_index: dict,
+    fmt: str = "cc",
 ) -> tuple[bool, list[str]]:
     """Validate a single deck file.
 
@@ -33,12 +34,16 @@ def validate_single_deck(
         deck_path:   path to the deck text file.
         card_db:     CardDB instance for card lookups.
         slug_index:  the ``by_slug`` dict from slug_index.json.
+        fmt:         format key for banned-card lookup (default ``"cc"``).
 
     Returns:
         (is_valid, violations) where *violations* is a list of human-readable
         strings (empty when the deck is legal).
     """
     violations: list[str] = []
+
+    # ── load banned cards for this format ──────────────────────────────────
+    banned_slugs = load_banned_cards(fmt)
 
     # ── load deck ──────────────────────────────────────────────────────────
     try:
@@ -99,6 +104,7 @@ def validate_single_deck(
                 slug_index=slug_index,
                 hero_keywords=hero_keywords,
                 hero_name=hero_entry.get("name", ""),
+                banned_slugs=banned_slugs,
             )
             violations.extend(legality_violations)
     else:
