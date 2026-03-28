@@ -52,6 +52,12 @@ def validate_single_deck(
     equipment: dict = deck_data.get("equipment", {})
     cards: list = deck_data.get("cards", [])
 
+    # ── (b) weapon check ──────────────────────────────────────────────────
+    # Gravy Bones is the only CC-legal hero who intentionally runs no weapon.
+    _WEAPONLESS_HEROES: frozenset[str] = frozenset({"gravy_bones_shipwrecked_looter"})
+    if not weapon_slug and hero_slug not in _WEAPONLESS_HEROES:
+        violations.append("Deck has no weapon.")
+
     # ── (c) equipment check ───────────────────────────────────────────────
     if not equipment:
         violations.append("Deck has no equipment.")
