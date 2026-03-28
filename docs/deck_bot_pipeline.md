@@ -30,7 +30,7 @@ pip install requests beautifulsoup4
 
 ## Phase 1: Collect Meta Data
 
-Scrape card play rates, win rates, and hero statistics from fablazing.com. This is the foundation for bootstrap training and heuristic deck generation.
+Scrape card play rates, win rates, and hero statistics from fablazing.com. This data is used **only during bootstrapping** (Phase 2.1) and heuristic deck generation — it is not referenced by fine-tuning, deck search, or tournament phases.
 
 ### 1.1 Scrape Fablazing
 
@@ -84,7 +84,7 @@ Exact parameter counts depend on vocabulary size. Run bootstrap training to see 
 
 ### 2.1 Bootstrap Training (No Game Data Needed)
 
-Train on synthetic labels derived from fablazing play rates. "Good" decks (high-frequency cards) get high labels; "bad" decks (random cards) get low labels.
+Train on synthetic labels derived from fablazing play rates (from `data/fablazing_meta.db`). "Good" decks (high-frequency cards) get high labels; "bad" decks (random cards) get low labels. This is the **only** training phase that uses fablazing data.
 
 ```bash
 # DeepSets (faster, start here)
@@ -202,6 +202,8 @@ python scripts/train_deck_evaluator.py \
     --epochs 50
 ```
 
+> **Note:** Fine-tuning uses only game outcome data from `talishar_games.db` — fablazing meta data is not referenced during this phase.
+
 Fine-tuning uses 0.1x the base learning rate. Each game produces two training samples: (hero_1, deck_1, hero_2, won) and (hero_2, deck_2, hero_1, won).
 
 **Output:** `checkpoints/deck_eval_finetune_best.pt`
@@ -302,15 +304,15 @@ Hero archetypes (top 20):
 ```
 
 **Key metrics to watch:**
-- Does the meta distribution match fablazing percentages?
-- Do high win-rate heroes on fablazing also perform well in simulation?
+- Is the hero distribution diverse across archetypes? (Heroes are sampled uniformly, not weighted by fablazing meta.)
 - Are diverse archetypes emerging, or does one flex_depth dominate?
+- Do fine-tuned models produce different standings than bootstrap-only models?
 
 ---
 
 ## Phase 6: Iteration Loop
 
-The system improves through a cycle of play, train, evolve, benchmark:
+The system improves through a cycle of play, train, evolve, benchmark. After the initial bootstrap (which uses fablazing data), the iteration loop is entirely self-improving — it relies only on game outcomes:
 
 ```
 1. Train evaluator (bootstrap)
