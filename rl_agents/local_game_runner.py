@@ -445,6 +445,7 @@ def run_games(
             winner = getattr(game_state, "winner", None)
             turn_number = getattr(game_state, "turn_number", 0)
             ended_on_cap = turn_number >= max_turns
+            guardrail_terminated = step_counter[0] >= p1_agent.max_decisions_per_game
             p1_hp = game_state.players[1].health if hasattr(game_state, "players") else 0
             p2_hp = game_state.players[2].health if hasattr(game_state, "players") else 0
 
@@ -477,9 +478,16 @@ def run_games(
             )
             results.results.append(result)
 
-            print(f"  Game {idx + 1}/{len(deck_pairs)}: "
-                  f"winner=P{winner or '?'}, turns={turn_number}, "
-                  f"HP={p1_hp}/{p2_hp}")
+            msg = (f"  Game {idx + 1}/{len(deck_pairs)}: "
+                   f"winner=P{winner or '?'}, turns={turn_number}, "
+                   f"HP={p1_hp}/{p2_hp}")
+            if guardrail_terminated:
+                msg += f" [GUARDRAIL: {step_counter[0]} decisions, trigger loop on turn {turn_number}]"
+            elif turn_number <= 2:
+                done_flag = getattr(game_state, "done", "?")
+                step_flag = getattr(game_state, "step", "?")
+                msg += f" [EARLY: done={done_flag}, step={step_flag}]"
+            print(msg)
 
         except Exception as exc:
             error_msg = f"Game {idx + 1} error ({p1_deck} vs {p2_deck}): {exc}"

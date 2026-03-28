@@ -286,17 +286,16 @@
     }
   },
   "qa_signoff": null,
-  "status": "human_review",
-  "planStatus": "review",
-  "xstateState": "human_review",
+  "status": "done",
+  "planStatus": "completed",
+  "xstateState": "done",
   "executionPhase": "complete",
-  "updated_at": "2026-03-28T01:06:22.779Z",
+  "updated_at": "2026-03-28T01:38:48.199Z",
   "lastEvent": {
     "eventId": "bb24801b-eeba-4677-9b06-9023d3988a5d",
     "sequence": 0,
     "type": "PLANNING_COMPLETE",
     "timestamp": "2026-03-28T00:51:04.234999+00:00"
   },
-  "last_updated": "2026-03-28T00:55:46.732336+00:00",
-  "reviewReason": "completed"
+  "last_updated": "2026-03-28T00:55:46.732336+00:00"
 }

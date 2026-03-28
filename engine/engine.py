@@ -340,8 +340,8 @@ def _attack_step(state: GameState, attack_card: Card) -> None:
     state.combat = CombatState(
         attacker_id=state.active_player,
         link_id=len(state.chain_links) + 1,
-        attack_power=attack_card.power,
-        base_attack_power=attack_card.base_power,
+        attack_power=attack_card.power or 0,
+        base_attack_power=attack_card.base_power or 0,
         from_weapon=attack_card.is_weapon,
         attack_card=attack_card,
         keywords=list(attack_card.keywords),
@@ -592,7 +592,18 @@ def _draw_cards(player: Player, count: int) -> None:
 def _resolve_all_triggers(state: GameState) -> None:
     """Order and resolve all triggers on the stack without giving players priority."""
     handle_stack(state)
+    _iters = 0
+    _MAX_TRIGGER_ITERS = 500
     while state.stack_entries:
+        _iters += 1
+        if _iters > _MAX_TRIGGER_ITERS:
+            import logging
+            logging.warning(
+                "trigger loop exceeded %d iterations on turn %d — clearing stack",
+                _MAX_TRIGGER_ITERS, state.turn_number,
+            )
+            state.stack_entries.clear()
+            return
         resolve_stack(state)
         if check_state_based_actions(state):
             return
@@ -638,7 +649,7 @@ def _resolve_damage(state: GameState) -> None:
     # Recalculate attack power from continuous effects before damage
     _recalculate_attack_power(combat)
 
-    total_defense = sum(c.defense for c in combat.defending_cards)
+    total_defense = sum((c.defense or 0) for c in combat.defending_cards)
     combat.total_defense = total_defense
 
     # 7.5.2: net damage = attack power - total defense (min 0)
@@ -711,7 +722,7 @@ def _apply_defend(state: GameState, action: Action) -> None:
         if card in defender.hand.cards:
             defender.hand.remove(card)
         combat.defending_cards.append(card)
-        combat.total_defense += card.defense
+        combat.total_defense += (card.defense or 0)
         # 7.0.5a: defend event
         state.event_manager.emit(Event(type='defend', card=card.slug), state)
 
@@ -877,9 +888,21 @@ def priority_loop(state: GameState) -> None:
       - If stack is empty or only attack → exit
     """
     state.consecutive_passes = 0
+    _loop_iters = 0
+    _MAX_PRIORITY_ITERS = 2000
 
     while True:
         if state.done:
+            return
+
+        _loop_iters += 1
+        if _loop_iters > _MAX_PRIORITY_ITERS:
+            # Pathological trigger/priority loop — force exit
+            import logging
+            logging.warning(
+                "priority_loop exceeded %d iterations on turn %d, step %s — forcing exit",
+                _MAX_PRIORITY_ITERS, state.turn_number, state.step,
+            )
             return
 
         current_player = state.priority_player

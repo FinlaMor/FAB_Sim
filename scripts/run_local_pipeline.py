@@ -28,8 +28,10 @@ import signal
 import subprocess
 import sqlite3
 import sys
+
+# Ensure project root is on the path so `rl_agents`, `engine`, etc. are importable
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import time
-from datetime import datetime
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -202,8 +204,8 @@ def step_run_games(args, valid_decks: list[str], loop_num: int,
 
     elapsed = time.time() - t0
 
-    n_games = args._game_data_store.game_count()
-    n_transitions = args._game_data_store.transition_count()
+    n_games = args._replay_db.game_count()
+    n_transitions = args._replay_db.transition_count()
 
     print_summary("Game collection results", {
         "Games this batch": results.completed,
@@ -227,8 +229,8 @@ def step_upload_data(args) -> None:
 
     t0 = time.time()
 
-    n_games = args._game_data_store.game_count()
-    n_transitions = args._game_data_store.transition_count()
+    n_games = args._replay_db.game_count()
+    n_transitions = args._replay_db.transition_count()
 
     if n_games == 0:
         print("  WARNING: No games recorded in database.")
@@ -240,8 +242,7 @@ def step_upload_data(args) -> None:
     print_summary("Data verification", {
         "Games in DB": n_games,
         "Transitions in DB": n_transitions,
-        "Database": str(args._game_data_store.db_path)
-                    if hasattr(args._game_data_store, 'db_path') else "N/A",
+        "Database": str(args._replay_db.db_path),
         "Elapsed": f"{elapsed:.1f}s",
     })
 
@@ -254,7 +255,7 @@ def step_upload_data(args) -> None:
 
 def step_train_player_bot(args, loop_num: int) -> None:
     """Stage 4: Train IQL player bot on collected transitions."""
-    n_transitions = args._game_data_store.transition_count()
+    n_transitions = args._replay_db.transition_count()
     min_transitions = 500  # minimum to begin training
 
     if n_transitions < min_transitions:
@@ -266,9 +267,7 @@ def step_train_player_bot(args, loop_num: int) -> None:
         print()
         return
 
-    replay_db_path = args._replay_db.db_path if hasattr(args._replay_db, 'db_path') else str(
-        ROOT / "data" / "replay.db"
-    )
+    replay_db_path = args._replay_db.db_path
     out_dir = str(CHECKPOINT_DIR / "iql" / f"loop{loop_num}")
 
     cmd = [
@@ -296,7 +295,7 @@ def step_train_player_bot(args, loop_num: int) -> None:
 
 def step_train_deck_bot(args, loop_num: int) -> None:
     """Stage 5: Train deck evaluator on game outcomes."""
-    n_games = args._game_data_store.game_count()
+    n_games = args._replay_db.game_count()
     min_games = 10  # minimum to begin training
 
     if n_games < min_games:
@@ -308,9 +307,7 @@ def step_train_deck_bot(args, loop_num: int) -> None:
         print()
         return
 
-    game_data_db = args._game_data_store.db_path if hasattr(
-        args._game_data_store, 'db_path'
-    ) else str(ROOT / "data" / "game_data.db")
+    game_data_db = args._replay_db.db_path
 
     cmd = [
         PYTHON, str(ROOT / "scripts" / "train_deck_evaluator.py"),
@@ -570,17 +567,12 @@ def main():
     CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
     (ROOT / "data").mkdir(parents=True, exist_ok=True)
 
-    # Create fresh databases for this run
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
+    # Use fixed database paths so data accumulates across runs
     from rl_agents.game_data import GameDataStore
     from data_collection.replay_db import ReplayDB
 
-    game_data_store = GameDataStore.create_fresh(
-        base_dir=str(ROOT / "data"),
-        prefix="local_pipeline",
-    )
-    replay_db_path = ROOT / "data" / f"replay_{timestamp}.db"
+    game_data_store = GameDataStore(db_path=str(ROOT / "data" / "game_data.db"))
+    replay_db_path = ROOT / "data" / "replay.db"
     replay_db = ReplayDB(str(replay_db_path))
 
     # Attach DB objects to args for easy passing
@@ -739,8 +731,8 @@ def main():
     print("#  Pipeline Complete")
     print("#" * 70)
 
-    n_games = game_data_store.game_count()
-    n_transitions = game_data_store.transition_count()
+    n_games = replay_db.game_count()
+    n_transitions = replay_db.transition_count()
 
     print_summary("Final state", {
         "Loops completed": loop_num,

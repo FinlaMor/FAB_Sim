@@ -377,6 +377,14 @@ class CardDB:
         Handles mismatches from slugify differences (e.g. unicode normalization)."""
         if slug in self._by_slug:
             return slug
+        # Meld card fix: single underscore may have lost the "__" meld separator.
+        # Try re-inserting "__" at every single-underscore boundary.
+        if "_" in slug and "__" not in slug:
+            parts = slug.split("_")
+            for i in range(1, len(parts)):
+                candidate = "_".join(parts[:i]) + "__" + "_".join(parts[i:])
+                if candidate in self._by_slug:
+                    return candidate
         # Try by_name fallback: strip color suffix and look up by name
         color_suffix = None
         base = slug
@@ -392,7 +400,7 @@ class CardDB:
             self._name_normalized = {}
             for name_key, slugs in self._by_name.items():
                 norm = unicodedata.normalize("NFKD", name_key).encode("ascii", "ignore").decode("ascii")
-                norm = norm.lower().replace("-", " ").replace(",", "").replace("'", "")
+                norm = norm.lower().replace("-", " ").replace(",", "").replace("'", "").replace("/", "")
                 self._name_normalized[norm] = slugs
         name_key = base.replace("_", " ")
         candidates = self._name_normalized.get(name_key, [])

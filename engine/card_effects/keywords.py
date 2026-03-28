@@ -1111,24 +1111,42 @@ WEAPON_TOKENS = {
 }
 
 
-def create_token_card(token_slug: str, owner_id: int) -> Card:
-    """Create a Card instance from a token definition."""
+def create_token_card(token_slug: str, owner_id: int, **kwargs) -> Card:
+    """Create a Card instance from a token definition.
+
+    Looks up WEAPON_TOKENS first for detailed definitions, then falls back
+    to the slug_index CardDB, and finally creates a minimal token from the
+    slug name alone.
+    """
     defn = WEAPON_TOKENS.get(token_slug)
-    if defn is None:
-        raise ValueError(f"Unknown token: {token_slug}")
-    card = Card(
-        slug=defn["slug"],
-        name=defn["name"],
-        types=list(defn["types"]),
-        keywords=list(defn["keywords"]),
-        base_pitch=defn["pitch"],
-        base_cost=defn["cost"],
-        base_power=defn["power"],
-        base_defense=defn["defense"],
-        base_functional_text=defn["functional_text"],
-    )
-    card.owner = owner_id
-    card.controller = owner_id
+    if defn is not None:
+        card = Card(
+            slug=defn["slug"],
+            name=defn["name"],
+            types=list(defn["types"]),
+            keywords=list(defn["keywords"]),
+            base_pitch=defn["pitch"],
+            base_cost=defn["cost"],
+            base_power=defn["power"],
+            base_defense=defn["defense"],
+            base_functional_text=defn["functional_text"],
+        )
+    else:
+        # Fall back to slug_index via CardDB
+        from engine.card import CardDB
+        from config import SLUG_INDEX_PATH
+        db = CardDB(str(SLUG_INDEX_PATH))
+        card = db.get(token_slug)
+        if card is None:
+            # Last resort: create a minimal token from the slug
+            card = Card(
+                slug=token_slug,
+                name=token_slug.replace("_", " ").title(),
+                types=["Token"],
+            )
+
+    card.owner = kwargs.get("controller", owner_id)
+    card.controller = kwargs.get("controller", owner_id)
     card.is_public = True
     return card
 

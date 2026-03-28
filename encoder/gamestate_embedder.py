@@ -567,12 +567,12 @@ class GlobalStateEmbedder(nn.Module):
             combat_features = torch.tensor([
                 float(state.combat.attacker_id) / 2.0,
                 float(attack_target_id) / 2.0,  # NEW: attack target
-                state.combat.link_id / 10.0,
-                state.combat.attack_power / self.norm_attack_power,
-                state.combat.base_attack_power / self.norm_attack_power,
+                (state.combat.link_id or 0) / 10.0,
+                (state.combat.attack_power or 0) / self.norm_attack_power,
+                (state.combat.base_attack_power or 0) / self.norm_attack_power,
                 float(state.combat.from_weapon),
-                state.combat.total_defense / self.norm_defense,
-                state.combat.defending_equipment_defense / self.norm_defense,
+                (state.combat.total_defense or 0) / self.norm_defense,
+                (state.combat.defending_equipment_defense or 0) / self.norm_defense,
                 float(defending_equip_count) / 5.0,  # NEW: equipment count
                 float(state.combat.defender_used_hand_card),
                 float(state.combat.no_defense_reactions),

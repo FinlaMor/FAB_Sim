@@ -738,6 +738,128 @@ def _mutate(
 
 
 # ---------------------------------------------------------------------------
+# Pool integrity — ensure weapon + all 4 armor slots are filled
+# ---------------------------------------------------------------------------
+
+_ARMOR_SLOTS = ("head", "chest", "arms", "legs")
+
+
+def _ensure_pool_integrity(
+    pool: CardPool,
+    card_db: HeroCardDB,
+    rng: random.Random,
+) -> CardPool:
+    """Repair a pool so it has at least one weapon and one equipment per armor slot.
+
+    Looks up each equipment slug's subtype from the hero's candidate list to
+    determine which armor slots are already covered, then fills gaps from the
+    card_db candidates.  Falls back to the slug_index for slots with no DB
+    candidates.  Trims deck_slugs to maintain POOL_SIZE.
+    """
+    hero = pool.hero_slug
+    equip_cards = card_db.hero_equipment.get(hero, [])
+    weapon_cards = card_db.hero_weapons.get(hero, [])
+    slug_idx = card_db._slug_idx
+
+    equipment = list(pool.equipment_slugs)
+    weapons = list(pool.weapon_slugs)
+    deck_slugs = list(pool.deck_slugs)
+
+    # Build slug → subtype lookup from the hero's equipment candidates
+    slot_by_slug: dict[str, str] = {}
+    by_slot: dict[str, list[dict]] = {}
+    for c in equip_cards:
+        slot_by_slug[c["slug"]] = c["equipment_subtype"]
+        by_slot.setdefault(c["equipment_subtype"], []).append(c)
+
+    # Determine which armor slots are already covered
+    filled_slots: set[str] = set()
+    for slug in equipment:
+        slot = slot_by_slug.get(slug, "")
+        if not slot:
+            # Check slug_index for equipment not in the DB
+            entry = slug_idx.get(slug) or slug_idx.get(slug.replace("-", "_"))
+            if entry:
+                for t in entry.get("types", []):
+                    if t.lower() in _ARMOR_SLOTS:
+                        slot = t.lower()
+                        break
+        if slot in _ARMOR_SLOTS:
+            filled_slots.add(slot)
+
+    # Compute hero class types for legality checks
+    hero_entry = slug_idx.get(hero) or slug_idx.get(hero.replace("-", "_"))
+    hero_classes: frozenset = frozenset(
+        t.lower() for t in (hero_entry or {}).get("types", [])
+        if t.lower() not in DESCRIPTOR
+    )
+
+    # Fill missing armor slots from DB candidates first, then slug_index fallback
+    for slot in _ARMOR_SLOTS:
+        if slot in filled_slots:
+            continue
+        candidates = by_slot.get(slot, [])
+        if candidates:
+            pick = rng.choice(candidates)
+            equipment.append(pick["slug"])
+            filled_slots.add(slot)
+        else:
+            # Fallback: scan slug_index for any class-legal equipment in this slot.
+            # Exclude cards that are also Action/Instant/Event (Evo cards, events).
+            _NON_EQUIP = {"action", "instant", "event", "token", "hero", "ally", "attack"}
+            slot_type = slot.capitalize()  # "head" → "Head"
+            fallbacks = []
+            for s, entry in slug_idx.items():
+                types = entry.get("types", [])
+                types_lower = set(t.lower() for t in types)
+                if "equipment" not in types_lower or slot.lower() not in types_lower:
+                    continue
+                if types_lower & _NON_EQUIP:
+                    continue
+                card_classes = frozenset(
+                    t.lower() for t in types if t.lower() not in DESCRIPTOR
+                )
+                if not card_classes or card_classes <= hero_classes:
+                    fallbacks.append(s)
+            if fallbacks:
+                equipment.append(rng.choice(fallbacks))
+                filled_slots.add(slot)
+
+    # Ensure at least one weapon (from DB, then slug_index fallback)
+    if not weapons and weapon_cards:
+        pick = max(weapon_cards, key=lambda c: c.get("frequency", 0))
+        weapons = [pick["slug"]]
+    elif not weapons:
+        # Fallback: find any class-legal weapon from slug_index
+        # Exclude tokens and non-standard weapon entries
+        _NON_WEAPON = {"token", "event", "hero", "ally"}
+        weapon_fallbacks = []
+        for s, entry in slug_idx.items():
+            types = entry.get("types", [])
+            types_lower = set(t.lower() for t in types)
+            if "weapon" not in types_lower:
+                continue
+            if types_lower & _NON_WEAPON:
+                continue
+            card_classes = frozenset(
+                t.lower() for t in types if t.lower() not in DESCRIPTOR
+            )
+            if not card_classes or card_classes <= hero_classes:
+                weapon_fallbacks.append(s)
+        if weapon_fallbacks:
+            weapons = [rng.choice(weapon_fallbacks)]
+
+    # Trim deck to maintain pool size
+    target_deck = POOL_SIZE - len(equipment) - len(weapons)
+    if target_deck < 0:
+        target_deck = 0
+    deck_slugs = deck_slugs[:target_deck]
+
+    return CardPool(hero, equipment, weapons, deck_slugs,
+                    flex_depth=pool.flex_depth, fitness=pool.fitness)
+
+
+# ---------------------------------------------------------------------------
 # Matchup deck selection (Stage 2) — archetype-aware
 # ---------------------------------------------------------------------------
 
@@ -954,14 +1076,14 @@ def evolve_pool(
         fd = rng.randint(0, 5)
         pool = _heuristic_pool(hero_slug, card_db, rng,
                                noise=0.1 + i * 0.01, flex_depth=fd)
-        population.append(pool)
+        population.append(_ensure_pool_integrity(pool, card_db, rng))
 
     for i in range(third):
         # Midrange
         fd = rng.randint(6, 14)
         pool = _heuristic_pool(hero_slug, card_db, rng,
                                noise=0.1 + i * 0.01, flex_depth=fd)
-        population.append(pool)
+        population.append(_ensure_pool_integrity(pool, card_db, rng))
 
     for i in range(pop_size - 2 * third):
         # Wide / control + random
@@ -971,7 +1093,7 @@ def evolve_pool(
                                    noise=0.15 + i * 0.01, flex_depth=fd)
         else:
             pool = _random_pool(hero_slug, card_db, rng)
-        population.append(pool)
+        population.append(_ensure_pool_integrity(pool, card_db, rng))
 
     n_elite = max(2, int(pop_size * elite_frac))
 
@@ -1038,7 +1160,7 @@ def evolve_pool(
             child = _crossover(p1, p2, rng)
             if rng.random() < 0.8:
                 child = _mutate(child, card_db, rng, n_swaps=rng.randint(2, 8))
-            next_gen.append(child)
+            next_gen.append(_ensure_pool_integrity(child, card_db, rng))
 
         population = next_gen
 
@@ -1083,19 +1205,22 @@ def evolve_pool_diverse(
 
     for i in range(third):
         fd = rng.randint(0, 5)
-        population.append(_heuristic_pool(hero_slug, card_db, rng,
-                                          noise=0.1 + i * 0.01, flex_depth=fd))
+        pool = _heuristic_pool(hero_slug, card_db, rng,
+                               noise=0.1 + i * 0.01, flex_depth=fd)
+        population.append(_ensure_pool_integrity(pool, card_db, rng))
     for i in range(third):
         fd = rng.randint(6, 14)
-        population.append(_heuristic_pool(hero_slug, card_db, rng,
-                                          noise=0.1 + i * 0.01, flex_depth=fd))
+        pool = _heuristic_pool(hero_slug, card_db, rng,
+                               noise=0.1 + i * 0.01, flex_depth=fd)
+        population.append(_ensure_pool_integrity(pool, card_db, rng))
     for i in range(pop_size - 2 * third):
         if i < (pop_size - 2 * third) // 2:
             fd = rng.randint(15, MAX_FLEX_DEPTH)
-            population.append(_heuristic_pool(hero_slug, card_db, rng,
-                                              noise=0.15 + i * 0.01, flex_depth=fd))
+            pool = _heuristic_pool(hero_slug, card_db, rng,
+                                   noise=0.15 + i * 0.01, flex_depth=fd)
         else:
-            population.append(_random_pool(hero_slug, card_db, rng))
+            pool = _random_pool(hero_slug, card_db, rng)
+        population.append(_ensure_pool_integrity(pool, card_db, rng))
 
     n_elite = max(2, int(pop_size * elite_frac))
     resample_every = max(1, n_generations // 5)
@@ -1147,7 +1272,7 @@ def evolve_pool_diverse(
             child = _crossover(p1, p2, rng)
             if rng.random() < 0.8:
                 child = _mutate(child, card_db, rng, n_swaps=rng.randint(2, 8))
-            next_gen.append(child)
+            next_gen.append(_ensure_pool_integrity(child, card_db, rng))
         population = next_gen
 
     population.sort(key=lambda p: p.fitness, reverse=True)
@@ -1512,7 +1637,8 @@ def _pool_to_deck_text(pool: CardPool, hero_name: str, label: str = "") -> str:
     lines.append("")
     lines.append("Arena cards")
     def _slug_to_name(slug: str) -> str:
-        return slug.replace("-", " ").replace("_", " ").title()
+        # Preserve meld separator: double underscore "__" → " // "
+        return slug.replace("__", " // ").replace("-", " ").replace("_", " ").title()
 
     if len(pool.weapon_slugs) > 1 and pool.weapon_slugs[0] == pool.weapon_slugs[1]:
         lines.append(f"2x {_slug_to_name(pool.weapon_slugs[0])}")
@@ -1552,10 +1678,11 @@ def _pool_to_deck_text(pool: CardPool, hero_name: str, label: str = "") -> str:
     for slug, count in sorted(slug_counts.items(), key=sort_key):
         parts = slug.rsplit("_", 1)
         if len(parts) == 2 and parts[1] in ("red", "yellow", "blue"):
-            base_name = parts[0].replace("_", " ").title()
+            # Preserve meld separator: "__" → " // " before general "_" → " "
+            base_name = parts[0].replace("__", " // ").replace("_", " ").title()
             lines.append(f"{count}x {base_name} ({parts[1]})")
         else: # Non-colored card ie "gorganian_tome" or "burn_bare"
-            name = slug.replace("_", " ").title()
+            name = slug.replace("__", " // ").replace("_", " ").title()
             lines.append(f"{count}x {name}")
 
     lines.append("")

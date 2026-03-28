@@ -122,6 +122,14 @@ class ReplayDB:
         )
         self.conn.commit()
 
+    def game_count(self) -> int:
+        """Return the number of games in the database."""
+        return self.conn.execute("SELECT COUNT(*) FROM games").fetchone()[0]
+
+    def transition_count(self) -> int:
+        """Return the number of transitions in the database."""
+        return self.conn.execute("SELECT COUNT(*) FROM transitions").fetchone()[0]
+
     def flush(self) -> None:
         """Commit pending writes."""
         if self._conn is not None:
