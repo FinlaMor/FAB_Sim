@@ -17,7 +17,7 @@ Archetype discovery via flex_depth:
     tight or wide pools win for each hero automatically.
 
 Tournament simulation:
-    - 200-300 players, hero distribution matches fablazing meta percentages
+    - 200-300 players, uniform hero distribution (or custom weights)
     - Each player builds an 80-card pool via evolutionary search
     - Swiss pairings, matchup-specific deck selection before each round
 
@@ -43,7 +43,6 @@ from rl_agents.deck_evaluator import (
     CardVocab,
     build_evaluator,
     load_checkpoint,
-    load_meta_weights,
 )
 
 SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
@@ -1738,7 +1737,8 @@ def main():
     search_p = sub.add_parser("search", help="Search for best pool(s) for a single hero")
     search_p.add_argument("--hero", required=True, help="Hero slug")
     search_p.add_argument("--checkpoint", required=True, type=Path)
-    search_p.add_argument("--meta-db", type=Path, default=Path("data/fablazing_meta.db"))
+    search_p.add_argument("--meta-db", type=Path, default=None,
+                          help="(deprecated) ignored, card data comes from slug_index.json")
     search_p.add_argument("--pop-size", type=int, default=100)
     search_p.add_argument("--generations", type=int, default=50)
     search_p.add_argument("--seed", type=int, default=random.randint(0, 1_000_000))
@@ -1746,7 +1746,8 @@ def main():
     # Export evolved pools as deck files
     export_p = sub.add_parser("export", help="Evolve pools for all heroes and export as deck files")
     export_p.add_argument("--checkpoint", required=True, type=Path)
-    export_p.add_argument("--meta-db", type=Path, default=Path("data/fablazing_meta.db"))
+    export_p.add_argument("--meta-db", type=Path, default=None,
+                          help="(deprecated) ignored, card data comes from slug_index.json")
     export_p.add_argument("--output-dir", type=Path, default=Path("decks/generated"))
     export_p.add_argument("--pop-size", type=int, default=50)
     export_p.add_argument("--generations", type=int, default=20)
@@ -1755,7 +1756,8 @@ def main():
     # Tournament simulation
     tourney_p = sub.add_parser("tournament", help="Simulate a Swiss tournament")
     tourney_p.add_argument("--checkpoint", required=True, type=Path)
-    tourney_p.add_argument("--meta-db", type=Path, default=Path("data/fablazing_meta.db"))
+    tourney_p.add_argument("--meta-db", type=Path, default=None,
+                          help="(deprecated) ignored, card data comes from slug_index.json")
     tourney_p.add_argument("--players", type=int, default=256)
     tourney_p.add_argument("--rounds", type=int, default=5)
     tourney_p.add_argument("--pool-pop", type=int, default=50)
@@ -1771,6 +1773,17 @@ def main():
         parser.print_help()
         return
 
+    # Deprecation warning for --meta-db
+    if getattr(args, "meta_db", None) is not None:
+        import warnings
+        warnings.warn(
+            "--meta-db is deprecated and ignored; card data is now loaded "
+            "from slug_index.json and meta weights are derived from the "
+            "checkpoint vocab.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
     # Load model
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ckpt = load_checkpoint(args.checkpoint)
@@ -1780,8 +1793,14 @@ def main():
     model = model.to(device)
     model.eval()
 
-    card_db = HeroCardDB(args.meta_db)
-    meta_weights = load_meta_weights(args.meta_db)
+    card_db = HeroCardDB.from_slug_index()
+
+    # Build uniform meta weights from checkpoint vocab hero slugs
+    hero_slugs = [
+        slug for slug in vocab._hero2idx
+        if slug not in ("<PAD>", "<UNK>")
+    ]
+    meta_weights = {h: 1.0 for h in hero_slugs}
 
     if args.command == "search":
         print(f"Searching for best pool(s): {args.hero}")
