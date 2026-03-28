@@ -202,7 +202,7 @@ python scripts/train_deck_evaluator.py \
     --epochs 50
 ```
 
-> **Note:** Fine-tuning uses only game outcome data from `talishar_games.db` — fablazing meta data is not referenced during this phase.
+> **Note:** Fine-tuning uses only game outcome data from `talishar_games.db` — no external meta data is referenced during this phase.
 
 Fine-tuning uses 0.1x the base learning rate. Each game produces two training samples: (hero_1, deck_1, hero_2, won) and (hero_2, deck_2, hero_1, won).
 
@@ -304,7 +304,7 @@ Hero archetypes (top 20):
 ```
 
 **Key metrics to watch:**
-- Is the hero distribution diverse across archetypes? (Heroes are sampled uniformly, not weighted by fablazing meta.)
+- Is the hero distribution diverse across archetypes? (Heroes are sampled uniformly.)
 - Are diverse archetypes emerging, or does one flex_depth dominate?
 - Do fine-tuned models produce different standings than bootstrap-only models?
 
@@ -312,7 +312,7 @@ Hero archetypes (top 20):
 
 ## Phase 6: Iteration Loop
 
-The system improves through a cycle of play, train, evolve, benchmark. After the initial bootstrap (which uses fablazing data), the iteration loop is entirely self-improving — it relies only on game outcomes:
+The system improves through a cycle of play, train, evolve, benchmark. After the initial bootstrap, the iteration loop is entirely self-improving — it relies only on game outcomes:
 
 ```
 1. Train evaluator (bootstrap)
