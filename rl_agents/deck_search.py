@@ -601,9 +601,17 @@ def select_weapons(
     weapon_slugs = [chosen["slug"]]
 
     secondary: list[str] = []
-    if wtype == "1h" and offhand_candidates:
-        oh = rng.choice(offhand_candidates)
-        secondary = [oh["slug"]]
+    if wtype == "1h":
+        if offhand_candidates:
+            oh = rng.choice(offhand_candidates)
+            secondary = [oh["slug"]]
+        else:
+            # Dual-wield: fill the second weapon zone.
+            # FAB rules require both slots for 1H heroes (except Kayo/Gravy Bones,
+            # which are excluded by the caller before select_weapons is called).
+            other_1h = [w for w in weapons_1h if w["slug"] != chosen["slug"]]
+            second = rng.choice(other_1h) if other_1h else chosen
+            weapon_slugs.append(second["slug"])
     elif wtype == "bow" and quiver_candidates:
         q = rng.choice(quiver_candidates)
         secondary = [q["slug"]]

@@ -731,8 +731,9 @@ def _pick_equipment(
                 return w
             # Invalid slug but hero has a second weapon entry → use same weapon again
             return {**main_weapon}
-        # If hero has exactly one 1H weapon entry, no dual-wield signal — return None
-        return None
+        # No second distinct weapon entry — default to dual-wield with the same weapon.
+        # FAB rules require both weapon zones to be filled for 1H heroes.
+        return {**main_weapon}
 
     if chosen_weapon:
         _add(chosen_weapon)

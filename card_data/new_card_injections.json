@@ -79,13 +79,19 @@
     "hero_name": "Hala, Bladesaint of the Vow",
     "equipment": [
       {
-        "card_slug": "dawnblade",
+        "card_slug": "zenith_blade",
         "equipment_subtype": "weapon-2h",
-        "frequency": 0.9,
+        "frequency": 0.95,
         "avg_copies": 1.0
       },
       {
-        "card_slug": "golden_galea",
+        "card_slug": "dawnblade",
+        "equipment_subtype": "weapon-2h",
+        "frequency": 0.5,
+        "avg_copies": 1.0
+      },
+      {
+        "card_slug": "arcanite_skullcap",
         "equipment_subtype": "head",
         "frequency": 0.85,
         "avg_copies": 1.0
@@ -111,6 +117,11 @@
     ],
     "deck_cards": [
       {
+        "card_slug": "edict_of_steel_red",
+        "frequency": 0.99,
+        "avg_copies": 3.0
+      },
+      {
         "card_slug": "spoils_of_war_red",
         "frequency": 0.99,
         "avg_copies": 3.0
@@ -128,16 +139,6 @@
       {
         "card_slug": "glint_the_quicksilver_blue",
         "frequency": 0.99,
-        "avg_copies": 3.0
-      },
-      {
-        "card_slug": "blood_on_her_hands_yellow",
-        "frequency": 0.99,
-        "avg_copies": 3.0
-      },
-      {
-        "card_slug": "blood_follows_blade_yellow",
-        "frequency": 0.98,
         "avg_copies": 3.0
       },
       {
@@ -167,11 +168,6 @@
       },
       {
         "card_slug": "hit_and_run_blue",
-        "frequency": 0.97,
-        "avg_copies": 3.0
-      },
-      {
-        "card_slug": "up_the_ante_blue",
         "frequency": 0.97,
         "avg_copies": 3.0
       },
@@ -281,6 +277,21 @@
         "card_slug": "astral_strike_red",
         "frequency": 0.85,
         "avg_copies": 1.0
+      },
+      {
+        "card_slug": "nebula_duality_red",
+        "frequency": 0.9,
+        "avg_copies": 3.0
+      },
+      {
+        "card_slug": "nebula_duality_yellow",
+        "frequency": 0.9,
+        "avg_copies": 3.0
+      },
+      {
+        "card_slug": "nebula_duality_blue",
+        "frequency": 0.85,
+        "avg_copies": 3.0
       }
     ]
   },
@@ -373,6 +384,26 @@
         "card_slug": "astral_strike_red",
         "frequency": 0.85,
         "avg_copies": 1.0
+      },
+      {
+        "card_slug": "stardust_spike",
+        "frequency": 0.85,
+        "avg_copies": 3.0
+      },
+      {
+        "card_slug": "cosmic_duality_red",
+        "frequency": 0.9,
+        "avg_copies": 3.0
+      },
+      {
+        "card_slug": "cosmic_duality_yellow",
+        "frequency": 0.9,
+        "avg_copies": 3.0
+      },
+      {
+        "card_slug": "cosmic_duality_blue",
+        "frequency": 0.85,
+        "avg_copies": 3.0
       }
     ]
   },
@@ -465,6 +496,21 @@
         "card_slug": "astral_strike_red",
         "frequency": 0.85,
         "avg_copies": 1.0
+      },
+      {
+        "card_slug": "voltbound_duality_red",
+        "frequency": 0.9,
+        "avg_copies": 3.0
+      },
+      {
+        "card_slug": "voltbound_duality_yellow",
+        "frequency": 0.9,
+        "avg_copies": 3.0
+      },
+      {
+        "card_slug": "voltbound_duality_blue",
+        "frequency": 0.85,
+        "avg_copies": 3.0
       }
     ]
   }
