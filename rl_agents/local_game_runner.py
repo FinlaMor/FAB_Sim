@@ -254,6 +254,7 @@ class EmbeddingRecorderAgent:
         state_embedder: GameStateEmbedder,
         step_counter: list[int] | None = None,
         max_decisions_per_game: int = 5000,
+        combat_log: dict[int, list[dict]] | None = None,
     ):
         self.base_agent = base_agent
         self.player_id = player_id
@@ -263,6 +264,8 @@ class EmbeddingRecorderAgent:
         self.state_embedder = state_embedder
         self.step_counter = step_counter if step_counter is not None else [0]
         self.max_decisions_per_game = max_decisions_per_game
+        self.combat_log = combat_log if combat_log is not None else {}
+        self._last_seen_chain_count: int = 0
 
     def __call__(self, state: GameState, options, context=None):
         if not isinstance(options, (list, tuple)) or not options:
@@ -282,6 +285,25 @@ class EmbeddingRecorderAgent:
         # Delegate to base agent for the actual decision
         choice = self.base_agent(state, options, context)
 
+        # Snapshot new chain_links into combat_log
+        chain_links = getattr(state, "chain_links", []) or []
+        if len(chain_links) > self._last_seen_chain_count:
+            turn = getattr(state, "turn_number", 0)
+            new_links = chain_links[self._last_seen_chain_count:]
+            entry_list = self.combat_log.setdefault(turn, [])
+            for link in new_links:
+                entry_list.append({
+                    "attacker_id": link.attacker_id,
+                    "attack_power": link.attack_power,
+                    "net_damage": link.net_damage,
+                    "hit": link.hit,
+                })
+            self._last_seen_chain_count = len(chain_links)
+
+        # Reset chain count tracking when turn advances (chain_links reset at turn start)
+        if chain_links == [] and self._last_seen_chain_count > 0:
+            self._last_seen_chain_count = 0
+
         # Record embeddings for Action decisions
         is_action_choice = isinstance(options[0], Action) and isinstance(choice, Action)
         if is_action_choice:
@@ -296,6 +318,15 @@ class EmbeddingRecorderAgent:
                 )
 
             phase = state.step.value if hasattr(state.step, "value") else str(state.step)
+            chain_links_snapshot = [
+                {
+                    "attacker_id": link.attacker_id,
+                    "attack_power": link.attack_power,
+                    "net_damage": link.net_damage,
+                    "hit": link.hit,
+                }
+                for link in chain_links
+            ]
             obs = {
                 "turn": state.turn_number,
                 "step": phase,
@@ -303,6 +334,9 @@ class EmbeddingRecorderAgent:
                 "priority_player": state.priority_player,
                 "state_debug": gamestate_to_features(state),
                 "state_embedding_norm": float(torch.norm(state_emb).item()),
+                "chain_links_snapshot": chain_links_snapshot,
+                "p1_hp": state.players[1].health,
+                "p2_hp": state.players[2].health,
             }
             action_json = _serialise_action(choice)
 
@@ -407,6 +441,7 @@ def run_games(
 
             # Sample and wrap agents
             step_counter = [0]
+            combat_log: dict[int, list[dict]] = {}
             base_p1 = opponent_pool.sample_agent(rng, player_id=1, seed=game_seed)
             base_p2 = opponent_pool.sample_agent(rng, player_id=2, seed=game_seed + 1)
 
@@ -418,6 +453,7 @@ def run_games(
                 action_embedder=action_embedder,
                 state_embedder=state_embedder,
                 step_counter=step_counter,
+                combat_log=combat_log,
             )
             p2_agent = EmbeddingRecorderAgent(
                 base_agent=base_p2,
@@ -427,6 +463,7 @@ def run_games(
                 action_embedder=action_embedder,
                 state_embedder=state_embedder,
                 step_counter=step_counter,
+                combat_log=combat_log,
             )
 
             req = GameRunRequest(
