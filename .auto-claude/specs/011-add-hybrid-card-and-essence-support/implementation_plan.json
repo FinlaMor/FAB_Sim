@@ -1,0 +1,302 @@
+{
+  "feature": "Add hybrid card and Essence affinity support to deck validation",
+  "workflow_type": "feature",
+  "workflow_rationale": "This task adds new game-rule logic (hybrid card either/or evaluation) and fixes an existing feature (Essence affinity parsing). Both changes expand the set of legally valid decks across validation, generation, and search pipelines.",
+  "phases": [
+    {
+      "id": "phase-1-core-logic",
+      "name": "Core Validation Logic",
+      "type": "implementation",
+      "description": "Fix Essence keyword parsing bug and add hybrid card detection/matching in the central validation module (fab_constants.py). This is the foundation that all callers depend on.",
+      "depends_on": [],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Fix _expand_hero_classes() to handle split Essence keywords. The current implementation only processes keywords containing 'essence of' directly, missing split entries like ['Essence of Earth', 'Ice', 'and Lightning']. Fix by joining all keywords into a single string before parsing, then using regex to find all 'essence of ...' segments.",
+          "service": "main",
+          "files_to_modify": [
+            "rl_agents/fab_constants.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/fab_constants.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from rl_agents.fab_constants import _expand_hero_classes; result = _expand_hero_classes(['Guardian'], ['Essence of Earth', 'Ice', 'and Lightning']); print('earth' in result and 'ice' in result and 'lightning' in result)\"",
+            "expected": "True"
+          },
+          "status": "completed",
+          "notes": "Join hero_keywords list into single string, then use re.finditer(r'essence of\\s+(.+?)(?=essence of|$)', joined_lower) to extract all element words. Keep _ESSENCE_ELEMENTS as the filter set."
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Add _parse_hybrid_supertypes() helper function that detects hybrid cards via the type_text field's ' / ' delimiter and returns two frozensets of non-descriptor class types (one per side). Returns None for non-hybrid cards.",
+          "service": "main",
+          "files_to_modify": [
+            "rl_agents/fab_constants.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/fab_constants.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from rl_agents.fab_constants import _parse_hybrid_supertypes; r = _parse_hybrid_supertypes('Brute / Warrior Action - Attack'); print(r == (frozenset({'brute'}), frozenset({'warrior'})))\"",
+            "expected": "True"
+          },
+          "status": "completed",
+          "notes": "Split type_text on ' / ' (maxsplit=1). Left side: all words are supertypes (non-DESCRIPTOR). Right side: take words until first DESCRIPTOR word is hit. Filter both sides through DESCRIPTOR to get class types only."
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Update validate_deck_legality() to use _parse_hybrid_supertypes() for hybrid card either/or matching. For hybrid cards, check if EITHER supertype set independently satisfies the hero's class requirements. Non-hybrid cards continue using the existing ALL-subset check.",
+          "service": "main",
+          "files_to_modify": [
+            "rl_agents/fab_constants.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/fab_constants.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from rl_agents.fab_constants import _parse_hybrid_supertypes, validate_deck_legality; print('import OK')\"",
+            "expected": "import OK"
+          },
+          "status": "completed",
+          "notes": "Code already implemented in prior subtasks. validate_deck_legality() already uses _parse_hybrid_supertypes() for hybrid either/or matching and _expand_hero_classes() for Essence support. Verification passes.",
+          "updated_at": "2026-03-28T00:55:46.732336+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-caller-propagation",
+      "name": "Caller Propagation",
+      "type": "implementation",
+      "description": "Update all callers of the validation logic to use the fixed Essence parsing and new hybrid card support. Ensure consistency between build_legal_pool(), validate_pool(), and validate_single_deck().",
+      "depends_on": [
+        "phase-1-core-logic"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Update build_legal_pool() in generate_heuristic_decks.py to: (1) Replace inline Essence parsing with a call to _expand_hero_classes() from fab_constants, (2) Add hybrid card detection using _parse_hybrid_supertypes() so hybrid cards that match on one side are included in the legal pool.",
+          "service": "main",
+          "files_to_modify": [
+            "scripts/generate_heuristic_decks.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/fab_constants.py",
+            "scripts/generate_heuristic_decks.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"from scripts.generate_heuristic_decks import build_legal_pool; print('import OK')\"",
+            "expected": "import OK"
+          },
+          "status": "completed",
+          "notes": "Import _expand_hero_classes and _parse_hybrid_supertypes from fab_constants. Replace lines 133-151 (inline Essence parsing) with a call to _expand_hero_classes(hero_entry.get('types', []), hero_entry.get('card_keywords', [])). In the card loop (lines 160-169), add hybrid detection: if _parse_hybrid_supertypes returns non-None, check either side. Keep _NON_PLAYABLE filter unchanged."
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Fix validate_pool() in deck_search.py to extract hero_keywords from slug_index (using 'card_keywords' field) and pass them to validate_deck_legality(). Currently hero_keywords is omitted, silently skipping Essence expansion during evolutionary deck search.",
+          "service": "main",
+          "files_to_modify": [
+            "rl_agents/deck_search.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/deck_validator.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import ast, inspect; from rl_agents.deck_search import HeroCardDB; src = inspect.getsource(HeroCardDB.validate_pool); print('hero_keywords' in src)\"",
+            "expected": "True"
+          },
+          "status": "completed",
+          "notes": "In validate_pool() (line 436-450): add hero_keywords = (hero_entry or {}).get('keywords', []) and pass hero_keywords=hero_keywords to validate_deck_legality() call at line 450."
+        },
+        {
+          "id": "subtask-2-3",
+          "description": "Fix keyword field name bug in deck_validator.py. Line 72 uses hero_entry.get('keywords', []) but slug_index uses 'card_keywords' as the field name. Change to hero_entry.get('card_keywords', []) to match the actual data format.",
+          "service": "main",
+          "files_to_modify": [
+            "rl_agents/deck_validator.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "scripts/generate_heuristic_decks.py",
+            "engine/card.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import ast, inspect; from rl_agents.deck_validator import validate_single_deck; src = inspect.getsource(validate_single_deck); print('card_keywords' in src)\"",
+            "expected": "True"
+          },
+          "status": "completed",
+          "notes": "Discovered during investigation: deck_validator.py line 72 uses hero_entry.get('keywords', []) but slug_index stores keywords under 'card_keywords'. This silently returns [] and skips Essence expansion. Fix: change to hero_entry.get('card_keywords', [])."
+        }
+      ]
+    },
+    {
+      "id": "phase-3-testing",
+      "name": "Unit and Integration Tests",
+      "type": "implementation",
+      "description": "Add comprehensive tests covering Essence parsing fixes, hybrid card legality, and cross-module consistency.",
+      "depends_on": [
+        "phase-2-caller-propagation"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Add unit tests to test_deck_validator.py covering: (1) Essence split keyword parsing (earth, ice, lightning from Bravo-style keywords), (2) Essence single keyword, (3) Essence combined keyword, (4) _expand_hero_classes with no keywords, (5) Hybrid card legal (one side matches), (6) Hybrid card legal (other side matches), (7) Hybrid card rejected (neither side matches), (8) Hybrid card with both sides matching, (9) Non-hybrid multi-class card still requires all types.",
+          "service": "main",
+          "files_to_modify": [
+            "tests/test_deck_validator.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "tests/test_deck_validator.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -m pytest tests/test_deck_validator.py -v --tb=short -x",
+            "expected": "All tests pass"
+          },
+          "status": "completed",
+          "notes": "Use direct calls to _expand_hero_classes() and validate_deck_legality() with mock data (slug_index dicts). No need for full deck files for unit tests. Use module-scoped fixtures. Test names should match spec QA Acceptance Criteria: test_hybrid_card_legal_one_side_matches, test_hybrid_card_rejected_neither_side, test_essence_split_keywords, test_essence_single_keyword, test_essence_combined_keyword, test_expand_hero_classes_no_keywords, test_non_hybrid_multiclass_still_requires_all, test_hybrid_card_both_sides_match, test_hybrid_card_legal_other_side_matches."
+        }
+      ]
+    },
+    {
+      "id": "phase-4-verification",
+      "name": "Full Suite Verification",
+      "type": "integration",
+      "description": "Run the complete test suite to verify no regressions, and perform end-to-end consistency checks.",
+      "depends_on": [
+        "phase-3-testing"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Run the full pytest suite to verify all existing tests still pass and all new tests pass. Check for import errors and consistency.",
+          "all_services": true,
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "python -m pytest tests/ -v --tb=short",
+            "expected": "All tests pass with 0 failures"
+          },
+          "status": "completed",
+          "notes": "All 18 new tests pass. 4772 pre-existing tests pass. 167 pre-existing failures (test_card_gamestates, test_loader_conditions, test_talishar_autopass) confirmed not caused by this task. 4 collection errors from missing modules (pre-existing)."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 4,
+    "total_subtasks": 8,
+    "services_involved": [
+      "main"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential — single service with tightly coupled changes"
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 011 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "phase-3-testing",
+    "test_types_required": [
+      "unit",
+      "integration"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All existing tests pass (python -m pytest tests/ -v)",
+      "Hybrid cards accepted when either supertype set matches hero",
+      "Hybrid cards rejected when neither supertype set matches",
+      "Split Essence keywords correctly parsed (Bravo-style: Earth, Ice, Lightning)",
+      "build_legal_pool() and validate_deck_legality() produce consistent results",
+      "deck_search.py passes hero_keywords to validation",
+      "deck_validator.py uses correct 'card_keywords' field name"
+    ],
+    "verification_steps": [
+      {
+        "name": "Unit Tests",
+        "command": "python -m pytest tests/test_deck_validator.py -v --tb=short",
+        "expected_outcome": "All tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Full Test Suite (Regression)",
+        "command": "python -m pytest tests/ -v --tb=short",
+        "expected_outcome": "All tests pass with 0 failures",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      }
+    ],
+    "reasoning": "Medium risk change to core deck validation logic. Multiple callsites with duplicated logic must all be updated consistently. Incorrect hybrid parsing could make illegal decks pass or reject legal decks. Unit tests cover all edge cases; full suite run ensures no regressions."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/test_deck_validator.py -v --tb=short"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/ -v --tb=short"
+      ],
+      "services_to_test": [
+        "main"
+      ]
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    }
+  },
+  "qa_signoff": null,
+  "status": "human_review",
+  "planStatus": "review",
+  "xstateState": "human_review",
+  "executionPhase": "complete",
+  "updated_at": "2026-03-28T01:06:22.779Z",
+  "lastEvent": {
+    "eventId": "bb24801b-eeba-4677-9b06-9023d3988a5d",
+    "sequence": 0,
+    "type": "PLANNING_COMPLETE",
+    "timestamp": "2026-03-28T00:51:04.234999+00:00"
+  },
+  "last_updated": "2026-03-28T00:55:46.732336+00:00",
+  "reviewReason": "completed"
+}
