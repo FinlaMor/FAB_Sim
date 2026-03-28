@@ -443,11 +443,15 @@ class HeroCardDB:
             pool.hero_slug.replace("-", "_")
         )
         hero_types: list[str] = (hero_entry or {}).get("types", [])
+        hero_keywords: list[str] = (hero_entry or {}).get("keywords", [])
 
         # Convert pool slugs to card dicts expected by validate_deck_legality
         deck_cards = [{"card_slug": s} for s in pool.deck_slugs]
         equipment = [{"card_slug": s} for s in pool.equipment_slugs + pool.weapon_slugs]
-        return validate_deck_legality(deck_cards, equipment, hero_types, self._slug_idx)
+        return validate_deck_legality(
+            deck_cards, equipment, hero_types, self._slug_idx,
+            hero_keywords=hero_keywords,
+        )
 
 
 # ---------------------------------------------------------------------------
