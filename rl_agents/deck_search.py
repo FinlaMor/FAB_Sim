@@ -415,6 +415,106 @@ class HeroCardDB:
 
         conn.close()
 
+    @classmethod
+    def from_slug_index(cls, path: str | Path | None = None) -> "HeroCardDB":
+        """Build a HeroCardDB from slug_index.json instead of fablazing DB.
+
+        Uses card type information to classify cards into equipment, weapons,
+        and deck cards. Hero-card legality is determined by class/talent subset
+        check (non-DESCRIPTOR types). All cards get default frequency/win_rate
+        since no meta data is available.
+        """
+        obj = cls.__new__(cls)
+        obj.hero_cards = {}
+        obj.hero_equipment = {}
+        obj.hero_weapons = {}
+
+        idx_path = Path(path) if path else SLUG_INDEX_PATH
+        if not idx_path.exists():
+            obj._slug_idx = {}
+            return obj
+
+        with open(idx_path, encoding="utf-8") as f:
+            raw = json.load(f)
+        slug_idx = raw.get("by_slug", {})
+        obj._slug_idx = slug_idx
+
+        _ARMOR_SLOTS = {"head", "chest", "arms", "legs"}
+        _WEAPON_KEYWORDS = {"weapon", "1h", "2h", "sword", "axe", "bow", "dagger",
+                            "hammer", "staff", "scepter", "scythe", "claw", "club",
+                            "flail", "gun", "pistol", "cannon", "polearm", "book",
+                            "orb", "fiddle", "lute", "brush", "wrench", "rock",
+                            "scroll", "item"}
+        _EQUIP_KEYWORD = "equipment"
+
+        def _default_entry(slug: str, card_type: str, equip_subtype: str = "") -> dict:
+            return {
+                "slug": slug,
+                "name": slug,
+                "type": card_type,
+                "equipment_subtype": equip_subtype,
+                "frequency": 0.5,
+                "avg_copies": 2.0,
+                "win_rate": 0.5,
+            }
+
+        def _non_descriptor_types(types: list[str]) -> frozenset:
+            return frozenset(t.lower() for t in types if t.lower() not in DESCRIPTOR)
+
+        # Identify heroes and build per-card classification
+        heroes: dict[str, dict] = {}  # hero_slug -> slug_idx entry
+        all_cards: list[tuple[str, dict]] = []  # (slug, entry) for non-hero cards
+
+        for slug, entry in slug_idx.items():
+            types_lower = [t.lower() for t in entry.get("types", [])]
+            if "hero" in types_lower:
+                heroes[slug] = entry
+            else:
+                all_cards.append((slug, entry))
+
+        # Classify each non-hero card
+        for hero_slug, hero_entry in heroes.items():
+            hero_classes = _non_descriptor_types(hero_entry.get("types", []))
+
+            equip: list[dict] = []
+            weap: list[dict] = []
+            deck: list[dict] = []
+
+            for card_slug, card_entry in all_cards:
+                card_types_lower = [t.lower() for t in card_entry.get("types", [])]
+                card_classes = _non_descriptor_types(card_entry.get("types", []))
+
+                # Legality: card's class/talent types must be subset of hero's
+                if card_classes and not card_classes <= hero_classes:
+                    continue
+
+                # Classify by type keywords
+                is_equipment = _EQUIP_KEYWORD in card_types_lower
+                armor_slot = ""
+                for s in _ARMOR_SLOTS:
+                    if s in card_types_lower:
+                        armor_slot = s
+                        break
+                is_weapon = any(t in _WEAPON_KEYWORDS for t in card_types_lower) and not armor_slot
+
+                if is_weapon:
+                    # Determine handedness
+                    if "2h" in card_types_lower:
+                        sub = "weapon-2h"
+                    else:
+                        sub = "weapon-1h"
+                    weap.append(_default_entry(card_slug, "equipment", sub))
+                elif is_equipment or armor_slot:
+                    equip.append(_default_entry(card_slug, "equipment", armor_slot))
+                else:
+                    deck.append(_default_entry(card_slug, "deck"))
+
+            obj.hero_cards[hero_slug] = deck
+            obj.hero_equipment[hero_slug] = equip
+            obj.hero_weapons[hero_slug] = weap
+
+        return obj
+
     def get_candidate_slugs(self, hero_slug: str) -> tuple[list[str], list[str], list[str]]:
         """Return (equipment_slugs, weapon_slugs, deck_card_slugs) available for this hero."""
         equip = [c["slug"] for c in self.hero_equipment.get(hero_slug, [])]
