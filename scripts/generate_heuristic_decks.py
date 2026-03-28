@@ -35,7 +35,7 @@ if "rl_agents" not in sys.modules:
     _pkg.__path__ = [str(_PROJECT_ROOT / "rl_agents")]  # type: ignore[assignment]
     _pkg.__package__ = "rl_agents"
     sys.modules["rl_agents"] = _pkg
-from rl_agents.fab_constants import DESCRIPTOR, validate_deck_legality, _expand_hero_classes, _parse_hybrid_supertypes  # noqa: E402
+from rl_agents.fab_constants import DESCRIPTOR, validate_deck_legality, _expand_hero_classes, _parse_hybrid_supertypes, load_banned_cards  # noqa: E402
 
 DB_PATH = Path("data/fablazing_meta.db")
 OUTPUT_DIR = Path("decks/generated")
@@ -973,6 +973,7 @@ def generate_deck(
     fmt: str = "cc",
     mutate: bool = False,
     rng: random.Random | None = None,
+    banned_slugs: frozenset[str] | None = None,
 ) -> dict:
     """Generate a heuristic deck for the given hero.
 
@@ -982,6 +983,8 @@ def generate_deck(
         fmt: Format string (default 'cc' for Classic Constructed).
         mutate: If True, apply random mutations to the deck.
         rng: Optional Random instance for reproducibility.
+        banned_slugs: Optional override for banned card slugs. If None,
+            load_banned_cards(fmt) is used automatically.
 
     Returns:
         A dict with keys:
@@ -996,6 +999,11 @@ def generate_deck(
     # This is the authoritative gate: only cards whose class types are a subset
     # of the hero's class+talent types (or Generic) can enter the deck.
     legal_pool = build_legal_pool(hero_slug)
+
+    # --- Step 1b: Remove banned cards from the legal pool ---
+    _banned = banned_slugs if banned_slugs is not None else load_banned_cards(fmt)
+    if _banned:
+        legal_pool = frozenset(legal_pool - _banned)
 
     conn = sqlite3.connect(str(db_path))
     try:
