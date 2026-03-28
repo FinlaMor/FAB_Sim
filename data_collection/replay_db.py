@@ -132,6 +132,42 @@ class ReplayDB:
             self._conn.close()
             self._conn = None
 
+    def update_reward(self, transition_id: int, reward: float) -> None:
+        """Update the reward for a single transition."""
+        self.conn.execute(
+            "UPDATE transitions SET reward = ? WHERE id = ?",
+            (reward, transition_id),
+        )
+        self.conn.commit()
+
+    def batch_update_rewards(self, updates: list[tuple[float, int]]) -> None:
+        """Batch-update rewards. Each tuple is (reward, transition_id)."""
+        BATCH = 5000
+        for i in range(0, len(updates), BATCH):
+            self.conn.executemany(
+                "UPDATE transitions SET reward = ? WHERE id = ?",
+                updates[i : i + BATCH],
+            )
+        self.conn.commit()
+
+    def batch_update_done(self, updates: list[tuple[int, int]]) -> None:
+        """Batch-update done flags. Each tuple is (done, transition_id)."""
+        BATCH = 5000
+        for i in range(0, len(updates), BATCH):
+            self.conn.executemany(
+                "UPDATE transitions SET done = ? WHERE id = ?",
+                updates[i : i + BATCH],
+            )
+        self.conn.commit()
+
+    def get_game_transitions(self, game_id: int) -> list[sqlite3.Row]:
+        """Return all transitions for a game, ordered by step_idx."""
+        return self.conn.execute(
+            """SELECT id, step_idx, player_id, phase, obs, reward, done
+               FROM transitions WHERE game_id = ? ORDER BY step_idx ASC""",
+            (game_id,),
+        ).fetchall()
+
     def load_embedding_dataset(self, game_id: int) -> list[dict[str, Any]]:
         """Load embedded transitions for a game.
 
