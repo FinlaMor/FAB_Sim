@@ -84,6 +84,28 @@ _ESSENCE_ELEMENTS: frozenset[str] = frozenset(
 )
 
 
+def _parse_hybrid_supertypes(
+    type_text: str,
+) -> tuple[frozenset[str], frozenset[str]] | None:
+    """Detect hybrid cards via ' / ' delimiter in type_text.
+
+    Returns a tuple of two frozensets of non-descriptor class types
+    (one per side), or None if the card is not a hybrid.
+    """
+    if " / " not in type_text:
+        return None
+    left, right = type_text.split(" / ", 1)
+    left_classes = frozenset(
+        w.lower() for w in left.strip().split()
+        if w.lower() not in DESCRIPTOR and w != "-"
+    )
+    right_classes = frozenset(
+        w.lower() for w in right.strip().split()
+        if w.lower() not in DESCRIPTOR and w != "-"
+    )
+    return (left_classes, right_classes)
+
+
 def _expand_hero_classes(
     hero_types: list[str],
     hero_keywords: list[str],
