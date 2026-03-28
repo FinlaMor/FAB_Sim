@@ -6,17 +6,17 @@ Phase 1: Bootstrap on fablazing play-rate data (synthetic win labels).
 Phase 2: Fine-tune on actual Talishar game outcomes (when available).
 
 Usage:
-    # Bootstrap training from fablazing data
+    # Bootstrap training from fablazing data (requires --meta-db, uses default if omitted)
     python scripts/train_deck_evaluator.py --bootstrap
 
-    # Fine-tune on game data
-    python scripts/train_deck_evaluator.py --games-db data/talishar_games.db
+    # Resume training from checkpoint (vocab loaded from checkpoint, no --meta-db needed)
+    python scripts/train_deck_evaluator.py --resume checkpoints/deck_eval_best.pt
+
+    # Fine-tune on game data (requires a checkpoint to resume from)
+    python scripts/train_deck_evaluator.py --resume checkpoints/deck_eval_best.pt --games-db data/talishar_games.db
 
     # Set Transformer instead of DeepSets
     python scripts/train_deck_evaluator.py --bootstrap --model set_transformer
-
-    # Resume from checkpoint
-    python scripts/train_deck_evaluator.py --bootstrap --resume checkpoints/deck_eval_best.pt
 """
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ import argparse
 import signal
 import sys
 import time
+import warnings
 from pathlib import Path
 
 import torch
@@ -247,8 +248,8 @@ def main():
                         help="Bootstrap train on fablazing play-rate data")
     parser.add_argument("--games-db", type=Path, default=None,
                         help="Path to talishar_games.db for fine-tuning")
-    parser.add_argument("--meta-db", type=Path, default=META_DB,
-                        help=f"Path to fablazing_meta.db (default: {META_DB})")
+    parser.add_argument("--meta-db", type=Path, default=None,
+                        help=f"Path to fablazing_meta.db (only used with --bootstrap, default: {META_DB})")
     parser.add_argument("--model", default="deepsets",
                         choices=["deepsets", "set_transformer"],
                         help="Model architecture (default: deepsets)")
@@ -269,8 +270,27 @@ def main():
                         help="Device (default: cuda if available)")
     args = parser.parse_args()
 
-    if not args.bootstrap and args.games_db is None:
-        parser.error("Specify --bootstrap or --games-db (or both)")
+    if not args.bootstrap and args.games_db is None and args.resume is None:
+        parser.error(
+            "Specify --bootstrap for initial training, --resume to continue from "
+            "a checkpoint, or --games-db for fine-tuning."
+        )
+
+    # Deprecation warning: --meta-db without --bootstrap
+    if args.meta_db is not None and not args.bootstrap:
+        warnings.warn(
+            "--meta-db is only used during --bootstrap and will be ignored. "
+            "Vocabulary is loaded from the checkpoint when resuming.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
+    # Default --meta-db for bootstrap
+    if args.bootstrap and args.meta_db is None:
+        args.meta_db = META_DB
+
+    if args.bootstrap and not args.meta_db.exists():
+        parser.error(f"--meta-db path does not exist: {args.meta_db}")
 
     # Setup
     signal.signal(signal.SIGINT, _handle_signal)
@@ -280,17 +300,13 @@ def main():
     torch.manual_seed(args.seed)
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
 
-    # Build vocabulary
-    print(f"Building vocabulary from {args.meta_db}...")
-    vocab = CardVocab.from_db(args.meta_db)
-    print(f"  Cards: {vocab.n_cards}  Heroes: {vocab.n_heroes}")
-
-    # Build or load model
+    # Build vocabulary — source depends on mode
     start_epoch = 0
     if args.resume and args.resume.exists():
         print(f"Resuming from {args.resume}...")
         ckpt = load_checkpoint(args.resume)
         vocab = CardVocab.from_state_dict(ckpt["vocab"])
+        print(f"  Vocab loaded from checkpoint — Cards: {vocab.n_cards}  Heroes: {vocab.n_heroes}")
         model = build_evaluator(
             vocab, ckpt.get("model_type", args.model),
             args.embed_dim, args.hidden_dim, args.n_heads, args.n_layers, args.dropout,
@@ -298,12 +314,22 @@ def main():
         model.load_state_dict(ckpt["model_state_dict"])
         start_epoch = ckpt.get("epoch", 0) + 1
         model_type = ckpt.get("model_type", args.model)
-    else:
+    elif args.bootstrap:
+        print(f"Building vocabulary from {args.meta_db}...")
+        vocab = CardVocab.from_db(args.meta_db)
+        print(f"  Cards: {vocab.n_cards}  Heroes: {vocab.n_heroes}")
         model = build_evaluator(
             vocab, args.model,
             args.embed_dim, args.hidden_dim, args.n_heads, args.n_layers, args.dropout,
         )
         model_type = args.model
+    else:
+        parser.error(
+            "Cannot build vocabulary without --bootstrap or --resume. "
+            "Run with --bootstrap first to create an initial checkpoint, "
+            "then use --resume to continue training."
+        )
+        return  # unreachable, but satisfies type checker
 
     model = model.to(device)
 
