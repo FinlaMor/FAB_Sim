@@ -207,6 +207,8 @@ Deck cards
 # (f) Empty directory → empty results
 # ---------------------------------------------------------------------------
 
+# (Keep existing test below, new tests follow after it)
+
 def test_validate_all_decks_empty_dir(card_db, slug_index, tmp_path):
     """Empty directory returns empty valid list."""
     empty_dir = tmp_path / "empty"
@@ -215,3 +217,154 @@ def test_validate_all_decks_empty_dir(card_db, slug_index, tmp_path):
     valid_paths, invalid_report = validate_all_decks(str(empty_dir), card_db, slug_index)
     assert valid_paths == []
     assert invalid_report == {}
+
+
+# ---------------------------------------------------------------------------
+# (g) Essence keyword parsing — _expand_hero_classes
+# ---------------------------------------------------------------------------
+
+from rl_agents.fab_constants import _expand_hero_classes, _parse_hybrid_supertypes, validate_deck_legality
+
+
+def test_essence_split_keywords():
+    """Essence of Earth, Ice, and Lightning parsed from Bravo-style keywords."""
+    hero_types = ["Guardian", "Hero"]
+    hero_keywords = ["Essence of Earth", "Ice", "and Lightning"]
+    result = _expand_hero_classes(hero_types, hero_keywords)
+    assert "earth" in result
+    assert "ice" in result
+    assert "lightning" in result
+    assert "guardian" in result
+
+
+def test_essence_single_keyword():
+    """Essence of a single element."""
+    hero_types = ["Warrior", "Hero"]
+    hero_keywords = ["Essence of Ice"]
+    result = _expand_hero_classes(hero_types, hero_keywords)
+    assert "ice" in result
+    assert "warrior" in result
+
+
+def test_essence_combined_keyword():
+    """Essence of Earth and Fire in a single string."""
+    hero_types = ["Brute", "Hero"]
+    hero_keywords = ["Essence of Earth and Fire"]
+    result = _expand_hero_classes(hero_types, hero_keywords)
+    assert "earth" in result
+    assert "fire" in result
+    assert "brute" in result
+
+
+def test_expand_hero_classes_no_keywords():
+    """No keywords → only hero types returned."""
+    hero_types = ["Ninja", "Hero", "Young"]
+    result = _expand_hero_classes(hero_types, [])
+    assert result == frozenset({"ninja"})
+
+
+# ---------------------------------------------------------------------------
+# (h) Hybrid card legality — validate_deck_legality
+# ---------------------------------------------------------------------------
+
+def _make_slug_index(entries: dict) -> dict:
+    """Helper to build a minimal slug_index for testing."""
+    return entries
+
+
+def test_hybrid_card_legal_left_matches():
+    """Hybrid card legal when left side matches hero classes."""
+    slug_index = {
+        "hybrid-card": {
+            "name": "Hybrid Card",
+            "types": [],
+            "type_text": "Warrior Action / Wizard Action",
+        },
+    }
+    violations = validate_deck_legality(
+        deck_cards=[{"card_slug": "hybrid-card"}],
+        equipment=[],
+        hero_types=["Warrior", "Hero"],
+        slug_index=slug_index,
+        hero_keywords=[],
+    )
+    assert violations == []
+
+
+def test_hybrid_card_legal_right_matches():
+    """Hybrid card legal when right side matches hero classes."""
+    slug_index = {
+        "hybrid-card": {
+            "name": "Hybrid Card",
+            "types": [],
+            "type_text": "Warrior Action / Wizard Action",
+        },
+    }
+    violations = validate_deck_legality(
+        deck_cards=[{"card_slug": "hybrid-card"}],
+        equipment=[],
+        hero_types=["Wizard", "Hero"],
+        slug_index=slug_index,
+        hero_keywords=[],
+    )
+    assert violations == []
+
+
+def test_hybrid_card_rejected_neither_matches():
+    """Hybrid card rejected when neither side matches hero classes."""
+    slug_index = {
+        "hybrid-card": {
+            "name": "Hybrid Card",
+            "types": [],
+            "type_text": "Warrior Action / Wizard Action",
+        },
+    }
+    violations = validate_deck_legality(
+        deck_cards=[{"card_slug": "hybrid-card"}],
+        equipment=[],
+        hero_types=["Ninja", "Hero"],
+        slug_index=slug_index,
+        hero_keywords=[],
+    )
+    assert len(violations) == 1
+    assert "hybrid" in violations[0].lower()
+
+
+def test_hybrid_card_both_sides_match():
+    """Hybrid card with both sides matching is legal."""
+    slug_index = {
+        "hybrid-card": {
+            "name": "Hybrid Card",
+            "types": [],
+            "type_text": "Warrior Action / Warrior Attack",
+        },
+    }
+    violations = validate_deck_legality(
+        deck_cards=[{"card_slug": "hybrid-card"}],
+        equipment=[],
+        hero_types=["Warrior", "Hero"],
+        slug_index=slug_index,
+        hero_keywords=[],
+    )
+    assert violations == []
+
+
+def test_non_hybrid_multi_class_requires_all_types():
+    """Non-hybrid multi-class card still requires all types to match."""
+    slug_index = {
+        "multi-class-card": {
+            "name": "Multi Class Card",
+            "types": ["Warrior", "Wizard"],
+            "type_text": "Warrior Wizard Action",
+        },
+    }
+    # Hero is only Warrior, not Wizard — should fail
+    violations = validate_deck_legality(
+        deck_cards=[{"card_slug": "multi-class-card"}],
+        equipment=[],
+        hero_types=["Warrior", "Hero"],
+        slug_index=slug_index,
+        hero_keywords=[],
+    )
+    assert len(violations) == 1
+    assert "multi-class-card" in violations[0] or "Multi Class Card" in violations[0]
