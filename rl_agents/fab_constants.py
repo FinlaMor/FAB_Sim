@@ -84,6 +84,28 @@ _ESSENCE_ELEMENTS: frozenset[str] = frozenset(
 )
 
 
+def _parse_hybrid_supertypes(
+    type_text: str,
+) -> tuple[frozenset[str], frozenset[str]] | None:
+    """Detect hybrid cards via ' / ' delimiter in type_text.
+
+    Returns a tuple of two frozensets of non-descriptor class types
+    (one per side), or None if the card is not a hybrid.
+    """
+    if " / " not in type_text:
+        return None
+    left, right = type_text.split(" / ", 1)
+    left_classes = frozenset(
+        w.lower() for w in left.strip().split()
+        if w.lower() not in DESCRIPTOR and w != "-"
+    )
+    right_classes = frozenset(
+        w.lower() for w in right.strip().split()
+        if w.lower() not in DESCRIPTOR and w != "-"
+    )
+    return (left_classes, right_classes)
+
+
 def _expand_hero_classes(
     hero_types: list[str],
     hero_keywords: list[str],
@@ -94,14 +116,14 @@ def _expand_hero_classes(
     """
     import re as _re
     classes: set[str] = {t.lower() for t in hero_types if t.lower() not in DESCRIPTOR}
-    for kw in hero_keywords:
-        kw_lower = kw.lower()
-        if "essence of" in kw_lower:
-            after = kw_lower.split("essence of", 1)[1]
-            for word in _re.split(r"[\s,]+", after):
-                word = word.strip()
-                if word and word not in ("and", "or", "the") and word in _ESSENCE_ELEMENTS:
-                    classes.add(word)
+    # Join all keywords so split entries like
+    # ['Essence of Earth', 'Ice', 'and Lightning'] are handled correctly.
+    combined = ", ".join(hero_keywords).lower()
+    for match in _re.finditer(r"essence of\s+(.+?)(?=essence of|$)", combined):
+        for word in _re.split(r"[\s,]+", match.group(1)):
+            word = word.strip()
+            if word and word not in ("and", "or", "the") and word in _ESSENCE_ELEMENTS:
+                classes.add(word)
     return frozenset(classes)
 
 
@@ -141,13 +163,29 @@ def validate_deck_legality(
         entry = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
         if not entry:
             continue  # not in slug_index → cannot verify, skip
-        card_classes: frozenset[str] = frozenset(
-            t.lower() for t in entry.get("types", []) if t.lower() not in DESCRIPTOR
-        )
-        if card_classes and not card_classes <= hero_classes:
-            name = entry.get("name", slug)
-            violations.append(
-                f"{name!r} ({slug}): card types {set(card_classes)!r} "
-                f"not subset of hero types {set(hero_classes)!r}"
+        # Check for hybrid cards via ' / ' delimiter in type_text
+        type_text = entry.get("type_text", "")
+        hybrid = _parse_hybrid_supertypes(type_text)
+        if hybrid is not None:
+            left_classes, right_classes = hybrid
+            # Hybrid card is legal if EITHER side satisfies hero classes
+            left_ok = not left_classes or left_classes <= hero_classes
+            right_ok = not right_classes or right_classes <= hero_classes
+            if not left_ok and not right_ok:
+                name = entry.get("name", slug)
+                violations.append(
+                    f"{name!r} ({slug}): hybrid card types "
+                    f"{set(left_classes)!r} | {set(right_classes)!r} "
+                    f"— neither side subset of hero types {set(hero_classes)!r}"
+                )
+        else:
+            card_classes: frozenset[str] = frozenset(
+                t.lower() for t in entry.get("types", []) if t.lower() not in DESCRIPTOR
             )
+            if card_classes and not card_classes <= hero_classes:
+                name = entry.get("name", slug)
+                violations.append(
+                    f"{name!r} ({slug}): card types {set(card_classes)!r} "
+                    f"not subset of hero types {set(hero_classes)!r}"
+                )
     return violations
