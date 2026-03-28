@@ -127,12 +127,44 @@ def _expand_hero_classes(
     return frozenset(classes)
 
 
+import re as _re
+
+_SPEC_RE = _re.compile(r'\*\*(.+?)\s+Specialization\*\*', _re.IGNORECASE)
+
+
+def _check_specialization(spec_req: str, hero_name: str, hero_is_young: bool) -> bool:
+    """Return True if *hero_name* satisfies *spec_req*.
+
+    Rules:
+    - ``"Legendary X"``  → hero name must contain all words of X (case-insensitive)
+                           AND the hero must not be Young.
+    - ``"X or Y"``       → hero name must satisfy either X or Y (recursive).
+    - ``"X"``            → all words of X must appear in hero name.
+    """
+    hero_lower = hero_name.lower()
+    # Handle "X or Y" alternatives
+    if _re.search(r'\bor\b', spec_req, _re.IGNORECASE):
+        parts = _re.split(r'\bor\b', spec_req, flags=_re.IGNORECASE)
+        return any(_check_specialization(p.strip(), hero_name, hero_is_young) for p in parts)
+    # Handle "Legendary X" prefix
+    legendary = False
+    req = spec_req.strip()
+    if req.lower().startswith("legendary "):
+        legendary = True
+        req = req[len("legendary "):].strip()
+    if legendary and hero_is_young:
+        return False
+    words = [w.lower() for w in req.split() if w]
+    return all(w in hero_lower for w in words)
+
+
 def validate_deck_legality(
     deck_cards: list[dict],
     equipment: list[dict],
     hero_types: list[str],
     slug_index: dict,
     hero_keywords: list[str] | None = None,
+    hero_name: str = "",
 ) -> list[str]:
     """Check every card in a deck for FAB class/talent legality.
 
@@ -140,14 +172,17 @@ def validate_deck_legality(
 
     FAB rule: a card is legal if it is Generic (no non-descriptor types)
     OR all of its non-descriptor types are a subset of the hero's
-    non-descriptor types.
+    non-descriptor types.  Specialization cards additionally require the
+    hero's name to match the specialization constraint.
 
     Args:
-        deck_cards: list of card dicts with at least a ``card_slug`` key.
-        equipment:  list of equipment/weapon dicts with at least a ``card_slug`` key.
-        hero_types: raw type list from slug_index for the hero card
-                    (e.g. ``['Warrior', 'Hero', 'Young']``).
-        slug_index: the ``by_slug`` dict from slug_index.json.
+        deck_cards:  list of card dicts with at least a ``card_slug`` key.
+        equipment:   list of equipment/weapon dicts with at least a ``card_slug`` key.
+        hero_types:  raw type list from slug_index for the hero card
+                     (e.g. ``['Warrior', 'Hero', 'Young']``).
+        slug_index:  the ``by_slug`` dict from slug_index.json.
+        hero_name:   display name of the hero (e.g. ``"Olympia, Prized Fighter"``).
+                     Required for specialization checks; ignored if empty.
 
     Returns:
         A list of human-readable violation strings.
@@ -155,6 +190,7 @@ def validate_deck_legality(
     hero_classes: frozenset[str] = _expand_hero_classes(
         hero_types, hero_keywords or []
     )
+    hero_is_young = "young" in {t.lower() for t in hero_types}
 
     violations: list[str] = []
     all_cards = list(deck_cards) + list(equipment)
@@ -163,6 +199,22 @@ def validate_deck_legality(
         entry = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
         if not entry:
             continue  # not in slug_index → cannot verify, skip
+
+        # ── specialization check ──────────────────────────────────────────
+        if hero_name:
+            ft = entry.get("functional_text") or ""
+            m = _SPEC_RE.search(ft)
+            if m:
+                spec_req = m.group(1)
+                if not _check_specialization(spec_req, hero_name, hero_is_young):
+                    name = entry.get("name", slug)
+                    violations.append(
+                        f"{name!r} ({slug}): requires {spec_req!r} Specialization"
+                        f" — hero is {hero_name!r}"
+                    )
+                continue  # specialization cards don't need further class checks
+
+        # ── class/talent check ────────────────────────────────────────────
         # Check for hybrid cards via ' / ' delimiter in type_text
         type_text = entry.get("type_text", "")
         hybrid = _parse_hybrid_supertypes(type_text)

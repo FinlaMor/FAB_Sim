@@ -98,6 +98,7 @@ def validate_single_deck(
                 hero_types=hero_types,
                 slug_index=slug_index,
                 hero_keywords=hero_keywords,
+                hero_name=hero_entry.get("name", ""),
             )
             violations.extend(legality_violations)
     else:
