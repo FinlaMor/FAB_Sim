@@ -1,6 +1,6 @@
 """Play an interactive game against a trained IQL agent.
 
-Launches a single game where a human player (via UserInputAgent) faces off
+Launches a single game where a human player (via HumanAgent) faces off
 against an IQL-trained policy, a heuristic bot, or a random agent.
 """
 
@@ -19,7 +19,8 @@ from rl_agents.embedder_bundle import load_embedder_bundle
 from rl_agents.evaluate_iql_vs_random import IQLPolicyAgent
 from rl_agents.game_backends import GameRunRequest, build_game_backend
 from rl_agents.heuristic_bot import HeuristicBot
-from rl_agents.random_agent import RandomAgent, UserInputAgent
+from rl_agents.human_agent import HumanAgent
+from rl_agents.random_agent import RandomAgent
 from rl_agents.utils.device import default_device as _default_device
 from rl_agents.utils.seed import resolve_base_seed as _resolve_base_seed
 
@@ -160,7 +161,7 @@ def main() -> int:
     else:
         opponent_agent = RandomAgent(seed=base_seed + 1)
 
-    human_agent = UserInputAgent()
+    human_agent = HumanAgent(player_id=human_seat)
     card_db = CardDB(SLUG_INDEX_PATH)
 
     if human_seat == 1:
