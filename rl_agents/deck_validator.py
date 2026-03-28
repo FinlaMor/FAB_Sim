@@ -69,7 +69,7 @@ def validate_single_deck(
             violations.append(f"Hero slug {hero_slug!r} not found in slug_index.")
         else:
             hero_types: list[str] = hero_entry.get("types", [])
-            hero_keywords: list[str] = hero_entry.get("keywords", [])
+            hero_keywords: list[str] = hero_entry.get("card_keywords", [])
 
             # Build card dicts expected by validate_deck_legality
             deck_cards = [{"card_slug": s} for s in cards]
