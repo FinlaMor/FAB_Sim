@@ -254,6 +254,7 @@ class EmbeddingRecorderAgent:
         state_embedder: GameStateEmbedder,
         step_counter: list[int] | None = None,
         max_decisions_per_game: int = 5000,
+        combat_log: dict[int, list[dict]] | None = None,
     ):
         self.base_agent = base_agent
         self.player_id = player_id
@@ -263,6 +264,8 @@ class EmbeddingRecorderAgent:
         self.state_embedder = state_embedder
         self.step_counter = step_counter if step_counter is not None else [0]
         self.max_decisions_per_game = max_decisions_per_game
+        self.combat_log = combat_log if combat_log is not None else {}
+        self._last_seen_chain_count: int = 0
 
     def __call__(self, state: GameState, options, context=None):
         if not isinstance(options, (list, tuple)) or not options:
@@ -282,6 +285,25 @@ class EmbeddingRecorderAgent:
         # Delegate to base agent for the actual decision
         choice = self.base_agent(state, options, context)
 
+        # Snapshot new chain_links into combat_log
+        chain_links = getattr(state, "chain_links", []) or []
+        if len(chain_links) > self._last_seen_chain_count:
+            turn = getattr(state, "turn_number", 0)
+            new_links = chain_links[self._last_seen_chain_count:]
+            entry_list = self.combat_log.setdefault(turn, [])
+            for link in new_links:
+                entry_list.append({
+                    "attacker_id": link.attacker_id,
+                    "attack_power": link.attack_power,
+                    "net_damage": link.net_damage,
+                    "hit": link.hit,
+                })
+            self._last_seen_chain_count = len(chain_links)
+
+        # Reset chain count tracking when turn advances (chain_links reset at turn start)
+        if chain_links == [] and self._last_seen_chain_count > 0:
+            self._last_seen_chain_count = 0
+
         # Record embeddings for Action decisions
         is_action_choice = isinstance(options[0], Action) and isinstance(choice, Action)
         if is_action_choice:
@@ -296,6 +318,15 @@ class EmbeddingRecorderAgent:
                 )
 
             phase = state.step.value if hasattr(state.step, "value") else str(state.step)
+            chain_links_snapshot = [
+                {
+                    "attacker_id": link.attacker_id,
+                    "attack_power": link.attack_power,
+                    "net_damage": link.net_damage,
+                    "hit": link.hit,
+                }
+                for link in chain_links
+            ]
             obs = {
                 "turn": state.turn_number,
                 "step": phase,
@@ -303,6 +334,9 @@ class EmbeddingRecorderAgent:
                 "priority_player": state.priority_player,
                 "state_debug": gamestate_to_features(state),
                 "state_embedding_norm": float(torch.norm(state_emb).item()),
+                "chain_links_snapshot": chain_links_snapshot,
+                "p1_hp": state.players[1].health,
+                "p2_hp": state.players[2].health,
             }
             action_json = _serialise_action(choice)
 
@@ -326,6 +360,109 @@ class EmbeddingRecorderAgent:
 # ---------------------------------------------------------------------------
 # run_games
 # ---------------------------------------------------------------------------
+
+def _assign_game_rewards(
+    replay_db: ReplayDB,
+    game_id: int,
+    combat_log: dict[int, list[dict]],
+    winner: int | None,
+    normalizer: float = 10.0,
+) -> None:
+    """Compute damage-scaled rewards and back-propagate to previous-turn transitions.
+
+    Algorithm:
+    1. Query all transitions for this game.
+    2. Build per-player, per-turn lookup of last transition ID (back-prop targets).
+    3. For each turn's combat links, compute attacker/defender rewards scaled by damage.
+    4. Back-propagate combat rewards to the last transition of the *previous* turn.
+       Turn 1 fallback: earliest transition for that player.
+    5. Assign terminal rewards (+1/-1) on last transition per player with done=1.
+    6. Batch-update rewards and done flags.
+    """
+    transitions = replay_db.get_game_transitions(game_id)
+    if not transitions:
+        return
+
+    # Build per-player per-turn lookup: {(player_id, turn): transition_id}
+    # and per-player earliest/latest transition IDs
+    import json as _json
+
+    player_turn_last: dict[tuple[int, int], int] = {}   # (pid, turn) -> last tid
+    player_earliest: dict[int, int] = {}                 # pid -> earliest tid
+    player_latest: dict[int, int] = {}                   # pid -> latest tid
+
+    for t in transitions:
+        tid = t["id"]
+        pid = t["player_id"]
+        obs = _json.loads(t["obs"]) if isinstance(t["obs"], str) else t["obs"]
+        turn = obs.get("turn", 0)
+
+        key = (pid, turn)
+        player_turn_last[key] = tid  # last one wins (ordered by step_idx)
+
+        if pid not in player_earliest:
+            player_earliest[pid] = tid
+        player_latest[pid] = tid
+
+    # Accumulate rewards: {tid: float}
+    reward_acc: dict[int, float] = {}
+
+    # Process combat log: for each turn's chain links, compute rewards
+    for turn, links in combat_log.items():
+        if not links:
+            continue
+
+        # Aggregate damage per attacker
+        attacker_damage: dict[int, float] = {}    # attacker_id -> total attack_power
+        defender_blocked: dict[int, float] = {}   # defender_id -> total damage blocked
+
+        for link in links:
+            attacker_id = link.get("attacker_id")
+            attack_power = link.get("attack_power", 0) or 0
+            net_damage = link.get("net_damage", 0) or 0
+            blocked = max(0, attack_power - net_damage)
+
+            if attacker_id is not None:
+                attacker_damage[attacker_id] = attacker_damage.get(attacker_id, 0) + attack_power
+                # Defender is the other player
+                defender_id = 2 if attacker_id == 1 else 1
+                defender_blocked[defender_id] = defender_blocked.get(defender_id, 0) + blocked
+
+        # Back-propagate: target is last transition of previous turn (turn - 1)
+        # For turn 1, fallback to earliest transition for that player
+        for pid, total_attack in attacker_damage.items():
+            reward = total_attack / normalizer
+            target_turn = turn - 1
+            target_tid = player_turn_last.get((pid, target_turn))
+            if target_tid is None:
+                target_tid = player_earliest.get(pid)
+            if target_tid is not None:
+                reward_acc[target_tid] = reward_acc.get(target_tid, 0.0) + reward
+
+        for pid, total_blocked in defender_blocked.items():
+            reward = total_blocked / normalizer
+            target_turn = turn - 1
+            target_tid = player_turn_last.get((pid, target_turn))
+            if target_tid is None:
+                target_tid = player_earliest.get(pid)
+            if target_tid is not None:
+                reward_acc[target_tid] = reward_acc.get(target_tid, 0.0) + reward
+
+    # Terminal rewards: last transition per player
+    done_updates: list[tuple[int, int]] = []  # (done, tid)
+    for pid, tid in player_latest.items():
+        terminal = 0.0
+        if winner is not None:
+            terminal = 1.0 if pid == winner else -1.0
+        reward_acc[tid] = reward_acc.get(tid, 0.0) + terminal
+        done_updates.append((1, tid))
+
+    # Batch update
+    if reward_acc:
+        replay_db.batch_update_rewards([(r, tid) for tid, r in reward_acc.items()])
+    if done_updates:
+        replay_db.batch_update_done(done_updates)
+
 
 def _extract_hero_from_deck(deck_path: str) -> str:
     """Extract hero name from a deck file."""
@@ -407,6 +544,7 @@ def run_games(
 
             # Sample and wrap agents
             step_counter = [0]
+            combat_log: dict[int, list[dict]] = {}
             base_p1 = opponent_pool.sample_agent(rng, player_id=1, seed=game_seed)
             base_p2 = opponent_pool.sample_agent(rng, player_id=2, seed=game_seed + 1)
 
@@ -418,6 +556,7 @@ def run_games(
                 action_embedder=action_embedder,
                 state_embedder=state_embedder,
                 step_counter=step_counter,
+                combat_log=combat_log,
             )
             p2_agent = EmbeddingRecorderAgent(
                 base_agent=base_p2,
@@ -427,6 +566,7 @@ def run_games(
                 action_embedder=action_embedder,
                 state_embedder=state_embedder,
                 step_counter=step_counter,
+                combat_log=combat_log,
             )
 
             req = GameRunRequest(
@@ -451,6 +591,10 @@ def run_games(
 
             # Finalize in ReplayDB
             replay_db.finalize_game(game_id, winner, turn_number, ended_on_cap)
+
+            # Assign damage-scaled rewards and terminal signals
+            _assign_game_rewards(replay_db, game_id, combat_log, winner)
+
             replay_db.flush()
 
             # Record to GameDataStore if available
