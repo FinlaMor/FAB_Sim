@@ -35,7 +35,7 @@ if "rl_agents" not in sys.modules:
     _pkg.__path__ = [str(_PROJECT_ROOT / "rl_agents")]  # type: ignore[assignment]
     _pkg.__package__ = "rl_agents"
     sys.modules["rl_agents"] = _pkg
-from rl_agents.fab_constants import DESCRIPTOR, validate_deck_legality  # noqa: E402
+from rl_agents.fab_constants import DESCRIPTOR, validate_deck_legality, _expand_hero_classes, _parse_hybrid_supertypes  # noqa: E402
 
 DB_PATH = Path("data/fablazing_meta.db")
 OUTPUT_DIR = Path("decks/generated")
@@ -130,25 +130,10 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
         )
         return frozenset()
 
-    hero_classes: set[str] = {
-        t.lower() for t in hero_entry.get("types", [])
-        if t.lower() not in DESCRIPTOR
-    }
-
-    # Expand hero classes via Essence keywords (e.g. "Essence of Earth and Ice"
-    # grants access to Earth and Ice talent cards).
-    _ELEMENT_NAMES = {"earth", "ice", "fire", "lightning", "water", "wind", "rock"}
-    for kw in hero_entry.get("card_keywords", []):
-        kw_lower = kw.lower()
-        if "essence of" in kw_lower:
-            # Extract element words after "essence of"
-            after = kw_lower.split("essence of", 1)[1]
-            for word in re.split(r"[\s,]+", after):
-                word = word.strip()
-                if word and word not in ("and", "or", "the") and word in _ELEMENT_NAMES:
-                    hero_classes.add(word)
-
-    hero_classes_frozen: frozenset[str] = frozenset(hero_classes)
+    hero_classes_frozen: frozenset[str] = _expand_hero_classes(
+        hero_entry.get("types", []),
+        hero_entry.get("card_keywords", []),
+    )
 
     # Types that mark a card as non-deck-playable regardless of class legality
     _NON_PLAYABLE: frozenset[str] = frozenset({
@@ -162,6 +147,19 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
         # Exclude heroes and non-playable game objects
         if raw_types & _NON_PLAYABLE:
             continue
+
+        # Check for hybrid cards via ' / ' delimiter in type_text
+        type_text = entry.get("type_text", "")
+        hybrid = _parse_hybrid_supertypes(type_text)
+        if hybrid is not None:
+            left_classes, right_classes = hybrid
+            # Hybrid card is legal if EITHER side satisfies hero classes
+            left_ok = not left_classes or left_classes <= hero_classes_frozen
+            right_ok = not right_classes or right_classes <= hero_classes_frozen
+            if left_ok or right_ok:
+                legal.add(slug)
+            continue
+
         card_classes = frozenset(
             t for t in raw_types if t not in DESCRIPTOR
         )
