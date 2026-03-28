@@ -632,9 +632,63 @@ def _pick_equipment(
         picked.append({**card, "count": 1})
         used_slugs.add(card["card_slug"])
 
-    # Armor: exactly one of each slot — apply class legality check to generic cards too.
+    def _slug_index_armor(slot: str) -> dict | None:
+        """Fall back to slug_index for armor equipment legal for this hero.
+
+        Used when neither the hero's fablazing pool nor the generic DB pool
+        has a legal card for the given slot (head/chest/arms/legs).
+        Filters by hero class legality; skips specialization mismatches.
+        """
+        slot_cap = slot.capitalize()  # "arms" -> "Arms", etc.
+        candidates: list[tuple[int, str, dict]] = []
+        hero_name_tokens = (hero_slug or "").replace("-", " ").replace("_", " ").lower()
+        for slug, entry in index.items():
+            types = entry.get("types") or []
+            if slot_cap not in types or "Equipment" not in types:
+                continue
+            if "Token" in types or "Ally" in types:
+                continue
+            if slug in used_slugs:
+                continue
+            # Specialization check
+            kws = entry.get("card_keywords") or []
+            legal_spec = True
+            for kw in kws:
+                if "Specialization" in kw:
+                    spec_hero = kw.replace(" Specialization", "").lower()
+                    if spec_hero not in hero_name_tokens:
+                        legal_spec = False
+                        break
+            if not legal_spec:
+                continue
+            # Class legality
+            card_classes = frozenset(
+                t.lower() for t in types if t.lower() not in DESCRIPTOR
+            )
+            if card_classes and not card_classes <= hero_classes:
+                continue
+            if legal_pool and slug not in legal_pool:
+                continue
+            priority = 1 if not card_classes else 0  # prefer class-specific
+            candidates.append((priority, slug, {
+                "card_slug": slug,
+                "card_name": entry.get("name", slug),
+                "card_type": "equipment",
+                "equipment_subtype": slot,
+                "frequency": 0.5,
+                "avg_copies": 1.0,
+                "win_rate": 0.5,
+            }))
+        candidates.sort(key=lambda x: (x[0], x[1]))
+        for _, slug, card in candidates:
+            if slug not in used_slugs:
+                return card
+        return None
+
+    # Armor: exactly one of each slot — apply class legality check, then fall
+    # back to slug_index for heroes whose fablazing pool lacks that slot.
     for slot in ("head", "chest", "arms", "legs"):
-        card = _best(slot, require_legal=True)
+        card = _best(slot, require_legal=True) or _slug_index_armor(slot)
         if card:
             _add(card)
 
