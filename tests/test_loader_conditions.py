@@ -400,8 +400,8 @@ def test_reprise_check_false():
 def test_crush_check_true():
     state = _make_state()
     state.combat = _make_combat(attack_power=6)
-    # crush_check uses event.data["damage_dealt"] >= 4
-    event = SimpleNamespace(data={"damage_dealt": 5})
+    # crush_check reads event.data["damage"] — matches the key emitted by engine.py
+    event = SimpleNamespace(data={"damage": 5})
     card = _make_card(owner=1)
     fn = _make_condition("crush_check", {}, None)
     assert fn(card, event, state) is True
@@ -410,7 +410,7 @@ def test_crush_check_true():
 def test_crush_check_false():
     state = _make_state()
     state.combat = _make_combat(attack_power=3)
-    event = SimpleNamespace(data={"damage_dealt": 2})
+    event = SimpleNamespace(data={"damage": 2})
     card = _make_card(owner=1)
     fn = _make_condition("crush_check", {}, None)
     assert fn(card, event, state) is False
@@ -447,8 +447,8 @@ def test_combo_check_false():
 
 def test_surge_check_true():
     state = _make_state()
-    # surge_check uses event.data["damage_dealt"] >= amount
-    event = SimpleNamespace(data={"damage_dealt": 3})
+    # surge_check reads event.data["damage"] — matches the key emitted by engine.py
+    event = SimpleNamespace(data={"damage": 3})
     card = _make_card(owner=1)
     fn = _make_condition("surge_check", {"amount": 2}, None)
     assert fn(card, event, state) is True
@@ -456,7 +456,7 @@ def test_surge_check_true():
 
 def test_surge_check_false():
     state = _make_state()
-    event = SimpleNamespace(data={"damage_dealt": 1})
+    event = SimpleNamespace(data={"damage": 1})
     card = _make_card(owner=1)
     fn = _make_condition("surge_check", {"amount": 2}, None)
     assert fn(card, event, state) is False
