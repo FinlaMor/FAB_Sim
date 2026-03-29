@@ -223,11 +223,12 @@ class MatchupScheduler:
         for i in range(0, len(shuffled), 2):
             pairs.append((shuffled[i], shuffled[i + 1]))
 
-        # Fill remaining games with random pairings
+        # Fill remaining games with random pairings until we have enough. Equal number of decks.
         while len(pairs) < games_per_loop:
-            d1 = random.choice(deck_paths)
-            d2 = random.choice(deck_paths)
-            pairs.append((d1, d2))
+            random.shuffle(shuffled)
+            pairs: list[tuple[str, str]] = []
+            for i in range(0, len(shuffled), 2):
+                pairs.append((shuffled[i], shuffled[i + 1]))
 
         # Trim to exact count
         return pairs[:games_per_loop]
