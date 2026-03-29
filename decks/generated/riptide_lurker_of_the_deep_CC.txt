@@ -1,39 +1,34 @@
-Name: Riptide_Lurker_Of_The_Deep - Evolved
-Hero: Riptide_Lurker_Of_The_Deep
+Name: Riptide, Lurker of the Deep - Heuristic
+Hero: Riptide, Lurker of the Deep
 Format: Classic Constructed
 
 Arena cards
-1x Red Liner
-1x Target Totalizer
-1x Heartened Cross Strap
-1x Nullrune Gloves
-1x Quartermasters Boots
+1x New Horizon
+1x Trench of Sunken Treasure
+1x Sharp Shooters
+1x Bolt’n Boots
+1x Dreadbore
 
 Deck cards
-1x Enchanting Melody (red)
-1x Money Where Ya Mouth Is (red)
-3x Sift (red)
-3x Skybound Shot (red)
-3x Take The Bait (red)
-1x Thrust (red)
-2x Widowmaker (red)
-3x Yinti Yanti (red)
-1x Cracker Bauble (yellow)
-3x Factfinding Mission (yellow)
-3x Public Bounty (yellow)
-1x Raging Onslaught (yellow)
-2x Sirens Of Safe Harbor (yellow)
-1x Sleep Dart (yellow)
-3x Spring Load (yellow)
-3x Trade In (yellow)
-3x Call In The Big Guns (blue)
-3x Fervent Forerunner (blue)
-3x Life For A Life (blue)
-3x Minnowism (blue)
-2x Over Flex (blue)
-1x Release The Tension (blue)
-1x Scour The Battlescape (blue)
-3x Yinti Yanti (blue)
-1x Zealous Belting (blue)
-3x Didnt See That Coming
-3x Ire Of The Crowd
+3x Endless Arrow (red)
+3x Lace with Bloodrot (red)
+3x Premeditate (red)
+1x Sink Below (red)
+3x Seek and Destroy (red)
+3x Bolt'n' Shot (red)
+3x Searing Shot (red)
+3x Murky Water (red)
+3x Drill Shot (red)
+3x Remorseless (red)
+3x Return Fire (red)
+3x Codex of Frailty (yellow)
+3x Tarpit Trap (yellow)
+3x Bolt'n' Shot (yellow)
+3x Searing Shot (yellow)
+3x Drill Shot (yellow)
+1x Collapsing Trap (blue)
+1x Buzzsaw Trap (blue)
+3x Quickening Sand (blue)
+3x Bolt'n' Shot (blue)
+3x Searing Shot (blue)
+3x Drill Shot (blue)

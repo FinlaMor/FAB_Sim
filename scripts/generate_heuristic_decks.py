@@ -805,6 +805,68 @@ def _pick_equipment(
 
     valid_slugs = _get_valid_slugs()
 
+    def _slug_index_weapon() -> dict | None:
+        """Fallback: pick the best class-legal weapon from slug_index.
+
+        Prefers class-specific weapons over Generic ones.
+        Excludes specialization weapons for other heroes.
+        """
+        if not hero_classes:
+            return None
+        hero_name_tokens = (hero_slug or "").replace("-", " ").replace("_", " ").lower()
+        candidates: list[tuple[int, str, dict]] = []
+        for slug, entry in index.items():
+            types = entry.get("types") or []
+            if "Weapon" not in types or "Equipment" not in types:
+                continue
+            if "Token" in types or "Ally" in types:
+                continue
+            if slug in used_slugs:
+                continue
+            if valid_slugs and slug not in valid_slugs:
+                continue
+            # Specialization check
+            kws = entry.get("card_keywords") or []
+            spec_mismatch = False
+            for kw in kws:
+                if "Specialization" in kw:
+                    spec_hero = kw.replace(" Specialization", "").lower().strip()
+                    if spec_hero not in hero_name_tokens:
+                        spec_mismatch = True
+                        break
+            if spec_mismatch:
+                continue
+            # Class legality: rely on legal_pool (built via _expand_hero_classes)
+            # Do NOT use w_types <= hero_classes — weapon types like 'staff'/'sword'
+            # are not class identifiers and would incorrectly filter class weapons.
+            if legal_pool and slug not in legal_pool:
+                continue
+            # Prefer class-specific weapons (have non-DESCRIPTOR types) over Generic
+            w_types = frozenset(t.lower() for t in types if t.lower() not in DESCRIPTOR)
+            priority = 0 if w_types else 1
+            # Infer subtype from type_text
+            tt_lower = (entry.get("type_text") or "").lower()
+            if "2h" in tt_lower:
+                subtype = "weapon-2h"
+            elif "bow" in tt_lower or "arrow" in tt_lower:
+                subtype = "weapon-bow"
+            else:
+                subtype = "weapon-1h"
+            candidates.append((priority, slug, {
+                "card_slug": slug,
+                "card_name": entry.get("name", slug),
+                "card_type": "equipment",
+                "equipment_subtype": subtype,
+                "frequency": 0.5,
+                "avg_copies": 1.0,
+                "win_rate": 0.5,
+            }))
+        candidates.sort(key=lambda x: (x[0], x[1]))
+        for _, slug, card in candidates:
+            if slug not in used_slugs:
+                return card
+        return None
+
     def _hero_name_from_slug(slug: str | None) -> str:
         """Extract hero display name tokens from slug for specialization matching."""
         if not slug:
@@ -907,9 +969,26 @@ def _pick_equipment(
     else:
         # No weapon found in DB/class pool.
         # Truly weaponless heroes (Gravy Bones) are left as-is.
-        # All others fall back to Talishar, the Lost Prince (generic 2H).
+        # Others try slug_index for a class-legal weapon, then fall back to Talishar.
         if hero_slug not in _TRULY_WEAPONLESS_HEROES:
-            _add(_TALISHAR_FALLBACK_WEAPON)
+            si_weapon = _slug_index_weapon()
+            if si_weapon:
+                chosen_weapon = si_weapon
+                _add(chosen_weapon)
+                wtype = chosen_weapon.get("equipment_subtype", "")
+                if wtype == "weapon-1h" and hero_slug not in _SINGLE_WEAPON_ZONE_HEROES:
+                    oh = (
+                        _second_weapon_as_offhand(chosen_weapon)
+                        or _best("off-hand", require_legal=True)
+                        or _slug_index_offhand()
+                    )
+                    if oh:
+                        if oh["card_slug"] == chosen_weapon["card_slug"]:
+                            picked[-1] = {**picked[-1], "count": 2}
+                        else:
+                            _add(oh)
+            else:
+                _add(_TALISHAR_FALLBACK_WEAPON)
         else:
             # Still equip a standalone off-hand if the hero uses one
             oh = _best("off-hand", require_legal=True)
