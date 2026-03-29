@@ -51,6 +51,22 @@ _SINGLE_WEAPON_ZONE_HEROES: frozenset[str] = frozenset({
     "kayo-underhanded-cheat",
 })
 
+# Heroes who genuinely carry no weapon (Gravy Bones uses bare-hand attacks).
+# All other heroes without a weapon in the DB fall back to Talishar, the Lost Prince.
+_TRULY_WEAPONLESS_HEROES: frozenset[str] = frozenset({
+    "gravy-bones-shipwrecked-looter",
+    "gravy_bones_shipwrecked_looter",
+})
+_TALISHAR_FALLBACK_WEAPON: dict = {
+    "card_slug": "talishar_the_lost_prince",
+    "card_name": "Talishar, the Lost Prince",
+    "card_type": "equipment",
+    "equipment_subtype": "weapon-2h",
+    "frequency": 0.1,
+    "avg_copies": 1.0,
+    "win_rate": 0.5,
+}
+
 # Lazily loaded slug index and valid slug set from slug_index.json
 _valid_slugs: set[str] | None = None
 _slug_index: dict | None = None
@@ -135,6 +151,10 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
         hero_entry.get("card_keywords", []),
     )
 
+    # Build a string of hero name tokens for specialization matching.
+    # e.g. "rhinar_reckless_rampage" → "rhinar reckless rampage"
+    _hero_name_tokens: str = hero_slug.replace("-", " ").replace("_", " ").lower()
+
     # Types that mark a card as non-deck-playable regardless of class legality
     _NON_PLAYABLE: frozenset[str] = frozenset({
         "hero", "macro", "companion", "invocation", "mentor",
@@ -146,6 +166,19 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
         raw_types = frozenset(t.lower() for t in (entry.get("types") or []))
         # Exclude heroes and non-playable game objects
         if raw_types & _NON_PLAYABLE:
+            continue
+
+        # Specialization check: if the card has an "XYZ Specialization" keyword,
+        # only include it when "xyz" appears in this hero's name tokens.
+        kws = entry.get("card_keywords") or []
+        spec_mismatch = False
+        for kw in kws:
+            if "Specialization" in kw:
+                spec_hero = kw.replace(" Specialization", "").lower().strip()
+                if spec_hero not in _hero_name_tokens:
+                    spec_mismatch = True
+                    break
+        if spec_mismatch:
             continue
 
         # Check for hybrid cards via ' / ' delimiter in type_text
@@ -872,10 +905,16 @@ def _pick_equipment(
                 _add(q)
         # weapon-2h / weapon-other: no secondary item
     else:
-        # No weapon — still equip a standalone off-hand if the hero uses one
-        oh = _best("off-hand", require_legal=True)
-        if oh and oh["card_slug"] in {c["card_slug"] for c in equipment_cards}:
-            _add(oh)
+        # No weapon found in DB/class pool.
+        # Truly weaponless heroes (Gravy Bones) are left as-is.
+        # All others fall back to Talishar, the Lost Prince (generic 2H).
+        if hero_slug not in _TRULY_WEAPONLESS_HEROES:
+            _add(_TALISHAR_FALLBACK_WEAPON)
+        else:
+            # Still equip a standalone off-hand if the hero uses one
+            oh = _best("off-hand", require_legal=True)
+            if oh and oh["card_slug"] in {c["card_slug"] for c in equipment_cards}:
+                _add(oh)
 
     return picked
 
