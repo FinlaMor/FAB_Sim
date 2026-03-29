@@ -712,6 +712,15 @@ def _close_combat_chain(state: GameState) -> None:
         else:
             defender.graveyard.add(card)
 
+    # Defense reactions played from arsenal were added to state.combat_chain; move to graveyard now.
+    # (attack_card was already removed above, so only reactions remain in the zone at this point.)
+    for chain_card in list(state.combat_chain.cards):
+        ctrl = chain_card.controller if chain_card.controller is not None else chain_card.owner
+        if ctrl in state.players:
+            state.remember_last_known(chain_card)
+            state.combat_chain.remove(chain_card)
+            state.players[ctrl].graveyard.add(chain_card)
+
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""
     combat = state.combat
@@ -1336,14 +1345,20 @@ def _apply_react(state: GameState, action: Action) -> None:
             # Fallback safety for legacy actions incorrectly marked as hand plays.
             player.arsenal.remove(card)
 
-    # CR 3.0.1 / CR 5.3.4c: card enters stack zone
-    card.prev_zone = card.zone
-    card.zone = 'stack'
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone.
+    # Defense reactions played from arsenal are additionally placed on the combat chain so
+    # _close_combat_chain() moves them to graveyard at chain close rather than leaving them
+    # in limbo (zone='stack' but absent from every Zone collection).
+    if action.from_arsenal and state.combat is not None and "Defense Reaction" in (card.types or []):
+        state.combat_chain.add(card)  # zone='combat chain', is_public=True
+    else:
+        card.prev_zone = card.zone
+        card.zone = 'stack'
 
     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
     # CR 3.15.4: layer position is N+1 where N is existing layers
     entry = StackEntry(
-        player_id=action.player_id, 
+        player_id=action.player_id,
         card=card,
         layer_type='card',
         layer_position=len(state.stack_entries) + 1,
