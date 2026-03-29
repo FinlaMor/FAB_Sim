@@ -203,6 +203,53 @@ def build_iql_tensors_from_replay_db(
         if not s_list:
             raise ValueError("No embedded transitions found for selected game IDs")
 
+        # Pad variable-length state/action tensors to uniform max dimension
+        max_state_dim = max(t.shape[0] for t in s_list)
+        min_state_dim = min(t.shape[0] for t in s_list)
+        max_action_dim = max(t.shape[0] for t in a_list)
+        min_action_dim = min(t.shape[0] for t in a_list)
+
+        def _pad_to(tensor: torch.Tensor, target_len: int) -> torch.Tensor:
+            if tensor.shape[0] == target_len:
+                return tensor
+            padded = torch.zeros(target_len, dtype=tensor.dtype)
+            padded[:tensor.shape[0]] = tensor
+            return padded
+
+        if min_state_dim != max_state_dim:
+            import warnings
+            warnings.warn(
+                f"[dataset] padding state tensors: min_dim={min_state_dim} "
+                f"max_dim={max_state_dim} → padded to {max_state_dim}",
+                stacklevel=2,
+            )
+            if min_state_dim > 0 and max_state_dim / min_state_dim > 2.0:
+                warnings.warn(
+                    f"[dataset] state dimension ratio {max_state_dim / min_state_dim:.1f}x "
+                    f"exceeds 2.0 — possible data corruption",
+                    stacklevel=2,
+                )
+            s_list = [_pad_to(t, max_state_dim) for t in s_list]
+            s_next_list = [_pad_to(t, max_state_dim) for t in s_next_list]
+
+        if min_action_dim != max_action_dim:
+            import warnings
+            warnings.warn(
+                f"[dataset] padding action tensors: min_dim={min_action_dim} "
+                f"max_dim={max_action_dim} → padded to {max_action_dim}",
+                stacklevel=2,
+            )
+            if min_action_dim > 0 and max_action_dim / min_action_dim > 2.0:
+                warnings.warn(
+                    f"[dataset] action dimension ratio {max_action_dim / min_action_dim:.1f}x "
+                    f"exceeds 2.0 — possible data corruption",
+                    stacklevel=2,
+                )
+            a_list = [_pad_to(t, max_action_dim) for t in a_list]
+
+        state_dim = max_state_dim
+        action_dim = max_action_dim
+
         if reward_mode == "rtg":
             r_list = _apply_rtg(r_list, d_list, gamma)
 

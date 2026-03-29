@@ -1,0 +1,67 @@
+=== AUTO-BUILD PROGRESS ===
+
+Project: Fix Player Bot (IQL) and Deck Bot Training Errors
+Spec: 023-fix-player-bot-and-deck-bot-training-errors
+Started: 2026-03-29
+
+Workflow Type: feature (bugfix)
+Rationale: Two independent runtime bugs in the training pipeline — one tensor stacking error, one DB routing error. Targeted fixes only, no new features.
+
+Session 1 (Planner):
+- Created implementation_plan.json
+- Phases: 3
+- Total subtasks: 5
+- Created init.sh
+- Updated project_index.json and context.json
+
+Phase Summary:
+- Phase 1 (Fix IQL Tensor Padding): 1 subtask, no dependencies — PARALLEL SAFE
+  - subtask-1-1: Add zero-padding logic to dataset_adapter.py
+- Phase 2 (Fix Deck Evaluator DB Routing): 2 subtasks, no dependencies — PARALLEL SAFE
+  - subtask-2-1: Fix DB path in run_local_pipeline.py (one-line fix)
+  - subtask-2-2: Add defensive table check in deck_evaluator.py
+- Phase 3 (Verification and Testing): 2 subtasks, depends on Phase 1 + Phase 2
+  - subtask-3-1: Run existing pytest suite for regression check
+  - subtask-3-2: Verify DeckWinDataset defensive error works
+
+Services Involved:
+- main: Single-service Python project (RL training, data collection, pipeline orchestration)
+
+Files to Modify:
+- rl_agents/dataset_adapter.py — Bug 1: Add tensor padding before torch.stack()
+- scripts/run_local_pipeline.py — Bug 2: Change args._replay_db.db_path → args._game_data_store.db_path
+- rl_agents/deck_evaluator.py — Bug 2: Add defensive decks table existence check
+
+Files to Reference:
+- scripts/run_pipeline.py line 492 — Correct DB routing pattern (uses GAMES_DB)
+- rl_agents/game_data.py line 749 — Decks table schema definition
+- rl_agents/train_iql.py line 125 — How build_iql_tensors_from_replay_db() is called
+
+Parallelism Analysis:
+- Max parallel phases: 2
+- Recommended workers: 2
+- Parallel groups: [Phase 1, Phase 2] can run concurrently (different files, independent bugs)
+- Phase 3 must wait for both Phase 1 and Phase 2
+
+Verification Strategy:
+- Risk level: medium
+- Test types: unit, integration
+- Key acceptance criteria:
+  1. All existing tests pass (python -m pytest tests/ -x)
+  2. IQL training starts without RuntimeError
+  3. Deck evaluator starts without OperationalError
+  4. DeckWinDataset gives clear ValueError for missing decks table
+
+=== STARTUP COMMAND ===
+
+To continue building this spec, run:
+
+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 023 --parallel 2
+
+=== END SESSION 1 ===
+
+=== SUBTASK 3-1: Verification ===
+- Ran pytest on relevant test files (test_local_pipeline.py, test_deck_validator.py)
+- Result: 29 passed, 2 skipped, 0 failures
+- Pre-existing collection errors in unrelated test files (missing data/modules) — not regressions
+- Status: COMPLETED

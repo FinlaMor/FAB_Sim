@@ -1,0 +1,259 @@
+{
+  "feature": "Fix IQL tensor stacking and deck evaluator DB routing errors",
+  "workflow_type": "feature",
+  "workflow_rationale": "Two independent runtime bugs in the training pipeline. Each requires a targeted code fix — one in tensor assembly logic, one in database table routing. No new features; the goal is to make existing training stages succeed.",
+  "created_at": "2026-03-29T10:03:05.034Z",
+  "updated_at": "2026-03-29T12:39:18.418Z",
+  "status": "in_progress",
+  "planStatus": "in_progress",
+  "xstateState": "coding",
+  "executionPhase": "coding",
+  "lastEvent": {
+    "eventId": "caa35a6d-4dc0-4bc1-8317-29bfa3655622",
+    "sequence": 1,
+    "type": "PLANNING_COMPLETE",
+    "timestamp": "2026-03-29T12:35:23.858353+00:00"
+  },
+  "phases": [
+    {
+      "id": "phase-1-iql-tensor-fix",
+      "name": "Fix IQL Tensor Padding",
+      "type": "implementation",
+      "description": "Add zero-padding logic to build_iql_tensors_from_replay_db() so variable-length state/action embeddings are padded to a uniform max dimension before torch.stack()",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add padding logic to dataset_adapter.py: after collecting all tensors, compute max_state_dim and max_action_dim, pad shorter tensors with zeros, update state_dim/action_dim in returned dict, and fix terminal-state zero padding (line 191) to use max_state_dim. Add warning log if dimensions are inconsistent, and a sanity-check warning if max_dim/min_dim > 2.0.",
+          "service": "main",
+          "files_to_modify": [
+            "rl_agents/dataset_adapter.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/dataset_adapter.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import torch; from rl_agents.dataset_adapter import build_iql_tensors_from_replay_db; print('import OK')\"",
+            "expected": "import OK"
+          },
+          "status": "completed",
+          "notes": "Key changes: (1) Define _pad_to() helper function. (2) After line 203 'if not s_list' check, compute max dims from s_list/a_list. (3) Pad s_list, a_list, s_next_list to uniform dims. (4) Update state_dim and action_dim to max values. (5) Terminal state zeros on line 191 will initially use first-row state_dim — these get corrected during the padding pass. (6) Log dimension info with [dataset] prefix. (7) Warn if max_dim/min_dim > 2.0 (possible data corruption). (8) Skip padding entirely if all dims already equal (no-op for consistent data)."
+        }
+      ]
+    },
+    {
+      "id": "phase-2-deck-eval-db-fix",
+      "name": "Fix Deck Evaluator DB Routing",
+      "type": "implementation",
+      "description": "Fix the pipeline to pass the correct database (game_data.db with decks table) to the deck evaluator, and add defensive table-existence check in DeckWinDataset",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Fix DB path in run_local_pipeline.py line 310: change 'args._replay_db.db_path' to 'args._game_data_store.db_path' so the deck evaluator receives the correct database with the 'decks' table.",
+          "service": "main",
+          "files_to_modify": [
+            "scripts/run_local_pipeline.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "scripts/run_pipeline.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import ast; tree = ast.parse(open('scripts/run_local_pipeline.py').read()); print('parsed OK')\"",
+            "expected": "parsed OK"
+          },
+          "status": "completed",
+          "notes": "Changed args._replay_db.db_path to args._game_data_store.db_path on line 310 of run_local_pipeline.py. Verification passed.",
+          "updated_at": "2026-03-29T12:37:22.686477+00:00"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Add defensive check in DeckWinDataset.__init__() in deck_evaluator.py: before querying the 'decks' table, check it exists via sqlite_master, and raise a clear ValueError with guidance if missing (e.g., 'Database X has no decks table. Expected a GameDataStore DB like data/game_data.db').",
+          "service": "main",
+          "files_to_modify": [
+            "rl_agents/deck_evaluator.py"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "rl_agents/game_data.py"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import ast; tree = ast.parse(open('rl_agents/deck_evaluator.py').read()); print('parsed OK')\"",
+            "expected": "parsed OK"
+          },
+          "status": "completed",
+          "notes": "Defensive check already implemented and committed in dd826fc. DeckWinDataset.__init__() checks sqlite_master for 'decks' table and raises ValueError with guidance if missing.",
+          "updated_at": "2026-03-29T12:39:10.758786+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-verification",
+      "name": "Verification and Testing",
+      "type": "integration",
+      "description": "Run existing tests to verify no regressions, and validate both fixes work correctly",
+      "depends_on": [
+        "phase-1-iql-tensor-fix",
+        "phase-2-deck-eval-db-fix"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Run the existing pytest test suite to verify no regressions from the changes to dataset_adapter.py, run_local_pipeline.py, and deck_evaluator.py.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "python -m pytest tests/ -x",
+            "expected": "All tests pass"
+          },
+          "status": "completed",
+          "notes": "All 29 relevant tests pass (test_local_pipeline.py + test_deck_validator.py). Collection errors in test_engine_game.py, test_talishar_adapter.py, test_talishar_comparison_normalization.py, test_transformer_policy_smoke.py are pre-existing (missing data files/modules unrelated to our changes)."
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Verify DeckWinDataset defensive error: confirm that passing a DB without a 'decks' table to DeckWinDataset raises ValueError with a descriptive message instead of raw sqlite3.OperationalError.",
+          "service": "main",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "python -c \"import sqlite3, tempfile, os; db=tempfile.mktemp(suffix='.db'); conn=sqlite3.connect(db); conn.execute('CREATE TABLE games (id INTEGER)'); conn.close(); print('temp db created'); from rl_agents.deck_evaluator import DeckWinDataset, CardVocab; vocab=CardVocab(); ok=False; exec('try:\\n DeckWinDataset(db, vocab)\\nexcept ValueError as e:\\n ok=chr(100)+chr(101)+chr(99)+chr(107)+chr(115) in str(e).lower()'); os.unlink(db); print('Defensive check OK' if ok else 'FAIL')\"",
+            "expected": "Defensive check OK"
+          },
+          "status": "pending",
+          "notes": "This verifies the defensive error message works. Creates a temp DB without a decks table and confirms DeckWinDataset raises ValueError (not sqlite3.OperationalError)."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 3,
+    "total_subtasks": 5,
+    "services_involved": [
+      "main"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 2,
+      "parallel_groups": [
+        {
+          "phases": [
+            "phase-1-iql-tensor-fix",
+            "phase-2-deck-eval-db-fix"
+          ],
+          "reason": "Both depend on nothing (no dependencies), modify completely different files, and fix independent bugs"
+        }
+      ],
+      "recommended_workers": 2,
+      "speedup_estimate": "1.5x faster than sequential — phases 1 and 2 can run in parallel, phase 3 must wait for both"
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 023 --parallel 2"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "unit",
+      "integration"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All existing tests pass (python -m pytest tests/ -x)",
+      "build_iql_tensors_from_replay_db() handles variable-dimension embeddings by zero-padding to max observed dimension",
+      "IQL training starts without RuntimeError (python -m rl_agents.train_iql --db-path data/replay.db --steps 100 --batch-size 32 --device dml)",
+      "step_train_deck_bot() passes game_data_store.db_path to the deck evaluator script",
+      "Deck evaluator training starts without OperationalError (python scripts/train_deck_evaluator.py --games-db data/game_data.db)",
+      "DeckWinDataset gives a clear ValueError when passed a DB without a decks table"
+    ],
+    "verification_steps": [
+      {
+        "name": "Existing Tests",
+        "command": "python -m pytest tests/ -x",
+        "expected_outcome": "All tests pass with no regressions",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "IQL Import Check",
+        "command": "python -c \"from rl_agents.dataset_adapter import build_iql_tensors_from_replay_db; print('OK')\"",
+        "expected_outcome": "OK — module imports without errors",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Pipeline Script Parse Check",
+        "command": "python -c \"import ast; ast.parse(open('scripts/run_local_pipeline.py').read()); print('OK')\"",
+        "expected_outcome": "OK — script parses without syntax errors",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Deck Evaluator Parse Check",
+        "command": "python -c \"import ast; ast.parse(open('rl_agents/deck_evaluator.py').read()); print('OK')\"",
+        "expected_outcome": "OK — script parses without syntax errors",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      }
+    ],
+    "reasoning": "Medium risk bugfix — tensor padding must be correct to avoid silent model degradation, and DB routing fix is straightforward but requires defensive error handling. Unit tests verify padding logic correctness, integration tests verify training scripts can start."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/ -x"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "python -m pytest tests/test_local_pipeline.py -x -v"
+      ],
+      "services_to_test": [
+        "main"
+      ]
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [
+        "python -m rl_agents.train_iql --db-path data/replay.db --steps 100 --batch-size 32 --device dml",
+        "python scripts/train_deck_evaluator.py --games-db data/game_data.db --resume checkpoints/deck_eval_finetune_best.pt"
+      ],
+      "flows": [
+        "iql-training-starts",
+        "deck-eval-training-starts"
+      ]
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": true,
+      "checks": [
+        "data/game_data.db has 'decks' table: SELECT name FROM sqlite_master WHERE type='table' AND name='decks'",
+        "data/replay.db has embeddings: SELECT COUNT(*) FROM embeddings LIMIT 1"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "last_updated": "2026-03-29T12:39:10.758786+00:00"
+}

@@ -307,7 +307,7 @@ def step_train_deck_bot(args, loop_num: int) -> None:
         print()
         return
 
-    game_data_db = args._replay_db.db_path
+    game_data_db = args._game_data_store.db_path
 
     cmd = [
         PYTHON, str(ROOT / "scripts" / "train_deck_evaluator.py"),

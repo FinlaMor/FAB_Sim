@@ -477,6 +477,16 @@ class DeckWinDataset(torch.utils.data.Dataset):
         self.samples: list[dict] = []
 
         conn = sqlite3.connect(str(games_db_path))
+        # Verify the database has a 'decks' table (GameDataStore schema)
+        has_table = conn.execute(
+            "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='decks'"
+        ).fetchone()[0]
+        if not has_table:
+            conn.close()
+            raise ValueError(
+                f"Database {games_db_path} has no 'decks' table. "
+                f"Expected a GameDataStore DB like data/game_data.db"
+            )
         rows = conn.execute(
             "SELECT p1_hero, p2_hero, p1_decklist, p2_decklist, winner "
             "FROM decks WHERE winner IS NOT NULL"
