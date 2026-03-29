@@ -453,6 +453,8 @@ class HeroCardDB:
         slug_idx = raw.get("by_slug", {})
         obj._slug_idx = slug_idx
 
+        _banned = load_banned_cards("cc")
+
         _ARMOR_SLOTS = {"head", "chest", "arms", "legs"}
         _WEAPON_KEYWORDS = {"weapon", "1h", "2h", "sword", "axe", "bow", "dagger",
                             "hammer", "staff", "scepter", "scythe", "claw", "club",
@@ -482,7 +484,7 @@ class HeroCardDB:
         for slug, entry in slug_idx.items():
             types_lower = [t.lower() for t in entry.get("types", [])]
             if "hero" in types_lower:
-                if "young" not in types_lower:  # CC only — young heroes not legal
+                if "young" not in types_lower and slug not in _banned:  # CC only — young heroes not legal
                     heroes[slug] = entry
             else:
                 all_cards.append((slug, entry))
@@ -496,6 +498,8 @@ class HeroCardDB:
             deck: list[dict] = []
 
             for card_slug, card_entry in all_cards:
+                if _banned and card_slug in _banned:
+                    continue
                 card_types_lower = [t.lower() for t in card_entry.get("types", [])]
                 card_classes = _non_descriptor_types(card_entry.get("types", []))
 
