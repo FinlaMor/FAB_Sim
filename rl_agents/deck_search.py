@@ -47,7 +47,7 @@ from rl_agents.deck_evaluator import (
 
 SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
 
-from .fab_constants import DESCRIPTOR, validate_deck_legality, load_banned_cards
+from .fab_constants import DESCRIPTOR, validate_deck_legality, load_banned_cards, _expand_hero_classes
 
 _valid_slugs: set[str] | None = None
 
@@ -251,10 +251,11 @@ class HeroCardDB:
                 _slug_idx = json.load(_f).get("by_slug", {})
         self._slug_idx = _slug_idx
 
-        # Exclude young heroes from CC format — they are not legal
+        # Exclude heroes that are not legal in CC format
+        _NON_CC_HERO_TYPES = {"young", "pit-fighter", "adjudicator", "merchant"}
         if fmt == "cc":
             heroes = [h for h in heroes
-                      if "young" not in {t.lower() for t in
+                      if not _NON_CC_HERO_TYPES & {t.lower() for t in
                           (_slug_idx.get(h) or _slug_idx.get(h.replace("-", "_")) or {}).get("types", [])}]
 
         # Exclude banned heroes
@@ -308,12 +309,26 @@ class HeroCardDB:
             equip = []
             deck = []
             weap = []
+            # Pre-compute hero name tokens for specialization checks
+            _hero_name_tokens = hero.replace("-", " ").replace("_", " ").lower()
             for slug, name, ctype, freq, avg_c, wr, equip_subtype in rows:
                 ct = ctype or "deck"
                 if ct in ("token", "hero"):
                     continue
                 if not equip_subtype and ct in _WEAPON_TYPE_MAP:
                     equip_subtype = _WEAPON_TYPE_MAP[ct]
+                # Filter out specialization cards for other heroes
+                _card_entry = _slug_idx.get(slug) or _slug_idx.get(slug.replace("-", "_"))
+                if _card_entry:
+                    _spec_mismatch = False
+                    for _kw in (_card_entry.get("card_keywords") or []):
+                        if "Specialization" in _kw:
+                            _spec_hero = _kw.replace(" Specialization", "").lower().strip()
+                            if _spec_hero not in _hero_name_tokens:
+                                _spec_mismatch = True
+                                break
+                    if _spec_mismatch:
+                        continue
                 entry = {
                     "slug": slug, "name": name or slug, "type": ct,
                     "equipment_subtype": equip_subtype or "",
@@ -328,10 +343,11 @@ class HeroCardDB:
                     deck.append(entry)
 
             # Compute hero class types once (used for both armor and weapon checks)
+            # Use _expand_hero_classes so talent keywords (e.g. Elemental+Lightning) are included
             hero_entry = _slug_idx.get(hero) or _slug_idx.get(hero.replace("-", "_"))
-            hero_classes: frozenset = frozenset(
-                t.lower() for t in (hero_entry or {}).get("types", [])
-                if t.lower() not in DESCRIPTOR
+            hero_classes: frozenset = _expand_hero_classes(
+                (hero_entry or {}).get("types", []),
+                (hero_entry or {}).get("card_keywords", []),
             )
 
             def _equip_legal(card_slug: str) -> bool:
@@ -477,6 +493,8 @@ class HeroCardDB:
         def _non_descriptor_types(types: list[str]) -> frozenset:
             return frozenset(t.lower() for t in types if t.lower() not in DESCRIPTOR)
 
+        _NON_CC_HERO_TYPES = {"young", "pit-fighter", "adjudicator", "merchant"}
+
         # Identify heroes and build per-card classification
         heroes: dict[str, dict] = {}  # hero_slug -> slug_idx entry
         all_cards: list[tuple[str, dict]] = []  # (slug, entry) for non-hero cards
@@ -484,14 +502,19 @@ class HeroCardDB:
         for slug, entry in slug_idx.items():
             types_lower = [t.lower() for t in entry.get("types", [])]
             if "hero" in types_lower:
-                if "young" not in types_lower and slug not in _banned:  # CC only — young heroes not legal
+                if not (_NON_CC_HERO_TYPES & set(types_lower)) and slug not in _banned:
                     heroes[slug] = entry
             else:
                 all_cards.append((slug, entry))
 
         # Classify each non-hero card
         for hero_slug, hero_entry in heroes.items():
-            hero_classes = _non_descriptor_types(hero_entry.get("types", []))
+            # Use _expand_hero_classes so talent grants (e.g. Elemental+Lightning) are included
+            hero_classes = _expand_hero_classes(
+                hero_entry.get("types", []),
+                hero_entry.get("card_keywords", []),
+            )
+            _hero_name_tokens = hero_slug.replace("-", " ").replace("_", " ").lower()
 
             equip: list[dict] = []
             weap: list[dict] = []
@@ -507,14 +530,29 @@ class HeroCardDB:
                 if card_classes and not card_classes <= hero_classes:
                     continue
 
+                # Filter out specialization cards for other heroes
+                _spec_mismatch = False
+                for _kw in (card_entry.get("card_keywords") or []):
+                    if "Specialization" in _kw:
+                        _spec_hero = _kw.replace(" Specialization", "").lower().strip()
+                        if _spec_hero not in _hero_name_tokens:
+                            _spec_mismatch = True
+                            break
+                if _spec_mismatch:
+                    continue
+
                 # Classify by type keywords
+                # A card is a weapon iff it has "Weapon" explicitly in types (not just item/scroll)
+                is_weapon = "weapon" in card_types_lower
                 is_equipment = _EQUIP_KEYWORD in card_types_lower
                 armor_slot = ""
                 for s in _ARMOR_SLOTS:
                     if s in card_types_lower:
                         armor_slot = s
                         break
-                is_weapon = any(t in _WEAPON_KEYWORDS for t in card_types_lower) and not armor_slot
+                # Armor slots take priority; items/scrolls should not be classified as weapons
+                if armor_slot:
+                    is_weapon = False
 
                 if is_weapon:
                     # Determine handedness
@@ -527,6 +565,18 @@ class HeroCardDB:
                     equip.append(_default_entry(card_slug, "equipment", armor_slot))
                 else:
                     deck.append(_default_entry(card_slug, "deck"))
+
+            # Last resort: Talishar if no weapon found
+            if not weap:
+                weap.append({
+                    "slug": "talishar_the_lost_prince",
+                    "name": "Talishar, the Lost Prince",
+                    "type": "equipment",
+                    "equipment_subtype": "weapon-2h",
+                    "frequency": 0.1,
+                    "avg_copies": 1.0,
+                    "win_rate": 0.5,
+                })
 
             obj.hero_cards[hero_slug] = deck
             obj.hero_equipment[hero_slug] = equip
