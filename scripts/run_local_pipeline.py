@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import random
 import signal
 import subprocess
 import sqlite3
@@ -545,8 +546,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help="Loop until interrupted (Ctrl+C)")
 
     # General
-    parser.add_argument("--seed", type=int, default=42,
-                        help="Global RNG seed (default: 42)")
+    parser.add_argument("--seed", type=int, default=random.randint(0, 999999),
+                        help="Global RNG seed (default: random)")
 
     return parser
 

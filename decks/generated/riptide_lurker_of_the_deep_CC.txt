@@ -3,35 +3,37 @@ Hero: Riptide_Lurker_Of_The_Deep
 Format: Classic Constructed
 
 Arena cards
-1x Talishar The Lost Prince
-1x Crown Of Providence
-1x Hidden Agenda
-1x Quelling Sleeves
-1x Unflinching Foothold
+1x Red Liner
+1x Target Totalizer
+1x Heartened Cross Strap
+1x Nullrune Gloves
+1x Quartermasters Boots
 
 Deck cards
-2x Blanch (red)
-3x Come To Fight (red)
-3x Hand Behind The Pen (red)
-3x Jack Be Nimble (red)
-1x Outed (red)
-3x Point The Tip (red)
-3x Public Bounty (red)
-1x Pursue To The Pits Of Despair (red)
-3x Pummel (yellow)
-1x Fatigue Shot (blue)
-2x Gesture Of Goodwill (blue)
-2x Hemorrhage Bore (blue)
-3x Money Where Ya Mouth Is (blue)
-3x Murkmire Grapnel (blue)
-1x Pathing Helix (blue)
-3x Peace Of Mind (blue)
-3x Ransack And Raze (blue)
-2x Rouse The Ancients (blue)
-3x Sigil Of Fyendal (blue)
-1x Smashing Good Time (blue)
-3x Snag (blue)
-3x Sun Kiss (blue)
-3x Bait
-3x Intellect Penalty
-2x The Hand That Pulls The Strings
+1x Enchanting Melody (red)
+1x Money Where Ya Mouth Is (red)
+3x Sift (red)
+3x Skybound Shot (red)
+3x Take The Bait (red)
+1x Thrust (red)
+2x Widowmaker (red)
+3x Yinti Yanti (red)
+1x Cracker Bauble (yellow)
+3x Factfinding Mission (yellow)
+3x Public Bounty (yellow)
+1x Raging Onslaught (yellow)
+2x Sirens Of Safe Harbor (yellow)
+1x Sleep Dart (yellow)
+3x Spring Load (yellow)
+3x Trade In (yellow)
+3x Call In The Big Guns (blue)
+3x Fervent Forerunner (blue)
+3x Life For A Life (blue)
+3x Minnowism (blue)
+2x Over Flex (blue)
+1x Release The Tension (blue)
+1x Scour The Battlescape (blue)
+3x Yinti Yanti (blue)
+1x Zealous Belting (blue)
+3x Didnt See That Coming
+3x Ire Of The Crowd

@@ -74,7 +74,6 @@ class Card:
     owner: int = 0
     controller: Optional[int] = None
     is_public: bool = False
-    permanent_subtype: Optional[str] = None  # e.g. 'Item', 'Aura', etc.
 
     # State
     tapped: bool = False
@@ -377,14 +376,6 @@ class CardDB:
         Handles mismatches from slugify differences (e.g. unicode normalization)."""
         if slug in self._by_slug:
             return slug
-        # Meld card fix: single underscore may have lost the "__" meld separator.
-        # Try re-inserting "__" at every single-underscore boundary.
-        if "_" in slug and "__" not in slug:
-            parts = slug.split("_")
-            for i in range(1, len(parts)):
-                candidate = "_".join(parts[:i]) + "__" + "_".join(parts[i:])
-                if candidate in self._by_slug:
-                    return candidate
         # Try by_name fallback: strip color suffix and look up by name
         color_suffix = None
         base = slug
@@ -400,7 +391,7 @@ class CardDB:
             self._name_normalized = {}
             for name_key, slugs in self._by_name.items():
                 norm = unicodedata.normalize("NFKD", name_key).encode("ascii", "ignore").decode("ascii")
-                norm = norm.lower().replace("-", " ").replace(",", "").replace("'", "").replace("/", "")
+                norm = norm.lower().replace("-", " ").replace(",", "").replace("'", "")
                 self._name_normalized[norm] = slugs
         name_key = base.replace("_", " ")
         candidates = self._name_normalized.get(name_key, [])
@@ -633,7 +624,7 @@ class CardDB:
         ability_flags['ability_type_count'] = ability_type_count
         ability_flags['has_multiple_ability_types'] = ability_type_count >= 2
 
-        # Derive color from pitch and validate against slug suffix when present.
+        # Derive color from pitch
         color: Optional[str] = None
         if pitch_val == 1:
             color = "red"
@@ -641,8 +632,7 @@ class CardDB:
             color = "yellow"
         elif pitch_val == 3:
             color = "blue"
-        _color_suffixes = ("_red", "_yellow", "_blue")
-        if color and any(slug.endswith(s) for s in _color_suffixes):
+        if color:
             assert slug.endswith(color), "Slug '{}' does not match derived color '{}'".format(slug, color)
 
         return Card(

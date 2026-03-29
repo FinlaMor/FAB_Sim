@@ -552,7 +552,7 @@ class IQLTrainer:
     @classmethod
     def from_checkpoint(cls, path: str, device: Optional[str] = None) -> "IQLTrainer":
         # Only load checkpoints from trusted sources.
-        payload = torch.load(path, map_location="cpu", weights_only=True)
+        payload = torch.load(path, map_location="cpu", weights_only=False)
         cfg = IQLConfig(**payload["config"])
         if device is not None:
             cfg.device = device

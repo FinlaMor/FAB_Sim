@@ -85,12 +85,6 @@
         "avg_copies": 1.0
       },
       {
-        "card_slug": "dawnblade",
-        "equipment_subtype": "weapon-2h",
-        "frequency": 0.5,
-        "avg_copies": 1.0
-      },
-      {
         "card_slug": "arcanite_skullcap",
         "equipment_subtype": "head",
         "frequency": 0.85,
@@ -192,7 +186,7 @@
     "hero_name": "Oscilio, Forked Continuum",
     "equipment": [
       {
-        "card_slug": "volzar_the_lightning_rod",
+        "card_slug": "waning_moon",
         "equipment_subtype": "weapon-2h",
         "frequency": 0.9,
         "avg_copies": 1.0
@@ -411,7 +405,7 @@
     "hero_name": "Aurora, Legacy of Tempest",
     "equipment": [
       {
-        "card_slug": "star_fall",
+        "card_slug": "reaping_blade",
         "equipment_subtype": "weapon-2h",
         "frequency": 0.9,
         "avg_copies": 1.0

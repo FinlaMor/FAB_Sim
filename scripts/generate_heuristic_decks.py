@@ -320,7 +320,13 @@ def _fetch_hero(conn: sqlite3.Connection, hero_slug: str, fmt: str = "cc") -> di
         (hero_slug, fmt),
     ).fetchone()
     if row:
-        return {"hero_slug": hero_slug, "hero_name": html.unescape(row[0] or ""), "win_rate": row[1], "total_matches": row[2]}
+        # Prefer slug_index name (canonical) over scraped DB title (often a page title like
+        # "FAB Arakni, Marionette Deck Analysis &amp;").
+        index = _get_slug_index()
+        # hero_slug from DB uses hyphens; slug_index uses underscores
+        idx_entry = index.get(hero_slug) or index.get(hero_slug.replace("-", "_"))
+        canonical_name = (idx_entry.get("name") if idx_entry else None) or html.unescape(row[0] or "")
+        return {"hero_slug": hero_slug, "hero_name": canonical_name, "win_rate": row[1], "total_matches": row[2]}
 
     # Hero not in DB — check injections for display name
     injections = _load_injections()
@@ -405,12 +411,24 @@ def _is_young_hero(hero_slug: str) -> bool:
 
 
 def _list_heroes(conn: sqlite3.Connection, fmt: str = "cc") -> list[str]:
-    """Return all hero slugs for the given format."""
+    """Return all hero slugs for the given format, including injection-only heroes."""
     rows = conn.execute(
         "SELECT hero_slug FROM heroes WHERE format = ? ORDER BY total_matches DESC",
         (fmt,),
     ).fetchall()
     slugs = [r[0] for r in rows]
+    slugs_set = set(slugs) | {s.replace("-", "_") for s in slugs}
+
+    # Add injection-only heroes (not yet in fablazing DB)
+    injections = _load_injections()
+    for hero_slug in injections:
+        if hero_slug.startswith("_"):
+            continue
+        # Skip if already covered by DB (handle hyphen/underscore variants)
+        if hero_slug in slugs_set or hero_slug.replace("-", "_") in slugs_set:
+            continue
+        slugs.append(hero_slug)
+
     # Exclude young heroes from CC format — they are not legal
     if fmt == "cc":
         slugs = [s for s in slugs if not _is_young_hero(s)]
