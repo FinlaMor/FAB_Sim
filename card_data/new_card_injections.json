@@ -83,40 +83,12 @@
         "equipment_subtype": "weapon-2h",
         "frequency": 0.95,
         "avg_copies": 1.0
-      },
-      {
-        "card_slug": "arcanite_skullcap",
-        "equipment_subtype": "head",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "courage_of_bladehold",
-        "equipment_subtype": "chest",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "braveforge_bracers",
-        "equipment_subtype": "arms",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "valiant_dynamo",
-        "equipment_subtype": "legs",
-        "frequency": 0.85,
-        "avg_copies": 1.0
       }
+     
     ],
     "deck_cards": [
       {
         "card_slug": "edict_of_steel_red",
-        "frequency": 0.99,
-        "avg_copies": 3.0
-      },
-      {
-        "card_slug": "spoils_of_war_red",
         "frequency": 0.99,
         "avg_copies": 3.0
       },
@@ -136,16 +108,6 @@
         "avg_copies": 3.0
       },
       {
-        "card_slug": "blade_runner_red",
-        "frequency": 0.91,
-        "avg_copies": 3.0
-      },
-      {
-        "card_slug": "blade_runner_blue",
-        "frequency": 0.97,
-        "avg_copies": 3.0
-      },
-      {
         "card_slug": "slice_and_dice_red",
         "frequency": 0.94,
         "avg_copies": 3.0
@@ -153,11 +115,6 @@
       {
         "card_slug": "slice_and_dice_yellow",
         "frequency": 0.75,
-        "avg_copies": 3.0
-      },
-      {
-        "card_slug": "draw_swords_red",
-        "frequency": 0.85,
         "avg_copies": 3.0
       },
       {
@@ -189,30 +146,6 @@
         "card_slug": "waning_moon",
         "equipment_subtype": "weapon-2h",
         "frequency": 0.9,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "flash_of_brilliance",
-        "equipment_subtype": "head",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "stormweavers_aegis",
-        "equipment_subtype": "chest",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "metacarpus_node",
-        "equipment_subtype": "arms",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "storm_striders",
-        "equipment_subtype": "legs",
-        "frequency": 0.85,
         "avg_copies": 1.0
       }
     ],
@@ -297,32 +230,8 @@
         "equipment_subtype": "weapon-2h",
         "frequency": 0.95,
         "avg_copies": 1.0
-      },
-      {
-        "card_slug": "flash_of_brilliance",
-        "equipment_subtype": "head",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "calming_cloak",
-        "equipment_subtype": "chest",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "wave_of_reality",
-        "equipment_subtype": "arms",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "phantasmal_footsteps",
-        "equipment_subtype": "legs",
-        "frequency": 0.85,
-        "avg_copies": 1.0
       }
-    ],
+      ],
     "deck_cards": [
       {
         "card_slug": "flowing_stormstrike_red",
@@ -407,30 +316,6 @@
       {
         "card_slug": "reaping_blade",
         "equipment_subtype": "weapon-2h",
-        "frequency": 0.9,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "flash_of_brilliance",
-        "equipment_subtype": "head",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "stormweavers_aegis",
-        "equipment_subtype": "chest",
-        "frequency": 0.85,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "zap_clappers",
-        "equipment_subtype": "arms",
-        "frequency": 0.9,
-        "avg_copies": 1.0
-      },
-      {
-        "card_slug": "starlight_striders",
-        "equipment_subtype": "legs",
         "frequency": 0.9,
         "avg_copies": 1.0
       }

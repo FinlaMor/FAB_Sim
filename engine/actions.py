@@ -705,7 +705,7 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             continue
         if has_reaction and not has_instant and player.action_points <= 0:
             continue
-        if ("Once per" in text or "once per" in text) and equip_card.exhausted:
+        if equip_card.exhausted:  # exhausted covers "once per turn" AND {t} (exhaust-cost) equipment
             continue
         if equip_card.tapped:
             continue

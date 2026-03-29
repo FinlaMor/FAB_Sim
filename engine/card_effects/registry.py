@@ -271,6 +271,75 @@ def _achilles_accelerator_effect(action, player, state):
     """Effect: gain 1 action point."""
     player.action_points += 1
 
+# ---------------------------------------------------------------------------
+# Radiant-* equipment: "Instant – Banish this and a card from hero's soul"
+# Condition: soul must have a card. Pay: banish self from slot + banish soul card.
+# ---------------------------------------------------------------------------
+
+def _radiant_condition(player, slot_name, equip_card, state=None) -> bool:
+    return bool(player.soul.cards)
+
+def _radiant_head_pay_cost(action, player, state):
+    """Banish self from head + banish top soul card."""
+    player.head.remove(action.card)
+    player.banished.add(action.card)
+    if player.soul.cards:
+        soul_card = player.soul.cards[0]
+        player.soul.remove(soul_card)
+        player.banished.add(soul_card)
+
+def _radiant_chest_pay_cost(action, player, state):
+    player.chest.remove(action.card)
+    player.banished.add(action.card)
+    if player.soul.cards:
+        soul_card = player.soul.cards[0]
+        player.soul.remove(soul_card)
+        player.banished.add(soul_card)
+
+def _radiant_arms_pay_cost(action, player, state):
+    player.arms.remove(action.card)
+    player.banished.add(action.card)
+    if player.soul.cards:
+        soul_card = player.soul.cards[0]
+        player.soul.remove(soul_card)
+        player.banished.add(soul_card)
+
+def _radiant_legs_pay_cost(action, player, state):
+    player.legs.remove(action.card)
+    player.banished.add(action.card)
+    if player.soul.cards:
+        soul_card = player.soul.cards[0]
+        player.soul.remove(soul_card)
+        player.banished.add(soul_card)
+
+# Ragamuffin's Hat: "Instant – Destroy Ragamuffin's Hat"  (head slot)
+# _head_destroy_pay_cost already exists — reused.
+
+# compass_of_sunken_depths / iris_of_the_blossom: {t} cost = exhaust self
+def _exhaust_self_pay_cost(action, player, state):
+    """Cost: {t} — exhaust this equipment (prevents re-use until start of next turn)."""
+    action.card.exhausted = True
+
+# iris_of_the_blossom: {t} + discard a card; condition: hand not empty
+def _iris_condition(player, slot_name, equip_card, state=None) -> bool:
+    return bool(player.hand.cards)
+
+def _iris_pay_cost(action, player, state):
+    """Cost: {t}, discard a card from hand."""
+    action.card.exhausted = True
+    if player.hand.cards:
+        card = player.hand.cards[0]
+        player.hand.remove(card)
+        player.graveyard.add(card)
+
+# alluvion_constellas: "Instant – Remove 2 energy counters"
+# Counter not yet fully modelled; condition blocks activation unless 2+ counters present.
+def _alluvion_condition(player, slot_name, equip_card, state=None) -> bool:
+    return player.class_counters.get("alluvion_energy", 0) >= 2
+
+def _alluvion_pay_cost(action, player, state):
+    player.class_counters["alluvion_energy"] = max(0, player.class_counters.get("alluvion_energy", 0) - 2)
+
 EQUIPMENT_PAY_COSTS = {
     "hammerhead_harpoon_cannon": _hammerhead_pay_cost,
     "goldbaited_hook": _goldbaited_hook_pay_cost,
@@ -282,12 +351,31 @@ EQUIPMENT_PAY_COSTS = {
     "halo_of_illumination": _head_destroy_pay_cost,
     "storm_striders": _lightning_greaves_pay_cost,   # same: {r} + destroy from legs
     "achilles_accelerator": _achilles_accelerator_pay_cost,
+    # Radiant-* (banish self + soul card)
+    "radiant_view": _radiant_head_pay_cost,
+    "radiant_raiment": _radiant_chest_pay_cost,
+    "radiant_touch": _radiant_arms_pay_cost,
+    "radiant_flow": _radiant_legs_pay_cost,
+    # Ragamuffin's Hat (head destroy)
+    "ragamuffins_hat": _head_destroy_pay_cost,
+    # {t}-cost Instants — exhaust self
+    "compass_of_sunken_depths": _exhaust_self_pay_cost,
+    "iris_of_the_blossom": _iris_pay_cost,
+    # alluvion_constellas — remove 2 energy counters
+    "alluvion_constellas": _alluvion_pay_cost,
 }
 
 EQUIPMENT_ACTIVATION_COST["halo_of_illumination"] = 1    # {r} from card text
 EQUIPMENT_ACTIVATION_COST["storm_striders"] = 1           # {r} from card text
 EQUIPMENT_ACTIVATION_COST["waning_moon"] = 2              # {r}{r} from card text
+EQUIPMENT_ACTIVATION_COST["meridian_pathway"] = 3         # {c}{c}{c} treated as 3 generic resources
 EQUIPMENT_ACTIVATION_CONDITIONS["achilles_accelerator"] = _achilles_accelerator_condition
+EQUIPMENT_ACTIVATION_CONDITIONS["radiant_view"] = _radiant_condition
+EQUIPMENT_ACTIVATION_CONDITIONS["radiant_raiment"] = _radiant_condition
+EQUIPMENT_ACTIVATION_CONDITIONS["radiant_touch"] = _radiant_condition
+EQUIPMENT_ACTIVATION_CONDITIONS["radiant_flow"] = _radiant_condition
+EQUIPMENT_ACTIVATION_CONDITIONS["iris_of_the_blossom"] = _iris_condition
+EQUIPMENT_ACTIVATION_CONDITIONS["alluvion_constellas"] = _alluvion_condition
 
 # ---------------------------------------------------------------------------
 # Equipment activation effects — what happens AFTER costs are paid (after the colon)
