@@ -251,6 +251,12 @@ class HeroCardDB:
                 _slug_idx = json.load(_f).get("by_slug", {})
         self._slug_idx = _slug_idx
 
+        # Exclude young heroes from CC format — they are not legal
+        if fmt == "cc":
+            heroes = [h for h in heroes
+                      if "young" not in {t.lower() for t in
+                          (_slug_idx.get(h) or _slug_idx.get(h.replace("-", "_")) or {}).get("types", [])}]
+
         # Build weapon candidate list with slug_index class types pre-computed.
         # DESCRIPTOR imported from fab_constants — shared with generate_heuristic_decks.py
         _all_weapon_rows = conn.execute(
@@ -467,7 +473,8 @@ class HeroCardDB:
         for slug, entry in slug_idx.items():
             types_lower = [t.lower() for t in entry.get("types", [])]
             if "hero" in types_lower:
-                heroes[slug] = entry
+                if "young" not in types_lower:  # CC only — young heroes not legal
+                    heroes[slug] = entry
             else:
                 all_cards.append((slug, entry))
 

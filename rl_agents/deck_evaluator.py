@@ -589,6 +589,21 @@ class FablazingBootstrapDataset(torch.utils.data.Dataset):
             "SELECT hero_slug, hero_name, win_rate FROM heroes WHERE format = 'cc'"
         ).fetchall()
 
+        # Filter out young heroes (not legal in CC)
+        _slug_idx_path = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
+        _si: dict = {}
+        if _slug_idx_path.exists():
+            with open(_slug_idx_path, encoding="utf-8") as _f:
+                _si = json.load(_f).get("by_slug", {})
+
+        def _is_young(slug: str) -> bool:
+            entry = _si.get(slug) or _si.get(slug.replace("-", "_"))
+            if not entry:
+                return False
+            return "young" in {t.lower() for t in entry.get("types", [])}
+
+        heroes = [h for h in heroes if not _is_young(h[0])]
+
         for hero_slug, hero_name, hero_wr in heroes:
             if hero_wr is None:
                 hero_wr = 0.5
