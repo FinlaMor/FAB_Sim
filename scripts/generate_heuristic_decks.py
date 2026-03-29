@@ -1244,7 +1244,7 @@ def generate_deck(
                                   legal_pool=legal_pool or None)
 
     if mutate:
-        deck_cards = _mutate_deck(deck_cards, deck_pool, rng=rng)
+        deck_cards = _mutate_deck(deck_cards, deck_pool, rng=rng, generic_pool=generic_deck)
 
     total_deck = sum(e["count"] for e in deck_cards)
 
@@ -1278,6 +1278,7 @@ def _mutate_deck(
     full_pool: list[dict],
     n_swaps: int | None = None,
     rng: random.Random | None = None,
+    generic_pool: list[dict] | None = None,
 ) -> list[dict]:
     """Mutate a deck by swapping 5-10 random cards with alternatives from the pool.
 
@@ -1327,6 +1328,19 @@ def _mutate_deck(
                 add = min(room, deficit)
                 entry["count"] += add
                 deficit -= add
+
+    # Last resort: fill remaining deficit with generic staples
+    if deficit > 0 and generic_pool:
+        used_slugs = {e["card_slug"] for e in deck}
+        for card in generic_pool:
+            if deficit <= 0:
+                break
+            if card["card_slug"] in used_slugs:
+                continue
+            copies = max(1, min(MAX_COPIES, deficit))
+            deck.append({**card, "count": copies})
+            used_slugs.add(card["card_slug"])
+            deficit -= copies
 
     return deck
 
