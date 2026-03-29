@@ -3460,3 +3460,6 @@ def register_all_triggers(state: GameState) -> None:
         for card in player.public_cards:
             register_card_triggers(card, state.event_manager)
         register_hero_triggers(player.hero, player, state.event_manager)
+
+
+import engine.card_effects.card_triggers_extended  # noqa: F401 — registers all extended triggers on import
