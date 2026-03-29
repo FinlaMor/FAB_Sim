@@ -206,6 +206,36 @@ class Transition:
     chain_link_count: int
     has_go_again: bool
     combat_keywords: str | None       # comma-separated: dominate,overpower,phantasm,...
+    # --- zone content columns (JSON arrays of card slugs) ---
+    player_hand: str | None = None
+    player_graveyard: str | None = None
+    player_banished: str | None = None
+    player_arsenal: str | None = None
+    player_equipment: str | None = None
+    player_pitch_zone: str | None = None
+    player_soul: str | None = None
+    player_auras: str | None = None
+    player_items: str | None = None
+    player_permanents: str | None = None
+    opp_graveyard: str | None = None
+    opp_banished: str | None = None
+    opp_equipment: str | None = None
+    opp_pitch_zone: str | None = None
+    opp_soul: str | None = None
+    opp_auras: str | None = None
+    opp_items: str | None = None
+    opp_permanents: str | None = None
+    # --- pitch stack columns ---
+    player_pitch_stack: str | None = None       # JSON ordered list of all pitched cards
+    opp_pitch_stack: str | None = None          # JSON turn-bucketed dict
+    # --- deck remainder ---
+    deck_remainder: str | None = None           # JSON alphabetically sorted list
+    # --- additional metadata ---
+    player_hero: str | None = None
+    opp_hero: str | None = None
+    combat_attack_card: str | None = None
+    combat_defending_cards: str | None = None    # JSON array
+    chain_link_history: str | None = None        # JSON array
     # --- backfilled after game ends ---
     game_progress: float | None = None
     steps_to_terminal: int | None = None
@@ -571,6 +601,36 @@ CREATE TABLE IF NOT EXISTS transitions (
     chain_link_count     INTEGER NOT NULL DEFAULT 0,
     has_go_again         INTEGER NOT NULL DEFAULT 0,
     combat_keywords      TEXT,            -- comma-separated: dominate,overpower,...
+    -- zone content (JSON arrays of card slugs)
+    player_hand          TEXT,
+    player_graveyard     TEXT,
+    player_banished      TEXT,
+    player_arsenal       TEXT,
+    player_equipment     TEXT,
+    player_pitch_zone    TEXT,
+    player_soul          TEXT,
+    player_auras         TEXT,
+    player_items         TEXT,
+    player_permanents    TEXT,
+    opp_graveyard        TEXT,
+    opp_banished         TEXT,
+    opp_equipment        TEXT,
+    opp_pitch_zone       TEXT,
+    opp_soul             TEXT,
+    opp_auras            TEXT,
+    opp_items            TEXT,
+    opp_permanents       TEXT,
+    -- pitch stacks
+    player_pitch_stack   TEXT,
+    opp_pitch_stack      TEXT,
+    -- deck remainder
+    deck_remainder       TEXT,
+    -- additional metadata
+    player_hero          TEXT,
+    opp_hero             TEXT,
+    combat_attack_card   TEXT,
+    combat_defending_cards TEXT,
+    chain_link_history   TEXT,
     -- trajectory linking
     game_progress        REAL,                   -- 0.0 to 1.0
     steps_to_terminal    INTEGER,
