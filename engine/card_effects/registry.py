@@ -237,6 +237,40 @@ def _old_knocker_pay_cost(action, player, state):
     player.chest.remove(action.card)
     player.graveyard.add(action.card)
 
+def _head_destroy_pay_cost(action, player, state):
+    """Cost: destroy self from head slot."""
+    player.head.remove(action.card)
+    player.graveyard.add(action.card)
+
+def _achilles_accelerator_pay_cost(action, player, state):
+    """Cost: destroy self from legs slot."""
+    player.legs.remove(action.card)
+    player.graveyard.add(action.card)
+
+def _achilles_accelerator_condition(player, slot_name, equip_card, state=None) -> bool:
+    """Only activatable if the player has boosted this turn."""
+    return bool(player.class_counters.get("boosted_this_turn"))
+
+def _storm_striders_effect(action, player, state):
+    """Effect: next Wizard non-attack action card this turn costs {r} less."""
+    player.current_turn_effects.append("storm_striders_cost_reduction")
+
+def _halo_of_illumination_effect(action, player, state):
+    """Effect: put a card from hand into soul; if Light, draw a card."""
+    if not player.hand.cards:
+        return
+    card = player.hand.cards[0]
+    player.hand.remove(card)
+    player.soul.add(card)
+    if "Light" in (card.types or []) and player.deck.cards:
+        drawn = player.deck.cards[0]
+        player.deck.remove(drawn)
+        player.hand.add(drawn)
+
+def _achilles_accelerator_effect(action, player, state):
+    """Effect: gain 1 action point."""
+    player.action_points += 1
+
 EQUIPMENT_PAY_COSTS = {
     "hammerhead_harpoon_cannon": _hammerhead_pay_cost,
     "goldbaited_hook": _goldbaited_hook_pay_cost,
@@ -245,7 +279,15 @@ EQUIPMENT_PAY_COSTS = {
     "aether_bindings_of_the_third_age": _aether_bindings_pay_cost,
     "lightning_greaves": _lightning_greaves_pay_cost,
     "old_knocker": _old_knocker_pay_cost,
+    "halo_of_illumination": _head_destroy_pay_cost,
+    "storm_striders": _lightning_greaves_pay_cost,   # same: {r} + destroy from legs
+    "achilles_accelerator": _achilles_accelerator_pay_cost,
 }
+
+EQUIPMENT_ACTIVATION_COST["halo_of_illumination"] = 1    # {r} from card text
+EQUIPMENT_ACTIVATION_COST["storm_striders"] = 1           # {r} from card text
+EQUIPMENT_ACTIVATION_COST["waning_moon"] = 2              # {r}{r} from card text
+EQUIPMENT_ACTIVATION_CONDITIONS["achilles_accelerator"] = _achilles_accelerator_condition
 
 # ---------------------------------------------------------------------------
 # Equipment activation effects — what happens AFTER costs are paid (after the colon)
@@ -324,6 +366,9 @@ EQUIPMENT_ACTIVATION_EFFECTS = {
     "aether_bindings_of_the_third_age": _aether_bindings_effect,
     "lightning_greaves": _lightning_greaves_effect,
     "old_knocker": _old_knocker_effect,
+    "halo_of_illumination": _halo_of_illumination_effect,
+    "storm_striders": _storm_striders_effect,
+    "achilles_accelerator": _achilles_accelerator_effect,
 }
 
 # ---------------------------------------------------------------------------

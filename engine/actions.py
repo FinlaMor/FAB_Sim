@@ -456,6 +456,9 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             if (("**Action**" in text or "Action" in text) and player.action_points > 0) or "**Instant**" in text or "Instant" in text:
                 can_activate_weapon = True
                 weapon_slug = weapon_card.slug
+                # Block "Once per Turn" weapons that have already been activated this turn
+                if ("once per" in text.lower()) and weapon_card.exhausted:
+                    can_activate_weapon = False
                 # Check weapon-specific conditions
                 cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(weapon_slug)
                 if cond_fn is not None and not cond_fn(player, "weapon", weapon_card):
