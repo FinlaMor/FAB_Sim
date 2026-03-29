@@ -47,7 +47,7 @@ from rl_agents.deck_evaluator import (
 
 SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
 
-from .fab_constants import DESCRIPTOR, validate_deck_legality
+from .fab_constants import DESCRIPTOR, validate_deck_legality, load_banned_cards
 
 _valid_slugs: set[str] | None = None
 
@@ -257,6 +257,11 @@ class HeroCardDB:
                       if "young" not in {t.lower() for t in
                           (_slug_idx.get(h) or _slug_idx.get(h.replace("-", "_")) or {}).get("types", [])}]
 
+        # Exclude banned heroes
+        _banned = load_banned_cards(fmt)
+        if _banned:
+            heroes = [h for h in heroes if h not in _banned and h.replace("-", "_") not in _banned]
+
         # Build weapon candidate list with slug_index class types pre-computed.
         # DESCRIPTOR imported from fab_constants — shared with generate_heuristic_decks.py
         _all_weapon_rows = conn.execute(
@@ -414,6 +419,10 @@ class HeroCardDB:
                         if total_possible >= MIN_DECK:
                             break
 
+            if _banned:
+                deck = [c for c in deck if c["slug"] not in _banned and c["slug"].replace("-", "_") not in _banned]
+                equip = [c for c in equip if c["slug"] not in _banned and c["slug"].replace("-", "_") not in _banned]
+                weap = [c for c in weap if c["slug"] not in _banned and c["slug"].replace("-", "_") not in _banned]
             self.hero_cards[hero] = deck
             self.hero_equipment[hero] = equip
             self.hero_weapons[hero] = weap
@@ -444,6 +453,8 @@ class HeroCardDB:
         slug_idx = raw.get("by_slug", {})
         obj._slug_idx = slug_idx
 
+        _banned = load_banned_cards("cc")
+
         _ARMOR_SLOTS = {"head", "chest", "arms", "legs"}
         _WEAPON_KEYWORDS = {"weapon", "1h", "2h", "sword", "axe", "bow", "dagger",
                             "hammer", "staff", "scepter", "scythe", "claw", "club",
@@ -473,7 +484,7 @@ class HeroCardDB:
         for slug, entry in slug_idx.items():
             types_lower = [t.lower() for t in entry.get("types", [])]
             if "hero" in types_lower:
-                if "young" not in types_lower:  # CC only — young heroes not legal
+                if "young" not in types_lower and slug not in _banned:  # CC only — young heroes not legal
                     heroes[slug] = entry
             else:
                 all_cards.append((slug, entry))
@@ -487,6 +498,8 @@ class HeroCardDB:
             deck: list[dict] = []
 
             for card_slug, card_entry in all_cards:
+                if _banned and card_slug in _banned:
+                    continue
                 card_types_lower = [t.lower() for t in card_entry.get("types", [])]
                 card_classes = _non_descriptor_types(card_entry.get("types", []))
 
