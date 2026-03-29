@@ -410,6 +410,33 @@ def _is_young_hero(hero_slug: str) -> bool:
     return "young" in {t.lower() for t in (entry.get("types") or [])}
 
 
+# Hero types that are only legal in their own special formats, never CC.
+_NON_CC_HERO_TYPES = {"pit-fighter", "adjudicator", "merchant"}
+
+
+def _is_cc_legal_hero(hero_slug: str, banned_slugs: set) -> bool:
+    """Return True if *hero_slug* is legal for Classic Constructed.
+
+    Filters out:
+    - Young heroes (blitz-only)
+    - Heroes whose types are restricted to non-CC formats (Pit-Fighter, Adjudicator, Merchant)
+    - Heroes that appear on the CC banned list
+    """
+    norm = hero_slug.replace("-", "_")
+    if norm in banned_slugs or hero_slug in banned_slugs:
+        return False
+    index = _get_slug_index()
+    entry = index.get(norm) or index.get(hero_slug)
+    if entry is None:
+        return True  # Unknown hero — let it through and fail later if needed
+    types_lower = {t.lower() for t in (entry.get("types") or [])}
+    if "young" in types_lower:
+        return False
+    if types_lower & _NON_CC_HERO_TYPES:
+        return False
+    return True
+
+
 def _list_heroes(conn: sqlite3.Connection, fmt: str = "cc") -> list[str]:
     """Return all hero slugs for the given format, including injection-only heroes."""
     rows = conn.execute(
@@ -429,9 +456,10 @@ def _list_heroes(conn: sqlite3.Connection, fmt: str = "cc") -> list[str]:
             continue
         slugs.append(hero_slug)
 
-    # Exclude young heroes from CC format — they are not legal
+    # Filter to CC-legal heroes only
     if fmt == "cc":
-        slugs = [s for s in slugs if not _is_young_hero(s)]
+        banned = set(load_banned_cards("cc"))
+        slugs = [s for s in slugs if _is_cc_legal_hero(s, banned)]
     return slugs
 
 
