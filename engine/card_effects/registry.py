@@ -2566,3 +2566,122 @@ DISCARD_ACTIVATE_EFFECTS = {
     "ripple_away": _ripple_away_discard_effect,
     "under_the_trapdoor": _under_the_trap_door_discard_effect,
 }
+
+# ---------------------------------------------------------------------------
+# Dragonscaler Flight Path (Equipment - Legs)
+# "Instant - {r}{r}{r}, destroy this: Target Draconic attack gets go again.
+#  If it's a weapon or ally attack, you may attack with it an additional time
+#  this turn. This ability costs {r} less for each Draconic chain link you
+#  control."
+# ---------------------------------------------------------------------------
+
+def _dragonscaler_activation_cost(player, state) -> int:
+    """Base cost 3, minus 1 per Draconic chain link the activating player controls.
+    A Draconic chain link is one whose attack card had 'Draconic' in its types."""
+    draconic_links = 0
+    for link in (state.chain_links or []):
+        if link.attacker_id != player.player_id:
+            continue
+        # Look up the attack card's types from LKI cache or CardDB
+        lki_types = state.last_known_value(link.attack_slug, "types")
+        if lki_types is None and hasattr(state, "card_db") and state.card_db is not None:
+            card = state.card_db.get(link.attack_slug)
+            lki_types = card.types if card else []
+        if "Draconic" in (lki_types or []):
+            draconic_links += 1
+    return max(0, 3 - draconic_links)
+
+
+def _dragonscaler_condition(player, slot_name, equip_card, state) -> bool:
+    """Dragonscaler Flight Path: activatable as Instant only during combat when
+    there is at least one Draconic attack on the chain (current or past link)."""
+    if state.combat is None:
+        return False
+    # Current attack is Draconic
+    if state.combat.attack_card and "Draconic" in (state.combat.attack_card.types or []):
+        return True
+    # A past chain link from this player is Draconic (weapon/ally re-attack target)
+    for link in (state.chain_links or []):
+        if link.attacker_id != player.player_id:
+            continue
+        lki_types = state.last_known_value(link.attack_slug, "types")
+        if lki_types is None and hasattr(state, "card_db") and state.card_db is not None:
+            card = state.card_db.get(link.attack_slug)
+            lki_types = card.types if card else []
+        if "Draconic" in (lki_types or []):
+            return True
+    return False
+
+
+def _dragonscaler_pay_cost(action, player, state) -> None:
+    """Cost: destroy Dragonscaler Flight Path from legs."""
+    zone = player.zone_by_name("legs")
+    if zone and action.card in zone.cards:
+        zone.remove(action.card)
+        player.graveyard.add(action.card)
+
+
+def _dragonscaler_effect(action, player, state) -> None:
+    """Effect: target Draconic attack gets go again.
+    The target can be the current chain-link attack OR a previous weapon/ally attack
+    from this player's chain links — allowing a weapon or ally to swing again.
+    If it's a weapon or ally attack, the player gains an extra attack with it this turn."""
+    from engine.card_effects.keywords import _ask_player
+
+    # Build list of targetable Draconic attacks: current + past links (weapon/ally from this player)
+    targets = []
+    if state.combat and state.combat.attack_card:
+        ac = state.combat.attack_card
+        if "Draconic" in (ac.types or []):
+            targets.append(("current", ac, state.combat.from_weapon, "Ally" in (ac.types or [])))
+
+    for link in (state.chain_links or []):
+        if link.attacker_id != player.player_id:
+            continue
+        # Weapon/ally re-attack targets: look up card types
+        lki_types = state.last_known_value(link.attack_slug, "types")
+        if lki_types is None and hasattr(state, "card_db") and state.card_db is not None:
+            card = state.card_db.get(link.attack_slug)
+            lki_types = card.types if card else []
+        if "Draconic" not in (lki_types or []):
+            continue
+        is_weapon = link.from_weapon
+        is_ally = "Ally" in (lki_types or [])
+        if is_weapon or is_ally:
+            targets.append(("link", link, is_weapon, is_ally))
+
+    if not targets:
+        return
+
+    # If multiple targets, ask player to choose; otherwise auto-select
+    if len(targets) > 1:
+        options = [f"{t[0]}:{t[1].attack_slug if hasattr(t[1], 'attack_slug') else t[1].slug}" for t in targets]
+        choice_idx = _ask_player(state, player.player_id, list(range(len(targets))),
+                                  context="Dragonscaler Flight Path: choose target Draconic attack")
+        chosen = targets[choice_idx] if isinstance(choice_idx, int) and 0 <= choice_idx < len(targets) else targets[0]
+    else:
+        chosen = targets[0]
+
+    target_type, target_obj, is_weapon, is_ally = chosen
+
+    if target_type == "current":
+        # Grant go again to the active chain link
+        if "go_again" not in state.combat.keywords and "Go again" not in state.combat.keywords:
+            state.combat.keywords.append("go_again")
+        attack = target_obj
+        if attack.keywords is None:
+            attack.keywords = []
+        if "Go again" not in attack.keywords:
+            attack.keywords.append("Go again")
+        if is_weapon or is_ally:
+            player.current_turn_effects.append("dragonscaler_extra_attack")
+    else:
+        # Past link — grant extra weapon/ally attack this turn
+        if is_weapon or is_ally:
+            player.current_turn_effects.append("dragonscaler_extra_attack")
+
+
+EQUIPMENT_ACTIVATION_CONDITIONS["dragonscaler_flight_path"] = _dragonscaler_condition
+EQUIPMENT_ACTIVATION_COST["dragonscaler_flight_path"] = _dragonscaler_activation_cost
+EQUIPMENT_PAY_COSTS["dragonscaler_flight_path"] = _dragonscaler_pay_cost
+EQUIPMENT_ACTIVATION_EFFECTS["dragonscaler_flight_path"] = _dragonscaler_effect

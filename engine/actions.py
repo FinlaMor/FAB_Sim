@@ -419,16 +419,25 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             
             # Check additonal activation conditions from registry
             cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(equip_slug)
-            if cond_fn is not None and not cond_fn(player, slot_name, equip_card):
+            if cond_fn is not None:
+                import inspect as _inspect
+                _sig = _inspect.signature(cond_fn)
+                _cond_result = cond_fn(player, slot_name, equip_card, state) if len(_sig.parameters) >= 4 else cond_fn(player, slot_name, equip_card)
+                if not _cond_result:
+                    continue
                 continue
             
             cost_override = EQUIPMENT_ACTIVATION_COST.get(equip_slug)
             if cost_override is not None:
-                effective_cost = cost_override(player) if callable(cost_override) else cost_override
+                if callable(cost_override):
+                    import inspect
+                    effective_cost = cost_override(player, state) if len(inspect.signature(cost_override).parameters) >= 2 else cost_override(player)
+                else:
+                    effective_cost = cost_override
             else:
                 effective_cost = equip_card.cost
             equipment_pitch_seqs = find_all_valid_pitch_sequences(
-                player.hand.cards, 
+                player.hand.cards,
                 effective_cost,
                 current_resources=player.resources
             )
@@ -703,10 +712,18 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
         cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(equip_slug)
         if cond_fn is not None and not cond_fn(player, slot_name, equip_card):
             continue
-        
-        effective_cost = equip_card.cost
+
+        cost_override = EQUIPMENT_ACTIVATION_COST.get(equip_slug)
+        if cost_override is not None:
+            if callable(cost_override):
+                import inspect
+                effective_cost = cost_override(player, state) if len(inspect.signature(cost_override).parameters) >= 2 else cost_override(player)
+            else:
+                effective_cost = cost_override
+        else:
+            effective_cost = equip_card.cost
         equipment_pitch_seqs = find_all_valid_pitch_sequences(
-            player.hand.cards, 
+            player.hand.cards,
             effective_cost,
             current_resources=player.resources
         )
