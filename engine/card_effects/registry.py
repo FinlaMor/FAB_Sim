@@ -884,6 +884,109 @@ EQUIPMENT_ACTIVATION_EFFECTS.update(_EFFECT_MAP)
 
 
 # ---------------------------------------------------------------------------
+# Dragonscaler Flight Path (HNT — Fai legs equipment)
+# ---------------------------------------------------------------------------
+
+def _dragonscaler_activation_cost(player, state) -> int:
+    """Base cost 3, minus 1 per Draconic chain link the activating player controls."""
+    draconic_links = 0
+    for link in (state.chain_links or []):
+        if link.attacker_id != player.player_id:
+            continue
+        lki_types = state.last_known_value(link.attack_slug, "types")
+        if lki_types is None and hasattr(state, "card_db") and state.card_db is not None:
+            card = state.card_db.get(link.attack_slug)
+            lki_types = card.types if card else []
+        if "Draconic" in (lki_types or []):
+            draconic_links += 1
+    return max(0, 3 - draconic_links)
+
+
+def _dragonscaler_condition(player, slot_name, equip_card, state) -> bool:
+    """Legal only during combat when there is at least one Draconic attack on the chain."""
+    if state.combat is None:
+        return False
+    if state.combat.attack_card and "Draconic" in (state.combat.attack_card.types or []):
+        return True
+    for link in (state.chain_links or []):
+        if link.attacker_id != player.player_id:
+            continue
+        lki_types = state.last_known_value(link.attack_slug, "types")
+        if lki_types is None and hasattr(state, "card_db") and state.card_db is not None:
+            card = state.card_db.get(link.attack_slug)
+            lki_types = card.types if card else []
+        if "Draconic" in (lki_types or []):
+            return True
+    return False
+
+
+def _dragonscaler_pay_cost(action, player, state) -> None:
+    """Cost: destroy Dragonscaler Flight Path from legs."""
+    zone = player.zone_by_name("legs")
+    if zone and action.card in zone.cards:
+        zone.remove(action.card)
+        player.graveyard.add(action.card)
+
+
+def _dragonscaler_effect(action, player, state) -> None:
+    """Effect: target Draconic attack gets go again.
+    Weapon/ally attacks also flag player for an extra attack this turn."""
+    from engine.card_effects.keywords import _ask_player
+
+    targets = []
+    if state.combat and state.combat.attack_card:
+        ac = state.combat.attack_card
+        if "Draconic" in (ac.types or []):
+            targets.append(("current", ac, state.combat.from_weapon, "Ally" in (ac.types or [])))
+
+    for link in (state.chain_links or []):
+        if link.attacker_id != player.player_id:
+            continue
+        lki_types = state.last_known_value(link.attack_slug, "types")
+        if lki_types is None and hasattr(state, "card_db") and state.card_db is not None:
+            card = state.card_db.get(link.attack_slug)
+            lki_types = card.types if card else []
+        if "Draconic" not in (lki_types or []):
+            continue
+        is_weapon = link.from_weapon
+        is_ally = "Ally" in (lki_types or [])
+        if is_weapon or is_ally:
+            targets.append(("link", link, is_weapon, is_ally))
+
+    if not targets:
+        return
+
+    if len(targets) > 1:
+        choice_idx = _ask_player(state, player.player_id, list(range(len(targets))),
+                                  context="Dragonscaler Flight Path: choose target Draconic attack")
+        chosen = targets[choice_idx] if isinstance(choice_idx, int) and 0 <= choice_idx < len(targets) else targets[0]
+    else:
+        chosen = targets[0]
+
+    target_type, target_obj, is_weapon, is_ally = chosen
+
+    if target_type == "current":
+        if "go_again" not in state.combat.keywords and "Go again" not in state.combat.keywords:
+            state.combat.keywords.append("go_again")
+        attack = target_obj
+        if attack.keywords is None:
+            attack.keywords = []
+        if "Go again" not in attack.keywords:
+            attack.keywords.append("Go again")
+        if is_weapon or is_ally:
+            player.current_turn_effects.append("dragonscaler_extra_attack")
+    else:
+        if is_weapon or is_ally:
+            player.current_turn_effects.append("dragonscaler_extra_attack")
+
+
+EQUIPMENT_ACTIVATION_CONDITIONS["dragonscaler_flight_path"] = _dragonscaler_condition
+EQUIPMENT_ACTIVATION_COST["dragonscaler_flight_path"] = _dragonscaler_activation_cost
+EQUIPMENT_PAY_COSTS["dragonscaler_flight_path"] = _dragonscaler_pay_cost
+EQUIPMENT_ACTIVATION_EFFECTS["dragonscaler_flight_path"] = _dragonscaler_effect
+
+
+# ---------------------------------------------------------------------------
 # B2/B3: HERO_TRIGGERS — passive triggered hero abilities
 # Maps hero_slug -> list[dict] where each dict describes a passive trigger.
 # Format: {"event": str, "condition_fn": callable(player, event, state) -> bool,
