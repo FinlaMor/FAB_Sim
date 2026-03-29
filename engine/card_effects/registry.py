@@ -881,3 +881,224 @@ _EFFECT_MAP = {
     "timesnap_potion_blue":           _timesnap_potion_effect,
 }
 EQUIPMENT_ACTIVATION_EFFECTS.update(_EFFECT_MAP)
+
+
+# ---------------------------------------------------------------------------
+# B2/B3: HERO_TRIGGERS — passive triggered hero abilities
+# Maps hero_slug -> list[dict] where each dict describes a passive trigger.
+# Format: {"event": str, "condition_fn": callable(player, event, state) -> bool,
+#          "effect_fn": callable(player, event, state) -> None}
+# Registered in engine/triggers.py register_hero_triggers() when hero is in play.
+# ---------------------------------------------------------------------------
+
+def _dorinthea_weapon_hit_passive(player, event, state):
+    if "dorinthea_weapon_hit_used" in player.current_turn_effects:
+        return
+    player.current_turn_effects.append("dorinthea_extra_weapon_attack")
+    player.current_turn_effects.append("dorinthea_weapon_hit_used")
+
+
+def _viserai_runeblade_trigger(player, event, state):
+    from engine.card_effects.keywords import create_token
+    data = event.data if isinstance(event.data, dict) else {}
+    played_card = data.get('card')
+    if played_card is None:
+        return
+    if "Runeblade" not in (played_card.types or []):
+        return
+    if "played_nonattack_action" not in player.current_turn_effects:
+        return
+    create_token(state, player.player_id, "runechant", 1)
+
+
+def _briar_attack_damage_trigger(player, event, state):
+    if "briar_earth_trigger_used" in player.current_turn_effects:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    damage = data.get('damage', 0)
+    target_id = data.get('target', 3 - player.player_id)
+    if damage > 0 and target_id != player.player_id:
+        if state.combat and state.combat.attack_card:
+            ac = state.combat.attack_card
+            if ac.controller == player.player_id and "Attack" in (ac.types or []) and "Action" in (ac.types or []):
+                from engine.card_effects.keywords import create_token
+                create_token(state, player.player_id, "embodiment_of_earth", 1)
+                player.current_turn_effects.append("briar_earth_trigger_used")
+
+
+def _briar_second_nonattack_trigger(player, event, state):
+    data = event.data if isinstance(event.data, dict) else {}
+    played_card = data.get('card')
+    if played_card is None:
+        return
+    types = played_card.types or []
+    if "Action" not in types or "Attack" in types:
+        return
+    count = player.current_turn_effects.count("played_nonattack_action")
+    if count == 1:
+        from engine.card_effects.keywords import create_token
+        create_token(state, player.player_id, "embodiment_of_lightning", 1)
+
+
+def _katsu_on_hit_trigger(player, event, state):
+    if "katsu_hit_trigger_used" in player.current_turn_effects:
+        return
+    if not state.combat or not state.combat.attack_card:
+        return
+    ac = state.combat.attack_card
+    if ac.controller != player.player_id:
+        return
+    if "Attack" not in (ac.types or []) or "Action" not in (ac.types or []):
+        return
+    player.current_turn_effects.append("katsu_hit_trigger_used")
+    zero_cost = [c for c in player.hand.cards if (c.cost or 0) == 0]
+    if not zero_cost:
+        return
+    from engine.card_effects.keywords import _ask_player, effect_shuffle
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context="Katsu: discard a 0-cost card to search for a combo card?")
+    if not choice:
+        return
+    pick = _ask_player(state, player.player_id, [c.slug for c in zero_cost],
+                       context="Katsu: choose a 0-cost card to discard")
+    card = next((c for c in zero_cost if c.slug == pick), zero_cost[0])
+    player.hand.remove(card)
+    player.graveyard.add(card)
+    combo_cards = [c for c in player.deck.cards if "Combo" in (c.keywords or [])]
+    if not combo_cards:
+        return
+    pick2 = _ask_player(state, player.player_id, [c.slug for c in combo_cards],
+                        context="Katsu: choose a combo card to banish face-up")
+    found = next((c for c in combo_cards if c.slug == pick2), combo_cards[0])
+    player.deck.remove(found)
+    player.banished.add(found, is_public=True)
+    player.current_turn_effects.append(("katsu_banished_playable", found.slug))
+    effect_shuffle(state, player.player_id)
+
+
+def _olympia_wager_win_trigger(player, event, state):
+    if "olympia_wager_win_used" in player.current_turn_effects:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    if data.get('winner') != player.player_id:
+        return
+    from engine.card_effects.keywords import create_token
+    create_token(state, player.player_id, "gold", 1)
+    player.current_turn_effects.append("olympia_wager_win_used")
+
+
+def _victor_gold_creation_trigger(player, event, state):
+    if "victor_gold_draw_used" in player.current_turn_effects:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    if data.get('player_id') != player.player_id:
+        return
+    from engine.card_effects.keywords import effect_draw
+    effect_draw(state, player.player_id, 1)
+    player.current_turn_effects.append("victor_gold_draw_used")
+
+
+def _valda_opponent_draw_trigger(player, event, state):
+    from engine.state import Step
+    if state.step not in (Step.ACTION, Step.START_PHASE):
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    if data.get('player_id', -1) == player.player_id:
+        return
+    count = data.get('count', 1)
+    from engine.card_effects.keywords import create_token
+    for _ in range(count):
+        create_token(state, player.player_id, "seismic_surge", 1)
+
+
+def _betsy_wager_trigger(player, event, state):
+    if not state.combat or not state.combat.attack_card:
+        return
+    if state.combat.attack_card.controller != player.player_id:
+        return
+    from engine.card_effects.keywords import _ask_player
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context="Betsy: pay {r}{r} to give this attack +1{p} and overpower?")
+    if not choice or player.resources < 2:
+        return
+    player.resources -= 2
+    state.combat.attack_power = (state.combat.attack_power or 0) + 1
+    if "Overpower" not in state.combat.keywords:
+        state.combat.keywords.append("Overpower")
+
+
+def _data_doll_banished_from_deck_trigger(player, event, state):
+    data = event.data if isinstance(event.data, dict) else {}
+    card = data.get('card')
+    if card is None or card.owner != player.player_id:
+        return
+    if getattr(card, 'prev_zone', None) != "deck":
+        return
+    types = card.types or []
+    if "Mechanologist" not in types or "Item" not in types:
+        return
+    if (card.cost or 0) > 2:
+        return
+    player.banished.remove(card)
+    player.items.add(card)
+
+
+def _florian_banished_earth_trigger(player, event, state):
+    earth_count = sum(1 for c in player.banished.cards if "Earth" in (c.types or []))
+    if earth_count >= 4:
+        if "florian_bonus_active" not in player.current_turn_effects:
+            player.current_turn_effects.append("florian_bonus_active")
+    else:
+        if "florian_bonus_active" in player.current_turn_effects:
+            player.current_turn_effects.remove("florian_bonus_active")
+
+
+def _riptide_play_from_hand_trigger(player, event, state):
+    data = event.data if isinstance(event.data, dict) else {}
+    played_card = data.get('card')
+    if played_card is None:
+        return
+    if getattr(played_card, 'prev_zone', None) != "hand":
+        return
+    if played_card.controller != player.player_id:
+        return
+    if player.arsenal.cards or not player.hand.cards:
+        return
+    from engine.card_effects.keywords import _ask_player
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context="Riptide: put a card from hand face-down into arsenal?")
+    if not choice:
+        return
+    pick = _ask_player(state, player.player_id, [c.slug for c in player.hand.cards],
+                       context="Riptide: choose a card to put into arsenal face-down")
+    card = player.hand.find(pick) or player.hand.cards[0]
+    player.hand.remove(card)
+    player.arsenal.add(card, is_public=False)
+    card.face_down = True
+
+
+HERO_TRIGGERS: dict = {
+    "dorinthea": [{"event": "hit", "condition_fn": lambda p, e, s: s.combat is not None and s.combat.from_weapon and s.combat.attacker_id == p.player_id, "effect_fn": _dorinthea_weapon_hit_passive}],
+    "dorinthea_ironsong": [{"event": "hit", "condition_fn": lambda p, e, s: s.combat is not None and s.combat.from_weapon and s.combat.attacker_id == p.player_id, "effect_fn": _dorinthea_weapon_hit_passive}],
+    "dorinthea_quicksilver_prodigy": [{"event": "hit", "condition_fn": lambda p, e, s: s.combat is not None and s.combat.from_weapon and s.combat.attacker_id == p.player_id, "effect_fn": _dorinthea_weapon_hit_passive}],
+    "viserai": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _viserai_runeblade_trigger}],
+    "viserai_rune_blood": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _viserai_runeblade_trigger}],
+    "briar": [{"event": "damage_dealt", "condition_fn": lambda p, e, s: True, "effect_fn": _briar_attack_damage_trigger}, {"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _briar_second_nonattack_trigger}],
+    "briar_warden_of_thorns": [{"event": "damage_dealt", "condition_fn": lambda p, e, s: True, "effect_fn": _briar_attack_damage_trigger}, {"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _briar_second_nonattack_trigger}],
+    "katsu": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _katsu_on_hit_trigger}],
+    "katsu_the_wanderer": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _katsu_on_hit_trigger}],
+    "olympia": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _olympia_wager_win_trigger}],
+    "olympia_prized_fighter": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _olympia_wager_win_trigger}],
+    "victor_goldmane": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
+    "victor_goldmane_high_and_mighty": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
+    "victor_goldmane_match_fixer": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
+    "valda_brightaxe": [{"event": "card_draw", "condition_fn": lambda p, e, s: True, "effect_fn": _valda_opponent_draw_trigger}],
+    "valda_seismic_impact": [{"event": "card_draw", "condition_fn": lambda p, e, s: True, "effect_fn": _valda_opponent_draw_trigger}],
+    "betsy": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _betsy_wager_trigger}],
+    "betsy_skin_in_the_game": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _betsy_wager_trigger}],
+    "data_doll_mkii": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _data_doll_banished_from_deck_trigger}],
+    "florian": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _florian_banished_earth_trigger}],
+    "florian_rotwood_harbinger": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _florian_banished_earth_trigger}],
+    "riptide": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _riptide_play_from_hand_trigger}],
+    "riptide_lurker_of_the_deep": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _riptide_play_from_hand_trigger}],
+}
