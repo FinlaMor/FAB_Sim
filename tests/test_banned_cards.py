@@ -310,3 +310,130 @@ def test_end_to_end_ban_and_generate(tmp_path, monkeypatch):
     assert "card-to-ban" not in filtered_pool
     assert "legal-card-a" in filtered_pool
     assert "legal-card-b" in filtered_pool
+
+
+# ---------------------------------------------------------------------------
+# (f) Production banned list and HeroCardDB integration tests
+# ---------------------------------------------------------------------------
+
+BANNED_HERO_SLUGS = frozenset({
+    "aurora_shooting_star",
+    "azalea_ace_in_the_hole",
+    "bravo_star_of_the_show",
+    "briar_warden_of_thorns",
+    "chane_bound_by_shadow",
+    "dash_inventor_extraordinaire",
+    "dromai_ash_artist",
+    "enigma_ledger_of_ancestry",
+    "florian_rotwood_harbinger",
+    "iyslander_stormbind",
+    "kano_dracai_of_aether",
+    "kayo_armed_and_dangerous",
+    "lexi_livewire",
+    "nuu_alluring_desire",
+    "oldhim_grandfather_of_eternity",
+    "prism_sculptor_of_arc_light",
+    "verdance_thorn_of_the_rose",
+    "viserai_rune_blood",
+    "zen_tamer_of_purpose",
+})
+
+BANNED_WEAPON_SLUGS = frozenset({
+    "star_fall",
+    "death_dealer",
+    "rosetta_thorn",
+    "galaxxi_black",
+    "teklo_plasma_pistol",
+    "storm_of_sandikai",
+    "cosmo_scroll_of_ancestral_tapestry",
+    "rotwood_reaper",
+    "krakens_aethervein",
+    "crucible_of_aetherweave",
+    "mandible_claw",
+    "voltaire_strike_twice",
+    "beckoning_mistblade",
+    "winters_wail",
+    "luminaris",
+    "staff_of_verdant_shoots",
+    "nebula_blade",
+    "tiger_taming_khakkara",
+})
+
+
+def test_banned_list_slug_count():
+    """load_banned_cards('cc') returns a frozenset with >= 76 slugs."""
+    from rl_agents.fab_constants import load_banned_cards
+
+    banned = load_banned_cards("cc")
+    assert isinstance(banned, frozenset)
+    assert len(banned) >= 76
+
+
+def test_all_banned_slugs_exist_in_slug_index():
+    """Every slug in load_banned_cards('cc') exists in slug_index.json."""
+    from rl_agents.fab_constants import load_banned_cards
+
+    slug_index_path = os.path.join(ROOT, "card_data", "slug_index.json")
+    if not os.path.exists(slug_index_path):
+        pytest.skip("slug_index.json not available")
+    with open(slug_index_path, encoding="utf-8") as f:
+        slug_index = json.load(f)
+    by_slug = slug_index.get("by_slug", slug_index)
+
+    banned = load_banned_cards("cc")
+    missing = [s for s in banned if s not in by_slug]
+    assert not missing, f"Banned slugs not found in slug_index: {missing}"
+
+
+def test_banned_heroes_present():
+    """All 19 hero slugs from spec are in load_banned_cards('cc')."""
+    from rl_agents.fab_constants import load_banned_cards
+
+    banned = load_banned_cards("cc")
+    missing = BANNED_HERO_SLUGS - banned
+    assert not missing, f"Missing banned hero slugs: {missing}"
+
+
+def test_banned_weapons_present():
+    """All 18 weapon slugs from spec are in load_banned_cards('cc')."""
+    from rl_agents.fab_constants import load_banned_cards
+
+    banned = load_banned_cards("cc")
+    missing = BANNED_WEAPON_SLUGS - banned
+    assert not missing, f"Missing banned weapon slugs: {missing}"
+
+
+def test_hero_card_db_from_slug_index_excludes_banned_heroes():
+    """HeroCardDB.from_slug_index() excludes banned hero slugs from hero_cards keys."""
+    from rl_agents.deck_search import HeroCardDB
+    from rl_agents.fab_constants import load_banned_cards
+
+    db = HeroCardDB.from_slug_index()
+    banned = load_banned_cards("cc")
+    banned_heroes_in_db = set(db.hero_cards.keys()) & BANNED_HERO_SLUGS
+    assert not banned_heroes_in_db, (
+        f"Banned heroes found in hero_cards: {banned_heroes_in_db}"
+    )
+
+
+def test_hero_card_db_from_slug_index_excludes_banned_cards():
+    """HeroCardDB.from_slug_index() card pools contain no banned slugs."""
+    from rl_agents.deck_search import HeroCardDB
+    from rl_agents.fab_constants import load_banned_cards
+
+    db = HeroCardDB.from_slug_index()
+    banned = load_banned_cards("cc")
+
+    all_card_slugs = set()
+    for hero_slug in db.hero_cards:
+        for card in db.hero_cards[hero_slug]:
+            all_card_slugs.add(card.get("card_slug", card.get("slug", "")))
+        for card in db.hero_equipment.get(hero_slug, []):
+            all_card_slugs.add(card.get("card_slug", card.get("slug", "")))
+        for card in db.hero_weapons.get(hero_slug, []):
+            all_card_slugs.add(card.get("card_slug", card.get("slug", "")))
+
+    banned_in_pools = all_card_slugs & banned
+    assert not banned_in_pools, (
+        f"Banned slugs found in card pools: {banned_in_pools}"
+    )
