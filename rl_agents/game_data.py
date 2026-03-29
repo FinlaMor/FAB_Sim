@@ -596,6 +596,36 @@ class TransitionCollector:
                 chain_link_count=0,
                 has_go_again=False,
                 combat_keywords=None,
+                # zone content columns — no state to extract from
+                player_hand=None,
+                player_graveyard=None,
+                player_banished=None,
+                player_arsenal=None,
+                player_equipment=None,
+                player_pitch_zone=None,
+                player_soul=None,
+                player_auras=None,
+                player_items=None,
+                player_permanents=None,
+                opp_graveyard=None,
+                opp_banished=None,
+                opp_equipment=None,
+                opp_pitch_zone=None,
+                opp_soul=None,
+                opp_auras=None,
+                opp_items=None,
+                opp_permanents=None,
+                # pitch stacks
+                player_pitch_stack=None,
+                opp_pitch_stack=None,
+                # deck remainder
+                deck_remainder=None,
+                # additional metadata
+                player_hero=None,
+                opp_hero=None,
+                combat_attack_card=None,
+                combat_defending_cards=None,
+                chain_link_history=None,
             )
             self._transitions.append(t)
             self._step += 1
@@ -917,9 +947,20 @@ class GameDataStore:
              equipment_count, opp_equipment_count,
              has_arsenal, opp_has_arsenal,
              chain_link_count, has_go_again, combat_keywords,
+             player_hand, player_graveyard, player_banished,
+             player_arsenal, player_equipment, player_pitch_zone,
+             player_soul, player_auras, player_items, player_permanents,
+             opp_graveyard, opp_banished, opp_equipment, opp_pitch_zone,
+             opp_soul, opp_auras, opp_items, opp_permanents,
+             player_pitch_stack, opp_pitch_stack, deck_remainder,
+             player_hero, opp_hero,
+             combat_attack_card, combat_defending_cards, chain_link_history,
              game_progress, steps_to_terminal)
             VALUES (?,?,?,?, ?,?,?,?, ?,?,?,?,?, ?,?,?, ?,?, ?,?,?, ?,?,?, ?,?,?,?,
-                    ?,?,?, ?,?, ?,?, ?,?, ?,?, ?,?,?, ?,?)"""
+                    ?,?,?, ?,?, ?,?, ?,?, ?,?, ?,?,?,
+                    ?,?,?, ?,?,?, ?,?,?,?, ?,?,?,?, ?,?,?,?,
+                    ?,?,?, ?,?, ?,?,?,
+                    ?,?)"""
 
         rows = [
             (
@@ -941,6 +982,14 @@ class GameDataStore:
                 t.equipment_count, t.opp_equipment_count,
                 int(t.has_arsenal), int(t.opp_has_arsenal),
                 t.chain_link_count, int(t.has_go_again), t.combat_keywords,
+                t.player_hand, t.player_graveyard, t.player_banished,
+                t.player_arsenal, t.player_equipment, t.player_pitch_zone,
+                t.player_soul, t.player_auras, t.player_items, t.player_permanents,
+                t.opp_graveyard, t.opp_banished, t.opp_equipment, t.opp_pitch_zone,
+                t.opp_soul, t.opp_auras, t.opp_items, t.opp_permanents,
+                t.player_pitch_stack, t.opp_pitch_stack, t.deck_remainder,
+                t.player_hero, t.opp_hero,
+                t.combat_attack_card, t.combat_defending_cards, t.chain_link_history,
                 t.game_progress, t.steps_to_terminal,
             )
             for t in transitions
