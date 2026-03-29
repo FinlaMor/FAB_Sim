@@ -69,14 +69,12 @@ class TestFactoryCardTypes:
         assert state.combat is not None
 
     def test_factory_equipment_card(self, factory):
-        # achilles_accelerator is Equipment + Legs
-        # Note: factory resolves equipment slot from subtypes; since slot types
-        # are in card.types (not subtypes), equipment defaults to head zone.
+        # achilles_accelerator is Equipment + Legs — factory resolves slot from types.
         state = factory.create_gamestate("achilles_accelerator")
         assert len(state.players) == 2
         p1 = state.players[1]
-        head_slugs = [c.slug for c in p1.head]
-        assert "achilles_accelerator" in head_slugs
+        legs_slugs = [c.slug for c in p1.legs]
+        assert "achilles_accelerator" in legs_slugs
 
     def test_factory_weapon_card(self, factory):
         state = factory.create_gamestate("aether_conduit")
@@ -111,7 +109,7 @@ class TestFactoryCardTypes:
     def test_factory_defense_reaction(self, factory):
         state = factory.create_gamestate("absorb_in_aether_red")
         assert len(state.players) == 2
-        assert state.step == Step.COMBAT_DEFEND
+        assert state.step == Step.COMBAT_REACTION
         assert state.combat is not None
 
     def test_factory_attack_reaction(self, factory):
@@ -239,18 +237,21 @@ def test_factory_creates_valid_state(card_slug):
     assert len(state.players) == 2, "State must have 2 players"
     assert state.step is not None, "Step must be set"
 
-    # Card should be in some zone of player 1
-    p1 = state.players[1]
-    all_cards = []
-    for zone_name in (
+    # Card should be in some zone of either player.
+    # Defense Reactions and Block cards are placed in P2 (the defender), so check both.
+    _ZONE_NAMES = (
         "hand", "deck", "graveyard", "banish", "pitch", "arsenal",
         "permanents", "hero", "weapon1", "weapon2",
         "head", "chest", "arms", "legs",
-    ):
-        zone = p1.zone_by_name(zone_name)
-        if zone is not None:
-            all_cards.extend(c.slug for c in zone)
-    assert card_slug in all_cards, f"{card_slug} not found in any P1 zone"
+    )
+    all_cards = []
+    for pid in (1, 2):
+        p = state.players[pid]
+        for zone_name in _ZONE_NAMES:
+            zone = p.zone_by_name(zone_name)
+            if zone is not None:
+                all_cards.extend(c.slug for c in zone)
+    assert card_slug in all_cards, f"{card_slug} not found in any zone of either player"
 
 
 # =========================================================================

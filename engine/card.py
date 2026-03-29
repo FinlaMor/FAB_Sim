@@ -633,7 +633,7 @@ class CardDB:
         ability_flags['ability_type_count'] = ability_type_count
         ability_flags['has_multiple_ability_types'] = ability_type_count >= 2
 
-        # Derive color from pitch
+        # Derive color from pitch and validate against slug suffix when present.
         color: Optional[str] = None
         if pitch_val == 1:
             color = "red"
@@ -641,7 +641,8 @@ class CardDB:
             color = "yellow"
         elif pitch_val == 3:
             color = "blue"
-        if color:
+        _color_suffixes = ("_red", "_yellow", "_blue")
+        if color and any(slug.endswith(s) for s in _color_suffixes):
             assert slug.endswith(color), "Slug '{}' does not match derived color '{}'".format(slug, color)
 
         return Card(
