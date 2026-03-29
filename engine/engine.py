@@ -1258,7 +1258,16 @@ def _apply_activate(state: GameState, action: Action) -> None:
             state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
         state.record_pitch(action.player_id, pitched_slugs)
 
-    player.resources -= card.cost or 0
+    # Use EQUIPMENT_ACTIVATION_COST override when available (handles tokens/items with resource
+    # cost embedded in functional text and a cost field that doesn't reflect activation cost).
+    from engine.card_effects.registry import EQUIPMENT_ACTIVATION_COST as _ACT_COST
+    _cost_val = _ACT_COST.get(card.slug)
+    if _cost_val is not None:
+        import inspect as _ins
+        activation_cost = _cost_val(player, state) if (callable(_cost_val) and len(_ins.signature(_cost_val).parameters) >= 2) else (_cost_val(player) if callable(_cost_val) else _cost_val)
+    else:
+        activation_cost = card.cost or 0
+    player.resources -= activation_cost
 
     # Mark exhausted for "once per turn" abilities
     text = card.functional_text or ""

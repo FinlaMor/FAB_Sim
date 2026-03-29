@@ -425,7 +425,6 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 _cond_result = cond_fn(player, slot_name, equip_card, state) if len(_sig.parameters) >= 4 else cond_fn(player, slot_name, equip_card)
                 if not _cond_result:
                     continue
-                continue
             
             cost_override = EQUIPMENT_ACTIVATION_COST.get(equip_slug)
             if cost_override is not None:
