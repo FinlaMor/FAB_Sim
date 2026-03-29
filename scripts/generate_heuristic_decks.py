@@ -395,13 +395,26 @@ def _fetch_cards(
     return equipment, deck
 
 
+def _is_young_hero(hero_slug: str) -> bool:
+    """Return True if *hero_slug* is a Young hero according to slug_index."""
+    index = _get_slug_index()
+    entry = index.get(hero_slug) or index.get(hero_slug.replace("-", "_"))
+    if entry is None:
+        return False
+    return "young" in {t.lower() for t in (entry.get("types") or [])}
+
+
 def _list_heroes(conn: sqlite3.Connection, fmt: str = "cc") -> list[str]:
     """Return all hero slugs for the given format."""
     rows = conn.execute(
         "SELECT hero_slug FROM heroes WHERE format = ? ORDER BY total_matches DESC",
         (fmt,),
     ).fetchall()
-    return [r[0] for r in rows]
+    slugs = [r[0] for r in rows]
+    # Exclude young heroes from CC format — they are not legal
+    if fmt == "cc":
+        slugs = [s for s in slugs if not _is_young_hero(s)]
+    return slugs
 
 
 def _fetch_generic_equipment(
