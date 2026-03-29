@@ -111,6 +111,24 @@ _COMBAT_KEYWORD_KEYS = (
 )
 
 
+def _extract_zone_slugs(state: dict, key: str) -> str | None:
+    """Extract card slugs from a zone as JSON list string.
+
+    Returns JSON string like '["sink_below_red","command_and_conquer_red"]'
+    or None if zone is absent.
+    """
+    cards = state.get(key)
+    if not isinstance(cards, list):
+        return None
+    slugs = []
+    for card in cards:
+        if isinstance(card, dict):
+            slug = card.get("cardNumber") or card.get("cardID") or ""
+            if slug:
+                slugs.append(slug)
+    return json.dumps(slugs, separators=(",", ":")) if slugs else "[]"
+
+
 def _extract_combat_keywords(acl: dict | None) -> str | None:
     """Return comma-separated active combat keywords, or None if not in combat."""
     if not acl or not isinstance(acl, dict):
