@@ -254,6 +254,13 @@ class TransitionCollector:
         self._transitions: list[Transition] = []
         self._step = 0
         self._lock = threading.Lock()
+        # Cumulative pitch stack tracking across transitions within a game
+        # {player_id: [slug, slug, ...]} — flat ordered list
+        self._player_pitch_stacks: dict[int, list[str]] = {}
+        # {player_id: {turn_number: [slug, ...]}} — turn-bucketed
+        self._opp_pitch_buckets: dict[int, dict[int, list[str]]] = {}
+        # Track which pitch zone slugs we've already added per player per turn
+        self._last_pitch_zone: dict[int, set[str]] = {}
 
     def record(
         self,
@@ -327,6 +334,135 @@ class TransitionCollector:
         has_arsenal = bool(player_arse) and isinstance(player_arse, list) and len(player_arse) > 0
         opp_has_arsenal = bool(opp_arse) and isinstance(opp_arse, list) and len(opp_arse) > 0
 
+        # --- zone content extraction ---
+        player_hand = _extract_zone_slugs(state, "playerHand")
+        player_graveyard = _extract_zone_slugs(state, "playerDiscard")
+        player_banished = _extract_zone_slugs(state, "playerBanish")
+        player_arsenal = _extract_zone_slugs(state, "playerArse")
+        player_equipment = _extract_zone_slugs(state, "playerEquipment")
+        player_pitch_zone = _extract_zone_slugs(state, "playerPitch")
+        player_soul = _extract_zone_slugs(state, "playerSoul")
+        player_auras = _extract_zone_slugs(state, "playerAuras")
+        player_items = _extract_zone_slugs(state, "playerItems")
+        player_permanents = _extract_zone_slugs(state, "playerPermanents")
+        opp_graveyard = _extract_zone_slugs(state, "opponentDiscard")
+        opp_banished = _extract_zone_slugs(state, "opponentBanish")
+        opp_equipment = _extract_zone_slugs(state, "opponentEquipment")
+        opp_pitch_zone = _extract_zone_slugs(state, "opponentPitch")
+        opp_soul = _extract_zone_slugs(state, "opponentSoul")
+        opp_auras = _extract_zone_slugs(state, "opponentAuras")
+        opp_items = _extract_zone_slugs(state, "opponentItems")
+        opp_permanents = _extract_zone_slugs(state, "opponentPermanents")
+
+        # --- cumulative pitch stack tracking ---
+        # Extract current pitch zone slugs as a set
+        current_pitch_slugs: list[str] = []
+        pitch_cards = state.get("playerPitch")
+        if isinstance(pitch_cards, list):
+            for card in pitch_cards:
+                if isinstance(card, dict):
+                    slug = card.get("cardNumber") or card.get("cardID") or ""
+                    if slug:
+                        current_pitch_slugs.append(slug)
+
+        # Initialize pitch stacks for this player if needed
+        if player_id not in self._player_pitch_stacks:
+            self._player_pitch_stacks[player_id] = []
+        if player_id not in self._last_pitch_zone:
+            self._last_pitch_zone[player_id] = set()
+
+        # Detect newly pitched cards (current pitch zone minus what we last saw)
+        current_set = set(current_pitch_slugs)
+        last_set = self._last_pitch_zone[player_id]
+        if current_set != last_set:
+            # New cards appeared in pitch zone — add them to cumulative stack
+            new_slugs = [s for s in current_pitch_slugs if s not in last_set]
+            self._player_pitch_stacks[player_id].extend(new_slugs)
+            self._last_pitch_zone[player_id] = current_set
+
+        player_pitch_stack = json.dumps(
+            self._player_pitch_stacks[player_id], separators=(",", ":")
+        )
+
+        # --- opponent pitch stack (turn-bucketed, alpha-sorted) ---
+        opp_pitch_slugs: list[str] = []
+        opp_pitch_cards = state.get("opponentPitch")
+        if isinstance(opp_pitch_cards, list):
+            for card in opp_pitch_cards:
+                if isinstance(card, dict):
+                    slug = card.get("cardNumber") or card.get("cardID") or ""
+                    if slug:
+                        opp_pitch_slugs.append(slug)
+
+        if player_id not in self._opp_pitch_buckets:
+            self._opp_pitch_buckets[player_id] = {}
+
+        if opp_pitch_slugs:
+            turn_key = turn_number
+            self._opp_pitch_buckets[player_id][turn_key] = sorted(opp_pitch_slugs)
+
+        opp_pitch_stack = json.dumps(
+            {str(k): v for k, v in sorted(self._opp_pitch_buckets[player_id].items())},
+            separators=(",", ":"),
+        )
+
+        # --- deck remainder (deck minus pitch stack, alpha-sorted) ---
+        deck_remainder: str | None = None
+        deck_cards = state.get("playerDeck")
+        if isinstance(deck_cards, list):
+            deck_slugs = []
+            for card in deck_cards:
+                if isinstance(card, dict):
+                    slug = card.get("cardNumber") or card.get("cardID") or ""
+                    if slug:
+                        deck_slugs.append(slug)
+            pitch_stack_set = set(self._player_pitch_stacks.get(player_id, []))
+            # Remove pitch stack cards from deck (handle duplicates by count)
+            remaining = list(deck_slugs)
+            for ps in self._player_pitch_stacks.get(player_id, []):
+                if ps in remaining:
+                    remaining.remove(ps)
+            deck_remainder = json.dumps(sorted(remaining), separators=(",", ":"))
+
+        # --- hero slugs ---
+        player_hero: str | None = None
+        opp_hero: str | None = None
+        p_hero_raw = state.get("playerHero")
+        if isinstance(p_hero_raw, dict):
+            player_hero = p_hero_raw.get("cardNumber") or p_hero_raw.get("cardID")
+        elif isinstance(p_hero_raw, str):
+            player_hero = p_hero_raw or None
+        o_hero_raw = state.get("opponentHero")
+        if isinstance(o_hero_raw, dict):
+            opp_hero = o_hero_raw.get("cardNumber") or o_hero_raw.get("cardID")
+        elif isinstance(o_hero_raw, str):
+            opp_hero = o_hero_raw or None
+
+        # --- combat chain details ---
+        combat_attack_card: str | None = None
+        combat_defending_cards: str | None = None
+        if acl:
+            atk_card = acl.get("attackCard") or acl.get("cardNumber")
+            if isinstance(atk_card, dict):
+                combat_attack_card = atk_card.get("cardNumber") or atk_card.get("cardID")
+            elif isinstance(atk_card, str) and atk_card:
+                combat_attack_card = atk_card
+            def_cards = acl.get("defendingCards")
+            if isinstance(def_cards, list):
+                def_slugs = []
+                for dc in def_cards:
+                    if isinstance(dc, dict):
+                        s = dc.get("cardNumber") or dc.get("cardID") or ""
+                        if s:
+                            def_slugs.append(s)
+                    elif isinstance(dc, str) and dc:
+                        def_slugs.append(dc)
+                combat_defending_cards = json.dumps(def_slugs, separators=(",", ":"))
+
+        chain_link_history: str | None = None
+        if isinstance(chain_links, list) and chain_links:
+            chain_link_history = json.dumps(chain_links, separators=(",", ":"))
+
         with self._lock:
             t = Transition(
                 game_id=self.game_id,
@@ -371,6 +507,32 @@ class TransitionCollector:
                 chain_link_count=chain_link_count,
                 has_go_again=has_go_again,
                 combat_keywords=combat_keywords,
+                player_hand=player_hand,
+                player_graveyard=player_graveyard,
+                player_banished=player_banished,
+                player_arsenal=player_arsenal,
+                player_equipment=player_equipment,
+                player_pitch_zone=player_pitch_zone,
+                player_soul=player_soul,
+                player_auras=player_auras,
+                player_items=player_items,
+                player_permanents=player_permanents,
+                opp_graveyard=opp_graveyard,
+                opp_banished=opp_banished,
+                opp_equipment=opp_equipment,
+                opp_pitch_zone=opp_pitch_zone,
+                opp_soul=opp_soul,
+                opp_auras=opp_auras,
+                opp_items=opp_items,
+                opp_permanents=opp_permanents,
+                player_pitch_stack=player_pitch_stack,
+                opp_pitch_stack=opp_pitch_stack,
+                deck_remainder=deck_remainder,
+                player_hero=player_hero,
+                opp_hero=opp_hero,
+                combat_attack_card=combat_attack_card,
+                combat_defending_cards=combat_defending_cards,
+                chain_link_history=chain_link_history,
             )
             self._transitions.append(t)
             self._step += 1
@@ -511,6 +673,32 @@ def _replace_transition(t: Transition, **overrides: Any) -> Transition:
         "chain_link_count": t.chain_link_count,
         "has_go_again": t.has_go_again,
         "combat_keywords": t.combat_keywords,
+        "player_hand": t.player_hand,
+        "player_graveyard": t.player_graveyard,
+        "player_banished": t.player_banished,
+        "player_arsenal": t.player_arsenal,
+        "player_equipment": t.player_equipment,
+        "player_pitch_zone": t.player_pitch_zone,
+        "player_soul": t.player_soul,
+        "player_auras": t.player_auras,
+        "player_items": t.player_items,
+        "player_permanents": t.player_permanents,
+        "opp_graveyard": t.opp_graveyard,
+        "opp_banished": t.opp_banished,
+        "opp_equipment": t.opp_equipment,
+        "opp_pitch_zone": t.opp_pitch_zone,
+        "opp_soul": t.opp_soul,
+        "opp_auras": t.opp_auras,
+        "opp_items": t.opp_items,
+        "opp_permanents": t.opp_permanents,
+        "player_pitch_stack": t.player_pitch_stack,
+        "opp_pitch_stack": t.opp_pitch_stack,
+        "deck_remainder": t.deck_remainder,
+        "player_hero": t.player_hero,
+        "opp_hero": t.opp_hero,
+        "combat_attack_card": t.combat_attack_card,
+        "combat_defending_cards": t.combat_defending_cards,
+        "chain_link_history": t.chain_link_history,
         "game_progress": t.game_progress,
         "steps_to_terminal": t.steps_to_terminal,
         "next_transition_id": t.next_transition_id,
