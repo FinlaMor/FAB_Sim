@@ -866,8 +866,10 @@ def resolve_stack(game_state: GameState) -> None:
                    and "Figment" in _card_types)
     _is_aura = (entry.layer_type == 'card' and card is not None
                 and "Aura" in _card_types and not _is_figment)
+    _is_ally = (entry.layer_type == 'card' and card is not None
+                and "Ally" in _card_types)
 
-    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura:
+    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura and not _is_ally:
         game_state.process_cease_to_exist(card)
 
     if entry.effect_fn:
@@ -877,16 +879,27 @@ def resolve_stack(game_state: GameState) -> None:
             with open(environ['debug_file'], 'a') as f:
                 f.write(f'stack {entry} resolves: {result}\n')
 
-    # Figments and Auras enter the arena as permanents instead of ceasing to exist.
-    if _is_figment or _is_aura:
+    # Figments, Auras, and Allies enter the arena as permanents instead of ceasing to exist.
+    if _is_figment or _is_aura or _is_ally:
         player_id = entry.player_id
         player = game_state.players[player_id]
         # Remove from stack zone tracking (triggered layers add here; card layers may not)
         game_state.stack.remove(card)
-        # Enter permanents zone
-        if "Ally" in _card_types:
-            card.permanent_subtype = "Ally"
-        player.permanents.add(card, is_public=True)
+        # Allies enter the allies zone; Figments/Auras enter permanents
+        if _is_ally:
+            player.allies.add(card, is_public=True)
+            # Ensure allies_exhausted list is long enough
+            while len(player.allies_exhausted) < len(player.allies.cards):
+                player.allies_exhausted.append(False)
+            # Set initial life
+            if hasattr(card, 'base_life') and card.base_life is not None:
+                card.current_life = card.base_life
+            elif hasattr(card, 'life') and card.life is not None:
+                card.current_life = card.life
+        else:
+            if "Ally" in _card_types:
+                card.permanent_subtype = "Ally"
+            player.permanents.add(card, is_public=True)
         # Register triggers for the card now that it's in the arena
         from engine.card_effects.triggers import register_card_triggers
         register_card_triggers(card, game_state.event_manager)
