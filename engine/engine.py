@@ -1423,7 +1423,8 @@ def _apply_activate_hero(state: GameState, action: Action) -> None:
         state.record_pitch(action.player_id, pitched_slugs)
 
     hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
-    cost = hero_cfg.get("cost", 0)
+    cost_raw = hero_cfg.get("cost", 0)
+    cost = cost_raw(player, state) if callable(cost_raw) else cost_raw
     player.resources -= cost
 
     # Tap hero if required

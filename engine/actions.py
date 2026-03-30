@@ -561,7 +561,8 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
     if hero_cfg is not None:
         cond_fn = hero_cfg.get("condition_fn")
         if cond_fn and cond_fn(player, state):
-            hero_cost = hero_cfg.get("cost", 0)
+            hero_cost_raw = hero_cfg.get("cost", 0)
+            hero_cost = hero_cost_raw(player, state) if callable(hero_cost_raw) else hero_cost_raw
             hero_pitch_seqs = find_all_valid_pitch_sequences(
                 player.hand.cards,
                 hero_cost,
