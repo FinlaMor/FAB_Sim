@@ -226,13 +226,17 @@ def main() -> int:
     embedder_bundle = load_embedder_bundle(embedder_bundle_path) if embedder_bundle_path is not None else None
 
     # P1-10: Validate bundle dimensions match dataset dimensions
+    # Skip this check when using raw features — the dataset dims are packed sizes
+    # (e.g. 410/70) which are intentionally different from the bundle's output dims (320/835).
+    # The e2e encoder build step below handles the dimension mapping.
+    uses_raw_features = bool(payload.get("uses_raw_features", False))
     if embedder_bundle is None and args.dataset_pt:
         print(
             "[iql] WARNING: no embedder bundle found for pre-built dataset. "
             "Dimension validation skipped — pass --embedder-bundle explicitly.",
             flush=True,
         )
-    if embedder_bundle is not None:
+    if embedder_bundle is not None and not uses_raw_features:
         bundle_state_dim = embedder_bundle.get("state_output_dim")
         bundle_action_dim = embedder_bundle.get("action_output_dim")
         dataset_state_dim = int(payload["state_dim"])
@@ -258,8 +262,7 @@ def main() -> int:
         out_pt.parent.mkdir(parents=True, exist_ok=True)
         torch.save(payload, str(out_pt))
 
-    # Detect whether the dataset contains raw packed features (end-to-end training)
-    uses_raw_features = bool(payload.get("uses_raw_features", False))
+    # uses_raw_features already computed above for dimension validation skip
     if uses_raw_features:
         print("[iql] dataset uses raw packed features — end-to-end transformer training enabled", flush=True)
 
