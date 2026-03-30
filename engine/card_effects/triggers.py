@@ -85,7 +85,12 @@ def _defended_this_chain(card, event, state):
 
 
 def _is_attacking(card, event, state):
-    """Check if this card is the current attack."""
+    """Check if this card is the current attack or was 'flicked' to hit."""
+    # Check flick hit: event.data.card matches this card (Flick Knives retroactive hit)
+    event_data = event.data if isinstance(event.data, dict) else {}
+    flick_card = event_data.get("card")
+    if flick_card is not None and getattr(flick_card, 'slug', '') == card.slug:
+        return True
     if not state.combat:
         return False
     return state.combat.attack_card == card or state.combat.attack_card.slug == card.slug
@@ -1164,7 +1169,7 @@ def _hunters_klaive_hit(card, event, state):
 
 def _kiss_of_death_hit(card, event, state):
     """When Kiss of Death hits a hero, they lose 1 health."""
-    if not state.combat or state.combat.attack_card.slug != card.slug:
+    if not _is_attacking(card, event, state):
         return
     target_id = 3 - _controller_id(card)
     effect_lose_life(state, target_id, 1)

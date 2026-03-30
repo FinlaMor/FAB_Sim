@@ -647,9 +647,18 @@ _register("beseech_the_demigon", [
 ])
 
 # -- bet_big_red --
-# Betsy wager. Simplified: noop (wager too complex)
+# "When this attacks a hero, you may wager a Gold, Might, and Vigor token with them."
+def _bet_big_attacking(card, event, state):
+    if not _is_this_attacking(card, event, state):
+        return
+    from engine.card_effects.keywords import add_wager
+    cid = _controller_id(card)
+    add_wager(state, cid, "gold")
+    add_wager(state, cid, "might")
+    add_wager(state, cid, "vigor")
+
 _register("bet_big", [
-    TriggerDef(event_type="attacking", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="attacking", effect_fn=_bet_big_attacking),
 ])
 
 # -- big_bertha_blue --
@@ -1194,11 +1203,20 @@ _register("drill_shot", [
 ])
 
 # -- drink_em_under_the_table_red --
-# Betsy wager. Simplified: on attack draw 1.
+# "When this attacks a hero, you may wager with them. The winner draws a card."
+def _drink_em_attacking(card, event, state):
+    if not _is_this_attacking(card, event, state):
+        return
+    from engine.card_effects.keywords import add_wager
+    cid = _controller_id(card)
+    # Wager with no prize token — winner draws determined at resolution
+    add_wager(state, cid, None)
+    # Simplified: both players get the "winner draws" via the wager_resolved event
+    # For now, just draw 1 for the attacker as approximation
+    effect_draw(state, cid, 1)
+
 _register("drink_em_under_the_table", [
-    TriggerDef(event_type="attacking",
-               effect_fn=lambda c, e, s: effect_draw(s, _controller_id(c), 1)
-               if _is_this_attacking(c, e, s) else None),
+    TriggerDef(event_type="attacking", effect_fn=_drink_em_attacking),
 ])
 
 # -- duty_bound_blitz (red/yellow) --
@@ -1738,10 +1756,22 @@ _register("hit_the_gas", [
 ])
 
 # -- hold_em (red: +3p, yellow: +2p, blue: +1p) --
-# Next Warrior attack +Np and wager Vigor. Go again. Simplified: next attack +Np.
+# "Next Warrior attack +Np and 'wager a Vigor token with them.'"
+if "next_attack_wager_vigor" not in TURN_ATTACK_EFFECTS:
+    def _apply_wager_vigor(attack_card, player, state):
+        from engine.card_effects.keywords import add_wager
+        add_wager(state, player.player_id, "vigor")
+    TURN_ATTACK_EFFECTS["next_attack_wager_vigor"] = {"apply_fn": _apply_wager_vigor}
+
+def _hold_em_play(card, event, state, bonus):
+    cid = _controller_id(card)
+    state.players[cid].current_turn_effects.append(f"next_attack_+{bonus}")
+    state.players[cid].current_turn_effects.append("next_attack_wager_vigor")
+
 for _slug, _n in [("hold_em_red", 3), ("hold_em_yellow", 2), ("hold_em_blue", 1)]:
     _register(_slug, [
-        TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(_n)),
+        TriggerDef(event_type="on_play",
+                   effect_fn=(lambda n: lambda c, e, s: _hold_em_play(c, e, s, n))(_n)),
     ])
 
 # -- hostile_encroachment_red --
@@ -2022,10 +2052,28 @@ _register("minnowism", [
     TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(3)),
 ])
 
-# -- money_where_ya_mouth_is_red --
-# Next attack +3p and wager Gold. Simplified: next attack +3p.
-_register("money_where_ya_mouth_is", [
-    TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(3)),
+# -- money_where_ya_mouth_is (red: +3p, yellow: +2p, blue: +1p) --
+# "Next attack gets +Np and 'When this attacks a hero, you may wager a Gold token with them.'"
+def _money_where_play(card, event, state, bonus):
+    cid = _controller_id(card)
+    state.players[cid].current_turn_effects.append(f"next_attack_+{bonus}")
+    state.players[cid].current_turn_effects.append("next_attack_wager_gold")
+
+# Register a TURN_ATTACK_EFFECTS entry for the wager
+if "next_attack_wager_gold" not in TURN_ATTACK_EFFECTS:
+    def _apply_wager_gold(attack_card, player, state):
+        from engine.card_effects.keywords import add_wager
+        add_wager(state, player.player_id, "gold")
+    TURN_ATTACK_EFFECTS["next_attack_wager_gold"] = {"apply_fn": _apply_wager_gold}
+
+_register("money_where_ya_mouth_is_red", [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _money_where_play(c, e, s, 3)),
+])
+_register("money_where_ya_mouth_is_yellow", [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _money_where_play(c, e, s, 2)),
+])
+_register("money_where_ya_mouth_is_blue", [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _money_where_play(c, e, s, 1)),
 ])
 
 # -- mordred_tide_red --

@@ -725,6 +725,37 @@ def _resolve_damage(state: GameState) -> None:
     )
     state.chain_links.append(link)
 
+    # CR 8.5.46: Resolve wagers — winner creates the prize token
+    _resolve_wagers(state, combat)
+
+def _resolve_wagers(state: GameState, combat) -> None:
+    """CR 8.5.46: Resolve all wagers on the current chain link.
+
+    If the attack hit, the controller (attacker) wins. Otherwise the
+    opponent (defender) wins. The winner creates the prize token.
+    """
+    from engine.card_effects.keywords import create_token
+    if not combat.wagers:
+        return
+
+    hit = combat.hit
+    for controller_id, prize_slug in combat.wagers:
+        opponent_id = 3 - controller_id
+        winner_id = controller_id if hit else opponent_id
+        # Emit wager_resolved event
+        state.event_manager.emit(
+            Event(type='wager_resolved',
+                  data={'winner': winner_id, 'loser': 3 - winner_id,
+                        'hit': hit, 'prize': prize_slug,
+                        'controller': controller_id}),
+            state)
+        # Create prize token for the winner
+        if prize_slug:
+            create_token(state, winner_id, prize_slug)
+
+    combat.wagers.clear()
+
+
 def _close_combat_chain(state: GameState) -> None:
     """7.7.5-7.7.6: move cards to appropriate zones after combat."""
     combat = state.combat

@@ -1389,6 +1389,21 @@ def effect_wager(state: GameState, player_id: int, source: Card = None) -> bool:
     return winner == player_id
 
 
+def add_wager(state: GameState, controller_id: int, prize_slug: str | None = None) -> None:
+    """Add a wager to the current combat chain link.
+
+    The wager resolves automatically at chain link resolution via
+    ``_resolve_wagers`` in engine.py: if the attack hits, the controller
+    wins and creates the prize token; otherwise the opponent wins it.
+    """
+    if state.combat is not None:
+        state.combat.wagers.append((controller_id, prize_slug))
+        state.event_manager.emit(
+            type('Event', (), {'type': 'wagered',
+                               'data': {'controller': controller_id, 'prize': prize_slug}})(),
+            state)
+
+
 def check_decompose(state: GameState, player_id: int) -> bool:
     """CR 8.4.14: Decompose — check if the player can pay the cost.
     Cost: banish 2 Earth cards and an action card from graveyard.

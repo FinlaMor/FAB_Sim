@@ -495,6 +495,8 @@ class CombatState:
     no_defense_reactions: bool = False
     defending_declared: bool = False
     defending_equipment_zones: list[str] = field(default_factory=list)
+    # Wager system (CR 8.5.46): list of (controller_id, prize_token_slug_or_None)
+    wagers: list[tuple[int, str | None]] = field(default_factory=list)
 
     @property
     def attack_slug(self) -> Optional[str]:
