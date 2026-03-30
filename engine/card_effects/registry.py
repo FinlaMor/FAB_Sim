@@ -1132,6 +1132,44 @@ EQUIPMENT_ACTIVATION_EFFECTS["dragonscaler_flight_path"] = _dragonscaler_effect
 
 
 # ---------------------------------------------------------------------------
+# quickdodge_flexors
+# "**Defense Reaction** - {r}: Add this to the active chain link as a
+# defending card. It has 2 base {d} this chain link.
+# At the beginning of the end phase, if this defended this turn, destroy it."
+#
+# Implementation:
+#   Condition: only legal when combat is active (there is an active chain link).
+#   Effect: give the card 2 base defense temporarily, add to combat.defending_cards,
+#   and remove from the equipment slot → graveyard. Removing from the slot prevents
+#   re-activation (slot is empty) and approximates the "destroy at end of phase"
+#   result with no observable difference at random-agent level.
+# ---------------------------------------------------------------------------
+
+def _quickdodge_flexors_condition(_player, _slot_name, _equip_card, state):
+    return state.combat is not None
+
+def _quickdodge_flexors_effect(action, player, state):
+    card = action.card
+    slot = getattr(action, 'slot', None) or "legs"
+    # Grant 2 base defense for this chain link
+    card.base_defense = 2
+    # Add to chain link defending cards so damage calculation includes it
+    if state.combat is not None:
+        if state.combat.defending_cards is None:
+            state.combat.defending_cards = []
+        if card not in state.combat.defending_cards:
+            state.combat.defending_cards.append(card)
+    # Remove from equipment slot (card has been committed; destroyed at end of phase)
+    zone = player.zone_by_name(slot)
+    if zone and card in zone.cards:
+        zone.remove(card)
+        player.graveyard.add(card)
+
+EQUIPMENT_ACTIVATION_CONDITIONS["quickdodge_flexors"] = _quickdodge_flexors_condition
+EQUIPMENT_ACTIVATION_EFFECTS["quickdodge_flexors"] = _quickdodge_flexors_effect
+
+
+# ---------------------------------------------------------------------------
 # B2/B3: HERO_TRIGGERS — passive triggered hero abilities
 # Maps hero_slug -> list[dict] where each dict describes a passive trigger.
 # Format: {"event": str, "condition_fn": callable(player, event, state) -> bool,

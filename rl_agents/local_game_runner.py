@@ -26,6 +26,7 @@ from encoder.action_embedder import ActionEmbedder
 from encoder.card_embedder import SlugVocab
 from encoder.gamestate_embedder import GameStateEmbedder, gamestate_to_features
 from rl_agents.game_backends import GameRunRequest, LocalEngineBackend
+from rl_agents.game_data import TransitionCollector
 from rl_agents.random_agent import RandomAgent
 from rl_agents.utils.card_helpers import (
     card_slug as _card_slug,
@@ -223,10 +224,9 @@ class MatchupScheduler:
         for i in range(0, len(shuffled), 2):
             pairs.append((shuffled[i], shuffled[i + 1]))
 
-        # Fill remaining games with random pairings until we have enough. Equal number of decks.
+        # Fill remaining games with random pairings until we have enough.
         while len(pairs) < games_per_loop:
             random.shuffle(shuffled)
-            pairs: list[tuple[str, str]] = []
             for i in range(0, len(shuffled), 2):
                 pairs.append((shuffled[i], shuffled[i + 1]))
 
@@ -256,6 +256,7 @@ class EmbeddingRecorderAgent:
         step_counter: list[int] | None = None,
         max_decisions_per_game: int = 5000,
         combat_log: dict[int, list[dict]] | None = None,
+        transition_collector: Any | None = None,
     ):
         self.base_agent = base_agent
         self.player_id = player_id
@@ -266,6 +267,7 @@ class EmbeddingRecorderAgent:
         self.step_counter = step_counter if step_counter is not None else [0]
         self.max_decisions_per_game = max_decisions_per_game
         self.combat_log = combat_log if combat_log is not None else {}
+        self.transition_collector = transition_collector
         self._last_seen_chain_count: int = 0
 
     def __call__(self, state: GameState, options, context=None):
@@ -351,6 +353,15 @@ class EmbeddingRecorderAgent:
             )
             self.replay_db.store_embeddings(row_id, state_emb, action_emb)
             self.step_counter[0] += 1
+
+            # Also record to TransitionCollector (→ game_data.db rich columns)
+            if self.transition_collector is not None:
+                self.transition_collector.record_simple(
+                    player_id=self.player_id,
+                    turn_number=state.turn_number,
+                    p1_hp=state.players[1].health,
+                    p2_hp=state.players[2].health,
+                )
 
             if self.step_counter[0] % 50 == 0:
                 self.replay_db.flush()
@@ -553,6 +564,7 @@ def run_games(
             # Sample and wrap agents
             step_counter = [0]
             combat_log: dict[int, list[dict]] = {}
+            collector = TransitionCollector(game_id=game_id)
             base_p1 = opponent_pool.sample_agent(rng, player_id=1, seed=game_seed)
             base_p2 = opponent_pool.sample_agent(rng, player_id=2, seed=game_seed + 1)
 
@@ -565,6 +577,7 @@ def run_games(
                 state_embedder=state_embedder,
                 step_counter=step_counter,
                 combat_log=combat_log,
+                transition_collector=collector,
             )
             p2_agent = EmbeddingRecorderAgent(
                 base_agent=base_p2,
@@ -575,6 +588,7 @@ def run_games(
                 state_embedder=state_embedder,
                 step_counter=step_counter,
                 combat_log=combat_log,
+                transition_collector=collector,
             )
 
             req = GameRunRequest(
@@ -608,8 +622,9 @@ def run_games(
             # Record to GameDataStore if available
             if game_data_store is not None:
                 try:
+                    collector.finalize(winner)
                     game_data_store.record_local_game(
-                        collector=None,
+                        collector=collector,
                         game_state=game_state,
                         p1_deck_file=p1_deck,
                         p2_deck_file=p2_deck,

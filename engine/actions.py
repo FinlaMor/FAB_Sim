@@ -432,11 +432,11 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 continue
             if has_action and not has_instant and player.action_points <= 0:
                 continue
-            if ("Once per" in text or "once per" in text) and equip_card.exhausted:
+            if equip_card.exhausted:
                 continue
             if equip_card.tapped:
                 continue
-            
+
             # Check additonal activation conditions from registry
             cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(equip_slug)
             if cond_fn is not None:

@@ -1293,10 +1293,17 @@ def _apply_activate(state: GameState, action: Action) -> None:
         activation_cost = card.cost or 0
     player.resources -= activation_cost
 
-    # Mark exhausted for "once per turn" abilities
+    # CR 4.4.3d / 8.x: Mark exhausted for "once per turn" abilities.
+    # {t} (tap symbol as activation cost) → tapped=True, not exhausted.
+    # Tapped permanents untap at end of turn (4.4.3d), so effects can re-enable
+    # them mid-turn. exhausted=True is a harder "once per turn" gate.
     text = card.functional_text or ""
+    _first_colon = text.find(':')
+    _cost_section = text[:_first_colon] if _first_colon >= 0 else ""
     if "per turn" in text.lower():
         card.exhausted = True
+    if re.search(r'\{t\}', _cost_section, re.IGNORECASE):
+        card.tapped = True
 
     # Use action point if it's an Action-speed ability (not Instant)
     if re.search(r'\*\*(?:\w+ per turn )?Action\*\*', text):
@@ -1307,6 +1314,17 @@ def _apply_activate(state: GameState, action: Action) -> None:
     pay_cost_fn = EQUIPMENT_PAY_COSTS.get(card.slug)
     if callable(pay_cost_fn):
         pay_cost_fn(action, player, state)
+    elif (action.type == ActionType.ACTIVATE_EQUIPMENT and ':' in text
+          and re.search(r'\bDestroy\b', text[:text.rfind(':')], re.IGNORECASE)):
+        # Generic fallback: equipment with "Destroy [this/CardName]:" activation cost
+        # not covered by an explicit EQUIPMENT_PAY_COSTS entry.
+        # Remove from the equipment slot and move to graveyard.
+        slot = getattr(action, 'slot', None)
+        if slot:
+            zone = player.zone_by_name(slot)
+            if zone and card in zone.cards:
+                zone.remove(card)
+                player.graveyard.add(card)
 
     # Dispatch to registry callback (effect after the colon)
     effect_fn = EQUIPMENT_ACTIVATION_EFFECTS.get(card.slug)
