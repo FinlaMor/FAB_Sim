@@ -787,6 +787,17 @@ def run_games(
                 except Exception:
                     pass  # Non-critical; replay DB is the primary store
 
+            early_end = turn_number <= 2
+
+            # Free memory: clear collector transitions and game state references
+            collector._transitions.clear()
+            del game_state, p1_agent, p2_agent, base_p1, base_p2, collector
+
+            # Periodic garbage collection to break circular refs (every 50 games)
+            if (idx + 1) % 50 == 0:
+                import gc
+                gc.collect()
+
             result = GameResult(
                 winner=winner,
                 turn_number=turn_number,
@@ -803,10 +814,8 @@ def run_games(
                    f"HP={p1_hp}/{p2_hp}")
             if guardrail_terminated:
                 msg += f" [GUARDRAIL: {step_counter[0]} decisions, trigger loop on turn {turn_number}]"
-            elif turn_number <= 2:
-                done_flag = getattr(game_state, "done", "?")
-                step_flag = getattr(game_state, "step", "?")
-                msg += f" [EARLY: done={done_flag}, step={step_flag}]"
+            elif early_end:
+                msg += f" [EARLY END]"
             print(msg)
 
         except Exception as exc:
