@@ -434,10 +434,11 @@ _register("angelic_attendant", [
                effect_fn=lambda c, e, s: effect_move_to_soul(s, c, _controller_id(c))),
 ])
 
-# -- angelic_wrath_yellow --
-# Target attack action card with Herald in its name gets +3p
+# -- angelic_wrath (red: +4p, yellow: +3p, blue: +2p) --
+# Target attack action card with Herald in its name gets +Np
+# Registered without color suffix → use red variant's +4p as most impactful
 _register("angelic_wrath", [
-    TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(3)),
+    TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(4)),
 ])
 
 # -- annihilate_the_armed --
@@ -655,12 +656,13 @@ _register("blood_on_her_hands", [
 ])
 
 # -- bloodrush_bellow_yellow --
-# Discard random, Brute attacks +2p this turn, if 6+p go again.
+# Discard random, Brute attacks +2p this turn, if 6+p draw 2 and go again.
 def _bloodrush_bellow_yellow_play(card, event, state):
     cid = _controller_id(card)
     discarded = effect_discard(state, cid, 1, random_discard=True)
     state.players[cid].current_turn_effects.append("next_attack_+2")
     if discarded and discarded[0].power is not None and discarded[0].power >= 6:
+        effect_draw(state, cid, 2)
         effect_gain_action_point(state, cid)
 
 _register("bloodrush_bellow_yellow", [
@@ -1888,11 +1890,12 @@ _register("lightning_press", [
 ])
 
 # -- lobotomy_red --
-# Stealth. On attack equip Orbitoclast. On hit if control Orbitoclast, lose AP. Simplified: noop.
+# Stealth. On attack equip Orbitoclast. On hit if control Orbitoclast, lose hero abilities.
+# Card text: "they lose all hero card abilities during their next action phase."
+# Simplified: noop (hero ability suppression too complex for ML sim).
 _register("lobotomy", [
     TriggerDef(event_type="hit",
-               effect_fn=lambda c, e, s: effect_lose_life(s, 3 - _controller_id(c), 1)
-               if _is_this_attacking(c, e, s) else None),
+               effect_fn=lambda c, e, s: None),
 ])
 
 # -- loot_the_hold_blue --
@@ -2786,7 +2789,7 @@ _register("tough_as_a_rok", [
 # On defend, clash. Winner creates Toughness. Simplified.
 _register("tough_smashup", [
     TriggerDef(event_type="defend",
-               effect_fn=_factory_on_defend_clash_winner_token("might")),
+               effect_fn=_factory_on_defend_clash_winner_token("toughness")),
 ])
 
 # -- trot_along_blue --
@@ -2966,7 +2969,7 @@ _register("wild_ride", [
 # Instant discard: create Toughness and Vigor. Simplified: on_play.
 def _wind_up_crowd_play(card, event, state):
     cid = _controller_id(card)
-    create_token(state, cid, "might")  # Toughness not modeled, use might
+    create_token(state, cid, "toughness")
     create_token(state, cid, "vigor")
 
 _register("wind_up_the_crowd", [
@@ -3096,7 +3099,7 @@ _register("bone_puppetry", [
 # On defend, pay up to rrr, create Toughness. Temper. Simplified: create 1 token.
 _register("boots_to_the_boards", [
     TriggerDef(event_type="defend",
-               effect_fn=lambda c, e, s: create_token(s, _controller_id(c), "might")
+               effect_fn=lambda c, e, s: create_token(s, _controller_id(c), "toughness")
                if _is_this_defending(c, e, s) else None),
 ])
 
@@ -3847,11 +3850,24 @@ _register("seeker_kunai", [
 
 # -- sharpened_senses_yellow --
 # Weapon attacks +1p. If > 2x base, go again. End phase destroy.
+# This is an AURA, not an attack card. The trigger fires whenever any attack is made
+# while this aura is in play. Do NOT check _is_this_attacking.
+def _sharpened_senses_attacking(card, event, state):
+    if not state.combat:
+        return
+    cid = _controller_id(card)
+    # Only apply if this aura's controller is the attacker
+    if state.combat.attacker_id != cid:
+        return
+    state.combat.attack_power += 1
+    # If power > 2x base, go again
+    base = state.combat.attack_card.power if state.combat.attack_card else 0
+    if state.combat.attack_power > 2 * (base or 0):
+        if "Go Again" not in state.combat.keywords:
+            state.combat.keywords.append("Go Again")
+
 _register("sharpened_senses", [
-    TriggerDef(event_type="attacking",
-               effect_fn=lambda c, e, s: (
-                   setattr(s.combat, 'attack_power', s.combat.attack_power + 1)
-                   if s.combat and _is_this_attacking(c, e, s) else None)),
+    TriggerDef(event_type="attacking", effect_fn=_sharpened_senses_attacking),
 ])
 
 # -- show_time_blue --
