@@ -1538,15 +1538,13 @@ def _marlynn_draw_arrow_arsenal_trigger(player, event, state):
 
 # 9. Ser Boltyn, Breaker of Dawn — attacking: if charged this turn and
 #    attack is defended by an attack action card, +1{p}
-# NOTE: Ideally "charged this turn" should check current_turn_effects for a "charged"
-# flag instead of soul being non-empty. Kept as soul proxy for simplicity.
+# Uses class_counters["charged_this_turn"] flag set by the charge keyword in keywords.py.
 def _boltyn_charged_attack_bonus(player, event, state):
     """If you've charged this turn, your attacks get +1{p} while defended by an AA card."""
     if not state.combat or state.combat.attacker_id != player.player_id:
         return
-    # Check if player has charged this turn (soul non-empty is our proxy)
-    # TODO: switch to "charged" in current_turn_effects when charge tracking is added
-    if not player.soul.cards:
+    # Check if player has charged this turn via the class counter flag
+    if not player.class_counters.get("charged_this_turn", 0):
         return
     ac = state.combat.attack_card
     if ac is None or ac.controller != player.player_id:
@@ -2097,9 +2095,12 @@ HERO_ACTIVATION_CONDITIONS["pleiades_superstar"] = {
     "timing": "instant",
     "cost": 0,
     "requires_tap": True,
+    "pay_cost_fn": _pleiades_pay_cost,
     "condition_fn": lambda player, state: (
         not player.hero.tapped
-        and bool(player.auras.cards)
+        # Must have an aura with a suspense counter to remove
+        and any(player.counters.get((c.slug, 'auras', 'suspense'), 0) > 0
+                for c in player.auras.cards)
     ),
     "effect_fn": _pleiades_effect,
 }
@@ -2137,10 +2138,9 @@ def _prism_awakener_soul_trigger(player, event, state):
 # 10. Teklovossen, Esteemed Magnate — hero activation
 # Once per Turn Instant - {r}{r}{r}: play next Evo this turn as instant + draw a card.
 def _teklovossen_effect(action, player, state):
-    """Teklovossen: draw a card + next Evo plays as instant this turn."""
-    from engine.card_effects.keywords import effect_draw
-    effect_draw(state, player.player_id, 1)
-    player.current_turn_effects.append("teklovossen_evo_instant")
+    """Teklovossen: next Evo this turn plays as instant. When you do, draw a card."""
+    # The draw happens when the next Evo is actually played, not immediately.
+    player.current_turn_effects.append("teklovossen_evo_instant_draw")
     player.current_turn_effects.append("teklovossen_used")
 
 HERO_ACTIVATION_CONDITIONS["teklovossen_esteemed_magnate"] = {
@@ -2152,10 +2152,13 @@ HERO_ACTIVATION_CONDITIONS["teklovossen_esteemed_magnate"] = {
     "effect_fn": _teklovossen_effect,
 }
 
-# 11. Uzuri, Switchblade — attack reaction (fires during combat/reaction step)
-# Once per Turn AR - banish card from hand face down: if stealth AA with cost <=2, swap into combat chain
+# 11. Uzuri, Switchblade — Once per Turn Attack Reaction
+# Cost: banish a card from hand face down.
+# Effect: turn it face up. If it's an AA with cost <=2, put the stealth attacking card
+# on bottom of deck, put the banished card onto the combat chain as the attacking card.
+# If it's NOT an AA cost <=2, the card just stays banished face-up.
 def _uzuri_attack_trigger(player, event, state):
-    """Uzuri: once per turn during combat, if stealth attack, swap an AA cost<=2 from hand."""
+    """Uzuri: once per turn AR — banish from hand face-down, reveal, maybe swap."""
     if "uzuri_switchblade_used" in player.current_turn_effects:
         return
     if not state.combat or state.combat.attacker_id != player.player_id:
@@ -2163,31 +2166,40 @@ def _uzuri_attack_trigger(player, event, state):
     # Must be a stealth attack
     if "Stealth" not in (state.combat.keywords or []):
         return
-    aa_cards = [c for c in player.hand.cards
-                if "Attack" in (c.types or []) and "Action" in (c.types or [])
-                and (c.cost or 0) <= 2]
-    if not aa_cards:
+    if not player.hand.cards:
         return
     from engine.card_effects.keywords import _ask_player
+    # Player can always banish ANY card from hand (not just AAs)
     choice = _ask_player(state, player.player_id, [True, False],
-                         context="Uzuri: swap an attack action card (cost<=2) from hand into combat?")
+                         context="Uzuri: banish a card from hand face-down? (may swap into combat)")
     if not choice:
         return
-    options = [c.slug for c in aa_cards]
+    options = [c.slug for c in player.hand.cards]
     pick = _ask_player(state, player.player_id, options,
-                       context="Uzuri: choose an attack action card to swap in")
-    card = next((c for c in aa_cards if c.slug == pick), aa_cards[0])
-    # Banish old attack card
-    old_attack = state.combat.attack_card
-    if old_attack:
-        player.banished.add(old_attack)
-    # Put new card as attack
+                       context="Uzuri: choose a card from hand to banish face-down")
+    card = next((c for c in player.hand.cards if c.slug == pick), player.hand.cards[0])
     player.hand.remove(card)
-    state.combat.attack_card = card
-    card.controller = player.player_id
-    # Update combat power
-    state.combat.base_attack_power = card.power or card.base_power or 0
     player.current_turn_effects.append("uzuri_switchblade_used")
+
+    # Banish face-down (opponent gets response window here in full rules)
+    card.face_down = True
+    player.banished.add(card)
+
+    # Turn face-up and check: is it an Attack Action with cost <= 2?
+    card.face_down = False
+    is_aa = "Attack" in (card.types or []) and "Action" in (card.types or [])
+    cost_ok = (card.cost or 0) <= 2
+    if is_aa and cost_ok:
+        # Swap: put current stealth attack on bottom of deck, banished card becomes attack
+        old_attack = state.combat.attack_card
+        if old_attack:
+            player.deck.cards.append(old_attack)
+            old_attack.zone = "deck"
+        player.banished.remove(card)
+        state.combat.attack_card = card
+        card.controller = player.player_id
+        state.combat.base_attack_power = card.power or card.base_power or 0
+    # If not AA cost<=2, card stays banished face-up (no swap)
 
 # 12. Zyggy Starlight — hero activation
 # Instant - {r}{r}, {q}: banish a Lightning aura with no holo counters, return it with a holo counter.

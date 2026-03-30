@@ -246,6 +246,10 @@ def _start_of_turn_phase(state: GameState) -> None:
     for _key in [k for k in player.class_counters if k.startswith("current_link_hit")]:
         del player.class_counters[_key]
 
+    # Clear per-turn class counter flags
+    player.class_counters.pop("charged_this_turn", None)
+    player.class_counters.pop("boosted_this_turn", None)
+
     if environ['debug'] == 'True':
         import json
         with open(environ['debug_file'], 'a') as f:

@@ -845,6 +845,8 @@ def effect_charge(state: GameState, player_id: int, card: Card) -> None:
     player = state.players[player_id]
     player.hand.remove(card)
     player.soul.add(card)
+    # Set charged_this_turn flag for Boltyn and other charge-dependent effects
+    player.class_counters["charged_this_turn"] = player.class_counters.get("charged_this_turn", 0) + 1
 
 
 def effect_reload(state: GameState, player_id: int, source_card: Card = None) -> bool:
