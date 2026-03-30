@@ -1271,6 +1271,16 @@ def _apply_weapon_attack(state: GameState, action: Action) -> None:
     player = state.players[action.player_id]
     player.weapon_exhausted = True
     player.action_points -= 1
+
+    # Pay "banish a card from under" cost if required (e.g., Nitro Mechanoid)
+    weapon_card = action.card
+    text = getattr(weapon_card, 'functional_text', '') or ''
+    if "banish a card from under" in text.lower():
+        underneath = getattr(weapon_card, 'cards_underneath', [])
+        if underneath:
+            banished = underneath.pop(0)
+            player.banished.add(banished)
+
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
     # CR 1.6.2b: Weapon attack is an activated ability (activated-layer)

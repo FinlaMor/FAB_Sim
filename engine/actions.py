@@ -158,7 +158,13 @@ def _get_pitch_value(card: Card) -> int:
 
 def _weapon_can_attack(weapon_card) -> bool:
     text = weapon_card.functional_text or ""
-    return "**Attack**" in text or ": Attack" in text
+    if "**Attack**" not in text and ": Attack" not in text:
+        return False
+    # Weapons with "Banish a card from under" cost require cards underneath
+    if "banish a card from under" in text.lower():
+        if not getattr(weapon_card, 'cards_underneath', None):
+            return False
+    return True
 
 def _weapon_cost(weapon_card) -> int:
     text = weapon_card.functional_text or ""

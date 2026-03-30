@@ -4800,8 +4800,10 @@ _register("scepter_of_pain", [
 
 # -- nitro_mechanoid --
 # "Action - Banish a card from under Nitro Mechanoid: Attack. Overpower. Temper."
-# The "banish from under" cost uses cards placed under items by Mechanologist effects.
-# Simplified: Overpower on attack. The "under" zone is not fully modeled.
+# Cost: banish a CARD from under (card objects in weapon.cards_underneath, NOT counters).
+# _weapon_can_attack in actions.py blocks attack if cards_underneath is empty.
+# _apply_weapon_attack in engine.py banishes the card as cost.
+# This trigger just adds Overpower to the attack keywords.
 def _nitro_mechanoid_attacking(card, event, state):
     if not _is_this_attacking(card, event, state) or not state.combat:
         return

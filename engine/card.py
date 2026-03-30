@@ -79,6 +79,7 @@ class Card:
     tapped: bool = False
     exhausted: bool = False
     face_down: bool = False  # CR 8.5.24: face-down = private, face-up = public
+    cards_underneath: list = field(default_factory=list)  # Cards placed "under" this card (Mechanologist)
 
     # Ability structure flags (Gap #1 fix - Round 9)
     # Activated abilities (CR 5.2)
