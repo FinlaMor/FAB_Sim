@@ -7,6 +7,18 @@ Design: each card slug maps to a callable in one of the registries.
 Effect functions receive (state, player_id, card_db) and mutate state in place.
 """
 
+# Weapon attack conditions: slug -> fn(state, player) -> bool
+# Return False to suppress ATTACK_WEAPON from legal actions for that weapon.
+WEAPON_ATTACK_CONDITIONS: dict = {
+    # bank_breaker / banksy: "Activate this only if you've cranked this turn."
+    "bank_breaker": lambda state, player: bool(player.class_counters.get("cranked_this_turn")),
+    "banksy":       lambda state, player: bool(player.class_counters.get("cranked_this_turn")),
+    # rok: "Activate Rok only if you have no cards in hand."
+    "rok":          lambda state, player: len(player.hand.cards) == 0,
+    # rugged_roller: "Activate only if you've rolled a 6 on a die this turn."
+    "rugged_roller": lambda state, player: bool(player.class_counters.get("rolled_six_this_turn")),
+}
+
 # At the top of actions.py or in a separate file
 # Non-resource activation conditions (resource checks are handled by pitch sequence finder)
 EQUIPMENT_ACTIVATION_CONDITIONS = {

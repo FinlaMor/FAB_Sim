@@ -12,7 +12,7 @@ sys.path.insert(0, r"C:\Users\Joseph\Desktop\FAB_Coach")
 
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, Zone
-from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS, PLAY_TARGET_CONDITIONS
+from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS, PLAY_TARGET_CONDITIONS, WEAPON_ATTACK_CONDITIONS
 
 
 class ActionType(Enum):
@@ -264,11 +264,17 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
     if pp == state.active_player and not state.stack_entries:
         # ATTACK_WEAPON
         weapon_card = player.weapon.top
-        if weapon_card is not None and player.action_points > 0 and not player.weapon_exhausted and not weapon_card.tapped:
-            if _weapon_can_attack(weapon_card):
+        if (weapon_card is not None
+                and player.action_points > 0
+                and not player.weapon_exhausted
+                and not weapon_card.tapped
+                and _weapon_can_attack(weapon_card)):
+            # Check slug-specific attack conditions (e.g. bank_breaker requires crank)
+            weapon_cond = WEAPON_ATTACK_CONDITIONS.get(weapon_card.slug)
+            if weapon_cond is None or weapon_cond(state, player):
                 weapon_cost_val = _weapon_cost(weapon_card)
                 weapon_attack_pitch_seqs = find_all_valid_pitch_sequences(
-                    player.hand.cards, 
+                    player.hand.cards,
                     weapon_cost_val,
                     current_resources=player.resources
                 )
