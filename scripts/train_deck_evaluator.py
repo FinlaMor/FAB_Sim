@@ -179,7 +179,7 @@ def train(
             print(f"Saving checkpoint at epoch {epoch}...")
             save_checkpoint(
                 checkpoint_dir / f"{checkpoint_prefix}_interrupted.pt",
-                model, vocab, optimizer, epoch,
+                model, vocab, optimizer, scheduler, epoch,
                 model_type=model_type,
             )
             print("Checkpoint saved.")
@@ -208,7 +208,7 @@ def train(
                 patience_counter = 0
                 save_checkpoint(
                     checkpoint_dir / f"{checkpoint_prefix}_best.pt",
-                    model, vocab, optimizer, epoch,
+                    model, vocab, optimizer, scheduler, epoch,
                     metrics=val_metrics,
                     model_type=model_type,
                 )
@@ -224,7 +224,7 @@ def train(
             if (epoch + 1) % 10 == 0:
                 save_checkpoint(
                     checkpoint_dir / f"{checkpoint_prefix}_epoch{epoch+1}.pt",
-                    model, vocab, optimizer, epoch,
+                    model, vocab, optimizer, scheduler, epoch,
                     metrics=train_metrics,
                     model_type=model_type,
                 )
@@ -238,7 +238,7 @@ def train(
     final_path = checkpoint_dir / f"{checkpoint_prefix}_final.pt"
     save_checkpoint(
         final_path,
-        model, vocab, optimizer, last_epoch,
+        model, vocab, optimizer, scheduler, last_epoch,
         model_type=model_type,
     )
     print(f"\nFinal checkpoint saved to {final_path}")
@@ -329,11 +329,21 @@ def main():
             args.embed_dim, args.hidden_dim, args.n_heads, args.n_layers, args.dropout,
         )
         model_type = args.model
+    elif args.games_db is not None and args.games_db.exists():
+        # No checkpoint and no bootstrap — build vocab from game data itself
+        print(f"Building vocabulary from game data at {args.games_db}...")
+        vocab = CardVocab.from_games_db(args.games_db)
+        print(f"  Cards: {vocab.n_cards}  Heroes: {vocab.n_heroes}")
+        model = build_evaluator(
+            vocab, args.model,
+            args.embed_dim, args.hidden_dim, args.n_heads, args.n_layers, args.dropout,
+        )
+        model_type = args.model
     else:
         parser.error(
-            "Cannot build vocabulary without --bootstrap or --resume. "
-            "Run with --bootstrap first to create an initial checkpoint, "
-            "then use --resume to continue training."
+            "Cannot build vocabulary without --bootstrap, --resume, or --games-db. "
+            "Run with --bootstrap for synthetic data, --games-db for game outcomes, "
+            "or --resume to continue from a checkpoint."
         )
         return  # unreachable, but satisfies type checker
 
@@ -346,6 +356,8 @@ def main():
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer, T_max=args.epochs, eta_min=args.lr * 0.01,
     )
+    if args.resume and args.resume.exists() and "scheduler_state_dict" in ckpt:
+        scheduler.load_state_dict(ckpt["scheduler_state_dict"])
 
     # Phase 1: Bootstrap on fablazing data
     if args.bootstrap:
@@ -390,12 +402,12 @@ def main():
         if len(dataset) < 10:
             print("Not enough game data for fine-tuning. Skipping Phase 2.")
         else:
-            n_val = max(1, len(dataset) // 5)
-            n_train = len(dataset) - n_val
-            train_ds, val_ds = random_split(
-                dataset, [n_train, n_val],
-                generator=torch.Generator().manual_seed(args.seed),
-            )
+            # Split by game so both perspectives stay in the same split (no data leakage)
+            from torch.utils.data import Subset
+            train_idx, val_idx = dataset.split_by_game(val_frac=0.2, seed=args.seed)
+            train_ds = Subset(dataset, train_idx)
+            val_ds = Subset(dataset, val_idx)
+            print(f"  Split: {len(train_ds)} train / {len(val_ds)} val (by game)")
 
             # Lower LR for fine-tuning
             ft_lr = args.lr * 0.1

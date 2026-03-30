@@ -1199,10 +1199,11 @@ class GameDataStore:
             collector = TransitionCollector(game_id=game_id or 0)
 
         # Build full decklists from deck files so the deck evaluator has card slugs to train on.
-        p1_hero_name = getattr(p1, "hero_name", getattr(p1, "name", ""))
-        p2_hero_name = getattr(p2, "hero_name", getattr(p2, "name", ""))
-        p1_decklist = _parse_deck_for_storage(p1_deck_file, p1_hero_name)
-        p2_decklist = _parse_deck_for_storage(p2_deck_file, p2_hero_name)
+        # Use hero.slug (not hero.name) as fallback so the deck evaluator can match hero IDs.
+        p1_hero_slug = getattr(p1.hero, "slug", "") if hasattr(p1, "hero") else ""
+        p2_hero_slug = getattr(p2.hero, "slug", "") if hasattr(p2, "hero") else ""
+        p1_decklist = _parse_deck_for_storage(p1_deck_file, p1_hero_slug)
+        p2_decklist = _parse_deck_for_storage(p2_deck_file, p2_hero_slug)
 
         meta = DeckMeta(
             game_id=collector.game_id,

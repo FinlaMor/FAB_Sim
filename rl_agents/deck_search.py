@@ -1235,8 +1235,13 @@ def evolve_pool(
 
     # Sample opponent field
     opp_heroes = list(meta_weights.keys())
-    opp_weights = [meta_weights[h] for h in opp_heroes]
-    field_size = min(20, len(opp_heroes))
+    if not opp_heroes:
+        # Fallback: use the hero itself as sole opponent so scoring is not blind
+        opp_heroes = [hero_slug]
+        opp_weights = [1.0]
+    else:
+        opp_weights = [meta_weights[h] for h in opp_heroes]
+    field_size = min(20, max(1, len(opp_heroes)))
     opp_field = rng.choices(opp_heroes, weights=opp_weights, k=field_size)
 
     # Initialize population with diverse flex_depths
@@ -1369,8 +1374,12 @@ def evolve_pool_diverse(
 
     # Run full evolution to get the scored population
     opp_heroes = list(meta_weights.keys())
-    opp_weights = [meta_weights[h] for h in opp_heroes]
-    field_size = min(20, len(opp_heroes))
+    if not opp_heroes:
+        opp_heroes = [hero_slug]
+        opp_weights = [1.0]
+    else:
+        opp_weights = [meta_weights[h] for h in opp_heroes]
+    field_size = min(20, max(1, len(opp_heroes)))
     opp_field = rng.choices(opp_heroes, weights=opp_weights, k=field_size)
 
     # Initialize diverse population (same as evolve_pool)
@@ -1551,8 +1560,12 @@ def _select_locked_pool(
 
     rng = random.Random(seed)
     opp_heroes = list(meta_weights.keys())
-    opp_weights = [meta_weights[h] for h in opp_heroes]
-    field = rng.choices(opp_heroes, weights=opp_weights, k=20)
+    if not opp_heroes:
+        opp_heroes = [pools[0].hero_slug]
+        opp_weights = [1.0]
+    else:
+        opp_weights = [meta_weights[h] for h in opp_heroes]
+    field = rng.choices(opp_heroes, weights=opp_weights, k=max(1, min(20, len(opp_heroes))))
 
     best_pool = pools[0]
     best_score = _score_pool(pools[0], model, vocab, field, device,
