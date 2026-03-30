@@ -37,7 +37,7 @@ if TYPE_CHECKING:
 # Per rules 3.0.5 — zones that comprise the arena.
 ARENA_ZONE_NAMES = frozenset({
     "head", "chest", "arms", "legs", "weapon",
-    "hero", "permanents",
+    "hero", "permanents", "allies",
     "combat chain",
 })
 
@@ -312,9 +312,10 @@ def suspense_enter(card: Card, state: GameState) -> None:
 
 def watery_grave(card: Card, event: Event, state: GameState) -> None:
     """8.3.41: When put into graveyard from the arena, turn face-down.
-    Arena includes combat chain per rules 3.0.5 / 7.0.3f."""
+    Arena includes combat chain, allies zone, permanents per rules 3.0.5 / 7.0.3f."""
     if card.zone == "graveyard" and _was_in_arena(card):
-        state.set_card_visibility(card, False)
+        card.face_down = True
+        card.is_public = False
 
 
 # ---------------------------------------------------------------------------

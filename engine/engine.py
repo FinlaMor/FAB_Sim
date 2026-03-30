@@ -760,6 +760,19 @@ def _resolve_wagers(state: GameState, combat) -> None:
     combat.wagers.clear()
 
 
+def _apply_watery_grave(card, state: GameState) -> None:
+    """CR 8.3.41: If card has Watery Grave and entered graveyard from the arena, turn face-down."""
+    if not hasattr(card, 'keywords') or not card.keywords:
+        return
+    has_wg = any("watery grave" in kw.lower() for kw in card.keywords)
+    if not has_wg:
+        return
+    from engine.card_effects.keywords import ARENA_ZONE_NAMES
+    if card.prev_zone in ARENA_ZONE_NAMES:
+        card.face_down = True
+        card.is_public = False
+
+
 def _close_combat_chain(state: GameState) -> None:
     """7.7.5-7.7.6: move cards to appropriate zones after combat."""
     combat = state.combat
@@ -778,6 +791,7 @@ def _close_combat_chain(state: GameState) -> None:
         pass  # 7.7.5: weapon returns to equipped zone
     else:
         attacker.graveyard.add(attack_card)
+        _apply_watery_grave(attack_card, state)
 
     # Defending cards: equipment stays, hand cards go to graveyard
     for card in combat.defending_cards:
@@ -786,15 +800,16 @@ def _close_combat_chain(state: GameState) -> None:
             pass  # 7.7.5: equipment returns to equipped zone
         else:
             defender.graveyard.add(card)
+            _apply_watery_grave(card, state)
 
     # Defense reactions played from arsenal were added to state.combat_chain; move to graveyard now.
-    # (attack_card was already removed above, so only reactions remain in the zone at this point.)
     for chain_card in list(state.combat_chain.cards):
         ctrl = chain_card.controller if chain_card.controller is not None else chain_card.owner
         if ctrl in state.players:
             state.remember_last_known(chain_card)
             state.combat_chain.remove(chain_card)
             state.players[ctrl].graveyard.add(chain_card)
+            _apply_watery_grave(chain_card, state)
 
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""
