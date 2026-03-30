@@ -510,10 +510,10 @@ def step_evolve_decks(args, loop_num: int) -> None:
 
 
 def step_benchmark(args, loop_num: int) -> None:
-    """Stage 7: Benchmark player bot vs random, heuristic, and previous checkpoint."""
+    """Stage 9: Benchmark player bot vs random, heuristic, and previous checkpoint."""
     print()
     print("=" * 70)
-    print(f"  Stage 7: Benchmark (loop {loop_num})")
+    print(f"  Stage 9: Benchmark (loop {loop_num})")
     print("=" * 70)
     print()
 
@@ -527,7 +527,7 @@ def step_benchmark(args, loop_num: int) -> None:
         current_ckpt = find_best_checkpoint("player_bot")
     if not current_ckpt or not current_ckpt.exists():
         print("  No player bot checkpoint found — skipping benchmark.")
-        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        print(f"\n  [SKIP] Stage 9: Benchmark ({time.time() - t0:.1f}s)")
         return
 
     from rl_agents.game_backends import LocalEngineBackend, GameRunRequest
@@ -547,7 +547,7 @@ def step_benchmark(args, loop_num: int) -> None:
     deck_files = sorted(GENERATED_DIR.glob("*.txt")) if GENERATED_DIR.exists() else []
     if len(deck_files) < 2:
         print("  Not enough decks for benchmark — need at least 2.")
-        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        print(f"\n  [SKIP] Stage 9: Benchmark ({time.time() - t0:.1f}s)")
         return
 
     import random as _random
@@ -593,7 +593,7 @@ def step_benchmark(args, loop_num: int) -> None:
 
         if embedder_bundle is None:
             print("  No embedder bundle available — skipping benchmark.")
-            print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+            print(f"\n  [SKIP] Stage 9: Benchmark ({time.time() - t0:.1f}s)")
             return
 
         iql_agent = IQLPolicyAgent(
@@ -605,7 +605,7 @@ def step_benchmark(args, loop_num: int) -> None:
         )
     except Exception as e:
         print(f"  Failed to load IQL agent: {e}")
-        print(f"\n  [SKIP] Stage 7: Benchmark ({time.time() - t0:.1f}s)")
+        print(f"\n  [SKIP] Stage 9: Benchmark ({time.time() - t0:.1f}s)")
         return
 
     # Benchmark vs random
@@ -650,7 +650,7 @@ def step_benchmark(args, loop_num: int) -> None:
         print(f"  │ {opp:<19} │ {rate_str:<24} │")
     print("  └─────────────────────┴──────────────────────────┘")
 
-    print(f"\n  [OK] Stage 7: Benchmark ({elapsed:.1f}s)")
+    print(f"\n  [OK] Stage 9: Benchmark ({elapsed:.1f}s)")
 
 
 # ---------------------------------------------------------------------------
