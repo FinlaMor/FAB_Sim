@@ -4685,10 +4685,11 @@ def _grandstand_defend(card, event, state):
     cid = _controller_id(card)
     opp = state.players[3 - cid]
     my_hp = state.players[cid].health
-    if opp.health > my_hp:
-        card.defense = 1
-    else:
-        card.defense = 0
+    # Adjust combat total_defense based on dynamic defense value
+    if state.combat:
+        old_def = card.base_defense or 0
+        new_def = 1 if opp.health > my_hp else 0
+        state.combat.total_defense += (new_def - old_def)
 
 _register("grandstand_legplates", [
     TriggerDef(event_type="defend", effect_fn=_grandstand_defend),
