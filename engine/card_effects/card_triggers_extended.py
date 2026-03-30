@@ -3187,12 +3187,19 @@ _register("aphrodias", [
 ])
 
 # -- arcanite_skullcap --
-# If less h, +1d and Arcane Barrier 3. Battleworn. Simplified: noop (keyword handles).
+# "If you have less {h} than your opponent, Arcanite Skullcap gains +1{d} and Arcane Barrier 3."
+def _arcanite_skullcap_defend(card, event, state):
+    if not _is_this_defending(card, event, state):
+        return
+    cid = _controller_id(card)
+    if state.players[cid].health < state.players[3 - cid].health:
+        if state.combat:
+            state.combat.total_defense += 1
+        # Arcane Barrier 3 flag for this turn
+        state.players[cid].current_turn_effects.append("arcanite_skullcap_ab3")
+
 _register("arcanite_skullcap", [
-    TriggerDef(event_type="defend",
-               effect_fn=lambda c, e, s: c.effects.append(("base_defense", lambda base: base + 1))
-               if _is_this_defending(c, e, s) and s.players[_controller_id(c)].health < s.players[3 - _controller_id(c)].health
-               else None),
+    TriggerDef(event_type="defend", effect_fn=_arcanite_skullcap_defend),
 ])
 
 # -- attention_grabbers --
@@ -3248,9 +3255,18 @@ _register("boots_to_the_boards", [
 ])
 
 # -- braveforge_bracers --
-# Once per turn: next weapon +1p if weapon has hit. Temper.
+# "Once per turn Action - {r}: Your next weapon attack this turn gains +1{p}.
+#  Activate only if a weapon you control has hit this turn. Go again. Battleworn."
+def _braveforge_bracers_activate(card, event, state):
+    cid = _controller_id(card)
+    # Check if a weapon has hit this turn
+    weapon_hit = any(cl.from_weapon and cl.hit for cl in state.chain_links)
+    if not weapon_hit:
+        return
+    state.players[cid].current_turn_effects.append("next_attack_+1")
+
 _register("braveforge_bracers", [
-    TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(1)),
+    TriggerDef(event_type="on_play", effect_fn=_braveforge_bracers_activate),
 ])
 
 # -- breaker_helm_protos --
@@ -3316,18 +3332,35 @@ _register("cogwerx_tinker_rings", [
 ])
 
 # -- crown_of_providence --
-# On defend, put card from hand on bottom, draw. Blade Break.
+# "When you defend with this, you may put a card from your hand or arsenal
+#  on the bottom of your deck. If you do, draw a card. Blade Break."
 def _crown_prov_defend(card, event, state):
     if not _is_this_defending(card, event, state):
         return
     cid = _controller_id(card)
     player = state.players[cid]
-    if player.hand.cards:
-        c = player.hand.cards[-1]
-        player.hand.remove(c)
-        player.deck.cards.append(c)
-        c.zone = "deck"
-        effect_draw(state, cid, 1)
+    from engine.card_effects.keywords import _ask_player
+    # Collect candidates from hand and arsenal
+    candidates = [(c, "hand") for c in player.hand.cards] + \
+                 [(c, "arsenal") for c in player.arsenal.cards]
+    if not candidates:
+        return
+    options = [f"{c.slug}_{src}" for c, src in candidates] + ["decline"]
+    choice = _ask_player(state, cid, options,
+                         context="Crown of Providence: put a card from hand/arsenal on bottom of deck, then draw?")
+    if choice == "decline":
+        return
+    # Find chosen card
+    for c, src in candidates:
+        if f"{c.slug}_{src}" == choice:
+            if src == "hand":
+                player.hand.remove(c)
+            else:
+                player.arsenal.remove(c)
+            player.deck.cards.append(c)
+            c.zone = "deck"
+            effect_draw(state, cid, 1)
+            return
 
 _register("crown_of_providence", [
     TriggerDef(event_type="defend", effect_fn=_crown_prov_defend),
@@ -3496,10 +3529,14 @@ _register("harmonized_kodachi", [
 ])
 
 # -- heartened_cross_strap --
-# Destroy: next attack costs rr less. Go again. Simplified: gain 2r.
+# "Action - Destroy: The next attack action card you play this turn costs {r}{r} less. Go again."
+def _heartened_cross_strap_activate(card, event, state):
+    cid = _controller_id(card)
+    state.players[cid].current_turn_effects.append("heartened_cross_strap_cost_reduction_2")
+    effect_gain_action_point(state, cid)
+
 _register("heartened_cross_strap", [
-    TriggerDef(event_type="on_play",
-               effect_fn=lambda c, e, s: effect_gain_resources(s, _controller_id(c), 2)),
+    TriggerDef(event_type="on_play", effect_fn=_heartened_cross_strap_activate),
 ])
 
 # -- helm_of_halos_grace --
@@ -4785,12 +4822,16 @@ _register("face_adversity", [
 ])
 
 # -- threadbare_tunic --
-# "Instant - Destroy: Gain {r}. Activate only if you've been dealt damage this combat chain."
-# Already handled by EQUIPMENT_ACTIVATION_EFFECTS if present; register trigger as backup.
+# "Instant - Destroy: Gain {r}. Activate only if you have no cards in hand."
+def _threadbare_tunic_activate(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if player.hand.cards:
+        return  # Can only activate with empty hand
+    player.resources += 1
+
 _register("threadbare_tunic", [
-    TriggerDef(event_type="on_play",
-               effect_fn=lambda c, e, s: setattr(s.players[_controller_id(c)], 'resources',
-                                                  s.players[_controller_id(c)].resources + 1)),
+    TriggerDef(event_type="on_play", effect_fn=_threadbare_tunic_activate),
 ])
 
 # -- grandstand_legplates --
@@ -4822,21 +4863,42 @@ def _ironhide_helm_defend(card, event, state):
     if player.resources >= 1:
         from engine.card_effects.keywords import _ask_player
         choice = _ask_player(state, cid, [True, False],
-                             context="Ironhide Helm: pay {r} for +2{d} and Blade Break?")
+                             context="Ironhide Helm: pay {r} for +2{d}? (destroyed when chain closes)")
         if choice:
             player.resources -= 1
             if state.combat:
                 state.combat.total_defense += 2
+            # Flag for destruction when combat chain closes
+            player.current_turn_effects.append("ironhide_helm_destroy_on_close")
+
+def _ironhide_helm_close(card, event, state):
+    """Destroy Ironhide Helm when combat chain closes if paid for +2{d}."""
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if "ironhide_helm_destroy_on_close" not in player.current_turn_effects:
+        return
+    player.current_turn_effects.remove("ironhide_helm_destroy_on_close")
+    if card in player.head.cards:
+        player.head.remove(card)
+        player.graveyard.add(card)
 
 _register("ironhide_helm", [
     TriggerDef(event_type="defend", effect_fn=_ironhide_helm_defend),
+    TriggerDef(event_type="combat_chain_close", effect_fn=_ironhide_helm_close),
 ])
 
 # -- quick_clicks --
-# "Action - Destroy: Next attack gets go again. Activate only if boosted this turn."
+# "Action - Destroy: Next attack gets go again. Activate only if you've played a Nimblism this turn."
+def _quick_clicks_activate(card, event, state):
+    cid = _controller_id(card)
+    # Check if a Nimblism card was played this turn
+    nimblism_played = any("nimblism" in eff for eff in state.players[cid].current_turn_effects)
+    if not nimblism_played:
+        return
+    state.players[cid].current_turn_effects.append("next_attack_go_again")
+
 _register("quick_clicks", [
-    TriggerDef(event_type="on_play",
-               effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append("next_attack_go_again")),
+    TriggerDef(event_type="on_play", effect_fn=_quick_clicks_activate),
 ])
 
 
