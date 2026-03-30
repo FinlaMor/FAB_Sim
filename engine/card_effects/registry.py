@@ -1429,7 +1429,13 @@ def _kayo_underhanded_boo_trigger(player, event, state):
 
 # 5. Dash, I/O — start_of_turn: once per turn, play Mech item from top of deck
 def _dash_io_start_of_turn_trigger(player, event, state):
-    """Once per turn, look at top card; if Mech item with cost<=2, may play it."""
+    """Dash I/O: top card always visible + once per turn play Mech item cost 0-1."""
+    # "You may look at the top card of your deck at any time."
+    # Flag so the state embedder/agent knows top card is public to this player.
+    player.class_counters["dash_io_top_card_visible"] = 1
+
+    # "Once per turn, you may play a Mechanologist item with cost 0 or 1 from the
+    #  top of your deck as though it were an instant."
     if "dash_io_used" in player.current_turn_effects:
         return
     if not player.deck.cards:
@@ -1438,11 +1444,11 @@ def _dash_io_start_of_turn_trigger(player, event, state):
     types = top.types or []
     if "Mechanologist" not in types or "Item" not in types:
         return
-    if (top.cost or 0) > 2:
+    if (top.cost or 0) > 1:
         return
     from engine.card_effects.keywords import _ask_player
     choice = _ask_player(state, player.player_id, [True, False],
-                         context=f"Dash I/O: play {top.name} from top of deck?")
+                         context=f"Dash I/O: play {top.name} (cost {top.cost}) from top of deck?")
     if not choice:
         return
     player.current_turn_effects.append("dash_io_used")
@@ -1453,47 +1459,93 @@ def _dash_io_start_of_turn_trigger(player, event, state):
 # 6. Oscilio, Constella Intelligence — activation already registered above
 
 
-# 7. Kassai of the Golden Sand — Action {r}{r}{r}: Create 2 Gold. Go again.
+# 7. Kassai of the Golden Sand — Once per Turn Action:
+# Cost: banish 2 red and 2 yellow cards from graveyard.
+# Effect: next time weapon hits hero this turn, create Gold + go again.
+def _kassai_pay_cost(player, state):
+    """Pay Kassai cost: banish 2 red and 2 yellow cards from graveyard."""
+    from engine.card_effects.keywords import _ask_player
+    reds = [c for c in player.graveyard.cards if (c.pitch or 0) == 1]
+    yellows = [c for c in player.graveyard.cards if (c.pitch or 0) == 2]
+    if len(reds) < 2 or len(yellows) < 2:
+        return False
+    # Banish 2 reds
+    for _ in range(2):
+        avail = [c for c in player.graveyard.cards if (c.pitch or 0) == 1]
+        if not avail:
+            return False
+        pick = _ask_player(state, player.player_id, [c.slug for c in avail],
+                           context="Kassai: choose a red card from graveyard to banish")
+        card = next((c for c in avail if c.slug == pick), avail[0])
+        player.graveyard.remove(card)
+        player.banished.add(card)
+    # Banish 2 yellows
+    for _ in range(2):
+        avail = [c for c in player.graveyard.cards if (c.pitch or 0) == 2]
+        if not avail:
+            return False
+        pick = _ask_player(state, player.player_id, [c.slug for c in avail],
+                           context="Kassai: choose a yellow card from graveyard to banish")
+        card = next((c for c in avail if c.slug == pick), avail[0])
+        player.graveyard.remove(card)
+        player.banished.add(card)
+    return True
+
 def _kassai_activate(action, player, state):
-    """Create 2 Gold tokens. Go again."""
-    from engine.card_effects.keywords import create_token
-    create_token(state, player.player_id, "gold", 2)
-    player.action_points += 1
+    """Next time weapon hits hero this turn, create Gold + go again."""
+    player.current_turn_effects.append("kassai_weapon_hit_gold")
     player.current_turn_effects.append("kassai_used")
 
 
-# 8. Marlynn, Treasure Hunter — passive: when Gold created during action phase,
-#    next arrow this turn gets +1{p}
-def _marlynn_gold_arrow_buff_trigger(player, event, state):
-    """Whenever you create a Gold, if it's your action phase, next arrow gets +1{p}."""
+def _kassai_weapon_hit_trigger(player, event, state):
+    """Kassai: when weapon hits hero and flag is set, create Gold."""
+    if "kassai_weapon_hit_gold" not in player.current_turn_effects:
+        return
+    if not state.combat or state.combat.attacker_id != player.player_id:
+        return
+    if not state.combat.from_weapon:
+        return
+    player.current_turn_effects.remove("kassai_weapon_hit_gold")
+    from engine.card_effects.keywords import create_token
+    create_token(state, player.player_id, "gold", 1)
+
+
+# 8. Marlynn, Treasure Hunter — passive: when you draw a card during action phase,
+#    may put an arrow from hand face-up into arsenal.
+def _marlynn_draw_arrow_arsenal_trigger(player, event, state):
+    """Whenever you draw a card during action phase, may put arrow from hand into arsenal."""
     if state.active_player != player.player_id:
         return
     data = event.data if isinstance(event.data, dict) else {}
     if data.get('player_id') != player.player_id:
         return
-    player.current_turn_effects.append("marlynn_next_arrow_+1")
-
-
-def _marlynn_next_arrow_plus1_apply(attack_card, player, state):
-    """Marlynn: next arrow attack +1{p}."""
-    if "Arrow" not in (attack_card.types or []):
+    # Check if player has an Arrow in hand and arsenal is empty
+    arrows = [c for c in player.hand.cards if "Arrow" in (c.types or [])]
+    if not arrows or player.arsenal.cards:
         return
-    attack_card.effects = list(getattr(attack_card, 'effects', []))
-    attack_card.effects.append(("base_power", lambda base: base + 1))
-
-TURN_ATTACK_EFFECTS["marlynn_next_arrow_+1"] = {
-    "condition_fn": lambda attack_card, player, state: "Arrow" in (attack_card.types or []),
-    "apply_fn": _marlynn_next_arrow_plus1_apply,
-}
+    from engine.card_effects.keywords import _ask_player
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context="Marlynn: put an Arrow from hand face-up into arsenal?")
+    if not choice:
+        return
+    options = [c.slug for c in arrows]
+    pick = _ask_player(state, player.player_id, options,
+                       context="Marlynn: choose an Arrow to put into arsenal")
+    card = next((c for c in arrows if c.slug == pick), arrows[0])
+    player.hand.remove(card)
+    player.arsenal.add(card, is_public=True)
 
 
 # 9. Ser Boltyn, Breaker of Dawn — attacking: if charged this turn and
 #    attack is defended by an attack action card, +1{p}
+# NOTE: Ideally "charged this turn" should check current_turn_effects for a "charged"
+# flag instead of soul being non-empty. Kept as soul proxy for simplicity.
 def _boltyn_charged_attack_bonus(player, event, state):
     """If you've charged this turn, your attacks get +1{p} while defended by an AA card."""
     if not state.combat or state.combat.attacker_id != player.player_id:
         return
     # Check if player has charged this turn (soul non-empty is our proxy)
+    # TODO: switch to "charged" in current_turn_effects when charge tracking is added
     if not player.soul.cards:
         return
     ac = state.combat.attack_card
@@ -1611,10 +1663,39 @@ def _cindra_hit_marked_trigger(player, event, state):
         from engine.card_effects.keywords import create_token
         create_token(state, player.player_id, "fealty", 1)
 
-# Cindra activation: Once per Turn Instant {r}{r}{r}: each Draconic attack +1{p}
+# Cindra activation: Once per Turn Instant {r}{r}{r}: equip up to 2 Draconic daggers from graveyard
 def _cindra_activate(action, player, state):
-    """Each Draconic attack you control gets +1{p} this turn."""
-    player.current_turn_effects.append("cindra_draconic_+1")
+    """Equip up to 2 Draconic daggers from graveyard to weapon zones."""
+    from engine.card_effects.keywords import _ask_player
+    for _ in range(2):
+        daggers = [c for c in player.graveyard.cards
+                   if "Dagger" in (c.types or [] if isinstance(c.types, list) else [c.types] if c.types else [])
+                   or "Dagger" in (getattr(c, 'subtypes', None) or [])
+                   or "dagger" in c.slug.lower()]
+        # Also filter for Draconic
+        daggers = [c for c in daggers
+                   if "Draconic" in (c.types or [] if isinstance(c.types, list) else [c.types] if c.types else [])
+                   or "Draconic" in (getattr(c, 'subtypes', None) or [])
+                   or "draconic" in c.slug.lower()
+                   or "draconic" in (getattr(c, 'name', '') or '').lower()]
+        if not daggers:
+            break
+        options = [c.slug for c in daggers] + ["done"]
+        pick = _ask_player(state, player.player_id, options,
+                           context="Cindra: choose a Draconic dagger from graveyard to equip")
+        if pick == "done":
+            break
+        card = next((c for c in daggers if c.slug == pick), daggers[0])
+        player.graveyard.remove(card)
+        # Equip to weapon zone
+        if not player.weapon1.cards:
+            player.weapon1.add(card)
+        elif hasattr(player, 'weapon2') and not player.weapon2.cards:
+            player.weapon2.add(card)
+        else:
+            # No free weapon slot; put back
+            player.graveyard.add(card)
+            break
     player.current_turn_effects.append("cindra_used")
 
 
@@ -1631,13 +1712,18 @@ HERO_ACTIVATION_CONDITIONS["bravo_showstopper"] = {
     "effect_fn": _bravo_showstopper_activate,
 }
 
-# 7. Kassai of the Golden Sand — Once per Turn Action {r}{r}{r}
+# 7. Kassai of the Golden Sand — Once per Turn Action, banish 2R+2Y from GY
 HERO_ACTIVATION_CONDITIONS["kassai_of_the_golden_sand"] = {
     "timing": "action",
-    "cost": 3,
+    "cost": 0,
     "requires_tap": False,
     "once_per_turn": True,
-    "condition_fn": lambda player, state: "kassai_used" not in player.current_turn_effects,
+    "condition_fn": lambda player, state: (
+        "kassai_used" not in player.current_turn_effects
+        and sum(1 for c in player.graveyard.cards if (c.pitch or 0) == 1) >= 2
+        and sum(1 for c in player.graveyard.cards if (c.pitch or 0) == 2) >= 2
+    ),
+    "pay_cost_fn": _kassai_pay_cost,
     "effect_fn": _kassai_activate,
 }
 
@@ -1652,13 +1738,16 @@ HERO_ACTIVATION_CONDITIONS["fai_rising_rebellion"] = {
 }
 HERO_ACTIVATION_CONDITIONS["fai"] = HERO_ACTIVATION_CONDITIONS["fai_rising_rebellion"]
 
-# 14. Maxx, the Hype Nitro — Once per Turn Action {r}{r}
+# 14. Maxx, the Hype Nitro — Once per Turn Action {r}{r} (requires boosted this turn)
 HERO_ACTIVATION_CONDITIONS["maxx_the_hype_nitro"] = {
     "timing": "action",
     "cost": 2,
     "requires_tap": False,
     "once_per_turn": True,
-    "condition_fn": lambda player, state: "maxx_used" not in player.current_turn_effects,
+    "condition_fn": lambda player, state: (
+        "maxx_used" not in player.current_turn_effects
+        and bool(player.class_counters.get("boosted_this_turn"))
+    ),
     "effect_fn": _maxx_activate,
 }
 HERO_ACTIVATION_CONDITIONS["maxx_nitro"] = HERO_ACTIVATION_CONDITIONS["maxx_the_hype_nitro"]
@@ -1805,18 +1894,18 @@ HERO_ACTIVATION_CONDITIONS["puffin_hightail"] = {
     "effect_fn": _puffin_effect,
 }
 
-# Puffin passive: second crank each turn creates Gold
+# Puffin passive: second crank each turn draws a card
 def _puffin_crank_trigger(player, event, state):
-    """When a Cog is cranked, track count. On second crank, create Gold."""
+    """When a Cog is cranked, track count. On second crank, draw a card."""
     crank_count = player.current_turn_effects.count("cog_cranked")
     if crank_count == 1:  # This is the second crank (first was already appended)
-        from engine.card_effects.keywords import create_token
-        create_token(state, player.player_id, "gold", 1)
+        from engine.card_effects.keywords import effect_draw
+        effect_draw(state, player.player_id, 1)
 
 # 4. Tuffnut, Bumbling Hulkster — hero activation
 # Instant - {t}: Pitch top card of deck. If 6+ power, crowd cheers; else crowd boos.
 def _tuffnut_effect(action, player, state):
-    """Tuffnut: pitch top deck card. If 6+ power, cheers; else boos."""
+    """Tuffnut: pitch top deck card. If 6+ power, crowd cheers."""
     if not player.deck.cards:
         return
     card = player.deck.pop_top()
@@ -1830,9 +1919,15 @@ def _tuffnut_effect(action, player, state):
         state.event_manager.emit(
             type('Event', (), {'type': 'crowd_cheers', 'data': {'player_id': player.player_id}})(),
             state)
-    else:
-        from engine.card_effects.keywords import effect_crowd_boos
-        effect_crowd_boos(state, player.player_id)
+
+
+def _tuffnut_crowd_cheers_trigger(player, event, state):
+    """Tuffnut: when crowd cheers, create a Toughness token."""
+    data = event.data if isinstance(event.data, dict) else {}
+    if data.get('player_id') != player.player_id:
+        return
+    from engine.card_effects.keywords import create_token
+    create_token(state, player.player_id, "toughness", 1)
 
 HERO_ACTIVATION_CONDITIONS["tuffnut_bumbling_hulkster"] = {
     "timing": "instant",
@@ -1863,23 +1958,21 @@ def _arakni_marionette_attack_trigger(player, event, state):
     # +1{p}
     combat.attack_card.effects = list(getattr(combat.attack_card, 'effects', []))
     combat.attack_card.effects.append(("base_power", lambda base: base + 1))
-    # On-hit: defender puts card from hand on top of deck
-    player.current_turn_effects.append("arakni_marionette_on_hit_hand_to_top")
+    # On-hit: this attack gains go again
+    player.current_turn_effects.append("arakni_marionette_on_hit_go_again")
 
 def _arakni_marionette_hit_trigger(player, event, state):
-    """Arakni Marionette on-hit: defender puts a card from hand on top of deck."""
-    if "arakni_marionette_on_hit_hand_to_top" not in player.current_turn_effects:
+    """Arakni Marionette on-hit: attack gains go again."""
+    if "arakni_marionette_on_hit_go_again" not in player.current_turn_effects:
         return
-    player.current_turn_effects.remove("arakni_marionette_on_hit_hand_to_top")
-    opp = state.players[3 - player.player_id]
-    if not opp.hand.cards:
-        return
-    from engine.card_effects.keywords import _ask_player, effect_put_top_deck
-    pick = _ask_player(state, opp.player_id, [c.slug for c in opp.hand.cards],
-                       context="Arakni Marionette hit: put a card from your hand on top of your deck")
-    card = next((c for c in opp.hand.cards if c.slug == pick), opp.hand.cards[0])
-    opp.hand.remove(card)
-    opp.deck.add_top(card)
+    player.current_turn_effects.remove("arakni_marionette_on_hit_go_again")
+    if state.combat and state.combat.attack_card:
+        ac = state.combat.attack_card
+        kw = ac.keywords or []
+        if "Go again" not in kw:
+            ac.keywords = list(kw) + ["Go again"]
+        if "Go again" not in (state.combat.keywords or []):
+            state.combat.keywords.append("Go again")
 
 # 6. Gravy Bones, Shipwrecked Looter — hero activation + passive
 # Instant - {t}, destroy Gold: Draw a card, then discard a card.
@@ -1918,26 +2011,10 @@ HERO_ACTIVATION_CONDITIONS["gravy_bones_shipwrecked_looter"] = {
     "effect_fn": _gravy_effect,
 }
 
-# Passive: if blue in graveyard this turn, Pirate attacks get go again
-def _gravy_attack_trigger(player, event, state):
-    """Gravy Bones passive: if blue went to graveyard this turn, Pirate attacks get go again."""
-    if not state.combat or not state.combat.attack_card:
-        return
-    if state.combat.attacker_id != player.player_id:
-        return
-    ac = state.combat.attack_card
-    if "Pirate" not in (ac.types or []):
-        return
-    if "blue_entered_gy_this_turn" not in player.current_turn_effects:
-        return
-    kw = ac.keywords or []
-    if "Go again" not in kw:
-        ac.keywords = list(kw) + ["Go again"]
-    if "Go again" not in (state.combat.keywords or []):
-        state.combat.keywords.append("Go again")
-
+# Passive: if blue in graveyard this turn, may play cards with watery grave from graveyard.
+# Simplified: track blue_entered_gy_this_turn flag; watery grave playability TBD.
 def _gravy_graveyard_trigger(player, event, state):
-    """Track when blue cards enter the graveyard this turn."""
+    """Track when blue cards enter the graveyard this turn (enables watery grave plays)."""
     data = event.data if isinstance(event.data, dict) else {}
     card = data.get('card')
     if card is None:
@@ -1948,12 +2025,21 @@ def _gravy_graveyard_trigger(player, event, state):
         if "blue_entered_gy_this_turn" not in player.current_turn_effects:
             player.current_turn_effects.append("blue_entered_gy_this_turn")
 
-# 7. Lyath Goldmane, Vile Savant — hero activation (halving passive is noop)
-# Instant - {r}{r}, {t}: next card costs {r} less and gets "When this hits, crowd cheers you"
+# 7. Lyath Goldmane, Vile Savant — hero activation
+# Instant - {r}{r}, {t}: The crowd boos you. Defending action cards you control get +1{d} this turn.
 def _lyath_effect(action, player, state):
-    """Lyath: next card costs {r} less + on-hit crowd cheers."""
-    player.current_turn_effects.append("lyath_next_card_cost_reduction")
-    player.current_turn_effects.append("lyath_on_hit_crowd_cheers")
+    """Lyath: crowd boos you, defending action cards get +1{d} this turn."""
+    from engine.card_effects.keywords import effect_crowd_boos
+    effect_crowd_boos(state, player.player_id)
+    player.current_turn_effects.append("lyath_defending_actions_+1d")
+
+def _lyath_crowd_boos_trigger(player, event, state):
+    """Lyath: when crowd boos you, create a Might token."""
+    data = event.data if isinstance(event.data, dict) else {}
+    if data.get('player_id') != player.player_id:
+        return
+    from engine.card_effects.keywords import create_token
+    create_token(state, player.player_id, "might", 1)
 
 HERO_ACTIVATION_CONDITIONS["lyath_goldmane_vile_savant"] = {
     "timing": "instant",
@@ -1983,21 +2069,29 @@ def _pleiades_pay_cost(player, state):
     return True
 
 def _pleiades_effect(action, player, state):
-    """Pleiades: put an aura from hand into arena with suspense counter."""
+    """Pleiades: put a suspense counter on an aura of suspense you control."""
     from engine.card_effects.keywords import _ask_player
-    auras_in_hand = [c for c in player.hand.cards if "Aura" in (c.types or [])]
-    if not auras_in_hand:
+    # Find auras in play (any aura can receive a suspense counter)
+    auras = list(player.auras.cards)
+    if not auras:
         return
-    options = [c.slug for c in auras_in_hand] + ["none"]
-    pick = _ask_player(state, player.player_id, options,
-                       context="Pleiades: choose an aura from hand to put into arena")
-    if pick == "none":
-        return
-    card = next((c for c in auras_in_hand if c.slug == pick), auras_in_hand[0])
-    player.hand.remove(card)
-    player.auras.add(card)
+    options = [c.slug for c in auras]
+    if len(options) == 1:
+        pick = options[0]
+    else:
+        pick = _ask_player(state, player.player_id, options,
+                           context="Pleiades: choose an aura to put a suspense counter on")
+    card = next((c for c in auras if c.slug == pick), auras[0])
     key = (card.slug, 'auras', 'suspense')
     player.counters[key] = player.counters.get(key, 0) + 1
+
+def _pleiades_crowd_cheers_trigger(player, event, state):
+    """Pleiades: when crowd cheers, create a Confidence token."""
+    data = event.data if isinstance(event.data, dict) else {}
+    if data.get('player_id') != player.player_id:
+        return
+    from engine.card_effects.keywords import create_token
+    create_token(state, player.player_id, "confidence", 1)
 
 HERO_ACTIVATION_CONDITIONS["pleiades_superstar"] = {
     "timing": "instant",
@@ -2005,10 +2099,9 @@ HERO_ACTIVATION_CONDITIONS["pleiades_superstar"] = {
     "requires_tap": True,
     "condition_fn": lambda player, state: (
         not player.hero.tapped
-        and any(player.counters.get((c.slug, 'auras', 'suspense'), 0) > 0 for c in player.auras.cards)
+        and bool(player.auras.cards)
     ),
     "effect_fn": _pleiades_effect,
-    "pay_cost_fn": _pleiades_pay_cost,
 }
 
 # 9. Prism, Awakener of Sol — passive on soul entry
@@ -2037,15 +2130,17 @@ def _prism_awakener_soul_trigger(player, event, state):
         return
     target = next((c for c in figments if c.slug == pick), figments[0])
     player.deck.remove(target)
-    player.hand.add(target)
+    player.permanents.add(target)  # Put figment into arena (permanents zone)
     from engine.card_effects.keywords import effect_shuffle
     effect_shuffle(state, player.player_id)
 
-# 10. Teklovossen, Esteemed Magnate — hero activation (simplified: gain 1 AP)
-# Once per Turn Instant - {r}{r}{r}: gain 1 action point (simplified from "play your weapon")
+# 10. Teklovossen, Esteemed Magnate — hero activation
+# Once per Turn Instant - {r}{r}{r}: play next Evo this turn as instant + draw a card.
 def _teklovossen_effect(action, player, state):
-    """Teklovossen: gain 1 action point (simplified play weapon)."""
-    player.action_points += 1
+    """Teklovossen: draw a card + next Evo plays as instant this turn."""
+    from engine.card_effects.keywords import effect_draw
+    effect_draw(state, player.player_id, 1)
+    player.current_turn_effects.append("teklovossen_evo_instant")
     player.current_turn_effects.append("teklovossen_used")
 
 HERO_ACTIVATION_CONDITIONS["teklovossen_esteemed_magnate"] = {
@@ -2057,13 +2152,16 @@ HERO_ACTIVATION_CONDITIONS["teklovossen_esteemed_magnate"] = {
     "effect_fn": _teklovossen_effect,
 }
 
-# 11. Uzuri, Switchblade — passive attack reaction (simplified: swap attack card)
-# Once per Turn AR - banish card from hand face down: if AA with cost <=2, swap into combat chain
+# 11. Uzuri, Switchblade — attack reaction (fires during combat/reaction step)
+# Once per Turn AR - banish card from hand face down: if stealth AA with cost <=2, swap into combat chain
 def _uzuri_attack_trigger(player, event, state):
-    """Uzuri: once per turn, if attacking, try to swap an AA cost<=2 from hand."""
+    """Uzuri: once per turn during combat, if stealth attack, swap an AA cost<=2 from hand."""
     if "uzuri_switchblade_used" in player.current_turn_effects:
         return
     if not state.combat or state.combat.attacker_id != player.player_id:
+        return
+    # Must be a stealth attack
+    if "Stealth" not in (state.combat.keywords or []):
         return
     aa_cards = [c for c in player.hand.cards
                 if "Attack" in (c.types or []) and "Action" in (c.types or [])
@@ -2092,27 +2190,30 @@ def _uzuri_attack_trigger(player, event, state):
     player.current_turn_effects.append("uzuri_switchblade_used")
 
 # 12. Zyggy Starlight — hero activation
-# Instant - {r}{r}, {q}, destroy a Lightning Flow: create Embodiment of Lightning token
-def _zyggy_pay_cost(player, state):
-    """Pay Zyggy cost: destroy a Lightning Flow."""
-    lightning_flows = [c for c in player.auras.cards if "lightning_flow" in c.slug]
-    if not lightning_flows:
-        return False
-    from engine.card_effects.keywords import _ask_player
-    if len(lightning_flows) == 1:
-        target = lightning_flows[0]
-    else:
-        pick = _ask_player(state, player.player_id, [c.slug for c in lightning_flows],
-                           context="Zyggy: choose a Lightning Flow to destroy")
-        target = next((c for c in lightning_flows if c.slug == pick), lightning_flows[0])
-    player.auras.remove(target)
-    player.graveyard.add(target)
-    return True
-
+# Instant - {r}{r}, {q}: banish a Lightning aura with no holo counters, return it with a holo counter.
 def _zyggy_effect(action, player, state):
-    """Zyggy: create Embodiment of Lightning token."""
-    from engine.card_effects.keywords import create_token
-    create_token(state, player.player_id, "embodiment_of_lightning", 1)
+    """Zyggy: banish a Lightning aura without holo counters, return it with one."""
+    from engine.card_effects.keywords import _ask_player
+    lightning_auras = [c for c in player.auras.cards
+                       if "Lightning" in (c.types or [])
+                       and player.counters.get((c.slug, 'auras', 'holo'), 0) == 0]
+    if not lightning_auras:
+        return
+    if len(lightning_auras) == 1:
+        target = lightning_auras[0]
+    else:
+        options = [c.slug for c in lightning_auras]
+        pick = _ask_player(state, player.player_id, options,
+                           context="Zyggy: choose a Lightning aura to banish and return with holo counter")
+        target = next((c for c in lightning_auras if c.slug == pick), lightning_auras[0])
+    # Remove from auras, then re-add with holo counter
+    player.auras.remove(target)
+    player.banished.add(target)
+    # Return it: move from banished back to auras with a holo counter
+    player.banished.remove(target)
+    player.auras.add(target)
+    key = (target.slug, 'auras', 'holo')
+    player.counters[key] = player.counters.get(key, 0) + 1
 
 HERO_ACTIVATION_CONDITIONS["zyggy_starlight"] = {
     "timing": "instant",
@@ -2120,9 +2221,10 @@ HERO_ACTIVATION_CONDITIONS["zyggy_starlight"] = {
     "requires_tap": True,
     "condition_fn": lambda player, state: (
         not player.hero.tapped
-        and any("lightning_flow" in c.slug for c in player.auras.cards)
+        and any("Lightning" in (c.types or [])
+                and player.counters.get((c.slug, 'auras', 'holo'), 0) == 0
+                for c in player.auras.cards)
     ),
-    "pay_cost_fn": _zyggy_pay_cost,
     "effect_fn": _zyggy_effect,
 }
 
@@ -2147,9 +2249,9 @@ def _arakni_slipped_attack_trigger(player, event, state):
     player.current_turn_effects.append("arakni_slipped_stealth_ga_used")
 
 # 14. Arakni, Huntsman — passive on play
-# Whenever you play a card with contract, look at top card of opponent's deck
+# Whenever you play a card with contract, look at top card of opponent's deck; may put it on bottom.
 def _arakni_huntsman_play_trigger(player, event, state):
-    """Arakni Huntsman: when playing a contract card, look at top of opponent deck."""
+    """Arakni Huntsman: when playing a contract card, look at top of opponent deck; may put on bottom."""
     data = event.data if isinstance(event.data, dict) else {}
     played_card = data.get('card')
     if played_card is None:
@@ -2164,15 +2266,27 @@ def _arakni_huntsman_play_trigger(player, event, state):
         has_contract = "Contract" in types
     if not has_contract:
         return
-    # Look at top of opponent's deck (information advantage — simplified)
-    from engine.card_effects.keywords import effect_look_top
+    # Look at top of opponent's deck
     opp_id = 3 - player.player_id
+    opp = state.players[opp_id]
+    if not opp.deck.cards:
+        return
+    from engine.card_effects.keywords import _ask_player, effect_look_top
     effect_look_top(state, opp_id, 1)
+    # Offer to put it on the bottom
+    top_card = opp.deck.cards[0] if opp.deck.cards else None
+    if top_card is None:
+        return
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context=f"Arakni Huntsman: put opponent's top card ({top_card.slug}) on bottom of their deck?")
+    if choice:
+        opp.deck.remove(top_card)
+        opp.deck.add_bottom(top_card)
 
 # 15. Fang, Dracai of Blades — passive hit trigger
-# When you hit a marked hero, create Fealty token. If 3+ Fealty tokens, crowd cheers.
+# When you hit a marked hero, create Fealty token. If 3+ Fealty tokens, dagger attacks cost {r} less.
 def _fang_hit_trigger(player, event, state):
-    """Fang: on hit vs marked hero, create Fealty. If 3+ Fealty, crowd cheers."""
+    """Fang: on hit vs marked hero, create Fealty. If 3+ Fealty, next dagger attack costs 0."""
     if not state.combat or state.combat.attacker_id != player.player_id:
         return
     opp = state.players[3 - player.player_id]
@@ -2180,15 +2294,12 @@ def _fang_hit_trigger(player, event, state):
         return
     from engine.card_effects.keywords import create_token
     create_token(state, player.player_id, "fealty", 1)
-    # Check if 3+ Fealty tokens
+    # Check if 3+ Fealty tokens — dagger attacks cost {r} less (simplified: next dagger free)
     fealty_count = sum(1 for c in player.auras.cards if "fealty" in c.slug.lower())
     if fealty_count < 3:
         fealty_count = sum(1 for c in player.items.cards if "fealty" in c.slug.lower())
     if fealty_count >= 3:
-        player.current_turn_effects.append("crowd_cheers")
-        state.event_manager.emit(
-            type('Event', (), {'type': 'crowd_cheers', 'data': {'player_id': player.player_id}})(),
-            state)
+        player.current_turn_effects.append("fang_dagger_cost_0")
 
 
 
@@ -2236,12 +2347,12 @@ HERO_TRIGGERS: dict = {
     "dash": [{"event": "start_of_turn", "condition_fn": lambda p, e, s: s.active_player == p.player_id, "effect_fn": _dash_io_start_of_turn_trigger}],
     # 6. Oscilio, Constella Intelligence — activation only (registered above)
     "oscilio_constella_intelligence": [],
-    # 7. Kassai of the Golden Sand — activation only
-    "kassai_of_the_golden_sand": [],
-    "kassai": [],
-    # 8. Marlynn, Treasure Hunter — passive: Gold creation -> next arrow +1{p}
-    "marlynn_treasure_hunter": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _marlynn_gold_arrow_buff_trigger}],
-    "marlynn": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _marlynn_gold_arrow_buff_trigger}],
+    # 7. Kassai of the Golden Sand — weapon hit gold trigger
+    "kassai_of_the_golden_sand": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _kassai_weapon_hit_trigger}],
+    "kassai": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _kassai_weapon_hit_trigger}],
+    # 8. Marlynn, Treasure Hunter — passive: card draw during action phase -> arrow to arsenal
+    "marlynn_treasure_hunter": [{"event": "card_draw", "condition_fn": lambda p, e, s: True, "effect_fn": _marlynn_draw_arrow_arsenal_trigger}],
+    "marlynn": [{"event": "card_draw", "condition_fn": lambda p, e, s: True, "effect_fn": _marlynn_draw_arrow_arsenal_trigger}],
     # 9. Ser Boltyn, Breaker of Dawn — attacks get +1{p} if charged & defended by AA
     "ser_boltyn_breaker_of_dawn": [{"event": "defend", "condition_fn": lambda p, e, s: True, "effect_fn": _boltyn_charged_attack_bonus}],
     "ser_boltyn": [{"event": "defend", "condition_fn": lambda p, e, s: True, "effect_fn": _boltyn_charged_attack_bonus}],
@@ -2275,19 +2386,28 @@ HERO_TRIGGERS: dict = {
         {"event": "attack_declared", "condition_fn": lambda p, e, s: True, "effect_fn": _arakni_marionette_attack_trigger},
         {"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _arakni_marionette_hit_trigger},
     ],
-    # 6. Gravy Bones — blue graveyard tracking + pirate go again
+    # 6. Gravy Bones — blue graveyard tracking (enables watery grave plays)
     "gravy_bones_shipwrecked_looter": [
         {"event": "card_enters_graveyard", "condition_fn": lambda p, e, s: True, "effect_fn": _gravy_graveyard_trigger},
-        {"event": "attack_declared", "condition_fn": lambda p, e, s: True, "effect_fn": _gravy_attack_trigger},
     ],
     # 9. Prism, Awakener of Sol — Herald enters soul
     "prism_awakener_of_sol": [{"event": "card_enters_soul", "condition_fn": lambda p, e, s: True, "effect_fn": _prism_awakener_soul_trigger}],
-    # 11. Uzuri, Switchblade — attack reaction swap
-    "uzuri_switchblade": [{"event": "attack_declared", "condition_fn": lambda p, e, s: True, "effect_fn": _uzuri_attack_trigger}],
+    # 11. Uzuri, Switchblade — attack reaction (fires during combat)
+    "uzuri_switchblade": [{"event": "attacking", "condition_fn": lambda p, e, s: True, "effect_fn": _uzuri_attack_trigger}],
     # 13. Arakni (5lp3d) — first stealth attack gets go again
     "arakni_5lp3d_7hru_7h3_cr4x": [{"event": "attack_declared", "condition_fn": lambda p, e, s: True, "effect_fn": _arakni_slipped_attack_trigger}],
     # 14. Arakni, Huntsman — contract play trigger
     "arakni_huntsman": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _arakni_huntsman_play_trigger}],
     # 15. Fang, Dracai of Blades — hit vs marked hero
     "fang_dracai_of_blades": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _fang_hit_trigger}],
+    # Tuffnut, Bumbling Hulkster — crowd cheers -> create Toughness token
+    "tuffnut_bumbling_hulkster": [{"event": "crowd_cheers", "condition_fn": lambda p, e, s: True, "effect_fn": _tuffnut_crowd_cheers_trigger}],
+    "tuffnut": [{"event": "crowd_cheers", "condition_fn": lambda p, e, s: True, "effect_fn": _tuffnut_crowd_cheers_trigger}],
+    # Lyath Goldmane, Vile Savant — crowd boos -> create Might token
+    "lyath_goldmane_vile_savant": [{"event": "crowd_boos", "condition_fn": lambda p, e, s: True, "effect_fn": _lyath_crowd_boos_trigger}],
+    "lyath_goldmane": [{"event": "crowd_boos", "condition_fn": lambda p, e, s: True, "effect_fn": _lyath_crowd_boos_trigger}],
+    "lyath": [{"event": "crowd_boos", "condition_fn": lambda p, e, s: True, "effect_fn": _lyath_crowd_boos_trigger}],
+    # Pleiades, Superstar — crowd cheers -> create Confidence token
+    "pleiades_superstar": [{"event": "crowd_cheers", "condition_fn": lambda p, e, s: True, "effect_fn": _pleiades_crowd_cheers_trigger}],
+    "pleiades": [{"event": "crowd_cheers", "condition_fn": lambda p, e, s: True, "effect_fn": _pleiades_crowd_cheers_trigger}],
 }
