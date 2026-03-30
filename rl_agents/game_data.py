@@ -740,8 +740,8 @@ class TransitionCollector:
                 resources=getattr(p, "resources", None),
                 graveyard_size=len(p.graveyard.cards) if hasattr(p, "graveyard") else None,
                 opp_graveyard_size=len(opp.graveyard.cards) if hasattr(opp, "graveyard") else None,
-                banished_size=len(p.banish.cards) if hasattr(p, "banish") else None,
-                opp_banished_size=len(opp.banish.cards) if hasattr(opp, "banish") else None,
+                banished_size=len(p.banished.cards) if hasattr(p, "banished") else None,
+                opp_banished_size=len(opp.banished.cards) if hasattr(opp, "banished") else None,
                 pitch_zone_size=len(p.pitch.cards) if hasattr(p, "pitch") else None,
                 opp_pitch_zone_size=len(opp.pitch.cards) if hasattr(opp, "pitch") else None,
                 equipment_count=sum(1 for z in [p.head, p.chest, p.arms, p.legs] if z.cards),
@@ -753,7 +753,7 @@ class TransitionCollector:
                 combat_keywords=combat_kw,
                 player_hand=_zone_slugs(p.hand),
                 player_graveyard=_zone_slugs(p.graveyard),
-                player_banished=_zone_slugs(p.banish),
+                player_banished=_zone_slugs(p.banished),
                 player_arsenal=_zone_slugs(p.arsenal),
                 player_equipment=_json.dumps(
                     [getattr(c, "slug", str(c)) for z in [p.head, p.chest, p.arms, p.legs] for c in z.cards],
@@ -765,7 +765,7 @@ class TransitionCollector:
                 player_items=_zone_slugs(p.items) if hasattr(p, "items") else None,
                 player_permanents=_zone_slugs(p.permanents) if hasattr(p, "permanents") else None,
                 opp_graveyard=_zone_slugs(opp.graveyard),
-                opp_banished=_zone_slugs(opp.banish),
+                opp_banished=_zone_slugs(opp.banished),
                 opp_equipment=_json.dumps(
                     [getattr(c, "slug", str(c)) for z in [opp.head, opp.chest, opp.arms, opp.legs] for c in z.cards],
                     separators=(",", ":"),
