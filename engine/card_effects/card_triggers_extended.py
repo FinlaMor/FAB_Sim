@@ -49,6 +49,13 @@ for _n in [1, 2, 3, 4, 5]:
     if _key not in TURN_ATTACK_EFFECTS:
         TURN_ATTACK_EFFECTS[_key] = {"apply_fn": _make_nap(_n)}
 
+# next_brute_attack_+2: only applies to Brute class attack cards
+if "next_brute_attack_+2" not in TURN_ATTACK_EFFECTS:
+    TURN_ATTACK_EFFECTS["next_brute_attack_+2"] = {
+        "condition_fn": lambda ac, pl, st: "Brute" in (ac.subtypes or []),
+        "apply_fn": _make_nap(2),
+    }
+
 
 # ============================================================
 # SECTION 1: Shared helper functions / factories
@@ -511,13 +518,13 @@ _register("back_alley_breakline", [
 ])
 
 # -- backspin_thrust_red --
-# Instant: tap cog: +1p or go again. Simplified: +1p on play
+# Instant: tap cog: +1p or go again. Simplified: +1p on current attack if in combat
+def _backspin_thrust_play(card, event, state):
+    if state.combat:
+        state.combat.attack_power += 1
+
 _register("backspin_thrust", [
-    TriggerDef(event_type="on_play",
-               effect_fn=lambda c, e, s: (
-                   setattr(state.combat, 'attack_power', state.combat.attack_power + 1)
-                   if state.combat else None
-               ) if (state := s) else None),
+    TriggerDef(event_type="on_play", effect_fn=_backspin_thrust_play),
 ])
 
 # -- banneret_of_courage_yellow --
@@ -533,12 +540,20 @@ _register("banneret_of_gallantry", [
 ])
 
 # -- bare_destruction_red --
-# Beat Chest; when attacks, if beaten chest and no chest equipment, go again
+# Beat Chest; when attacks, if beaten chest and no chest equipment, go again + next Brute attack +2p
+def _bare_destruction_attacking(card, event, state):
+    if not _is_this_attacking(card, event, state):
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if not any("beat_chest" in e for e in player.current_turn_effects):
+        return
+    if state.combat and "Go Again" not in state.combat.keywords:
+        state.combat.keywords.append("Go Again")
+    player.current_turn_effects.append("next_brute_attack_+2")
+
 _register("bare_destruction", [
-    TriggerDef(event_type="attacking",
-               effect_fn=_factory_attacking_go_again_if(
-                   lambda c, s: any("beat_chest" in e for e in
-                                    s.players[_controller_id(c)].current_turn_effects))),
+    TriggerDef(event_type="attacking", effect_fn=_bare_destruction_attacking),
 ])
 
 # -- bare_fangs_red --
@@ -670,12 +685,23 @@ _register("bloodrush_bellow_yellow", [
 ])
 
 # -- bolt_of_courage (red/yellow/blue) --
-# Optional charge; if charged, on-hit deal arcane 1. Simplified: on-hit deal 1 arcane.
+# Optional charge; if charged this turn, on-hit deal 1 arcane damage.
+def _bolt_of_courage_play(card, event, state):
+    charged = _factory_on_play_charge_optional()(card, event, state)
+    if charged:
+        cid = _controller_id(card)
+        state.players[cid].class_counters["bolt_of_courage_charged"] = True
+
+def _bolt_of_courage_hit(card, event, state):
+    if not _is_this_attacking(card, event, state):
+        return
+    cid = _controller_id(card)
+    if state.players[cid].class_counters.pop("bolt_of_courage_charged", False):
+        effect_deal_arcane(state, 3 - cid, 1, source=card)
+
 _register("bolt_of_courage", [
-    TriggerDef(event_type="on_play", effect_fn=_factory_on_play_charge_optional(), is_optional=True),
-    TriggerDef(event_type="hit",
-               effect_fn=lambda c, e, s: effect_deal_arcane(s, 3 - _controller_id(c), 1, source=c)
-               if _is_this_attacking(c, e, s) else None),
+    TriggerDef(event_type="on_play", effect_fn=_bolt_of_courage_play, is_optional=True),
+    TriggerDef(event_type="hit", effect_fn=_bolt_of_courage_hit),
 ])
 
 # -- boltn_shot (red/yellow/blue) --
@@ -951,13 +977,15 @@ _register("cut_through", [
 ])
 
 # -- deadwood_dirge_red --
-# Destroy an aura you control. Create 3 Runechant tokens. Go again.
+# Destroy an aura you control (required). Create 3 Runechant tokens. Go again.
+# CR 5.1.4a: unplayable without an aura (enforced by PLAY_TARGET_CONDITIONS in registry.py)
 def _deadwood_dirge_play(card, event, state):
     cid = _controller_id(card)
     player = state.players[cid]
-    if player.auras.cards:
-        aura = player.auras.cards[0]
-        _move_to_graveyard(aura, state)
+    if not player.auras.cards:
+        return  # target no longer exists at resolution — effect fails
+    aura = player.auras.cards[0]
+    _move_to_graveyard(aura, state)
     for _ in range(3):
         create_token(state, cid, "runechant")
 
@@ -3363,12 +3391,56 @@ _register("luminaris_angels_glow", [
 ])
 
 # -- mask_of_momentum --
-# Third+ chain link in a row to hit: draw. Blade Break.
-_register("mask_of_momentum", [
-    TriggerDef(event_type="hit",
-               effect_fn=lambda c, e, s: effect_draw(s, _controller_id(c), 1)
-               if len(getattr(s, 'chain_links', [])) >= 3 else None),
-])
+# "Once per Turn Effect – When an attack action card you control is the third or
+#  higher chain link in a row to hit, draw a card."
+#
+# Implementation strategy:
+#   • On ANY 'hit' event (covers both main-attack hits AND Flick Knives dagger
+#     hits that occur before the main attack resolves): mark
+#     player.class_counters["current_link_hit"] = True for the current chain
+#     link position (len(state.chain_links) before this link is appended).
+#   • On 'chain_link_resolves' (fires after the link is appended):
+#     - link_hit = chain_links[-1].hit  OR  current_link_hit counter was set
+#     - Update consecutive "hit_streak" counter
+#     - If streak >= 3 and mask not yet exhausted this turn: draw, exhaust mask
+#   • card.exhausted on mask_of_momentum is reset each turn by the engine's
+#     start-of-turn equipment-exhausted reset (added alongside this fix).
+
+def _mom_hit(card, event, state):
+    """Any hit during this chain link: mark current_link_hit."""
+    cid = _controller_id(card)
+    state.players[cid].class_counters["current_link_hit"] = True
+
+def _mom_chain_close(card, event, state):
+    """Chain link resolved: update consecutive hit streak; draw if 3rd+ consecutive."""
+    cid = _controller_id(card)
+    player = state.players[cid]
+    links = state.chain_links
+    if not links:
+        return
+    last_link = links[-1]
+    # A chain link "hit" if the main attack dealt damage OR any side-hit was recorded
+    link_hit = last_link.hit or bool(player.class_counters.get("current_link_hit", False))
+    # Clear per-link flag now that the link has resolved
+    player.class_counters.pop("current_link_hit", None)
+
+    if link_hit:
+        player.class_counters["hit_streak"] = player.class_counters.get("hit_streak", 0) + 1
+    else:
+        player.class_counters["hit_streak"] = 0
+
+    # Check once-per-turn draw condition
+    mask = next((c for c in player.head.cards if c.slug == "mask_of_momentum"), None)
+    if mask is None or mask.exhausted:
+        return
+    if player.class_counters.get("hit_streak", 0) >= 3:
+        effect_draw(state, cid, 1)
+        mask.exhausted = True  # once per turn
+
+CARD_TRIGGERS["mask_of_momentum"] = [
+    TriggerDef(event_type="hit",              effect_fn=_mom_hit),
+    TriggerDef(event_type="chain_link_resolves", effect_fn=_mom_chain_close),
+]
 
 # -- mask_of_perdition --
 # From GY: destroy 2 Silver to equip. On defend, mark attacker. Simplified: noop.

@@ -12,7 +12,7 @@ sys.path.insert(0, r"C:\Users\Joseph\Desktop\FAB_Coach")
 
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, Zone
-from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS
+from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS, PLAY_TARGET_CONDITIONS
 
 
 class ActionType(Enum):
@@ -334,6 +334,17 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             else:
                 if card.is_action and player.action_points <= 0:
                     continue
+                # CR 5.1.4a: cards with required targets cannot be played without a valid target
+                _card_base_slug = re.sub(r'_(red|yellow|blue)$', '', card.slug)
+                _ptc = PLAY_TARGET_CONDITIONS.get(_card_base_slug)
+                if _ptc is not None and not _ptc(state, pp):
+                    continue
+                # General: card can ONLY target attacks → requires active combat
+                if (getattr(card, 'can_target_attack', False)
+                        and not getattr(card, 'can_target_hero', False)
+                        and not getattr(card, 'can_target_permanent', False)
+                        and state.combat is None):
+                    continue
                 effective_cost = card.cost
                 play_card_pitch_seqs = find_all_valid_pitch_sequences(
                     player.hand.cards,
@@ -351,33 +362,42 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             is_instant = "Instant" in arsenal_card.types
             if (arsenal_card.is_action or is_instant) and not is_ar and not is_dr:
                 if is_instant or player.action_points > 0:
-                    effective_cost = arsenal_card.cost
-                    arsenal_pitch_seqs = find_all_valid_pitch_sequences(
-                        player.hand.cards, 
-                        effective_cost,
-                        current_resources=player.resources
-                    )
-                    null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(arsenal_card) else None
-                    if not (null_targets is not None and not null_targets):
-                        for seq in arsenal_pitch_seqs:
-                            if seq is not None:
-                                if null_targets is not None:
-                                    for target_entry in null_targets:
+                    # CR 5.1.4a: block play if required target is missing
+                    _ab_slug = re.sub(r'_(red|yellow|blue)$', '', arsenal_card.slug)
+                    _aptc = PLAY_TARGET_CONDITIONS.get(_ab_slug)
+                    _no_target = ((_aptc is not None and not _aptc(state, pp))
+                                  or (getattr(arsenal_card, 'can_target_attack', False)
+                                      and not getattr(arsenal_card, 'can_target_hero', False)
+                                      and not getattr(arsenal_card, 'can_target_permanent', False)
+                                      and state.combat is None))
+                    if not _no_target:
+                        effective_cost = arsenal_card.cost
+                        arsenal_pitch_seqs = find_all_valid_pitch_sequences(
+                            player.hand.cards,
+                            effective_cost,
+                            current_resources=player.resources
+                        )
+                        null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(arsenal_card) else None
+                        if not (null_targets is not None and not null_targets):
+                            for seq in arsenal_pitch_seqs:
+                                if seq is not None:
+                                    if null_targets is not None:
+                                        for target_entry in null_targets:
+                                            actions.append(Action(
+                                                type=ActionType.PLAY_ARSENAL,
+                                                card=arsenal_card,
+                                                pitch_cards=seq,
+                                                from_arsenal=True,
+                                                target=target_entry.card,
+                                                targets=[f"oid:{target_entry.card.object_id}"],
+                                            ))
+                                    else:
                                         actions.append(Action(
                                             type=ActionType.PLAY_ARSENAL,
                                             card=arsenal_card,
                                             pitch_cards=seq,
                                             from_arsenal=True,
-                                            target=target_entry.card,
-                                            targets=[f"oid:{target_entry.card.object_id}"],
                                         ))
-                                else:
-                                    actions.append(Action(
-                                        type=ActionType.PLAY_ARSENAL,
-                                        card=arsenal_card,
-                                        pitch_cards=seq,
-                                        from_arsenal=True,
-                                    ))
 
         # ACTIVATE_ITEM
         for i, card in enumerate(player.items.cards):
@@ -654,6 +674,11 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
                                       pitch_cards=seq, meld_side='bottom'))
         else:
+            # CR 5.1.4a: check required target exists
+            _ri_base_slug = re.sub(r'_(red|yellow|blue)$', '', card.slug)
+            _ri_ptc = PLAY_TARGET_CONDITIONS.get(_ri_base_slug)
+            if _ri_ptc is not None and not _ri_ptc(state, pp):
+                continue
             effective_cost = card.cost
             hand_pitch_seqs = find_all_valid_pitch_sequences(
                 player.hand.cards,
@@ -662,7 +687,7 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             )
             for seq in hand_pitch_seqs:
                 actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, pitch_cards=seq))
-        
+
     # Instants from arsenal
     for i, card in enumerate(player.arsenal.cards):
         if "Instant" not in card.types:

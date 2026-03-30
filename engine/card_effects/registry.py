@@ -586,6 +586,18 @@ DEFENSE_REACTION_CONDITIONS = {
 }
 
 # ---------------------------------------------------------------------------
+# Play target conditions — CR 5.1.4a
+# Cards with required targets that may not always exist.
+# Signature: condition(state, player_id) -> bool
+# Returns True if a valid target exists and the card may be played.
+# Register slugs WITHOUT color suffix (_red/_yellow/_blue stripped by lookup).
+# ---------------------------------------------------------------------------
+PLAY_TARGET_CONDITIONS: dict = {
+    # "Destroy an aura you control" — required effect, card cannot be played without an aura
+    "deadwood_dirge": lambda state, pid: bool(state.players[pid].auras.cards),
+}
+
+# ---------------------------------------------------------------------------
 # Discard-activate effects — "Instant - Discard this:" hand abilities
 # Cost (discard) is handled by _apply_discard_activate in engine.py.
 # Signature: (action, player, state) -> None

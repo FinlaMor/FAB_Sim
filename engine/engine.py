@@ -219,8 +219,19 @@ def _start_of_turn_phase(state: GameState) -> None:
     # Clear equipment-defended tracking (safety net)
     player.equipment_defended_this_turn = []
 
+    # Reset card.exhausted for all equipment in arena (covers "once per turn" and {t}-cost instants)
+    for _zone in (player.head, player.chest, player.arms, player.legs):
+        for _card in _zone.cards:
+            _card.exhausted = False
+    for _card in player.weapon.cards:
+        _card.exhausted = False
+
     # Clear combat chain link history
     state.chain_links = []
+
+    # Clear per-chain-link hit-tracking counters (mask_of_momentum streak etc.)
+    for _key in [k for k in player.class_counters if k.startswith("current_link_hit")]:
+        del player.class_counters[_key]
 
     if environ['debug'] == 'True':
         import json
