@@ -3313,10 +3313,20 @@ _register("carrion_husk", [
 ])
 
 # -- cintari_saber --
-# Once per Turn. Defended by 1+ attack actions, +1p.
+# "Whenever Cintari Saber is defended by 1 or more attack action cards, it gains go again."
+def _cintari_saber_defend(card, event, state):
+    if not state.combat or state.combat.attack_card is not card:
+        return
+    # Check if any defending card is an attack action card
+    for dc in state.combat.defending_cards:
+        types = dc.types or []
+        if "Attack" in types and "Action" in types:
+            if "Go Again" not in state.combat.keywords:
+                state.combat.keywords.append("Go Again")
+            return
+
 _register("cintari_saber", [
-    TriggerDef(event_type="defend",
-               effect_fn=lambda c, e, s: None),  # Handled by engine
+    TriggerDef(event_type="defend", effect_fn=_cintari_saber_defend),
 ])
 
 # -- cogwerx_base_arms --
@@ -3366,9 +3376,41 @@ _register("crown_of_providence", [
     TriggerDef(event_type="defend", effect_fn=_crown_prov_defend),
 ])
 
-# -- dawnblade -- (already handled by engine mostly)
+# -- dawnblade --
+# "If Dawnblade hits, and it's the second time or more it has hit this turn,
+#  put a +1{p} counter on it. At the beginning of your end phase, if Dawnblade
+#  didn't hit this turn, remove all +1{p} counters from it."
+def _dawnblade_hit(card, event, state):
+    if not _is_this_attacking(card, event, state):
+        return
+    cid = _controller_id(card)
+    # Track hits this turn
+    hit_key = "dawnblade_hits_this_turn"
+    hits = state.players[cid].class_counters.get(hit_key, 0) + 1
+    state.players[cid].class_counters[hit_key] = hits
+    if hits >= 2:
+        # Put a +1{p} counter
+        counter_key = (card.slug, "weapon", "power_plus")
+        state.players[cid].counters[counter_key] = state.players[cid].counters.get(counter_key, 0) + 1
+        card.base_power = (card.base_power or 0) + 1
+
+def _dawnblade_end_phase(card, event, state):
+    """If Dawnblade didn't hit this turn, remove all +1{p} counters."""
+    cid = _controller_id(card)
+    hit_key = "dawnblade_hits_this_turn"
+    hits = state.players[cid].class_counters.get(hit_key, 0)
+    if hits == 0:
+        counter_key = (card.slug, "weapon", "power_plus")
+        n_counters = state.players[cid].counters.get(counter_key, 0)
+        if n_counters > 0:
+            card.base_power = max(0, (card.base_power or 0) - n_counters)
+            state.players[cid].counters[counter_key] = 0
+    # Clear hit tracking
+    state.players[cid].class_counters.pop(hit_key, None)
+
 _register("dawnblade", [
-    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="hit", effect_fn=_dawnblade_hit),
+    TriggerDef(event_type="start_of_end_phase", effect_fn=_dawnblade_end_phase),
 ])
 
 # -- dead_threads --
@@ -4758,12 +4800,16 @@ _register("scepter_of_pain", [
 
 # -- nitro_mechanoid --
 # "Action - Banish a card from under Nitro Mechanoid: Attack. Overpower. Temper."
-# Simplified: basic weapon attack with overpower keyword
+# The "banish from under" cost uses cards placed under items by Mechanologist effects.
+# Simplified: Overpower on attack. The "under" zone is not fully modeled.
+def _nitro_mechanoid_attacking(card, event, state):
+    if not _is_this_attacking(card, event, state) or not state.combat:
+        return
+    if "Overpower" not in state.combat.keywords:
+        state.combat.keywords.append("Overpower")
+
 _register("nitro_mechanoid", [
-    TriggerDef(event_type="attacking",
-               effect_fn=lambda c, e, s: (
-                   s.combat.keywords.append("Overpower") if s.combat and _is_this_attacking(c, e, s)
-                   and "Overpower" not in s.combat.keywords else None)),
+    TriggerDef(event_type="attacking", effect_fn=_nitro_mechanoid_attacking),
 ])
 
 # -- spell_fray_tiara --
