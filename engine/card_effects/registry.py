@@ -1492,9 +1492,11 @@ def _kassai_pay_cost(player, state):
     return True
 
 def _kassai_activate(action, player, state):
-    """Next time weapon hits hero this turn, create Gold + go again."""
+    """Next time weapon hits hero this turn, create Gold. Go again (on the activation, not the swing)."""
     player.current_turn_effects.append("kassai_weapon_hit_gold")
     player.current_turn_effects.append("kassai_used")
+    # Go Again on the activation itself (grants +1 AP to continue the turn)
+    player.action_points += 1
 
 
 def _kassai_weapon_hit_trigger(player, event, state):
@@ -2203,6 +2205,16 @@ def _uzuri_attack_trigger(player, event, state):
 
 # 12. Zyggy Starlight — hero activation
 # Instant - {r}{r}, {q}: banish a Lightning aura with no holo counters, return it with a holo counter.
+def _zyggy_pay_cost(player, state):
+    """Zyggy cost: destroy a Lightning Flow you control."""
+    flows = [c for c in player.auras.cards if "lightning_flow" in c.slug]
+    if not flows:
+        return False
+    flow = flows[0]
+    player.auras.remove(flow)
+    player.graveyard.add(flow)
+    return True
+
 def _zyggy_effect(action, player, state):
     """Zyggy: banish a Lightning aura without holo counters, return it with one."""
     from engine.card_effects.keywords import _ask_player
@@ -2218,10 +2230,9 @@ def _zyggy_effect(action, player, state):
         pick = _ask_player(state, player.player_id, options,
                            context="Zyggy: choose a Lightning aura to banish and return with holo counter")
         target = next((c for c in lightning_auras if c.slug == pick), lightning_auras[0])
-    # Remove from auras, then re-add with holo counter
+    # Banish and return with holo counter
     player.auras.remove(target)
     player.banished.add(target)
-    # Return it: move from banished back to auras with a holo counter
     player.banished.remove(target)
     player.auras.add(target)
     key = (target.slug, 'auras', 'holo')
@@ -2231,9 +2242,13 @@ HERO_ACTIVATION_CONDITIONS["zyggy_starlight"] = {
     "timing": "instant",
     "cost": 2,
     "requires_tap": True,
+    "pay_cost_fn": _zyggy_pay_cost,
     "condition_fn": lambda player, state: (
         not player.hero.tapped
+        # Need a Lightning Flow to destroy AND a Lightning aura without holo counters
+        and any("lightning_flow" in c.slug for c in player.auras.cards)
         and any("Lightning" in (c.types or [])
+                and "lightning_flow" not in c.slug
                 and player.counters.get((c.slug, 'auras', 'holo'), 0) == 0
                 for c in player.auras.cards)
     ),

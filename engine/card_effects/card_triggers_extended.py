@@ -3167,9 +3167,17 @@ _register("aether_crackers", [
 ])
 
 # -- anothos --
-# While 2+ cost-3+ in pitch, +2p. Simplified: noop (weapon power handled by engine).
+# "While there are 2 or more cards with cost 3 or greater in your pitch zone, Anothos has +2{p}."
+def _anothos_attacking(card, event, state):
+    if not _is_this_attacking(card, event, state) or not state.combat:
+        return
+    cid = _controller_id(card)
+    cost3_in_pitch = sum(1 for c in state.players[cid].pitch.cards if (c.cost or 0) >= 3)
+    if cost3_in_pitch >= 2:
+        state.combat.attack_power += 2
+
 _register("anothos", [
-    TriggerDef(event_type="attacking", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="attacking", effect_fn=_anothos_attacking),
 ])
 
 # -- aphrodias --
@@ -3406,9 +3414,18 @@ _register("galvanic_bender", [
 ])
 
 # -- gauntlets_of_iron_will --
-# On defend, next attack power gain is -1. Temper. Simplified: noop.
+# "When this defends, the next time an attack would gain {p} this chain link,
+#  instead it gains that much minus 1. Temper."
+def _gauntlets_iron_will_defend(card, event, state):
+    if not _is_this_defending(card, event, state):
+        return
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    # Set flag so power gains this chain link are reduced by 1
+    state.players[opp_id].current_turn_effects.append("iron_will_power_gain_minus1")
+
 _register("gauntlets_of_iron_will", [
-    TriggerDef(event_type="defend", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="defend", effect_fn=_gauntlets_iron_will_defend),
 ])
 
 # -- gauntlets_of_tyrannical_rex --
@@ -3437,9 +3454,34 @@ _register("grains_of_bloodspill", [
 ])
 
 # -- graven_gloves --
-# From GY: destroy 2 Silver to equip. When equipped from GY, on-hit create Silver. Simplified: noop.
+# "While this is in your graveyard, at the start of your turn, you may destroy 2
+#  Silver you control. If you do, equip this."
+# Simplified: at start of turn, if in graveyard and 2+ Silver, auto-equip.
+def _graven_gloves_start_of_turn(card, event, state):
+    cid = _controller_id(card)
+    player = state.players[cid]
+    # Check if this card is in graveyard
+    if card not in player.graveyard.cards:
+        return
+    # Check for 2 Silver tokens
+    silvers = [c for c in player.items.cards if "silver" in c.slug]
+    if len(silvers) < 2:
+        return
+    from engine.card_effects.keywords import _ask_player
+    choice = _ask_player(state, cid, [True, False],
+                         context="Graven Gloves: destroy 2 Silver to equip from graveyard?")
+    if not choice:
+        return
+    # Destroy 2 Silver
+    for s in silvers[:2]:
+        player.items.remove(s)
+        player.graveyard.add(s)
+    # Equip to arms
+    player.graveyard.remove(card)
+    player.arms.add(card)
+
 _register("graven_gloves", [
-    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="start_of_turn", effect_fn=_graven_gloves_start_of_turn),
 ])
 
 # -- harmonized_kodachi --
@@ -3473,9 +3515,26 @@ _register("hexagore_the_death_hydra", [
 ])
 
 # -- ironfist_revelation --
-# On defend, turn face-down crush card face-up for +1p counter. Temper. Simplified: noop.
+# "When this defends, you may turn a face-down card with crush in your arsenal face-up.
+#  If you do, put a +1{p} counter on it. Temper."
+def _ironfist_defend(card, event, state):
+    if not _is_this_defending(card, event, state):
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    # Check for face-down cards in arsenal with Crush keyword
+    face_down_crush = [c for c in player.arsenal.cards
+                       if getattr(c, 'face_down', False)
+                       and any("Crush" in kw for kw in (c.keywords or []))]
+    if not face_down_crush:
+        return
+    target = face_down_crush[0]
+    target.face_down = False
+    # Add +1{p} counter
+    target.base_power = (target.base_power or 0) + 1
+
 _register("ironfist_revelation", [
-    TriggerDef(event_type="defend", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="defend", effect_fn=_ironfist_defend),
 ])
 
 # -- ironsong_versus --
@@ -3565,9 +3624,30 @@ _register("mask_of_the_pouncing_lynx", [
 ])
 
 # -- millers_grindstone --
-# On hit, clash. Win: destroy top of deck. Lose: they draw. Simplified: noop.
+# "When this hits a hero, clash with them. If you win, destroy the top card of their deck.
+#  If they win, put a -1{p} counter on Miller's Grindstone."
+def _millers_grindstone_hit(card, event, state):
+    if not _is_this_attacking(card, event, state):
+        return
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    # Clash: compare top card power
+    my_cards = effect_look_top(state, cid, 1)
+    opp_cards = effect_look_top(state, opp_id, 1)
+    my_power = (my_cards[0].base_power or 0) if my_cards else 0
+    opp_power = (opp_cards[0].base_power or 0) if opp_cards else 0
+    if my_power > opp_power:
+        # Win: destroy top of opponent's deck
+        if state.players[opp_id].deck.cards:
+            destroyed = state.players[opp_id].deck.cards.pop(0)
+            state.players[opp_id].graveyard.add(destroyed)
+    elif opp_power > my_power:
+        # Lose: put -1{p} counter on this weapon
+        key = (card.slug, "weapon", "power_minus")
+        state.players[cid].counters[key] = state.players[cid].counters.get(key, 0) + 1
+
 _register("millers_grindstone", [
-    TriggerDef(event_type="hit", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="hit", effect_fn=_millers_grindstone_hit),
 ])
 
 # -- new_horizon --
@@ -3577,13 +3657,24 @@ _register("new_horizon", [
 ])
 
 # -- obsidian_fire_vein --
-# Once per turn weapon. If Draconic this chain link, +1p and go again.
+# "If you've played a Draconic card this chain link, this attack gets +1{p} and go again."
+def _obsidian_fire_vein_attacking(card, event, state):
+    if not _is_this_attacking(card, event, state) or not state.combat:
+        return
+    # Check if a Draconic card has been played this chain link
+    cid = _controller_id(card)
+    played_draconic = any("draconic" in eff.lower() for eff in state.players[cid].current_turn_effects
+                          if "draconic_played_this_chain" in eff)
+    # Simpler check: any Draconic chain link already exists
+    if not played_draconic:
+        played_draconic = any("Draconic" in (getattr(cl, 'keywords', []) or []) for cl in state.chain_links)
+    if played_draconic:
+        state.combat.attack_power += 1
+        if "Go Again" not in state.combat.keywords:
+            state.combat.keywords.append("Go Again")
+
 _register("obsidian_fire_vein", [
-    TriggerDef(event_type="attacking",
-               effect_fn=lambda c, e, s: (
-                   setattr(s.combat, 'attack_power', s.combat.attack_power + 1),
-                   s.combat.keywords.append("Go Again") if "Go Again" not in s.combat.keywords else None,
-               ) if _is_this_attacking(c, e, s) and s.combat else None),
+    TriggerDef(event_type="attacking", effect_fn=_obsidian_fire_vein_attacking),
 ])
 
 # -- parry_blade --
@@ -3623,10 +3714,10 @@ _register("quickdodge_flexors", [
 ])
 
 # -- ravenous_meataxe --
-# On attack, draw then discard random. If 6+p, +1p.
+# On attack, draw then discard random. If 6+p discarded, +2p.
 def _ravenous_meataxe_bonus(card, state):
     if state.combat:
-        state.combat.attack_power += 1
+        state.combat.attack_power += 2
 
 _register("ravenous_meataxe", [
     TriggerDef(event_type="attacking",
@@ -3709,9 +3800,16 @@ _register("spellbound_creepers", [
 ])
 
 # -- spiders_bite --
-# On hit, next time they defend with attack action, it gets -2d. Piercing 1. Simplified: noop.
+# "Piercing 1. When this hits a hero, the next time they defend with 1 or more
+#  attack action cards this turn, those cards have -1{d} while defending."
+def _spiders_bite_hit(card, event, state):
+    if not _is_this_attacking(card, event, state):
+        return
+    target_id = 3 - _controller_id(card)
+    state.players[target_id].current_turn_effects.append("spiders_bite_aa_minus1d")
+
 _register("spiders_bite", [
-    TriggerDef(event_type="hit", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="hit", effect_fn=_spiders_bite_hit),
 ])
 
 # -- spitfire --
@@ -3733,9 +3831,31 @@ _register("synapse_sparkcap", [
 ])
 
 # -- talishar_the_lost_prince --
-# Once per turn rr, put rust counter: attack. At end phase, if 2+ rust, destroy. Simplified: noop.
+# "Once per Turn Action - {r}{r}, put a rust counter: Attack.
+#  At the beginning of your end phase, if this has 2 or more rust counters, destroy it."
+def _talishar_attacking(card, event, state):
+    if not _is_this_attacking(card, event, state):
+        return
+    cid = _controller_id(card)
+    key = (card.slug, "weapon", "rust")
+    state.players[cid].counters[key] = state.players[cid].counters.get(key, 0) + 1
+
+def _talishar_end_phase(card, event, state):
+    """At end phase, if 2+ rust counters, destroy Talishar."""
+    cid = _controller_id(card)
+    key = (card.slug, "weapon", "rust")
+    rust = state.players[cid].counters.get(key, 0)
+    if rust >= 2:
+        player = state.players[cid]
+        for wz in [player.weapon1, player.weapon2]:
+            if card in wz.cards:
+                wz.remove(card)
+                player.graveyard.add(card)
+                break
+
 _register("talishar_the_lost_prince", [
-    TriggerDef(event_type="attacking", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="attacking", effect_fn=_talishar_attacking),
+    TriggerDef(event_type="start_of_end_phase", effect_fn=_talishar_end_phase),
 ])
 
 # -- tectonic_plating --
@@ -4585,14 +4705,14 @@ _register("tarpit_trap", [
 
 # -- scepter_of_pain --
 # "Once per Turn Action - {r}{r}: Deal 1 arcane damage to any opposing target.
-#  Create a Runechant token for each damage prevented this way."
+#  Create a Runechant token for each damage dealt this way."
 def _scepter_of_pain_activate(card, event, state):
     from engine.card_effects.keywords import effect_deal_damage, create_token
     cid = _controller_id(card)
     target_id = 3 - cid
     dmg = effect_deal_damage(state, target_id, 1, card, "arcane")
-    prevented = max(0, 1 - (dmg or 0))
-    for _ in range(prevented):
+    dealt = dmg or 0
+    for _ in range(dealt):
         create_token(state, cid, "runechant")
 
 _register("scepter_of_pain", [
@@ -4622,32 +4742,29 @@ _register("spell_fray_tiara", [
 # Already handled by the generic keyword system. No trigger needed.
 
 # -- bracers_of_belief --
-# "Action - Destroy: Reveal top card. If it's an attack with 6+{p}, put into hand. Otherwise bottom."
+# "Action - Destroy: Reveal top card. Next AA you play this turn gets +X{p},
+#  where X = 3 minus the pitch value of the revealed card. Go again."
 def _bracers_of_belief_activate(card, event, state):
     cid = _controller_id(card)
     top = effect_look_top(state, cid, 1)
     if not top:
         return
     card_top = top[0]
-    is_attack = "Attack" in getattr(card_top, 'types', [])
-    has_6p = (card_top.base_power or 0) >= 6
-    state.players[cid].deck.cards.pop(0)
-    if is_attack and has_6p:
-        state.players[cid].hand.add(card_top)
-    else:
-        state.players[cid].deck.cards.append(card_top)
-        card_top.zone = "deck"
+    pitch_val = card_top.pitch or 0
+    bonus = max(0, 3 - pitch_val)
+    if bonus > 0:
+        state.players[cid].current_turn_effects.append(f"next_attack_+{bonus}")
 
 _register("bracers_of_belief", [
     TriggerDef(event_type="on_play", effect_fn=_bracers_of_belief_activate),
 ])
 
 # -- bloodied_gauntlet --
-# "Action - Destroy: Next attack action card gets +1{p}. Go again. Activate only during action phase."
+# "Action - Destroy: Next attack action card gets +2{p}. Go again."
 _register("bloodied_gauntlet", [
     TriggerDef(event_type="on_play",
                effect_fn=lambda c, e, s: (
-                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_+1"),
+                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_+2"),
                    effect_gain_action_point(s, _controller_id(c)),
                )),
 ])
