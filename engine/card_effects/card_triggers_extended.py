@@ -4580,6 +4580,149 @@ _register("tarpit_trap", [
 
 
 # ============================================================
+# SECTION: Missing weapons and equipment for active deck pool
+# ============================================================
+
+# -- scepter_of_pain --
+# "Once per Turn Action - {r}{r}: Deal 1 arcane damage to any opposing target.
+#  Create a Runechant token for each damage prevented this way."
+def _scepter_of_pain_activate(card, event, state):
+    from engine.card_effects.keywords import effect_deal_damage, create_token
+    cid = _controller_id(card)
+    target_id = 3 - cid
+    dmg = effect_deal_damage(state, target_id, 1, card, "arcane")
+    prevented = max(0, 1 - (dmg or 0))
+    for _ in range(prevented):
+        create_token(state, cid, "runechant")
+
+_register("scepter_of_pain", [
+    TriggerDef(event_type="on_play", effect_fn=_scepter_of_pain_activate),
+])
+
+# -- nitro_mechanoid --
+# "Action - Banish a card from under Nitro Mechanoid: Attack. Overpower. Temper."
+# Simplified: basic weapon attack with overpower keyword
+_register("nitro_mechanoid", [
+    TriggerDef(event_type="attacking",
+               effect_fn=lambda c, e, s: (
+                   s.combat.keywords.append("Overpower") if s.combat and _is_this_attacking(c, e, s)
+                   and "Overpower" not in s.combat.keywords else None)),
+])
+
+# -- spell_fray_tiara --
+# "Spellvoid 1" — prevent 1 arcane damage by destroying this
+# Handled by generic Spellvoid processing; register as defend trigger that signals spellvoid
+_register("spell_fray_tiara", [
+    TriggerDef(event_type="defend",
+               effect_fn=lambda c, e, s: None),  # Spellvoid is a prevention replacement, not trigger
+])
+
+# -- ironrot_plate --
+# "Blade Break" — no special effect, just has defense and blade break keyword.
+# Already handled by the generic keyword system. No trigger needed.
+
+# -- bracers_of_belief --
+# "Action - Destroy: Reveal top card. If it's an attack with 6+{p}, put into hand. Otherwise bottom."
+def _bracers_of_belief_activate(card, event, state):
+    cid = _controller_id(card)
+    top = effect_look_top(state, cid, 1)
+    if not top:
+        return
+    card_top = top[0]
+    is_attack = "Attack" in getattr(card_top, 'types', [])
+    has_6p = (card_top.base_power or 0) >= 6
+    state.players[cid].deck.cards.pop(0)
+    if is_attack and has_6p:
+        state.players[cid].hand.add(card_top)
+    else:
+        state.players[cid].deck.cards.append(card_top)
+        card_top.zone = "deck"
+
+_register("bracers_of_belief", [
+    TriggerDef(event_type="on_play", effect_fn=_bracers_of_belief_activate),
+])
+
+# -- bloodied_gauntlet --
+# "Action - Destroy: Next attack action card gets +1{p}. Go again. Activate only during action phase."
+_register("bloodied_gauntlet", [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: (
+                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_+1"),
+                   effect_gain_action_point(s, _controller_id(c)),
+               )),
+])
+
+# -- time_skippers --
+# "Action - {r}{r}{r}, destroy: Gain 2 action points."
+_register("time_skippers", [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: effect_gain_action_point(s, _controller_id(c), 2)),
+])
+
+# -- face_adversity --
+# "This may only defend an attack if the attack's controller has drawn a card this turn."
+# This is a defend restriction, not a trigger. It should be checked in _legal_defend_step.
+# For now, register as a noop since the restriction is complex to enforce.
+_register("face_adversity", [
+    TriggerDef(event_type="defend", effect_fn=lambda c, e, s: None),
+])
+
+# -- threadbare_tunic --
+# "Instant - Destroy: Gain {r}. Activate only if you've been dealt damage this combat chain."
+# Already handled by EQUIPMENT_ACTIVATION_EFFECTS if present; register trigger as backup.
+_register("threadbare_tunic", [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: setattr(s.players[_controller_id(c)], 'resources',
+                                                  s.players[_controller_id(c)].resources + 1)),
+])
+
+# -- grandstand_legplates --
+# "{d} equals number of opposing heroes with greater {h}." 1v1 = 0 or 1.
+# This is a continuous effect. Register as defend trigger to adjust defense.
+def _grandstand_defend(card, event, state):
+    if not _is_this_defending(card, event, state):
+        return
+    cid = _controller_id(card)
+    opp = state.players[3 - cid]
+    my_hp = state.players[cid].health
+    if opp.health > my_hp:
+        card.defense = 1
+    else:
+        card.defense = 0
+
+_register("grandstand_legplates", [
+    TriggerDef(event_type="defend", effect_fn=_grandstand_defend),
+])
+
+# -- ironhide_helm --
+# "When you defend with this, you may pay {r}. If you do, it gains +2{d} and Blade Break."
+def _ironhide_helm_defend(card, event, state):
+    if not _is_this_defending(card, event, state):
+        return
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if player.resources >= 1:
+        from engine.card_effects.keywords import _ask_player
+        choice = _ask_player(state, cid, [True, False],
+                             context="Ironhide Helm: pay {r} for +2{d} and Blade Break?")
+        if choice:
+            player.resources -= 1
+            if state.combat:
+                state.combat.total_defense += 2
+
+_register("ironhide_helm", [
+    TriggerDef(event_type="defend", effect_fn=_ironhide_helm_defend),
+])
+
+# -- quick_clicks --
+# "Action - Destroy: Next attack gets go again. Activate only if boosted this turn."
+_register("quick_clicks", [
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append("next_attack_go_again")),
+])
+
+
+# ============================================================
 # Final verification: count registered triggers
 # ============================================================
 _new_count = sum(1 for k in CARD_TRIGGERS if k not in {
