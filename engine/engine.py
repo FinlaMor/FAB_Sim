@@ -1455,6 +1455,11 @@ def _apply_activate_hero(state: GameState, action: Action) -> None:
     cost = cost_raw(player, state) if callable(cost_raw) else cost_raw
     player.resources -= cost
 
+    # Action-timing abilities consume an action point
+    hero_timing = hero_cfg.get("timing", "action")
+    if hero_timing == "action":
+        player.action_points -= 1
+
     # Tap hero if required
     if hero_cfg.get("requires_tap", False):
         player.hero.tapped = True

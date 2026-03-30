@@ -554,10 +554,15 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             for seq in banish_pitch_seqs:
                 actions.append(Action(type=ActionType.PLAY_BANISH, card=card, pitch_cards=seq, player_id=pp))
 
-    # ACTIVATE_HERO — instant-speed hero abilities (available whenever player has priority)
+    # ACTIVATE_HERO — hero abilities (Action-timing requires AP, Instant doesn't)
     hero_card = player.hero
     hero_slug = hero_card.slug if hero_card else None
     hero_cfg = HERO_ACTIVATION_CONDITIONS.get(hero_slug) if hero_slug else None
+    if hero_cfg is not None:
+        hero_timing = hero_cfg.get("timing", "action")
+        # Action-timing hero abilities require an action point
+        if hero_timing == "action" and player.action_points <= 0:
+            hero_cfg = None  # Skip — can't activate without AP
     if hero_cfg is not None:
         cond_fn = hero_cfg.get("condition_fn")
         if cond_fn and cond_fn(player, state):

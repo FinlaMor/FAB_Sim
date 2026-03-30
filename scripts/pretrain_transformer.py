@@ -30,16 +30,16 @@ from rl_agents.embedder_bundle import load_embedder_bundle
 
 def _load_packed_states(db_path: str) -> torch.Tensor:
     """Load all packed state feature arrays from replay.db."""
-    from data_collection.replay_db import ReplayDB
+    import sqlite3
 
-    db = ReplayDB(db_path)
-    conn = db._get_conn()
+    conn = sqlite3.connect(db_path)
 
     # Check if state_features column has data
     row = conn.execute(
         "SELECT state_features FROM embeddings WHERE state_features IS NOT NULL LIMIT 1"
     ).fetchone()
     if row is None:
+        conn.close()
         raise ValueError(f"No packed state features found in {db_path}. "
                          "Run game collection with the transformer embedder first.")
 
@@ -47,7 +47,7 @@ def _load_packed_states(db_path: str) -> torch.Tensor:
     rows = conn.execute(
         "SELECT state_features FROM embeddings WHERE state_features IS NOT NULL"
     ).fetchall()
-    db.close()
+    conn.close()
 
     arrays = [np.frombuffer(r[0], dtype=np.float32) for r in rows]
     stacked = np.stack(arrays, axis=0)
