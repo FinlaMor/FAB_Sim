@@ -666,6 +666,25 @@ def _find_previous_checkpoint(loop_num: int) -> Path | None:
     return None
 
 
+def _load_benchmark_rates(loop_num: int) -> dict[str, float] | None:
+    """Load saved benchmark rates for a loop's checkpoint, if they exist."""
+    import json as _json
+    rates_path = CHECKPOINT_DIR / "iql" / f"loop{loop_num}" / "benchmark_rates.json"
+    if rates_path.exists():
+        with open(rates_path, encoding="utf-8") as f:
+            return _json.load(f)
+    return None
+
+
+def _save_benchmark_rates(loop_num: int, rates: dict[str, float]) -> None:
+    """Save benchmark rates alongside the loop's checkpoint."""
+    import json as _json
+    rates_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
+    rates_dir.mkdir(parents=True, exist_ok=True)
+    with open(rates_dir / "benchmark_rates.json", "w", encoding="utf-8") as f:
+        _json.dump(rates, f, indent=2)
+
+
 def _evaluate_checkpoint_promotion(
     loop_num: int,
     bench_rates: dict[str, float] | None,
@@ -674,14 +693,19 @@ def _evaluate_checkpoint_promotion(
 
     Rules:
     - First checkpoint ever (no previous): always keep
-    - Otherwise keep if:
-        (vs_random >= 75% AND vs_heuristic >= 75% AND vs_previous > 50%)
+    - Otherwise keep if EITHER:
+        a) Meets absolute thresholds: vs_random >= 75% AND vs_heuristic >= 75%
+           AND vs_previous > 50%
+        b) Win rates improved vs the previous checkpoint's benchmark scores
+           (accepts any improvement during early training ramp-up)
     - If benchmark was skipped/failed: keep (benefit of the doubt)
     """
     prev_ckpt = _find_previous_checkpoint(loop_num)
     is_first = prev_ckpt is None
 
     if is_first:
+        if bench_rates is not None:
+            _save_benchmark_rates(loop_num, bench_rates)
         print("  Checkpoint promotion: ACCEPTED (first checkpoint)")
         return True
 
@@ -693,26 +717,54 @@ def _evaluate_checkpoint_promotion(
     vs_heuristic = bench_rates.get("vs_heuristic", 0.0)
     vs_previous = bench_rates.get("vs_previous")
 
-    # If vs_previous wasn't run (error/skip), only check absolute thresholds
-    if vs_previous is None:
-        if vs_random >= 0.75 and vs_heuristic >= 0.75:
-            print(f"  Checkpoint promotion: ACCEPTED "
-                  f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%})")
-            return True
-        print(f"  Checkpoint promotion: REJECTED "
-              f"(random={vs_random:.0%}<75%, heuristic={vs_heuristic:.0%}<75%)")
-        return False
+    # Check absolute thresholds
+    meets_absolute = (
+        vs_random >= 0.75
+        and vs_heuristic >= 0.75
+        and (vs_previous is None or vs_previous > 0.50)
+    )
 
-    if vs_random >= 0.75 and vs_heuristic >= 0.75 and vs_previous > 0.50:
-        print(f"  Checkpoint promotion: ACCEPTED "
-              f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%}, "
-              f"vs_prev={vs_previous:.0%})")
+    # Check improvement over previous checkpoint's benchmark scores
+    improved = False
+    prev_loop_for_rates = None
+    for prev_l in range(loop_num - 1, -1, -1):
+        prev_rates = _load_benchmark_rates(prev_l)
+        if prev_rates is not None:
+            prev_loop_for_rates = prev_l
+            prev_vs_random = prev_rates.get("vs_random", 0.0)
+            prev_vs_heuristic = prev_rates.get("vs_heuristic", 0.0)
+            # Improved if BOTH random and heuristic rates are better
+            if vs_random >= prev_vs_random and vs_heuristic >= prev_vs_heuristic:
+                # At least one must be strictly better (not just equal)
+                if vs_random > prev_vs_random or vs_heuristic > prev_vs_heuristic:
+                    improved = True
+            break
+
+    if meets_absolute:
+        _save_benchmark_rates(loop_num, bench_rates)
+        print(f"  Checkpoint promotion: ACCEPTED — meets thresholds "
+              f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%}"
+              f"{f', vs_prev={vs_previous:.0%}' if vs_previous is not None else ''})")
         return True
 
-    print(f"  Checkpoint promotion: REJECTED "
-          f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%}, "
-          f"vs_prev={vs_previous:.0%}) — "
-          f"need >=75% random+heuristic and >50% vs previous")
+    if improved:
+        _save_benchmark_rates(loop_num, bench_rates)
+        prev_rates = _load_benchmark_rates(prev_loop_for_rates)
+        print(f"  Checkpoint promotion: ACCEPTED — improved over loop {prev_loop_for_rates} "
+              f"(random={vs_random:.0%} was {prev_rates['vs_random']:.0%}, "
+              f"heuristic={vs_heuristic:.0%} was {prev_rates['vs_heuristic']:.0%})")
+        return True
+
+    reason_parts = []
+    if vs_random < 0.75:
+        reason_parts.append(f"random={vs_random:.0%}<75%")
+    if vs_heuristic < 0.75:
+        reason_parts.append(f"heuristic={vs_heuristic:.0%}<75%")
+    if vs_previous is not None and vs_previous <= 0.50:
+        reason_parts.append(f"vs_prev={vs_previous:.0%}<=50%")
+    if not improved:
+        reason_parts.append("no improvement over previous")
+    print(f"  Checkpoint promotion: REJECTED ({', '.join(reason_parts)})")
     return False
 
 
