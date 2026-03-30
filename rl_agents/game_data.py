@@ -780,7 +780,7 @@ class TransitionCollector:
                 combat_attack_card=combat_attack_card,
                 combat_defending_cards=combat_defending_cards,
                 chain_link_history=_json.dumps(
-                    [{"atk": l.attack_power, "def": l.total_defense, "hit": l.hit}
+                    [{"atk": l.attack_power, "dmg": l.net_damage, "hit": l.hit}
                      for l in chain_links],
                     separators=(",", ":"),
                 ) if chain_links else None,
