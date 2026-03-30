@@ -24,7 +24,8 @@ from engine.card import CardDB
 from engine.state import GameState
 from encoder.action_embedder import ActionEmbedder
 from encoder.card_embedder import SlugVocab
-from encoder.gamestate_embedder import GameStateEmbedder, gamestate_to_features
+from encoder.gamestate_embedder import GameStateEmbedder
+from encoder.game_transformer import GameTransformerEncoder, prime_dummy_vocab
 from rl_agents.game_backends import GameRunRequest, LocalEngineBackend
 from rl_agents.game_data import TransitionCollector
 from rl_agents.random_agent import RandomAgent
@@ -195,7 +196,16 @@ class OpponentPool:
 # ---------------------------------------------------------------------------
 
 class MatchupScheduler:
-    """Ensures all validated decks appear at least once per batch."""
+    """Ensures all validated decks appear at least once per batch.
+
+    Scheduling pattern: 4 non-mirror cycles followed by 1 mirror cycle,
+    repeating until games_per_loop is reached.
+
+    Non-mirror cycle — shuffle decks, pair consecutively (N//2 pairs).
+    Mirror cycle     — each deck plays against itself (N pairs).
+    """
+
+    MIRROR_EVERY_N_CYCLES: int = 4  # insert 1 mirror cycle after this many non-mirror cycles
 
     def schedule_matchups(
         self,
@@ -204,33 +214,34 @@ class MatchupScheduler:
     ) -> list[tuple[str, str]]:
         """Return a list of (p1_deck, p2_deck) pairs.
 
-        Algorithm:
-        1. Shuffle decks, pair consecutively for round-robin coverage.
-        2. Add random pairings to fill remaining games.
-        3. Handle odd deck count by repeating the last deck.
+        Generates complete super-cycles (4 non-mirror + 1 mirror) until the
+        list is at least games_per_loop long, then trims to exact count.
         """
         if not deck_paths:
             return []
 
-        shuffled = list(deck_paths)
-        random.shuffle(shuffled)
-
-        # Handle odd count: repeat last deck so we can pair evenly
-        if len(shuffled) % 2 != 0:
-            shuffled.append(shuffled[-1])
-
-        # Round-robin coverage: pair consecutive decks
         pairs: list[tuple[str, str]] = []
-        for i in range(0, len(shuffled), 2):
-            pairs.append((shuffled[i], shuffled[i + 1]))
+        non_mirror_cycles_done = 0
 
-        # Fill remaining games with random pairings until we have enough.
         while len(pairs) < games_per_loop:
-            random.shuffle(shuffled)
-            for i in range(0, len(shuffled), 2):
-                pairs.append((shuffled[i], shuffled[i + 1]))
+            if non_mirror_cycles_done < self.MIRROR_EVERY_N_CYCLES:
+                # Non-mirror cycle: shuffle, pair consecutively without replacement
+                shuffled = list(deck_paths)
+                random.shuffle(shuffled)
+                if len(shuffled) % 2 != 0:
+                    # Odd count: repeat last deck to allow clean pairing
+                    shuffled.append(shuffled[-1])
+                for i in range(0, len(shuffled), 2):
+                    pairs.append((shuffled[i], shuffled[i + 1]))
+                non_mirror_cycles_done += 1
+            else:
+                # Mirror cycle: every deck plays itself once
+                shuffled = list(deck_paths)
+                random.shuffle(shuffled)
+                for deck in shuffled:
+                    pairs.append((deck, deck))
+                non_mirror_cycles_done = 0  # reset counter
 
-        # Trim to exact count
         return pairs[:games_per_loop]
 
 
@@ -269,6 +280,81 @@ class EmbeddingRecorderAgent:
         self.combat_log = combat_log if combat_log is not None else {}
         self.transition_collector = transition_collector
         self._last_seen_chain_count: int = 0
+        # Card usage tracking: {slug: count} per usage type
+        self._card_usage: dict[str, dict[str, int]] = {
+            "played": {},
+            "blocked": {},
+            "pitched": {},
+        }
+
+    def get_card_usage(self) -> dict[str, dict[str, int]]:
+        """Return accumulated card usage for this player."""
+        return self._card_usage
+
+    def _track_action_cards(self, action: "Action") -> None:
+        """Extract card slugs from action and record how they were used.
+
+        Coverage:
+          played  — PLAY_CARD, PLAY_ARSENAL, PLAY_ATTACK_REACTION,
+                    PLAY_DEFENSE_REACTION, ATTACK_WEAPON, ACTIVATE_WEAPON,
+                    ACTIVATE_EQUIPMENT, ACTIVATE_ITEM, ATTACK_ALLY,
+                    DISCARD_ACTIVATE, PLAY_BANISH
+          blocked — DEFEND_CARDS (hand cards), DEFEND_EQUIPMENT
+          pitched — pitch_cards attached to any action
+        """
+        # ── pitched cards (attached to any action type) ──────────────────
+        for pc in (action.pitch_cards or []):
+            ps = _card_slug(pc)
+            if ps:
+                self._card_usage["pitched"][ps] = self._card_usage["pitched"].get(ps, 0) + 1
+
+        # ── primary card usage ────────────────────────────────────────────
+        t = action.type
+
+        if t in (
+            ActionType.PLAY_CARD,
+            ActionType.PLAY_ARSENAL,
+            ActionType.PLAY_ATTACK_REACTION,
+            ActionType.PLAY_DEFENSE_REACTION,
+            ActionType.DISCARD_ACTIVATE,
+            ActionType.PLAY_BANISH,
+        ):
+            # Hand/arsenal card played as the primary action
+            slug = _card_slug(action.card) if action.card is not None else None
+            if slug:
+                self._card_usage["played"][slug] = self._card_usage["played"].get(slug, 0) + 1
+
+        elif t in (
+            ActionType.ATTACK_WEAPON,
+            ActionType.ACTIVATE_WEAPON,
+        ):
+            # Weapon being swung or activated
+            slug = _card_slug(action.card) if action.card is not None else None
+            if slug:
+                self._card_usage["played"][slug] = self._card_usage["played"].get(slug, 0) + 1
+
+        elif t in (
+            ActionType.ACTIVATE_EQUIPMENT,
+            ActionType.ACTIVATE_ITEM,
+            ActionType.ATTACK_ALLY,
+        ):
+            # Equipment/item activated, or ally attacking
+            slug = _card_slug(action.card) if action.card is not None else None
+            if slug:
+                self._card_usage["played"][slug] = self._card_usage["played"].get(slug, 0) + 1
+
+        elif t == ActionType.DEFEND_CARDS:
+            # One or more hand cards committed as blockers
+            for c in (action.card_list or []):
+                slug = _card_slug(c)
+                if slug:
+                    self._card_usage["blocked"][slug] = self._card_usage["blocked"].get(slug, 0) + 1
+
+        elif t == ActionType.DEFEND_EQUIPMENT:
+            # Equipment used to block
+            slug = _card_slug(action.card) if action.card is not None else None
+            if slug:
+                self._card_usage["blocked"][slug] = self._card_usage["blocked"].get(slug, 0) + 1
 
     def __call__(self, state: GameState, options, context=None):
         if not isinstance(options, (list, tuple)) or not options:
@@ -310,34 +396,42 @@ class EmbeddingRecorderAgent:
         # Record embeddings for Action decisions
         is_action_choice = isinstance(options[0], Action) and isinstance(choice, Action)
         if is_action_choice:
-            with torch.no_grad():
-                state_emb = self.state_embedder(
+            self._track_action_cards(choice)
+
+            action_for_embedder = _normalise_action_for_embedder(choice)
+            player_counters = state.players[self.player_id].counters
+
+            # Decide: end-to-end (raw features) or legacy (pre-computed embeddings)?
+            use_raw_features = isinstance(self.state_embedder, GameTransformerEncoder) and hasattr(
+                self.action_embedder, "tokenize_to_packed"
+            )
+
+            if use_raw_features:
+                # Store compact raw tokenized features — transformer runs inside training loop
+                state_feat = self.state_embedder.tokenize_to_packed(
                     state, perspective_player=self.player_id,
                 )
-                action_for_embedder = _normalise_action_for_embedder(choice)
-                action_emb = self.action_embedder(
+                action_feat = self.action_embedder.tokenize_to_packed(
                     action_for_embedder,
-                    player_counters=state.players[self.player_id].counters,
+                    player_counters=player_counters,
                 )
+            else:
+                # Legacy path: run encoders now, store the resulting embedding blobs
+                with torch.no_grad():
+                    state_emb = self.state_embedder(
+                        state, perspective_player=self.player_id,
+                    )
+                    action_emb = self.action_embedder(
+                        action_for_embedder,
+                        player_counters=player_counters,
+                    )
 
             phase = state.step.value if hasattr(state.step, "value") else str(state.step)
-            chain_links_snapshot = [
-                {
-                    "attacker_id": link.attacker_id,
-                    "attack_power": link.attack_power,
-                    "net_damage": link.net_damage,
-                    "hit": link.hit,
-                }
-                for link in chain_links
-            ]
             obs = {
                 "turn": state.turn_number,
                 "step": phase,
                 "active_player": state.active_player,
                 "priority_player": state.priority_player,
-                "state_debug": gamestate_to_features(state),
-                "state_embedding_norm": float(torch.norm(state_emb).item()),
-                "chain_links_snapshot": chain_links_snapshot,
                 "p1_hp": state.players[1].health,
                 "p2_hp": state.players[2].health,
             }
@@ -351,7 +445,12 @@ class EmbeddingRecorderAgent:
                 obs=obs,
                 action=action_json,
             )
-            self.replay_db.store_embeddings(row_id, state_emb, action_emb)
+
+            if use_raw_features:
+                self.replay_db.store_features(row_id, state_feat, action_feat)
+            else:
+                self.replay_db.store_embeddings(row_id, state_emb, action_emb)
+
             self.step_counter[0] += 1
 
             # Also record to TransitionCollector (→ game_data.db rich columns)
@@ -382,26 +481,25 @@ def _assign_game_rewards(
 ) -> None:
     """Compute damage-scaled rewards and back-propagate to previous-turn transitions.
 
-    Algorithm:
-    1. Query all transitions for this game.
-    2. Build per-player, per-turn lookup of last transition ID (back-prop targets).
-    3. For each turn's combat links, compute attacker/defender rewards scaled by damage.
-    4. Back-propagate combat rewards to the last transition of the *previous* turn.
-       Turn 1 fallback: earliest transition for that player.
-    5. Assign terminal rewards (+1/-1) on last transition per player with done=1.
-    6. Batch-update rewards and done flags.
+    Reward structure:
+    - Dealing net_damage: attacker receives +net_damage / normalizer
+    - Taking net_damage: defender receives -0.75 * net_damage / normalizer
+    - The asymmetry (1.0 vs 0.75) encourages aggression over stalling.
+    - Terminal: +1 for winner, -1 for loser on each player's final transition.
+
+    Back-propagation target: last transition of the *previous* turn (when cards were
+    drawn), falling back to each player's earliest transition for turn-1 combat.
     """
     transitions = replay_db.get_game_transitions(game_id)
     if not transitions:
         return
 
-    # Build per-player per-turn lookup: {(player_id, turn): transition_id}
-    # and per-player earliest/latest transition IDs
     import json as _json
 
-    player_turn_last: dict[tuple[int, int], int] = {}   # (pid, turn) -> last tid
-    player_earliest: dict[int, int] = {}                 # pid -> earliest tid
-    player_latest: dict[int, int] = {}                   # pid -> latest tid
+    # Build per-player per-turn lookup: {(player_id, turn): last_tid}
+    player_turn_last: dict[tuple[int, int], int] = {}
+    player_earliest: dict[int, int] = {}
+    player_latest: dict[int, int] = {}
 
     for t in transitions:
         tid = t["id"]
@@ -409,9 +507,7 @@ def _assign_game_rewards(
         obs = _json.loads(t["obs"]) if isinstance(t["obs"], str) else t["obs"]
         turn = obs.get("turn", 0)
 
-        key = (pid, turn)
-        player_turn_last[key] = tid  # last one wins (ordered by step_idx)
-
+        player_turn_last[(pid, turn)] = tid  # last one wins (ordered by step_idx)
         if pid not in player_earliest:
             player_earliest[pid] = tid
         player_latest[pid] = tid
@@ -419,46 +515,34 @@ def _assign_game_rewards(
     # Accumulate rewards: {tid: float}
     reward_acc: dict[int, float] = {}
 
-    # Process combat log: for each turn's chain links, compute rewards
     for turn, links in combat_log.items():
         if not links:
             continue
 
-        # Aggregate damage per attacker
-        attacker_damage: dict[int, float] = {}    # attacker_id -> total attack_power
-        defender_blocked: dict[int, float] = {}   # defender_id -> total damage blocked
+        # Aggregate actual net damage per attacker/defender
+        damage_dealt: dict[int, float] = {}   # attacker_id -> total net damage dealt
+        damage_taken: dict[int, float] = {}   # defender_id -> total net damage received
 
         for link in links:
             attacker_id = link.get("attacker_id")
-            attack_power = link.get("attack_power", 0) or 0
             net_damage = link.get("net_damage", 0) or 0
-            blocked = max(0, attack_power - net_damage)
 
-            if attacker_id is not None:
-                attacker_damage[attacker_id] = attacker_damage.get(attacker_id, 0) + attack_power
-                # Defender is the other player
+            if attacker_id is not None and net_damage > 0:
                 defender_id = 2 if attacker_id == 1 else 1
-                defender_blocked[defender_id] = defender_blocked.get(defender_id, 0) + blocked
+                damage_dealt[attacker_id] = damage_dealt.get(attacker_id, 0) + net_damage
+                damage_taken[defender_id] = damage_taken.get(defender_id, 0) + net_damage
 
-        # Back-propagate: target is last transition of previous turn (turn - 1)
-        # For turn 1, fallback to earliest transition for that player
-        for pid, total_attack in attacker_damage.items():
-            reward = total_attack / normalizer
-            target_turn = turn - 1
-            target_tid = player_turn_last.get((pid, target_turn))
-            if target_tid is None:
-                target_tid = player_earliest.get(pid)
-            if target_tid is not None:
-                reward_acc[target_tid] = reward_acc.get(target_tid, 0.0) + reward
+        # Back-propagate to last transition of previous turn
+        target_turn = turn - 1
+        for pid, total_dealt in damage_dealt.items():
+            tid = player_turn_last.get((pid, target_turn)) or player_earliest.get(pid)
+            if tid is not None:
+                reward_acc[tid] = reward_acc.get(tid, 0.0) + total_dealt / normalizer
 
-        for pid, total_blocked in defender_blocked.items():
-            reward = total_blocked / normalizer
-            target_turn = turn - 1
-            target_tid = player_turn_last.get((pid, target_turn))
-            if target_tid is None:
-                target_tid = player_earliest.get(pid)
-            if target_tid is not None:
-                reward_acc[target_tid] = reward_acc.get(target_tid, 0.0) + reward
+        for pid, total_taken in damage_taken.items():
+            tid = player_turn_last.get((pid, target_turn)) or player_earliest.get(pid)
+            if tid is not None:
+                reward_acc[tid] = reward_acc.get(tid, 0.0) - 0.75 * total_taken / normalizer
 
     # Terminal rewards: last transition per player
     done_updates: list[tuple[int, int]] = []  # (done, tid)
@@ -489,18 +573,21 @@ def _extract_hero_from_deck(deck_path: str) -> str:
     return "Unknown"
 
 
-def _build_embedders(embedder_bundle: dict) -> tuple[ActionEmbedder, GameStateEmbedder]:
-    """Build ActionEmbedder and GameStateEmbedder from a bundle dict."""
+def _build_embedders(
+    embedder_bundle: dict,
+    device: "torch.device | None" = None,
+) -> tuple[ActionEmbedder, "GameStateEmbedder | GameTransformerEncoder"]:
+    """Build ActionEmbedder and state embedder from a bundle dict.
+
+    If the bundle contains a ``game_transformer_state_dict`` key, construct and
+    return a ``GameTransformerEncoder`` as the state embedder.  Otherwise fall
+    back to the legacy ``GameStateEmbedder``.
+    """
     card_db = CardDB(SLUG_INDEX_PATH)
     slug_vocab = SlugVocab.from_card_db(card_db)
     d_model = int(embedder_bundle.get("d_model", 128))
 
     action_embedder = ActionEmbedder(
-        d_model=d_model,
-        slug_vocab_size=slug_vocab.size,
-        slug_vocab=slug_vocab,
-    )
-    state_embedder = GameStateEmbedder(
         d_model=d_model,
         slug_vocab_size=slug_vocab.size,
         slug_vocab=slug_vocab,
@@ -519,12 +606,43 @@ def _build_embedders(embedder_bundle: dict) -> tuple[ActionEmbedder, GameStateEm
         _filter_by_shape(action_embedder, {**card_prefixed, **embedder_bundle["action_embedder_state_dict"]}),
         strict=False,
     )
-    state_embedder.load_state_dict(
-        _filter_by_shape(state_embedder, {**card_prefixed, **embedder_bundle["state_embedder_state_dict"]}),
-        strict=False,
-    )
     action_embedder.eval()
+
+    # ── Choose state embedder ───────────────────────────────────────────────
+    if "game_transformer_state_dict" in embedder_bundle:
+        # Use transformer encoder — populate slug vocab for forward() lookups
+        prime_dummy_vocab(card_db)
+        gt_d_model        = int(embedder_bundle.get("game_transformer_d_model", 256))
+        gt_n_heads        = int(embedder_bundle.get("game_transformer_n_heads", 8))
+        gt_n_layers       = int(embedder_bundle.get("game_transformer_n_layers", 4))
+        gt_hero_head_dim  = int(embedder_bundle.get("game_transformer_hero_head_dim", 64))
+        state_embedder = GameTransformerEncoder(
+            slug_vocab_size=slug_vocab.size,
+            d_model=gt_d_model,
+            n_heads=gt_n_heads,
+            n_layers=gt_n_layers,
+            hero_head_dim=gt_hero_head_dim,
+        )
+        state_embedder.load_state_dict(
+            _filter_by_shape(state_embedder, embedder_bundle["game_transformer_state_dict"]),
+            strict=False,
+        )
+    else:
+        state_embedder = GameStateEmbedder(
+            d_model=d_model,
+            slug_vocab_size=slug_vocab.size,
+            slug_vocab=slug_vocab,
+        )
+        state_embedder.load_state_dict(
+            _filter_by_shape(state_embedder, {**card_prefixed, **embedder_bundle["state_embedder_state_dict"]}),
+            strict=False,
+        )
+
     state_embedder.eval()
+
+    if device is not None:
+        action_embedder = action_embedder.to(device)
+        state_embedder = state_embedder.to(device)
 
     return action_embedder, state_embedder
 
@@ -538,6 +656,7 @@ def run_games(
     embedder_bundle: dict,
     max_turns: int = 200,
     seed: int = 0,
+    device: "torch.device | str | None" = None,
 ) -> GameResults:
     """Run a batch of games and record results.
 
@@ -550,7 +669,13 @@ def run_games(
     """
     rng = random.Random(seed)
     backend = LocalEngineBackend()
-    action_embedder, state_embedder = _build_embedders(embedder_bundle)
+    # Resolve device — accept string ("dml", "cpu", etc.) or torch.device
+    if isinstance(device, str):
+        from rl_agents.utils.device import resolve_device
+        _device = resolve_device(device)
+    else:
+        _device = device  # None → embedders stay on CPU
+    action_embedder, state_embedder = _build_embedders(embedder_bundle, device=_device)
     results = GameResults()
 
     for idx, (p1_deck, p2_deck) in enumerate(deck_pairs):
@@ -630,6 +755,8 @@ def run_games(
                         p2_deck_file=p2_deck,
                         seed=game_seed,
                         game_id=game_id,
+                        p1_card_usage=p1_agent.get_card_usage(),
+                        p2_card_usage=p2_agent.get_card_usage(),
                     )
                 except Exception:
                     pass  # Non-critical; replay DB is the primary store

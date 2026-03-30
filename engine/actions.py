@@ -107,22 +107,23 @@ class Action:
 
 def find_all_valid_pitch_sequences(hand_cards: list[Card], target_cost: int, current_resources: int = 0) -> list[list[Card]]:
     """
-    Find all valid pitch combinations that can reach target_cost.
+    Find all legal ordered pitch sequences for paying target_cost.
 
-    CR 5.1.6/5.1.7: A player may pitch any card from hand with a pitch value.
-    There is no rule preventing pitching when resources already meet a card's own cost.
-    Only constraint: the combination's total resources must reach target_cost.
+    CR 5.1.6/5.1.7: Pitching is sequential. After each card is pitched the game
+    checks whether the cost is now satisfied; if it is, pitching stops immediately.
+    This means a legal sequence s = [c1, ..., ck] must satisfy:
+        - Every proper prefix sum(s[:i]) < needed  (cost not yet met after i-1 cards)
+        - sum(s) >= needed                         (cost met by final card)
 
-    Returns a list of card combinations (as Card lists). Order within a combination
-    does not matter for legality, so combinations (not permutations) are used to
-    avoid duplicate equivalent sequences.
+    Order matters: [red(1), blue(3)] for cost=3 is legal (red doesn't cover cost;
+    blue then does), but [blue(3), red(1)] is NOT (blue alone covers cost so red
+    can never be pitched after it).
+
+    Returns a list of ordered Card lists.
     """
-    card_sequences = []
-
     if target_cost is None or target_cost <= 0:
         return [[]]  # No pitching needed — empty sequence is always valid
 
-    # Collect indices of cards that have a pitch value
     pitchable_indices = [
         i for i, card in enumerate(hand_cards)
         if card.pitch is not None and card.pitch > 0
@@ -130,18 +131,25 @@ def find_all_valid_pitch_sequences(hand_cards: list[Card], target_cost: int, cur
 
     needed = target_cost - current_resources
 
-    # If existing resources already cover the cost, "pitch nothing" is always valid
     if needed <= 0:
-        card_sequences.append([])
-        return card_sequences
+        return [[]]
 
-    # Try all combination sizes (combinations, not permutations — pitch order is not rule-relevant)
-    for seq_size in range(1, len(pitchable_indices) + 1):
-        for combo_indices in combinations(pitchable_indices, seq_size):
-            total = sum(_get_pitch_value(hand_cards[i]) for i in combo_indices)
-            if total >= needed:
-                card_sequences.append([hand_cards[i] for i in combo_indices])
+    card_sequences: list[list[Card]] = []
 
+    def _dfs(remaining: list[int], running: int, seq: list[Card]) -> None:
+        for j, idx in enumerate(remaining):
+            v = _get_pitch_value(hand_cards[idx])
+            new_total = running + v
+            new_seq = seq + [hand_cards[idx]]
+            if new_total >= needed:
+                # This card satisfies the cost — record the complete legal sequence
+                card_sequences.append(new_seq)
+            else:
+                # Cost not yet satisfied — keep building the sequence
+                rest = remaining[:j] + remaining[j + 1:]
+                _dfs(rest, new_total, new_seq)
+
+    _dfs(pitchable_indices, 0, [])
     return card_sequences
 
 def _get_pitch_value(card: Card) -> int:

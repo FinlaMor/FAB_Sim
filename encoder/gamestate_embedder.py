@@ -35,8 +35,9 @@ Global State Features:
 - Total global: 218 + len(CARD_KEYWORDS) + 11*d_model
 
 Total State Embedding:
-2*(28 + len(COUNTER_TYPES) + 8*d_model) + (218 + len(CARD_KEYWORDS) + 11*d_model)
-With d_model=128 and current registries: 3884 dimensions
+2*(32 + len(COUNTER_TYPES) + 11*d_model) + (236 + len(CARD_KEYWORDS) + 18*d_model)
+= 300 + 2*len(COUNTER_TYPES) + len(CARD_KEYWORDS) + 40*d_model
+With d_model=128 and current registries: ~5574 dimensions
 
 Note: legality checking is intentionally out of scope for embeddings. The engine and
 legal action generator are responsible for enforcing legal play before states/actions
@@ -69,6 +70,7 @@ STEPS = STEP_VOCABULARY
 
 MAX_STACK_LAYERS = 5
 STACK_LAYER_TYPES = ['card', 'activated', 'triggered']
+MAX_CHAIN_LINKS_DISPLAY = 6  # Per-link detail embedded for the N most recent chain links
 
 
 class PlayerStateEmbedder(nn.Module):
@@ -102,6 +104,7 @@ class PlayerStateEmbedder(nn.Module):
         self.norm_action_points = 5.0
         self.norm_zone_size = 30.0
         self.norm_counters = 10.0  # For counter types (steam, flow, suspense, etc.)
+        self.norm_attack_power = 20.0
     
     def embed_card(self, card: Optional[Card], player_counters: Optional[dict] = None) -> torch.Tensor:
         """Helper to embed a single card using card_to_features."""
@@ -116,14 +119,17 @@ class PlayerStateEmbedder(nn.Module):
         return emb.squeeze(0)  # Remove batch dim
     
     def get_output_dim(self) -> int:
-        """Total output dimension: 28 + len(COUNTER_TYPES) + 8*d_model
+        """Total output dimension: 32 + len(COUNTER_TYPES) + 11*d_model
         Breakdown: health(1) + intellect(1) + resources(1) + action_points(1) +
                    weapon_exhausted(1) + hero_power_exhausted(1) + arsenal_face_up(1) + marked(1) +
                    counters(len(COUNTER_TYPES)) + zone_sizes(7) + equipment_cards(6*d_model) + equipment_exhausted(6) +
-                   equipment_tapped(6) + permanents_zone(d_model) + permanents_count(1) + hero_card(d_model)
-        With d_model=128 and current counter registry: 1095 dimensions
+                   equipment_tapped(6) + permanents_zone(d_model) + permanents_count(1) + hero_card(d_model) +
+                   hand_pooled(d_model) + graveyard_pooled(d_model) + arsenal_top(d_model) +
+                   current_turn_effects_count(1) + next_turn_effects_count(1) +
+                   weapon_power_bonus(1) + class_counters_count(1)
+        With d_model=128 and current counter registry: 1483 dimensions
         """
-        return 28 + len(COUNTER_TYPES) + 8 * self.d_model
+        return 32 + len(COUNTER_TYPES) + 11 * self.d_model
     
     def forward(self, player: Player, player_counters: Optional[dict] = None) -> torch.Tensor:
         """Convert Player to embedding tensor.
@@ -227,9 +233,47 @@ class PlayerStateEmbedder(nn.Module):
         hero_emb = self.embed_card(player.hero, player_counters)
         features.append(hero_emb)
 
+        # 14. Hand card identities (sum-pooled, d_model).
+        # Gives the model knowledge of which cards are in hand, not just count.
+        hand_cards = list(player.hand.cards)
+        if hand_cards:
+            hand_embs = [self.embed_card(c, player_counters) for c in hand_cards]
+            hand_pooled = sum(hand_embs)
+        else:
+            hand_pooled = torch.zeros(self.d_model)
+        features.append(hand_pooled)
+
+        # 15. Graveyard card identities (sum-pooled, d_model).
+        # Graveyard is fully public — both players can see it.
+        gy_cards = list(player.graveyard.cards)
+        if gy_cards:
+            gy_embs = [self.embed_card(c, player_counters) for c in gy_cards]
+            gy_pooled = sum(gy_embs)
+        else:
+            gy_pooled = torch.zeros(self.d_model)
+        features.append(gy_pooled)
+
+        # 16. Arsenal top card identity (d_model).
+        # Player always knows their own arsenal card identity.
+        arsenal_top = player.arsenal.top if player.arsenal.cards else None
+        features.append(self.embed_card(arsenal_top, player_counters))
+
+        # 17. Active one-shot effect count (current turn + next turn).
+        # Presence of effects like "command_and_conquer_no_dr" critically changes legality.
+        current_fx_count = float(len(player.current_turn_effects)) / 5.0
+        next_fx_count = float(len(player.next_turn_effects)) / 5.0
+        features.append(torch.tensor([current_fx_count, next_fx_count]))
+
+        # 18. Weapon power bonus (Dawnblade hit counter, etc.)
+        features.append(torch.tensor([float(getattr(player, 'weapon_power_bonus', 0)) / self.norm_attack_power]))
+
+        # 19. Class counters count (once-per-turn equipment uses, hero-specific mechanics).
+        class_counters_count = float(len(getattr(player, 'class_counters', {}))) / 10.0
+        features.append(torch.tensor([class_counters_count]))
+
         # Concatenate all features
         player_embedding = torch.cat(features)
-        
+
         return player_embedding
 
 
@@ -283,7 +327,7 @@ class GlobalStateEmbedder(nn.Module):
         return emb.squeeze(0)  # Remove batch dim
     
     def get_output_dim(self) -> int:
-        """Total output dimension: 
+        """Total output dimension:
         - Turn: 1
         - Active player: 1
         - Step embed: 64
@@ -292,15 +336,17 @@ class GlobalStateEmbedder(nn.Module):
         - Combat: 13 + len(CARD_KEYWORDS) + 4*d_model
         - Stack layers: 5 * (8 + d_model) = 40 + 5*d_model
         - Stack summary: 11 + 2*d_model
-        - Chain links: 3
+        - Chain links aggregate: 3
+        - Chain links full pool (all links sum-pooled): d_model
+        - Chain links per-link (MAX_CHAIN_LINKS_DISPLAY * (d_model + 3)): 6*(d_model+3) = 18 + 6*d_model
         - Event history: 15
         - Continuous effects summary: 30
         - Replacement effects summary: 36
         - Trigger metadata summary: 2
-        Total: 218 + len(CARD_KEYWORDS) + 11*d_model
-        With d_model=128 and current keyword registry: 1694 dimensions
+        Total: 236 + len(CARD_KEYWORDS) + 18*d_model
+        With d_model=128 and current keyword registry: 2608 dimensions
         """
-        return 218 + len(CARD_KEYWORDS) + 11 * self.d_model
+        return 236 + len(CARD_KEYWORDS) + 18 * self.d_model
 
     @staticmethod
     def _enum_to_str(value) -> str:
@@ -742,19 +788,60 @@ class GlobalStateEmbedder(nn.Module):
         ])
         features.append(stack_summary)
 
-        # 8. Chain links aggregated (3-dim: count, avg power, hit rate)
+        # 8. Chain links: 3-dim aggregate + full-chain sum pool + per-link for last N.
+        #
+        # Three complementary signals:
+        #   (a) 3-scalar aggregate: count, avg_power, hit_rate — global chain statistics
+        #   (b) sum pool of ALL chain link slug embeddings — full identity over entire chain
+        #       regardless of chain length; the model sees every card played this combat chain
+        #   (c) per-link detail for the MAX_CHAIN_LINKS_DISPLAY most recent links —
+        #       sequence/ordering signal critical for Combo keyword legality
         if state.chain_links:
             num_links = len(state.chain_links)
             avg_power = sum(link.attack_power for link in state.chain_links) / num_links
             hit_rate = sum(link.hit for link in state.chain_links) / num_links
-            chain_features = torch.tensor([
+            chain_agg = torch.tensor([
                 num_links / 10.0,
                 avg_power / self.norm_attack_power,
                 hit_rate,
             ])
         else:
-            chain_features = torch.zeros(3)
-        features.append(chain_features)
+            chain_agg = torch.zeros(3)
+        features.append(chain_agg)
+
+        # (b) Sum pool of ALL chain link card embeddings.
+        # Covers every attack in the chain regardless of chain length.
+        from engine.card import Card as _Card
+        if state.chain_links:
+            all_link_embs = []
+            for link in state.chain_links:
+                slug_card = _Card(slug=link.attack_slug, name=link.attack_slug)
+                slug_card.keywords = list(link.keywords) if link.keywords else []
+                all_link_embs.append(self.embed_card(slug_card, player_counters))
+            chain_all_pool = sum(all_link_embs)
+        else:
+            chain_all_pool = torch.zeros(self.d_model)
+        features.append(chain_all_pool)
+
+        # (c) Per-link detail for the MAX_CHAIN_LINKS_DISPLAY most recent links.
+        # Each link: slug embedding (d_model) + is_hit (1) + power (1) + from_weapon (1).
+        recent_links = state.chain_links[-MAX_CHAIN_LINKS_DISPLAY:] if state.chain_links else []
+        for i in range(MAX_CHAIN_LINKS_DISPLAY):
+            if i < len(recent_links):
+                link = recent_links[-(i + 1)]  # Most recent first
+                slug_card = _Card(slug=link.attack_slug, name=link.attack_slug)
+                slug_card.keywords = list(link.keywords) if link.keywords else []
+                link_slug_emb = self.embed_card(slug_card, player_counters)
+                link_scalars = torch.tensor([
+                    float(link.hit),
+                    float(link.attack_power) / self.norm_attack_power,
+                    float(link.from_weapon),
+                ])
+            else:
+                link_slug_emb = torch.zeros(self.d_model)
+                link_scalars = torch.zeros(3)
+            features.append(link_slug_emb)
+            features.append(link_scalars)
 
         # 9. Event history (15-dim, binary flags for this turn)
         # These flags support "if you've X this turn" style effects.
@@ -787,15 +874,15 @@ class GlobalStateEmbedder(nn.Module):
 
 class GameStateEmbedder(nn.Module):
     """Full game state embedder combining player and global state.
-    
-    Architecture (Round 10 + Layer System + Counter Expansion + Event/Effect History):
-    - Active player state: 28 + len(COUNTER_TYPES) + 8*d_model
-    - Inactive player state: 28 + len(COUNTER_TYPES) + 8*d_model
-    - Global state: 218 + len(CARD_KEYWORDS) + 11*d_model
 
-    Total: 274 + 2*len(COUNTER_TYPES) + len(CARD_KEYWORDS) + 27*d_model
-    With d_model=128 and current registries: 3884 dimensions
-    
+    Architecture (Round 11 — zone identities + chain links + active effects):
+    - Active player state: 32 + len(COUNTER_TYPES) + 11*d_model
+    - Inactive player state: 32 + len(COUNTER_TYPES) + 11*d_model
+    - Global state: 227 + len(CARD_KEYWORDS) + 14*d_model
+
+    Total: 291 + 2*len(COUNTER_TYPES) + len(CARD_KEYWORDS) + 36*d_model
+    With d_model=128 and current registries: 5053 dimensions
+
     The embedder provides a rich representation of the full game state
     suitable for deep RL value networks and policy networks.
     """
@@ -816,8 +903,13 @@ class GameStateEmbedder(nn.Module):
         self.layer_norm = nn.LayerNorm(self.get_output_dim())
     
     def get_output_dim(self) -> int:
-        """Total output dimension with shared schema registries."""
-        return 274 + (2 * len(COUNTER_TYPES)) + len(CARD_KEYWORDS) + (27 * self.d_model)
+        """Total output dimension with shared schema registries.
+        300 + 2*len(COUNTER_TYPES) + len(CARD_KEYWORDS) + 40*d_model
+        = 2*PlayerStateEmbedder (32 + COUNTER + 11*d each)
+          + GlobalStateEmbedder (236 + KEYWORDS + 18*d)
+        With d_model=128: 5574 dimensions
+        """
+        return 300 + (2 * len(COUNTER_TYPES)) + len(CARD_KEYWORDS) + (40 * self.d_model)
 
     def get_schema_metadata(self) -> dict[str, object]:
         """Return schema metadata bundle for checkpoint compatibility checks."""

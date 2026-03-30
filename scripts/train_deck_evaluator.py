@@ -81,8 +81,11 @@ def train_epoch(
         counts = batch["counts"].to(device)
         pad_mask = batch["pad_mask"].to(device)
         labels = batch["label"].to(device)
+        card_credits = batch.get("card_credits")
+        if card_credits is not None:
+            card_credits = card_credits.to(device)
 
-        logits = model(hero_ids, card_ids, counts, opp_hero_ids, pad_mask).squeeze(-1)
+        logits = model(hero_ids, card_ids, counts, opp_hero_ids, pad_mask, card_credits).squeeze(-1)
         loss = nn.functional.binary_cross_entropy_with_logits(logits, labels)
 
         optimizer.zero_grad()
@@ -122,8 +125,11 @@ def eval_epoch(
         counts = batch["counts"].to(device)
         pad_mask = batch["pad_mask"].to(device)
         labels = batch["label"].to(device)
+        card_credits = batch.get("card_credits")
+        if card_credits is not None:
+            card_credits = card_credits.to(device)
 
-        logits = model(hero_ids, card_ids, counts, opp_hero_ids, pad_mask).squeeze(-1)
+        logits = model(hero_ids, card_ids, counts, opp_hero_ids, pad_mask, card_credits).squeeze(-1)
         loss = nn.functional.binary_cross_entropy_with_logits(logits, labels)
 
         total_loss += loss.item() * labels.size(0)

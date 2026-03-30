@@ -58,7 +58,11 @@ def _handle_signal(sig, frame):
 
 
 def run_step(description: str, cmd: list[str], allow_fail: bool = False) -> int:
-    """Run a subprocess step, printing its output in real time."""
+    """Run a subprocess step, printing its output in real time.
+
+    On KeyboardInterrupt the entire child process *tree* is killed (Windows:
+    taskkill /F /T; POSIX: os.killpg) so no orphaned workers are left behind.
+    """
     print()
     print("=" * 70)
     print(f"  {description}")
@@ -67,11 +71,34 @@ def run_step(description: str, cmd: list[str], allow_fail: bool = False) -> int:
     print()
 
     t0 = time.time()
-    result = subprocess.run(cmd, cwd=str(ROOT))
-    elapsed = time.time() - t0
 
-    if result.returncode != 0:
-        status = f"FAILED (exit {result.returncode})"
+    import platform
+    if platform.system() == "Windows":
+        proc = subprocess.Popen(cmd, cwd=str(ROOT),
+                                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+    else:
+        proc = subprocess.Popen(cmd, cwd=str(ROOT), start_new_session=True)
+
+    try:
+        proc.wait()
+    except KeyboardInterrupt:
+        # Kill the entire process tree so no workers are orphaned.
+        if platform.system() == "Windows":
+            subprocess.run(
+                ["taskkill", "/F", "/T", "/PID", str(proc.pid)],
+                capture_output=True,
+            )
+        else:
+            import os, signal
+            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+        proc.wait()
+        raise
+
+    elapsed = time.time() - t0
+    rc = proc.returncode
+
+    if rc != 0:
+        status = f"FAILED (exit {rc})"
         if not allow_fail:
             print(f"\n  {status} after {elapsed:.1f}s")
             print(f"  Pipeline halted. Fix the error above and re-run.")
@@ -80,7 +107,7 @@ def run_step(description: str, cmd: list[str], allow_fail: bool = False) -> int:
         status = "OK"
 
     print(f"\n  [{status}] {description} ({elapsed:.1f}s)")
-    return result.returncode
+    return rc
 
 
 def db_row_count(db_path: Path, table: str) -> int:
@@ -254,6 +281,45 @@ def step_upload_data(args) -> None:
 # Pipeline steps (stages 4-7)
 # ---------------------------------------------------------------------------
 
+def _update_bundle_from_checkpoint(ckpt_path: Path) -> None:
+    """Overwrite the on-disk embedder bundle with trained e2e weights from an IQL checkpoint.
+
+    This ensures evaluation and future game collection use the improved encoder
+    weights rather than the stale initial bundle.
+    """
+    import torch as _torch
+    bundle_path = CHECKPOINT_DIR / "embedder_bundle.pt"
+    if not bundle_path.exists():
+        return
+
+    try:
+        payload = _torch.load(str(ckpt_path), map_location="cpu", weights_only=False)
+        bundle = _torch.load(str(bundle_path), map_location="cpu", weights_only=False)
+        updated = False
+
+        if "transformer_state_dict" in payload:
+            bundle["game_transformer_state_dict"] = payload["transformer_state_dict"]
+            updated = True
+        if "action_embedder_state_dict" in payload:
+            # The checkpoint stores the full action_embedder state_dict (including card_embedder).
+            # Split it back into the bundle's separate sections.
+            full_ae_sd = payload["action_embedder_state_dict"]
+            card_keys = {k: v for k, v in full_ae_sd.items() if k.startswith("card_embedder.")}
+            ae_keys = {k: v for k, v in full_ae_sd.items() if not k.startswith("card_embedder.")}
+            if card_keys:
+                bundle["card_embedder_state_dict"] = {
+                    k.removeprefix("card_embedder."): v for k, v in card_keys.items()
+                }
+            bundle["action_embedder_state_dict"] = ae_keys
+            updated = True
+
+        if updated:
+            _torch.save(bundle, str(bundle_path))
+            print(f"  Updated embedder bundle at {bundle_path} with trained e2e weights")
+    except Exception as e:
+        print(f"  WARNING: Could not update embedder bundle from checkpoint: {e}")
+
+
 def step_train_player_bot(args, loop_num: int) -> None:
     """Stage 4: Train IQL player bot on collected transitions."""
     n_transitions = args._replay_db.transition_count()
@@ -271,32 +337,55 @@ def step_train_player_bot(args, loop_num: int) -> None:
     replay_db_path = args._replay_db.db_path
     out_dir = str(CHECKPOINT_DIR / "iql" / f"loop{loop_num}")
 
+    # Find the most recent checkpoint from any previous loop to resume from.
+    # Searches loops in descending order so loop N-1 is preferred over older loops.
+    prev_ckpt = None
+    for prev_loop in range(loop_num - 1, -1, -1):
+        prev_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_loop}"
+        candidates = sorted(prev_dir.glob("*/checkpoint_final.pt")) if prev_dir.exists() else []
+        if candidates:
+            prev_ckpt = candidates[-1]
+            break
+
     cmd = [
         PYTHON, "-m", "rl_agents.train_iql",
         "--db-path", str(replay_db_path),
+        "--embedder-bundle", str(CHECKPOINT_DIR / "embedder_bundle.pt"),
         "--steps", str(args.iql_steps),
         "--batch-size", "256",
         "--device", args.iql_device,
         "--out-dir", out_dir,
+        "--normalize-rewards",
+        "--trainable-embedder",
     ]
+    if prev_ckpt is not None:
+        cmd.extend(["--resume-from", str(prev_ckpt)])
 
     label = f"Stage 4: Train IQL player bot (loop {loop_num})"
     run_step(label, cmd, allow_fail=True)
 
-    # Check for checkpoint
-    ckpt = Path(out_dir) / "checkpoint_final.pt"
-    if ckpt.exists():
-        print_summary("Player bot training results", {
+    # Check for checkpoint — train_iql saves to out_dir/<run_name>/checkpoint_final.pt
+    ckpt_candidates = sorted(Path(out_dir).glob("*/checkpoint_final.pt"))
+    if ckpt_candidates:
+        ckpt = ckpt_candidates[-1]  # most recent run
+        summary = {
             "Transitions used": n_transitions,
             "Checkpoint": str(ckpt),
-        })
+        }
+        if prev_ckpt is not None:
+            summary["Resumed from"] = str(prev_ckpt)
+        print_summary("Player bot training results", summary)
+
+        # Update on-disk embedder bundle with trained e2e weights from IQL checkpoint
+        # so that evaluation and future game collection use the improved encoder.
+        _update_bundle_from_checkpoint(ckpt)
     else:
         print("  WARNING: IQL training produced no checkpoint.")
 
 
 def step_train_deck_bot(args, loop_num: int) -> None:
     """Stage 5: Train deck evaluator on game outcomes."""
-    n_games = args._replay_db.game_count()
+    n_games = args._game_data_store.game_count()
     min_games = 10  # minimum to begin training
 
     if n_games < min_games:
@@ -368,10 +457,11 @@ def step_benchmark(args, loop_num: int) -> None:
 
     t0 = time.time()
 
-    # Find the latest IQL checkpoint
+    # Find the latest IQL checkpoint — train_iql saves inside a timestamped subdir
     iql_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
-    current_ckpt = iql_dir / "checkpoint_final.pt"
-    if not current_ckpt.exists():
+    ckpt_candidates = sorted(iql_dir.glob("*/checkpoint_final.pt")) if iql_dir.exists() else []
+    current_ckpt = ckpt_candidates[-1] if ckpt_candidates else None
+    if not current_ckpt or not current_ckpt.exists():
         current_ckpt = find_best_checkpoint("player_bot")
     if not current_ckpt or not current_ckpt.exists():
         print("  No player bot checkpoint found — skipping benchmark.")
@@ -468,8 +558,10 @@ def step_benchmark(args, loop_num: int) -> None:
 
     # Benchmark vs previous checkpoint (if exists)
     prev_loop = loop_num - 1
-    prev_ckpt = CHECKPOINT_DIR / "iql" / f"loop{prev_loop}" / "checkpoint_final.pt"
-    if prev_loop >= 0 and prev_ckpt.exists():
+    prev_iql_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_loop}"
+    prev_ckpt_candidates = sorted(prev_iql_dir.glob("*/checkpoint_final.pt")) if prev_iql_dir.exists() else []
+    prev_ckpt = prev_ckpt_candidates[-1] if prev_ckpt_candidates else None
+    if prev_loop >= 0 and prev_ckpt and prev_ckpt.exists():
         try:
             prev_agent = IQLPolicyAgent(
                 checkpoint_path=str(prev_ckpt),
@@ -588,6 +680,11 @@ def main():
         from rl_agents.embedder_bundle import load_embedder_bundle
         args._embedder_bundle = load_embedder_bundle(str(bundle_path))
         print(f"  Loaded embedder bundle from {bundle_path}")
+        if "game_transformer_state_dict" in args._embedder_bundle:
+            print(f"    GameTransformerEncoder: d_model={args._embedder_bundle.get('game_transformer_d_model')},"
+                  f" n_heads={args._embedder_bundle.get('game_transformer_n_heads')},"
+                  f" n_layers={args._embedder_bundle.get('game_transformer_n_layers')},"
+                  f" output_dim={args._embedder_bundle.get('game_transformer_output_dim')}")
     else:
         try:
             from engine.card import CardDB
@@ -595,21 +692,51 @@ def main():
             from encoder.card_embedder import SlugVocab
             from encoder.action_embedder import ActionEmbedder
             from encoder.gamestate_embedder import GameStateEmbedder
+            from encoder.game_transformer import GameTransformerEncoder, prime_dummy_vocab
             from rl_agents.embedder_bundle import build_embedder_bundle, save_embedder_bundle
 
             card_db = CardDB(str(SLUG_INDEX_PATH))
             args._card_db = card_db
             slug_vocab = SlugVocab.from_card_db(card_db)
-            d_model = 128
+
+            # ActionEmbedder uses d_model=128 (unchanged)
+            action_d_model = 128
             action_embedder = ActionEmbedder(
-                d_model=d_model, slug_vocab_size=slug_vocab.size, slug_vocab=slug_vocab,
+                d_model=action_d_model, slug_vocab_size=slug_vocab.size, slug_vocab=slug_vocab,
             )
+
+            # Legacy GameStateEmbedder kept for backward compat
             state_embedder = GameStateEmbedder(
-                d_model=d_model, slug_vocab_size=slug_vocab.size, slug_vocab=slug_vocab,
+                d_model=action_d_model, slug_vocab_size=slug_vocab.size, slug_vocab=slug_vocab,
             )
-            args._embedder_bundle = build_embedder_bundle(action_embedder, state_embedder)
-            save_embedder_bundle(str(bundle_path), action_embedder, state_embedder)
+
+            # New transformer encoder
+            prime_dummy_vocab(card_db)
+            gt_d_model = 256
+            gt_n_heads = 8
+            gt_n_layers = 4
+            gt_hero_head_dim = 64
+            game_transformer = GameTransformerEncoder(
+                slug_vocab_size=slug_vocab.size,
+                d_model=gt_d_model,
+                n_heads=gt_n_heads,
+                n_layers=gt_n_layers,
+                hero_head_dim=gt_hero_head_dim,
+            )
+            # Populate the card_feats_lookup buffer so tokenize_to_packed() and
+            # forward_packed_batch() can look up numeric card features by slug index.
+            game_transformer.set_card_feats_lookup(card_db)
+
+            args._embedder_bundle = build_embedder_bundle(
+                action_embedder, state_embedder, game_transformer=game_transformer,
+            )
+            save_embedder_bundle(
+                str(bundle_path), action_embedder, state_embedder,
+                game_transformer=game_transformer,
+            )
             print(f"  Created fresh embedder bundle at {bundle_path}")
+            print(f"    GameTransformerEncoder: d_model={gt_d_model}, n_heads={gt_n_heads},"
+                  f" n_layers={gt_n_layers}, output_dim={game_transformer.get_output_dim()}")
         except Exception as e:
             print(f"  WARNING: Could not create embedder bundle: {e}")
 
@@ -668,11 +795,18 @@ def main():
                 from config import SLUG_INDEX_PATH
                 args._card_db = CardDB(str(SLUG_INDEX_PATH))
 
-            # Create opponent pool
+            # Create opponent pool — include all previous loops' IQL checkpoints
             from rl_agents.local_game_runner import OpponentPool
+            prev_ckpts: list[str] = []
+            for prev_l in range(loop_num):
+                prev_loop_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_l}"
+                if prev_loop_dir.exists():
+                    candidates = sorted(prev_loop_dir.glob("*/checkpoint_final.pt"))
+                    if candidates:
+                        prev_ckpts.append(str(candidates[-1]))
             opponent_pool = OpponentPool(
                 heuristic_seed=args.seed + loop_num,
-                checkpoint_paths=None,  # TODO: collect prev checkpoints
+                checkpoint_paths=prev_ckpts if prev_ckpts else None,
                 device=args.iql_device,
                 embedder_bundle=args._embedder_bundle,
             )

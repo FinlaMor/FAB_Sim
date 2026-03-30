@@ -13,8 +13,64 @@ import torch
 
 from rl_agents.dataset_adapter import ReplayDataset, build_iql_tensors_from_replay_db
 from rl_agents.embedder_bundle import load_embedder_bundle, resolve_embedder_bundle_path
-from rl_agents.iql import IQLConfig, IQLTrainer
+from rl_agents.iql import IQLConfig, IQLTrainer, ResidualAdapter
 from rl_agents.utils.device import default_device as _default_device, resolve_device as _resolve_device
+
+
+def _build_e2e_encoders(embedder_bundle: dict, device: str):
+    """Build GameTransformerEncoder and ActionEmbedder from bundle for end-to-end training.
+
+    Returns (transformer, action_embedder) or (None, None) if bundle lacks transformer.
+    """
+    if "game_transformer_state_dict" not in embedder_bundle:
+        return None, None
+
+    try:
+        from engine.card import CardDB
+        from encoder.card_embedder import SlugVocab
+        from encoder.action_embedder import ActionEmbedder
+        from encoder.game_transformer import GameTransformerEncoder, prime_dummy_vocab
+        from config import SLUG_INDEX_PATH
+
+        card_db = CardDB(SLUG_INDEX_PATH)
+        slug_vocab = SlugVocab.from_card_db(card_db)
+        prime_dummy_vocab(card_db)
+
+        gt_d_model       = int(embedder_bundle.get("game_transformer_d_model", 256))
+        gt_n_heads       = int(embedder_bundle.get("game_transformer_n_heads", 8))
+        gt_n_layers      = int(embedder_bundle.get("game_transformer_n_layers", 4))
+        gt_hero_head_dim = int(embedder_bundle.get("game_transformer_hero_head_dim", 64))
+
+        transformer = GameTransformerEncoder(
+            slug_vocab_size=slug_vocab.size,
+            d_model=gt_d_model,
+            n_heads=gt_n_heads,
+            n_layers=gt_n_layers,
+            hero_head_dim=gt_hero_head_dim,
+        )
+        # Shape-safe load (handles stale bundles gracefully)
+        gt_sd = embedder_bundle["game_transformer_state_dict"]
+        model_sd = transformer.state_dict()
+        filtered_sd = {k: v for k, v in gt_sd.items() if k in model_sd and model_sd[k].shape == v.shape}
+        transformer.load_state_dict(filtered_sd, strict=False)
+        transformer.set_card_feats_lookup(card_db)
+
+        d_model = int(embedder_bundle.get("d_model", 128))
+        ae = ActionEmbedder(
+            d_model=d_model,
+            slug_vocab_size=slug_vocab.size,
+            slug_vocab=slug_vocab,
+        )
+        ae_sd = {**{f"card_embedder.{k}": v for k, v in embedder_bundle.get("card_embedder_state_dict", {}).items()},
+                 **embedder_bundle.get("action_embedder_state_dict", {})}
+        ae_model_sd = ae.state_dict()
+        ae_filtered = {k: v for k, v in ae_sd.items() if k in ae_model_sd and ae_model_sd[k].shape == v.shape}
+        ae.load_state_dict(ae_filtered, strict=False)
+
+        return transformer, ae
+    except Exception as e:
+        print(f"[iql] WARNING: could not build end-to-end encoders: {e}", flush=True)
+        return None, None
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -202,6 +258,27 @@ def main() -> int:
         out_pt.parent.mkdir(parents=True, exist_ok=True)
         torch.save(payload, str(out_pt))
 
+    # Detect whether the dataset contains raw packed features (end-to-end training)
+    uses_raw_features = bool(payload.get("uses_raw_features", False))
+    if uses_raw_features:
+        print("[iql] dataset uses raw packed features — end-to-end transformer training enabled", flush=True)
+
+    # When using raw features, state_dim / action_dim in the payload are the PACKED sizes,
+    # not the transformer output dims.  IQLConfig must use the transformer output dim.
+    e2e_transformer = None
+    e2e_action_embedder = None
+    if uses_raw_features and embedder_bundle is not None:
+        e2e_transformer, e2e_action_embedder = _build_e2e_encoders(embedder_bundle, args.device)
+        if e2e_transformer is not None:
+            # Override state_dim/action_dim to be the transformer OUTPUT dims
+            payload["state_dim"]  = e2e_transformer.get_output_dim()
+            payload["action_dim"] = e2e_action_embedder.get_output_dim()
+            print(
+                f"[iql] e2e encoders built: "
+                f"state_dim={payload['state_dim']}, action_dim={payload['action_dim']}",
+                flush=True,
+            )
+
     config = IQLConfig(
         state_dim=int(payload["state_dim"]),
         action_dim=int(payload["action_dim"]),
@@ -227,16 +304,60 @@ def main() -> int:
         embedder_layers=args.embedder_layers,
         lr_schedule=args.lr_schedule,
         lr_warmup_steps=args.lr_warmup_steps,
+        use_raw_features=uses_raw_features and e2e_transformer is not None,
     )
 
     # Resume from checkpoint if specified (P2-19)
     if args.resume_from:
         print(f"[iql] resuming from checkpoint: {args.resume_from}", flush=True)
-        trainer = IQLTrainer.from_checkpoint(args.resume_from, device=args.device)
-        # Override config values that may have changed via CLI
+        trainer = IQLTrainer.from_checkpoint(
+            args.resume_from,
+            device=args.device,
+            transformer=e2e_transformer,
+            action_embedder=e2e_action_embedder,
+        )
+        # Override config values that may have changed via CLI.
+        # Training hyperparameters are always taken from CLI so the user can tune on resume.
         trainer.config.batch_size = config.batch_size
+        trainer.config.use_raw_features = config.use_raw_features
+        trainer.config.lr_schedule = config.lr_schedule
+        trainer.config.lr_warmup_steps = config.lr_warmup_steps
+        trainer.config.grad_clip = config.grad_clip
+        trainer.config.reward_scale = config.reward_scale
+        trainer.config.temperature = config.temperature
+        trainer.config.expectile = config.expectile
+        trainer.config.max_weight = config.max_weight
+        trainer.config.normalize_advantages = config.normalize_advantages
+        trainer.config.rwbc_mode = config.rwbc_mode
+        if config.trainable_embedder and not trainer.config.trainable_embedder:
+            print("[iql] upgrading checkpoint: enabling trainable_embedder adapters", flush=True)
+            trainer.config.trainable_embedder = True
+            trainer.state_adapter = ResidualAdapter(
+                input_dim=config.state_dim,
+                hidden_dim=config.embedder_hidden_dim,
+                hidden_layers=config.embedder_layers,
+                enabled=True,
+            ).to(trainer.device)
+            trainer.action_adapter = ResidualAdapter(
+                input_dim=config.action_dim,
+                hidden_dim=config.embedder_hidden_dim,
+                hidden_layers=config.embedder_layers,
+                enabled=True,
+            ).to(trainer.device)
+            trainer._embedder_params = (
+                list(trainer.state_adapter.parameters()) +
+                list(trainer.action_adapter.parameters())
+            )
+            trainer.opt_embed = torch.optim.Adam(
+                trainer._embedder_params, lr=config.lr_embedder,
+                weight_decay=config.weight_decay,
+            )
     else:
-        trainer = IQLTrainer(config)
+        trainer = IQLTrainer(
+            config,
+            transformer=e2e_transformer,
+            action_embedder=e2e_action_embedder,
+        )
 
     run_name = args.run_name or time.strftime("iql_%Y%m%d_%H%M%S")
     run_dir = Path(args.out_dir) / run_name

@@ -378,8 +378,8 @@ def test_compute_combat_rewards_defense(tmp_path) -> None:
     row2 = rdb.conn.execute(
         "SELECT reward FROM transitions WHERE id = ?", (tid2,)
     ).fetchone()
-    # tid2 is p2's latest transition -> terminal +1, plus defense reward 5/10 = 0.5
-    assert row2[0] == pytest.approx(1.5), f"Expected 1.5, got {row2[0]}"
+    # tid2 is p2's latest transition -> terminal +1.0, minus damage-taken penalty -0.75*3/10 = -0.225
+    assert row2[0] == pytest.approx(0.775), f"Expected 0.775, got {row2[0]}"
     rdb.close()
 
 

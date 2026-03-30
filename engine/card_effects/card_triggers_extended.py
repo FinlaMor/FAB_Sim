@@ -2113,9 +2113,10 @@ _register("plunder_the_poor", [
 # Each hero banishes from hand. If not 6+p, lose 1h. Go again.
 def _pound_of_flesh_play(card, event, state):
     for pid in state.players:
-        banished = effect_banish_from_hand(state, pid)
-        if banished and (banished.power is None or banished.power < 6):
-            effect_lose_life(state, pid, 1)
+        banished_list = effect_banish_from_hand(state, pid)
+        for banished in banished_list:
+            if banished.power is None or banished.power < 6:
+                effect_lose_life(state, pid, 1)
 
 _register("pound_of_flesh", [
     TriggerDef(event_type="on_play", effect_fn=_pound_of_flesh_play),

@@ -152,12 +152,25 @@ def _game_loop(state: GameState) -> None:
     """Iterative main game loop — avoids deep recursion from turn/combat cycling."""
     state._next_phase = "start_of_turn"
 
+    _stalemate_health_history: list[tuple[int, int]] = []
+    _STALEMATE_TURNS = 50  # end game if health unchanged for this many consecutive turns
+
     while not state.done:
         phase = state._next_phase
         # Prevent pathological long games from generating runaway data volume.
         if phase == "start_of_turn" and state.turn_number >= state.max_turns:
             _end_game_on_turn_cap(state)
             break
+        # Stalemate detection: if health hasn't changed in _STALEMATE_TURNS turns, end game.
+        if phase == "start_of_turn":
+            hp = (state.players[1].health, state.players[2].health)
+            _stalemate_health_history.append(hp)
+            if len(_stalemate_health_history) > _STALEMATE_TURNS:
+                _stalemate_health_history.pop(0)
+            if (len(_stalemate_health_history) == _STALEMATE_TURNS
+                    and len(set(_stalemate_health_history)) == 1):
+                _end_game_on_turn_cap(state)
+                break
 
         if phase == "start_of_turn":
             _start_of_turn_phase(state)
@@ -799,12 +812,17 @@ def resolve_stack(game_state: GameState) -> None:
 
     # CR 5.3.4c: card-type layers cease to exist on resolution; capture LKI while still at stack zone.
     # activated/triggered layers leave their source card in its zone — do NOT freeze its LKI here.
-    # Exception: Figment cards enter the arena instead of ceasing to exist (CR 8.2.16a).
+    # Exception: Figment cards and Aura cards enter the arena instead of ceasing to exist.
+    # CR 8.2.16a: Figments enter the arena as permanents.
+    # CR 8.x (Aura rule): Aura-type cards (including Instant+Aura) enter the arena as permanents.
     card = entry.card
+    _card_types = card.types or [] if card else []
     _is_figment = (entry.layer_type == 'card' and card is not None
-                   and "Figment" in (card.types or []))
+                   and "Figment" in _card_types)
+    _is_aura = (entry.layer_type == 'card' and card is not None
+                and "Aura" in _card_types and not _is_figment)
 
-    if entry.layer_type == 'card' and card and not _is_figment:
+    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura:
         game_state.process_cease_to_exist(card)
 
     if entry.effect_fn:
@@ -814,17 +832,17 @@ def resolve_stack(game_state: GameState) -> None:
             with open(environ['debug_file'], 'a') as f:
                 f.write(f'stack {entry} resolves: {result}\n')
 
-    # CR 8.2.16a: Figments enter the arena as permanents instead of ceasing to exist.
-    if _is_figment:
+    # Figments and Auras enter the arena as permanents instead of ceasing to exist.
+    if _is_figment or _is_aura:
         player_id = entry.player_id
         player = game_state.players[player_id]
-        # Remove from stack zone tracking
+        # Remove from stack zone tracking (triggered layers add here; card layers may not)
         game_state.stack.remove(card)
-        # Enter permanents zone (Ally sub-zone if it has Ally type, otherwise generic permanent)
-        if "Ally" in (card.types or []):
+        # Enter permanents zone
+        if "Ally" in _card_types:
             card.permanent_subtype = "Ally"
         player.permanents.add(card, is_public=True)
-        # Register triggers for the figment now that it's in the arena
+        # Register triggers for the card now that it's in the arena
         from engine.card_effects.triggers import register_card_triggers
         register_card_triggers(card, game_state.event_manager)
         # Emit enters_arena event so CARD_TRIGGERS can fire

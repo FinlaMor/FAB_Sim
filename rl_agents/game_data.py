@@ -156,6 +156,9 @@ class DeckMeta:
     total_actions: int
     seed: int | None = None
     mode: str = "pvp"
+    # Per-card usage tracking: {"played": {slug: count}, "blocked": {...}, "pitched": {...}}
+    p1_card_usage: dict = field(default_factory=dict)
+    p2_card_usage: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -743,6 +746,99 @@ def _terminal_reward(player_id: int, winner: int | None) -> float:
     return 1.0 if player_id == winner else -1.0
 
 
+def _parse_deck_for_storage(deck_file: str, fallback_hero: str) -> dict:
+    """Parse a deck file into a dict suitable for DeckWinDataset.
+
+    Returns {"hero": str, "deck": [slug, ...], "weapons": [slug, ...]} without
+    requiring a CardDB.  Falls back to {"hero": fallback_hero} on any read error.
+    """
+    import re as _re
+    import unicodedata as _ud
+
+    def _slugify(name: str) -> str:
+        s = _ud.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii")
+        s = s.lower()
+        s = _re.sub(r"['\u2019,!?.]", "", s)
+        s = _re.sub(r"[\s\-]+", "_", s.strip())
+        s = _re.sub(r"[^a-z0-9_]", "", s)
+        return s
+
+    try:
+        with open(deck_file, encoding="utf-8") as f:
+            lines = f.readlines()
+    except OSError:
+        return {"hero": fallback_hero}
+
+    hero = fallback_hero
+    deck_cards: list[str] = []
+    weapons: list[str] = []
+
+    # Detect Fabrary format
+    is_fabrary = any(
+        l.strip().startswith("Hero:") or l.strip() == "Arena cards"
+        for l in lines[:15]
+    )
+
+    if is_fabrary:
+        in_arena = False
+        in_deck = False
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                in_arena = in_deck = False
+                continue
+            if stripped.startswith("Hero:"):
+                hero = _slugify(stripped[5:].strip())
+                continue
+            if stripped == "Arena cards":
+                in_arena, in_deck = True, False
+                continue
+            if stripped == "Deck cards":
+                in_arena, in_deck = False, True
+                continue
+            m = _re.match(r"^(\d+)x\s+(.+)$", stripped)
+            if not m:
+                continue
+            count = int(m.group(1))
+            rest = m.group(2).strip()
+            color_m = _re.match(r"^(.+?)\s+\((red|yellow|blue)\)$", rest)
+            slug = (
+                _slugify(color_m.group(1)) + "_" + color_m.group(2)
+                if color_m
+                else _slugify(rest)
+            )
+            if in_arena:
+                for _ in range(count):
+                    weapons.append(slug)
+            elif in_deck:
+                for _ in range(count):
+                    deck_cards.append(slug)
+    else:
+        for line in lines:
+            parts = line.strip().split()
+            if not parts or parts[0].startswith("#"):
+                continue
+            if parts[0] == "hero" and len(parts) > 1:
+                hero = parts[1]
+            elif parts[0] == "weapon" and len(parts) > 1:
+                weapons.append(parts[1])
+            elif parts[0] == "equipment":
+                pass  # equipment slots handled separately
+            else:
+                try:
+                    count = int(parts[0])
+                    slug = parts[1]
+                    for _ in range(count):
+                        deck_cards.append(slug)
+                except (ValueError, IndexError):
+                    pass
+
+    result: dict = {"hero": hero, "deck": deck_cards}
+    if weapons:
+        result["weapons"] = weapons
+    return result
+
+
 # ── SQLite persistence ───────────────────────────────────────────────
 
 
@@ -765,7 +861,21 @@ CREATE TABLE IF NOT EXISTS decks (
     ended_on_turn_cap INTEGER NOT NULL,
     total_actions   INTEGER NOT NULL,
     seed            INTEGER,
-    created_at      TEXT NOT NULL DEFAULT (datetime('now'))
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    p1_card_usage   TEXT,   -- JSON: {"played":{slug:n},"blocked":{slug:n},"pitched":{slug:n}}
+    p2_card_usage   TEXT    -- JSON: same structure for player 2
+);
+
+CREATE TABLE IF NOT EXISTS card_performance (
+    hero_slug       TEXT NOT NULL,
+    card_slug       TEXT NOT NULL,
+    games_seen      INTEGER NOT NULL DEFAULT 0,
+    play_count      INTEGER NOT NULL DEFAULT 0,
+    block_count     INTEGER NOT NULL DEFAULT 0,
+    pitch_count     INTEGER NOT NULL DEFAULT 0,
+    wins            INTEGER NOT NULL DEFAULT 0,
+    losses          INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (hero_slug, card_slug)
 );
 
 CREATE TABLE IF NOT EXISTS transitions (
@@ -877,6 +987,11 @@ class GameDataStore:
         self._local = threading.local()
         conn = self._get_conn()
         conn.executescript(_SCHEMA_SQL)
+        # Migrate existing DBs: add columns that may be absent in older schemas
+        existing_decks = {r[1] for r in conn.execute("PRAGMA table_info(decks)")}
+        for col, typedef in [("p1_card_usage", "TEXT"), ("p2_card_usage", "TEXT")]:
+            if col not in existing_decks:
+                conn.execute(f"ALTER TABLE decks ADD COLUMN {col} {typedef}")
         conn.commit()
 
     @classmethod
@@ -909,8 +1024,9 @@ class GameDataStore:
                 p1_decklist, p2_decklist, p1_hero, p2_hero,
                 winner, p1_won, p2_won,
                 p1_final_hp, p2_final_hp,
-                turn_count, ended_on_turn_cap, total_actions, seed)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                turn_count, ended_on_turn_cap, total_actions, seed,
+                p1_card_usage, p2_card_usage)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 meta.game_id, meta.mode,
                 meta.p1_deck_file, meta.p2_deck_file,
@@ -923,8 +1039,51 @@ class GameDataStore:
                 meta.p1_final_hp, meta.p2_final_hp,
                 meta.turn_count, int(meta.ended_on_turn_cap),
                 meta.total_actions, meta.seed,
+                json.dumps(meta.p1_card_usage, separators=(",", ":")) if meta.p1_card_usage else None,
+                json.dumps(meta.p2_card_usage, separators=(",", ":")) if meta.p2_card_usage else None,
             ),
         )
+
+        # --- card_performance upsert ---
+        # Update cumulative card stats for both players using this game's usage data.
+        for player_id, hero_key, usage_dict in (
+            (1, "p1_hero", meta.p1_card_usage),
+            (2, "p2_hero", meta.p2_card_usage),
+        ):
+            hero_slug = (meta.p1_decklist if player_id == 1 else meta.p2_decklist).get("hero", "")
+            if not hero_slug or not usage_dict:
+                continue
+            won = int(meta.winner == player_id)
+            lost = int(meta.winner is not None and meta.winner != player_id)
+
+            # Collect all slugs seen (union of played/blocked/pitched)
+            played = usage_dict.get("played", {})
+            blocked = usage_dict.get("blocked", {})
+            pitched = usage_dict.get("pitched", {})
+            all_slugs = set(played) | set(blocked) | set(pitched)
+
+            for slug in all_slugs:
+                conn.execute(
+                    """INSERT INTO card_performance
+                           (hero_slug, card_slug, games_seen, play_count, block_count,
+                            pitch_count, wins, losses)
+                       VALUES (?, ?, 1, ?, ?, ?, ?, ?)
+                       ON CONFLICT(hero_slug, card_slug) DO UPDATE SET
+                           games_seen  = games_seen  + 1,
+                           play_count  = play_count  + excluded.play_count,
+                           block_count = block_count + excluded.block_count,
+                           pitch_count = pitch_count + excluded.pitch_count,
+                           wins        = wins        + excluded.wins,
+                           losses      = losses      + excluded.losses
+                    """,
+                    (
+                        hero_slug, slug,
+                        played.get(slug, 0),
+                        blocked.get(slug, 0),
+                        pitched.get(slug, 0),
+                        won, lost,
+                    ),
+                )
 
         # --- transition rows ---
         transitions = collector.transitions
@@ -1019,6 +1178,8 @@ class GameDataStore:
         p2_deck_file: str,
         seed: int | None = None,
         game_id: int | None = None,
+        p1_card_usage: dict | None = None,
+        p2_card_usage: dict | None = None,
     ) -> None:
         """Save a game played via the local engine.
 
@@ -1037,11 +1198,11 @@ class GameDataStore:
         if collector is None:
             collector = TransitionCollector(game_id=game_id or 0)
 
-        # Build minimal decklists – the local engine doesn't expose the
-        # original list in the same format as Talishar, so we store the
-        # hero name and the deck file path for traceability.
-        p1_decklist = {"hero": getattr(p1, "hero_name", getattr(p1, "name", ""))}
-        p2_decklist = {"hero": getattr(p2, "hero_name", getattr(p2, "name", ""))}
+        # Build full decklists from deck files so the deck evaluator has card slugs to train on.
+        p1_hero_name = getattr(p1, "hero_name", getattr(p1, "name", ""))
+        p2_hero_name = getattr(p2, "hero_name", getattr(p2, "name", ""))
+        p1_decklist = _parse_deck_for_storage(p1_deck_file, p1_hero_name)
+        p2_decklist = _parse_deck_for_storage(p2_deck_file, p2_hero_name)
 
         meta = DeckMeta(
             game_id=collector.game_id,
@@ -1057,8 +1218,44 @@ class GameDataStore:
             total_actions=len(collector.transitions),
             seed=seed,
             mode="local",
+            p1_card_usage=p1_card_usage or {},
+            p2_card_usage=p2_card_usage or {},
         )
         self.save_game(collector, meta)
+
+    def load_card_performance(
+        self,
+        min_games: int = 5,
+    ) -> dict[tuple[str, str], dict]:
+        """Return cumulative card performance stats from all recorded games.
+
+        Returns dict keyed by (hero_slug, card_slug) → {
+            "games_seen": int,
+            "play_rate": float,     # play_count / games_seen
+            "block_rate": float,
+            "pitch_rate": float,
+            "win_rate": float,      # wins / (wins + losses), NaN if no outcomes
+        }
+
+        Only rows with at least *min_games* games_seen are included.
+        """
+        conn = self._get_conn()
+        rows = conn.execute(
+            "SELECT hero_slug, card_slug, games_seen, play_count, block_count, "
+            "pitch_count, wins, losses FROM card_performance WHERE games_seen >= ?",
+            (min_games,),
+        ).fetchall()
+        result = {}
+        for hero_slug, card_slug, gs, pc, bc, ptc, w, l in rows:
+            wr = w / (w + l) if (w + l) > 0 else float("nan")
+            result[(hero_slug, card_slug)] = {
+                "games_seen": gs,
+                "play_rate": pc / gs,
+                "block_rate": bc / gs,
+                "pitch_rate": ptc / gs,
+                "win_rate": wr,
+            }
+        return result
 
     def game_count(self) -> int:
         conn = self._get_conn()
