@@ -226,6 +226,7 @@ class GameTransformerEncoder(nn.Module):
             encoder_layer=encoder_layer,
             num_layers=n_layers,
             norm=nn.LayerNorm(d_model),
+            enable_nested_tensor=False,  # DML/DirectML doesn't support nested tensors
         )
 
         # Output layer norm (applied to CLS token)

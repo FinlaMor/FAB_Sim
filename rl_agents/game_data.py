@@ -633,6 +633,161 @@ class TransitionCollector:
             self._transitions.append(t)
             self._step += 1
 
+    def record_local(
+        self,
+        player_id: int,
+        state: Any,
+        action: Any = None,
+        legal_actions: list | None = None,
+        reward: float = 0.0,
+        done: bool = False,
+    ) -> None:
+        """Record a decision point from the local engine's GameState.
+
+        Extracts all denormalized columns directly from the engine objects
+        so game_data.db transitions have full zone contents.
+        """
+        import json as _json
+
+        p = state.players[player_id]
+        opp_id = 2 if player_id == 1 else 1
+        opp = state.players[opp_id]
+
+        def _zone_slugs(zone) -> str | None:
+            cards = getattr(zone, "cards", None)
+            if not cards:
+                return None
+            slugs = [getattr(c, "slug", str(c)) for c in cards]
+            return _json.dumps(slugs, separators=(",", ":"))
+
+        # Combat info
+        combat = getattr(state, "combat", None)
+        in_cc = combat is not None
+        cc_atk = getattr(combat, "attack_power", None) if combat else None
+        cc_def = getattr(combat, "total_defense", None) if combat else None
+        combat_kw = ",".join(sorted(getattr(combat, "keywords", set()))) if combat else None
+        has_go_again = bool(getattr(combat, "go_again", False)) if combat else False
+
+        # Chain links
+        chain_links = getattr(state, "chain_links", [])
+        chain_link_count = len(chain_links)
+
+        # Action card
+        card_id = None
+        if action is not None:
+            card_id = getattr(action, "card_slug", None) or getattr(action, "slug", None)
+            if card_id is None and hasattr(action, "card") and action.card is not None:
+                card_id = getattr(action.card, "slug", None)
+
+        # Decision type from action
+        decision_type = "other"
+        if action is not None:
+            at = getattr(action, "action_type", None)
+            if at is not None:
+                decision_type = at.name if hasattr(at, "name") else str(at)
+
+        turn_phase = state.step.value if hasattr(state.step, "value") else str(state.step)
+        is_turn_player = (state.active_player == player_id)
+
+        # Arsenal
+        has_arsenal = bool(getattr(p, "arsenal", None) and len(p.arsenal.cards) > 0)
+        opp_has_arsenal = bool(getattr(opp, "arsenal", None) and len(opp.arsenal.cards) > 0)
+
+        # Combat attack/defense cards
+        combat_attack_card = None
+        combat_defending_cards = None
+        if combat:
+            atk_card = getattr(combat, "attack_card", None)
+            if atk_card:
+                combat_attack_card = getattr(atk_card, "slug", str(atk_card))
+            def_cards = getattr(combat, "defending_cards", [])
+            if def_cards:
+                combat_defending_cards = _json.dumps(
+                    [getattr(c, "slug", str(c)) for c in def_cards],
+                    separators=(",", ":"),
+                )
+
+        with self._lock:
+            t = Transition(
+                game_id=self.game_id,
+                step=self._step,
+                player_id=player_id,
+                turn_number=state.turn_number,
+                state={},
+                available_actions=[],
+                action_taken={},
+                action_index=-1,
+                next_state=None,
+                reward=reward,
+                done=done,
+                p1_hp=state.players[1].health,
+                p2_hp=state.players[2].health,
+                decision_type=decision_type,
+                hp_delta=0,
+                opp_hp_delta=0,
+                cards_in_deck=len(p.deck.cards) if hasattr(p, "deck") else None,
+                opp_cards_in_deck=len(opp.deck.cards) if hasattr(opp, "deck") else None,
+                num_actions=len(legal_actions) if legal_actions else 0,
+                action_points=getattr(p, "action_points", None),
+                turn_phase=turn_phase,
+                card_id=card_id,
+                in_combat_chain=in_cc,
+                combat_chain_attack=cc_atk,
+                combat_chain_defense=cc_def,
+                is_turn_player=is_turn_player,
+                hand_size=len(p.hand.cards) if hasattr(p, "hand") else None,
+                opp_hand_size=len(opp.hand.cards) if hasattr(opp, "hand") else None,
+                resources=getattr(p, "resources", None),
+                graveyard_size=len(p.graveyard.cards) if hasattr(p, "graveyard") else None,
+                opp_graveyard_size=len(opp.graveyard.cards) if hasattr(opp, "graveyard") else None,
+                banished_size=len(p.banish.cards) if hasattr(p, "banish") else None,
+                opp_banished_size=len(opp.banish.cards) if hasattr(opp, "banish") else None,
+                pitch_zone_size=len(p.pitch.cards) if hasattr(p, "pitch") else None,
+                opp_pitch_zone_size=len(opp.pitch.cards) if hasattr(opp, "pitch") else None,
+                equipment_count=sum(1 for z in [p.head, p.chest, p.arms, p.legs] if z.cards),
+                opp_equipment_count=sum(1 for z in [opp.head, opp.chest, opp.arms, opp.legs] if z.cards),
+                has_arsenal=has_arsenal,
+                opp_has_arsenal=opp_has_arsenal,
+                chain_link_count=chain_link_count,
+                has_go_again=has_go_again,
+                combat_keywords=combat_kw,
+                player_hand=_zone_slugs(p.hand),
+                player_graveyard=_zone_slugs(p.graveyard),
+                player_banished=_zone_slugs(p.banish),
+                player_arsenal=_zone_slugs(p.arsenal),
+                player_equipment=_json.dumps(
+                    [getattr(c, "slug", str(c)) for z in [p.head, p.chest, p.arms, p.legs] for c in z.cards],
+                    separators=(",", ":"),
+                ) if any(z.cards for z in [p.head, p.chest, p.arms, p.legs]) else None,
+                player_pitch_zone=_zone_slugs(p.pitch),
+                player_soul=_zone_slugs(p.soul) if hasattr(p, "soul") else None,
+                player_auras=_zone_slugs(p.auras) if hasattr(p, "auras") else None,
+                player_items=_zone_slugs(p.items) if hasattr(p, "items") else None,
+                player_permanents=_zone_slugs(p.permanents) if hasattr(p, "permanents") else None,
+                opp_graveyard=_zone_slugs(opp.graveyard),
+                opp_banished=_zone_slugs(opp.banish),
+                opp_equipment=_json.dumps(
+                    [getattr(c, "slug", str(c)) for z in [opp.head, opp.chest, opp.arms, opp.legs] for c in z.cards],
+                    separators=(",", ":"),
+                ) if any(z.cards for z in [opp.head, opp.chest, opp.arms, opp.legs]) else None,
+                opp_pitch_zone=_zone_slugs(opp.pitch),
+                opp_soul=_zone_slugs(opp.soul) if hasattr(opp, "soul") else None,
+                opp_auras=_zone_slugs(opp.auras) if hasattr(opp, "auras") else None,
+                opp_items=_zone_slugs(opp.items) if hasattr(opp, "items") else None,
+                opp_permanents=_zone_slugs(opp.permanents) if hasattr(opp, "permanents") else None,
+                player_hero=getattr(p.hero, "slug", None) if hasattr(p, "hero") else None,
+                opp_hero=getattr(opp.hero, "slug", None) if hasattr(opp, "hero") else None,
+                combat_attack_card=combat_attack_card,
+                combat_defending_cards=combat_defending_cards,
+                chain_link_history=_json.dumps(
+                    [{"atk": l.attack_power, "def": l.total_defense, "hit": l.hit}
+                     for l in chain_links],
+                    separators=(",", ":"),
+                ) if chain_links else None,
+            )
+            self._transitions.append(t)
+            self._step += 1
+
     def finalize(self, winner: int | None) -> None:
         """Retroactively set terminal rewards and backfill computed columns.
 

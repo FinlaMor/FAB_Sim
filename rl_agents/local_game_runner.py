@@ -455,11 +455,11 @@ class EmbeddingRecorderAgent:
 
             # Also record to TransitionCollector (→ game_data.db rich columns)
             if self.transition_collector is not None:
-                self.transition_collector.record_simple(
+                self.transition_collector.record_local(
                     player_id=self.player_id,
-                    turn_number=state.turn_number,
-                    p1_hp=state.players[1].health,
-                    p2_hp=state.players[2].health,
+                    state=state,
+                    action=choice,
+                    legal_actions=options,
                 )
 
             if self.step_counter[0] % 50 == 0:
