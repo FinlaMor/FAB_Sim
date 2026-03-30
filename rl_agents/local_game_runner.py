@@ -131,44 +131,70 @@ class LocalHeuristicAgent:
 # ---------------------------------------------------------------------------
 
 class OpponentPool:
-    """Manages a pool of agents for self-play matchups.
+    """Manages agent assignment for training games.
 
-    Falls back to heuristic + random agents if no checkpoints are provided.
+    P1 (the learner) always uses the current best IQL checkpoint.
+    P2 (the opponent) is sampled from a mix of: current IQL model,
+    previous checkpoints, heuristic, to provide diverse training signal.
+    Falls back to heuristic for P1 if no checkpoint exists yet.
     """
 
     def __init__(
         self,
         heuristic_seed: int = 0,
-        checkpoint_paths: list[str] | None = None,
+        current_checkpoint: str | None = None,
+        previous_checkpoints: list[str] | None = None,
         device: str = "cpu",
         embedder_bundle: dict | None = None,
     ):
-        self._agents: list[dict[str, Any]] = []
         self._device = device
         self._embedder_bundle = embedder_bundle
+        self._heuristic_seed = heuristic_seed
 
-        # Always include heuristic and random agents
-        self._agents.append({
-            "type": "heuristic",
-            "seed": heuristic_seed,
-        })
-        self._agents.append({
-            "type": "random",
-            "seed": heuristic_seed + 1,
-        })
+        # P1 agent config: current IQL model (or heuristic if none)
+        if current_checkpoint and Path(current_checkpoint).exists():
+            self._p1_config = {"type": "iql_policy", "checkpoint_path": current_checkpoint}
+        else:
+            self._p1_config = {"type": "heuristic", "seed": heuristic_seed}
 
-        # Add IQL policy agents from checkpoints
-        for cp_path in (checkpoint_paths or []):
+        # P2 opponent pool: mix of current model, previous checkpoints, heuristic
+        self._p2_pool: list[dict[str, Any]] = []
+
+        # Current model as opponent (self-play)
+        if current_checkpoint and Path(current_checkpoint).exists():
+            self._p2_pool.append({
+                "type": "iql_policy",
+                "checkpoint_path": current_checkpoint,
+            })
+
+        # Previous checkpoints
+        for cp_path in (previous_checkpoints or []):
             if Path(cp_path).exists():
-                self._agents.append({
+                self._p2_pool.append({
                     "type": "iql_policy",
                     "checkpoint_path": cp_path,
                 })
 
-    def sample_agent(self, rng: random.Random, player_id: int = 1, seed: int = 0) -> Any:
-        """Return a random agent instance from the pool."""
-        entry = rng.choice(self._agents)
+        # Always include heuristic as opponent
+        self._p2_pool.append({
+            "type": "heuristic",
+            "seed": heuristic_seed,
+        })
+
+    def get_p1_agent(self, player_id: int = 1, seed: int = 0) -> Any:
+        """Return the P1 (learner) agent — always the current best model."""
+        return self._build_agent(self._p1_config, player_id=player_id, seed=seed)
+
+    def sample_opponent(self, rng: random.Random, player_id: int = 2, seed: int = 0) -> Any:
+        """Return a random P2 opponent from the pool."""
+        entry = rng.choice(self._p2_pool)
         return self._build_agent(entry, player_id=player_id, seed=seed)
+
+    # Keep backward compat for any code that calls sample_agent
+    def sample_agent(self, rng: random.Random, player_id: int = 1, seed: int = 0) -> Any:
+        if player_id == 1:
+            return self.get_p1_agent(player_id=player_id, seed=seed)
+        return self.sample_opponent(rng, player_id=player_id, seed=seed)
 
     def _build_agent(self, entry: dict, player_id: int, seed: int) -> Any:
         agent_type = entry["type"]
@@ -690,8 +716,8 @@ def run_games(
             step_counter = [0]
             combat_log: dict[int, list[dict]] = {}
             collector = TransitionCollector(game_id=game_id)
-            base_p1 = opponent_pool.sample_agent(rng, player_id=1, seed=game_seed)
-            base_p2 = opponent_pool.sample_agent(rng, player_id=2, seed=game_seed + 1)
+            base_p1 = opponent_pool.get_p1_agent(player_id=1, seed=game_seed)
+            base_p2 = opponent_pool.sample_opponent(rng, player_id=2, seed=game_seed + 1)
 
             p1_agent = EmbeddingRecorderAgent(
                 base_agent=base_p1,

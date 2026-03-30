@@ -111,31 +111,37 @@ def test_mirror_matches_exact_count() -> None:
 # ---------------------------------------------------------------------------
 
 def test_mixed_opponents() -> None:
-    """OpponentPool with no checkpoints samples heuristic + random agents."""
+    """OpponentPool with no checkpoints: P1=heuristic, P2 pool=heuristic."""
     pool = OpponentPool(heuristic_seed=42)
+    # P1 should be heuristic (no checkpoint)
+    p1 = pool.get_p1_agent(player_id=1, seed=0)
+    assert type(p1).__name__ == "LocalHeuristicAgent"
+    # P2 pool should only contain heuristic
     rng = random.Random(123)
     types_seen: set[str] = set()
     for _ in range(50):
-        agent = pool.sample_agent(rng, player_id=1, seed=0)
+        agent = pool.sample_opponent(rng, player_id=2, seed=0)
         types_seen.add(type(agent).__name__)
-    assert "LocalHeuristicAgent" in types_seen, "Expected LocalHeuristicAgent in sampled agents"
-    assert "RandomAgent" in types_seen, "Expected RandomAgent in sampled agents"
+    assert "LocalHeuristicAgent" in types_seen
 
 
 def test_opponent_pool_no_checkpoints() -> None:
-    """OpponentPool falls back to heuristic+random when no checkpoint files exist."""
+    """OpponentPool with nonexistent checkpoint falls back to heuristic."""
     pool = OpponentPool(
         heuristic_seed=0,
-        checkpoint_paths=["/nonexistent/checkpoint.pt"],
+        current_checkpoint="/nonexistent/checkpoint.pt",
+        previous_checkpoints=["/nonexistent/old_checkpoint.pt"],
     )
+    # P1 should be heuristic (checkpoint doesn't exist)
+    p1 = pool.get_p1_agent(player_id=1, seed=0)
+    assert type(p1).__name__ == "LocalHeuristicAgent"
+    # P2 pool should only contain heuristic (IQL checkpoints don't exist)
     rng = random.Random(99)
     types_seen: set[str] = set()
     for _ in range(50):
-        agent = pool.sample_agent(rng, player_id=1, seed=0)
+        agent = pool.sample_opponent(rng, player_id=2, seed=0)
         types_seen.add(type(agent).__name__)
-    # Only heuristic and random should be present (nonexistent checkpoint ignored)
-    assert types_seen <= {"LocalHeuristicAgent", "RandomAgent"}
-    assert len(types_seen) == 2
+    assert types_seen == {"LocalHeuristicAgent"}
 
 
 # ---------------------------------------------------------------------------

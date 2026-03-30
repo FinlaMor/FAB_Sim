@@ -869,21 +869,46 @@ def main():
                 from config import SLUG_INDEX_PATH
                 args._card_db = CardDB(str(SLUG_INDEX_PATH))
 
-            # Create opponent pool — include all previous loops' IQL checkpoints
+            # Create opponent pool:
+            # P1 = current best IQL model (learner)
+            # P2 = mix of current model (self-play), previous checkpoints, heuristic
             from rl_agents.local_game_runner import OpponentPool
+
+            # Find current best checkpoint (most recent loop)
+            current_ckpt = None
+            for prev_l in range(loop_num, -1, -1):
+                prev_loop_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_l}"
+                if prev_loop_dir.exists():
+                    candidates = sorted(prev_loop_dir.glob("*/checkpoint_final.pt"))
+                    if candidates:
+                        current_ckpt = str(candidates[-1])
+                        break
+
+            # Collect older checkpoints (everything except the current best)
             prev_ckpts: list[str] = []
             for prev_l in range(loop_num):
                 prev_loop_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_l}"
                 if prev_loop_dir.exists():
                     candidates = sorted(prev_loop_dir.glob("*/checkpoint_final.pt"))
-                    if candidates:
-                        prev_ckpts.append(str(candidates[-1]))
+                    for c in candidates:
+                        if str(c) != current_ckpt:
+                            prev_ckpts.append(str(c))
+
             opponent_pool = OpponentPool(
                 heuristic_seed=args.seed + loop_num,
-                checkpoint_paths=prev_ckpts if prev_ckpts else None,
+                current_checkpoint=current_ckpt,
+                previous_checkpoints=prev_ckpts if prev_ckpts else None,
                 device=args.iql_device,
                 embedder_bundle=args._embedder_bundle,
             )
+
+            if current_ckpt:
+                print(f"  P1: IQL model ({Path(current_ckpt).parent.name})")
+            else:
+                print(f"  P1: Heuristic (no IQL checkpoint yet)")
+            print(f"  P2 pool: {len(opponent_pool._p2_pool)} opponents "
+                  f"({sum(1 for a in opponent_pool._p2_pool if a['type'] == 'iql_policy')} IQL, "
+                  f"{sum(1 for a in opponent_pool._p2_pool if a['type'] == 'heuristic')} heuristic)")
 
             step_run_games(args, valid_decks, loop_num, opponent_pool)
             if _interrupted:
