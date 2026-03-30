@@ -432,6 +432,8 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             if not equip_zone or not equip_zone.cards:
                 continue
             equip_card = equip_zone.cards[0]
+            if getattr(equip_card, 'face_down', False):
+                continue  # Face-down/cloaked equipment can't be activated
             equip_slug = equip_card.slug
             text = equip_card.functional_text or ""
             has_action = bool(re.search(r'\*\*(?:\w+ per turn )?Action\*\*', text))
@@ -593,6 +595,11 @@ def _legal_defend_step(state: GameState, card_db: CardDB) -> list[Action]:
     # Always include the option to defend with nothing
     actions.append(Action(type=ActionType.PASS))
 
+    # If the attack targets an ally (not the hero), defender cannot declare defending cards
+    # (Rules Reprise: "Nic cannot declare any defending cards, because their hero is not the one being attacked")
+    if combat.attack_target is not None and combat.attack_target is not defender:
+        return actions
+
     # List all hand cards able to block
     defendable_cards = []
     for i, card in enumerate(defender.hand.cards):
@@ -602,13 +609,14 @@ def _legal_defend_step(state: GameState, card_db: CardDB) -> list[Action]:
             continue
         defendable_cards.append(card)
     
-    # List all equipment able to block
+    # List all equipment able to block (face-down/cloaked equipment cannot defend)
     for slot_name in ("head", "chest", "arms", "legs"):
         equip_zone = defender.zone_by_name(slot_name)
         if not equip_zone or not equip_zone.cards:
             continue
         equip_card = equip_zone.cards[0]
-        equip_slug = equip_card.slug
+        if getattr(equip_card, 'face_down', False):
+            continue
         if not equip_card.has_defense:
             continue
         defendable_cards.append(equip_card)
@@ -727,12 +735,14 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             else:
                 actions.append(Action(type=ActionType.PLAY_ARSENAL, card_idx=i, card=card, pitch_cards=seq))
 
-    # ACTIVATE_EQUIPMENT (non-weapon)
+    # ACTIVATE_EQUIPMENT (non-weapon) in reaction step
     for slot_name in ("head", "chest", "arms", "legs"):
         equip_zone = player.zone_by_name(slot_name)
         if not equip_zone or not equip_zone.cards:
             continue
         equip_card = equip_zone.cards[0]
+        if getattr(equip_card, 'face_down', False):
+            continue  # Face-down/cloaked equipment can't be activated
         equip_slug = equip_card.slug
         text = equip_card.functional_text or ""
         has_reaction = bool(re.search(r'\*\*(?:\w+ per turn )?(?:Defense |Attack )?Reaction\*\*', text))
@@ -831,7 +841,10 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 )
 
     elif pp == defender_id:
-        if not combat.no_defense_reactions:
+        # If attack targets an ally (not the hero), defender cannot play DRs
+        defender_player = state.players[defender_id]
+        target_is_hero = (combat.attack_target is None or combat.attack_target is defender_player)
+        if target_is_hero and not combat.no_defense_reactions:
             dominate_blocks = "Dominate" in combat.keywords and combat.defender_used_hand_card
             if not dominate_blocks:
                 for i, card in enumerate(player.hand.cards):
@@ -851,7 +864,8 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
 
             # Defense reaction from arsenal — blocked by no_defense_reactions (CR 7.4.2c),
             # but NOT by dominate (CR 8.3.4b scopes dominate to "from hand" only).
-            if not combat.no_defense_reactions:
+            # Also blocked if attack targets an ally (not the hero).
+            if target_is_hero and not combat.no_defense_reactions:
                 for i, card in enumerate(player.arsenal.cards):
                     if "Defense Reaction" not in card.types:
                         continue
