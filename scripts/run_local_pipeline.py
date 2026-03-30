@@ -509,8 +509,12 @@ def step_evolve_decks(args, loop_num: int) -> None:
     })
 
 
-def step_benchmark(args, loop_num: int) -> None:
-    """Stage 9: Benchmark player bot vs random, heuristic, and previous checkpoint."""
+def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
+    """Stage 9: Benchmark player bot vs random, heuristic, and previous checkpoint.
+
+    Returns dict of win rates {"vs_random": float, "vs_heuristic": float,
+    "vs_previous": float | None} or None if benchmark was skipped.
+    """
     print()
     print("=" * 70)
     print(f"  Stage 9: Benchmark (loop {loop_num})")
@@ -528,7 +532,7 @@ def step_benchmark(args, loop_num: int) -> None:
     if not current_ckpt or not current_ckpt.exists():
         print("  No player bot checkpoint found — skipping benchmark.")
         print(f"\n  [SKIP] Stage 9: Benchmark ({time.time() - t0:.1f}s)")
-        return
+        return None
 
     from rl_agents.game_backends import LocalEngineBackend, GameRunRequest
     from rl_agents.random_agent import RandomAgent
@@ -542,13 +546,14 @@ def step_benchmark(args, loop_num: int) -> None:
     backend = LocalEngineBackend()
     n_bench = 10  # games per opponent type
     results_table: dict[str, str] = {}
+    rates: dict[str, float] = {}
 
     # Collect valid decks for benchmarking
     deck_files = sorted(GENERATED_DIR.glob("*.txt")) if GENERATED_DIR.exists() else []
     if len(deck_files) < 2:
         print("  Not enough decks for benchmark — need at least 2.")
         print(f"\n  [SKIP] Stage 9: Benchmark ({time.time() - t0:.1f}s)")
-        return
+        return None
 
     import random as _random
     rng = _random.Random(args.seed + loop_num * 999)
@@ -586,7 +591,6 @@ def step_benchmark(args, loop_num: int) -> None:
 
         embedder_bundle = args._embedder_bundle
         if embedder_bundle is None:
-            # Try loading from checkpoint
             import torch
             ckpt_data = torch.load(str(current_ckpt), map_location="cpu", weights_only=False)
             embedder_bundle = (ckpt_data.get("extra") or {}).get("embedder_bundle")
@@ -594,7 +598,7 @@ def step_benchmark(args, loop_num: int) -> None:
         if embedder_bundle is None:
             print("  No embedder bundle available — skipping benchmark.")
             print(f"\n  [SKIP] Stage 9: Benchmark ({time.time() - t0:.1f}s)")
-            return
+            return None
 
         iql_agent = IQLPolicyAgent(
             checkpoint_path=str(current_ckpt),
@@ -606,24 +610,21 @@ def step_benchmark(args, loop_num: int) -> None:
     except Exception as e:
         print(f"  Failed to load IQL agent: {e}")
         print(f"\n  [SKIP] Stage 9: Benchmark ({time.time() - t0:.1f}s)")
-        return
+        return None
 
     # Benchmark vs random
     random_agent = RandomAgent(seed=args.seed + 100)
-    rate_vs_random = _run_bench_games(iql_agent, random_agent, "vs_random")
-    results_table["vs Random"] = f"{rate_vs_random:.1%} ({n_bench} games)"
+    rates["vs_random"] = _run_bench_games(iql_agent, random_agent, "vs_random")
+    results_table["vs Random"] = f"{rates['vs_random']:.1%} ({n_bench} games)"
 
     # Benchmark vs heuristic
     heuristic_agent = HeuristicBot(seed=args.seed + 200)
-    rate_vs_heuristic = _run_bench_games(iql_agent, heuristic_agent, "vs_heuristic")
-    results_table["vs Heuristic"] = f"{rate_vs_heuristic:.1%} ({n_bench} games)"
+    rates["vs_heuristic"] = _run_bench_games(iql_agent, heuristic_agent, "vs_heuristic")
+    results_table["vs Heuristic"] = f"{rates['vs_heuristic']:.1%} ({n_bench} games)"
 
     # Benchmark vs previous checkpoint (if exists)
-    prev_loop = loop_num - 1
-    prev_iql_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_loop}"
-    prev_ckpt_candidates = sorted(prev_iql_dir.glob("*/checkpoint_final.pt")) if prev_iql_dir.exists() else []
-    prev_ckpt = prev_ckpt_candidates[-1] if prev_ckpt_candidates else None
-    if prev_loop >= 0 and prev_ckpt and prev_ckpt.exists():
+    prev_ckpt = _find_previous_checkpoint(loop_num)
+    if prev_ckpt is not None:
         try:
             prev_agent = IQLPolicyAgent(
                 checkpoint_path=str(prev_ckpt),
@@ -632,8 +633,8 @@ def step_benchmark(args, loop_num: int) -> None:
                 seed=args.seed + 300,
                 embedder_bundle=embedder_bundle,
             )
-            rate_vs_prev = _run_bench_games(iql_agent, prev_agent, "vs_previous")
-            results_table["vs Previous"] = f"{rate_vs_prev:.1%} ({n_bench} games)"
+            rates["vs_previous"] = _run_bench_games(iql_agent, prev_agent, "vs_previous")
+            results_table["vs Previous"] = f"{rates['vs_previous']:.1%} ({n_bench} games)"
         except Exception as e:
             results_table["vs Previous"] = f"error — {e}"
     else:
@@ -651,6 +652,77 @@ def step_benchmark(args, loop_num: int) -> None:
     print("  └─────────────────────┴──────────────────────────┘")
 
     print(f"\n  [OK] Stage 9: Benchmark ({elapsed:.1f}s)")
+    return rates
+
+
+def _find_previous_checkpoint(loop_num: int) -> Path | None:
+    """Find the most recent IQL checkpoint from a previous loop."""
+    for prev_l in range(loop_num - 1, -1, -1):
+        prev_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_l}"
+        if prev_dir.exists():
+            candidates = sorted(prev_dir.glob("*/checkpoint_final.pt"))
+            if candidates:
+                return candidates[-1]
+    return None
+
+
+def _evaluate_checkpoint_promotion(
+    loop_num: int,
+    bench_rates: dict[str, float] | None,
+) -> bool:
+    """Decide whether to keep the current loop's checkpoint.
+
+    Rules:
+    - First checkpoint ever (no previous): always keep
+    - Otherwise keep if:
+        (vs_random >= 75% AND vs_heuristic >= 75% AND vs_previous > 50%)
+    - If benchmark was skipped/failed: keep (benefit of the doubt)
+    """
+    prev_ckpt = _find_previous_checkpoint(loop_num)
+    is_first = prev_ckpt is None
+
+    if is_first:
+        print("  Checkpoint promotion: ACCEPTED (first checkpoint)")
+        return True
+
+    if bench_rates is None:
+        print("  Checkpoint promotion: ACCEPTED (benchmark skipped)")
+        return True
+
+    vs_random = bench_rates.get("vs_random", 0.0)
+    vs_heuristic = bench_rates.get("vs_heuristic", 0.0)
+    vs_previous = bench_rates.get("vs_previous")
+
+    # If vs_previous wasn't run (error/skip), only check absolute thresholds
+    if vs_previous is None:
+        if vs_random >= 0.75 and vs_heuristic >= 0.75:
+            print(f"  Checkpoint promotion: ACCEPTED "
+                  f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%})")
+            return True
+        print(f"  Checkpoint promotion: REJECTED "
+              f"(random={vs_random:.0%}<75%, heuristic={vs_heuristic:.0%}<75%)")
+        return False
+
+    if vs_random >= 0.75 and vs_heuristic >= 0.75 and vs_previous > 0.50:
+        print(f"  Checkpoint promotion: ACCEPTED "
+              f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%}, "
+              f"vs_prev={vs_previous:.0%})")
+        return True
+
+    print(f"  Checkpoint promotion: REJECTED "
+          f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%}, "
+          f"vs_prev={vs_previous:.0%}) — "
+          f"need >=75% random+heuristic and >50% vs previous")
+    return False
+
+
+def _discard_loop_checkpoint(loop_num: int) -> None:
+    """Remove the current loop's IQL checkpoint so the previous best stays active."""
+    import shutil
+    loop_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
+    if loop_dir.exists():
+        shutil.rmtree(loop_dir)
+        print(f"  Discarded checkpoint at {loop_dir}")
 
 
 # ---------------------------------------------------------------------------
@@ -961,13 +1033,20 @@ def main():
         else:
             print(f"\n  [SKIP] Deck evolution")
 
-        # Stage 9: Benchmark
+        # Stage 9: Benchmark + checkpoint promotion gate
+        bench_rates = None
         if not args.skip_benchmark:
-            step_benchmark(args, loop_num)
+            bench_rates = step_benchmark(args, loop_num)
             if _interrupted:
                 break
         else:
             print(f"\n  [SKIP] Benchmark")
+
+        # Decide whether to keep or discard this loop's checkpoint
+        if not args.skip_player_train:
+            promoted = _evaluate_checkpoint_promotion(loop_num, bench_rates)
+            if not promoted:
+                _discard_loop_checkpoint(loop_num)
 
         loop_num += 1
 
