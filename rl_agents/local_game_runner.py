@@ -504,6 +504,7 @@ def _assign_game_rewards(
     combat_log: dict[int, list[dict]],
     winner: int | None,
     normalizer: float = 10.0,
+    is_guardrail: bool = False,
 ) -> None:
     """Compute damage-scaled rewards and back-propagate to previous-turn transitions.
 
@@ -512,6 +513,8 @@ def _assign_game_rewards(
     - Taking net_damage: defender receives -0.75 * net_damage / normalizer
     - The asymmetry (1.0 vs 0.75) encourages aggression over stalling.
     - Terminal: +1 for winner, -1 for loser on each player's final transition.
+    - Guardrail games (turn cap / decision cap hit): all rewards are 0; transitions
+      are still marked done so the dataset knows the episode ended.
 
     Back-propagation target: last transition of the *previous* turn (when cards were
     drawn), falling back to each player's earliest transition for turn-1 combat.
@@ -541,40 +544,41 @@ def _assign_game_rewards(
     # Accumulate rewards: {tid: float}
     reward_acc: dict[int, float] = {}
 
-    for turn, links in combat_log.items():
-        if not links:
-            continue
+    if not is_guardrail:
+        for turn, links in combat_log.items():
+            if not links:
+                continue
 
-        # Aggregate actual net damage per attacker/defender
-        damage_dealt: dict[int, float] = {}   # attacker_id -> total net damage dealt
-        damage_taken: dict[int, float] = {}   # defender_id -> total net damage received
+            # Aggregate actual net damage per attacker/defender
+            damage_dealt: dict[int, float] = {}   # attacker_id -> total net damage dealt
+            damage_taken: dict[int, float] = {}   # defender_id -> total net damage received
 
-        for link in links:
-            attacker_id = link.get("attacker_id")
-            net_damage = link.get("net_damage", 0) or 0
+            for link in links:
+                attacker_id = link.get("attacker_id")
+                net_damage = link.get("net_damage", 0) or 0
 
-            if attacker_id is not None and net_damage > 0:
-                defender_id = 2 if attacker_id == 1 else 1
-                damage_dealt[attacker_id] = damage_dealt.get(attacker_id, 0) + net_damage
-                damage_taken[defender_id] = damage_taken.get(defender_id, 0) + net_damage
+                if attacker_id is not None and net_damage > 0:
+                    defender_id = 2 if attacker_id == 1 else 1
+                    damage_dealt[attacker_id] = damage_dealt.get(attacker_id, 0) + net_damage
+                    damage_taken[defender_id] = damage_taken.get(defender_id, 0) + net_damage
 
-        # Back-propagate to last transition of previous turn
-        target_turn = turn - 1
-        for pid, total_dealt in damage_dealt.items():
-            tid = player_turn_last.get((pid, target_turn)) or player_earliest.get(pid)
-            if tid is not None:
-                reward_acc[tid] = reward_acc.get(tid, 0.0) + total_dealt / normalizer
+            # Back-propagate to last transition of previous turn
+            target_turn = turn - 1
+            for pid, total_dealt in damage_dealt.items():
+                tid = player_turn_last.get((pid, target_turn)) or player_earliest.get(pid)
+                if tid is not None:
+                    reward_acc[tid] = reward_acc.get(tid, 0.0) + total_dealt / normalizer
 
-        for pid, total_taken in damage_taken.items():
-            tid = player_turn_last.get((pid, target_turn)) or player_earliest.get(pid)
-            if tid is not None:
-                reward_acc[tid] = reward_acc.get(tid, 0.0) - 0.75 * total_taken / normalizer
+            for pid, total_taken in damage_taken.items():
+                tid = player_turn_last.get((pid, target_turn)) or player_earliest.get(pid)
+                if tid is not None:
+                    reward_acc[tid] = reward_acc.get(tid, 0.0) - 0.75 * total_taken / normalizer
 
-    # Terminal rewards: last transition per player
+    # Terminal rewards: last transition per player (zero for guardrail games)
     done_updates: list[tuple[int, int]] = []  # (done, tid)
     for pid, tid in player_latest.items():
         terminal = 0.0
-        if winner is not None:
+        if not is_guardrail and winner is not None:
             terminal = 1.0 if pid == winner else -1.0
         reward_acc[tid] = reward_acc.get(tid, 0.0) + terminal
         done_updates.append((1, tid))
@@ -766,7 +770,10 @@ def run_games(
             replay_db.finalize_game(game_id, winner, turn_number, ended_on_cap)
 
             # Assign damage-scaled rewards and terminal signals
-            _assign_game_rewards(replay_db, game_id, combat_log, winner)
+            _assign_game_rewards(
+                replay_db, game_id, combat_log, winner,
+                is_guardrail=ended_on_cap or guardrail_terminated,
+            )
 
             replay_db.flush()
 
