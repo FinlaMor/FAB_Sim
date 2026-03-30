@@ -737,8 +737,12 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
         
         # Check additonal activation conditions from registry
         cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(equip_slug)
-        if cond_fn is not None and not cond_fn(player, slot_name, equip_card):
-            continue
+        if cond_fn is not None:
+            import inspect as _inspect_r
+            _sig_r = _inspect_r.signature(cond_fn)
+            _cond_r = cond_fn(player, slot_name, equip_card, state) if len(_sig_r.parameters) >= 4 else cond_fn(player, slot_name, equip_card)
+            if not _cond_r:
+                continue
 
         cost_override = EQUIPMENT_ACTIVATION_COST.get(equip_slug)
         if cost_override is not None:

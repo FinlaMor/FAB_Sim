@@ -624,16 +624,21 @@ class CardDB:
         ability_flags['ability_type_count'] = ability_type_count
         ability_flags['has_multiple_ability_types'] = ability_type_count >= 2
 
-        # Derive color from pitch
+        # Derive color: prefer slug suffix (authoritative), fall back to pitch value.
+        # Single-version cards may have a pitch value without a color suffix in their slug.
         color: Optional[str] = None
-        if pitch_val == 1:
+        if slug.endswith("_red"):
+            color = "red"
+        elif slug.endswith("_yellow"):
+            color = "yellow"
+        elif slug.endswith("_blue"):
+            color = "blue"
+        elif pitch_val == 1:
             color = "red"
         elif pitch_val == 2:
             color = "yellow"
         elif pitch_val == 3:
             color = "blue"
-        if color:
-            assert slug.endswith(color), "Slug '{}' does not match derived color '{}'".format(slug, color)
 
         return Card(
             slug=slug,

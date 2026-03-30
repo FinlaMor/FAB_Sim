@@ -41,7 +41,7 @@ from engine.card_effects.registry import TURN_ATTACK_EFFECTS
 def _make_nap(n):
     """Factory: next_attack_+N apply function."""
     def apply_fn(attack_card, player, state):
-        attack_card.power = (attack_card.power or 0) + n
+        attack_card.base_power = (attack_card.base_power or 0) + n
     return apply_fn
 
 for _n in [1, 2, 3, 4, 5]:
