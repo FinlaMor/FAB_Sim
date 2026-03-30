@@ -320,15 +320,75 @@ def _update_bundle_from_checkpoint(ckpt_path: Path) -> None:
         print(f"  WARNING: Could not update embedder bundle from checkpoint: {e}")
 
 
+def step_pretrain_transformer(args, loop_num: int) -> None:
+    """Stage 4: Pre-train transformer via masked card prediction."""
+    n_transitions = args._replay_db.transition_count()
+    min_transitions = 500
+
+    if n_transitions < min_transitions:
+        print()
+        print("=" * 70)
+        print(f"  Stage 4: Pre-train transformer — SKIPPED "
+              f"({n_transitions} transitions, need {min_transitions}+)")
+        print("=" * 70)
+        print()
+        return
+
+    bundle_path = CHECKPOINT_DIR / "embedder_bundle.pt"
+    if not bundle_path.exists():
+        print("  Stage 4: Pre-train transformer — SKIPPED (no embedder bundle)")
+        return
+
+    cmd = [
+        PYTHON, str(ROOT / "scripts" / "pretrain_transformer.py"),
+        "--db-path", str(args._replay_db.db_path),
+        "--embedder-bundle", str(bundle_path),
+        "--steps", str(args.pretrain_steps),
+        "--batch-size", "128",
+        "--device", "cpu",
+    ]
+
+    label = f"Stage 4: Pre-train transformer (loop {loop_num})"
+    run_step(label, cmd, allow_fail=True)
+
+
+def step_reembed_replay(args, loop_num: int) -> None:
+    """Stage 5: Re-embed replay data with updated transformer."""
+    n_transitions = args._replay_db.transition_count()
+    if n_transitions == 0:
+        print("  Stage 5: Re-embed — SKIPPED (no transitions)")
+        return
+
+    bundle_path = CHECKPOINT_DIR / "embedder_bundle.pt"
+    if not bundle_path.exists():
+        print("  Stage 5: Re-embed — SKIPPED (no embedder bundle)")
+        return
+
+    cmd = [
+        PYTHON, str(ROOT / "scripts" / "reembed_replay.py"),
+        "--db-path", str(args._replay_db.db_path),
+        "--embedder-bundle", str(bundle_path),
+        "--batch-size", "256",
+        "--device", "cpu",
+    ]
+
+    label = f"Stage 5: Re-embed replay data (loop {loop_num})"
+    run_step(label, cmd, allow_fail=True)
+
+    print_summary("Re-embedding results", {
+        "Transitions re-embedded": n_transitions,
+    })
+
+
 def step_train_player_bot(args, loop_num: int) -> None:
-    """Stage 4: Train IQL player bot on collected transitions."""
+    """Stage 6: Train IQL player bot on frozen embeddings."""
     n_transitions = args._replay_db.transition_count()
     min_transitions = 500  # minimum to begin training
 
     if n_transitions < min_transitions:
         print()
         print("=" * 70)
-        print(f"  Stage 4: Train player bot — SKIPPED "
+        print(f"  Stage 6: Train player bot — SKIPPED "
               f"({n_transitions} transitions, need {min_transitions}+)")
         print("=" * 70)
         print()
@@ -361,7 +421,7 @@ def step_train_player_bot(args, loop_num: int) -> None:
     if prev_ckpt is not None:
         cmd.extend(["--resume-from", str(prev_ckpt)])
 
-    label = f"Stage 4: Train IQL player bot (loop {loop_num})"
+    label = f"Stage 6: Train IQL player bot (loop {loop_num})"
     run_step(label, cmd, allow_fail=True)
 
     # Check for checkpoint — train_iql saves to out_dir/<run_name>/checkpoint_final.pt
@@ -609,6 +669,10 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Skip deck validation (use all decks)")
     skip.add_argument("--skip-games", action="store_true",
                       help="Skip game simulation")
+    skip.add_argument("--skip-pretrain", action="store_true",
+                      help="Skip transformer pre-training (masked card prediction)")
+    skip.add_argument("--skip-reembed", action="store_true",
+                      help="Skip re-embedding replay data with updated transformer")
     skip.add_argument("--skip-player-train", action="store_true",
                       help="Skip IQL player bot training")
     skip.add_argument("--skip-deck-train", action="store_true",
@@ -627,6 +691,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     # Training settings
     train_g = parser.add_argument_group("training settings")
+    train_g.add_argument("--pretrain-steps", type=int, default=5000,
+                         help="Transformer pre-training steps per loop (default: 5000)")
     train_g.add_argument("--iql-steps", type=int, default=20000,
                          help="IQL training steps per loop (default: 20000)")
     train_g.add_argument("--iql-device", default="dml",
@@ -758,6 +824,7 @@ def main():
     print(f"  Loops:          {'∞' if args.loop_forever else args.loops}")
     print(f"  Games/loop:     {args.games_per_loop}")
     print(f"  Max turns:      {args.max_turns}")
+    print(f"  Pretrain steps: {args.pretrain_steps}")
     print(f"  IQL steps:      {args.iql_steps}")
     print(f"  IQL device:     {args.iql_device}")
     print()
@@ -829,7 +896,23 @@ def main():
         if _interrupted:
             break
 
-        # Stage 4: Train player bot (IQL)
+        # Stage 4: Pre-train transformer (masked card prediction)
+        if not args.skip_pretrain:
+            step_pretrain_transformer(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Transformer pre-training")
+
+        # Stage 5: Re-embed replay data with updated transformer
+        if not args.skip_reembed:
+            step_reembed_replay(args, loop_num)
+            if _interrupted:
+                break
+        else:
+            print(f"\n  [SKIP] Re-embedding")
+
+        # Stage 6: Train player bot (IQL on frozen embeddings)
         if not args.skip_player_train:
             step_train_player_bot(args, loop_num)
             if _interrupted:
@@ -837,7 +920,7 @@ def main():
         else:
             print(f"\n  [SKIP] Player bot training")
 
-        # Stage 5: Train deck evaluator
+        # Stage 7: Train deck evaluator
         if not args.skip_deck_train:
             step_train_deck_bot(args, loop_num)
             if _interrupted:
@@ -845,7 +928,7 @@ def main():
         else:
             print(f"\n  [SKIP] Deck evaluator training")
 
-        # Stage 6: Evolve decks
+        # Stage 8: Evolve decks
         if not args.skip_evolve:
             step_evolve_decks(args, loop_num)
             if _interrupted:
@@ -853,7 +936,7 @@ def main():
         else:
             print(f"\n  [SKIP] Deck evolution")
 
-        # Stage 7: Benchmark
+        # Stage 9: Benchmark
         if not args.skip_benchmark:
             step_benchmark(args, loop_num)
             if _interrupted:

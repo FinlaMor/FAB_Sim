@@ -293,8 +293,10 @@ class ReplayDB:
 
         placeholders = ",".join("?" * len(game_ids))
 
-        # Detect which columns are populated: check first row for raw features.
-        # We prefer raw features over pre-computed embeddings when both are present.
+        # Detect which columns are populated.
+        # Prefer pre-computed embeddings (from re-embedding with a trained transformer)
+        # over raw packed features.  Raw features require end-to-end transformer training
+        # in the IQL loop, which is very slow on non-CUDA hardware.
         detect_sql = f"""
             SELECT e.state_features, e.state_embedding
             FROM transitions t
@@ -308,11 +310,18 @@ class ReplayDB:
         except Exception:
             pass  # DB predates state_features column — fall back to embeddings
 
-        uses_raw_features = (
+        has_embeddings = (
+            probe is not None
+            and probe["state_embedding"] is not None
+            and len(probe["state_embedding"]) > 0
+        )
+        has_features = (
             probe is not None
             and probe["state_features"] is not None
             and len(probe["state_features"]) > 0
         )
+        # Use embeddings when available (fast frozen path), fall back to raw features
+        uses_raw_features = has_features and not has_embeddings
 
         if uses_raw_features:
             sql = f"""
