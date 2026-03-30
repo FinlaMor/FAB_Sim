@@ -679,10 +679,10 @@ class TransitionCollector:
             if card_id is None and hasattr(action, "card") and action.card is not None:
                 card_id = getattr(action.card, "slug", None)
 
-        # Decision type from action
+        # Decision type from action (Action.type is an ActionType enum)
         decision_type = "other"
         if action is not None:
-            at = getattr(action, "action_type", None)
+            at = getattr(action, "type", None)
             if at is not None:
                 decision_type = at.name if hasattr(at, "name") else str(at)
 
