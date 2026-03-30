@@ -17,6 +17,11 @@ WEAPON_ATTACK_CONDITIONS: dict = {
     "rok":          lambda state, player: len(player.hand.cards) == 0,
     # rugged_roller: "Activate only if you've rolled a 6 on a die this turn."
     "rugged_roller": lambda state, player: bool(player.class_counters.get("rolled_six_this_turn")),
+    # spitfire: "{t}, {t} a cog you control: Attack" — requires an untapped cog in items
+    "spitfire": lambda state, player: any(
+        "Cog" in (c.types or []) and not c.tapped
+        for c in player.items.cards
+    ),
 }
 
 # At the top of actions.py or in a separate file

@@ -1309,6 +1309,18 @@ def _apply_weapon_attack(state: GameState, action: Action) -> None:
             banished = underneath.pop(0)
             player.banished.add(banished)
 
+    # Pay "{t} a cog you control" cost if required (e.g., Spitfire)
+    if "{t} a cog you control" in text and "Attack" in text:
+        # Only tap as cost when cog-tap appears before the Attack keyword (i.e. it's a cost)
+        cost_part = text.split("**Attack**")[0] if "**Attack**" in text else text.split(": Attack")[0]
+        if "{t} a cog you control" in cost_part:
+            cog = next(
+                (c for c in player.items.cards if "Cog" in (c.types or []) and not c.tapped),
+                None,
+            )
+            if cog is not None:
+                cog.tapped = True
+
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
     # CR 1.6.2b: Weapon attack is an activated ability (activated-layer)
