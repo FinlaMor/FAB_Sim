@@ -431,10 +431,12 @@ def step_evolve_decks(args, loop_num: int) -> None:
         print()
         return
 
+    game_data_db = args._game_data_store.db_path
     cmd = [
         PYTHON, "-m", "rl_agents.deck_search", "export",
         "--checkpoint", str(ckpt),
         "--output-dir", str(GENERATED_DIR),
+        "--game-data-db", str(game_data_db),
     ]
 
     label = f"Stage 6: Evolve decks (loop {loop_num})"
