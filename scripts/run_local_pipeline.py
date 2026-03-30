@@ -738,7 +738,12 @@ def main():
             print(f"    GameTransformerEncoder: d_model={gt_d_model}, n_heads={gt_n_heads},"
                   f" n_layers={gt_n_layers}, output_dim={game_transformer.get_output_dim()}")
         except Exception as e:
-            print(f"  WARNING: Could not create embedder bundle: {e}")
+            print(f"  FATAL: Could not create embedder bundle: {e}")
+            raise
+
+    if args._embedder_bundle is None:
+        print("  FATAL: No embedder bundle available. Cannot run pipeline.")
+        sys.exit(1)
 
     pipeline_start = time.time()
 

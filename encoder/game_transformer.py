@@ -272,7 +272,7 @@ class GameTransformerEncoder(nn.Module):
         for slug in card_db._by_slug:
             idx = _DUMMY_VOCAB.get(slug)
             if idx > 0:
-                card = card_db.get_card(slug)
+                card = card_db.get(slug)
                 if card is not None:
                     feats = _safe_card_features(card, masked=False)
                     table[idx] = feats
