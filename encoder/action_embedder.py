@@ -322,7 +322,11 @@ class ActionEmbedder(nn.Module):
             buf[i + j] = float(s)
         i += MAX_DEFEND_CARDS
         buf[i] = float(bool(action.from_arsenal));           i += 1
-        buf[i] = float(action.slot or 0);                    i += 1
+        _slot = action.slot
+        if isinstance(_slot, str):
+            _slot_lower = {s.lower(): idx + 1 for idx, s in enumerate(EQUIPMENT_SLOTS)}
+            _slot = float(_slot_lower.get(_slot.lower(), 0))
+        buf[i] = float(_slot or 0);                             i += 1
         buf[i] = float(target_slug_idx);                     i += 1
         for j, v in enumerate(counter_vals[:N_COUNTER_TYPES]):
             buf[i + j] = v
