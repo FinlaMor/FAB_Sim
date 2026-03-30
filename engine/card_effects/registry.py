@@ -1376,6 +1376,321 @@ def _riptide_play_from_hand_trigger(player, event, state):
 
 
 # ---------------------------------------------------------------------------
+# Hero ability helpers for HERO_TRIGGERS (passive) and HERO_ACTIVATION (active)
+# ---------------------------------------------------------------------------
+
+# 1. Rhinar, Reckless Rampage — card_discarded: if 6+{p}, intimidate
+def _rhinar_reckless_discard_trigger(player, event, state):
+    """Whenever you discard a card with 6+{p} during your action phase, intimidate."""
+    if state.active_player != player.player_id:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    card = data.get('card')
+    if card is None:
+        return
+    power = card.power if card.power is not None else 0
+    if power >= 6:
+        from engine.card_effects.keywords import effect_intimidate
+        opp_id = 3 - player.player_id
+        effect_intimidate(state, opp_id)
+
+
+# 2. Ira, Scarlet Revenger — attacking: second attack each turn gets +1{p}
+def _ira_second_attack_trigger(player, event, state):
+    """Your second attack each turn gets +1{p}."""
+    count = player.current_turn_effects.count("ira_attack_count")
+    player.current_turn_effects.append("ira_attack_count")
+    if count == 1:  # This is the second attack (count was 1 before append)
+        if state.combat and state.combat.attack_card:
+            ac = state.combat.attack_card
+            if ac.controller == player.player_id:
+                ac.effects = list(getattr(ac, 'effects', []))
+                ac.effects.append(("base_power", lambda base: base + 1))
+
+
+# 3. Bravo, Showstopper — Action {r}{r}: AAs with cost>=3 gain dominate
+def _bravo_showstopper_activate(action, player, state):
+    """Until end of turn, your attack action cards with cost 3+ gain dominate."""
+    player.current_turn_effects.append("bravo_showstopper_dominate")
+    player.action_points += 1  # Go again after hero activation
+
+
+# 4. Kayo, Underhanded Cheat — activation already registered; passive crowd boos
+# (kayo_underhanded_cheat activation already in HERO_ACTIVATION_CONDITIONS above)
+# Add the passive "whenever booed, create Vigor" trigger
+def _kayo_underhanded_boo_trigger(player, event, state):
+    """When Kayo is booed (Reviled), create a Vigor token."""
+    data = event.data if isinstance(event.data, dict) else {}
+    if data.get('player_id') != player.player_id:
+        return
+    from engine.card_effects.keywords import create_token
+    create_token(state, player.player_id, "vigor", 1)
+
+
+# 5. Dash, I/O — start_of_turn: once per turn, play Mech item from top of deck
+def _dash_io_start_of_turn_trigger(player, event, state):
+    """Once per turn, look at top card; if Mech item with cost<=2, may play it."""
+    if "dash_io_used" in player.current_turn_effects:
+        return
+    if not player.deck.cards:
+        return
+    top = player.deck.cards[0]
+    types = top.types or []
+    if "Mechanologist" not in types or "Item" not in types:
+        return
+    if (top.cost or 0) > 2:
+        return
+    from engine.card_effects.keywords import _ask_player
+    choice = _ask_player(state, player.player_id, [True, False],
+                         context=f"Dash I/O: play {top.name} from top of deck?")
+    if not choice:
+        return
+    player.current_turn_effects.append("dash_io_used")
+    player.deck.remove(top)
+    player.items.add(top)
+
+
+# 6. Oscilio, Constella Intelligence — activation already registered above
+
+
+# 7. Kassai of the Golden Sand — Action {r}{r}{r}: Create 2 Gold. Go again.
+def _kassai_activate(action, player, state):
+    """Create 2 Gold tokens. Go again."""
+    from engine.card_effects.keywords import create_token
+    create_token(state, player.player_id, "gold", 2)
+    player.action_points += 1
+    player.current_turn_effects.append("kassai_used")
+
+
+# 8. Marlynn, Treasure Hunter — passive: when Gold created during action phase,
+#    next arrow this turn gets +1{p}
+def _marlynn_gold_arrow_buff_trigger(player, event, state):
+    """Whenever you create a Gold, if it's your action phase, next arrow gets +1{p}."""
+    if state.active_player != player.player_id:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    if data.get('player_id') != player.player_id:
+        return
+    player.current_turn_effects.append("marlynn_next_arrow_+1")
+
+
+def _marlynn_next_arrow_plus1_apply(attack_card, player, state):
+    """Marlynn: next arrow attack +1{p}."""
+    if "Arrow" not in (attack_card.types or []):
+        return
+    attack_card.effects = list(getattr(attack_card, 'effects', []))
+    attack_card.effects.append(("base_power", lambda base: base + 1))
+
+TURN_ATTACK_EFFECTS["marlynn_next_arrow_+1"] = {
+    "condition_fn": lambda attack_card, player, state: "Arrow" in (attack_card.types or []),
+    "apply_fn": _marlynn_next_arrow_plus1_apply,
+}
+
+
+# 9. Ser Boltyn, Breaker of Dawn — attacking: if charged this turn and
+#    attack is defended by an attack action card, +1{p}
+def _boltyn_charged_attack_bonus(player, event, state):
+    """If you've charged this turn, your attacks get +1{p} while defended by an AA card."""
+    if not state.combat or state.combat.attacker_id != player.player_id:
+        return
+    # Check if player has charged this turn (soul non-empty is our proxy)
+    if not player.soul.cards:
+        return
+    ac = state.combat.attack_card
+    if ac is None or ac.controller != player.player_id:
+        return
+    # Check if defended by an attack action card
+    for dc in (state.combat.defending_cards or []):
+        types = dc.types or []
+        if "Attack" in types and "Action" in types:
+            ac.effects = list(getattr(ac, 'effects', []))
+            ac.effects.append(("base_power", lambda base: base + 1))
+            return  # Only apply once
+
+
+# 10. Fai, Rising Rebellion — Instant {r}{r}{r}: Create Phoenix Flame in hand
+def _fai_activate(action, player, state):
+    """Create a Phoenix Flame in your hand."""
+    from engine.card_effects.keywords import create_token_card
+    flame = create_token_card("phoenix_flame", player.player_id)
+    player.hand.add(flame)
+    player.current_turn_effects.append("fai_used")
+
+
+# 11. Vynnset, Iron Maiden — start_of_turn: banish from hand, create Runechant
+def _vynnset_start_of_turn_trigger(player, event, state):
+    """At start of your turn, banish a card from hand. If you do, create Runechant."""
+    if state.active_player != player.player_id:
+        return
+    if not player.hand.cards:
+        return
+    from engine.card_effects.keywords import _ask_player, effect_banish, create_token
+    pick = _ask_player(state, player.player_id, [c.slug for c in player.hand.cards],
+                       context="Vynnset: choose a card from hand to banish")
+    card = player.hand.find(pick) or player.hand.cards[0]
+    player.hand.remove(card)
+    player.banished.add(card, is_public=True)
+    create_token(state, player.player_id, "runechant", 1)
+
+
+# 12. Levia, Shadowborn Abomination — card_banished: track 6+{p} banished this turn
+def _levia_banished_trigger(player, event, state):
+    """If a card with 6+{p} has been put into your banished zone this turn,
+    cards you own lose blood debt."""
+    data = event.data if isinstance(event.data, dict) else {}
+    card = data.get('card')
+    if card is None or card.owner != player.player_id:
+        return
+    power = card.power if card.power is not None else 0
+    if power >= 6:
+        player.current_turn_effects.append("levia_blood_debt_removed")
+
+
+# 13. Jarl Vetreii — on_play: when you play an Ice card, create Frostbite
+def _jarl_ice_play_trigger(player, event, state):
+    """Whenever you play an Ice card, create a Frostbite token on opponent."""
+    data = event.data if isinstance(event.data, dict) else {}
+    played_card = data.get('card')
+    if played_card is None:
+        return
+    if played_card.controller != player.player_id:
+        return
+    types = played_card.types or []
+    if "Ice" not in types:
+        return
+    from engine.card_effects.keywords import create_token
+    opp_id = 3 - player.player_id
+    create_token(state, opp_id, "frostbite", 1)
+
+
+# 14. Maxx, the Hype Nitro — Action {r}{r}: Create Hyper Driver with 2 steam counters
+def _maxx_activate(action, player, state):
+    """Create a Hyper Driver token with 2 steam counters."""
+    from engine.card_effects.keywords import create_token
+    tokens = create_token(state, player.player_id, "hyper_driver", 1)
+    if tokens:
+        token = tokens[0]
+        counter_key = (token.slug, 'items', 'steam')
+        player.counters[counter_key] = player.counters.get(counter_key, 0) + 2
+    player.current_turn_effects.append("maxx_used")
+
+
+# 15. Hala, Bladesaint of the Vow — Action {r}{r}{r}, {t}: Sharpen target sword (+1 counter)
+def _hala_activate(action, player, state):
+    """Add a +1{p} counter to a weapon (sword). Go again."""
+    from engine.card_effects.keywords import _ask_player
+    weapons = []
+    for zone in [player.weapon1, player.weapon2]:
+        for c in getattr(zone, 'cards', []):
+            weapons.append(c)
+    if not weapons:
+        return
+    if len(weapons) == 1:
+        target = weapons[0]
+    else:
+        pick = _ask_player(state, player.player_id, [w.slug for w in weapons],
+                           context="Hala: choose a weapon to sharpen (+1{p} counter)")
+        target = next((w for w in weapons if w.slug == pick), weapons[0])
+    counter_key = (target.slug, target.zone or "weapon", "sharpen")
+    player.counters[counter_key] = player.counters.get(counter_key, 0) + 1
+    # Add a persistent power bonus effect
+    target.effects = list(getattr(target, 'effects', []))
+    target.effects.append(("base_power", lambda base: base + 1))
+    player.action_points += 1  # Go again
+
+
+# 16. Cindra, Dracai of Retribution
+# Passive: whenever you hit a marked hero, create Fealty token
+def _cindra_hit_marked_trigger(player, event, state):
+    """Whenever you hit a marked hero, create a Fealty token."""
+    if not state.combat or state.combat.attacker_id != player.player_id:
+        return
+    opp_id = 3 - player.player_id
+    opp = state.players.get(opp_id)
+    if opp and getattr(opp, 'marked', False):
+        from engine.card_effects.keywords import create_token
+        create_token(state, player.player_id, "fealty", 1)
+
+# Cindra activation: Once per Turn Instant {r}{r}{r}: each Draconic attack +1{p}
+def _cindra_activate(action, player, state):
+    """Each Draconic attack you control gets +1{p} this turn."""
+    player.current_turn_effects.append("cindra_draconic_+1")
+    player.current_turn_effects.append("cindra_used")
+
+
+# ---------------------------------------------------------------------------
+# Register hero activations for new heroes
+# ---------------------------------------------------------------------------
+
+# 3. Bravo, Showstopper — Action {r}{r}
+HERO_ACTIVATION_CONDITIONS["bravo_showstopper"] = {
+    "timing": "action",
+    "cost": 2,
+    "requires_tap": False,
+    "condition_fn": lambda player, state: True,
+    "effect_fn": _bravo_showstopper_activate,
+}
+
+# 7. Kassai of the Golden Sand — Once per Turn Action {r}{r}{r}
+HERO_ACTIVATION_CONDITIONS["kassai_of_the_golden_sand"] = {
+    "timing": "action",
+    "cost": 3,
+    "requires_tap": False,
+    "once_per_turn": True,
+    "condition_fn": lambda player, state: "kassai_used" not in player.current_turn_effects,
+    "effect_fn": _kassai_activate,
+}
+
+# 10. Fai, Rising Rebellion — Once per Turn Instant {r}{r}{r}
+HERO_ACTIVATION_CONDITIONS["fai_rising_rebellion"] = {
+    "timing": "instant",
+    "cost": 3,
+    "requires_tap": False,
+    "once_per_turn": True,
+    "condition_fn": lambda player, state: "fai_used" not in player.current_turn_effects,
+    "effect_fn": _fai_activate,
+}
+HERO_ACTIVATION_CONDITIONS["fai"] = HERO_ACTIVATION_CONDITIONS["fai_rising_rebellion"]
+
+# 14. Maxx, the Hype Nitro — Once per Turn Action {r}{r}
+HERO_ACTIVATION_CONDITIONS["maxx_the_hype_nitro"] = {
+    "timing": "action",
+    "cost": 2,
+    "requires_tap": False,
+    "once_per_turn": True,
+    "condition_fn": lambda player, state: "maxx_used" not in player.current_turn_effects,
+    "effect_fn": _maxx_activate,
+}
+HERO_ACTIVATION_CONDITIONS["maxx_nitro"] = HERO_ACTIVATION_CONDITIONS["maxx_the_hype_nitro"]
+
+# 15. Hala, Bladesaint of the Vow — Action {r}{r}{r}, {t}
+HERO_ACTIVATION_CONDITIONS["hala_bladesaint_of_the_vow"] = {
+    "timing": "action",
+    "cost": 3,
+    "requires_tap": True,
+    "condition_fn": lambda player, state: not player.hero.tapped,
+    "effect_fn": _hala_activate,
+}
+HERO_ACTIVATION_CONDITIONS["hala"] = HERO_ACTIVATION_CONDITIONS["hala_bladesaint_of_the_vow"]
+
+# 16. Cindra, Dracai of Retribution — Once per Turn Instant {r}{r}{r}
+HERO_ACTIVATION_CONDITIONS["cindra_dracai_of_retribution"] = {
+    "timing": "instant",
+    "cost": 3,
+    "requires_tap": False,
+    "once_per_turn": True,
+    "condition_fn": lambda player, state: "cindra_used" not in player.current_turn_effects,
+    "effect_fn": _cindra_activate,
+}
+HERO_ACTIVATION_CONDITIONS["cindra"] = HERO_ACTIVATION_CONDITIONS["cindra_dracai_of_retribution"]
+
+
+# ---------------------------------------------------------------------------
+# B2/B3: HERO_TRIGGERS — passive triggered hero abilities
+# ---------------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------
 # Hero ability effect functions for 15 new heroes
 # ---------------------------------------------------------------------------
 
@@ -1876,6 +2191,11 @@ def _fang_hit_trigger(player, event, state):
             state)
 
 
+
+
+
+# Agent 2 hero activations are registered inside their effect functions above.
+
 HERO_TRIGGERS: dict = {
     "dorinthea": [{"event": "hit", "condition_fn": lambda p, e, s: s.combat is not None and s.combat.from_weapon and s.combat.attacker_id == p.player_id, "effect_fn": _dorinthea_weapon_hit_passive}],
     "dorinthea_ironsong": [{"event": "hit", "condition_fn": lambda p, e, s: s.combat is not None and s.combat.from_weapon and s.combat.attacker_id == p.player_id, "effect_fn": _dorinthea_weapon_hit_passive}],
@@ -1900,6 +2220,54 @@ HERO_TRIGGERS: dict = {
     "florian_rotwood_harbinger": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _florian_banished_earth_trigger}],
     "riptide": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _riptide_play_from_hand_trigger}],
     "riptide_lurker_of_the_deep": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _riptide_play_from_hand_trigger}],
+    # 1. Rhinar, Reckless Rampage — discard 6+{p} during action phase -> intimidate
+    "rhinar_reckless_rampage": [{"event": "card_discarded", "condition_fn": lambda p, e, s: True, "effect_fn": _rhinar_reckless_discard_trigger}],
+    "rhinar": [{"event": "card_discarded", "condition_fn": lambda p, e, s: True, "effect_fn": _rhinar_reckless_discard_trigger}],
+    # 2. Ira, Scarlet Revenger — second attack each turn +1{p}
+    "ira_scarlet_revenger": [{"event": "attacking", "condition_fn": lambda p, e, s: True, "effect_fn": _ira_second_attack_trigger}],
+    "ira": [{"event": "attacking", "condition_fn": lambda p, e, s: True, "effect_fn": _ira_second_attack_trigger}],
+    # 3. Bravo, Showstopper — passive component: none (activation only)
+    "bravo_showstopper": [],
+    # 4. Kayo, Underhanded Cheat — passive: when booed, create Vigor
+    "kayo_underhanded_cheat": [{"event": "crowd_boos", "condition_fn": lambda p, e, s: True, "effect_fn": _kayo_underhanded_boo_trigger}],
+    "kayo": [{"event": "crowd_boos", "condition_fn": lambda p, e, s: True, "effect_fn": _kayo_underhanded_boo_trigger}],
+    # 5. Dash, I/O — once per turn, play Mech item from top of deck
+    "dash_io": [{"event": "start_of_turn", "condition_fn": lambda p, e, s: s.active_player == p.player_id, "effect_fn": _dash_io_start_of_turn_trigger}],
+    "dash": [{"event": "start_of_turn", "condition_fn": lambda p, e, s: s.active_player == p.player_id, "effect_fn": _dash_io_start_of_turn_trigger}],
+    # 6. Oscilio, Constella Intelligence — activation only (registered above)
+    "oscilio_constella_intelligence": [],
+    # 7. Kassai of the Golden Sand — activation only
+    "kassai_of_the_golden_sand": [],
+    "kassai": [],
+    # 8. Marlynn, Treasure Hunter — passive: Gold creation -> next arrow +1{p}
+    "marlynn_treasure_hunter": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _marlynn_gold_arrow_buff_trigger}],
+    "marlynn": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _marlynn_gold_arrow_buff_trigger}],
+    # 9. Ser Boltyn, Breaker of Dawn — attacks get +1{p} if charged & defended by AA
+    "ser_boltyn_breaker_of_dawn": [{"event": "defend", "condition_fn": lambda p, e, s: True, "effect_fn": _boltyn_charged_attack_bonus}],
+    "ser_boltyn": [{"event": "defend", "condition_fn": lambda p, e, s: True, "effect_fn": _boltyn_charged_attack_bonus}],
+    "boltyn": [{"event": "defend", "condition_fn": lambda p, e, s: True, "effect_fn": _boltyn_charged_attack_bonus}],
+    # 10. Fai, Rising Rebellion — activation only (registered above)
+    "fai_rising_rebellion": [],
+    "fai": [],
+    # 11. Vynnset, Iron Maiden — start of turn: banish from hand, create Runechant
+    "vynnset_iron_maiden": [{"event": "start_of_turn", "condition_fn": lambda p, e, s: s.active_player == p.player_id, "effect_fn": _vynnset_start_of_turn_trigger}],
+    "vynnset": [{"event": "start_of_turn", "condition_fn": lambda p, e, s: s.active_player == p.player_id, "effect_fn": _vynnset_start_of_turn_trigger}],
+    # 12. Levia, Shadowborn Abomination — card_banished: track 6+{p} to lose blood debt
+    "levia_shadowborn_abomination": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _levia_banished_trigger}],
+    "levia": [{"event": "card_banished", "condition_fn": lambda p, e, s: True, "effect_fn": _levia_banished_trigger}],
+    # 13. Jarl Vetreii — on_play: Ice card -> create Frostbite on opponent
+    "jarl_vetreii": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _jarl_ice_play_trigger}],
+    "jarl": [{"event": "on_play", "condition_fn": lambda p, e, s: True, "effect_fn": _jarl_ice_play_trigger}],
+    # 14. Maxx, the Hype Nitro — activation only
+    "maxx_the_hype_nitro": [],
+    "maxx_nitro": [],
+    "maxx": [],
+    # 15. Hala, Bladesaint of the Vow — activation only
+    "hala_bladesaint_of_the_vow": [],
+    "hala": [],
+    # 16. Cindra, Dracai of Retribution — passive: hit marked hero -> Fealty token
+    "cindra_dracai_of_retribution": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _cindra_hit_marked_trigger}],
+    "cindra": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _cindra_hit_marked_trigger}],
     # 3. Puffin, Hightail — passive crank trigger
     "puffin_hightail": [{"event": "cog_cranked", "condition_fn": lambda p, e, s: True, "effect_fn": _puffin_crank_trigger}],
     # 5. Arakni, Marionette — stealth+mark attack buff + on-hit
