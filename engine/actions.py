@@ -624,7 +624,10 @@ def _legal_defend_step(state: GameState, card_db: CardDB) -> list[Action]:
                 if len(already_defending_hand) + len(new_hand) > 1:
                     valid = False
             if "Overpower" in combat.keywords:
-                if sum([x.is_action for x in combo]) > 1:
+                # CR 8.3.22a: total action cards defending (already + new) must be ≤ 1
+                already_defending_action = sum(1 for c in combat.defending_cards if c.is_action)
+                new_action = sum(1 for c in combo if c.is_action)
+                if already_defending_action + new_action > 1:
                     valid = False
             if valid:
                 actions.append(Action(type=ActionType.DEFEND_CARDS, card_list=list(combo)))
@@ -846,29 +849,30 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                     for seq in dr_pitch_seqs:
                         actions.append(Action(type=ActionType.PLAY_DEFENSE_REACTION, card=card, pitch_cards=seq))
 
-            # Defense reaction from arsenal — blocked by no_defense_reactions, but NOT by dominate.
-            # CR 8.3.4b scopes dominate's restriction to cards "from hand" only.
-            for i, card in enumerate(player.arsenal.cards):
-                if "Defense Reaction" not in card.types:
-                    continue
-                cond_fn = DEFENSE_REACTION_CONDITIONS.get(card.slug)
-                if cond_fn is not None and not cond_fn(combat):
-                    continue
-                effective_cost = card.cost
-                dr_arsenal_pitch_seqs = find_all_valid_pitch_sequences(
-                    player.hand.cards,
-                    effective_cost,
-                    current_resources=player.resources
-                )
-                for seq in dr_arsenal_pitch_seqs:
-                    actions.append(
-                        Action(
-                            type=ActionType.PLAY_DEFENSE_REACTION,
-                            card=card,
-                            pitch_cards=seq,
-                            from_arsenal=True,
-                        )
+            # Defense reaction from arsenal — blocked by no_defense_reactions (CR 7.4.2c),
+            # but NOT by dominate (CR 8.3.4b scopes dominate to "from hand" only).
+            if not combat.no_defense_reactions:
+                for i, card in enumerate(player.arsenal.cards):
+                    if "Defense Reaction" not in card.types:
+                        continue
+                    cond_fn = DEFENSE_REACTION_CONDITIONS.get(card.slug)
+                    if cond_fn is not None and not cond_fn(combat):
+                        continue
+                    effective_cost = card.cost
+                    dr_arsenal_pitch_seqs = find_all_valid_pitch_sequences(
+                        player.hand.cards,
+                        effective_cost,
+                        current_resources=player.resources
                     )
+                    for seq in dr_arsenal_pitch_seqs:
+                        actions.append(
+                            Action(
+                                type=ActionType.PLAY_DEFENSE_REACTION,
+                                card=card,
+                                pitch_cards=seq,
+                                from_arsenal=True,
+                            )
+                        )
 
     return actions
 

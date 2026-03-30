@@ -869,13 +869,15 @@ CARD_TRIGGERS["show_of_strength"] = [
 ]
 
 
-# -- sigil_of_solace --
-# "Gain 3 life." — instant
-CARD_TRIGGERS["sigil_of_solace"] = [
-    TriggerDef(
-        event_type="on_play",
-        effect_fn=lambda c, e, s: effect_gain_life(s, _controller_id(c), 3),
-    ),
+# -- sigil_of_solace (red: 3h, yellow: 2h, blue: 1h) --
+CARD_TRIGGERS["sigil_of_solace_red"] = [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: effect_gain_life(s, _controller_id(c), 3)),
+]
+CARD_TRIGGERS["sigil_of_solace_yellow"] = [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: effect_gain_life(s, _controller_id(c), 2)),
+]
+CARD_TRIGGERS["sigil_of_solace_blue"] = [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: effect_gain_life(s, _controller_id(c), 1)),
 ]
 
 

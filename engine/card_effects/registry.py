@@ -800,10 +800,22 @@ def _onyx_amulet_effect(action, player, state):
     player.action_points += 1
 
 def _pearl_amulet_effect(action, player, state):
-    """Untap ({u}) target permanent. Go again. (Simplified: untap opponent hero if tapped.)"""
-    opp = state.players[3 - player.player_id]
-    if hasattr(opp, 'hero') and opp.hero is not None and getattr(opp.hero, 'tapped', False):
-        opp.hero.tapped = False
+    """Untap ({u}) target permanent. Go again."""
+    # Untap own tapped permanents first (most useful); fall back to opponent hero
+    untapped = False
+    for zone in [player.head, player.chest, player.arms, player.legs,
+                 player.weapon1, player.weapon2, player.permanents]:
+        for card in getattr(zone, 'cards', []):
+            if getattr(card, 'tapped', False):
+                card.tapped = False
+                untapped = True
+                break
+        if untapped:
+            break
+    if not untapped:
+        opp = state.players[3 - player.player_id]
+        if hasattr(opp, 'hero') and opp.hero is not None and getattr(opp.hero, 'tapped', False):
+            opp.hero.tapped = False
     player.action_points += 1
 
 def _sapphire_amulet_effect(action, player, state):

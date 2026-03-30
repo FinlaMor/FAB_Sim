@@ -49,6 +49,12 @@ for _n in [1, 2, 3, 4, 5]:
     if _key not in TURN_ATTACK_EFFECTS:
         TURN_ATTACK_EFFECTS[_key] = {"apply_fn": _make_nap(_n)}
 
+# all_attacks_+N: persistent (not consumed), applies to every attack this turn
+for _n in [1, 2, 3, 4, 5]:
+    _key = f"all_attacks_+{_n}"
+    if _key not in TURN_ATTACK_EFFECTS:
+        TURN_ATTACK_EFFECTS[_key] = {"apply_fn": _make_nap(_n), "persistent": True}
+
 # next_brute_attack_+2: only applies to Brute class attack cards
 if "next_brute_attack_+2" not in TURN_ATTACK_EFFECTS:
     TURN_ATTACK_EFFECTS["next_brute_attack_+2"] = {
@@ -245,19 +251,25 @@ def _factory_ar_go_again():
 
 
 def _factory_on_defend_clash_winner_token(token_slug):
-    """Factory: clash on defend, winner creates token. Simplified."""
+    """Factory: clash on defend, winner creates token.
+
+    CR 8.4.5: Both players reveal top card. Card with greater power wins.
+    Equal power = both fail (no winner, no token). No card = power 0.
+    """
     def effect(card, event, state):
         if not _is_this_defending(card, event, state):
             return
         cid = _controller_id(card)
         opp_id = 3 - cid
-        # Simplified clash: look at top cards, higher pitch wins
         my_cards = effect_look_top(state, cid, 1)
         opp_cards = effect_look_top(state, opp_id, 1)
-        my_pitch = my_cards[0].pitch if my_cards and my_cards[0].pitch else 0
-        opp_pitch = opp_cards[0].pitch if opp_cards and opp_cards[0].pitch else 0
-        winner = cid if my_pitch >= opp_pitch else opp_id
-        create_token(state, winner, token_slug)
+        my_power = (my_cards[0].base_power or 0) if my_cards else 0
+        opp_power = (opp_cards[0].base_power or 0) if opp_cards else 0
+        if my_power > opp_power:
+            create_token(state, cid, token_slug)
+        elif opp_power > my_power:
+            create_token(state, opp_id, token_slug)
+        # Equal power = both fail, no token created
     return effect
 
 
@@ -390,10 +402,12 @@ def _aftershock_attacking(card, event, state):
     if not _is_this_attacking(card, event, state):
         return
     cid = _controller_id(card)
-    if any("seismic_surge" in eff for eff in state.players[cid].current_turn_effects):
-        create_token(state, cid, "seismic_surge")
-    # Check if player controls a seismic surge
-    if any("seismic_surge" in c.slug for c in state.players[cid].auras.cards):
+    # Check either the turn effect flag OR an existing aura (not both)
+    has_surge = (
+        any("seismic_surge" in eff for eff in state.players[cid].current_turn_effects)
+        or any("seismic_surge" in c.slug for c in state.players[cid].auras.cards)
+    )
+    if has_surge:
         create_token(state, cid, "seismic_surge")
 
 _register("aftershock", [
@@ -443,9 +457,14 @@ _register("angelic_attendant", [
 
 # -- angelic_wrath (red: +4p, yellow: +3p, blue: +2p) --
 # Target attack action card with Herald in its name gets +Np
-# Registered without color suffix → use red variant's +4p as most impactful
-_register("angelic_wrath", [
+_register("angelic_wrath_red", [
     TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(4)),
+])
+_register("angelic_wrath_yellow", [
+    TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(3)),
+])
+_register("angelic_wrath_blue", [
+    TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(2)),
 ])
 
 # -- annihilate_the_armed --
@@ -670,18 +689,25 @@ _register("blood_on_her_hands", [
     TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(2)),
 ])
 
-# -- bloodrush_bellow_yellow --
-# Discard random, Brute attacks +2p this turn, if 6+p draw 2 and go again.
-def _bloodrush_bellow_yellow_play(card, event, state):
+# -- bloodrush_bellow (red: +3p, yellow: +2p, blue: +1p) --
+# Discard random, ALL Brute attacks get +Np this turn, if 6+p draw 2 and go again.
+def _bloodrush_bellow_play(card, event, state, bonus=2):
     cid = _controller_id(card)
     discarded = effect_discard(state, cid, 1, random_discard=True)
-    state.players[cid].current_turn_effects.append("next_attack_+2")
+    # "all_attacks_+N" persists for the entire turn (not consumed on first attack)
+    state.players[cid].current_turn_effects.append(f"all_attacks_+{bonus}")
     if discarded and discarded[0].power is not None and discarded[0].power >= 6:
         effect_draw(state, cid, 2)
         effect_gain_action_point(state, cid)
 
+_register("bloodrush_bellow_red", [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _bloodrush_bellow_play(c, e, s, bonus=3)),
+])
 _register("bloodrush_bellow_yellow", [
-    TriggerDef(event_type="on_play", effect_fn=_bloodrush_bellow_yellow_play),
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _bloodrush_bellow_play(c, e, s, bonus=2)),
+])
+_register("bloodrush_bellow_blue", [
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _bloodrush_bellow_play(c, e, s, bonus=1)),
 ])
 
 # -- bolt_of_courage (red/yellow/blue) --
@@ -737,12 +763,17 @@ _register("boneyard_marauder", [
 ])
 
 # -- boulder_drop_red --
-# Crush: 4+ dmg, they put card from hand on top of deck.
+# Crush: 4+ dmg, they put card from hand on top of deck (defender chooses).
 def _boulder_drop_crush(card, event, state):
+    from engine.card_effects.keywords import _ask_player
     target_id = 3 - _controller_id(card)
     player = state.players[target_id]
     if player.hand.cards:
-        chosen = player.hand.cards[0]
+        options = [c.slug for c in player.hand.cards]
+        choice = _ask_player(state, target_id, options,
+                             context="Boulder Drop: choose a card to put on top of your deck")
+        idx = options.index(choice) if choice in options else 0
+        chosen = player.hand.cards[idx]
         player.hand.remove(chosen)
         player.deck.cards.insert(0, chosen)
         chosen.zone = "deck"
@@ -825,9 +856,15 @@ _register("clash_of_bravado", [
 ])
 
 # -- cleave_red --
-# Next axe attack +4p. Simplified: next attack +4p.
+# "Target Axe attack gets +4{p}."
+if "next_axe_attack_+4" not in TURN_ATTACK_EFFECTS:
+    TURN_ATTACK_EFFECTS["next_axe_attack_+4"] = {
+        "condition_fn": lambda ac, pl, st: "Axe" in getattr(ac, 'subtypes', []) or "Axe" in getattr(ac, 'types', []),
+        "apply_fn": _make_nap(4),
+    }
 _register("cleave", [
-    TriggerDef(event_type="on_play", effect_fn=_factory_on_play_next_attack_plus(4)),
+    TriggerDef(event_type="on_play",
+               effect_fn=lambda c, e, s: s.players[_controller_id(c)].current_turn_effects.append("next_axe_attack_+4")),
 ])
 
 # -- cog_in_the_machine_red --
@@ -977,14 +1014,19 @@ _register("cut_through", [
 ])
 
 # -- deadwood_dirge_red --
-# Destroy an aura you control (required). Create 3 Runechant tokens. Go again.
+# Destroy an aura you control (player chooses). Create 3 Runechant tokens. Go again.
 # CR 5.1.4a: unplayable without an aura (enforced by PLAY_TARGET_CONDITIONS in registry.py)
 def _deadwood_dirge_play(card, event, state):
+    from engine.card_effects.keywords import _ask_player
     cid = _controller_id(card)
     player = state.players[cid]
     if not player.auras.cards:
-        return  # target no longer exists at resolution — effect fails
-    aura = player.auras.cards[0]
+        return
+    options = [c.slug for c in player.auras.cards]
+    choice = _ask_player(state, cid, options,
+                         context="Deadwood Dirge: choose an aura to destroy")
+    idx = options.index(choice) if choice in options else 0
+    aura = player.auras.cards[idx]
     _move_to_graveyard(aura, state)
     for _ in range(3):
         create_token(state, cid, "runechant")
@@ -1669,27 +1711,24 @@ _register("herald_of_victoria", [
 ])
 
 # -- hit_and_run (red: +3p, yellow: +2p, blue: +1p) --
-# Next weapon attack go again. If attacked with weapon, next attack +Np. Go again.
+# "Your next attack this turn gains go again. If you've attacked with a weapon
+#  this turn, your next attack gets +Np."
+def _hit_and_run_play(card, event, state, bonus):
+    cid = _controller_id(card)
+    state.players[cid].current_turn_effects.append("next_attack_go_again")
+    # Only add the power bonus if we've attacked with a weapon this turn
+    attacked_with_weapon = any(cl.from_weapon for cl in state.chain_links)
+    if attacked_with_weapon:
+        state.players[cid].current_turn_effects.append(f"next_attack_+{bonus}")
+
 _register("hit_and_run_red", [
-    TriggerDef(event_type="on_play",
-               effect_fn=lambda c, e, s: (
-                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_go_again"),
-                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_+3"),
-               )),
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _hit_and_run_play(c, e, s, 3)),
 ])
 _register("hit_and_run_yellow", [
-    TriggerDef(event_type="on_play",
-               effect_fn=lambda c, e, s: (
-                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_go_again"),
-                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_+2"),
-               )),
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _hit_and_run_play(c, e, s, 2)),
 ])
 _register("hit_and_run_blue", [
-    TriggerDef(event_type="on_play",
-               effect_fn=lambda c, e, s: (
-                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_go_again"),
-                   s.players[_controller_id(c)].current_turn_effects.append("next_attack_+1"),
-               )),
+    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: _hit_and_run_play(c, e, s, 1)),
 ])
 
 # -- hit_the_gas_blue --
@@ -2334,9 +2373,18 @@ _register("rouse_the_ancients", [
 ])
 
 # -- rowdy_locals_blue --
-# If defended by action card, +2p. On hit, mutual discard.
+# "If Rowdy Locals is defended by an attack action card, it gets +2{p}."
+# On hit, each player discards a card.
+def _rowdy_locals_defend_bonus(card, event, state):
+    """Apply +2{p} only if defended by an attack action card."""
+    if not state.combat or state.combat.attack_card is not card:
+        return
+    if any(c.is_action and "Attack" in getattr(c, 'types', []) for c in state.combat.defending_cards):
+        state.combat.attack_power += 2
+
 _register("rowdy_locals", [
-    TriggerDef(event_type="attacking", effect_fn=_factory_attacking_plus_power(2)),
+    TriggerDef(event_type="defend",
+               effect_fn=_rowdy_locals_defend_bonus),
     TriggerDef(event_type="hit",
                effect_fn=lambda c, e, s: (
                    effect_discard(s, _controller_id(c), 1),
@@ -3006,10 +3054,21 @@ _register("wind_up_the_crowd", [
 ])
 
 # -- winters_bite_blue --
-# Target hero discards unless they pay r. Go again.
+# "Target hero discards a card unless they pay {r}." Go again.
+def _winters_bite_play(card, event, state):
+    from engine.card_effects.keywords import _ask_player
+    target_id = 3 - _controller_id(card)
+    target = state.players[target_id]
+    if target.resources >= 1:
+        choice = _ask_player(state, target_id, ["pay_r", "discard"],
+                             context="Winter's Bite: pay {r} or discard a card")
+        if choice == "pay_r":
+            target.resources -= 1
+            return
+    effect_discard(state, target_id, 1)
+
 _register("winters_bite", [
-    TriggerDef(event_type="on_play",
-               effect_fn=lambda c, e, s: effect_discard(s, 3 - _controller_id(c), 1)),
+    TriggerDef(event_type="on_play", effect_fn=_winters_bite_play),
 ])
 
 # -- wrecker_romp (red/blue) --

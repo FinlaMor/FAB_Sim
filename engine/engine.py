@@ -437,7 +437,9 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
 
     # 7.6.2: chain link resolves, go again check
     state.event_manager.emit('chain_link_resolves', state)
-    if 'go_again' in state.combat.keywords:
+    # CR 8.3.5b: Go Again grants +1 AP at Resolution Step.
+    # Keywords may appear as "Go again", "Go Again", or "go_again" depending on source.
+    if any(k.lower().replace(' ', '_') == 'go_again' for k in state.combat.keywords):
         state.active().action_points += 1
 
     # 7.6.3: turn player gains priority
@@ -635,7 +637,11 @@ def _resolve_all_triggers(state: GameState) -> None:
             handle_stack(state)
 
 def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
-    """Consume pending turn effects that modify the next attack (from registry)."""
+    """Consume pending turn effects that modify the next attack (from registry).
+
+    Effects marked with ``persistent=True`` are NOT consumed — they apply
+    to every attack for the rest of the turn (e.g. ``all_attacks_+N``).
+    """
     from engine.card_effects.registry import TURN_ATTACK_EFFECTS
     player = state.active()
     consumed = []
@@ -647,7 +653,8 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
         if cond_fn and not cond_fn(attack_card, player, state):
             continue
         cfg["apply_fn"](attack_card, player, state)
-        consumed.append(effect_key)
+        if not cfg.get("persistent", False):
+            consumed.append(effect_key)
     for key in consumed:
         player.current_turn_effects.remove(key)
 
@@ -766,7 +773,10 @@ def _apply_defend(state: GameState, action: Action) -> None:
             # CR 8.3.4b: track that a hand card has been used to defend (Dominate/Reprise)
             combat.defender_used_hand_card = True
         combat.defending_cards.append(card)
-        combat.total_defense += (card.defense or 0)
+        defense_val = card.defense or 0
+        combat.total_defense += defense_val
+        if card.is_equipment:
+            combat.defending_equipment_defense += defense_val
         # 7.0.5a: defend event
         state.event_manager.emit(Event(type='defend', card=card.slug), state)
 
@@ -991,6 +1001,8 @@ def priority_loop(state: GameState) -> None:
                 return
             # New triggers from the action get ordered on top
             handle_stack(state)
+            # CR 1.11.5: acting player regains priority after playing/activating
+            state.priority_player = current_player
 
 # ---------------------------------------------------------------------------
 # Player decisions

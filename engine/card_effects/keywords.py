@@ -503,7 +503,7 @@ def reprise_check(state: GameState) -> bool:
     """8.4.3: Defending hero defended with a card from hand this chain link."""
     if not state.combat:
         return False
-    return any(c.prev_zone == "hand" for c in state.combat.defending_cards)
+    return state.combat.defender_used_hand_card
 
 
 def combo_check(state: GameState, combo_names: list) -> bool:
