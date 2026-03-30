@@ -649,6 +649,15 @@ def _recalculate_attack_power(combat) -> None:
     for effect_type, fn in getattr(card, 'effects', []):
         if effect_type == "base_power_multiply":
             power = fn(power)
+    # CR 8.3.23: Piercing — static ability evaluated fresh each recalculation.
+    # Replaces the triggered approach (keywords.py piercing() is now a noop).
+    for kw in getattr(card, 'keywords', []):
+        if kw.lower().startswith('piercing'):
+            parts = kw.split()
+            n = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 1
+            if any(c.is_equipment for c in (combat.defending_cards or [])):
+                power += n
+            break
     combat.attack_power = power
 
 def _resolve_damage(state: GameState) -> None:
@@ -741,6 +750,8 @@ def _apply_defend(state: GameState, action: Action) -> None:
     for card in action.card_list:
         if card in defender.hand.cards:
             defender.hand.remove(card)
+            # CR 8.3.4b: track that a hand card has been used to defend (Dominate/Reprise)
+            combat.defender_used_hand_card = True
         combat.defending_cards.append(card)
         combat.total_defense += (card.defense or 0)
         # 7.0.5a: defend event
@@ -822,9 +833,11 @@ def resolve_stack(game_state: GameState) -> None:
             game_state)
 
     # CR 5.3.5 / 8.3.5a: non-attack layers with go again grant an action point on resolution.
+    # CR 8.5.7b: non-turn-players cannot gain action points — check player is turn-player.
     # (Attack go again is handled separately in _resolution_step via combat.keywords.)
     if card and not entry.is_attack and card.has_go_again:
-        game_state.players[entry.player_id].action_points += 1
+        if entry.player_id == game_state.active_player:
+            game_state.players[entry.player_id].action_points += 1
 
     game_state.priority_player = game_state.active_player
     game_state.consecutive_passes = 0
@@ -1364,6 +1377,9 @@ def _apply_react(state: GameState, action: Action) -> None:
         if not removed:
             # Fallback safety for legacy actions incorrectly marked as hand plays.
             player.arsenal.remove(card)
+        # CR 8.3.4b: a DR played from hand counts as "defender used hand card" for Dominate/Reprise
+        if state.combat is not None and "Defense Reaction" in (card.types or []):
+            state.combat.defender_used_hand_card = True
 
     # CR 3.0.1 / CR 5.3.4c: card enters stack zone.
     # Defense reactions played from arsenal are additionally placed on the combat chain so

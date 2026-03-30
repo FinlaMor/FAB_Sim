@@ -253,9 +253,9 @@ def go_again(card: Card, state: GameState) -> None:
 
 
 def piercing(card: Card, amount: int, state: GameState) -> None:
-    """8.3.23: If defended by equipment, gets +N{p}."""
-    if state.combat and any(c.is_equipment for c in state.combat.defending_cards):
-        card.effects.append(("base_power", lambda base, n=amount: base + n))
+    """CR 8.3.23: Piercing — now a static ability evaluated in _recalculate_attack_power.
+    This triggered path is intentionally a noop to avoid double-counting."""
+    pass
 
 
 # ---------------------------------------------------------------------------
