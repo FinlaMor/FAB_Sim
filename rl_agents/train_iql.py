@@ -89,8 +89,15 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--save-dataset-pt", type=str, default="", help="Optional path to save the assembled dataset")
 
-    parser.add_argument("--steps", type=int, default=2000)
+    parser.add_argument("--steps", type=int, default=15000)
     parser.add_argument("--batch-size", type=int, default=256)
+    parser.add_argument(
+        "--e2e-batch-size",
+        type=int,
+        default=128,
+        help="Batch size override for end-to-end transformer training (uses_raw_features path). "
+             "Defaults to 128 to avoid OOM with large transformer forward passes.",
+    )
     parser.add_argument("--hidden-dim", type=int, default=512)
     parser.add_argument("--hidden-layers", type=int, default=2)
     parser.add_argument("--gamma", type=float, default=0.99)
@@ -149,7 +156,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Skip Q/V training and train the actor with return-weighted behavior cloning",
     )
     parser.add_argument("--device", type=str, default=_default_device())
-    parser.add_argument("--log-every", type=int, default=100)
+    parser.add_argument("--log-every", type=int, default=50)
     parser.add_argument("--eval-ratio", type=float, default=0.1, help="Fraction of transitions held out for eval, in [0.0, 1.0). 0 disables eval.")
 
     parser.add_argument("--out-dir", type=str, default="data_collection/iql_runs")
@@ -167,7 +174,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--early-stopping-patience",
         type=int,
-        default=0,
+        default=1500,
         help="Stop training if eval loss does not improve for this many eval cycles. 0 disables early stopping.",
     )
     parser.add_argument(
@@ -200,6 +207,18 @@ def _load_payload(args: argparse.Namespace) -> dict:
         raise ValueError(f"Dataset payload missing required keys: {sorted(missing)}")
 
     return payload
+
+
+def _is_device_runtime_failure(exc: RuntimeError) -> bool:
+    msg = str(exc).lower()
+    markers = [
+        "device instance has been suspended",
+        "device removed",
+        "getdeviceremovedreason",
+        "out of memory",
+        "cuda out of memory",
+    ]
+    return any(m in msg for m in markers)
 
 
 def main() -> int:
@@ -281,6 +300,15 @@ def main() -> int:
                 f"state_dim={payload['state_dim']}, action_dim={payload['action_dim']}",
                 flush=True,
             )
+            # Cap batch size for e2e path — transformer forward pass on packed features
+            # is memory-intensive; using the full IQL batch size causes OOM on GPU.
+            if args.batch_size > args.e2e_batch_size:
+                print(
+                    f"[iql] e2e mode: capping batch_size {args.batch_size} → {args.e2e_batch_size} "
+                    f"(use --e2e-batch-size to adjust)",
+                    flush=True,
+                )
+                args.batch_size = args.e2e_batch_size
 
     config = IQLConfig(
         state_dim=int(payload["state_dim"]),
@@ -373,7 +401,53 @@ def main() -> int:
         flush=True,
     )
 
-    history = trainer.fit(dataset=dataset, num_steps=args.steps, log_every=args.log_every, eval_ratio=args.eval_ratio)
+    try:
+        history = trainer.fit(
+            dataset=dataset,
+            num_steps=args.steps,
+            log_every=args.log_every,
+            eval_ratio=args.eval_ratio,
+        )
+    except RuntimeError as exc:
+        if args.device.lower() != "cpu" and _is_device_runtime_failure(exc):
+            print(
+                "[iql] device runtime failure detected; retrying training on CPU.",
+                flush=True,
+            )
+            args.device = "cpu"
+            config.device = "cpu"
+            if args.resume_from:
+                trainer = IQLTrainer.from_checkpoint(
+                    args.resume_from,
+                    device="cpu",
+                    transformer=e2e_transformer,
+                    action_embedder=e2e_action_embedder,
+                )
+                trainer.config.batch_size = config.batch_size
+                trainer.config.use_raw_features = config.use_raw_features
+                trainer.config.lr_schedule = config.lr_schedule
+                trainer.config.lr_warmup_steps = config.lr_warmup_steps
+                trainer.config.grad_clip = config.grad_clip
+                trainer.config.reward_scale = config.reward_scale
+                trainer.config.temperature = config.temperature
+                trainer.config.expectile = config.expectile
+                trainer.config.max_weight = config.max_weight
+                trainer.config.normalize_advantages = config.normalize_advantages
+                trainer.config.rwbc_mode = config.rwbc_mode
+            else:
+                trainer = IQLTrainer(
+                    config,
+                    transformer=e2e_transformer,
+                    action_embedder=e2e_action_embedder,
+                )
+            history = trainer.fit(
+                dataset=dataset,
+                num_steps=args.steps,
+                log_every=args.log_every,
+                eval_ratio=args.eval_ratio,
+            )
+        else:
+            raise
 
     # Early stopping based on eval loss plateau
     early_stopped = False

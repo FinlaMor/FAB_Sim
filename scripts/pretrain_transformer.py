@@ -17,6 +17,7 @@ import argparse
 import sys
 import time
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import torch
@@ -26,6 +27,48 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from encoder.game_transformer import GameTransformerEncoder, prime_dummy_vocab
 from encoder.pretrain_masked import MaskedPretrainer, pretrain_loop
 from rl_agents.embedder_bundle import load_embedder_bundle
+from rl_agents.utils.device import resolve_device as _resolve_device
+
+
+def _shape_safe_load(model: torch.nn.Module, state_dict: dict[str, Any], label: str) -> tuple[int, int]:
+    """Load only matching tensors from ``state_dict`` into ``model``.
+
+    Returns ``(loaded_count, total_model_tensors)``.
+    """
+    model_sd = model.state_dict()
+    filtered = {
+        k: v
+        for k, v in state_dict.items()
+        if k in model_sd and model_sd[k].shape == v.shape
+    }
+    skipped = [
+        k
+        for k, v in state_dict.items()
+        if k in model_sd and model_sd[k].shape != v.shape
+    ]
+    model.load_state_dict(filtered, strict=False)
+    print(
+        f"[pretrain] Loaded {len(filtered)}/{len(model_sd)} {label} tensors"
+        + (f" (skipped {len(skipped)} shape-mismatched)" if skipped else ""),
+        flush=True,
+    )
+    if skipped:
+        preview = ", ".join(skipped[:4])
+        suffix = "..." if len(skipped) > 4 else ""
+        print(f"[pretrain] Skipped {label} keys: {preview}{suffix}", flush=True)
+    return len(filtered), len(model_sd)
+
+
+def _is_device_runtime_failure(exc: RuntimeError) -> bool:
+    msg = str(exc).lower()
+    markers = [
+        "device instance has been suspended",
+        "device removed",
+        "getdeviceremovedreason",
+        "out of memory",
+        "cuda out of memory",
+    ]
+    return any(m in msg for m in markers)
 
 
 def _load_packed_states(db_path: str) -> torch.Tensor:
@@ -58,11 +101,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Pre-train transformer via masked card prediction")
     parser.add_argument("--db-path", type=str, required=True, help="Path to replay.db")
     parser.add_argument("--embedder-bundle", type=str, required=True, help="Path to embedder_bundle.pt")
-    parser.add_argument("--steps", type=int, default=5000, help="Training steps")
+    parser.add_argument("--steps", type=int, default=2000, help="Training steps")
     parser.add_argument("--batch-size", type=int, default=128, help="Batch size")
     parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
     parser.add_argument("--mask-ratio", type=float, default=0.15, help="Fraction of tokens to mask")
-    parser.add_argument("--log-every", type=int, default=100, help="Log every N steps")
+    parser.add_argument("--log-every", type=int, default=50, help="Log every N steps")
     parser.add_argument("--device", type=str, default="cpu", help="Device (cpu recommended)")
     parser.add_argument("--resume", type=str, default="", help="Resume from pretrain checkpoint")
     args = parser.parse_args()
@@ -98,12 +141,11 @@ def main() -> int:
 
     # Load existing weights (shape-safe)
     if "game_transformer_state_dict" in bundle:
-        saved_sd = bundle["game_transformer_state_dict"]
-        model_sd = transformer.state_dict()
-        filtered = {k: v for k, v in saved_sd.items()
-                    if k in model_sd and model_sd[k].shape == v.shape}
-        transformer.load_state_dict(filtered, strict=False)
-        print(f"[pretrain] Loaded {len(filtered)}/{len(model_sd)} transformer weights from bundle", flush=True)
+        _shape_safe_load(
+            transformer,
+            bundle["game_transformer_state_dict"],
+            "transformer-from-bundle",
+        )
 
     transformer.set_card_feats_lookup(card_db)
 
@@ -114,25 +156,63 @@ def main() -> int:
     start_step = 0
     if args.resume and Path(args.resume).exists():
         ckpt = torch.load(args.resume, map_location="cpu", weights_only=False)
-        transformer.load_state_dict(ckpt["transformer_state_dict"])
-        pretrainer.cls_head.load_state_dict(ckpt["cls_head_state_dict"])
-        pretrainer.mask_embed.data = ckpt["mask_embed"]
+        if "transformer_state_dict" in ckpt:
+            _shape_safe_load(
+                transformer,
+                ckpt["transformer_state_dict"],
+                "transformer-from-resume",
+            )
+        if "cls_head_state_dict" in ckpt:
+            _shape_safe_load(
+                pretrainer.cls_head,
+                ckpt["cls_head_state_dict"],
+                "cls_head-from-resume",
+            )
+        if "mask_embed" in ckpt:
+            saved_mask = ckpt["mask_embed"]
+            if tuple(saved_mask.shape) == tuple(pretrainer.mask_embed.shape):
+                pretrainer.mask_embed.data.copy_(saved_mask)
+            else:
+                print(
+                    "[pretrain] Skipping mask_embed from resume due to shape mismatch "
+                    f"{tuple(saved_mask.shape)} != {tuple(pretrainer.mask_embed.shape)}",
+                    flush=True,
+                )
         start_step = ckpt.get("step", 0)
-        print(f"[pretrain] Resumed from {args.resume} at step {start_step}", flush=True)
+        print(f"[pretrain] Resumed from {args.resume} (checkpoint step {start_step})", flush=True)
 
-    device = torch.device(args.device)
+    device = _resolve_device(args.device)
     checkpoint_dir = str(Path(args.embedder_bundle).parent / "pretrain_ckpts")
 
-    history = pretrain_loop(
-        pretrainer=pretrainer,
-        packed_states=packed_states,
-        num_steps=args.steps,
-        batch_size=args.batch_size,
-        lr=args.lr,
-        log_every=args.log_every,
-        device=device,
-        checkpoint_dir=checkpoint_dir,
-    )
+    try:
+        history = pretrain_loop(
+            pretrainer=pretrainer,
+            packed_states=packed_states,
+            num_steps=args.steps,
+            batch_size=args.batch_size,
+            lr=args.lr,
+            log_every=args.log_every,
+            device=device,
+            checkpoint_dir=checkpoint_dir,
+        )
+    except RuntimeError as exc:
+        if str(device) != "cpu" and _is_device_runtime_failure(exc):
+            print(
+                "[pretrain] Device runtime failure detected; retrying Stage 4 on CPU.",
+                flush=True,
+            )
+            history = pretrain_loop(
+                pretrainer=pretrainer,
+                packed_states=packed_states,
+                num_steps=args.steps,
+                batch_size=args.batch_size,
+                lr=args.lr,
+                log_every=args.log_every,
+                device=torch.device("cpu"),
+                checkpoint_dir=checkpoint_dir,
+            )
+        else:
+            raise
 
     # Save trained transformer weights back into the embedder bundle
     print(f"[pretrain] Updating embedder bundle at {args.embedder_bundle}...", flush=True)

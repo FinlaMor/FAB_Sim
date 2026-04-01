@@ -181,32 +181,28 @@ class IQLTrainer:
         ).to(self.device)
         self._embedder_params = list(self.state_adapter.parameters()) + list(self.action_adapter.parameters())
 
-        self.opt_q = torch.optim.Adam(
-            list(self.q1.parameters()) + list(self.q2.parameters()),
-            lr=config.lr_q,
-            weight_decay=config.weight_decay,
+        # foreach=False: disables vectorized foreach ops (e.g. _foreach_lerp_) that
+        # are not implemented in torch-directml and fall back to CPU, stalling the GPU.
+        _adam = lambda params, lr: torch.optim.Adam(
+            params, lr=lr, weight_decay=config.weight_decay, foreach=False
         )
-        self.opt_v = torch.optim.Adam(self.value.parameters(), lr=config.lr_v, weight_decay=config.weight_decay)
-        self.opt_actor = torch.optim.Adam(self.actor.parameters(), lr=config.lr_actor, weight_decay=config.weight_decay)
+        self.opt_q = _adam(
+            list(self.q1.parameters()) + list(self.q2.parameters()), config.lr_q
+        )
+        self.opt_v     = _adam(self.value.parameters(), config.lr_v)
+        self.opt_actor = _adam(self.actor.parameters(), config.lr_actor)
         self.opt_embed = (
-            torch.optim.Adam(self._embedder_params, lr=config.lr_embedder, weight_decay=config.weight_decay)
-            if self._embedder_params
-            else None
+            _adam(self._embedder_params, config.lr_embedder)
+            if self._embedder_params else None
         )
 
         # End-to-end optimizers for transformer and action_embedder
         self.opt_transformer = (
-            torch.optim.Adam(
-                transformer.parameters(), lr=config.lr_embedder,
-                weight_decay=config.weight_decay,
-            )
+            _adam(transformer.parameters(), config.lr_embedder)
             if transformer is not None else None
         )
         self.opt_action_embedder = (
-            torch.optim.Adam(
-                action_embedder.parameters(), lr=config.lr_embedder,
-                weight_decay=config.weight_decay,
-            )
+            _adam(action_embedder.parameters(), config.lr_embedder)
             if action_embedder is not None else None
         )
 
@@ -229,7 +225,7 @@ class IQLTrainer:
 
     def _clip_embedder_grad(self) -> None:
         if self._embedder_params:
-            nn.utils.clip_grad_norm_(self._embedder_params, self.config.grad_clip)
+            nn.utils.clip_grad_value_(self._embedder_params, self.config.grad_clip)
 
     def _zero_e2e_grads(self) -> None:
         """Zero gradients for end-to-end transformer / action_embedder optimizers."""
@@ -240,9 +236,9 @@ class IQLTrainer:
 
     def _clip_e2e_grads(self) -> None:
         if self.transformer is not None:
-            nn.utils.clip_grad_norm_(self.transformer.parameters(), self.config.grad_clip)
+            nn.utils.clip_grad_value_(self.transformer.parameters(), self.config.grad_clip)
         if self.action_embedder is not None:
-            nn.utils.clip_grad_norm_(self.action_embedder.parameters(), self.config.grad_clip)
+            nn.utils.clip_grad_value_(self.action_embedder.parameters(), self.config.grad_clip)
 
     def _step_e2e(self) -> None:
         if self.opt_transformer is not None:
@@ -370,7 +366,7 @@ class IQLTrainer:
             if use_e2e:
                 self._zero_e2e_grads()
             q_loss.backward()
-            nn.utils.clip_grad_norm_(
+            nn.utils.clip_grad_value_(
                 list(self.q1.parameters()) + list(self.q2.parameters()), self.config.grad_clip
             )
             if self.config.trainable_embedder:
@@ -405,7 +401,7 @@ class IQLTrainer:
 
             self.opt_v.zero_grad(set_to_none=True)
             v_loss.backward()
-            nn.utils.clip_grad_norm_(self.value.parameters(), self.config.grad_clip)
+            nn.utils.clip_grad_value_(self.value.parameters(), self.config.grad_clip)
             self.opt_v.step()
 
             # ── Compute advantage for actor weighting ─────────────────────────
@@ -444,7 +440,7 @@ class IQLTrainer:
         if use_e2e:
             self._zero_e2e_grads()
         actor_loss.backward()
-        nn.utils.clip_grad_norm_(self.actor.parameters(), self.config.grad_clip)
+        nn.utils.clip_grad_value_(self.actor.parameters(), self.config.grad_clip)
         self._clip_embedder_grad()
         if use_e2e:
             self._clip_e2e_grads()
@@ -590,37 +586,44 @@ class IQLTrainer:
         if len(train_ds) == 0:
             raise ValueError("Dataset is empty")
 
-        # Pre-move the full training dataset to the device once.
-        # With DML/CUDA, this eliminates per-batch .to(device) transfers and
-        # replaces DataLoader Python overhead with fast on-device randint sampling.
+        # Keep training tensors on CPU and stream minibatches to device.
+        # Moving multi-million transition datasets to DML can suspend/reset the GPU.
         _ds_tensors = train_ds.tensors
-        _t_states     = _ds_tensors[0].to(self.device)
-        _t_actions    = _ds_tensors[1].to(self.device)
-        _t_rewards    = _ds_tensors[2].to(self.device)
-        _t_next       = _ds_tensors[3].to(self.device)
-        _t_dones      = _ds_tensors[4].to(self.device)
+        _t_states     = _ds_tensors[0].cpu()
+        _t_actions    = _ds_tensors[1].cpu()
+        _t_rewards    = _ds_tensors[2].cpu()
+        _t_next       = _ds_tensors[3].cpu()
+        _t_dones      = _ds_tensors[4].cpu()
         _n_train = len(_t_states)
 
         if eval_s is not None:
-            eval_s  = eval_s.to(self.device)
-            eval_a  = eval_a.to(self.device)
-            eval_r  = eval_r.to(self.device)
-            eval_s2 = eval_s2.to(self.device)
-            eval_d  = eval_d.to(self.device)
+            eval_s  = eval_s.cpu()
+            eval_a  = eval_a.cpu()
+            eval_r  = eval_r.cpu()
+            eval_s2 = eval_s2.cpu()
+            eval_d  = eval_d.cpu()
 
-        _rng = torch.Generator(device=self.device if self.device.type != "privateuseone" else "cpu")
-        _rng.manual_seed(42)
         _bs = self.config.batch_size
 
+        # Pre-generate a large index buffer on CPU.
+        # Keeps sampling lightweight and avoids large device allocations.
+        _IDX_BLOCK = 50_000
+        _idx_buf = torch.randint(0, _n_train, (_IDX_BLOCK,))
+        _idx_pos = 0
+
         def _sample_batch():
-            # Use CPU rng for DML (privateuseone) since it doesn't support on-device Generator
-            if self.device.type == "privateuseone":
-                idx = torch.randint(0, _n_train, (_bs,))
-            else:
-                idx = torch.randint(0, _n_train, (_bs,), generator=_rng, device=self.device)
+            nonlocal _idx_buf, _idx_pos
+            if _idx_pos + _bs > len(_idx_buf):
+                _idx_buf = torch.randint(0, _n_train, (_IDX_BLOCK,))
+                _idx_pos = 0
+            idx = _idx_buf[_idx_pos : _idx_pos + _bs]
+            _idx_pos += _bs
             return (
-                _t_states[idx], _t_actions[idx], _t_rewards[idx],
-                _t_next[idx], _t_dones[idx],
+                _t_states[idx].to(self.device),
+                _t_actions[idx].to(self.device),
+                _t_rewards[idx].to(self.device),
+                _t_next[idx].to(self.device),
+                _t_dones[idx].to(self.device),
             )
 
         print(
@@ -742,6 +745,20 @@ class IQLTrainer:
         import dataclasses
         valid_fields = {f.name for f in dataclasses.fields(IQLConfig)}
         cfg_kwargs = {k: v for k, v in payload["config"].items() if k in valid_fields}
+        # Infer state_dim / action_dim from saved network weights when missing
+        # (handles checkpoints saved before these fields were added to IQLConfig).
+        if "state_dim" not in cfg_kwargs or "action_dim" not in cfg_kwargs:
+            try:
+                actor_sd = payload["actor_state_dict"]
+                # Actor: state → action, first weight shape = (hidden, state_dim)
+                first_key = next(k for k in actor_sd if k.endswith(".weight"))
+                last_key  = [k for k in actor_sd if k.endswith(".weight")][-1]
+                inferred_state_dim  = int(actor_sd[first_key].shape[1])
+                inferred_action_dim = int(actor_sd[last_key].shape[0])
+                cfg_kwargs.setdefault("state_dim",  inferred_state_dim)
+                cfg_kwargs.setdefault("action_dim", inferred_action_dim)
+            except Exception:
+                pass  # will raise naturally on IQLConfig(**cfg_kwargs) if still missing
         cfg = IQLConfig(**cfg_kwargs)
         if device is not None:
             cfg.device = device

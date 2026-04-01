@@ -225,31 +225,43 @@ def pretrain_loop(
 
     pretrainer = pretrainer.to(device)
     pretrainer.train()
-    packed_states = packed_states.to(device)
+    # Keep packed states on CPU and stream minibatches to device.
+    # Moving the full replay tensor to DML can suspend/reset the GPU device.
+    packed_states = packed_states.cpu()
 
     N = len(packed_states)
-    optimizer = torch.optim.AdamW(pretrainer.parameters(), lr=lr, weight_decay=1e-4)
+    # foreach=False: disables vectorized foreach ops not supported by torch-directml
+    optimizer = torch.optim.AdamW(pretrainer.parameters(), lr=lr, weight_decay=1e-4, foreach=False)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer, T_max=num_steps, eta_min=lr * 0.01,
     )
 
-    rng = torch.Generator(device="cpu").manual_seed(42)
     history: list[dict] = []
     t0 = time.time()
 
     print(f"[pretrain] starting masked card prediction: {num_steps} steps, "
           f"batch_size={batch_size}, N={N}, device={device}", flush=True)
 
+    # Pre-generate a large index buffer on CPU and copy to device once.
+    # Amortizes CPU randint overhead — avoids a CPU→GPU sync every batch step.
+    _IDX_BLOCK = 50_000
+    _idx_buf = torch.randint(0, N, (_IDX_BLOCK,))
+    _idx_pos = 0
+
     for step in range(1, num_steps + 1):
-        idx = torch.randint(0, N, (batch_size,), generator=rng)
-        batch = packed_states[idx]
+        if _idx_pos + batch_size > _IDX_BLOCK:
+            _idx_buf = torch.randint(0, N, (_IDX_BLOCK,))
+            _idx_pos = 0
+        idx = _idx_buf[_idx_pos : _idx_pos + batch_size]
+        _idx_pos += batch_size
+        batch = packed_states[idx].to(device)
 
         result = pretrainer(batch)
         loss = result["loss"]
 
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
-        nn.utils.clip_grad_norm_(pretrainer.parameters(), 5.0)
+        nn.utils.clip_grad_value_(pretrainer.parameters(), 5.0)
         optimizer.step()
         scheduler.step()
 

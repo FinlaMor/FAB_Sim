@@ -10,7 +10,9 @@ Provides:
 from __future__ import annotations
 
 import random
+import sqlite3
 import traceback
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -134,8 +136,9 @@ class OpponentPool:
     """Manages agent assignment for training games.
 
     P1 (the learner) always uses the current best IQL checkpoint.
-    P2 (the opponent) is sampled from a mix of: current IQL model,
-    previous checkpoints, heuristic, to provide diverse training signal.
+    P2 (the opponent) is sampled from a configurable mix of previous
+    checkpoints and heuristic (optionally current IQL model), to provide
+    diverse training signal.
     Falls back to heuristic for P1 if no checkpoint exists yet.
     """
 
@@ -144,6 +147,7 @@ class OpponentPool:
         heuristic_seed: int = 0,
         current_checkpoint: str | None = None,
         previous_checkpoints: list[str] | None = None,
+        include_current_in_p2: bool = True,
         device: str = "cpu",
         embedder_bundle: dict | None = None,
     ):
@@ -157,11 +161,11 @@ class OpponentPool:
         else:
             self._p1_config = {"type": "heuristic", "seed": heuristic_seed}
 
-        # P2 opponent pool: mix of current model, previous checkpoints, heuristic
+        # P2 opponent pool: configurable mix of current model, previous checkpoints, heuristic
         self._p2_pool: list[dict[str, Any]] = []
 
         # Current model as opponent (self-play)
-        if current_checkpoint and Path(current_checkpoint).exists():
+        if include_current_in_p2 and current_checkpoint and Path(current_checkpoint).exists():
             self._p2_pool.append({
                 "type": "iql_policy",
                 "checkpoint_path": current_checkpoint,
@@ -390,12 +394,24 @@ class EmbeddingRecorderAgent:
         if self.step_counter[0] >= self.max_decisions_per_game:
             p1_hp = state.players[1].health
             p2_hp = state.players[2].health
-            state.winner = 1 if p1_hp >= p2_hp else 2
+            # Declare winner only if a hero died or HP gap > 30
+            if p1_hp <= 0 or p2_hp <= 0:
+                state.winner = 1 if p1_hp >= p2_hp else 2
+            elif abs(p1_hp - p2_hp) > 30:
+                state.winner = 1 if p1_hp > p2_hp else 2
+            else:
+                state.winner = None
             state.done = True
             if isinstance(options[0], Action):
                 pass_action = next((a for a in options if a.type == ActionType.PASS), None)
                 return pass_action if pass_action is not None else options[0]
             return options[0]
+
+        # Log when option count is dangerously high (combinatorial explosion)
+        if isinstance(options, (list, tuple)) and len(options) > 200:
+            step_name = getattr(state.step, "value", state.step) if hasattr(state, "step") else "?"
+            print(f"  [WARN] game={self.game_id} step={self.step_counter[0]} "
+                  f"phase={step_name} options={len(options)} player={self.player_id}")
 
         # Delegate to base agent for the actual decision
         choice = self.base_agent(state, options, context)
@@ -677,16 +693,19 @@ def _build_embedders(
     return action_embedder, state_embedder
 
 
-def run_games(
+def _run_games_chunk(
     deck_pairs: list[tuple[str, str]],
     opponent_pool: OpponentPool,
     card_db: CardDB,
-    replay_db: ReplayDB,
+    replay_db: ReplayDB | str,
     game_data_store: Any | None,
     embedder_bundle: dict,
     max_turns: int = 200,
     seed: int = 0,
     device: "torch.device | str | None" = None,
+    index_offset: int = 0,
+    total_games: int | None = None,
+    worker_label: str = "",
 ) -> GameResults:
     """Run a batch of games and record results.
 
@@ -697,6 +716,11 @@ def run_games(
     4. Record results to ReplayDB (for IQL) and GameDataStore (for deck evaluator).
     5. Catch individual game errors without halting the batch.
     """
+    created_replay_db = False
+    if isinstance(replay_db, str):
+        replay_db = ReplayDB(replay_db)
+        created_replay_db = True
+
     rng = random.Random(seed)
     backend = LocalEngineBackend()
     # Resolve device — accept string ("dml", "cpu", etc.) or torch.device
@@ -708,7 +732,10 @@ def run_games(
     action_embedder, state_embedder = _build_embedders(embedder_bundle, device=_device)
     results = GameResults()
 
+    total = total_games if total_games is not None else len(deck_pairs)
+
     for idx, (p1_deck, p2_deck) in enumerate(deck_pairs):
+        display_idx = index_offset + idx + 1
         game_seed = rng.randint(0, 2**31 - 1)
         try:
             # Extract hero names for replay DB
@@ -761,10 +788,27 @@ def run_games(
 
             winner = getattr(game_state, "winner", None)
             turn_number = getattr(game_state, "turn_number", 0)
-            ended_on_cap = turn_number >= max_turns
             guardrail_terminated = step_counter[0] >= p1_agent.max_decisions_per_game
+            ended_on_cap = bool(
+                getattr(game_state, "ended_on_turn_cap", False)
+                or turn_number >= max_turns
+                or guardrail_terminated
+            )
             p1_hp = game_state.players[1].health if hasattr(game_state, "players") else 0
             p2_hp = game_state.players[2].health if hasattr(game_state, "players") else 0
+
+            # If both heroes are alive, only award winner/rewards when
+            # the HP gap is decisive (>30).  Otherwise treat as
+            # inconclusive — no winner, no rewards.
+            both_alive = p1_hp > 0 and p2_hp > 0
+            inconclusive = False
+            if both_alive:
+                hp_gap = abs(p1_hp - p2_hp)
+                if hp_gap > 30:
+                    winner = 1 if p1_hp > p2_hp else 2
+                else:
+                    winner = None
+                    inconclusive = True
 
             # Finalize in ReplayDB
             replay_db.finalize_game(game_id, winner, turn_number, ended_on_cap)
@@ -772,7 +816,7 @@ def run_games(
             # Assign damage-scaled rewards and terminal signals
             _assign_game_rewards(
                 replay_db, game_id, combat_log, winner,
-                is_guardrail=ended_on_cap or guardrail_terminated,
+                is_guardrail=inconclusive or ended_on_cap or guardrail_terminated,
             )
 
             replay_db.flush()
@@ -816,7 +860,8 @@ def run_games(
             )
             results.results.append(result)
 
-            msg = (f"  Game {idx + 1}/{len(deck_pairs)}: "
+            prefix = f"[{worker_label}] " if worker_label else ""
+            msg = (f"  {prefix}Game {display_idx}/{total}: "
                    f"winner=P{winner or '?'}, turns={turn_number}, "
                    f"HP={p1_hp}/{p2_hp}")
             if guardrail_terminated:
@@ -838,6 +883,276 @@ def run_games(
                 p2_deck=p2_deck,
                 error=str(exc),
             ))
-            print(f"  Game {idx + 1}/{len(deck_pairs)}: ERROR - {exc}")
+            prefix = f"[{worker_label}] " if worker_label else ""
+            print(f"  {prefix}Game {display_idx}/{total}: ERROR - {exc}")
+
+    if created_replay_db:
+        replay_db.flush()
+        replay_db.close()
 
     return results
+
+
+def _merge_replay_shard(main_db_path: str, shard_db_path: str) -> tuple[int, int]:
+    """Merge a worker replay shard into the main replay DB.
+
+    Returns (games_merged, transitions_merged).
+    """
+    main = sqlite3.connect(main_db_path)
+    shard = sqlite3.connect(shard_db_path)
+    main.row_factory = sqlite3.Row
+    shard.row_factory = sqlite3.Row
+
+    games_merged = 0
+    transitions_merged = 0
+
+    try:
+        game_rows = shard.execute(
+            "SELECT game_id, p1_hero, p2_hero, winner, turns, ended_on_turn_cap, created_at FROM games ORDER BY game_id"
+        ).fetchall()
+
+        for g in game_rows:
+            cur = main.execute(
+                "INSERT INTO games (p1_hero, p2_hero, winner, turns, ended_on_turn_cap, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+                (g["p1_hero"], g["p2_hero"], g["winner"], g["turns"], g["ended_on_turn_cap"], g["created_at"]),
+            )
+            new_game_id = int(cur.lastrowid)
+            old_game_id = g["game_id"]
+
+            transition_rows = shard.execute(
+                "SELECT id, step_idx, player_id, phase, obs, action, reward, done FROM transitions WHERE game_id = ? ORDER BY id",
+                (old_game_id,),
+            ).fetchall()
+
+            id_map: dict[int, int] = {}
+            for t in transition_rows:
+                t_cur = main.execute(
+                    "INSERT INTO transitions (game_id, step_idx, player_id, phase, obs, action, reward, done) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (new_game_id, t["step_idx"], t["player_id"], t["phase"], t["obs"], t["action"], t["reward"], t["done"]),
+                )
+                id_map[int(t["id"])] = int(t_cur.lastrowid)
+                transitions_merged += 1
+
+            if id_map:
+                placeholders = ",".join("?" for _ in id_map)
+                emb_rows = shard.execute(
+                    f"SELECT transition_id, state_embedding, action_embedding, state_features, action_features FROM embeddings WHERE transition_id IN ({placeholders})",
+                    tuple(id_map.keys()),
+                ).fetchall()
+                for e in emb_rows:
+                    mapped_tid = id_map[int(e["transition_id"])]
+                    main.execute(
+                        "INSERT OR REPLACE INTO embeddings (transition_id, state_embedding, action_embedding, state_features, action_features) VALUES (?, ?, ?, ?, ?)",
+                        (mapped_tid, e["state_embedding"], e["action_embedding"], e["state_features"], e["action_features"]),
+                    )
+
+            games_merged += 1
+
+        main.commit()
+    finally:
+        shard.close()
+        main.close()
+
+    return games_merged, transitions_merged
+
+
+def _worker_process_entry(
+    deck_pairs: list[tuple[str, str]],
+    shard_db_path: str,
+    game_data_db_path: str | None,
+    embedder_bundle_path: str,
+    slug_index_path: str,
+    opponent_config: dict,
+    max_turns: int,
+    seed: int,
+    device: str | None,
+    index_offset: int,
+    total_games: int,
+    worker_label: str,
+) -> dict:
+    """Entry point for worker processes. Reconstructs all objects from paths.
+
+    Returns a dict (not GameResults) so it's easily picklable across processes.
+    """
+    from rl_agents.embedder_bundle import load_embedder_bundle
+    from rl_agents.game_data import GameDataStore
+
+    # Reconstruct objects in this process
+    card_db = CardDB(slug_index_path)
+    embedder_bundle = load_embedder_bundle(embedder_bundle_path)
+    replay_db = ReplayDB(shard_db_path)
+
+    game_data_store = None
+    if game_data_db_path:
+        game_data_store = GameDataStore(db_path=game_data_db_path)
+
+    opponent_pool = OpponentPool(
+        heuristic_seed=opponent_config["heuristic_seed"],
+        current_checkpoint=opponent_config.get("current_checkpoint"),
+        previous_checkpoints=opponent_config.get("previous_checkpoints"),
+        device=opponent_config.get("device", "cpu"),
+        embedder_bundle=embedder_bundle,
+    )
+
+    results = _run_games_chunk(
+        deck_pairs=deck_pairs,
+        opponent_pool=opponent_pool,
+        card_db=card_db,
+        replay_db=replay_db,
+        game_data_store=game_data_store,
+        embedder_bundle=embedder_bundle,
+        max_turns=max_turns,
+        seed=seed,
+        device=device,
+        index_offset=index_offset,
+        total_games=total_games,
+        worker_label=worker_label,
+    )
+
+    replay_db.flush()
+    replay_db.close()
+    if game_data_store is not None:
+        game_data_store.close()
+
+    # Return plain dicts for pickling
+    return {
+        "results": [
+            {
+                "winner": r.winner,
+                "turn_number": r.turn_number,
+                "ended_on_turn_cap": r.ended_on_turn_cap,
+                "p1_final_hp": r.p1_final_hp,
+                "p2_final_hp": r.p2_final_hp,
+                "p1_deck": r.p1_deck,
+                "p2_deck": r.p2_deck,
+                "error": r.error,
+            }
+            for r in results.results
+        ],
+        "errors": results.errors,
+    }
+
+
+def run_games(
+    deck_pairs: list[tuple[str, str]],
+    opponent_pool: OpponentPool,
+    card_db: CardDB,
+    replay_db: ReplayDB,
+    game_data_store: Any | None,
+    embedder_bundle: dict,
+    max_turns: int = 200,
+    seed: int = 0,
+    device: "torch.device | str | None" = None,
+    game_workers: int = 1,
+) -> GameResults:
+    """Run a batch of games and record results.
+
+    When game_workers > 1, games are split across worker *processes*
+    (not threads) so each gets its own GIL and torch context.
+    Each worker writes to a private shard DB, which is merged back
+    into the main replay DB sequentially after all workers finish.
+    """
+    if game_workers <= 1 or len(deck_pairs) <= 1:
+        return _run_games_chunk(
+            deck_pairs=deck_pairs,
+            opponent_pool=opponent_pool,
+            card_db=card_db,
+            replay_db=replay_db,
+            game_data_store=game_data_store,
+            embedder_bundle=embedder_bundle,
+            max_turns=max_turns,
+            seed=seed,
+            device=device,
+            index_offset=0,
+            total_games=len(deck_pairs),
+        )
+
+    workers = max(1, min(int(game_workers), len(deck_pairs)))
+    chunks: list[list[tuple[str, str]]] = [list() for _ in range(workers)]
+    offsets: list[int] = [0 for _ in range(workers)]
+
+    for idx, pair in enumerate(deck_pairs):
+        chunks[idx % workers].append(pair)
+
+    running = 0
+    for i in range(workers):
+        offsets[i] = running
+        running += len(chunks[i])
+
+    # Flush and close the main DB — workers will use independent shards
+    replay_db.flush()
+    replay_db.close()
+
+    main_db_path = replay_db.db_path
+
+    # Build serializable opponent config from the pool's internal state
+    opponent_config = {
+        "heuristic_seed": opponent_pool._heuristic_seed,
+        "current_checkpoint": opponent_pool._p1_config.get("checkpoint_path"),
+        "previous_checkpoints": [
+            e["checkpoint_path"]
+            for e in opponent_pool._p2_pool
+            if e["type"] == "iql_policy" and e.get("checkpoint_path") != opponent_pool._p1_config.get("checkpoint_path")
+        ] or None,
+        "device": opponent_pool._device,
+    }
+
+    # Resolve paths needed by workers
+    embedder_bundle_path = str(Path(main_db_path).parent.parent / "checkpoints" / "embedder_bundle.pt")
+    slug_index_path = str(SLUG_INDEX_PATH)
+    game_data_db_path = game_data_store.db_path if game_data_store is not None else None
+    device_str = str(device) if device is not None else None
+
+    shard_paths: list[str] = []
+    futures = {}
+    merged_results = GameResults()
+
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        for worker_id in range(workers):
+            chunk = chunks[worker_id]
+            if not chunk:
+                continue
+            shard_path = f"{main_db_path}.worker{worker_id}.db"
+            Path(shard_path).unlink(missing_ok=True)
+            shard_paths.append(shard_path)
+
+            fut = executor.submit(
+                _worker_process_entry,
+                deck_pairs=chunk,
+                shard_db_path=shard_path,
+                game_data_db_path=game_data_db_path,
+                embedder_bundle_path=embedder_bundle_path,
+                slug_index_path=slug_index_path,
+                opponent_config=opponent_config,
+                max_turns=max_turns,
+                seed=seed + worker_id * 1_000_003,
+                device=device_str,
+                index_offset=offsets[worker_id],
+                total_games=len(deck_pairs),
+                worker_label=f"W{worker_id + 1}",
+            )
+            futures[fut] = shard_path
+
+        for fut in as_completed(futures):
+            result_dict = fut.result()
+            for r in result_dict["results"]:
+                merged_results.results.append(GameResult(**r))
+            merged_results.errors.extend(result_dict["errors"])
+
+    # Merge shards into main DB sequentially
+    total_merged_games = 0
+    total_merged_transitions = 0
+    for shard_path in shard_paths:
+        games_merged, transitions_merged = _merge_replay_shard(main_db_path, shard_path)
+        total_merged_games += games_merged
+        total_merged_transitions += transitions_merged
+        Path(shard_path).unlink(missing_ok=True)
+
+    # Re-open main connection for subsequent pipeline steps
+    replay_db.conn
+    print(
+        f"  Merged replay shards: games={total_merged_games}, "
+        f"transitions={total_merged_transitions}, workers={workers}"
+    )
+
+    return merged_results

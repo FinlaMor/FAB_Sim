@@ -161,12 +161,17 @@ def step_validate_decks(args) -> list[str]:
     from engine.card import CardDB
     from config import SLUG_INDEX_PATH
     import json
+    import msgpack
 
     # Load card_db and slug_index for validation
     if args._card_db is None:
         args._card_db = CardDB(str(SLUG_INDEX_PATH))
-    with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
-        si_data = json.load(f)
+    if str(SLUG_INDEX_PATH).endswith(".msgpack"):
+        with open(SLUG_INDEX_PATH, "rb") as f:
+            si_data = msgpack.unpack(f, raw=False)
+    else:
+        with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
+            si_data = json.load(f)
     slug_index = si_data.get("by_slug", si_data)
 
     deck_dir = str(GENERATED_DIR)
@@ -228,6 +233,7 @@ def step_run_games(args, valid_decks: list[str], loop_num: int,
         embedder_bundle=args._embedder_bundle,
         max_turns=args.max_turns,
         seed=args.seed + loop_num * 10000,
+        game_workers=args.game_workers,
     )
 
     elapsed = time.time() - t0
@@ -344,9 +350,15 @@ def step_pretrain_transformer(args, loop_num: int) -> None:
         "--db-path", str(args._replay_db.db_path),
         "--embedder-bundle", str(bundle_path),
         "--steps", str(args.pretrain_steps),
-        "--batch-size", "128",
-        "--device", "cpu",
+        "--batch-size", str(args.pretrain_batch_size),
+        "--device", args.pretrain_device,
     ]
+
+    # Resume from the latest pretrain checkpoint so training is continuous across loops
+    pretrain_ckpt_dir = CHECKPOINT_DIR / "pretrain_ckpts"
+    pretrain_ckpts = sorted(pretrain_ckpt_dir.glob("pretrain_step*.pt")) if pretrain_ckpt_dir.exists() else []
+    if pretrain_ckpts:
+        cmd.extend(["--resume", str(pretrain_ckpts[-1])])
 
     label = f"Stage 4: Pre-train transformer (loop {loop_num})"
     run_step(label, cmd, allow_fail=True)
@@ -368,8 +380,9 @@ def step_reembed_replay(args, loop_num: int) -> None:
         PYTHON, str(ROOT / "scripts" / "reembed_replay.py"),
         "--db-path", str(args._replay_db.db_path),
         "--embedder-bundle", str(bundle_path),
-        "--batch-size", "256",
-        "--device", "cpu",
+        "--batch-size", str(args.reembed_batch_size),
+        "--device", args.reembed_device,
+        "--max-games", str(args.iql_replay_buffer_games),
     ]
 
     label = f"Stage 5: Re-embed replay data (loop {loop_num})"
@@ -379,6 +392,25 @@ def step_reembed_replay(args, loop_num: int) -> None:
         "Transitions re-embedded": n_transitions,
     })
 
+def _get_recent_game_ids(db_path: Path, max_games: int) -> list[int] | None:
+    """Return game IDs of the most recent max_games games with outcomes, or None for all."""
+    if max_games <= 0 or not db_path:
+        return None
+    try:
+        conn = sqlite3.connect(str(db_path))
+        rows = conn.execute(
+            """
+            SELECT game_id FROM games
+            WHERE winner IS NOT NULL
+            ORDER BY rowid DESC
+            LIMIT ?
+            """,
+            (max_games,),
+        ).fetchall()
+        conn.close()
+        return [r[0] for r in rows] or None
+    except Exception:
+        return None
 
 def step_train_player_bot(args, loop_num: int) -> None:
     """Stage 6: Train IQL player bot on frozen embeddings."""
@@ -412,7 +444,8 @@ def step_train_player_bot(args, loop_num: int) -> None:
         "--db-path", str(replay_db_path),
         "--embedder-bundle", str(CHECKPOINT_DIR / "embedder_bundle.pt"),
         "--steps", str(args.iql_steps),
-        "--batch-size", "256",
+        "--batch-size", str(args.iql_batch_size),
+        "--e2e-batch-size", str(args.iql_e2e_batch_size),
         "--device", args.iql_device,
         "--out-dir", out_dir,
         "--normalize-rewards",
@@ -420,6 +453,12 @@ def step_train_player_bot(args, loop_num: int) -> None:
     ]
     if prev_ckpt is not None:
         cmd.extend(["--resume-from", str(prev_ckpt)])
+        
+    # Replay buffer cap: only train on the most recent N games to avoid
+    # off-policy contamination from old weak-policy trajectories.
+    recent_ids = _get_recent_game_ids(replay_db_path, args.iql_replay_buffer_games)
+    if recent_ids is not None:
+        cmd += ["--game-ids"] + [str(g) for g in recent_ids]
 
     label = f"Stage 6: Train IQL player bot (loop {loop_num})"
     run_step(label, cmd, allow_fail=True)
@@ -524,9 +563,7 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
     t0 = time.time()
 
     # Find the latest IQL checkpoint — train_iql saves inside a timestamped subdir
-    iql_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
-    ckpt_candidates = sorted(iql_dir.glob("*/checkpoint_final.pt")) if iql_dir.exists() else []
-    current_ckpt = ckpt_candidates[-1] if ckpt_candidates else None
+    current_ckpt = _get_current_loop_checkpoint(loop_num)
     if not current_ckpt or not current_ckpt.exists():
         current_ckpt = find_best_checkpoint("player_bot")
     if not current_ckpt or not current_ckpt.exists():
@@ -544,7 +581,9 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
         args._card_db = CardDB(str(SLUG_INDEX_PATH))
 
     backend = LocalEngineBackend()
-    n_bench = 10  # games per opponent type
+    n_bench_random = int(args.benchmark_games_random)
+    n_bench_heuristic = int(args.benchmark_games_heuristic)
+    n_bench_previous = int(args.benchmark_games_previous)
     results_table: dict[str, str] = {}
     rates: dict[str, float] = {}
 
@@ -558,13 +597,20 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
     import random as _random
     rng = _random.Random(args.seed + loop_num * 999)
 
-    def _run_bench_games(p1_agent, p2_agent, label: str) -> float:
-        """Run n_bench games and return P1 win rate."""
+    def _run_bench_games(primary_agent, opponent_agent, label: str, n_games: int) -> float:
+        """Run n_games games and return primary_agent win rate.
+
+        Seats are alternated each game to reduce first-player/seat bias.
+        """
         wins = 0
         completed = 0
-        for i in range(n_bench):
+        for i in range(n_games):
             d1, d2 = rng.sample(deck_files, 2)
             try:
+                primary_is_p1 = (i % 2 == 0)
+                p1_agent = primary_agent if primary_is_p1 else opponent_agent
+                p2_agent = opponent_agent if primary_is_p1 else primary_agent
+
                 req = GameRunRequest(
                     p1_deck=str(d1),
                     p2_deck=str(d2),
@@ -577,7 +623,10 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
                 )
                 result = backend.run_game(req)
                 completed += 1
-                if hasattr(result, 'winner') and result.winner == 1:
+                winner = getattr(result, "winner", None)
+                if winner is None:
+                    continue
+                if (primary_is_p1 and winner == 1) or ((not primary_is_p1) and winner == 2):
                     wins += 1
             except Exception as e:
                 print(f"    {label} game {i}: error — {e}")
@@ -614,16 +663,16 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
 
     # Benchmark vs random
     random_agent = RandomAgent(seed=args.seed + 100)
-    rates["vs_random"] = _run_bench_games(iql_agent, random_agent, "vs_random")
-    results_table["vs Random"] = f"{rates['vs_random']:.1%} ({n_bench} games)"
+    rates["vs_random"] = _run_bench_games(iql_agent, random_agent, "vs_random", n_bench_random)
+    results_table["vs Random"] = f"{rates['vs_random']:.1%} ({n_bench_random} games)"
 
     # Benchmark vs heuristic
     heuristic_agent = HeuristicBot(seed=args.seed + 200)
-    rates["vs_heuristic"] = _run_bench_games(iql_agent, heuristic_agent, "vs_heuristic")
-    results_table["vs Heuristic"] = f"{rates['vs_heuristic']:.1%} ({n_bench} games)"
+    rates["vs_heuristic"] = _run_bench_games(iql_agent, heuristic_agent, "vs_heuristic", n_bench_heuristic)
+    results_table["vs Heuristic"] = f"{rates['vs_heuristic']:.1%} ({n_bench_heuristic} games)"
 
     # Benchmark vs previous checkpoint (if exists)
-    prev_ckpt = _find_previous_checkpoint(loop_num)
+    prev_ckpt = _find_previous_checkpoint(loop_num, current_ckpt=current_ckpt)
     if prev_ckpt is not None:
         try:
             prev_agent = IQLPolicyAgent(
@@ -633,8 +682,8 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
                 seed=args.seed + 300,
                 embedder_bundle=embedder_bundle,
             )
-            rates["vs_previous"] = _run_bench_games(iql_agent, prev_agent, "vs_previous")
-            results_table["vs Previous"] = f"{rates['vs_previous']:.1%} ({n_bench} games)"
+            rates["vs_previous"] = _run_bench_games(iql_agent, prev_agent, "vs_previous", n_bench_previous)
+            results_table["vs Previous"] = f"{rates['vs_previous']:.1%} ({n_bench_previous} games)"
         except Exception as e:
             results_table["vs Previous"] = f"error — {e}"
     else:
@@ -655,14 +704,37 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
     return rates
 
 
-def _find_previous_checkpoint(loop_num: int) -> Path | None:
-    """Find the most recent IQL checkpoint from a previous loop."""
-    for prev_l in range(loop_num - 1, -1, -1):
-        prev_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_l}"
-        if prev_dir.exists():
-            candidates = sorted(prev_dir.glob("*/checkpoint_final.pt"))
-            if candidates:
-                return candidates[-1]
+def _get_current_loop_checkpoint(loop_num: int) -> Path | None:
+    """Return latest checkpoint for the current loop, if present."""
+    iql_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
+    ckpt_candidates = sorted(iql_dir.glob("*/checkpoint_final.pt")) if iql_dir.exists() else []
+    return ckpt_candidates[-1] if ckpt_candidates else None
+
+
+def _all_iql_checkpoints() -> list[Path]:
+    """Return all IQL checkpoints sorted by path (timestamped run dirs are sortable)."""
+    iql_root = CHECKPOINT_DIR / "iql"
+    if not iql_root.exists():
+        return []
+    return sorted(iql_root.glob("loop*/**/checkpoint_final.pt"))
+
+
+def _find_previous_checkpoint(loop_num: int, current_ckpt: Path | None = None) -> Path | None:
+    """Find the most recent IQL checkpoint that is not the current loop's latest.
+
+    Includes prior runs from the same loop so repeated loop0 executions can be
+    compared against the most recent earlier checkpoint.
+    """
+    active = current_ckpt or _get_current_loop_checkpoint(loop_num)
+    candidates = _all_iql_checkpoints()
+    if not candidates:
+        return None
+    if active is None:
+        return candidates[-1]
+    active_r = active.resolve()
+    for ckpt in reversed(candidates):
+        if ckpt.resolve() != active_r:
+            return ckpt
     return None
 
 
@@ -727,7 +799,7 @@ def _evaluate_checkpoint_promotion(
     # Check improvement over previous checkpoint's benchmark scores
     improved = False
     prev_loop_for_rates = None
-    for prev_l in range(loop_num - 1, -1, -1):
+    for prev_l in range(loop_num, -1, -1):
         prev_rates = _load_benchmark_rates(prev_l)
         if prev_rates is not None:
             prev_loop_for_rates = prev_l
@@ -768,13 +840,24 @@ def _evaluate_checkpoint_promotion(
     return False
 
 
-def _discard_loop_checkpoint(loop_num: int) -> None:
-    """Remove the current loop's IQL checkpoint so the previous best stays active."""
+def _discard_loop_checkpoint(loop_num: int, current_ckpt: Path | None = None) -> None:
+    """Discard only the current run's checkpoint directory.
+
+    Preserves earlier checkpoints in the same loop directory (important for
+    repeated loop0 runs where prior baselines live under loop0/*).
+    """
     import shutil
+    ckpt = current_ckpt or _get_current_loop_checkpoint(loop_num)
+    if ckpt is None:
+        return
+    run_dir = ckpt.parent
+    if run_dir.exists():
+        shutil.rmtree(run_dir)
+        print(f"  Discarded checkpoint run at {run_dir}")
+
     loop_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
-    if loop_dir.exists():
-        shutil.rmtree(loop_dir)
-        print(f"  Discarded checkpoint at {loop_dir}")
+    if loop_dir.exists() and not any(loop_dir.iterdir()):
+        loop_dir.rmdir()
 
 
 # ---------------------------------------------------------------------------
@@ -808,19 +891,44 @@ def build_parser() -> argparse.ArgumentParser:
 
     # Game settings
     games_g = parser.add_argument_group("game settings")
-    games_g.add_argument("--games-per-loop", type=int, default=100,
-                         help="Games to simulate per loop iteration (default: 100)")
+    games_g.add_argument("--games-per-loop", type=int, default=3000,
+                         help="Games to simulate per loop iteration (default: 3000)")
     games_g.add_argument("--max-turns", type=int, default=200,
                          help="Turn cap per game (default: 200)")
+    games_g.add_argument("--game-workers", type=int, default=4,
+                         help="Parallel local game workers (default: 4)")
 
     # Training settings
     train_g = parser.add_argument_group("training settings")
-    train_g.add_argument("--pretrain-steps", type=int, default=5000,
-                         help="Transformer pre-training steps per loop (default: 5000)")
-    train_g.add_argument("--iql-steps", type=int, default=20000,
-                         help="IQL training steps per loop (default: 20000)")
+    train_g.add_argument("--pretrain-steps", type=int, default=2000,
+                         help="Transformer pre-training steps per loop (default: 2000)")
+    train_g.add_argument("--iql-steps", type=int, default=10000,
+                         help="IQL training steps per loop (default: 10000)")
+    train_g.add_argument("--iql-replay-buffer-games", type=int, default=4000,
+                         help="Cap replay buffer to this many most-recent games (0 = unlimited)")
     train_g.add_argument("--iql-device", default="dml",
                          help="Torch device for IQL training/inference (default: dml)")
+    train_g.add_argument("--pretrain-device", default="dml",
+                         help="Torch device for transformer pretraining (default: dml)")
+    train_g.add_argument("--reembed-device", default="dml",
+                         help="Torch device for re-embedding inference (default: dml)")
+    train_g.add_argument("--pretrain-batch-size", type=int, default=128,
+                         help="Batch size for transformer pretraining (default: 128). "
+                              "Seq len=130 means batch 1024 needs ~556MB for attention alone — keep ≤256.")
+    train_g.add_argument("--reembed-batch-size", type=int, default=1024,
+                         help="Batch size for re-embedding inference (default: 1024)")
+    train_g.add_argument("--iql-batch-size", type=int, default=1024,
+                         help="Batch size for IQL training (default: 1024)")
+    train_g.add_argument("--iql-e2e-batch-size", type=int, default=128,
+                         help="Batch size cap for e2e transformer training path (default: 128)")
+    train_g.add_argument("--include-self-play-opponent", action=argparse.BooleanOptionalAction, default=True,
+                         help="Include current checkpoint as a P2 self-play opponent in Stage 2 (default: enabled)")
+    train_g.add_argument("--benchmark-games-random", type=int, default=50,
+                         help="Benchmark games vs random bot (default: 50)")
+    train_g.add_argument("--benchmark-games-heuristic", type=int, default=50,
+                         help="Benchmark games vs heuristic bot (default: 50)")
+    train_g.add_argument("--benchmark-games-previous", type=int, default=50,
+                         help="Benchmark games vs most recent prior checkpoint (default: 50)")
 
     # Loop settings
     loop_g = parser.add_argument_group("loop settings")
@@ -1008,20 +1116,21 @@ def main():
                         current_ckpt = str(candidates[-1])
                         break
 
-            # Collect older checkpoints (everything except the current best)
+            # Select exactly the two most recent prior checkpoints for P2 diversity.
+            all_ckpts = sorted((CHECKPOINT_DIR / "iql").glob("loop*/**/checkpoint_final.pt"))
             prev_ckpts: list[str] = []
-            for prev_l in range(loop_num):
-                prev_loop_dir = CHECKPOINT_DIR / "iql" / f"loop{prev_l}"
-                if prev_loop_dir.exists():
-                    candidates = sorted(prev_loop_dir.glob("*/checkpoint_final.pt"))
-                    for c in candidates:
-                        if str(c) != current_ckpt:
-                            prev_ckpts.append(str(c))
+            for ckpt in reversed(all_ckpts):
+                if current_ckpt is not None and str(ckpt) == current_ckpt:
+                    continue
+                prev_ckpts.append(str(ckpt))
+                if len(prev_ckpts) >= 2:
+                    break
 
             opponent_pool = OpponentPool(
                 heuristic_seed=args.seed + loop_num,
                 current_checkpoint=current_ckpt,
                 previous_checkpoints=prev_ckpts if prev_ckpts else None,
+                include_current_in_p2=args.include_self_play_opponent,
                 device=args.iql_device,
                 embedder_bundle=args._embedder_bundle,
             )
@@ -1030,8 +1139,16 @@ def main():
                 print(f"  P1: IQL model ({Path(current_ckpt).parent.name})")
             else:
                 print(f"  P1: Heuristic (no IQL checkpoint yet)")
+            n_current_self_play = 0
+            if current_ckpt is not None:
+                n_current_self_play = sum(
+                    1
+                    for a in opponent_pool._p2_pool
+                    if a["type"] == "iql_policy" and a.get("checkpoint_path") == current_ckpt
+                )
             print(f"  P2 pool: {len(opponent_pool._p2_pool)} opponents "
-                  f"({sum(1 for a in opponent_pool._p2_pool if a['type'] == 'iql_policy')} IQL, "
+                  f"({sum(1 for a in opponent_pool._p2_pool if a['type'] == 'iql_policy') - n_current_self_play} prior IQL, "
+                  f"{n_current_self_play} current self-play, "
                   f"{sum(1 for a in opponent_pool._p2_pool if a['type'] == 'heuristic')} heuristic)")
 
             step_run_games(args, valid_decks, loop_num, opponent_pool)
@@ -1098,7 +1215,7 @@ def main():
         if not args.skip_player_train:
             promoted = _evaluate_checkpoint_promotion(loop_num, bench_rates)
             if not promoted:
-                _discard_loop_checkpoint(loop_num)
+                _discard_loop_checkpoint(loop_num, _get_current_loop_checkpoint(loop_num))
 
         loop_num += 1
 
