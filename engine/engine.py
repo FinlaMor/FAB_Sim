@@ -152,12 +152,25 @@ def _game_loop(state: GameState) -> None:
     """Iterative main game loop — avoids deep recursion from turn/combat cycling."""
     state._next_phase = "start_of_turn"
 
+    _stalemate_health_history: list[tuple[int, int]] = []
+    _STALEMATE_TURNS = 50  # end game if health unchanged for this many consecutive turns
+
     while not state.done:
         phase = state._next_phase
         # Prevent pathological long games from generating runaway data volume.
         if phase == "start_of_turn" and state.turn_number >= state.max_turns:
             _end_game_on_turn_cap(state)
             break
+        # Stalemate detection: if health hasn't changed in _STALEMATE_TURNS turns, end game.
+        if phase == "start_of_turn":
+            hp = (state.players[1].health, state.players[2].health)
+            _stalemate_health_history.append(hp)
+            if len(_stalemate_health_history) > _STALEMATE_TURNS:
+                _stalemate_health_history.pop(0)
+            if (len(_stalemate_health_history) == _STALEMATE_TURNS
+                    and len(set(_stalemate_health_history)) == 1):
+                _end_game_on_turn_cap(state)
+                break
 
         if phase == "start_of_turn":
             _start_of_turn_phase(state)
@@ -219,8 +232,23 @@ def _start_of_turn_phase(state: GameState) -> None:
     # Clear equipment-defended tracking (safety net)
     player.equipment_defended_this_turn = []
 
+    # Reset card.exhausted for all equipment in arena (covers "once per turn" and {t}-cost instants)
+    for _zone in (player.head, player.chest, player.arms, player.legs):
+        for _card in _zone.cards:
+            _card.exhausted = False
+    for _card in player.weapon.cards:
+        _card.exhausted = False
+
     # Clear combat chain link history
     state.chain_links = []
+
+    # Clear per-chain-link hit-tracking counters (mask_of_momentum streak etc.)
+    for _key in [k for k in player.class_counters if k.startswith("current_link_hit")]:
+        del player.class_counters[_key]
+
+    # Clear per-turn class counter flags
+    player.class_counters.pop("charged_this_turn", None)
+    player.class_counters.pop("boosted_this_turn", None)
 
     if environ['debug'] == 'True':
         import json
@@ -413,7 +441,9 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
 
     # 7.6.2: chain link resolves, go again check
     state.event_manager.emit('chain_link_resolves', state)
-    if 'go_again' in state.combat.keywords:
+    # CR 8.3.5b: Go Again grants +1 AP at Resolution Step.
+    # Keywords may appear as "Go again", "Go Again", or "go_again" depending on source.
+    if any(k.lower().replace(' ', '_') == 'go_again' for k in state.combat.keywords):
         state.active().action_points += 1
 
     # 7.6.3: turn player gains priority
@@ -611,7 +641,11 @@ def _resolve_all_triggers(state: GameState) -> None:
             handle_stack(state)
 
 def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
-    """Consume pending turn effects that modify the next attack (from registry)."""
+    """Consume pending turn effects that modify the next attack (from registry).
+
+    Effects marked with ``persistent=True`` are NOT consumed — they apply
+    to every attack for the rest of the turn (e.g. ``all_attacks_+N``).
+    """
     from engine.card_effects.registry import TURN_ATTACK_EFFECTS
     player = state.active()
     consumed = []
@@ -623,7 +657,8 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
         if cond_fn and not cond_fn(attack_card, player, state):
             continue
         cfg["apply_fn"](attack_card, player, state)
-        consumed.append(effect_key)
+        if not cfg.get("persistent", False):
+            consumed.append(effect_key)
     for key in consumed:
         player.current_turn_effects.remove(key)
 
@@ -638,6 +673,15 @@ def _recalculate_attack_power(combat) -> None:
     for effect_type, fn in getattr(card, 'effects', []):
         if effect_type == "base_power_multiply":
             power = fn(power)
+    # CR 8.3.23: Piercing — static ability evaluated fresh each recalculation.
+    # Replaces the triggered approach (keywords.py piercing() is now a noop).
+    for kw in getattr(card, 'keywords', []):
+        if kw.lower().startswith('piercing'):
+            parts = kw.split()
+            n = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 1
+            if any(c.is_equipment for c in (combat.defending_cards or [])):
+                power += n
+            break
     combat.attack_power = power
 
 def _resolve_damage(state: GameState) -> None:
@@ -685,6 +729,50 @@ def _resolve_damage(state: GameState) -> None:
     )
     state.chain_links.append(link)
 
+    # CR 8.5.46: Resolve wagers — winner creates the prize token
+    _resolve_wagers(state, combat)
+
+def _resolve_wagers(state: GameState, combat) -> None:
+    """CR 8.5.46: Resolve all wagers on the current chain link.
+
+    If the attack hit, the controller (attacker) wins. Otherwise the
+    opponent (defender) wins. The winner creates the prize token.
+    """
+    from engine.card_effects.keywords import create_token
+    if not combat.wagers:
+        return
+
+    hit = combat.hit
+    for controller_id, prize_slug in combat.wagers:
+        opponent_id = 3 - controller_id
+        winner_id = controller_id if hit else opponent_id
+        # Emit wager_resolved event
+        state.event_manager.emit(
+            Event(type='wager_resolved',
+                  data={'winner': winner_id, 'loser': 3 - winner_id,
+                        'hit': hit, 'prize': prize_slug,
+                        'controller': controller_id}),
+            state)
+        # Create prize token for the winner
+        if prize_slug:
+            create_token(state, winner_id, prize_slug)
+
+    combat.wagers.clear()
+
+
+def _apply_watery_grave(card, state: GameState) -> None:
+    """CR 8.3.41: If card has Watery Grave and entered graveyard from the arena, turn face-down."""
+    if not hasattr(card, 'keywords') or not card.keywords:
+        return
+    has_wg = any("watery grave" in kw.lower() for kw in card.keywords)
+    if not has_wg:
+        return
+    from engine.card_effects.keywords import ARENA_ZONE_NAMES
+    if card.prev_zone in ARENA_ZONE_NAMES:
+        card.face_down = True
+        card.is_public = False
+
+
 def _close_combat_chain(state: GameState) -> None:
     """7.7.5-7.7.6: move cards to appropriate zones after combat."""
     combat = state.combat
@@ -703,6 +791,7 @@ def _close_combat_chain(state: GameState) -> None:
         pass  # 7.7.5: weapon returns to equipped zone
     else:
         attacker.graveyard.add(attack_card)
+        _apply_watery_grave(attack_card, state)
 
     # Defending cards: equipment stays, hand cards go to graveyard
     for card in combat.defending_cards:
@@ -711,15 +800,16 @@ def _close_combat_chain(state: GameState) -> None:
             pass  # 7.7.5: equipment returns to equipped zone
         else:
             defender.graveyard.add(card)
+            _apply_watery_grave(card, state)
 
     # Defense reactions played from arsenal were added to state.combat_chain; move to graveyard now.
-    # (attack_card was already removed above, so only reactions remain in the zone at this point.)
     for chain_card in list(state.combat_chain.cards):
         ctrl = chain_card.controller if chain_card.controller is not None else chain_card.owner
         if ctrl in state.players:
             state.remember_last_known(chain_card)
             state.combat_chain.remove(chain_card)
             state.players[ctrl].graveyard.add(chain_card)
+            _apply_watery_grave(chain_card, state)
 
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""
@@ -730,8 +820,13 @@ def _apply_defend(state: GameState, action: Action) -> None:
     for card in action.card_list:
         if card in defender.hand.cards:
             defender.hand.remove(card)
+            # CR 8.3.4b: track that a hand card has been used to defend (Dominate/Reprise)
+            combat.defender_used_hand_card = True
         combat.defending_cards.append(card)
-        combat.total_defense += (card.defense or 0)
+        defense_val = card.defense or 0
+        combat.total_defense += defense_val
+        if card.is_equipment:
+            combat.defending_equipment_defense += defense_val
         # 7.0.5a: defend event
         state.event_manager.emit(Event(type='defend', card=card.slug), state)
 
@@ -777,12 +872,19 @@ def resolve_stack(game_state: GameState) -> None:
 
     # CR 5.3.4c: card-type layers cease to exist on resolution; capture LKI while still at stack zone.
     # activated/triggered layers leave their source card in its zone — do NOT freeze its LKI here.
-    # Exception: Figment cards enter the arena instead of ceasing to exist (CR 8.2.16a).
+    # Exception: Figment cards and Aura cards enter the arena instead of ceasing to exist.
+    # CR 8.2.16a: Figments enter the arena as permanents.
+    # CR 8.x (Aura rule): Aura-type cards (including Instant+Aura) enter the arena as permanents.
     card = entry.card
+    _card_types = card.types or [] if card else []
     _is_figment = (entry.layer_type == 'card' and card is not None
-                   and "Figment" in (card.types or []))
+                   and "Figment" in _card_types)
+    _is_aura = (entry.layer_type == 'card' and card is not None
+                and "Aura" in _card_types and not _is_figment)
+    _is_ally = (entry.layer_type == 'card' and card is not None
+                and "Ally" in _card_types)
 
-    if entry.layer_type == 'card' and card and not _is_figment:
+    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura and not _is_ally:
         game_state.process_cease_to_exist(card)
 
     if entry.effect_fn:
@@ -792,17 +894,28 @@ def resolve_stack(game_state: GameState) -> None:
             with open(environ['debug_file'], 'a') as f:
                 f.write(f'stack {entry} resolves: {result}\n')
 
-    # CR 8.2.16a: Figments enter the arena as permanents instead of ceasing to exist.
-    if _is_figment:
+    # Figments, Auras, and Allies enter the arena as permanents instead of ceasing to exist.
+    if _is_figment or _is_aura or _is_ally:
         player_id = entry.player_id
         player = game_state.players[player_id]
-        # Remove from stack zone tracking
+        # Remove from stack zone tracking (triggered layers add here; card layers may not)
         game_state.stack.remove(card)
-        # Enter permanents zone (Ally sub-zone if it has Ally type, otherwise generic permanent)
-        if "Ally" in (card.types or []):
-            card.permanent_subtype = "Ally"
-        player.permanents.add(card, is_public=True)
-        # Register triggers for the figment now that it's in the arena
+        # Allies enter the allies zone; Figments/Auras enter permanents
+        if _is_ally:
+            player.allies.add(card, is_public=True)
+            # Ensure allies_exhausted list is long enough
+            while len(player.allies_exhausted) < len(player.allies.cards):
+                player.allies_exhausted.append(False)
+            # Set initial life
+            if hasattr(card, 'base_life') and card.base_life is not None:
+                card.current_life = card.base_life
+            elif hasattr(card, 'life') and card.life is not None:
+                card.current_life = card.life
+        else:
+            if "Ally" in _card_types:
+                card.permanent_subtype = "Ally"
+            player.permanents.add(card, is_public=True)
+        # Register triggers for the card now that it's in the arena
         from engine.card_effects.triggers import register_card_triggers
         register_card_triggers(card, game_state.event_manager)
         # Emit enters_arena event so CARD_TRIGGERS can fire
@@ -811,9 +924,11 @@ def resolve_stack(game_state: GameState) -> None:
             game_state)
 
     # CR 5.3.5 / 8.3.5a: non-attack layers with go again grant an action point on resolution.
+    # CR 8.5.7b: non-turn-players cannot gain action points — check player is turn-player.
     # (Attack go again is handled separately in _resolution_step via combat.keywords.)
     if card and not entry.is_attack and card.has_go_again:
-        game_state.players[entry.player_id].action_points += 1
+        if entry.player_id == game_state.active_player:
+            game_state.players[entry.player_id].action_points += 1
 
     game_state.priority_player = game_state.active_player
     game_state.consecutive_passes = 0
@@ -949,6 +1064,8 @@ def priority_loop(state: GameState) -> None:
                 return
             # New triggers from the action get ordered on top
             handle_stack(state)
+            # CR 1.11.5: acting player regains priority after playing/activating
+            state.priority_player = current_player
 
 # ---------------------------------------------------------------------------
 # Player decisions
@@ -1182,6 +1299,28 @@ def _apply_weapon_attack(state: GameState, action: Action) -> None:
     player = state.players[action.player_id]
     player.weapon_exhausted = True
     player.action_points -= 1
+
+    # Pay "banish a card from under" cost if required (e.g., Nitro Mechanoid)
+    weapon_card = action.card
+    text = getattr(weapon_card, 'functional_text', '') or ''
+    if "banish a card from under" in text.lower():
+        underneath = getattr(weapon_card, 'cards_underneath', [])
+        if underneath:
+            banished = underneath.pop(0)
+            player.banished.add(banished)
+
+    # Pay "{t} a cog you control" cost if required (e.g., Spitfire)
+    if "{t} a cog you control" in text and "Attack" in text:
+        # Only tap as cost when cog-tap appears before the Attack keyword (i.e. it's a cost)
+        cost_part = text.split("**Attack**")[0] if "**Attack**" in text else text.split(": Attack")[0]
+        if "{t} a cog you control" in cost_part:
+            cog = next(
+                (c for c in player.items.cards if "Cog" in (c.types or []) and not c.tapped),
+                None,
+            )
+            if cog is not None:
+                cog.tapped = True
+
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
     # CR 1.6.2b: Weapon attack is an activated ability (activated-layer)
@@ -1258,12 +1397,28 @@ def _apply_activate(state: GameState, action: Action) -> None:
             state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
         state.record_pitch(action.player_id, pitched_slugs)
 
-    player.resources -= card.cost or 0
+    # Use EQUIPMENT_ACTIVATION_COST override when available (handles tokens/items with resource
+    # cost embedded in functional text and a cost field that doesn't reflect activation cost).
+    from engine.card_effects.registry import EQUIPMENT_ACTIVATION_COST as _ACT_COST
+    _cost_val = _ACT_COST.get(card.slug)
+    if _cost_val is not None:
+        import inspect as _ins
+        activation_cost = _cost_val(player, state) if (callable(_cost_val) and len(_ins.signature(_cost_val).parameters) >= 2) else (_cost_val(player) if callable(_cost_val) else _cost_val)
+    else:
+        activation_cost = card.cost or 0
+    player.resources -= activation_cost
 
-    # Mark exhausted for "once per turn" abilities
+    # CR 4.4.3d / 8.x: Mark exhausted for "once per turn" abilities.
+    # {t} (tap symbol as activation cost) → tapped=True, not exhausted.
+    # Tapped permanents untap at end of turn (4.4.3d), so effects can re-enable
+    # them mid-turn. exhausted=True is a harder "once per turn" gate.
     text = card.functional_text or ""
+    _first_colon = text.find(':')
+    _cost_section = text[:_first_colon] if _first_colon >= 0 else ""
     if "per turn" in text.lower():
         card.exhausted = True
+    if re.search(r'\{t\}', _cost_section, re.IGNORECASE):
+        card.tapped = True
 
     # Use action point if it's an Action-speed ability (not Instant)
     if re.search(r'\*\*(?:\w+ per turn )?Action\*\*', text):
@@ -1274,6 +1429,17 @@ def _apply_activate(state: GameState, action: Action) -> None:
     pay_cost_fn = EQUIPMENT_PAY_COSTS.get(card.slug)
     if callable(pay_cost_fn):
         pay_cost_fn(action, player, state)
+    elif (action.type == ActionType.ACTIVATE_EQUIPMENT and ':' in text
+          and re.search(r'\bDestroy\b', text[:text.rfind(':')], re.IGNORECASE)):
+        # Generic fallback: equipment with "Destroy [this/CardName]:" activation cost
+        # not covered by an explicit EQUIPMENT_PAY_COSTS entry.
+        # Remove from the equipment slot and move to graveyard.
+        slot = getattr(action, 'slot', None)
+        if slot:
+            zone = player.zone_by_name(slot)
+            if zone and card in zone.cards:
+                zone.remove(card)
+                player.graveyard.add(card)
 
     # Dispatch to registry callback (effect after the colon)
     effect_fn = EQUIPMENT_ACTIVATION_EFFECTS.get(card.slug)
@@ -1297,8 +1463,14 @@ def _apply_activate_hero(state: GameState, action: Action) -> None:
         state.record_pitch(action.player_id, pitched_slugs)
 
     hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
-    cost = hero_cfg.get("cost", 0)
+    cost_raw = hero_cfg.get("cost", 0)
+    cost = cost_raw(player, state) if callable(cost_raw) else cost_raw
     player.resources -= cost
+
+    # Action-timing abilities consume an action point
+    hero_timing = hero_cfg.get("timing", "action")
+    if hero_timing == "action":
+        player.action_points -= 1
 
     # Tap hero if required
     if hero_cfg.get("requires_tap", False):
@@ -1344,6 +1516,9 @@ def _apply_react(state: GameState, action: Action) -> None:
         if not removed:
             # Fallback safety for legacy actions incorrectly marked as hand plays.
             player.arsenal.remove(card)
+        # CR 8.3.4b: a DR played from hand counts as "defender used hand card" for Dominate/Reprise
+        if state.combat is not None and "Defense Reaction" in (card.types or []):
+            state.combat.defender_used_hand_card = True
 
     # CR 3.0.1 / CR 5.3.4c: card enters stack zone.
     # Defense reactions played from arsenal are additionally placed on the combat chain so

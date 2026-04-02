@@ -37,7 +37,7 @@ if TYPE_CHECKING:
 # Per rules 3.0.5 — zones that comprise the arena.
 ARENA_ZONE_NAMES = frozenset({
     "head", "chest", "arms", "legs", "weapon",
-    "hero", "permanents",
+    "hero", "permanents", "allies",
     "combat chain",
 })
 
@@ -253,9 +253,9 @@ def go_again(card: Card, state: GameState) -> None:
 
 
 def piercing(card: Card, amount: int, state: GameState) -> None:
-    """8.3.23: If defended by equipment, gets +N{p}."""
-    if state.combat and any(c.is_equipment for c in state.combat.defending_cards):
-        card.effects.append(("base_power", lambda base, n=amount: base + n))
+    """CR 8.3.23: Piercing — now a static ability evaluated in _recalculate_attack_power.
+    This triggered path is intentionally a noop to avoid double-counting."""
+    pass
 
 
 # ---------------------------------------------------------------------------
@@ -312,9 +312,10 @@ def suspense_enter(card: Card, state: GameState) -> None:
 
 def watery_grave(card: Card, event: Event, state: GameState) -> None:
     """8.3.41: When put into graveyard from the arena, turn face-down.
-    Arena includes combat chain per rules 3.0.5 / 7.0.3f."""
+    Arena includes combat chain, allies zone, permanents per rules 3.0.5 / 7.0.3f."""
     if card.zone == "graveyard" and _was_in_arena(card):
-        state.set_card_visibility(card, False)
+        card.face_down = True
+        card.is_public = False
 
 
 # ---------------------------------------------------------------------------
@@ -503,7 +504,7 @@ def reprise_check(state: GameState) -> bool:
     """8.4.3: Defending hero defended with a card from hand this chain link."""
     if not state.combat:
         return False
-    return any(c.prev_zone == "hand" for c in state.combat.defending_cards)
+    return state.combat.defender_used_hand_card
 
 
 def combo_check(state: GameState, combo_names: list) -> bool:
@@ -845,6 +846,8 @@ def effect_charge(state: GameState, player_id: int, card: Card) -> None:
     player = state.players[player_id]
     player.hand.remove(card)
     player.soul.add(card)
+    # Set charged_this_turn flag for Boltyn and other charge-dependent effects
+    player.class_counters["charged_this_turn"] = player.class_counters.get("charged_this_turn", 0) + 1
 
 
 def effect_reload(state: GameState, player_id: int, source_card: Card = None) -> bool:
@@ -1387,6 +1390,21 @@ def effect_wager(state: GameState, player_id: int, source: Card = None) -> bool:
     Called at chain_link_resolve event. Prize effect is card-specific."""
     winner = resolve_wager(state, player_id, source)
     return winner == player_id
+
+
+def add_wager(state: GameState, controller_id: int, prize_slug: str | None = None) -> None:
+    """Add a wager to the current combat chain link.
+
+    The wager resolves automatically at chain link resolution via
+    ``_resolve_wagers`` in engine.py: if the attack hits, the controller
+    wins and creates the prize token; otherwise the opponent wins it.
+    """
+    if state.combat is not None:
+        state.combat.wagers.append((controller_id, prize_slug))
+        state.event_manager.emit(
+            type('Event', (), {'type': 'wagered',
+                               'data': {'controller': controller_id, 'prize': prize_slug}})(),
+            state)
 
 
 def check_decompose(state: GameState, player_id: int) -> bool:

@@ -12,7 +12,7 @@ sys.path.insert(0, r"C:\Users\Joseph\Desktop\FAB_Coach")
 
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, Zone
-from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS
+from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS, PLAY_TARGET_CONDITIONS, WEAPON_ATTACK_CONDITIONS
 
 
 class ActionType(Enum):
@@ -107,22 +107,23 @@ class Action:
 
 def find_all_valid_pitch_sequences(hand_cards: list[Card], target_cost: int, current_resources: int = 0) -> list[list[Card]]:
     """
-    Find all valid pitch combinations that can reach target_cost.
+    Find all legal ordered pitch sequences for paying target_cost.
 
-    CR 5.1.6/5.1.7: A player may pitch any card from hand with a pitch value.
-    There is no rule preventing pitching when resources already meet a card's own cost.
-    Only constraint: the combination's total resources must reach target_cost.
+    CR 5.1.6/5.1.7: Pitching is sequential. After each card is pitched the game
+    checks whether the cost is now satisfied; if it is, pitching stops immediately.
+    This means a legal sequence s = [c1, ..., ck] must satisfy:
+        - Every proper prefix sum(s[:i]) < needed  (cost not yet met after i-1 cards)
+        - sum(s) >= needed                         (cost met by final card)
 
-    Returns a list of card combinations (as Card lists). Order within a combination
-    does not matter for legality, so combinations (not permutations) are used to
-    avoid duplicate equivalent sequences.
+    Order matters: [red(1), blue(3)] for cost=3 is legal (red doesn't cover cost;
+    blue then does), but [blue(3), red(1)] is NOT (blue alone covers cost so red
+    can never be pitched after it).
+
+    Returns a list of ordered Card lists.
     """
-    card_sequences = []
-
     if target_cost is None or target_cost <= 0:
         return [[]]  # No pitching needed — empty sequence is always valid
 
-    # Collect indices of cards that have a pitch value
     pitchable_indices = [
         i for i, card in enumerate(hand_cards)
         if card.pitch is not None and card.pitch > 0
@@ -130,18 +131,25 @@ def find_all_valid_pitch_sequences(hand_cards: list[Card], target_cost: int, cur
 
     needed = target_cost - current_resources
 
-    # If existing resources already cover the cost, "pitch nothing" is always valid
     if needed <= 0:
-        card_sequences.append([])
-        return card_sequences
+        return [[]]
 
-    # Try all combination sizes (combinations, not permutations — pitch order is not rule-relevant)
-    for seq_size in range(1, len(pitchable_indices) + 1):
-        for combo_indices in combinations(pitchable_indices, seq_size):
-            total = sum(_get_pitch_value(hand_cards[i]) for i in combo_indices)
-            if total >= needed:
-                card_sequences.append([hand_cards[i] for i in combo_indices])
+    card_sequences: list[list[Card]] = []
 
+    def _dfs(remaining: list[int], running: int, seq: list[Card]) -> None:
+        for j, idx in enumerate(remaining):
+            v = _get_pitch_value(hand_cards[idx])
+            new_total = running + v
+            new_seq = seq + [hand_cards[idx]]
+            if new_total >= needed:
+                # This card satisfies the cost — record the complete legal sequence
+                card_sequences.append(new_seq)
+            else:
+                # Cost not yet satisfied — keep building the sequence
+                rest = remaining[:j] + remaining[j + 1:]
+                _dfs(rest, new_total, new_seq)
+
+    _dfs(pitchable_indices, 0, [])
     return card_sequences
 
 def _get_pitch_value(card: Card) -> int:
@@ -150,7 +158,13 @@ def _get_pitch_value(card: Card) -> int:
 
 def _weapon_can_attack(weapon_card) -> bool:
     text = weapon_card.functional_text or ""
-    return "**Attack**" in text or ": Attack" in text
+    if "**Attack**" not in text and ": Attack" not in text:
+        return False
+    # Weapons with "Banish a card from under" cost require cards underneath
+    if "banish a card from under" in text.lower():
+        if not getattr(weapon_card, 'cards_underneath', None):
+            return False
+    return True
 
 def _weapon_cost(weapon_card) -> int:
     text = weapon_card.functional_text or ""
@@ -250,11 +264,17 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
     if pp == state.active_player and not state.stack_entries:
         # ATTACK_WEAPON
         weapon_card = player.weapon.top
-        if weapon_card is not None and player.action_points > 0 and not player.weapon_exhausted and not weapon_card.tapped:
-            if _weapon_can_attack(weapon_card):
+        if (weapon_card is not None
+                and player.action_points > 0
+                and not player.weapon_exhausted
+                and not weapon_card.tapped
+                and _weapon_can_attack(weapon_card)):
+            # Check slug-specific attack conditions (e.g. bank_breaker requires crank)
+            weapon_cond = WEAPON_ATTACK_CONDITIONS.get(weapon_card.slug)
+            if weapon_cond is None or weapon_cond(state, player):
                 weapon_cost_val = _weapon_cost(weapon_card)
                 weapon_attack_pitch_seqs = find_all_valid_pitch_sequences(
-                    player.hand.cards, 
+                    player.hand.cards,
                     weapon_cost_val,
                     current_resources=player.resources
                 )
@@ -334,6 +354,17 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             else:
                 if card.is_action and player.action_points <= 0:
                     continue
+                # CR 5.1.4a: cards with required targets cannot be played without a valid target
+                _card_base_slug = re.sub(r'_(red|yellow|blue)$', '', card.slug)
+                _ptc = PLAY_TARGET_CONDITIONS.get(_card_base_slug)
+                if _ptc is not None and not _ptc(state, pp):
+                    continue
+                # General: card can ONLY target attacks → requires active combat
+                if (getattr(card, 'can_target_attack', False)
+                        and not getattr(card, 'can_target_hero', False)
+                        and not getattr(card, 'can_target_permanent', False)
+                        and state.combat is None):
+                    continue
                 effective_cost = card.cost
                 play_card_pitch_seqs = find_all_valid_pitch_sequences(
                     player.hand.cards,
@@ -351,33 +382,42 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             is_instant = "Instant" in arsenal_card.types
             if (arsenal_card.is_action or is_instant) and not is_ar and not is_dr:
                 if is_instant or player.action_points > 0:
-                    effective_cost = arsenal_card.cost
-                    arsenal_pitch_seqs = find_all_valid_pitch_sequences(
-                        player.hand.cards, 
-                        effective_cost,
-                        current_resources=player.resources
-                    )
-                    null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(arsenal_card) else None
-                    if not (null_targets is not None and not null_targets):
-                        for seq in arsenal_pitch_seqs:
-                            if seq is not None:
-                                if null_targets is not None:
-                                    for target_entry in null_targets:
+                    # CR 5.1.4a: block play if required target is missing
+                    _ab_slug = re.sub(r'_(red|yellow|blue)$', '', arsenal_card.slug)
+                    _aptc = PLAY_TARGET_CONDITIONS.get(_ab_slug)
+                    _no_target = ((_aptc is not None and not _aptc(state, pp))
+                                  or (getattr(arsenal_card, 'can_target_attack', False)
+                                      and not getattr(arsenal_card, 'can_target_hero', False)
+                                      and not getattr(arsenal_card, 'can_target_permanent', False)
+                                      and state.combat is None))
+                    if not _no_target:
+                        effective_cost = arsenal_card.cost
+                        arsenal_pitch_seqs = find_all_valid_pitch_sequences(
+                            player.hand.cards,
+                            effective_cost,
+                            current_resources=player.resources
+                        )
+                        null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(arsenal_card) else None
+                        if not (null_targets is not None and not null_targets):
+                            for seq in arsenal_pitch_seqs:
+                                if seq is not None:
+                                    if null_targets is not None:
+                                        for target_entry in null_targets:
+                                            actions.append(Action(
+                                                type=ActionType.PLAY_ARSENAL,
+                                                card=arsenal_card,
+                                                pitch_cards=seq,
+                                                from_arsenal=True,
+                                                target=target_entry.card,
+                                                targets=[f"oid:{target_entry.card.object_id}"],
+                                            ))
+                                    else:
                                         actions.append(Action(
                                             type=ActionType.PLAY_ARSENAL,
                                             card=arsenal_card,
                                             pitch_cards=seq,
                                             from_arsenal=True,
-                                            target=target_entry.card,
-                                            targets=[f"oid:{target_entry.card.object_id}"],
                                         ))
-                                else:
-                                    actions.append(Action(
-                                        type=ActionType.PLAY_ARSENAL,
-                                        card=arsenal_card,
-                                        pitch_cards=seq,
-                                        from_arsenal=True,
-                                    ))
 
         # ACTIVATE_ITEM
         for i, card in enumerate(player.items.cards):
@@ -404,6 +444,8 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             if not equip_zone or not equip_zone.cards:
                 continue
             equip_card = equip_zone.cards[0]
+            if getattr(equip_card, 'face_down', False):
+                continue  # Face-down/cloaked equipment can't be activated
             equip_slug = equip_card.slug
             text = equip_card.functional_text or ""
             has_action = bool(re.search(r'\*\*(?:\w+ per turn )?Action\*\*', text))
@@ -412,11 +454,11 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 continue
             if has_action and not has_instant and player.action_points <= 0:
                 continue
-            if ("Once per" in text or "once per" in text) and equip_card.exhausted:
+            if equip_card.exhausted:
                 continue
             if equip_card.tapped:
                 continue
-            
+
             # Check additonal activation conditions from registry
             cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(equip_slug)
             if cond_fn is not None:
@@ -425,7 +467,6 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 _cond_result = cond_fn(player, slot_name, equip_card, state) if len(_sig.parameters) >= 4 else cond_fn(player, slot_name, equip_card)
                 if not _cond_result:
                     continue
-                continue
             
             cost_override = EQUIPMENT_ACTIVATION_COST.get(equip_slug)
             if cost_override is not None:
@@ -457,6 +498,9 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             if (("**Action**" in text or "Action" in text) and player.action_points > 0) or "**Instant**" in text or "Instant" in text:
                 can_activate_weapon = True
                 weapon_slug = weapon_card.slug
+                # Block "Once per Turn" weapons that have already been activated this turn
+                if ("once per" in text.lower()) and weapon_card.exhausted:
+                    can_activate_weapon = False
                 # Check weapon-specific conditions
                 cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(weapon_slug)
                 if cond_fn is not None and not cond_fn(player, "weapon", weapon_card):
@@ -516,14 +560,20 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             for seq in banish_pitch_seqs:
                 actions.append(Action(type=ActionType.PLAY_BANISH, card=card, pitch_cards=seq, player_id=pp))
 
-    # ACTIVATE_HERO — instant-speed hero abilities (available whenever player has priority)
+    # ACTIVATE_HERO — hero abilities (Action-timing requires AP, Instant doesn't)
     hero_card = player.hero
     hero_slug = hero_card.slug if hero_card else None
     hero_cfg = HERO_ACTIVATION_CONDITIONS.get(hero_slug) if hero_slug else None
     if hero_cfg is not None:
+        hero_timing = hero_cfg.get("timing", "action")
+        # Action-timing hero abilities require an action point
+        if hero_timing == "action" and player.action_points <= 0:
+            hero_cfg = None  # Skip — can't activate without AP
+    if hero_cfg is not None:
         cond_fn = hero_cfg.get("condition_fn")
         if cond_fn and cond_fn(player, state):
-            hero_cost = hero_cfg.get("cost", 0)
+            hero_cost_raw = hero_cfg.get("cost", 0)
+            hero_cost = hero_cost_raw(player, state) if callable(hero_cost_raw) else hero_cost_raw
             hero_pitch_seqs = find_all_valid_pitch_sequences(
                 player.hand.cards,
                 hero_cost,
@@ -563,6 +613,11 @@ def _legal_defend_step(state: GameState, card_db: CardDB) -> list[Action]:
     # Always include the option to defend with nothing
     actions.append(Action(type=ActionType.PASS))
 
+    # If the attack targets an ally (not the hero), defender cannot declare defending cards
+    # (Rules Reprise: "Nic cannot declare any defending cards, because their hero is not the one being attacked")
+    if combat.attack_target is not None and combat.attack_target is not defender:
+        return actions
+
     # List all hand cards able to block
     defendable_cards = []
     for i, card in enumerate(defender.hand.cards):
@@ -572,13 +627,14 @@ def _legal_defend_step(state: GameState, card_db: CardDB) -> list[Action]:
             continue
         defendable_cards.append(card)
     
-    # List all equipment able to block
+    # List all equipment able to block (face-down/cloaked equipment cannot defend)
     for slot_name in ("head", "chest", "arms", "legs"):
         equip_zone = defender.zone_by_name(slot_name)
         if not equip_zone or not equip_zone.cards:
             continue
         equip_card = equip_zone.cards[0]
-        equip_slug = equip_card.slug
+        if getattr(equip_card, 'face_down', False):
+            continue
         if not equip_card.has_defense:
             continue
         defendable_cards.append(equip_card)
@@ -594,7 +650,10 @@ def _legal_defend_step(state: GameState, card_db: CardDB) -> list[Action]:
                 if len(already_defending_hand) + len(new_hand) > 1:
                     valid = False
             if "Overpower" in combat.keywords:
-                if sum([x.is_action for x in combo]) > 1:
+                # CR 8.3.22a: total action cards defending (already + new) must be ≤ 1
+                already_defending_action = sum(1 for c in combat.defending_cards if c.is_action)
+                new_action = sum(1 for c in combo if c.is_action)
+                if already_defending_action + new_action > 1:
                     valid = False
             if valid:
                 actions.append(Action(type=ActionType.DEFEND_CARDS, card_list=list(combo)))
@@ -652,6 +711,11 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
                                       pitch_cards=seq, meld_side='bottom'))
         else:
+            # CR 5.1.4a: check required target exists
+            _ri_base_slug = re.sub(r'_(red|yellow|blue)$', '', card.slug)
+            _ri_ptc = PLAY_TARGET_CONDITIONS.get(_ri_base_slug)
+            if _ri_ptc is not None and not _ri_ptc(state, pp):
+                continue
             effective_cost = card.cost
             hand_pitch_seqs = find_all_valid_pitch_sequences(
                 player.hand.cards,
@@ -660,7 +724,7 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             )
             for seq in hand_pitch_seqs:
                 actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, pitch_cards=seq))
-        
+
     # Instants from arsenal
     for i, card in enumerate(player.arsenal.cards):
         if "Instant" not in card.types:
@@ -689,12 +753,14 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             else:
                 actions.append(Action(type=ActionType.PLAY_ARSENAL, card_idx=i, card=card, pitch_cards=seq))
 
-    # ACTIVATE_EQUIPMENT (non-weapon)
+    # ACTIVATE_EQUIPMENT (non-weapon) in reaction step
     for slot_name in ("head", "chest", "arms", "legs"):
         equip_zone = player.zone_by_name(slot_name)
         if not equip_zone or not equip_zone.cards:
             continue
         equip_card = equip_zone.cards[0]
+        if getattr(equip_card, 'face_down', False):
+            continue  # Face-down/cloaked equipment can't be activated
         equip_slug = equip_card.slug
         text = equip_card.functional_text or ""
         has_reaction = bool(re.search(r'\*\*(?:\w+ per turn )?(?:Defense |Attack )?Reaction\*\*', text))
@@ -703,15 +769,19 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             continue
         if has_reaction and not has_instant and player.action_points <= 0:
             continue
-        if ("Once per" in text or "once per" in text) and equip_card.exhausted:
+        if equip_card.exhausted:  # exhausted covers "once per turn" AND {t} (exhaust-cost) equipment
             continue
         if equip_card.tapped:
             continue
         
         # Check additonal activation conditions from registry
         cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(equip_slug)
-        if cond_fn is not None and not cond_fn(player, slot_name, equip_card):
-            continue
+        if cond_fn is not None:
+            import inspect as _inspect_r
+            _sig_r = _inspect_r.signature(cond_fn)
+            _cond_r = cond_fn(player, slot_name, equip_card, state) if len(_sig_r.parameters) >= 4 else cond_fn(player, slot_name, equip_card)
+            if not _cond_r:
+                continue
 
         cost_override = EQUIPMENT_ACTIVATION_COST.get(equip_slug)
         if cost_override is not None:
@@ -789,7 +859,10 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 )
 
     elif pp == defender_id:
-        if not combat.no_defense_reactions:
+        # If attack targets an ally (not the hero), defender cannot play DRs
+        defender_player = state.players[defender_id]
+        target_is_hero = (combat.attack_target is None or combat.attack_target is defender_player)
+        if target_is_hero and not combat.no_defense_reactions:
             dominate_blocks = "Dominate" in combat.keywords and combat.defender_used_hand_card
             if not dominate_blocks:
                 for i, card in enumerate(player.hand.cards):
@@ -807,29 +880,31 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                     for seq in dr_pitch_seqs:
                         actions.append(Action(type=ActionType.PLAY_DEFENSE_REACTION, card=card, pitch_cards=seq))
 
-            # Defense reaction from arsenal — blocked by no_defense_reactions, but NOT by dominate.
-            # CR 8.3.4b scopes dominate's restriction to cards "from hand" only.
-            for i, card in enumerate(player.arsenal.cards):
-                if "Defense Reaction" not in card.types:
-                    continue
-                cond_fn = DEFENSE_REACTION_CONDITIONS.get(card.slug)
-                if cond_fn is not None and not cond_fn(combat):
-                    continue
-                effective_cost = card.cost
-                dr_arsenal_pitch_seqs = find_all_valid_pitch_sequences(
-                    player.hand.cards,
-                    effective_cost,
-                    current_resources=player.resources
-                )
-                for seq in dr_arsenal_pitch_seqs:
-                    actions.append(
-                        Action(
-                            type=ActionType.PLAY_DEFENSE_REACTION,
-                            card=card,
-                            pitch_cards=seq,
-                            from_arsenal=True,
-                        )
+            # Defense reaction from arsenal — blocked by no_defense_reactions (CR 7.4.2c),
+            # but NOT by dominate (CR 8.3.4b scopes dominate to "from hand" only).
+            # Also blocked if attack targets an ally (not the hero).
+            if target_is_hero and not combat.no_defense_reactions:
+                for i, card in enumerate(player.arsenal.cards):
+                    if "Defense Reaction" not in card.types:
+                        continue
+                    cond_fn = DEFENSE_REACTION_CONDITIONS.get(card.slug)
+                    if cond_fn is not None and not cond_fn(combat):
+                        continue
+                    effective_cost = card.cost
+                    dr_arsenal_pitch_seqs = find_all_valid_pitch_sequences(
+                        player.hand.cards,
+                        effective_cost,
+                        current_resources=player.resources
                     )
+                    for seq in dr_arsenal_pitch_seqs:
+                        actions.append(
+                            Action(
+                                type=ActionType.PLAY_DEFENSE_REACTION,
+                                card=card,
+                                pitch_cards=seq,
+                                from_arsenal=True,
+                            )
+                        )
 
     return actions
 

@@ -56,9 +56,17 @@ class ReplayDB:
             """CREATE TABLE IF NOT EXISTS embeddings (
                 transition_id INTEGER PRIMARY KEY,
                 state_embedding BLOB,
-                action_embedding BLOB
+                action_embedding BLOB,
+                state_features BLOB,
+                action_features BLOB
             )"""
         )
+        # Backward compat: add new columns to existing DBs that predate this schema.
+        for col, ctype in [("state_features", "BLOB"), ("action_features", "BLOB")]:
+            try:
+                c.execute(f"ALTER TABLE embeddings ADD COLUMN {col} {ctype}")
+            except Exception:
+                pass  # Column already exists
         c.commit()
 
     def start_game(self, p1_hero: str, p2_hero: str) -> int:
@@ -106,6 +114,40 @@ class ReplayDB:
                VALUES (?, ?, ?)""",
             (transition_id, state_blob, action_blob),
         )
+
+    def store_features(
+        self,
+        transition_id: int,
+        state_feat: Any,
+        action_feat: Any,
+    ) -> None:
+        """Store raw packed state and action feature arrays for end-to-end training.
+
+        These are compact float32 arrays (not final embeddings) that allow the
+        transformer / action_embedder to be run inside the IQL training loop with
+        full gradient flow.  Use store_embeddings() for the legacy pre-computed path.
+        """
+        import numpy as np
+        state_blob  = state_feat.astype(np.float32).tobytes()
+        action_blob = action_feat.astype(np.float32).tobytes()
+        with self._get_conn() as conn:
+            conn.execute(
+                "INSERT OR REPLACE INTO embeddings "
+                "(transition_id, state_features, action_features) "
+                "VALUES (?, ?, ?)",
+                (transition_id, state_blob, action_blob),
+            )
+
+    def _get_conn(self):
+        """Context manager yielding the connection (autocommit on exit)."""
+        import contextlib
+
+        @contextlib.contextmanager
+        def _cm():
+            yield self.conn
+            self.conn.commit()
+
+        return _cm()
 
     def finalize_game(
         self,
@@ -182,6 +224,7 @@ class ReplayDB:
         Returns list of dicts with keys: state_emb, action_emb, reward,
         done, player_id, transition_id.
         """
+        import numpy as np
         import torch
 
         rows = self.conn.execute(
@@ -196,6 +239,8 @@ class ReplayDB:
             (game_id,),
         ).fetchall()
 
+        # np.frombuffer on raw bytes avoids the bytearray intermediate copy;
+        # .copy() is required because the bytes object may be garbage-collected.
         result = []
         for row in rows:
             result.append({
@@ -203,11 +248,161 @@ class ReplayDB:
                 "player_id": row["player_id"],
                 "reward": row["reward"],
                 "done": row["done"],
-                "state_emb": torch.frombuffer(
-                    bytearray(row["state_embedding"]), dtype=torch.float32
-                ).clone(),
-                "action_emb": torch.frombuffer(
-                    bytearray(row["action_embedding"]), dtype=torch.float32
-                ).clone(),
+                "state_emb": torch.from_numpy(
+                    np.frombuffer(row["state_embedding"], dtype=np.float32).copy()
+                ),
+                "action_emb": torch.from_numpy(
+                    np.frombuffer(row["action_embedding"], dtype=np.float32).copy()
+                ),
             })
         return result
+
+    def load_embeddings_bulk(
+        self,
+        game_ids: list[int],
+    ) -> Optional[dict[str, Any]]:
+        """Load all embeddings for multiple games in one SQL query.
+
+        Significantly faster than calling load_embedding_dataset per game:
+        - Single round-trip to SQLite
+        - Pre-allocated numpy arrays (no Python list growth)
+        - np.frombuffer avoids intermediate bytearray copies
+        - torch.from_numpy is zero-copy
+
+        Automatically detects whether the DB contains pre-computed embedding blobs
+        (state_embedding / action_embedding) or raw packed feature arrays
+        (state_features / action_features) and returns accordingly.
+
+        Returns dict with keys:
+            states            float32 ndarray (N, state_dim)   — embeddings OR packed features
+            actions           float32 ndarray (N, action_dim)  — embeddings OR packed features
+            rewards           float32 ndarray (N,)
+            dones             float32 ndarray (N,)
+            player_ids        int32 ndarray   (N,)
+            transition_ids    int64 ndarray   (N,)
+            game_id_per_row   int64 ndarray   (N,)
+            state_dim         int
+            action_dim        int
+            uses_raw_features bool  — True when packed feature arrays were returned
+        Returns None if no rows found.
+        """
+        import numpy as np
+
+        if not game_ids:
+            return None
+
+        placeholders = ",".join("?" * len(game_ids))
+
+        # Detect which columns are populated.
+        # Prefer pre-computed embeddings (from re-embedding with a trained transformer)
+        # over raw packed features.  Raw features require end-to-end transformer training
+        # in the IQL loop, which is very slow on non-CUDA hardware.
+        detect_sql = f"""
+            SELECT e.state_features, e.state_embedding
+            FROM transitions t
+            JOIN embeddings e ON e.transition_id = t.id
+            WHERE t.game_id IN ({placeholders})
+            LIMIT 1
+        """
+        probe = None
+        try:
+            probe = self.conn.execute(detect_sql, game_ids).fetchone()
+        except Exception:
+            pass  # DB predates state_features column — fall back to embeddings
+
+        has_embeddings = (
+            probe is not None
+            and probe["state_embedding"] is not None
+            and len(probe["state_embedding"]) > 0
+        )
+        has_features = (
+            probe is not None
+            and probe["state_features"] is not None
+            and len(probe["state_features"]) > 0
+        )
+        # Use embeddings when available (fast frozen path), fall back to raw features
+        uses_raw_features = has_features and not has_embeddings
+
+        if uses_raw_features:
+            sql = f"""
+                SELECT t.game_id, t.id as transition_id, t.player_id, t.reward, t.done,
+                       e.state_features, e.action_features
+                FROM transitions t
+                JOIN embeddings e ON e.transition_id = t.id
+                WHERE t.game_id IN ({placeholders})
+                  AND e.state_features IS NOT NULL
+                ORDER BY t.game_id, t.id
+                """
+            state_col  = "state_features"
+            action_col = "action_features"
+        else:
+            sql = f"""
+                SELECT t.game_id, t.id as transition_id, t.player_id, t.reward, t.done,
+                       e.state_embedding, e.action_embedding
+                FROM transitions t
+                JOIN embeddings e ON e.transition_id = t.id
+                WHERE t.game_id IN ({placeholders})
+                ORDER BY t.game_id, t.id
+                """
+            state_col  = "state_embedding"
+            action_col = "action_embedding"
+
+        # Count rows first so we can pre-allocate without fetchall().
+        n = self.conn.execute(
+            f"SELECT COUNT(*) FROM transitions t JOIN embeddings e ON e.transition_id = t.id "
+            f"WHERE t.game_id IN ({placeholders})",
+            game_ids,
+        ).fetchone()[0]
+
+        if n == 0:
+            return None
+
+        # Determine dimensions from first matching row
+        first = self.conn.execute(sql, game_ids).fetchone()
+        state_blob  = first[state_col]
+        action_blob = first[action_col]
+        if state_blob is None or action_blob is None:
+            return None
+        state_dim  = len(np.frombuffer(state_blob,  dtype=np.float32))
+        action_dim = len(np.frombuffer(action_blob, dtype=np.float32))
+
+        # Pre-allocate output arrays
+        states = np.empty((n, state_dim), dtype=np.float32)
+        actions = np.empty((n, action_dim), dtype=np.float32)
+        rewards = np.empty(n, dtype=np.float32)
+        dones = np.empty(n, dtype=np.float32)
+        player_ids = np.empty(n, dtype=np.int32)
+        transition_ids = np.empty(n, dtype=np.int64)
+        game_id_per_row = np.empty(n, dtype=np.int64)
+
+        # Stream rows in chunks
+        _CHUNK = 2000
+        cursor = self.conn.execute(sql, game_ids)
+        i = 0
+        while True:
+            batch = cursor.fetchmany(_CHUNK)
+            if not batch:
+                break
+            for row in batch:
+                states[i] = np.frombuffer(row[state_col], dtype=np.float32)
+                actions[i] = np.frombuffer(row[action_col], dtype=np.float32)
+                rewards[i] = float(row["reward"])
+                dones[i] = float(row["done"])
+                player_ids[i] = int(row["player_id"])
+                transition_ids[i] = int(row["transition_id"])
+                game_id_per_row[i] = int(row["game_id"])
+                i += 1
+            del batch  # release raw blob memory before next chunk
+
+        return {
+            "states": states,
+            "actions": actions,
+            "rewards": rewards,
+            "dones": dones,
+            "player_ids": player_ids,
+            "transition_ids": transition_ids,
+            "game_id_per_row": game_id_per_row,
+            "state_dim": state_dim,
+            "action_dim": action_dim,
+            "uses_raw_features": uses_raw_features,
+        }

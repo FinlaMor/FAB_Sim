@@ -60,36 +60,88 @@ def test_matchup_scheduler_minimum_games() -> None:
         )
 
 
+def test_mirror_matches_present() -> None:
+    """Mirror matches (p1 == p2) appear roughly 1 cycle per 4 non-mirror cycles."""
+    deck_paths = [f"deck_{i}.txt" for i in range(10)]
+    scheduler = MatchupScheduler()
+    # Request enough games to span at least 2 full super-cycles
+    # Super-cycle with 10 decks: 4*(10//2) + 10 = 30 pairs
+    matchups = scheduler.schedule_matchups(deck_paths, games_per_loop=60)
+    assert len(matchups) == 60
+
+    mirrors = [(p1, p2) for p1, p2 in matchups if p1 == p2]
+    non_mirrors = [(p1, p2) for p1, p2 in matchups if p1 != p2]
+
+    assert len(mirrors) > 0, "No mirror matches found"
+    assert len(non_mirrors) > 0, "No non-mirror matches found"
+
+    # Expect exactly 1 mirror cycle per 4 non-mirror cycles.
+    # With 10 decks over 60 games (2 super-cycles):
+    #   non-mirror: 2 * 4 * 5 = 40 pairs
+    #   mirror:     2 * 10    = 20 pairs
+    assert len(non_mirrors) == 40, f"Expected 40 non-mirror, got {len(non_mirrors)}"
+    assert len(mirrors) == 20, f"Expected 20 mirror, got {len(mirrors)}"
+
+    # Every deck must appear as both sides of at least one mirror
+    mirror_decks = {p1 for p1, _ in mirrors}
+    for d in deck_paths:
+        assert d in mirror_decks, f"Deck {d} never played a mirror match"
+
+
+def test_mirror_matches_exact_count() -> None:
+    """Trim to games_per_loop never leaves fractional mirror cycles."""
+    deck_paths = [f"deck_{i}.txt" for i in range(8)]
+    scheduler = MatchupScheduler()
+    # With 8 decks: non-mirror cycle = 4 pairs; 4 cycles before mirror = 16 pairs.
+    # gpl <= 16 may trim before any mirror cycle is reached (0 mirrors is correct).
+    # gpl > 16 must include at least one mirror cycle.
+    n = len(deck_paths)
+    pairs_per_non_mirror_cycle = (n + 1) // 2  # ceil(n/2)
+    mirror_threshold = scheduler.MIRROR_EVERY_N_CYCLES * pairs_per_non_mirror_cycle
+    for gpl in [15, 25, 40]:
+        matchups = scheduler.schedule_matchups(deck_paths, games_per_loop=gpl)
+        assert len(matchups) == gpl, f"Expected exactly {gpl} matchups, got {len(matchups)}"
+        mirrors = sum(1 for p1, p2 in matchups if p1 == p2)
+        if gpl > mirror_threshold:
+            assert mirrors > 0, f"gpl={gpl} exceeds mirror threshold {mirror_threshold}, expected mirrors"
+
+
 # ---------------------------------------------------------------------------
 # OpponentPool tests
 # ---------------------------------------------------------------------------
 
 def test_mixed_opponents() -> None:
-    """OpponentPool with no checkpoints samples heuristic + random agents."""
+    """OpponentPool with no checkpoints: P1=heuristic, P2 pool=heuristic."""
     pool = OpponentPool(heuristic_seed=42)
+    # P1 should be heuristic (no checkpoint)
+    p1 = pool.get_p1_agent(player_id=1, seed=0)
+    assert type(p1).__name__ == "LocalHeuristicAgent"
+    # P2 pool should only contain heuristic
     rng = random.Random(123)
     types_seen: set[str] = set()
     for _ in range(50):
-        agent = pool.sample_agent(rng, player_id=1, seed=0)
+        agent = pool.sample_opponent(rng, player_id=2, seed=0)
         types_seen.add(type(agent).__name__)
-    assert "LocalHeuristicAgent" in types_seen, "Expected LocalHeuristicAgent in sampled agents"
-    assert "RandomAgent" in types_seen, "Expected RandomAgent in sampled agents"
+    assert "LocalHeuristicAgent" in types_seen
 
 
 def test_opponent_pool_no_checkpoints() -> None:
-    """OpponentPool falls back to heuristic+random when no checkpoint files exist."""
+    """OpponentPool with nonexistent checkpoint falls back to heuristic."""
     pool = OpponentPool(
         heuristic_seed=0,
-        checkpoint_paths=["/nonexistent/checkpoint.pt"],
+        current_checkpoint="/nonexistent/checkpoint.pt",
+        previous_checkpoints=["/nonexistent/old_checkpoint.pt"],
     )
+    # P1 should be heuristic (checkpoint doesn't exist)
+    p1 = pool.get_p1_agent(player_id=1, seed=0)
+    assert type(p1).__name__ == "LocalHeuristicAgent"
+    # P2 pool should only contain heuristic (IQL checkpoints don't exist)
     rng = random.Random(99)
     types_seen: set[str] = set()
     for _ in range(50):
-        agent = pool.sample_agent(rng, player_id=1, seed=0)
+        agent = pool.sample_opponent(rng, player_id=2, seed=0)
         types_seen.add(type(agent).__name__)
-    # Only heuristic and random should be present (nonexistent checkpoint ignored)
-    assert types_seen <= {"LocalHeuristicAgent", "RandomAgent"}
-    assert len(types_seen) == 2
+    assert types_seen == {"LocalHeuristicAgent"}
 
 
 # ---------------------------------------------------------------------------

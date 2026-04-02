@@ -51,6 +51,22 @@ _SINGLE_WEAPON_ZONE_HEROES: frozenset[str] = frozenset({
     "kayo-underhanded-cheat",
 })
 
+# Heroes who genuinely carry no weapon (Gravy Bones uses bare-hand attacks).
+# All other heroes without a weapon in the DB fall back to Talishar, the Lost Prince.
+_TRULY_WEAPONLESS_HEROES: frozenset[str] = frozenset({
+    "gravy-bones-shipwrecked-looter",
+    "gravy_bones_shipwrecked_looter",
+})
+_TALISHAR_FALLBACK_WEAPON: dict = {
+    "card_slug": "talishar_the_lost_prince",
+    "card_name": "Talishar, the Lost Prince",
+    "card_type": "equipment",
+    "equipment_subtype": "weapon-2h",
+    "frequency": 0.1,
+    "avg_copies": 1.0,
+    "win_rate": 0.5,
+}
+
 # Lazily loaded slug index and valid slug set from slug_index.json
 _valid_slugs: set[str] | None = None
 _slug_index: dict | None = None
@@ -135,6 +151,10 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
         hero_entry.get("card_keywords", []),
     )
 
+    # Build a string of hero name tokens for specialization matching.
+    # e.g. "rhinar_reckless_rampage" → "rhinar reckless rampage"
+    _hero_name_tokens: str = hero_slug.replace("-", " ").replace("_", " ").lower()
+
     # Types that mark a card as non-deck-playable regardless of class legality
     _NON_PLAYABLE: frozenset[str] = frozenset({
         "hero", "macro", "companion", "invocation", "mentor",
@@ -146,6 +166,19 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
         raw_types = frozenset(t.lower() for t in (entry.get("types") or []))
         # Exclude heroes and non-playable game objects
         if raw_types & _NON_PLAYABLE:
+            continue
+
+        # Specialization check: if the card has an "XYZ Specialization" keyword,
+        # only include it when "xyz" appears in this hero's name tokens.
+        kws = entry.get("card_keywords") or []
+        spec_mismatch = False
+        for kw in kws:
+            if "Specialization" in kw:
+                spec_hero = kw.replace(" Specialization", "").lower().strip()
+                if spec_hero not in _hero_name_tokens:
+                    spec_mismatch = True
+                    break
+        if spec_mismatch:
             continue
 
         # Check for hybrid cards via ' / ' delimiter in type_text
@@ -320,7 +353,13 @@ def _fetch_hero(conn: sqlite3.Connection, hero_slug: str, fmt: str = "cc") -> di
         (hero_slug, fmt),
     ).fetchone()
     if row:
-        return {"hero_slug": hero_slug, "hero_name": html.unescape(row[0] or ""), "win_rate": row[1], "total_matches": row[2]}
+        # Prefer slug_index name (canonical) over scraped DB title (often a page title like
+        # "FAB Arakni, Marionette Deck Analysis &amp;").
+        index = _get_slug_index()
+        # hero_slug from DB uses hyphens; slug_index uses underscores
+        idx_entry = index.get(hero_slug) or index.get(hero_slug.replace("-", "_"))
+        canonical_name = (idx_entry.get("name") if idx_entry else None) or html.unescape(row[0] or "")
+        return {"hero_slug": hero_slug, "hero_name": canonical_name, "win_rate": row[1], "total_matches": row[2]}
 
     # Hero not in DB — check injections for display name
     injections = _load_injections()
@@ -404,16 +443,56 @@ def _is_young_hero(hero_slug: str) -> bool:
     return "young" in {t.lower() for t in (entry.get("types") or [])}
 
 
+# Hero types that are only legal in their own special formats, never CC.
+_NON_CC_HERO_TYPES = {"pit-fighter", "adjudicator", "merchant"}
+
+
+def _is_cc_legal_hero(hero_slug: str, banned_slugs: set) -> bool:
+    """Return True if *hero_slug* is legal for Classic Constructed.
+
+    Filters out:
+    - Young heroes (blitz-only)
+    - Heroes whose types are restricted to non-CC formats (Pit-Fighter, Adjudicator, Merchant)
+    - Heroes that appear on the CC banned list
+    """
+    norm = hero_slug.replace("-", "_")
+    if norm in banned_slugs or hero_slug in banned_slugs:
+        return False
+    index = _get_slug_index()
+    entry = index.get(norm) or index.get(hero_slug)
+    if entry is None:
+        return True  # Unknown hero — let it through and fail later if needed
+    types_lower = {t.lower() for t in (entry.get("types") or [])}
+    if "young" in types_lower:
+        return False
+    if types_lower & _NON_CC_HERO_TYPES:
+        return False
+    return True
+
+
 def _list_heroes(conn: sqlite3.Connection, fmt: str = "cc") -> list[str]:
-    """Return all hero slugs for the given format."""
+    """Return all hero slugs for the given format, including injection-only heroes."""
     rows = conn.execute(
         "SELECT hero_slug FROM heroes WHERE format = ? ORDER BY total_matches DESC",
         (fmt,),
     ).fetchall()
     slugs = [r[0] for r in rows]
-    # Exclude young heroes from CC format — they are not legal
+    slugs_set = set(slugs) | {s.replace("-", "_") for s in slugs}
+
+    # Add injection-only heroes (not yet in fablazing DB)
+    injections = _load_injections()
+    for hero_slug in injections:
+        if hero_slug.startswith("_"):
+            continue
+        # Skip if already covered by DB (handle hyphen/underscore variants)
+        if hero_slug in slugs_set or hero_slug.replace("-", "_") in slugs_set:
+            continue
+        slugs.append(hero_slug)
+
+    # Filter to CC-legal heroes only
     if fmt == "cc":
-        slugs = [s for s in slugs if not _is_young_hero(s)]
+        banned = set(load_banned_cards("cc"))
+        slugs = [s for s in slugs if _is_cc_legal_hero(s, banned)]
     return slugs
 
 
@@ -726,6 +805,68 @@ def _pick_equipment(
 
     valid_slugs = _get_valid_slugs()
 
+    def _slug_index_weapon() -> dict | None:
+        """Fallback: pick the best class-legal weapon from slug_index.
+
+        Prefers class-specific weapons over Generic ones.
+        Excludes specialization weapons for other heroes.
+        """
+        if not hero_classes:
+            return None
+        hero_name_tokens = (hero_slug or "").replace("-", " ").replace("_", " ").lower()
+        candidates: list[tuple[int, str, dict]] = []
+        for slug, entry in index.items():
+            types = entry.get("types") or []
+            if "Weapon" not in types or "Equipment" not in types:
+                continue
+            if "Token" in types or "Ally" in types:
+                continue
+            if slug in used_slugs:
+                continue
+            if valid_slugs and slug not in valid_slugs:
+                continue
+            # Specialization check
+            kws = entry.get("card_keywords") or []
+            spec_mismatch = False
+            for kw in kws:
+                if "Specialization" in kw:
+                    spec_hero = kw.replace(" Specialization", "").lower().strip()
+                    if spec_hero not in hero_name_tokens:
+                        spec_mismatch = True
+                        break
+            if spec_mismatch:
+                continue
+            # Class legality: rely on legal_pool (built via _expand_hero_classes)
+            # Do NOT use w_types <= hero_classes — weapon types like 'staff'/'sword'
+            # are not class identifiers and would incorrectly filter class weapons.
+            if legal_pool and slug not in legal_pool:
+                continue
+            # Prefer class-specific weapons (have non-DESCRIPTOR types) over Generic
+            w_types = frozenset(t.lower() for t in types if t.lower() not in DESCRIPTOR)
+            priority = 0 if w_types else 1
+            # Infer subtype from type_text
+            tt_lower = (entry.get("type_text") or "").lower()
+            if "2h" in tt_lower:
+                subtype = "weapon-2h"
+            elif "bow" in tt_lower or "arrow" in tt_lower:
+                subtype = "weapon-bow"
+            else:
+                subtype = "weapon-1h"
+            candidates.append((priority, slug, {
+                "card_slug": slug,
+                "card_name": entry.get("name", slug),
+                "card_type": "equipment",
+                "equipment_subtype": subtype,
+                "frequency": 0.5,
+                "avg_copies": 1.0,
+                "win_rate": 0.5,
+            }))
+        candidates.sort(key=lambda x: (x[0], x[1]))
+        for _, slug, card in candidates:
+            if slug not in used_slugs:
+                return card
+        return None
+
     def _hero_name_from_slug(slug: str | None) -> str:
         """Extract hero display name tokens from slug for specialization matching."""
         if not slug:
@@ -826,10 +967,33 @@ def _pick_equipment(
                 _add(q)
         # weapon-2h / weapon-other: no secondary item
     else:
-        # No weapon — still equip a standalone off-hand if the hero uses one
-        oh = _best("off-hand", require_legal=True)
-        if oh and oh["card_slug"] in {c["card_slug"] for c in equipment_cards}:
-            _add(oh)
+        # No weapon found in DB/class pool.
+        # Truly weaponless heroes (Gravy Bones) are left as-is.
+        # Others try slug_index for a class-legal weapon, then fall back to Talishar.
+        if hero_slug not in _TRULY_WEAPONLESS_HEROES:
+            si_weapon = _slug_index_weapon()
+            if si_weapon:
+                chosen_weapon = si_weapon
+                _add(chosen_weapon)
+                wtype = chosen_weapon.get("equipment_subtype", "")
+                if wtype == "weapon-1h" and hero_slug not in _SINGLE_WEAPON_ZONE_HEROES:
+                    oh = (
+                        _second_weapon_as_offhand(chosen_weapon)
+                        or _best("off-hand", require_legal=True)
+                        or _slug_index_offhand()
+                    )
+                    if oh:
+                        if oh["card_slug"] == chosen_weapon["card_slug"]:
+                            picked[-1] = {**picked[-1], "count": 2}
+                        else:
+                            _add(oh)
+            else:
+                _add(_TALISHAR_FALLBACK_WEAPON)
+        else:
+            # Still equip a standalone off-hand if the hero uses one
+            oh = _best("off-hand", require_legal=True)
+            if oh and oh["card_slug"] in {c["card_slug"] for c in equipment_cards}:
+                _add(oh)
 
     return picked
 
@@ -1080,7 +1244,7 @@ def generate_deck(
                                   legal_pool=legal_pool or None)
 
     if mutate:
-        deck_cards = _mutate_deck(deck_cards, deck_pool, rng=rng)
+        deck_cards = _mutate_deck(deck_cards, deck_pool, rng=rng, generic_pool=generic_deck)
 
     total_deck = sum(e["count"] for e in deck_cards)
 
@@ -1114,6 +1278,7 @@ def _mutate_deck(
     full_pool: list[dict],
     n_swaps: int | None = None,
     rng: random.Random | None = None,
+    generic_pool: list[dict] | None = None,
 ) -> list[dict]:
     """Mutate a deck by swapping 5-10 random cards with alternatives from the pool.
 
@@ -1163,6 +1328,19 @@ def _mutate_deck(
                 add = min(room, deficit)
                 entry["count"] += add
                 deficit -= add
+
+    # Last resort: fill remaining deficit with generic staples
+    if deficit > 0 and generic_pool:
+        used_slugs = {e["card_slug"] for e in deck}
+        for card in generic_pool:
+            if deficit <= 0:
+                break
+            if card["card_slug"] in used_slugs:
+                continue
+            copies = max(1, min(MAX_COPIES, deficit))
+            deck.append({**card, "count": copies})
+            used_slugs.add(card["card_slug"])
+            deficit -= copies
 
     return deck
 

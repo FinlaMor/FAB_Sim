@@ -107,6 +107,35 @@ class CardVocab:
         conn.close()
         return cls(card_slugs, hero_slugs)
 
+    @classmethod
+    def from_games_db(cls, db_path: str | Path) -> "CardVocab":
+        """Build vocabulary from a GameDataStore DB (data/game_data.db).
+
+        Extracts hero slugs from p1_hero/p2_hero columns and card slugs
+        from the JSON decklists.
+        """
+        conn = sqlite3.connect(str(db_path))
+        hero_slugs: set[str] = set()
+        card_slugs: set[str] = set()
+        for col in ("p1_hero", "p2_hero"):
+            for (h,) in conn.execute(f"SELECT DISTINCT {col} FROM decks WHERE {col} IS NOT NULL AND {col} != ''"):
+                hero_slugs.add(h)
+        for (deck_json,) in conn.execute("SELECT p1_decklist FROM decks UNION ALL SELECT p2_decklist FROM decks"):
+            if not deck_json:
+                continue
+            try:
+                deck = json.loads(deck_json)
+                for key in ("deck", "weapons", "head", "chest", "arms", "legs", "offhand"):
+                    val = deck.get(key)
+                    if isinstance(val, list):
+                        card_slugs.update(val)
+                    elif isinstance(val, str) and val:
+                        card_slugs.add(val)
+            except (json.JSONDecodeError, AttributeError):
+                pass
+        conn.close()
+        return cls(sorted(card_slugs), sorted(hero_slugs))
+
     def state_dict(self) -> dict:
         return {
             "card2idx": self._card2idx,
@@ -251,31 +280,55 @@ class DeepSetsEvaluator(nn.Module):
         card_ids: torch.Tensor,        # [B, S]
         counts: torch.Tensor,          # [B, S]
         opp_hero_ids: torch.Tensor,    # [B]
-        pad_mask: torch.Tensor | None = None,  # [B, S] bool, True = pad
+        pad_mask: torch.Tensor | None = None,   # [B, S] bool, True = pad
+        card_credits: torch.Tensor | None = None,  # [B, S] float, 0 = unseen
     ) -> torch.Tensor:
-        """Returns win probability logits [B, 1]."""
+        """Returns win probability logits [B, 1].
+
+        When *card_credits* is provided, pooling is credit-weighted so cards
+        that were played contribute more than cards that were only pitched or
+        never seen (credit=0).  Cards with zero credit are excluded from max
+        pooling.
+        """
         # Card embeddings
         x = self.card_embed(card_ids, counts)  # [B, S, D]
         x = self.phi(x)  # [B, S, H]
 
-        # Mask padding
-        if pad_mask is not None:
-            x = x.masked_fill(pad_mask.unsqueeze(-1), 0.0)
-            # For max pool, use -inf for padded positions
-            x_for_max = x.masked_fill(pad_mask.unsqueeze(-1), float('-inf'))
+        # Build effective mask: pad OR zero-credit positions are excluded
+        if card_credits is not None:
+            # Positions to exclude from max pool: padded or unseen (credit==0)
+            exclude_mask = pad_mask if pad_mask is not None else torch.zeros(
+                x.shape[:2], dtype=torch.bool, device=x.device
+            )
+            exclude_mask = exclude_mask | (card_credits == 0)
+
+            # Credit-weighted mean pool (unseen cards get weight 0)
+            w = card_credits.unsqueeze(-1).clamp(min=0.0)  # [B, S, 1]
+            w = w.masked_fill(
+                (pad_mask.unsqueeze(-1) if pad_mask is not None else torch.zeros_like(w, dtype=torch.bool)),
+                0.0,
+            )
+            w_sum = w.sum(dim=1).clamp(min=1e-8)  # [B, 1]
+            mean_pool = (x * w).sum(dim=1) / w_sum  # [B, H]
+        else:
+            exclude_mask = pad_mask
+            if pad_mask is not None:
+                x = x.masked_fill(pad_mask.unsqueeze(-1), 0.0)
+                mean_pool = x.sum(dim=1) / (~pad_mask).sum(dim=1, keepdim=True).clamp(min=1).float()
+            else:
+                mean_pool = x.mean(dim=1)
+
+        # Max pool over non-excluded positions
+        if exclude_mask is not None:
+            x_for_max = x.masked_fill(exclude_mask.unsqueeze(-1), float('-inf'))
         else:
             x_for_max = x
-
-        # Pooling
-        mean_pool = x.sum(dim=1) / (~pad_mask).sum(dim=1, keepdim=True).clamp(min=1).float() \
-            if pad_mask is not None else x.mean(dim=1)
-        max_pool = x_for_max.max(dim=1).values  # [B, H]
+        max_pool = x_for_max.max(dim=1).values.nan_to_num(0.0).clamp(min=-1e6)  # [B, H]
 
         # Hero embeddings
         hero_emb = self.hero_embed(hero_ids)      # [B, D]
         opp_emb = self.hero_embed(opp_hero_ids)    # [B, D]
 
-        # Concatenate and predict
         combined = torch.cat([mean_pool, max_pool, hero_emb, opp_emb], dim=-1)
         return self.rho(combined)  # [B, 1]
 
@@ -357,6 +410,7 @@ class SetTransformerEvaluator(nn.Module):
         counts: torch.Tensor,          # [B, S]
         opp_hero_ids: torch.Tensor,    # [B]
         pad_mask: torch.Tensor | None = None,  # [B, S] bool, True = pad
+        card_credits: torch.Tensor | None = None,  # [B, S] float (accepted for API compat, used for masking)
     ) -> torch.Tensor:
         """Returns win probability logits [B, 1]."""
         B, S = card_ids.shape
@@ -367,6 +421,15 @@ class SetTransformerEvaluator(nn.Module):
 
         # Prepend hero token to the set
         x = torch.cat([hero_emb, card_emb], dim=1)  # [B, S+1, D]
+
+        # Build exclude mask: padded OR zero-credit positions
+        if card_credits is not None:
+            exclude_mask = pad_mask if pad_mask is not None else torch.zeros(
+                B, S, dtype=torch.bool, device=card_ids.device
+            )
+            exclude_mask = exclude_mask | (card_credits == 0)
+        else:
+            exclude_mask = pad_mask
 
         # Extend padding mask for hero token (never padded)
         if pad_mask is not None:
@@ -382,17 +445,25 @@ class SetTransformerEvaluator(nn.Module):
         # Extract hero-contextualized representations (skip hero token for pooling)
         card_out = x[:, 1:, :]  # [B, S, D]
 
-        # Masked pooling
-        if pad_mask is not None:
+        # Masked pooling (credit-weighted when available)
+        if card_credits is not None:
+            w = card_credits.unsqueeze(-1).clamp(min=0.0)  # [B, S, 1]
+            if pad_mask is not None:
+                w = w.masked_fill(pad_mask.unsqueeze(-1), 0.0)
+            w_sum = w.sum(dim=1).clamp(min=1e-8)
+            mean_pool = (card_out * w).sum(dim=1) / w_sum
+        elif pad_mask is not None:
             card_out_masked = card_out.masked_fill(pad_mask.unsqueeze(-1), 0.0)
-            card_out_for_max = card_out.masked_fill(pad_mask.unsqueeze(-1), float('-inf'))
             n_valid = (~pad_mask).sum(dim=1, keepdim=True).clamp(min=1).float()
             mean_pool = card_out_masked.sum(dim=1) / n_valid
         else:
             mean_pool = card_out.mean(dim=1)
-            card_out_for_max = card_out
 
-        max_pool = card_out_for_max.max(dim=1).values.clamp(min=-1e6)  # [B, D]
+        if exclude_mask is not None:
+            card_out_for_max = card_out.masked_fill(exclude_mask.unsqueeze(-1), float('-inf'))
+        else:
+            card_out_for_max = card_out
+        max_pool = card_out_for_max.max(dim=1).values.nan_to_num(0.0).clamp(min=-1e6)
 
         # Hero skip connection + opponent hero
         hero_skip = self.hero_embed(hero_ids)      # [B, D]
@@ -487,16 +558,29 @@ class DeckWinDataset(torch.utils.data.Dataset):
                 f"Database {games_db_path} has no 'decks' table. "
                 f"Expected a GameDataStore DB like data/game_data.db"
             )
+        # Check if card_usage columns exist
+        cols = {r[1] for r in conn.execute("PRAGMA table_info(decks)")}
+        has_usage = "p1_card_usage" in cols and "p2_card_usage" in cols
+        select = (
+            "SELECT p1_hero, p2_hero, p1_decklist, p2_decklist, winner, "
+            "p1_card_usage, p2_card_usage FROM decks WHERE winner IS NOT NULL"
+            if has_usage
+            else "SELECT p1_hero, p2_hero, p1_decklist, p2_decklist, winner, NULL, NULL "
+                 "FROM decks WHERE winner IS NOT NULL"
+        )
         rows = conn.execute(
-            "SELECT p1_hero, p2_hero, p1_decklist, p2_decklist, winner "
-            "FROM decks WHERE winner IS NOT NULL"
-            + ("" if include_ties else " AND winner IN (1, 2)")
+            select + ("" if include_ties else " AND winner IN (1, 2)")
         ).fetchall()
         conn.close()
 
-        for p1_hero, p2_hero, p1_deck_json, p2_deck_json, winner in rows:
+        for game_idx, row in enumerate(rows):
+            p1_hero, p2_hero, p1_deck_json, p2_deck_json, winner = row[:5]
+            p1_usage_json, p2_usage_json = row[5], row[6]
+
             p1_deck = json.loads(p1_deck_json)
             p2_deck = json.loads(p2_deck_json)
+            p1_usage = json.loads(p1_usage_json) if p1_usage_json else {}
+            p2_usage = json.loads(p2_usage_json) if p2_usage_json else {}
 
             # Extract card lists from deck JSON
             p1_cards = self._extract_card_slugs(p1_deck)
@@ -508,6 +592,8 @@ class DeckWinDataset(torch.utils.data.Dataset):
                 "opp_hero_slug": p2_hero,
                 "card_slugs": p1_cards,
                 "won": 1.0 if winner == 1 else 0.0,
+                "card_usage": p1_usage,
+                "game_idx": game_idx,
             })
             # Sample 2: player 2's perspective
             self.samples.append({
@@ -515,7 +601,32 @@ class DeckWinDataset(torch.utils.data.Dataset):
                 "opp_hero_slug": p1_hero,
                 "card_slugs": p2_cards,
                 "won": 1.0 if winner == 2 else 0.0,
+                "card_usage": p2_usage,
+                "game_idx": game_idx,
             })
+
+    @property
+    def n_games(self) -> int:
+        """Number of unique games in the dataset."""
+        return max((s["game_idx"] for s in self.samples), default=-1) + 1
+
+    def split_by_game(
+        self,
+        val_frac: float = 0.2,
+        seed: int = 42,
+    ) -> tuple[list[int], list[int]]:
+        """Split sample indices by game so both perspectives stay together.
+
+        Returns (train_indices, val_indices).
+        """
+        n_games = self.n_games
+        rng = torch.Generator().manual_seed(seed)
+        perm = torch.randperm(n_games, generator=rng).tolist()
+        n_val_games = max(1, int(n_games * val_frac))
+        val_games = set(perm[:n_val_games])
+        train_idx = [i for i, s in enumerate(self.samples) if s["game_idx"] not in val_games]
+        val_idx = [i for i, s in enumerate(self.samples) if s["game_idx"] in val_games]
+        return train_idx, val_idx
 
     @staticmethod
     def _extract_card_slugs(deck_dict: dict) -> list[str]:
@@ -532,20 +643,61 @@ class DeckWinDataset(torch.utils.data.Dataset):
     def __len__(self) -> int:
         return len(self.samples)
 
+    @staticmethod
+    def _compute_card_credits(
+        card_slugs_deduped: list[str],
+        slug_counts: dict[str, int],
+        usage: dict,
+        played_w: float = 1.0,
+        blocked_w: float = 0.5,
+        pitched_w: float = 0.3,
+    ) -> list[float]:
+        """Compute a credit score per unique card slug, normalized by copy count.
+
+        Raw credit = played_count * played_w + blocked_count * blocked_w + pitched_count * pitched_w.
+        Normalized credit = raw_credit / n_copies so per-copy usage is comparable.
+        Cards not seen at all get credit 0.0.
+        """
+        played = usage.get("played", {})
+        blocked = usage.get("blocked", {})
+        pitched = usage.get("pitched", {})
+        credits = []
+        for slug in card_slugs_deduped:
+            raw = (
+                played.get(slug, 0) * played_w
+                + blocked.get(slug, 0) * blocked_w
+                + pitched.get(slug, 0) * pitched_w
+            )
+            n_copies = slug_counts.get(slug, 1)
+            credits.append(raw / max(n_copies, 1))
+        return credits
+
     def __getitem__(self, idx: int) -> dict[str, torch.Tensor]:
         sample = self.samples[idx]
         card_ids, counts = self.vocab.encode_deck(sample["card_slugs"])
+
+        # Resolve deduplicated slug list to match card_ids order
+        slug_counter: dict[str, int] = {}
+        for s in sample["card_slugs"]:
+            slug_counter[s] = slug_counter.get(s, 0) + 1
+        deduped_slugs = list(slug_counter.keys())
+
+        # Compute per-card credits from usage data (normalized by copy count)
+        usage = sample.get("card_usage", {})
+        raw_credits = self._compute_card_credits(deduped_slugs, slug_counter, usage)
 
         # Pad / truncate to max_cards
         n = len(card_ids)
         if n > self.max_cards:
             card_ids = card_ids[:self.max_cards]
             counts = counts[:self.max_cards]
+            raw_credits = raw_credits[:self.max_cards]
             n = self.max_cards
 
         pad_len = self.max_cards - n
         card_ids_padded = card_ids + [self.vocab.pad_idx] * pad_len
         counts_padded = counts + [0] * pad_len
+        credits_padded = raw_credits + [0.0] * pad_len
         pad_mask = [False] * n + [True] * pad_len
 
         return {
@@ -553,6 +705,7 @@ class DeckWinDataset(torch.utils.data.Dataset):
             "opp_hero_id": torch.tensor(self.vocab.hero_id(sample["opp_hero_slug"]), dtype=torch.long),
             "card_ids": torch.tensor(card_ids_padded, dtype=torch.long),
             "counts": torch.tensor(counts_padded, dtype=torch.float),
+            "card_credits": torch.tensor(credits_padded, dtype=torch.float),
             "pad_mask": torch.tensor(pad_mask, dtype=torch.bool),
             "label": torch.tensor(sample["won"], dtype=torch.float),
         }
@@ -777,6 +930,7 @@ def save_checkpoint(
     model: nn.Module,
     vocab: CardVocab,
     optimizer: Optional[torch.optim.Optimizer] = None,
+    scheduler: Optional[object] = None,
     epoch: int = 0,
     metrics: Optional[dict] = None,
     model_type: str = "deepsets",
@@ -791,9 +945,12 @@ def save_checkpoint(
     }
     if optimizer is not None:
         state["optimizer_state_dict"] = optimizer.state_dict()
+    if scheduler is not None and hasattr(scheduler, "state_dict"):
+        state["scheduler_state_dict"] = scheduler.state_dict()
     torch.save(state, str(path))
 
 
 def load_checkpoint(path: str | Path) -> dict:
     """Load model checkpoint. Returns dict with model, vocab, metadata."""
     return torch.load(str(path), map_location="cpu", weights_only=False)
+

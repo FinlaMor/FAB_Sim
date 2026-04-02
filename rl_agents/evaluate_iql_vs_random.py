@@ -26,6 +26,7 @@ from engine.card import CardDB
 from encoder.action_embedder import ActionEmbedder
 from encoder.card_embedder import SlugVocab
 from encoder.gamestate_embedder import GameStateEmbedder
+from encoder.game_transformer import GameTransformerEncoder, prime_dummy_vocab
 from rl_agents.embedder_bundle import load_embedder_bundle
 from rl_agents.game_backends import GameRunRequest, add_game_backend_args, build_game_backend
 from rl_agents.iql import IQLTrainer
@@ -47,9 +48,10 @@ class IQLPolicyAgent:
     ):
         self.player_id = player_id
         self.rng = random.Random(seed)
-        self.trainer = IQLTrainer.from_checkpoint(checkpoint_path, device=device)
-        self.trainer.actor.eval()
         self.device = _resolve_device(device)
+
+        # Load checkpoint payload to access trained e2e weights
+        checkpoint_payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
 
         self.card_db = CardDB(SLUG_INDEX_PATH)
         slug_vocab = SlugVocab.from_card_db(self.card_db)
@@ -59,27 +61,71 @@ class IQLPolicyAgent:
             slug_vocab_size=slug_vocab.size,
             slug_vocab=slug_vocab,
         )
-        self.state_embedder = GameStateEmbedder(
-            d_model=d_model,
-            slug_vocab_size=slug_vocab.size,
-            slug_vocab=slug_vocab,
-        )
-        card_sd = embedder_bundle.get("card_embedder_state_dict", {})
-        card_prefixed = {f"card_embedder.{k}": v for k, v in card_sd.items()}
-        self.action_embedder.load_state_dict(
-            {**card_prefixed, **embedder_bundle["action_embedder_state_dict"]}, strict=False
-        )
-        self.state_embedder.load_state_dict(
-            {**card_prefixed, **embedder_bundle["state_embedder_state_dict"]}, strict=False
-        )
+        # Prefer trained weights from checkpoint over stale bundle weights
+        if "action_embedder_state_dict" in checkpoint_payload:
+            ae_sd = checkpoint_payload["action_embedder_state_dict"]
+            ae_model_sd = self.action_embedder.state_dict()
+            ae_filtered = {k: v for k, v in ae_sd.items() if k in ae_model_sd and ae_model_sd[k].shape == v.shape}
+            self.action_embedder.load_state_dict(ae_filtered, strict=False)
+        else:
+            card_sd = embedder_bundle.get("card_embedder_state_dict", {})
+            card_prefixed = {f"card_embedder.{k}": v for k, v in card_sd.items()}
+            self.action_embedder.load_state_dict(
+                {**card_prefixed, **embedder_bundle["action_embedder_state_dict"]}, strict=False
+            )
         self.action_embedder.eval()
+
+        # Use GameTransformerEncoder as state embedder when the bundle includes one;
+        # fall back to legacy GameStateEmbedder for checkpoints trained without it.
+        if "game_transformer_state_dict" in embedder_bundle:
+            prime_dummy_vocab(self.card_db)
+            gt_d_model       = int(embedder_bundle.get("game_transformer_d_model", 256))
+            gt_n_heads       = int(embedder_bundle.get("game_transformer_n_heads", 8))
+            gt_n_layers      = int(embedder_bundle.get("game_transformer_n_layers", 4))
+            gt_hero_head_dim = int(embedder_bundle.get("game_transformer_hero_head_dim", 64))
+            self.state_embedder = GameTransformerEncoder(
+                slug_vocab_size=slug_vocab.size,
+                d_model=gt_d_model,
+                n_heads=gt_n_heads,
+                n_layers=gt_n_layers,
+                hero_head_dim=gt_hero_head_dim,
+            )
+            # Prefer trained weights from checkpoint over stale bundle weights
+            if "transformer_state_dict" in checkpoint_payload:
+                gt_sd = checkpoint_payload["transformer_state_dict"]
+            else:
+                gt_sd = embedder_bundle["game_transformer_state_dict"]
+            gt_model_sd = self.state_embedder.state_dict()
+            gt_filtered = {k: v for k, v in gt_sd.items() if k in gt_model_sd and gt_model_sd[k].shape == v.shape}
+            self.state_embedder.load_state_dict(gt_filtered, strict=False)
+            # Ensure card_feats_lookup is populated (may already be in state_dict,
+            # but re-populate from card_db as authoritative source)
+            self.state_embedder.set_card_feats_lookup(self.card_db)
+        else:
+            card_sd = embedder_bundle.get("card_embedder_state_dict", {})
+            card_prefixed = {f"card_embedder.{k}": v for k, v in card_sd.items()}
+            self.state_embedder = GameStateEmbedder(
+                d_model=d_model,
+                slug_vocab_size=slug_vocab.size,
+                slug_vocab=slug_vocab,
+            )
+            self.state_embedder.load_state_dict(
+                {**card_prefixed, **embedder_bundle["state_embedder_state_dict"]}, strict=False
+            )
         self.state_embedder.eval()
+
+        # Build trainer from checkpoint (passing None for transformer/action_embedder
+        # since eval uses the embedders directly, not through trainer's e2e path)
+        self.trainer = IQLTrainer.from_checkpoint(checkpoint_path, device=device)
+        self.trainer.actor.eval()
 
         expected_state_dim = self.state_embedder.get_output_dim()
         expected_action_dim = self.action_embedder.get_output_dim()
         if self.trainer.config.state_dim != expected_state_dim:
             raise ValueError(
-                f"Checkpoint state_dim={self.trainer.config.state_dim} does not match current embedder state_dim={expected_state_dim}"
+                f"Checkpoint state_dim={self.trainer.config.state_dim} does not match "
+                f"embedder state_dim={expected_state_dim}. "
+                f"The checkpoint was trained with a different state encoder — delete stale checkpoints."
             )
         if self.trainer.config.action_dim != expected_action_dim:
             raise ValueError(

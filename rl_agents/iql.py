@@ -53,6 +53,7 @@ class IQLConfig:
     lr_embedder: float = 1e-4
     lr_schedule: str = "constant"
     lr_warmup_steps: int = 0
+    use_raw_features: bool = False  # True when dataset contains raw tokenized feature arrays
 
 
 class ValueNetwork(nn.Module):
@@ -131,7 +132,12 @@ class ResidualAdapter(nn.Module):
 
 
 class IQLTrainer:
-    def __init__(self, config: IQLConfig):
+    def __init__(
+        self,
+        config: IQLConfig,
+        transformer: Optional["nn.Module"] = None,
+        action_embedder: Optional["nn.Module"] = None,
+    ):
         if not (0.0 < config.expectile < 1.0):
             raise ValueError("expectile must be in (0, 1)")
         if config.batch_size <= 0:
@@ -142,6 +148,14 @@ class IQLTrainer:
         self.config = config
         self.device = _resolve_device(config.device)
 
+        # End-to-end transformer / action_embedder (optional)
+        self.transformer = transformer
+        self.action_embedder = action_embedder
+        if transformer is not None:
+            transformer.to(self.device)
+        if action_embedder is not None:
+            action_embedder.to(self.device)
+
         self.q1 = QNetwork(config.state_dim, config.action_dim, config.hidden_dim, config.hidden_layers).to(self.device)
         self.q2 = QNetwork(config.state_dim, config.action_dim, config.hidden_dim, config.hidden_layers).to(self.device)
         self.value = ValueNetwork(config.state_dim, config.hidden_dim, config.hidden_layers).to(self.device)
@@ -150,34 +164,50 @@ class IQLTrainer:
         self.value_target.requires_grad_(False)
         self.actor = ActorNetwork(config.state_dim, config.action_dim, config.hidden_dim, config.hidden_layers).to(self.device)
 
+        # When end-to-end transformer is in use, disable the residual adapters
+        # (the transformer itself is the trainable embedder — adapters would be redundant)
+        _adapter_enabled = config.trainable_embedder and transformer is None
         self.state_adapter = ResidualAdapter(
             input_dim=config.state_dim,
             hidden_dim=config.embedder_hidden_dim,
             hidden_layers=config.embedder_layers,
-            enabled=config.trainable_embedder,
+            enabled=_adapter_enabled,
         ).to(self.device)
         self.action_adapter = ResidualAdapter(
             input_dim=config.action_dim,
             hidden_dim=config.embedder_hidden_dim,
             hidden_layers=config.embedder_layers,
-            enabled=config.trainable_embedder,
+            enabled=_adapter_enabled,
         ).to(self.device)
         self._embedder_params = list(self.state_adapter.parameters()) + list(self.action_adapter.parameters())
 
-        self.opt_q = torch.optim.Adam(
-            list(self.q1.parameters()) + list(self.q2.parameters()),
-            lr=config.lr_q,
-            weight_decay=config.weight_decay,
+        # foreach=False: disables vectorized foreach ops (e.g. _foreach_lerp_) that
+        # are not implemented in torch-directml and fall back to CPU, stalling the GPU.
+        _adam = lambda params, lr: torch.optim.Adam(
+            params, lr=lr, weight_decay=config.weight_decay, foreach=False
         )
-        self.opt_v = torch.optim.Adam(self.value.parameters(), lr=config.lr_v, weight_decay=config.weight_decay)
-        self.opt_actor = torch.optim.Adam(self.actor.parameters(), lr=config.lr_actor, weight_decay=config.weight_decay)
+        self.opt_q = _adam(
+            list(self.q1.parameters()) + list(self.q2.parameters()), config.lr_q
+        )
+        self.opt_v     = _adam(self.value.parameters(), config.lr_v)
+        self.opt_actor = _adam(self.actor.parameters(), config.lr_actor)
         self.opt_embed = (
-            torch.optim.Adam(self._embedder_params, lr=config.lr_embedder, weight_decay=config.weight_decay)
-            if self._embedder_params
-            else None
+            _adam(self._embedder_params, config.lr_embedder)
+            if self._embedder_params else None
+        )
+
+        # End-to-end optimizers for transformer and action_embedder
+        self.opt_transformer = (
+            _adam(transformer.parameters(), config.lr_embedder)
+            if transformer is not None else None
+        )
+        self.opt_action_embedder = (
+            _adam(action_embedder.parameters(), config.lr_embedder)
+            if action_embedder is not None else None
         )
 
         self._schedulers: list[LambdaLR] = []
+        self._pending_scheduler_state_dicts: list[dict] | None = None
 
     def encode_states(self, states: torch.Tensor) -> torch.Tensor:
         return self.state_adapter(states)
@@ -195,7 +225,26 @@ class IQLTrainer:
 
     def _clip_embedder_grad(self) -> None:
         if self._embedder_params:
-            nn.utils.clip_grad_norm_(self._embedder_params, self.config.grad_clip)
+            nn.utils.clip_grad_value_(self._embedder_params, self.config.grad_clip)
+
+    def _zero_e2e_grads(self) -> None:
+        """Zero gradients for end-to-end transformer / action_embedder optimizers."""
+        if self.opt_transformer is not None:
+            self.opt_transformer.zero_grad(set_to_none=True)
+        if self.opt_action_embedder is not None:
+            self.opt_action_embedder.zero_grad(set_to_none=True)
+
+    def _clip_e2e_grads(self) -> None:
+        if self.transformer is not None:
+            nn.utils.clip_grad_value_(self.transformer.parameters(), self.config.grad_clip)
+        if self.action_embedder is not None:
+            nn.utils.clip_grad_value_(self.action_embedder.parameters(), self.config.grad_clip)
+
+    def _step_e2e(self) -> None:
+        if self.opt_transformer is not None:
+            self.opt_transformer.step()
+        if self.opt_action_embedder is not None:
+            self.opt_action_embedder.step()
 
     def _build_schedulers(self, total_steps: int) -> None:
         """Create LR schedulers for all optimizers based on config."""
@@ -219,7 +268,19 @@ class IQLTrainer:
         opts = [self.opt_q, self.opt_v, self.opt_actor]
         if self.opt_embed is not None:
             opts.append(self.opt_embed)
+        if self.opt_transformer is not None:
+            opts.append(self.opt_transformer)
+        if self.opt_action_embedder is not None:
+            opts.append(self.opt_action_embedder)
         self._schedulers = [LambdaLR(opt, _lr_lambda) for opt in opts]
+
+        # Restore scheduler state from checkpoint if available
+        if self._pending_scheduler_state_dicts is not None:
+            saved = self._pending_scheduler_state_dicts
+            for i, sched in enumerate(self._schedulers):
+                if i < len(saved):
+                    sched.load_state_dict(saved[i])
+            self._pending_scheduler_state_dicts = None
 
     def _step_schedulers(self) -> None:
         for sched in self._schedulers:
@@ -238,11 +299,26 @@ class IQLTrainer:
 
     def train_batch(self, batch: tuple[torch.Tensor, ...]) -> dict[str, float]:
         raw_states, raw_actions, rewards, raw_next_states, dones = batch
-        raw_states = raw_states.to(self.device).float()
-        raw_actions = raw_actions.to(self.device).float()
-        rewards = rewards.to(self.device).float() * self.config.reward_scale
-        raw_next_states = raw_next_states.to(self.device).float()
-        dones = dones.to(self.device).float()
+        # Tensors are pre-moved to device in fit(); these are no-ops when already on device
+        # but still needed for external callers (e.g. eval, tests).
+        if raw_states.device != self.device:
+            raw_states = raw_states.to(self.device)
+            raw_actions = raw_actions.to(self.device)
+            rewards = rewards.to(self.device)
+            raw_next_states = raw_next_states.to(self.device)
+            dones = dones.to(self.device)
+        raw_states = raw_states.float()
+        raw_actions = raw_actions.float()
+        rewards = rewards.float() * self.config.reward_scale
+        raw_next_states = raw_next_states.float()
+        dones = dones.float()
+
+        # Whether to run end-to-end transformer forward passes inside training loop
+        use_e2e = (
+            self.config.use_raw_features
+            and self.transformer is not None
+            and self.action_embedder is not None
+        )
 
         if self.config.rwbc_mode:
             q_loss = torch.zeros((), device=self.device)
@@ -253,71 +329,125 @@ class IQLTrainer:
                 advantage = rewards
                 weights = self._actor_weights_from_advantage(advantage)
         else:
-            # When trainable_embedder is enabled, let Q-network gradients also flow
-            # through adapters to prevent representation collapse from actor-only signal (P2-16).
-            if self.config.trainable_embedder:
-                states = self.encode_states(raw_states)
-                actions = self.encode_actions(raw_actions)
+            # ── Q loss ─────────────────────────────────────────────────────────
+            if use_e2e:
+                # End-to-end: run transformer forward passes with gradients
+                states      = self.transformer.forward_packed_batch(raw_states)
+                actions     = self.action_embedder.forward_packed_batch(raw_actions)
+                # next_states always detached — we don't want value target gradients
+                # flowing back into the transformer
+                with torch.no_grad():
+                    next_states = self.transformer.forward_packed_batch(raw_next_states)
+                    next_states = next_states.detach()
+            elif self.config.trainable_embedder:
+                # Residual adapter path
+                states      = self.encode_states(raw_states)
+                actions     = self.encode_actions(raw_actions)
                 next_states = self.encode_states(raw_next_states).detach()
             else:
-                states = self.encode_states(raw_states).detach()
-                actions = self.encode_actions(raw_actions).detach()
+                # Frozen embeddings
+                states      = self.encode_states(raw_states).detach()
+                actions     = self.encode_actions(raw_actions).detach()
                 next_states = self.encode_states(raw_next_states).detach()
 
             with torch.no_grad():
-                v_next = self.value_target(next_states)
-                q_target = rewards + self.config.gamma * (1.0 - dones) * v_next
+                v_next    = self.value_target(next_states)
+                q_target  = rewards + self.config.gamma * (1.0 - dones) * v_next
 
             q1_pred = self.q1(states, actions)
             q2_pred = self.q2(states, actions)
             q1_loss = F.mse_loss(q1_pred, q_target)
             q2_loss = F.mse_loss(q2_pred, q_target)
-            q_loss = q1_loss + q2_loss
+            q_loss  = q1_loss + q2_loss
 
             self.opt_q.zero_grad(set_to_none=True)
             if self.config.trainable_embedder:
                 self._zero_embedder_grad()
+            if use_e2e:
+                self._zero_e2e_grads()
             q_loss.backward()
-            nn.utils.clip_grad_norm_(list(self.q1.parameters()) + list(self.q2.parameters()), self.config.grad_clip)
+            nn.utils.clip_grad_value_(
+                list(self.q1.parameters()) + list(self.q2.parameters()), self.config.grad_clip
+            )
             if self.config.trainable_embedder:
                 self._clip_embedder_grad()
+            if use_e2e:
+                self._clip_e2e_grads()
             self.opt_q.step()
             if self.config.trainable_embedder:
                 self._step_embedder()
+            if use_e2e:
+                self._step_e2e()
 
-            states = self.encode_states(raw_states).detach()
-            actions = self.encode_actions(raw_actions).detach()
+            # ── V loss: re-encode with detach so value net gets no encoder gradients ──
+            if use_e2e:
+                with torch.no_grad():
+                    states_det  = self.transformer.forward_packed_batch(raw_states).detach()
+                    actions_det = self.action_embedder.forward_packed_batch(raw_actions).detach()
+            elif self.config.trainable_embedder:
+                states_det  = self.encode_states(raw_states).detach()
+                actions_det = self.encode_actions(raw_actions).detach()
+            else:
+                states_det  = states.detach()
+                actions_det = actions.detach()
+
             with torch.no_grad():
-                q_min_for_value = torch.minimum(self.q1(states, actions), self.q2(states, actions))
-            v_pred = self.value(states)
+                q_min_for_value = torch.minimum(
+                    self.q1(states_det, actions_det),
+                    self.q2(states_det, actions_det),
+                )
+            v_pred = self.value(states_det)
             v_loss = expectile_loss(q_min_for_value - v_pred, self.config.expectile).mean()
 
             self.opt_v.zero_grad(set_to_none=True)
             v_loss.backward()
-            nn.utils.clip_grad_norm_(self.value.parameters(), self.config.grad_clip)
+            nn.utils.clip_grad_value_(self.value.parameters(), self.config.grad_clip)
             self.opt_v.step()
 
+            # ── Compute advantage for actor weighting ─────────────────────────
             with torch.no_grad():
-                states = self.encode_states(raw_states)
-                actions = self.encode_actions(raw_actions)
-                q_min = torch.minimum(self.q1(states, actions), self.q2(states, actions))
-                v_now = self.value(states)
+                if use_e2e:
+                    states_adv  = self.transformer.forward_packed_batch(raw_states).detach()
+                    actions_adv = self.action_embedder.forward_packed_batch(raw_actions).detach()
+                elif self.config.trainable_embedder:
+                    states_adv  = self.encode_states(raw_states)
+                    actions_adv = self.encode_actions(raw_actions)
+                else:
+                    states_adv  = states_det
+                    actions_adv = actions_det
+                q_min  = torch.minimum(self.q1(states_adv, actions_adv), self.q2(states_adv, actions_adv))
+                v_now  = self.value(states_adv)
                 advantage = q_min - v_now
-                weights = self._actor_weights_from_advantage(advantage)
+                weights   = self._actor_weights_from_advantage(advantage)
 
-        states = self.encode_states(raw_states)
-        actions = self.encode_actions(raw_actions)
-        pred_actions = self.actor(states)
-        bc_per_row = (pred_actions - actions).pow(2).mean(dim=-1)
-        actor_loss = (weights * bc_per_row).mean()
+        # ── Actor loss ─────────────────────────────────────────────────────────
+        if use_e2e:
+            states_act  = self.transformer.forward_packed_batch(raw_states)
+            actions_act = self.action_embedder.forward_packed_batch(raw_actions)
+        elif self.config.trainable_embedder:
+            states_act  = self.encode_states(raw_states)
+            actions_act = self.encode_actions(raw_actions)
+        else:
+            states_act  = self.encode_states(raw_states)
+            actions_act = self.encode_actions(raw_actions)
+
+        pred_actions = self.actor(states_act)
+        bc_per_row   = (pred_actions - actions_act).pow(2).mean(dim=-1)
+        actor_loss   = (weights * bc_per_row).mean()
 
         self.opt_actor.zero_grad(set_to_none=True)
         self._zero_embedder_grad()
+        if use_e2e:
+            self._zero_e2e_grads()
         actor_loss.backward()
-        nn.utils.clip_grad_norm_(self.actor.parameters(), self.config.grad_clip)
+        nn.utils.clip_grad_value_(self.actor.parameters(), self.config.grad_clip)
         self._clip_embedder_grad()
+        if use_e2e:
+            self._clip_e2e_grads()
         self.opt_actor.step()
         self._step_embedder()
+        if use_e2e:
+            self._step_e2e()
 
         if not self.config.rwbc_mode:
             self._update_targets()
@@ -349,9 +479,19 @@ class IQLTrainer:
         are omitted to avoid misleading diagnostic output.
         eval_bc_loss is unweighted MSE (not advantage-weighted like actor_loss).
         """
+        use_e2e = (
+            self.config.use_raw_features
+            and self.transformer is not None
+            and self.action_embedder is not None
+        )
+
         # Put all sub-modules in eval mode for correctness with future BatchNorm/Dropout
         nets = [self.q1, self.q2, self.value, self.value_target, self.actor,
                 self.state_adapter, self.action_adapter]
+        if self.transformer is not None:
+            nets.append(self.transformer)
+        if self.action_embedder is not None:
+            nets.append(self.action_embedder)
         for m in nets:
             m.eval()
         try:
@@ -361,8 +501,12 @@ class IQLTrainer:
             s2 = eval_s2.to(self.device)
             d = eval_d.to(self.device)
 
-            states = self.encode_states(s)
-            actions = self.encode_actions(a)
+            if use_e2e:
+                states = self.transformer.forward_packed_batch(s)
+                actions = self.action_embedder.forward_packed_batch(a)
+            else:
+                states = self.encode_states(s)
+                actions = self.encode_actions(a)
 
             pred = self.actor(states)
             bc_loss = (pred - actions).pow(2).mean()
@@ -371,7 +515,10 @@ class IQLTrainer:
             }
 
             if not self.config.rwbc_mode:
-                next_states = self.encode_states(s2)
+                if use_e2e:
+                    next_states = self.transformer.forward_packed_batch(s2)
+                else:
+                    next_states = self.encode_states(s2)
                 q1 = self.q1(states, actions)
                 q2 = self.q2(states, actions)
                 q_min = torch.minimum(q1, q2)
@@ -436,29 +583,57 @@ class IQLTrainer:
                 dataset.dones,
             )
 
-        drop_last = len(train_ds) >= self.config.batch_size
-        use_pin_memory = self.device.type == "cuda"
-        loader = DataLoader(
-            train_ds,
-            batch_size=self.config.batch_size,
-            shuffle=True,
-            drop_last=drop_last,
-            pin_memory=use_pin_memory,
-            generator=torch.Generator().manual_seed(42),
-        )
+        if len(train_ds) == 0:
+            raise ValueError("Dataset is empty")
 
-        if len(loader) == 0:
-            raise ValueError("Dataset is empty after DataLoader construction")
+        # Keep training tensors on CPU and stream minibatches to device.
+        # Moving multi-million transition datasets to DML can suspend/reset the GPU.
+        _ds_tensors = train_ds.tensors
+        _t_states     = _ds_tensors[0].cpu()
+        _t_actions    = _ds_tensors[1].cpu()
+        _t_rewards    = _ds_tensors[2].cpu()
+        _t_next       = _ds_tensors[3].cpu()
+        _t_dones      = _ds_tensors[4].cpu()
+        _n_train = len(_t_states)
+
+        if eval_s is not None:
+            eval_s  = eval_s.cpu()
+            eval_a  = eval_a.cpu()
+            eval_r  = eval_r.cpu()
+            eval_s2 = eval_s2.cpu()
+            eval_d  = eval_d.cpu()
+
+        _bs = self.config.batch_size
+
+        # Pre-generate a large index buffer on CPU.
+        # Keeps sampling lightweight and avoids large device allocations.
+        _IDX_BLOCK = 50_000
+        _idx_buf = torch.randint(0, _n_train, (_IDX_BLOCK,))
+        _idx_pos = 0
+
+        def _sample_batch():
+            nonlocal _idx_buf, _idx_pos
+            if _idx_pos + _bs > len(_idx_buf):
+                _idx_buf = torch.randint(0, _n_train, (_IDX_BLOCK,))
+                _idx_pos = 0
+            idx = _idx_buf[_idx_pos : _idx_pos + _bs]
+            _idx_pos += _bs
+            return (
+                _t_states[idx].to(self.device),
+                _t_actions[idx].to(self.device),
+                _t_rewards[idx].to(self.device),
+                _t_next[idx].to(self.device),
+                _t_dones[idx].to(self.device),
+            )
 
         print(
-            f"[iql] fit_start steps={num_steps} batch_size={self.config.batch_size} "
-            f"batches_per_epoch={len(loader)} device={self.device}",
+            f"[iql] fit_start steps={num_steps} batch_size={_bs} "
+            f"n_train={_n_train} device={self.device}",
             flush=True,
         )
 
         self._build_schedulers(num_steps)
 
-        it = iter(loader)
         history: list[dict[str, float]] = []
         t0 = time.time()
         step = 0
@@ -479,12 +654,7 @@ class IQLTrainer:
                 if _stop_flag:
                     break
 
-                try:
-                    batch = next(it)
-                except StopIteration:
-                    it = iter(loader)
-                    batch = next(it)
-
+                batch = _sample_batch()
                 should_log = log_every > 0 and (step == 1 or step % log_every == 0 or step == num_steps)
 
                 if should_log:
@@ -528,7 +698,7 @@ class IQLTrainer:
         return history
 
     def checkpoint_payload(self, extra: Optional[dict] = None) -> dict:
-        return {
+        out = {
             "config": asdict(self.config),
             "q1_state_dict": self.q1.state_dict(),
             "q2_state_dict": self.q2.state_dict(),
@@ -543,6 +713,19 @@ class IQLTrainer:
             "opt_embed_state_dict": self.opt_embed.state_dict() if self.opt_embed is not None else None,
             "extra": extra or {},
         }
+        # End-to-end transformer / action_embedder state dicts
+        if self.transformer is not None:
+            out["transformer_state_dict"] = self.transformer.state_dict()
+        if self.action_embedder is not None:
+            out["action_embedder_state_dict"] = self.action_embedder.state_dict()
+        if self.opt_transformer is not None:
+            out["opt_transformer_state_dict"] = self.opt_transformer.state_dict()
+        if self.opt_action_embedder is not None:
+            out["opt_action_embedder_state_dict"] = self.opt_action_embedder.state_dict()
+        # LR scheduler state so cosine/warmup resumes correctly
+        if self._schedulers:
+            out["scheduler_state_dicts"] = [s.state_dict() for s in self._schedulers]
+        return out
 
     def save_checkpoint(self, path: str, extra: Optional[dict] = None) -> None:
         out = Path(path)
@@ -550,14 +733,37 @@ class IQLTrainer:
         torch.save(self.checkpoint_payload(extra=extra), str(out))
 
     @classmethod
-    def from_checkpoint(cls, path: str, device: Optional[str] = None) -> "IQLTrainer":
+    def from_checkpoint(
+        cls,
+        path: str,
+        device: Optional[str] = None,
+        transformer: Optional["nn.Module"] = None,
+        action_embedder: Optional["nn.Module"] = None,
+    ) -> "IQLTrainer":
         # Only load checkpoints from trusted sources.
-        payload = torch.load(path, map_location="cpu", weights_only=True)
-        cfg = IQLConfig(**payload["config"])
+        payload = torch.load(path, map_location="cpu", weights_only=False)
+        import dataclasses
+        valid_fields = {f.name for f in dataclasses.fields(IQLConfig)}
+        cfg_kwargs = {k: v for k, v in payload["config"].items() if k in valid_fields}
+        # Infer state_dim / action_dim from saved network weights when missing
+        # (handles checkpoints saved before these fields were added to IQLConfig).
+        if "state_dim" not in cfg_kwargs or "action_dim" not in cfg_kwargs:
+            try:
+                actor_sd = payload["actor_state_dict"]
+                # Actor: state → action, first weight shape = (hidden, state_dim)
+                first_key = next(k for k in actor_sd if k.endswith(".weight"))
+                last_key  = [k for k in actor_sd if k.endswith(".weight")][-1]
+                inferred_state_dim  = int(actor_sd[first_key].shape[1])
+                inferred_action_dim = int(actor_sd[last_key].shape[0])
+                cfg_kwargs.setdefault("state_dim",  inferred_state_dim)
+                cfg_kwargs.setdefault("action_dim", inferred_action_dim)
+            except Exception:
+                pass  # will raise naturally on IQLConfig(**cfg_kwargs) if still missing
+        cfg = IQLConfig(**cfg_kwargs)
         if device is not None:
             cfg.device = device
 
-        trainer = cls(cfg)
+        trainer = cls(cfg, transformer=transformer, action_embedder=action_embedder)
         trainer.q1.load_state_dict(payload["q1_state_dict"])
         trainer.q2.load_state_dict(payload["q2_state_dict"])
         trainer.value.load_state_dict(payload["value_state_dict"])
@@ -582,6 +788,38 @@ class IQLTrainer:
         opt_embed_sd = payload.get("opt_embed_state_dict")
         if trainer.opt_embed is not None and opt_embed_sd is not None:
             trainer.opt_embed.load_state_dict(opt_embed_sd)
+
+        # Restore end-to-end transformer / action_embedder state dicts
+        # Use shape-safe filtering so resume survives vocab growth or buffer changes
+        if transformer is not None and "transformer_state_dict" in payload:
+            saved_sd = payload["transformer_state_dict"]
+            model_sd = transformer.state_dict()
+            filtered = {k: v for k, v in saved_sd.items()
+                        if k in model_sd and model_sd[k].shape == v.shape}
+            transformer.load_state_dict(filtered, strict=False)
+            skipped = set(saved_sd) - set(filtered)
+            if skipped:
+                print(f"[iql] WARNING: skipped {len(skipped)} transformer keys on resume "
+                      f"(shape mismatch): {sorted(skipped)[:5]}", flush=True)
+        if action_embedder is not None and "action_embedder_state_dict" in payload:
+            saved_sd = payload["action_embedder_state_dict"]
+            model_sd = action_embedder.state_dict()
+            filtered = {k: v for k, v in saved_sd.items()
+                        if k in model_sd and model_sd[k].shape == v.shape}
+            action_embedder.load_state_dict(filtered, strict=False)
+            skipped = set(saved_sd) - set(filtered)
+            if skipped:
+                print(f"[iql] WARNING: skipped {len(skipped)} action_embedder keys on resume "
+                      f"(shape mismatch): {sorted(skipped)[:5]}", flush=True)
+        if trainer.opt_transformer is not None and "opt_transformer_state_dict" in payload:
+            trainer.opt_transformer.load_state_dict(payload["opt_transformer_state_dict"])
+        if trainer.opt_action_embedder is not None and "opt_action_embedder_state_dict" in payload:
+            trainer.opt_action_embedder.load_state_dict(payload["opt_action_embedder_state_dict"])
+
+        # Stash scheduler state dicts — they'll be applied when _build_schedulers runs in fit()
+        if "scheduler_state_dicts" in payload:
+            trainer._pending_scheduler_state_dicts = payload["scheduler_state_dicts"]
+
         return trainer
 
 

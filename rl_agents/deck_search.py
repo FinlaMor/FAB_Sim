@@ -47,7 +47,7 @@ from rl_agents.deck_evaluator import (
 
 SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
 
-from .fab_constants import DESCRIPTOR, validate_deck_legality, load_banned_cards
+from .fab_constants import DESCRIPTOR, validate_deck_legality, load_banned_cards, _expand_hero_classes
 
 _valid_slugs: set[str] | None = None
 
@@ -251,10 +251,11 @@ class HeroCardDB:
                 _slug_idx = json.load(_f).get("by_slug", {})
         self._slug_idx = _slug_idx
 
-        # Exclude young heroes from CC format — they are not legal
+        # Exclude heroes that are not legal in CC format
+        _NON_CC_HERO_TYPES = {"young", "pit-fighter", "adjudicator", "merchant"}
         if fmt == "cc":
             heroes = [h for h in heroes
-                      if "young" not in {t.lower() for t in
+                      if not _NON_CC_HERO_TYPES & {t.lower() for t in
                           (_slug_idx.get(h) or _slug_idx.get(h.replace("-", "_")) or {}).get("types", [])}]
 
         # Exclude banned heroes
@@ -308,12 +309,26 @@ class HeroCardDB:
             equip = []
             deck = []
             weap = []
+            # Pre-compute hero name tokens for specialization checks
+            _hero_name_tokens = hero.replace("-", " ").replace("_", " ").lower()
             for slug, name, ctype, freq, avg_c, wr, equip_subtype in rows:
                 ct = ctype or "deck"
                 if ct in ("token", "hero"):
                     continue
                 if not equip_subtype and ct in _WEAPON_TYPE_MAP:
                     equip_subtype = _WEAPON_TYPE_MAP[ct]
+                # Filter out specialization cards for other heroes
+                _card_entry = _slug_idx.get(slug) or _slug_idx.get(slug.replace("-", "_"))
+                if _card_entry:
+                    _spec_mismatch = False
+                    for _kw in (_card_entry.get("card_keywords") or []):
+                        if "Specialization" in _kw:
+                            _spec_hero = _kw.replace(" Specialization", "").lower().strip()
+                            if _spec_hero not in _hero_name_tokens:
+                                _spec_mismatch = True
+                                break
+                    if _spec_mismatch:
+                        continue
                 entry = {
                     "slug": slug, "name": name or slug, "type": ct,
                     "equipment_subtype": equip_subtype or "",
@@ -328,10 +343,11 @@ class HeroCardDB:
                     deck.append(entry)
 
             # Compute hero class types once (used for both armor and weapon checks)
+            # Use _expand_hero_classes so talent keywords (e.g. Elemental+Lightning) are included
             hero_entry = _slug_idx.get(hero) or _slug_idx.get(hero.replace("-", "_"))
-            hero_classes: frozenset = frozenset(
-                t.lower() for t in (hero_entry or {}).get("types", [])
-                if t.lower() not in DESCRIPTOR
+            hero_classes: frozenset = _expand_hero_classes(
+                (hero_entry or {}).get("types", []),
+                (hero_entry or {}).get("card_keywords", []),
             )
 
             def _equip_legal(card_slug: str) -> bool:
@@ -477,6 +493,8 @@ class HeroCardDB:
         def _non_descriptor_types(types: list[str]) -> frozenset:
             return frozenset(t.lower() for t in types if t.lower() not in DESCRIPTOR)
 
+        _NON_CC_HERO_TYPES = {"young", "pit-fighter", "adjudicator", "merchant"}
+
         # Identify heroes and build per-card classification
         heroes: dict[str, dict] = {}  # hero_slug -> slug_idx entry
         all_cards: list[tuple[str, dict]] = []  # (slug, entry) for non-hero cards
@@ -484,14 +502,19 @@ class HeroCardDB:
         for slug, entry in slug_idx.items():
             types_lower = [t.lower() for t in entry.get("types", [])]
             if "hero" in types_lower:
-                if "young" not in types_lower and slug not in _banned:  # CC only — young heroes not legal
+                if not (_NON_CC_HERO_TYPES & set(types_lower)) and slug not in _banned:
                     heroes[slug] = entry
             else:
                 all_cards.append((slug, entry))
 
         # Classify each non-hero card
         for hero_slug, hero_entry in heroes.items():
-            hero_classes = _non_descriptor_types(hero_entry.get("types", []))
+            # Use _expand_hero_classes so talent grants (e.g. Elemental+Lightning) are included
+            hero_classes = _expand_hero_classes(
+                hero_entry.get("types", []),
+                hero_entry.get("card_keywords", []),
+            )
+            _hero_name_tokens = hero_slug.replace("-", " ").replace("_", " ").lower()
 
             equip: list[dict] = []
             weap: list[dict] = []
@@ -507,14 +530,29 @@ class HeroCardDB:
                 if card_classes and not card_classes <= hero_classes:
                     continue
 
+                # Filter out specialization cards for other heroes
+                _spec_mismatch = False
+                for _kw in (card_entry.get("card_keywords") or []):
+                    if "Specialization" in _kw:
+                        _spec_hero = _kw.replace(" Specialization", "").lower().strip()
+                        if _spec_hero not in _hero_name_tokens:
+                            _spec_mismatch = True
+                            break
+                if _spec_mismatch:
+                    continue
+
                 # Classify by type keywords
+                # A card is a weapon iff it has "Weapon" explicitly in types (not just item/scroll)
+                is_weapon = "weapon" in card_types_lower
                 is_equipment = _EQUIP_KEYWORD in card_types_lower
                 armor_slot = ""
                 for s in _ARMOR_SLOTS:
                     if s in card_types_lower:
                         armor_slot = s
                         break
-                is_weapon = any(t in _WEAPON_KEYWORDS for t in card_types_lower) and not armor_slot
+                # Armor slots take priority; items/scrolls should not be classified as weapons
+                if armor_slot:
+                    is_weapon = False
 
                 if is_weapon:
                     # Determine handedness
@@ -527,6 +565,18 @@ class HeroCardDB:
                     equip.append(_default_entry(card_slug, "equipment", armor_slot))
                 else:
                     deck.append(_default_entry(card_slug, "deck"))
+
+            # Last resort: Talishar if no weapon found
+            if not weap:
+                weap.append({
+                    "slug": "talishar_the_lost_prince",
+                    "name": "Talishar, the Lost Prince",
+                    "type": "equipment",
+                    "equipment_subtype": "weapon-2h",
+                    "frequency": 0.1,
+                    "avg_copies": 1.0,
+                    "win_rate": 0.5,
+                })
 
             obj.hero_cards[hero_slug] = deck
             obj.hero_equipment[hero_slug] = equip
@@ -571,6 +621,56 @@ class HeroCardDB:
             deck_cards, equipment, hero_types, self._slug_idx,
             hero_keywords=hero_keywords,
         )
+
+
+    def overlay_game_performance(
+        self,
+        card_perf: dict[tuple[str, str], dict],
+        min_games: int = 5,
+    ) -> None:
+        """Overlay local game card_performance data onto card entries.
+
+        Replaces each card's ``win_rate`` with its **net score**: the card's
+        win rate minus the hero's baseline win rate.  Positive means the card
+        wins more than the hero's average; negative means it drags the hero
+        down.  Cards with fewer than *min_games* keep their original value.
+
+        *card_perf* is the dict returned by ``GameDataStore.load_card_performance()``,
+        keyed by ``(hero_slug, card_slug) → {"win_rate": float, "games_seen": int, ...}``.
+        """
+        # Step 1: compute hero baseline win rate (weighted avg across all cards)
+        hero_wins: dict[str, float] = {}
+        hero_total: dict[str, float] = {}
+        for (hero, card), stats in card_perf.items():
+            gs = stats.get("games_seen", 0)
+            if gs < min_games:
+                continue
+            wr = stats.get("win_rate", float("nan"))
+            if wr != wr:  # NaN check
+                continue
+            hero_wins[hero] = hero_wins.get(hero, 0.0) + wr * gs
+            hero_total[hero] = hero_total.get(hero, 0.0) + gs
+        hero_baseline: dict[str, float] = {}
+        for hero in hero_wins:
+            hero_baseline[hero] = hero_wins[hero] / hero_total[hero] if hero_total[hero] > 0 else 0.5
+
+        # Step 2: replace win_rate with net_score on each card entry
+        for hero, cards in list(self.hero_cards.items()) + \
+                           [(h, c) for h, c in self.hero_equipment.items()] + \
+                           [(h, c) for h, c in self.hero_weapons.items()]:
+            baseline = hero_baseline.get(hero, 0.5)
+            for card in cards:
+                key = (hero, card["slug"])
+                stats = card_perf.get(key)
+                if stats and stats.get("games_seen", 0) >= min_games:
+                    card_wr = stats.get("win_rate", 0.5)
+                    if card_wr != card_wr:  # NaN
+                        card["net_score"] = 0.0
+                    else:
+                        card["net_score"] = card_wr - baseline
+                else:
+                    # No game data — neutral net score
+                    card["net_score"] = 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -682,6 +782,20 @@ def _random_pool(
     return CardPool(hero_slug, equipment + secondary, weapon_slugs, deck_slugs[:target_deck], flex_depth=flex_depth)
 
 
+def _card_score(card: dict, noise: float, rng: random.Random) -> float:
+    """Composite card score for heuristic sorting.
+
+    When ``net_score`` is available (from game data overlay), it dominates:
+    cards that win more than the hero's baseline are boosted, losers are penalised.
+    ``frequency`` is used as a tiebreaker / fallback.
+    """
+    ns = card.get("net_score", 0.0)
+    freq = card.get("frequency", 0.0)
+    # net_score is on a [-1, 1] scale; frequency is on [0, 1].
+    # Weight net_score heavily so game performance drives selection.
+    return ns * 2.0 + freq + rng.gauss(0, noise)
+
+
 def _heuristic_pool(
     hero_slug: str,
     card_db: HeroCardDB,
@@ -689,7 +803,13 @@ def _heuristic_pool(
     noise: float = 0.1,
     flex_depth: int | None = None,
 ) -> CardPool:
-    """Generate a pool biased toward high-frequency cards (with noise)."""
+    """Generate a pool biased toward high net-score cards (with noise).
+
+    When game performance data has been overlaid via
+    ``card_db.overlay_game_performance()``, cards are ranked by their
+    **net score** (card win rate minus hero baseline).  Otherwise falls
+    back to fablazing frequency.
+    """
     equip_cards = card_db.hero_equipment.get(hero_slug, [])
     weapon_cards = card_db.hero_weapons.get(hero_slug, [])
     deck_cards = card_db.hero_cards.get(hero_slug, [])
@@ -703,22 +823,22 @@ def _heuristic_pool(
     for slot in ("head", "chest", "arms", "legs"):
         pool = sorted(
             by_slot.get(slot, []),
-            key=lambda c: c["frequency"] + rng.gauss(0, noise),
+            key=lambda c: _card_score(c, noise, rng),
             reverse=True,
         )
         if pool:
             equipment.append(pool[0]["slug"])
 
     # Weapon + secondary
-    offhand = sorted(by_slot.get("off-hand", []), key=lambda c: c["frequency"], reverse=True)
-    quivers = sorted(by_slot.get("quiver", []), key=lambda c: c["frequency"], reverse=True)
-    weapon_sorted = sorted(weapon_cards, key=lambda c: c["frequency"] + rng.gauss(0, noise), reverse=True)
+    offhand = sorted(by_slot.get("off-hand", []), key=lambda c: _card_score(c, 0, rng), reverse=True)
+    quivers = sorted(by_slot.get("quiver", []), key=lambda c: _card_score(c, 0, rng), reverse=True)
+    weapon_sorted = sorted(weapon_cards, key=lambda c: _card_score(c, noise, rng), reverse=True)
     weapon_slugs, secondary = select_weapons(weapon_sorted, offhand, quivers, rng)
 
     target_deck = POOL_SIZE - len(equipment) - len(weapon_slugs) - len(secondary)
     deck_slugs: list[str] = []
 
-    noisy_deck = [(c, c["frequency"] + rng.gauss(0, noise)) for c in deck_cards]
+    noisy_deck = [(c, _card_score(c, noise, rng)) for c in deck_cards]
     noisy_deck.sort(key=lambda x: x[1], reverse=True)
 
     for card, _ in noisy_deck:
@@ -808,6 +928,19 @@ def _mutate(
     used = set(pool.deck_slugs)
     unused = [s for s in all_deck_candidates if s not in used]
 
+    # Build slug→net_score lookup for weighted mutation selection
+    _card_lookup = {c["slug"]: c for c in card_db.hero_cards.get(pool.hero_slug, [])}
+
+    def _pick_weighted(candidates: list[str]) -> str:
+        """Pick from candidates, weighted by net_score (shifted to be positive)."""
+        if len(candidates) <= 1:
+            return candidates[0] if candidates else ""
+        scores = [_card_lookup.get(s, {}).get("net_score", 0.0) for s in candidates]
+        # Shift so all weights are positive (min score gets weight ~0.1)
+        min_s = min(scores)
+        weights = [s - min_s + 0.1 for s in scores]
+        return rng.choices(candidates, weights=weights, k=1)[0]
+
     for _ in range(n_swaps):
         if not pool.deck_slugs or not unused:
             break
@@ -816,7 +949,7 @@ def _mutate(
         if rng.random() < 0.7:
             idx = rng.randint(0, len(pool.deck_slugs) - 1)
             removed_slug = pool.deck_slugs.pop(idx)
-            new_card = rng.choice(unused)
+            new_card = _pick_weighted(unused)
             pool.deck_slugs.append(new_card)
             unused = [s for s in unused if s != new_card]
             # Re-add the removed slug to unused if it has no remaining copies
@@ -1185,8 +1318,13 @@ def evolve_pool(
 
     # Sample opponent field
     opp_heroes = list(meta_weights.keys())
-    opp_weights = [meta_weights[h] for h in opp_heroes]
-    field_size = min(20, len(opp_heroes))
+    if not opp_heroes:
+        # Fallback: use the hero itself as sole opponent so scoring is not blind
+        opp_heroes = [hero_slug]
+        opp_weights = [1.0]
+    else:
+        opp_weights = [meta_weights[h] for h in opp_heroes]
+    field_size = min(20, max(1, len(opp_heroes)))
     opp_field = rng.choices(opp_heroes, weights=opp_weights, k=field_size)
 
     # Initialize population with diverse flex_depths
@@ -1319,8 +1457,12 @@ def evolve_pool_diverse(
 
     # Run full evolution to get the scored population
     opp_heroes = list(meta_weights.keys())
-    opp_weights = [meta_weights[h] for h in opp_heroes]
-    field_size = min(20, len(opp_heroes))
+    if not opp_heroes:
+        opp_heroes = [hero_slug]
+        opp_weights = [1.0]
+    else:
+        opp_weights = [meta_weights[h] for h in opp_heroes]
+    field_size = min(20, max(1, len(opp_heroes)))
     opp_field = rng.choices(opp_heroes, weights=opp_weights, k=field_size)
 
     # Initialize diverse population (same as evolve_pool)
@@ -1501,8 +1643,12 @@ def _select_locked_pool(
 
     rng = random.Random(seed)
     opp_heroes = list(meta_weights.keys())
-    opp_weights = [meta_weights[h] for h in opp_heroes]
-    field = rng.choices(opp_heroes, weights=opp_weights, k=20)
+    if not opp_heroes:
+        opp_heroes = [pools[0].hero_slug]
+        opp_weights = [1.0]
+    else:
+        opp_weights = [meta_weights[h] for h in opp_heroes]
+    field = rng.choices(opp_heroes, weights=opp_weights, k=max(1, min(20, len(opp_heroes))))
 
     best_pool = pools[0]
     best_score = _score_pool(pools[0], model, vocab, field, device,
@@ -1898,6 +2044,8 @@ def main():
     search_p.add_argument("--checkpoint", required=True, type=Path)
     search_p.add_argument("--meta-db", type=Path, default=None,
                           help="(deprecated) ignored, card data comes from slug_index.json")
+    search_p.add_argument("--game-data-db", type=Path, default=None,
+                          help="Path to game_data.db for hero-relative card scoring")
     search_p.add_argument("--pop-size", type=int, default=100)
     search_p.add_argument("--generations", type=int, default=50)
     search_p.add_argument("--seed", type=int, default=random.randint(0, 1_000_000))
@@ -1907,6 +2055,8 @@ def main():
     export_p.add_argument("--checkpoint", required=True, type=Path)
     export_p.add_argument("--meta-db", type=Path, default=None,
                           help="(deprecated) ignored, card data comes from slug_index.json")
+    export_p.add_argument("--game-data-db", type=Path, default=None,
+                          help="Path to game_data.db for hero-relative card scoring")
     export_p.add_argument("--output-dir", type=Path, default=Path("decks/generated"))
     export_p.add_argument("--pop-size", type=int, default=50)
     export_p.add_argument("--generations", type=int, default=20)
@@ -1917,6 +2067,8 @@ def main():
     tourney_p.add_argument("--checkpoint", required=True, type=Path)
     tourney_p.add_argument("--meta-db", type=Path, default=None,
                           help="(deprecated) ignored, card data comes from slug_index.json")
+    tourney_p.add_argument("--game-data-db", type=Path, default=None,
+                          help="Path to game_data.db for hero-relative card scoring")
     tourney_p.add_argument("--players", type=int, default=256)
     tourney_p.add_argument("--rounds", type=int, default=5)
     tourney_p.add_argument("--pool-pop", type=int, default=50)
@@ -1953,6 +2105,22 @@ def main():
     model.eval()
 
     card_db = HeroCardDB.from_slug_index()
+
+    # Overlay game performance data for hero-relative card scoring
+    game_data_db = getattr(args, "game_data_db", None)
+    if game_data_db is None:
+        # Auto-detect default location
+        _default_gd = Path("data/game_data.db")
+        if _default_gd.exists():
+            game_data_db = _default_gd
+    if game_data_db is not None and game_data_db.exists():
+        from rl_agents.game_data import GameDataStore
+        gds = GameDataStore(db_path=str(game_data_db))
+        card_perf = gds.load_card_performance(min_games=5)
+        gds.close()
+        if card_perf:
+            card_db.overlay_game_performance(card_perf, min_games=5)
+            print(f"  Overlaid game performance data: {len(card_perf)} card-hero pairs")
 
     # Build uniform meta weights from checkpoint vocab hero slugs
     hero_slugs = [

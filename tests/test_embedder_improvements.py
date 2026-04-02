@@ -207,9 +207,9 @@ def test_dimension_increases():
     
     print(f"✓ Test 7 (Dimensions): Expected {expected_dim}, got {actual_dim}")
     assert actual_dim == expected_dim, f"Dimension mismatch"
-    assert player_dim == 967, f"Expected 967 player dims with shared counter registry"
-    assert global_dim == 1694, f"Expected 1694 global dims with shared keyword registry"
-    assert actual_dim == 3628, f"Expected 3628 dims for current architecture"
+    assert player_dim == 1483, f"Expected 1483 player dims with shared counter registry"
+    assert global_dim == 2608, f"Expected 2608 global dims with shared keyword registry"
+    assert actual_dim == 5574, f"Expected 5574 dims for current architecture"
     
     print(
         f"  → Breakdown: 2×{embedder.player_embedder.get_output_dim()} player dims "

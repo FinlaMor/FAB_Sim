@@ -156,6 +156,9 @@ class DeckMeta:
     total_actions: int
     seed: int | None = None
     mode: str = "pvp"
+    # Per-card usage tracking: {"played": {slug: count}, "blocked": {...}, "pitched": {...}}
+    p1_card_usage: dict = field(default_factory=dict)
+    p2_card_usage: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -630,6 +633,161 @@ class TransitionCollector:
             self._transitions.append(t)
             self._step += 1
 
+    def record_local(
+        self,
+        player_id: int,
+        state: Any,
+        action: Any = None,
+        legal_actions: list | None = None,
+        reward: float = 0.0,
+        done: bool = False,
+    ) -> None:
+        """Record a decision point from the local engine's GameState.
+
+        Extracts all denormalized columns directly from the engine objects
+        so game_data.db transitions have full zone contents.
+        """
+        import json as _json
+
+        p = state.players[player_id]
+        opp_id = 2 if player_id == 1 else 1
+        opp = state.players[opp_id]
+
+        def _zone_slugs(zone) -> str | None:
+            cards = getattr(zone, "cards", None)
+            if not cards:
+                return None
+            slugs = [getattr(c, "slug", str(c)) for c in cards]
+            return _json.dumps(slugs, separators=(",", ":"))
+
+        # Combat info
+        combat = getattr(state, "combat", None)
+        in_cc = combat is not None
+        cc_atk = getattr(combat, "attack_power", None) if combat else None
+        cc_def = getattr(combat, "total_defense", None) if combat else None
+        combat_kw = ",".join(sorted(getattr(combat, "keywords", set()))) if combat else None
+        has_go_again = bool(getattr(combat, "go_again", False)) if combat else False
+
+        # Chain links
+        chain_links = getattr(state, "chain_links", [])
+        chain_link_count = len(chain_links)
+
+        # Action card
+        card_id = None
+        if action is not None:
+            card_id = getattr(action, "card_slug", None) or getattr(action, "slug", None)
+            if card_id is None and hasattr(action, "card") and action.card is not None:
+                card_id = getattr(action.card, "slug", None)
+
+        # Decision type from action (Action.type is an ActionType enum)
+        decision_type = "other"
+        if action is not None:
+            at = getattr(action, "type", None)
+            if at is not None:
+                decision_type = at.name if hasattr(at, "name") else str(at)
+
+        turn_phase = state.step.value if hasattr(state.step, "value") else str(state.step)
+        is_turn_player = (state.active_player == player_id)
+
+        # Arsenal
+        has_arsenal = bool(getattr(p, "arsenal", None) and len(p.arsenal.cards) > 0)
+        opp_has_arsenal = bool(getattr(opp, "arsenal", None) and len(opp.arsenal.cards) > 0)
+
+        # Combat attack/defense cards
+        combat_attack_card = None
+        combat_defending_cards = None
+        if combat:
+            atk_card = getattr(combat, "attack_card", None)
+            if atk_card:
+                combat_attack_card = getattr(atk_card, "slug", str(atk_card))
+            def_cards = getattr(combat, "defending_cards", [])
+            if def_cards:
+                combat_defending_cards = _json.dumps(
+                    [getattr(c, "slug", str(c)) for c in def_cards],
+                    separators=(",", ":"),
+                )
+
+        with self._lock:
+            t = Transition(
+                game_id=self.game_id,
+                step=self._step,
+                player_id=player_id,
+                turn_number=state.turn_number,
+                state={},
+                available_actions=[],
+                action_taken={},
+                action_index=-1,
+                next_state=None,
+                reward=reward,
+                done=done,
+                p1_hp=state.players[1].health,
+                p2_hp=state.players[2].health,
+                decision_type=decision_type,
+                hp_delta=0,
+                opp_hp_delta=0,
+                cards_in_deck=len(p.deck.cards) if hasattr(p, "deck") else None,
+                opp_cards_in_deck=len(opp.deck.cards) if hasattr(opp, "deck") else None,
+                num_actions=len(legal_actions) if legal_actions else 0,
+                action_points=getattr(p, "action_points", None),
+                turn_phase=turn_phase,
+                card_id=card_id,
+                in_combat_chain=in_cc,
+                combat_chain_attack=cc_atk,
+                combat_chain_defense=cc_def,
+                is_turn_player=is_turn_player,
+                hand_size=len(p.hand.cards) if hasattr(p, "hand") else None,
+                opp_hand_size=len(opp.hand.cards) if hasattr(opp, "hand") else None,
+                resources=getattr(p, "resources", None),
+                graveyard_size=len(p.graveyard.cards) if hasattr(p, "graveyard") else None,
+                opp_graveyard_size=len(opp.graveyard.cards) if hasattr(opp, "graveyard") else None,
+                banished_size=len(p.banished.cards) if hasattr(p, "banished") else None,
+                opp_banished_size=len(opp.banished.cards) if hasattr(opp, "banished") else None,
+                pitch_zone_size=len(p.pitch.cards) if hasattr(p, "pitch") else None,
+                opp_pitch_zone_size=len(opp.pitch.cards) if hasattr(opp, "pitch") else None,
+                equipment_count=sum(1 for z in [p.head, p.chest, p.arms, p.legs] if z.cards),
+                opp_equipment_count=sum(1 for z in [opp.head, opp.chest, opp.arms, opp.legs] if z.cards),
+                has_arsenal=has_arsenal,
+                opp_has_arsenal=opp_has_arsenal,
+                chain_link_count=chain_link_count,
+                has_go_again=has_go_again,
+                combat_keywords=combat_kw,
+                player_hand=_zone_slugs(p.hand),
+                player_graveyard=_zone_slugs(p.graveyard),
+                player_banished=_zone_slugs(p.banished),
+                player_arsenal=_zone_slugs(p.arsenal),
+                player_equipment=_json.dumps(
+                    [getattr(c, "slug", str(c)) for z in [p.head, p.chest, p.arms, p.legs] for c in z.cards],
+                    separators=(",", ":"),
+                ) if any(z.cards for z in [p.head, p.chest, p.arms, p.legs]) else None,
+                player_pitch_zone=_zone_slugs(p.pitch),
+                player_soul=_zone_slugs(p.soul) if hasattr(p, "soul") else None,
+                player_auras=_zone_slugs(p.auras) if hasattr(p, "auras") else None,
+                player_items=_zone_slugs(p.items) if hasattr(p, "items") else None,
+                player_permanents=_zone_slugs(p.permanents) if hasattr(p, "permanents") else None,
+                opp_graveyard=_zone_slugs(opp.graveyard),
+                opp_banished=_zone_slugs(opp.banished),
+                opp_equipment=_json.dumps(
+                    [getattr(c, "slug", str(c)) for z in [opp.head, opp.chest, opp.arms, opp.legs] for c in z.cards],
+                    separators=(",", ":"),
+                ) if any(z.cards for z in [opp.head, opp.chest, opp.arms, opp.legs]) else None,
+                opp_pitch_zone=_zone_slugs(opp.pitch),
+                opp_soul=_zone_slugs(opp.soul) if hasattr(opp, "soul") else None,
+                opp_auras=_zone_slugs(opp.auras) if hasattr(opp, "auras") else None,
+                opp_items=_zone_slugs(opp.items) if hasattr(opp, "items") else None,
+                opp_permanents=_zone_slugs(opp.permanents) if hasattr(opp, "permanents") else None,
+                player_hero=getattr(p.hero, "slug", None) if hasattr(p, "hero") else None,
+                opp_hero=getattr(opp.hero, "slug", None) if hasattr(opp, "hero") else None,
+                combat_attack_card=combat_attack_card,
+                combat_defending_cards=combat_defending_cards,
+                chain_link_history=_json.dumps(
+                    [{"atk": l.attack_power, "dmg": l.net_damage, "hit": l.hit}
+                     for l in chain_links],
+                    separators=(",", ":"),
+                ) if chain_links else None,
+            )
+            self._transitions.append(t)
+            self._step += 1
+
     def finalize(self, winner: int | None) -> None:
         """Retroactively set terminal rewards and backfill computed columns.
 
@@ -743,6 +901,99 @@ def _terminal_reward(player_id: int, winner: int | None) -> float:
     return 1.0 if player_id == winner else -1.0
 
 
+def _parse_deck_for_storage(deck_file: str, fallback_hero: str) -> dict:
+    """Parse a deck file into a dict suitable for DeckWinDataset.
+
+    Returns {"hero": str, "deck": [slug, ...], "weapons": [slug, ...]} without
+    requiring a CardDB.  Falls back to {"hero": fallback_hero} on any read error.
+    """
+    import re as _re
+    import unicodedata as _ud
+
+    def _slugify(name: str) -> str:
+        s = _ud.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii")
+        s = s.lower()
+        s = _re.sub(r"['\u2019,!?.]", "", s)
+        s = _re.sub(r"[\s\-]+", "_", s.strip())
+        s = _re.sub(r"[^a-z0-9_]", "", s)
+        return s
+
+    try:
+        with open(deck_file, encoding="utf-8") as f:
+            lines = f.readlines()
+    except OSError:
+        return {"hero": fallback_hero}
+
+    hero = fallback_hero
+    deck_cards: list[str] = []
+    weapons: list[str] = []
+
+    # Detect Fabrary format
+    is_fabrary = any(
+        l.strip().startswith("Hero:") or l.strip() == "Arena cards"
+        for l in lines[:15]
+    )
+
+    if is_fabrary:
+        in_arena = False
+        in_deck = False
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                in_arena = in_deck = False
+                continue
+            if stripped.startswith("Hero:"):
+                hero = _slugify(stripped[5:].strip())
+                continue
+            if stripped == "Arena cards":
+                in_arena, in_deck = True, False
+                continue
+            if stripped == "Deck cards":
+                in_arena, in_deck = False, True
+                continue
+            m = _re.match(r"^(\d+)x\s+(.+)$", stripped)
+            if not m:
+                continue
+            count = int(m.group(1))
+            rest = m.group(2).strip()
+            color_m = _re.match(r"^(.+?)\s+\((red|yellow|blue)\)$", rest)
+            slug = (
+                _slugify(color_m.group(1)) + "_" + color_m.group(2)
+                if color_m
+                else _slugify(rest)
+            )
+            if in_arena:
+                for _ in range(count):
+                    weapons.append(slug)
+            elif in_deck:
+                for _ in range(count):
+                    deck_cards.append(slug)
+    else:
+        for line in lines:
+            parts = line.strip().split()
+            if not parts or parts[0].startswith("#"):
+                continue
+            if parts[0] == "hero" and len(parts) > 1:
+                hero = parts[1]
+            elif parts[0] == "weapon" and len(parts) > 1:
+                weapons.append(parts[1])
+            elif parts[0] == "equipment":
+                pass  # equipment slots handled separately
+            else:
+                try:
+                    count = int(parts[0])
+                    slug = parts[1]
+                    for _ in range(count):
+                        deck_cards.append(slug)
+                except (ValueError, IndexError):
+                    pass
+
+    result: dict = {"hero": hero, "deck": deck_cards}
+    if weapons:
+        result["weapons"] = weapons
+    return result
+
+
 # ── SQLite persistence ───────────────────────────────────────────────
 
 
@@ -765,7 +1016,21 @@ CREATE TABLE IF NOT EXISTS decks (
     ended_on_turn_cap INTEGER NOT NULL,
     total_actions   INTEGER NOT NULL,
     seed            INTEGER,
-    created_at      TEXT NOT NULL DEFAULT (datetime('now'))
+    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    p1_card_usage   TEXT,   -- JSON: {"played":{slug:n},"blocked":{slug:n},"pitched":{slug:n}}
+    p2_card_usage   TEXT    -- JSON: same structure for player 2
+);
+
+CREATE TABLE IF NOT EXISTS card_performance (
+    hero_slug       TEXT NOT NULL,
+    card_slug       TEXT NOT NULL,
+    games_seen      INTEGER NOT NULL DEFAULT 0,
+    play_count      INTEGER NOT NULL DEFAULT 0,
+    block_count     INTEGER NOT NULL DEFAULT 0,
+    pitch_count     INTEGER NOT NULL DEFAULT 0,
+    wins            INTEGER NOT NULL DEFAULT 0,
+    losses          INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (hero_slug, card_slug)
 );
 
 CREATE TABLE IF NOT EXISTS transitions (
@@ -877,6 +1142,11 @@ class GameDataStore:
         self._local = threading.local()
         conn = self._get_conn()
         conn.executescript(_SCHEMA_SQL)
+        # Migrate existing DBs: add columns that may be absent in older schemas
+        existing_decks = {r[1] for r in conn.execute("PRAGMA table_info(decks)")}
+        for col, typedef in [("p1_card_usage", "TEXT"), ("p2_card_usage", "TEXT")]:
+            if col not in existing_decks:
+                conn.execute(f"ALTER TABLE decks ADD COLUMN {col} {typedef}")
         conn.commit()
 
     @classmethod
@@ -909,8 +1179,9 @@ class GameDataStore:
                 p1_decklist, p2_decklist, p1_hero, p2_hero,
                 winner, p1_won, p2_won,
                 p1_final_hp, p2_final_hp,
-                turn_count, ended_on_turn_cap, total_actions, seed)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                turn_count, ended_on_turn_cap, total_actions, seed,
+                p1_card_usage, p2_card_usage)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 meta.game_id, meta.mode,
                 meta.p1_deck_file, meta.p2_deck_file,
@@ -923,8 +1194,51 @@ class GameDataStore:
                 meta.p1_final_hp, meta.p2_final_hp,
                 meta.turn_count, int(meta.ended_on_turn_cap),
                 meta.total_actions, meta.seed,
+                json.dumps(meta.p1_card_usage, separators=(",", ":")) if meta.p1_card_usage else None,
+                json.dumps(meta.p2_card_usage, separators=(",", ":")) if meta.p2_card_usage else None,
             ),
         )
+
+        # --- card_performance upsert ---
+        # Update cumulative card stats for both players using this game's usage data.
+        for player_id, hero_key, usage_dict in (
+            (1, "p1_hero", meta.p1_card_usage),
+            (2, "p2_hero", meta.p2_card_usage),
+        ):
+            hero_slug = (meta.p1_decklist if player_id == 1 else meta.p2_decklist).get("hero", "")
+            if not hero_slug or not usage_dict:
+                continue
+            won = int(meta.winner == player_id)
+            lost = int(meta.winner is not None and meta.winner != player_id)
+
+            # Collect all slugs seen (union of played/blocked/pitched)
+            played = usage_dict.get("played", {})
+            blocked = usage_dict.get("blocked", {})
+            pitched = usage_dict.get("pitched", {})
+            all_slugs = set(played) | set(blocked) | set(pitched)
+
+            for slug in all_slugs:
+                conn.execute(
+                    """INSERT INTO card_performance
+                           (hero_slug, card_slug, games_seen, play_count, block_count,
+                            pitch_count, wins, losses)
+                       VALUES (?, ?, 1, ?, ?, ?, ?, ?)
+                       ON CONFLICT(hero_slug, card_slug) DO UPDATE SET
+                           games_seen  = games_seen  + 1,
+                           play_count  = play_count  + excluded.play_count,
+                           block_count = block_count + excluded.block_count,
+                           pitch_count = pitch_count + excluded.pitch_count,
+                           wins        = wins        + excluded.wins,
+                           losses      = losses      + excluded.losses
+                    """,
+                    (
+                        hero_slug, slug,
+                        played.get(slug, 0),
+                        blocked.get(slug, 0),
+                        pitched.get(slug, 0),
+                        won, lost,
+                    ),
+                )
 
         # --- transition rows ---
         transitions = collector.transitions
@@ -1019,6 +1333,8 @@ class GameDataStore:
         p2_deck_file: str,
         seed: int | None = None,
         game_id: int | None = None,
+        p1_card_usage: dict | None = None,
+        p2_card_usage: dict | None = None,
     ) -> None:
         """Save a game played via the local engine.
 
@@ -1037,11 +1353,12 @@ class GameDataStore:
         if collector is None:
             collector = TransitionCollector(game_id=game_id or 0)
 
-        # Build minimal decklists – the local engine doesn't expose the
-        # original list in the same format as Talishar, so we store the
-        # hero name and the deck file path for traceability.
-        p1_decklist = {"hero": getattr(p1, "hero_name", getattr(p1, "name", ""))}
-        p2_decklist = {"hero": getattr(p2, "hero_name", getattr(p2, "name", ""))}
+        # Build full decklists from deck files so the deck evaluator has card slugs to train on.
+        # Use hero.slug (not hero.name) as fallback so the deck evaluator can match hero IDs.
+        p1_hero_slug = getattr(p1.hero, "slug", "") if hasattr(p1, "hero") else ""
+        p2_hero_slug = getattr(p2.hero, "slug", "") if hasattr(p2, "hero") else ""
+        p1_decklist = _parse_deck_for_storage(p1_deck_file, p1_hero_slug)
+        p2_decklist = _parse_deck_for_storage(p2_deck_file, p2_hero_slug)
 
         meta = DeckMeta(
             game_id=collector.game_id,
@@ -1057,8 +1374,44 @@ class GameDataStore:
             total_actions=len(collector.transitions),
             seed=seed,
             mode="local",
+            p1_card_usage=p1_card_usage or {},
+            p2_card_usage=p2_card_usage or {},
         )
         self.save_game(collector, meta)
+
+    def load_card_performance(
+        self,
+        min_games: int = 5,
+    ) -> dict[tuple[str, str], dict]:
+        """Return cumulative card performance stats from all recorded games.
+
+        Returns dict keyed by (hero_slug, card_slug) → {
+            "games_seen": int,
+            "play_rate": float,     # play_count / games_seen
+            "block_rate": float,
+            "pitch_rate": float,
+            "win_rate": float,      # wins / (wins + losses), NaN if no outcomes
+        }
+
+        Only rows with at least *min_games* games_seen are included.
+        """
+        conn = self._get_conn()
+        rows = conn.execute(
+            "SELECT hero_slug, card_slug, games_seen, play_count, block_count, "
+            "pitch_count, wins, losses FROM card_performance WHERE games_seen >= ?",
+            (min_games,),
+        ).fetchall()
+        result = {}
+        for hero_slug, card_slug, gs, pc, bc, ptc, w, l in rows:
+            wr = w / (w + l) if (w + l) > 0 else float("nan")
+            result[(hero_slug, card_slug)] = {
+                "games_seen": gs,
+                "play_rate": pc / gs,
+                "block_rate": bc / gs,
+                "pitch_rate": ptc / gs,
+                "win_rate": wr,
+            }
+        return result
 
     def game_count(self) -> int:
         conn = self._get_conn()

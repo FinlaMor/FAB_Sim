@@ -6,27 +6,29 @@ Arena cards
 1x New Horizon
 1x Trench of Sunken Treasure
 1x Sharp Shooters
+1x Bolt’n Boots
 1x Dreadbore
 
 Deck cards
 3x Endless Arrow (red)
 3x Lace with Bloodrot (red)
 3x Premeditate (red)
+1x Sink Below (red)
 3x Seek and Destroy (red)
-3x Drill Shot (red)
-3x Bolt'n' Shot (red)
-3x Murky Water (red)
-3x Return Fire (red)
+2x Bolt'n' Shot (red)
 3x Searing Shot (red)
-3x Falcon Wing (red)
-3x Swift Shot (red)
-3x Inertia Trap (red)
+2x Murky Water (red)
+3x Drill Shot (red)
+3x Remorseless (red)
+3x Return Fire (red)
 3x Codex of Frailty (yellow)
 3x Tarpit Trap (yellow)
-3x Boulder Trap (yellow)
 3x Bolt'n' Shot (yellow)
-2x Drill Shot (yellow)
+2x Searing Shot (yellow)
+3x Drill Shot (yellow)
+3x Collapsing Trap (blue)
 3x Buzzsaw Trap (blue)
-3x Quickening Sand (blue)
+2x Quickening Sand (blue)
+3x Bolt'n' Shot (blue)
+3x Searing Shot (blue)
 3x Drill Shot (blue)
-1x Bolt'n' Shot (blue)

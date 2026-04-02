@@ -35,15 +35,20 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
+import numpy as np
 import torch
 import torch.nn as nn
 import logging
 from typing import Optional
 
 from engine.actions import Action, ActionType
-from encoder.card_embedder import CardEmbedder, SlugVocab, card_to_features
+from encoder.card_embedder import (
+    CardEmbedder, SlugVocab, card_to_features,
+    N_COUNTER_TYPES, N_TYPES, N_SUBTYPES, N_SUPERTYPES, N_KEYWORDS, N_NUMERIC,
+)
 from encoder.feature_schema import (
     ACTION_ALT_COST_TYPES,
+    COUNTER_TYPES,
     PHASE_VOCABULARY,
     STEP_VOCABULARY,
     build_schema_metadata,
@@ -52,6 +57,32 @@ from encoder.feature_schema import (
 from engine.card import Card
 
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Action packed format constants (end-to-end training)
+# ---------------------------------------------------------------------------
+
+MAX_PITCH_CARDS  = 7
+MAX_DEFEND_CARDS = 10
+
+# Total float32 values in a packed action array:
+#   1 (action_type_idx) + 1 (card_slug_idx) + 1 (n_pitch) + MAX_PITCH_CARDS
+#   + 1 (n_defend) + MAX_DEFEND_CARDS + 1 (from_arsenal) + 1 (slot)
+#   + 1 (target_slug_idx) + N_COUNTER_TYPES + 3 (resource_cost, action_cost, has_go_again)
+# = 1+1+1+7+1+10+1+1+1+43+3 = 70
+ACTION_PACKED_SIZE = (
+    1               # action_type_idx
+    + 1             # card_slug_idx (0=None)
+    + 1             # n_pitch
+    + MAX_PITCH_CARDS   # pitch_slug_idxs, padded
+    + 1             # n_defend
+    + MAX_DEFEND_CARDS  # defend_slug_idxs, padded
+    + 1             # from_arsenal
+    + 1             # slot (0 if None)
+    + 1             # target_slug_idx (0=None)
+    + N_COUNTER_TYPES   # player counter values
+    + 3             # resource_cost, action_cost, has_go_again
+)
 
 
 # Action type vocabulary (17 types from ActionType enum)
@@ -230,7 +261,276 @@ class ActionEmbedder(nn.Module):
         if schema_metadata is None:
             return False, ["schema metadata is missing"]
         return validate_schema_metadata(self.get_schema_metadata(), schema_metadata, strict=strict)
-    
+
+    @property
+    def packed_feature_size(self) -> int:
+        """Size of the packed action feature array (float32 values)."""
+        return ACTION_PACKED_SIZE
+
+    def _slug_to_idx(self, card) -> int:
+        """Resolve a card object to its slug vocabulary index (0 if unknown/None)."""
+        if card is None:
+            return 0
+        slug = getattr(card, "slug", None) or ""
+        if not slug:
+            return 0
+        if self.slug_vocab is not None:
+            return self.slug_vocab.get(slug)
+        return 0
+
+    def tokenize_to_packed(
+        self,
+        action: "Action",
+        player_counters: Optional[dict] = None,
+    ) -> "np.ndarray":
+        """Pack action into a compact float32 feature array for DB storage.
+
+        Shape: (packed_feature_size,) = (ACTION_PACKED_SIZE,) floats.
+        Used at game-collection time instead of forward() when end-to-end training
+        is enabled.
+        """
+        try:
+            type_idx = ACTION_TYPES.index(action.type.value)
+        except (ValueError, AttributeError):
+            type_idx = 0
+
+        card_slug_idx = self._slug_to_idx(action.card)
+
+        pitch_slug_idxs = []
+        for pc in (action.pitch_cards or []):
+            pitch_slug_idxs.append(self._slug_to_idx(pc))
+
+        defend_slug_idxs = []
+        for dc in (action.card_list or []):
+            defend_slug_idxs.append(self._slug_to_idx(dc))
+
+        target_slug_idx = self._slug_to_idx(action.target)
+
+        counters = player_counters or {}
+        counter_vals = [float(counters.get(ct, 0)) for ct in COUNTER_TYPES]
+
+        buf = np.zeros(ACTION_PACKED_SIZE, dtype=np.float32)
+        i = 0
+        buf[i] = float(type_idx);                            i += 1
+        buf[i] = float(card_slug_idx);                       i += 1
+        buf[i] = float(len(pitch_slug_idxs));                i += 1
+        for j, s in enumerate(pitch_slug_idxs[:MAX_PITCH_CARDS]):
+            buf[i + j] = float(s)
+        i += MAX_PITCH_CARDS
+        buf[i] = float(len(defend_slug_idxs));               i += 1
+        for j, s in enumerate(defend_slug_idxs[:MAX_DEFEND_CARDS]):
+            buf[i + j] = float(s)
+        i += MAX_DEFEND_CARDS
+        buf[i] = float(bool(action.from_arsenal));           i += 1
+        _slot = action.slot
+        if isinstance(_slot, str):
+            _slot_lower = {s.lower(): idx + 1 for idx, s in enumerate(EQUIPMENT_SLOTS)}
+            _slot = float(_slot_lower.get(_slot.lower(), 0))
+        buf[i] = float(_slot or 0);                             i += 1
+        buf[i] = float(target_slug_idx);                     i += 1
+        for j, v in enumerate(counter_vals[:N_COUNTER_TYPES]):
+            buf[i + j] = v
+        i += N_COUNTER_TYPES
+        buf[i]   = float(action.resource_cost or 0)
+        buf[i+1] = float(action.action_cost or 0)
+        buf[i+2] = float(bool(getattr(action, "has_go_again", False)))
+        return buf
+
+    def _batch_card_embed_by_slug(
+        self, slug_idxs: torch.Tensor, device: "torch.device"
+    ) -> torch.Tensor:
+        """(B,) slug indices → (B, d_model) card embeddings.
+
+        Runs through the full CardEmbedder projection using slug embedding only
+        (all other features zeroed).  This matches the effective behaviour when
+        no card features are available in the packed format.
+        """
+        ce = self.card_embedder
+        B = slug_idxs.shape[0]
+        slug_idxs = slug_idxs.to(device)
+
+        slug_emb = ce.slug_embed(slug_idxs)                          # (B, D_SLUG)
+        color_emb = ce.color_embed(torch.zeros(B, dtype=torch.long, device=device))  # (B, D_COLOR)
+        zone_emb  = ce.zone_embed(torch.zeros(B, dtype=torch.long, device=device))   # (B, D_ZONE)
+        numeric   = ce.numeric_proj(torch.zeros(B, N_NUMERIC, device=device))         # (B, D_NUMERIC)
+        types_p   = ce.type_proj(torch.zeros(B, N_TYPES, device=device))              # (B, D_TYPES)
+        subtypes_p = ce.subtype_proj(torch.zeros(B, N_SUBTYPES, device=device))       # (B, D_SUBTYPES)
+        supertypes_p = ce.supertype_proj(torch.zeros(B, N_SUPERTYPES, device=device)) # (B, D_SUPERTYPES)
+        kw = ce._pool_keyword_embeddings(torch.zeros(B, N_KEYWORDS, device=device))   # (B, D_KW)
+
+        concat = torch.cat([slug_emb, color_emb, zone_emb, numeric,
+                            types_p, subtypes_p, supertypes_p, kw], dim=1)  # (B, D_IN)
+        out = ce.out_proj(concat)   # (B, d_model)
+        out = ce.norm(out)          # (B, d_model)
+        return out
+
+    def _batch_sum_embed_slugs(
+        self,
+        slug_idxs: torch.Tensor,
+        counts: torch.Tensor,
+        device: "torch.device",
+    ) -> torch.Tensor:
+        """(B, MAX_N) slug indices, (B,) counts → (B, d_model) sum-pooled embeddings."""
+        B, MAX_N = slug_idxs.shape
+        # Flatten to (B*MAX_N,), embed, reshape to (B, MAX_N, d_model)
+        flat = slug_idxs.to(device).reshape(B * MAX_N)
+        embs_flat = self._batch_card_embed_by_slug(flat, device)  # (B*MAX_N, d_model)
+        embs = embs_flat.reshape(B, MAX_N, -1)                    # (B, MAX_N, d_model)
+        arange = torch.arange(MAX_N, device=device).unsqueeze(0)
+        mask = (arange < counts.unsqueeze(1)).unsqueeze(2).float()
+        return (embs * mask).sum(dim=1)  # (B, d_model)
+
+    def forward_packed_batch(self, packed: torch.Tensor) -> torch.Tensor:
+        """Batched action embedding from packed feature arrays.
+
+        Args:
+            packed: (B, ACTION_PACKED_SIZE) float32 on model device
+        Returns:
+            (B, output_dim) embeddings
+        """
+        device = next(self.parameters()).device
+        B = packed.shape[0]
+
+        i = 0
+        action_type_idxs = packed[:, i].long().clamp(0, len(ACTION_TYPES) - 1); i += 1
+        card_slug_idxs   = packed[:, i].long().clamp(min=0);                     i += 1
+        n_pitch          = packed[:, i].long();                                   i += 1
+        pitch_slugs_raw  = packed[:, i:i + MAX_PITCH_CARDS].long().clamp(min=0); i += MAX_PITCH_CARDS
+        n_defend         = packed[:, i].long();                                   i += 1
+        defend_slugs_raw = packed[:, i:i + MAX_DEFEND_CARDS].long().clamp(min=0);i += MAX_DEFEND_CARDS
+        from_arsenal     = packed[:, i];                                          i += 1
+        slots            = packed[:, i];                                          i += 1
+        target_slugs     = packed[:, i].long().clamp(min=0);                     i += 1
+        counter_vals     = packed[:, i:i + N_COUNTER_TYPES];                     i += N_COUNTER_TYPES
+        resource_costs   = packed[:, i];                                          i += 1
+        action_costs     = packed[:, i];                                          i += 1
+        has_go_again     = packed[:, i]
+
+        # ── 1. Action type one-hot → 64-dim projection (matches forward() feature 1)
+        action_type_onehot = torch.zeros(B, len(ACTION_TYPES), device=device)
+        action_type_onehot.scatter_(1, action_type_idxs.unsqueeze(1), 1.0)
+        action_type_emb = self.action_type_embed(action_type_onehot)  # (B, 64)
+
+        # ── 2. Player ID (forward() uses action.player_id; we use 0.0 as default)
+        player_id_f = torch.zeros(B, 1, device=device)
+
+        # ── 3. Card embedding (forward() feature 3)
+        card_emb = self._batch_card_embed_by_slug(card_slug_idxs, device)  # (B, d_model)
+
+        # ── 4. Card index (forward() uses action.card_idx / 10.0; use -1.0 default)
+        card_idx_f = torch.full((B, 1), -1.0, device=device)
+
+        # ── 5. Pitch cards embedding — sum pool (forward() feature 5)
+        pitch_emb = self._batch_sum_embed_slugs(pitch_slugs_raw, n_pitch, device)  # (B, d_model)
+
+        # ── 6. From arsenal flag (forward() feature 6)
+        from_arsenal_f = from_arsenal.unsqueeze(1)  # (B, 1)
+
+        # ── 7. Slot — 4-dim one-hot → 32-dim projection (forward() feature 7)
+        # packed slot field stores the numeric slot value; we cannot recover one-hot
+        # without the string label, so use zeros (same as "no slot" in forward())
+        slot_emb = torch.zeros(B, 32, device=device)
+
+        # ── 8. Card list / defend embedding — sum pool (forward() feature 8)
+        defend_emb = self._batch_sum_embed_slugs(defend_slugs_raw, n_defend, device)  # (B, d_model)
+
+        # ── 9. Attack source embedding + modality flags (forward() features 9a, 9b)
+        # Use card embedding as attack source (same heuristic as forward() fallback)
+        attack_source_emb = card_emb  # (B, d_model) — same card, same embedding
+        # attack modality flags: use zeros (cannot reconstruct from packed format)
+        attack_flags = torch.zeros(B, 3, device=device)
+
+        # ── 10. Target embedding + count (forward() features 10a, 10b)
+        target_emb   = self._batch_card_embed_by_slug(target_slugs, device)  # (B, d_model)
+        target_count = torch.zeros(B, 1, device=device)
+
+        # ── 11. Phase embedding (forward() feature 11) — use zeros (not stored)
+        phase_emb = torch.zeros(B, 32, device=device)
+
+        # ── 12. Step embedding (forward() feature 12) — use zeros (not stored)
+        step_emb = torch.zeros(B, 32, device=device)
+
+        # ── 13. Chain link number (forward() feature 13) — use 0.0
+        chain_f = torch.zeros(B, 1, device=device)
+
+        # ── 14. Priority player (forward() feature 14) — use 0.0
+        priority_f = torch.zeros(B, 1, device=device)
+
+        # ── 15. Action points available (forward() feature 15) — use 0.0
+        ap_f = torch.zeros(B, 1, device=device)
+
+        # ── 16. Resources available (forward() feature 16) — use 0.0
+        res_avail_f = torch.zeros(B, 1, device=device)
+
+        # ── 17. Action cost (forward() feature 17)
+        action_cost_f = action_costs.unsqueeze(1)  # (B, 1)
+
+        # ── 18. Resource cost normalized (forward() feature 18)
+        resource_cost_f = (resource_costs / 10.0).unsqueeze(1)  # (B, 1)
+
+        # ── 19. Has go again (forward() feature 19)
+        go_again_f = has_go_again.unsqueeze(1)  # (B, 1)
+
+        # ── 20. Is instant speed (forward() feature 20) — use 0.0
+        instant_f = torch.zeros(B, 1, device=device)
+
+        # ── 21. Is action speed (forward() feature 21) — use 0.0
+        action_speed_f = torch.zeros(B, 1, device=device)
+
+        # ── 22. Played as instant (forward() feature 22) — use 0.0
+        played_instant_f = torch.zeros(B, 1, device=device)
+
+        # ── 23. Modes selected (forward() feature 23) — use zeros
+        modes_f = torch.zeros(B, 6, device=device)
+
+        # ── 24. X value declared (forward() feature 24) — use 0.0
+        x_f = torch.zeros(B, 1, device=device)
+
+        # ── 25. Is melded (forward() feature 25) — use 0.0
+        meld_f = torch.zeros(B, 1, device=device)
+
+        # ── 26. Alternative cost type one-hot (forward() feature 26)
+        _n_alt = len(ACTION_ALT_COST_TYPES) + 2
+        alt_cost_f = torch.zeros(B, _n_alt, device=device)
+        alt_cost_f[:, _n_alt - 1] = 1.0  # "none" category (matches forward() default)
+
+        # Concatenate in the exact same order as forward()
+        features = [
+            action_type_emb,    # 64
+            player_id_f,        # 1
+            card_emb,           # d_model
+            card_idx_f,         # 1
+            pitch_emb,          # d_model
+            from_arsenal_f,     # 1
+            slot_emb,           # 32
+            defend_emb,         # d_model
+            attack_source_emb,  # d_model
+            attack_flags,       # 3
+            target_emb,         # d_model
+            target_count,       # 1
+            phase_emb,          # 32
+            step_emb,           # 32
+            chain_f,            # 1
+            priority_f,         # 1
+            ap_f,               # 1
+            res_avail_f,        # 1
+            action_cost_f,      # 1
+            resource_cost_f,    # 1
+            go_again_f,         # 1
+            instant_f,          # 1
+            action_speed_f,     # 1
+            played_instant_f,   # 1
+            modes_f,            # 6
+            x_f,                # 1
+            meld_f,             # 1
+            alt_cost_f,         # _n_alt
+        ]
+        out = torch.cat([f.float() for f in features], dim=1)
+
+        # Apply layer norm (same as forward() output normalization)
+        out = self.layer_norm(out)
+        return out
+
     def forward(self, action: Action, player_counters: Optional[dict] = None) -> torch.Tensor:
         """Convert Action to embedding tensor.
         
