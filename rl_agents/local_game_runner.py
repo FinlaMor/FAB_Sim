@@ -112,21 +112,27 @@ class LocalHeuristicAgent:
     def __call__(self, state: GameState, options, context=None):
         if not options:
             return None
+        # If only one option, no need to rank.
         if len(options) == 1:
             return options[0]
 
-        # For Action choices, rank: attacks > non-pass > pass
+        # For Action choices, rank: attacks > non-attack/non-pass > pass
         if isinstance(options[0], Action):
-            attacks = [a for a in options if a.type in (
-                ActionType.ATTACK_WEAPON, ActionType.PLAY_CARD,
-            )]
-            non_pass = [a for a in options if a.type != ActionType.PASS]
-            if attacks:
-                return self._rng.choice(attacks)
-            if non_pass:
-                return self._rng.choice(non_pass)
-        return self._rng.choice(options)
+            attacks = [a for a in options if a.type in (ActionType.ATTACK_WEAPON, ActionType.ATTACK_ALLY)]
+            attacks += [a for a in options if a.card and a.card.isattack() and a not in attacks]
+            attacks += [a for a in options if a.card and 'attack' in a.card.base_text_box.lower() and a not in attacks]
 
+            non_pass = [a for a in options if a.type != ActionType.PASS and a not in attacks]
+
+            choices = attacks + non_pass + [_ for _ in options if _.type == ActionType.PASS]
+            weights = [1 for _ in attacks]
+            weights += [0.3 for _ in non_pass]
+            weights += [0.03 for _ in options if _.type == ActionType.PASS]
+
+            return self._rng.choices(choices, weights=weights, k=1)[0]
+        else:
+            # For non-Action choices, just pick randomly
+            return self._rng.choice(options)
 
 # ---------------------------------------------------------------------------
 # OpponentPool
