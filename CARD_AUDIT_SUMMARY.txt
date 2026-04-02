@@ -1,0 +1,332 @@
+====================================================================================================
+FAB SIMULATOR - COMPREHENSIVE CARD EFFECTS AUDIT
+====================================================================================================
+
+Report Generated: Complete audit of all cards in decks/generated/
+
+OVERVIEW
+----------------------------------------------------------------------------------------------------
+Total unique cards in generated decks: 490
+  - Registered with engine effects:       0
+  - Missing effect registration:       293 <-- AUDIT GAPS
+  - Stat-only / trivial keywords:      197
+
+GAPS BY CARD TYPE
+----------------------------------------------------------------------------------------------------
+Equipment                     :   1 cards
+Action Attack Cards           : 164 cards
+Attack Reactions              :  14 cards
+Defense Reactions             :   5 cards
+Instants                      :  24 cards
+Other                         :  85 cards
+
+DETAILED BREAKDOWN
+----------------------------------------------------------------------------------------------------
+
+EQUIPMENT (1 cards)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Evo Recall_Blue (evo_recall_blue)
+  Types: Mechanologist, Instant, Equipment, Evo, Head
+  If you have a base head equipped, transform it into this, then equip this.
+  When this is equipped, put up to 1 Mechanologist action card from your banished zone on to
+  **Arcane Barrier 1**
+
+ACTION ATTACK CARDS (164 cards)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Aftershock_Red (aftershock_red)
+  Types: Guardian, Action, Attack
+  When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic 
+
+  Agile Windup_Red (agile_windup_red)
+  Types: Brute, Warrior, Action, Attack
+  **Instant** - Discard this: Create an Agility token.
+
+  Alpha Instinct_Blue (alpha_instinct_blue)
+  Types: Brute, Action, Attack
+  **Rhinar Specialization**
+  When this is discard to beat chest, create a Might token.
+
+  Annihilate the Armed_Red (annihilate_the_armed_red)
+  Types: Assassin, Action, Attack
+  **Contract** - You are contracted to banish opponents' attack action cards. Whenever you c
+  When this hits a hero, banish the top card of their deck.
+
+  Art of Desire: Body_Red (art_of_desire_body_red)
+  Types: Assassin, Action, Attack
+  **Stealth**
+  When this hits a hero, banish the top card of their deck.
+  Whenever this banishes a red card, draw a card and gain 1{h}.
+
+  Art of the Dragon: Blood_Red (art_of_the_dragon_blood_red)
+  Types: Ninja, Action, Attack
+  When this attacks, if it is Draconic, it gets **go again** and the next 3 Draconic cards y
+
+  Assault and Battery_Red (assault_and_battery_red)
+  Types: Brute, Action, Attack
+  **Beat Chest**
+  When this attacks, if you've **beaten chest** this turn, create an Agility token.
+
+  Astral Strike_Red (astral_strike_red)
+  Types: Lightning, Action, Attack
+  When this attacks, if you've destroyed a Lightning Flow this turn, choose 1;
+  • Draw a card.
+  • This gets +2{p}.
+  • This gets **go again**.
+
+  Banneret of Courage_Yellow (banneret_of_courage_yellow)
+  Types: Light, Warrior, Action, Attack
+  **Solflare** - When this is **charged** to your hero's soul, create a Courage token.
+
+  Banneret of Gallantry_Yellow (banneret_of_gallantry_yellow)
+  Types: Light, Warrior, Action, Attack
+  **Solflare** - When this is **charged** to your hero's soul, create a Quicken token.
+
+  ... and 154 more Action Attack Cards cards
+
+ATTACK REACTIONS (14 cards)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Affirm Loyalty_Red (affirm_loyalty_red)
+  Types: Draconic, Warrior, Attack Reaction
+  Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, create a F
+
+  Ancestral Empowerment_Red (ancestral_empowerment_red)
+  Types: Ninja, Attack Reaction
+  Target Ninja attack action card gains +1{p}.
+  Draw a card.
+
+  Beacon of Victory_Yellow (beacon_of_victory_yellow)
+  Types: Light, Warrior, Attack Reaction
+  As an additional cost to play Beacon of Victory, banish X cards from your hero's soul. X c
+  Target attack gains +X{p}.
+  If you've **charged** this turn, search your deck for an action card with cost X or less, 
+
+  Blood Follows Blade_Yellow (blood_follows_blade_yellow)
+  Types: Warrior, Attack Reaction
+  **Kassai Specialization**
+  Target sword attack gets **go again** and "When this hits, create a Cintari Sellsword toke
+
+  Coercive Tendency_Blue (coercive_tendency_blue)
+  Types: Assassin, Attack Reaction
+  **Arakni Specialization**
+  Look at the top 3 cards of the defending hero's deck. Put them back in any order, then ban
+  If you complete a **contract** this way, your Assassin attacks get **go again** this comba
+
+  Glint the Quicksilver_Blue (glint_the_quicksilver_blue)
+  Types: Warrior, Attack Reaction
+  Target weapon attack gains **go again**.
+  **Reprise** - If the defending hero has defended with a card from their hand this chain li
+
+  Legacy of Ikaru_Blue (legacy_of_ikaru_blue)
+  Types: Ninja, Attack Reaction
+  Target Ninja attack gets +1{p} and "When this hits, if Edge of Autumn was the last attack 
+
+  Razor Reflex_Red (razor_reflex_red)
+  Types: Generic, Attack Reaction
+  Choose 1;
+  - Target dagger or sword weapon attack gets +3{p}.
+  - Target attack action card with cost 1 or less gets +3{p} and "When this hits, it gets **
+
+  Scar Tissue_Red (scar_tissue_red)
+  Types: Assassin, Warrior, Attack Reaction
+  Target dagger attack gets +3{p} and "When this hits a hero, **mark** them."
+
+  Searing Gaze_Red (searing_gaze_red)
+  Types: Draconic, Warrior, Attack Reaction
+  Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, it gets "W
+
+  ... and 4 more Attack Reactions cards
+
+DEFENSE REACTIONS (5 cards)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Collapsing Trap_Blue (collapsing_trap_blue)
+  Types: Ranger, Defense Reaction, Trap
+  **Legendary Riptide Specialization**
+  When this defends an attack with **go again**, the attacking hero discards their hand then
+
+  Hunter or Hunted?_Blue (hunter_or_hunted_blue)
+  Types: Assassin, Defense Reaction
+  When this defends, name a card. The attacking hero reveals the top card of their deck. If 
+  **Contract** - While this is defending, you are contracted to banish op
+
+  Inertia Trap_Red (inertia_trap_red)
+  Types: Assassin, Ranger, Defense Reaction, Trap
+  When this defends an attack with {p} greater than its base, create an Inertia token under 
+
+  Reduce to Runechant_Red (reduce_to_runechant_red)
+  Types: Runeblade, Defense Reaction
+  Reduce to Runechant costs {r} less to play for each Runechant you control.
+  Create a Runechant token.
+
+  Sink Below_Red (sink_below_red)
+  Types: Generic, Defense Reaction
+  You may put a card from your hand on the bottom of your deck. If you do, draw a card.
+
+INSTANTS (24 cards)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Art of the Phoenix: War_Red (art_of_the_phoenix_war_red)
+  Types: Draconic, Instant
+  As an additional cost to play this, discard a Phoenix Flame. Draconic attack action cards 
+
+  Concealed Object_Blue (concealed_object_blue)
+  Types: Reviled, Instant, Item
+  When this enters the arena, **the crowd boos** you.
+  **Instant** - {t}: Target attack gets +1{p}.
+  At the beginning of your end phase, destroy this.
+
+  Consign to Cosmos // Shock_Yellow (consign_to_cosmos__shock_yellow)
+  Types: Lightning, Wizard, Action, Instant
+  **Meld**
+  Banish X instant and/or aura cards from any graveyard, where X is the amount of arcane dam
+  //
+  ... (2 more lines)
+
+  Doomsday_Blue (doomsday_blue)
+  Types: Shadow, Instant
+  **Legendary Levia Specialization**
+  Play Doomsday only if there are 6 or more cards with blood debt in your banished zone.
+  Create a Blasmophet, the Soul Harvester token.
+
+  Fabricate_Red (fabricate_red)
+  Types: Mechanologist, Instant
+  Choose 2;
+  - Equip a base equipment with Proto in its name from your inventory.
+  - Evo permanents you control get +1{d} this turn.
+  - Put this under an Evo permanent you control.
+  ... (1 more lines)
+
+  Figment of Erudition_Yellow (figment_of_erudition_yellow)
+  Types: Light, Illusionist, Instant, Figment
+  **Legendary**
+  When this enters the arena, create a Ponder token.
+
+  Figment of Judgment_Yellow (figment_of_judgment_yellow)
+  Types: Light, Illusionist, Instant, Figment
+  **Legendary**
+  When this enters the arena, you may turn a card in any banished zone face-down.
+
+  Figment of Protection_Yellow (figment_of_protection_yellow)
+  Types: Light, Illusionist, Instant, Figment
+  **Legendary**
+  When this enters the arena, create a Spectral Shield token.
+
+  Figment of Ravages_Yellow (figment_of_ravages_yellow)
+  Types: Light, Illusionist, Instant, Figment
+  **Legendary**
+  When this enters the arena, deal 1 arcane damage to any target.
+
+  Figment of Rebirth_Yellow (figment_of_rebirth_yellow)
+  Types: Light, Illusionist, Instant, Figment
+  **Legendary**
+  When this enters the arena, you may put a yellow action card from your graveyard on top of
+
+  ... and 14 more Instants cards
+
+OTHER (85 cards)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Ancestral Harmony_Blue (ancestral_harmony_blue)
+  Types: Ninja, Action
+  Your attacks with **combo** get +1{p} this turn.
+  Banish the top card of your deck. If it has **combo**, you may play it this turn.
+  **Go again**
+
+  Avast Ye!_Blue (avast_ye_blue)
+  Types: Pirate, Necromancer, Action
+  Your next Pirate ally attack this turn gets **go again** and "When this hits a hero, creat
+  **Go again**
+
+  Beseech the Demigon_Red (beseech_the_demigon_red)
+  Types: Shadow, Action
+  Choose an attack action card in your banished zone. It gets +3{p} until end of turn.
+  **Go again**
+
+  Big Game Trophy Shot_Yellow (big_game_trophy_shot_yellow)
+  Types: Pirate, Ranger, Action
+  Your next arrow attack this turn gets +4{p}. If it has harpoon in its name, it gets "When 
+  Draw a card, then discard a card.
+  **Go again**
+
+  Bios Update_Red (bios_update_red)
+  Types: Mechanologist, Action
+  The next attack action card you **boost** this turn gains +3{p}.
+  The next time a Mechanologist item with cost 2 or less is banished to pay a **boost** cost
+  **Go again**
+
+  Blessing of Bellona_Yellow (blessing_of_bellona_yellow)
+  Types: Light, Action, Aura
+  Go again Whenever a card is put into your soul, create a Courage token. At the start of yo
+
+  Bloodrush Bellow_Yellow (bloodrush_bellow_yellow)
+  Types: Brute, Action
+  As an additional cost to play Bloodrush Bellow, discard a random card.
+  Your Brute attacks gain +2{p} this turn.
+  If the discarded card has 6 or more {p}, draw 2 cards and Bloodrush Bellow gains **go agai
+
+  Booze!_Blue (booze_blue)
+  Types: Reviled, Action, Aura
+  **Go again**
+  When this enters or leaves the arena, **the crowd boos** you.
+  At the start of your turn, destroy this.
+
+  Cerebellum Processor_Blue (cerebellum_processor_blue)
+  Types: Mechanologist, Action, Item
+  **Crank**
+  This enters the arena with 2 steam counters. At the start of your turn, destroy this unles
+  **Once per Turn Action** - 0: Draw a card.
+
+  Cheating Scoundrel_Red (cheating_scoundrel_red)
+  Types: Pirate, Action
+  The next attack action card you play this turn gets +3{p} and wagers with the defending he
+
+  ... and 75 more Other cards
+
+====================================================================================================
+KEY FINDINGS
+====================================================================================================
+
+1. TOTAL MISSING IMPLEMENTATIONS: 293 cards
+
+2. NO EFFECT REGISTRIES FOUND FOR:
+   - Equipment activation effects (13 registered in engine, 0 in decks)
+   - Action abilities with "when this attacks" / "when this hits"
+   - Attack Reactions with targeting or conditional effects
+   - Defense Reactions with special abilities
+   - Instant spells with enter-the-arena or activation effects
+   - Cards that create tokens
+   - Cards that draw, banish, or manipulate the deck
+   - Cards with conditional abilities ("if you've...", "if this is...")
+
+3. REGISTRY STRUCTURE FOUND:
+   - EQUIPMENT_ACTIVATION_EFFECTS (13 entries registered)
+   - EQUIPMENT_ACTIVATION_CONDITIONS (11 entries)
+   - EQUIPMENT_ACTIVATION_COST (4 entries)
+   - EQUIPMENT_PAY_COSTS (18 entries)
+   - HERO_ACTIVATION_CONDITIONS
+   - HERO_TRIGGERS
+
+4. BUT NOT FOUND (or extremely sparse):
+   - PLAY_ABILITIES (for "when you play" effects)
+   - HIT_EFFECTS (for "when this hits" effects)
+   - ATTACK_REACTION_POWER (for modifier effects)
+   - ATTACK_REACTION_EFFECTS (for special effects)
+   - DEFENSE_REACTION_BONUS (for defensive bonuses)
+   - AURA_START_OF_TURN_EFFECTS
+   - General card creation / token generation
+   - Draw/mill/banish effects
+   - Conditional ability resolution
+
+5. IMPLEMENTATION STRATEGY:
+   The engine architecture appears to support:
+   - Equipment with activation conditions and costs
+   - Hero passive triggers
+   - But lacks support for:
+     - Most attack action effects
+     - Attack/Defense reaction modifiers
+     - Instant spell effects
+     - Conditional gameplay mechanics
+     - Token creation system

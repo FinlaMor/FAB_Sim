@@ -103,7 +103,9 @@ def build_keyword_triggers(card: Card) -> list[TriggerDef]:
     keywords = card.keywords or []
 
     for kw in keywords:
-        kw_lower = kw.lower().strip()
+        # Normalize CamelCase keywords from card DB (e.g. "BladeBreak" -> "blade break")
+        kw_spaced = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw.strip())
+        kw_lower = kw_spaced.lower()
         # Parse numbered keywords like "Ward 3", "Arcane Barrier 2"
         kw_base = re.sub(r'\s+\d+$', '', kw_lower).strip()
         kw_num_match = re.search(r'(\d+)$', kw)
@@ -607,6 +609,13 @@ def rupture_trigger(effect_fn: Callable) -> TriggerDef:
         effect_fn=effect_fn,
     )
 
+def enters_with_steam_counters(count: int) -> TriggerDef:
+    """Template: "When this enters the arena, put N steam counters on it."."""
+    return TriggerDef(
+        event_type="enters_arena",
+        effect_fn=lambda c, e, s: effect_put_counter(s, c, "steam", count),
+    )
+
 
 # ---------------------------------------------------------------------------
 # Card-specific triggers — keyed by slug
@@ -641,6 +650,7 @@ CARD_TRIGGERS["kayo_underhanded_cheat"] = [
         effect_fn=lambda c, e, s: create_token(s, _controller_id(c), "vigor"),
     ),
 ]
+
 
 
 # -- fyendals_spring_tunic --
@@ -988,6 +998,23 @@ CARD_TRIGGERS["insult_to_injury"] = [
     TriggerDef(event_type="attacking", effect_fn=_insult_to_injury_effect),
 ]
 
+def _shock_charmers_on_hit(card, event, state):
+    """When an attack action card hits a hero, it deals 1 generic damage to them."""
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if "shock_charmers_hit_damage" not in player.current_turn_effects:
+        return
+    if not state.combat or not state.combat.attack_card:
+        return
+    atk = state.combat.attack_card
+    if _controller_id(atk) != cid:
+        return
+    types_lower = [t.lower() for t in atk.types]
+    if not any(t in types_lower for t in ("Attack", "Action")):
+        return
+    player.current_turn_effects.remove("shock_charmers_hit_damage")
+    defender_id = 3 - cid
+    effect_deal_damage(state, defender_id, 1, atk, "generic")
 
 # -- nimblism_blue --
 # "The next attack action card with cost 1 or less you play this turn gains +1 power."
@@ -2623,7 +2650,19 @@ CARD_TRIGGERS["flash_of_brilliance"] = [
                effect_fn=_flash_brilliance_defend, is_optional=True),
 ]
 
+def _helios_mitre_end_phase(card, event, state):
+    """If Helios Mitre was activated this turn, destroy it at the beginning of the end phase."""
+    cid = _controller_id(card)
+    player = state.players[cid]
+    if "helios_mitre_destroy_eot" in player.current_turn_effects:
+        if card in player.head.cards:
+            player.current_turn_effects.remove("helios_mitre_destroy_eot")
+            player.head.remove(card)
+            player.graveyard.add(card)
 
+CARD_TRIGGERS["helios_mitre"] = [
+    TriggerDef(event_type="start_of_end_phase", condition_fn=lambda c, e, s: ("helios_mitre_destroy_eot" in s.players[_controller_id(c)].current_turn_effects), effect_fn=_helios_mitre_end_phase),
+]
 # -- temporal_wobble --
 # "Negate target non-attack action if cost < sigils controlled. Opponent gains AP."
 def _temporal_wobble_on_play(card, event, state):
@@ -3323,6 +3362,26 @@ CARD_TRIGGERS["cloud_cover"] = [
     TriggerDef(event_type="on_play", effect_fn=_cloud_cover_on_play),
 ]
 
+def steam_counter_trigger(counter_amount):
+    """Factory for on-play trigger that enters with steam counters."""
+    return TriggerDef(event_type="enters_arena", effect_fn=lambda c, e, s: steam_counter_trigger(counter_amount)(c, e, s)) # Crank caught in keyword checks and should resolve after.
+
+EFFECT_MAP = {
+    "dissolving_shield_red": lambda c, e, s: steam_counter_trigger(3)(c, e, s),
+    "dissolving_shield_yellow": lambda c, e, s: steam_counter_trigger(2)(c, e, s),
+    "dissolving_shield_blue": lambda c, e, s: steam_counter_trigger(1)(c, e, s),
+    "backup_protocol": lambda c, e, s: steam_counter_trigger(1)(c, e, s),
+    "hyper_driver_red": lambda c, e, s: steam_counter_trigger(3)(c, e, s),
+    "hyper_driver_yellow": lambda c, e, s: steam_counter_trigger(2)(c, e, s),
+    "hyper_driver_blue": lambda c, e, s: steam_counter_trigger(1)(c, e, s),
+    "assembly_module_blue": lambda c, e, s: steam_counter_trigger(1)(c, e, s),
+    "teklo_core_blue": lambda c, e, s: steam_counter_trigger(2)(c, e, s),
+    "boom_grenade": lambda c, e, s: steam_counter_trigger(1)(c, e, s),
+    "teklo_pounder_blue": lambda c, e, s: steam_counter_trigger(2)(c, e, s),
+}
+
+
+CARD_TRIGGERS.update(EFFECT_MAP)
 
 # ---------------------------------------------------------------------------
 # Ripple Away — instant, discard-from-hand activation
@@ -3374,18 +3433,31 @@ def _under_the_trap_door_on_play(card, event, state):
 
 def get_triggers_for_card(card: Card) -> list[TriggerDef]:
     """Get all trigger definitions for a card.
-    Combines keyword-derived triggers with card-specific triggers."""
+    Combines keyword-derived triggers, data-driven text-parsed triggers,
+    and card-specific triggers.  Manual CARD_TRIGGERS entries take precedence
+    over text-parsed triggers."""
     triggers = build_keyword_triggers(card)
 
-    # Add card-specific triggers
+    # Add card-specific triggers (manual overrides)
     slug = card.slug
-    if slug in CARD_TRIGGERS:
-        triggers.extend(CARD_TRIGGERS[slug])
+    has_manual = slug in CARD_TRIGGERS
 
     # Also check base name (without color suffix) for shared triggers
     base_slug = re.sub(r'_(red|yellow|blue)$', '', slug)
     if base_slug != slug and base_slug in CARD_TRIGGERS:
-        triggers.extend(CARD_TRIGGERS[base_slug])
+        has_manual = True
+
+    if has_manual:
+        # Manual CARD_TRIGGERS entries take precedence — skip text parsing
+        if slug in CARD_TRIGGERS:
+            triggers.extend(CARD_TRIGGERS[slug])
+        if base_slug != slug and base_slug in CARD_TRIGGERS:
+            triggers.extend(CARD_TRIGGERS[base_slug])
+    else:
+        # No manual entry — try data-driven parsing from functional_text
+        from engine.card_effects.text_trigger_parser import parse_functional_text
+        parsed = parse_functional_text(card)
+        triggers.extend(parsed)
 
     # Set source slug on all triggers
     for t in triggers:

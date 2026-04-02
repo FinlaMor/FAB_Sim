@@ -19,9 +19,21 @@ from __future__ import annotations
 
 from typing import Optional
 
+import contextlib
+
 import numpy as np
 import torch
 import torch.nn as nn
+
+# DML (torch-directml) does not implement the fused
+# `aten::_transformer_encoder_layer_fwd` kernel and silently falls back to CPU.
+# Wrapping transformer calls with the MATH SDPA backend forces explicit matmul
+# attention that DML handles natively.
+try:
+    from torch.nn.attention import SDPBackend, sdpa_kernel as _sdpa_kernel
+    _SDPA_MATH_CTX = lambda: _sdpa_kernel([SDPBackend.MATH])  # type: ignore[misc]
+except ImportError:
+    _SDPA_MATH_CTX = contextlib.nullcontext  # type: ignore[assignment]
 
 from encoder.card_embedder import (
     SlugVocab,
@@ -501,7 +513,8 @@ class GameTransformerEncoder(nn.Module):
         token_embs = token_embs.unsqueeze(0)
 
         # No padding mask needed (all tokens are real — we truncated already)
-        out = self.transformer(token_embs)   # (1, T, d_model)
+        with _SDPA_MATH_CTX():
+            out = self.transformer(token_embs)   # (1, T, d_model)
         cls_out = out[0, 0]                  # (d_model,)
         cls_normed = self.output_norm(cls_out)
 
@@ -615,7 +628,8 @@ class GameTransformerEncoder(nn.Module):
         arange = torch.arange(2 + T, device=device).unsqueeze(0).expand(B, -1)
         padding_mask = arange >= seq_with_prefix.unsqueeze(1)  # (B, 2+T), True = pad
 
-        out = self.transformer(token_embs, src_key_padding_mask=padding_mask)  # (B, 2+T, d_model)
+        with _SDPA_MATH_CTX():
+            out = self.transformer(token_embs, src_key_padding_mask=padding_mask)  # (B, 2+T, d_model)
         cls_out = out[:, 0, :]  # (B, d_model)
         cls_normed = self.output_norm(cls_out)
 

@@ -84,13 +84,14 @@ _CARD_SLOT_DB: dict | None = None
 
 
 def _get_card_slot_db() -> dict:
-    """Lazy-load the slug_index.json card database (by_slug entries)."""
+    """Lazy-load the slug_index card database (by_slug entries)."""
     global _CARD_SLOT_DB
     if _CARD_SLOT_DB is None:
         import pathlib
-        db_path = pathlib.Path(__file__).parent.parent / "card_data" / "slug_index.json"
-        with open(db_path, encoding="utf-8") as _f:
-            _CARD_SLOT_DB = _json.load(_f).get("by_slug", {})
+        import msgpack as _msgpack
+        db_path = pathlib.Path(__file__).parent.parent / "card_data" / "slug_index.msgpack"
+        with open(db_path, "rb") as _f:
+            _CARD_SLOT_DB = _msgpack.unpack(_f, raw=False).get("by_slug", {})
     return _CARD_SLOT_DB
 
 
@@ -139,6 +140,10 @@ def _deck_file_to_talishar_slugs(deck_file: str) -> dict:
 
     def to_slug(name: str, color: str = "") -> str:
         slug = _html.unescape(name)          # &#x27; → '
+        # Some generated decks include a trailing color tag in the card name itself
+        # (e.g. "voltic_impact_yellow (yellow)"). Strip it before normalization so
+        # color suffixing below stays canonical.
+        slug = re.sub(r"\s*\((red|yellow|blue)\)\s*$", "", slug, flags=re.IGNORECASE)
         # Normalize unicode: decompose accented chars (í→i) and drop non-ASCII (ð dropped)
         slug = _unicodedata.normalize("NFKD", slug).encode("ascii", "ignore").decode("ascii")
         slug = slug.replace("'", "")         # Autumn's → Autumns

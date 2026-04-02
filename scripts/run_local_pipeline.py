@@ -23,6 +23,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import datetime
+import json as _json
 import os
 import random
 import signal
@@ -42,6 +44,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CHECKPOINT_DIR = ROOT / "checkpoints"
 GENERATED_DIR = ROOT / "decks" / "generated"
+HISTORY_LOG = CHECKPOINT_DIR / "pipeline_history.jsonl"
 PYTHON = sys.executable
 
 # ---------------------------------------------------------------------------
@@ -140,6 +143,109 @@ def print_summary(label: str, items: dict[str, str | int | float]) -> None:
     print(f"  --- {label} ---")
     for k, v in items.items():
         print(f"  {k:<30} {v}")
+    print()
+
+
+# ---------------------------------------------------------------------------
+# Pipeline history log (JSON-lines at checkpoints/pipeline_history.jsonl)
+# ---------------------------------------------------------------------------
+
+def _log_history_event(event: str, loop_num: int, **kwargs) -> None:
+    """Append a timestamped event to the pipeline history log."""
+    record = {
+        "timestamp": datetime.datetime.now().isoformat(timespec="seconds"),
+        "event": event,
+        "loop": loop_num,
+        **kwargs,
+    }
+    CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
+    with open(HISTORY_LOG, "a", encoding="utf-8") as f:
+        f.write(_json.dumps(record) + "\n")
+
+
+def _load_history() -> list[dict]:
+    """Load all history records."""
+    if not HISTORY_LOG.exists():
+        return []
+    records = []
+    with open(HISTORY_LOG, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                try:
+                    records.append(_json.loads(line))
+                except _json.JSONDecodeError:
+                    pass
+    return records
+
+
+def _print_history_recap() -> None:
+    """Print a chronological recap of all benchmark results and key events."""
+    records = _load_history()
+    if not records:
+        return
+
+    bench_records = [r for r in records if r["event"] == "benchmark"]
+    loop_records = [r for r in records if r["event"] == "loop_complete"]
+
+    if not bench_records and not loop_records:
+        return
+
+    print()
+    print("  ╔══════════════════════════════════════════════════════════════════╗")
+    print("  ║                    Pipeline History Recap                       ║")
+    print("  ╠══════════════════════════════════════════════════════════════════╣")
+
+    if bench_records:
+        print("  ║                                                                ║")
+        print("  ║  Benchmark Results Over Time:                                  ║")
+        print("  ╠══════════╦══════╦═══════════╦═══════════╦═══════════╦══════════╣")
+        print("  ║ Time     ║ Loop ║ vs Random ║ vs Heur.  ║ vs Prev   ║ Promoted ║")
+        print("  ╠══════════╬══════╬═══════════╬═══════════╬═══════════╬══════════╣")
+        for r in bench_records:
+            ts = r["timestamp"]
+            # Show just HH:MM:SS for readability (date shown once above)
+            try:
+                dt = datetime.datetime.fromisoformat(ts)
+                time_str = dt.strftime("%H:%M:%S")
+            except Exception:
+                time_str = ts[-8:]
+            loop = r.get("loop", "?")
+            vs_r = r.get("vs_random")
+            vs_h = r.get("vs_heuristic")
+            vs_p = r.get("vs_previous")
+            prom = r.get("promoted")
+            vs_r_s = f"{vs_r:.0%}" if vs_r is not None else "—"
+            vs_h_s = f"{vs_h:.0%}" if vs_h is not None else "—"
+            vs_p_s = f"{vs_p:.0%}" if vs_p is not None else "—"
+            prom_s = "YES" if prom else ("NO" if prom is not None else "—")
+            print(f"  ║ {time_str:<8} ║ {loop:>4} ║ {vs_r_s:>9} ║ {vs_h_s:>9} ║ {vs_p_s:>9} ║ {prom_s:>8} ║")
+        print("  ╚══════════╩══════╩═══════════╩═══════════╩═══════════╩══════════╝")
+
+        # Show date range
+        first_ts = bench_records[0]["timestamp"]
+        last_ts = bench_records[-1]["timestamp"]
+        try:
+            first_dt = datetime.datetime.fromisoformat(first_ts)
+            last_dt = datetime.datetime.fromisoformat(last_ts)
+            if first_dt.date() == last_dt.date():
+                print(f"  Date: {first_dt.strftime('%Y-%m-%d')}")
+            else:
+                print(f"  Date range: {first_dt.strftime('%Y-%m-%d')} — {last_dt.strftime('%Y-%m-%d')}")
+        except Exception:
+            pass
+
+    if loop_records:
+        print()
+        total_game_time = sum(r.get("elapsed_s", 0) for r in loop_records)
+        total_games = sum(r.get("games_collected", 0) for r in loop_records)
+        total_transitions = sum(r.get("transitions_collected", 0) for r in loop_records)
+        print(f"  Loops logged:        {len(loop_records)}")
+        print(f"  Total games:         {total_games}")
+        print(f"  Total transitions:   {total_transitions}")
+        if total_game_time > 0:
+            print(f"  Total loop time:     {total_game_time:.0f}s ({total_game_time / 3600:.1f}h)")
+
     print()
 
 
@@ -604,6 +710,7 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
         """
         wins = 0
         completed = 0
+        t_start = time.time()
         for i in range(n_games):
             d1, d2 = rng.sample(deck_files, 2)
             try:
@@ -630,6 +737,13 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
                     wins += 1
             except Exception as e:
                 print(f"    {label} game {i}: error — {e}")
+
+            # Progress every 10 games
+            if (i + 1) % 10 == 0 or i + 1 == n_games:
+                elapsed = time.time() - t_start
+                wr = wins / completed if completed > 0 else 0.0
+                print(f"    {label}: {i + 1}/{n_games}  WR={wr:.0%}  ({elapsed:.0f}s)")
+
         rate = wins / completed if completed > 0 else 0.0
         return rate
 
@@ -704,6 +818,62 @@ def step_benchmark(args, loop_num: int) -> dict[str, float] | None:
     return rates
 
 
+# ---------------------------------------------------------------------------
+# Stage 10: Archive old games
+# ---------------------------------------------------------------------------
+
+def _step_archive(args) -> None:
+    """Archive old games from replay.db and game_data.db between loops.
+
+    Uses args.iql_replay_buffer_games as the keep-recent threshold so the
+    live databases never grow beyond what training actually reads.
+    Runs as pure I/O — no GPU, no model loading.
+    """
+    from scripts.archive_old_games import (
+        REPLAY_DB, GAME_DATA_DB,
+        _get_archive_game_ids, _count,
+        archive_replay_db, archive_game_data_transitions,
+    )
+
+    keep_recent = args.iql_replay_buffer_games
+    print()
+    print("=" * 70)
+    print(f"  Stage 10: Archive old games (keep {keep_recent})")
+    print("=" * 70)
+    t0 = time.time()
+
+    # --- replay.db ---
+    if REPLAY_DB.exists():
+        conn = sqlite3.connect(str(REPLAY_DB), timeout=60)
+        archive_ids = _get_archive_game_ids(conn, keep_recent)
+        total_games = _count(conn, "games")
+        conn.close()
+
+        if archive_ids:
+            print(f"  replay.db: archiving {len(archive_ids):,} of {total_games:,} games")
+            try:
+                stats = archive_replay_db(archive_ids, dry_run=False)
+                saved = stats.get("space_saved_mb", 0)
+                if saved > 0:
+                    print(f"  replay.db: freed {saved:,.0f} MB")
+            except Exception as e:
+                print(f"  replay.db: archive failed — {e}")
+        else:
+            print(f"  replay.db: only {total_games:,} games, nothing to archive")
+
+    # --- game_data.db ---
+    if GAME_DATA_DB.exists():
+        try:
+            stats = archive_game_data_transitions(keep_recent, dry_run=False)
+            saved = stats.get("space_saved_mb", 0)
+            if saved > 0:
+                print(f"  game_data.db: freed {saved:,.0f} MB")
+        except Exception as e:
+            print(f"  game_data.db: archive failed — {e}")
+
+    print(f"\n  [OK] Stage 10: Archive ({time.time() - t0:.1f}s)")
+
+
 def _get_current_loop_checkpoint(loop_num: int) -> Path | None:
     """Return latest checkpoint for the current loop, if present."""
     iql_dir = CHECKPOINT_DIR / "iql" / f"loop{loop_num}"
@@ -761,83 +931,75 @@ def _evaluate_checkpoint_promotion(
     loop_num: int,
     bench_rates: dict[str, float] | None,
 ) -> bool:
-    """Decide whether to keep the current loop's checkpoint.
+    """Evaluate whether this loop's checkpoint is the new best.
 
-    Rules:
-    - First checkpoint ever (no previous): always keep
-    - Otherwise keep if EITHER:
-        a) Meets absolute thresholds: vs_random >= 75% AND vs_heuristic >= 75%
-           AND vs_previous > 50%
-        b) Win rates improved vs the previous checkpoint's benchmark scores
-           (accepts any improvement during early training ramp-up)
-    - If benchmark was skipped/failed: keep (benefit of the doubt)
+    Checkpoints are ALWAYS kept unless they won zero games across all
+    benchmarks (completely non-functional).  The return value indicates
+    whether this checkpoint is the **new best** — i.e. it improved over the
+    previous best benchmark scores.
+
+    Returns True if this checkpoint is the new best, False otherwise.
+    The checkpoint is kept on disk in both cases.
     """
-    prev_ckpt = _find_previous_checkpoint(loop_num)
-    is_first = prev_ckpt is None
-
-    if is_first:
-        if bench_rates is not None:
-            _save_benchmark_rates(loop_num, bench_rates)
-        print("  Checkpoint promotion: ACCEPTED (first checkpoint)")
-        return True
-
     if bench_rates is None:
-        print("  Checkpoint promotion: ACCEPTED (benchmark skipped)")
-        return True
+        print("  Benchmark: skipped — checkpoint kept")
+        return False
 
     vs_random = bench_rates.get("vs_random", 0.0)
     vs_heuristic = bench_rates.get("vs_heuristic", 0.0)
     vs_previous = bench_rates.get("vs_previous")
 
-    # Check absolute thresholds
-    meets_absolute = (
-        vs_random >= 0.75
-        and vs_heuristic >= 0.75
-        and (vs_previous is None or vs_previous > 0.50)
-    )
+    total_wins = vs_random + vs_heuristic + (vs_previous if vs_previous is not None else 0.0)
 
-    # Check improvement over previous checkpoint's benchmark scores
-    improved = False
+    # Only discard if the checkpoint won literally zero games
+    if total_wins == 0.0:
+        print(f"  Benchmark: checkpoint won 0 games — DISCARDING")
+        current_ckpt = _get_current_loop_checkpoint(loop_num)
+        _discard_loop_checkpoint(loop_num, current_ckpt)
+        return False
+
+    # Check if this is the new best by comparing to previous best rates
+    is_new_best = False
     prev_loop_for_rates = None
-    for prev_l in range(loop_num, -1, -1):
+    for prev_l in range(loop_num - 1, -1, -1):
         prev_rates = _load_benchmark_rates(prev_l)
         if prev_rates is not None:
             prev_loop_for_rates = prev_l
             prev_vs_random = prev_rates.get("vs_random", 0.0)
             prev_vs_heuristic = prev_rates.get("vs_heuristic", 0.0)
-            # Improved if BOTH random and heuristic rates are better
+            # New best if BOTH random and heuristic rates are at least as good
+            # and at least one is strictly better
             if vs_random >= prev_vs_random and vs_heuristic >= prev_vs_heuristic:
-                # At least one must be strictly better (not just equal)
                 if vs_random > prev_vs_random or vs_heuristic > prev_vs_heuristic:
-                    improved = True
+                    is_new_best = True
             break
 
-    if meets_absolute:
-        _save_benchmark_rates(loop_num, bench_rates)
-        print(f"  Checkpoint promotion: ACCEPTED — meets thresholds "
-              f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%}"
-              f"{f', vs_prev={vs_previous:.0%}' if vs_previous is not None else ''})")
-        return True
+    # First checkpoint ever is always the best
+    if prev_loop_for_rates is None:
+        is_new_best = True
 
-    if improved:
-        _save_benchmark_rates(loop_num, bench_rates)
+    _save_benchmark_rates(loop_num, bench_rates)
+
+    if is_new_best:
+        # Copy to player_bot_best.pt
+        current_ckpt = _get_current_loop_checkpoint(loop_num)
+        if current_ckpt and current_ckpt.exists():
+            import shutil
+            best_path = CHECKPOINT_DIR / "player_bot_best.pt"
+            shutil.copy2(str(current_ckpt), str(best_path))
+            print(f"  Benchmark: NEW BEST — promoted to {best_path.name} "
+                  f"(random={vs_random:.0%}, heuristic={vs_heuristic:.0%}"
+                  f"{f', vs_prev={vs_previous:.0%}' if vs_previous is not None else ''})")
+        else:
+            print(f"  Benchmark: NEW BEST (random={vs_random:.0%}, heuristic={vs_heuristic:.0%})"
+                  f" — checkpoint file not found for copy")
+    else:
         prev_rates = _load_benchmark_rates(prev_loop_for_rates)
-        print(f"  Checkpoint promotion: ACCEPTED — improved over loop {prev_loop_for_rates} "
-              f"(random={vs_random:.0%} was {prev_rates['vs_random']:.0%}, "
-              f"heuristic={vs_heuristic:.0%} was {prev_rates['vs_heuristic']:.0%})")
-        return True
+        print(f"  Benchmark: kept (random={vs_random:.0%}, heuristic={vs_heuristic:.0%}) "
+              f"— best remains loop {prev_loop_for_rates} "
+              f"(random={prev_rates['vs_random']:.0%}, heuristic={prev_rates['vs_heuristic']:.0%})")
 
-    reason_parts = []
-    if vs_random < 0.75:
-        reason_parts.append(f"random={vs_random:.0%}<75%")
-    if vs_heuristic < 0.75:
-        reason_parts.append(f"heuristic={vs_heuristic:.0%}<75%")
-    if vs_previous is not None and vs_previous <= 0.50:
-        reason_parts.append(f"vs_prev={vs_previous:.0%}<=50%")
-    if not improved:
-        reason_parts.append("no improvement over previous")
-    print(f"  Checkpoint promotion: REJECTED ({', '.join(reason_parts)})")
-    return False
+    return is_new_best
 
 
 def _discard_loop_checkpoint(loop_num: int, current_ckpt: Path | None = None) -> None:
@@ -888,6 +1050,8 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Skip deck evolution")
     skip.add_argument("--skip-benchmark", action="store_true",
                       help="Skip player bot benchmarking")
+    skip.add_argument("--skip-archive", action="store_true",
+                      help="Skip automatic archival of old games between loops")
 
     # Game settings
     games_g = parser.add_argument_group("game settings")
@@ -1069,6 +1233,8 @@ def main():
         if _interrupted:
             break
 
+        loop_start = time.time()
+
         if max_loops > 1:
             print()
             print("#" * 70)
@@ -1211,11 +1377,33 @@ def main():
         else:
             print(f"\n  [SKIP] Benchmark")
 
-        # Decide whether to keep or discard this loop's checkpoint
+        # Decide whether this is the new best checkpoint
+        promoted = None
         if not args.skip_player_train:
             promoted = _evaluate_checkpoint_promotion(loop_num, bench_rates)
-            if not promoted:
-                _discard_loop_checkpoint(loop_num, _get_current_loop_checkpoint(loop_num))
+
+        # Log benchmark results to history
+        if bench_rates is not None:
+            _log_history_event(
+                "benchmark", loop_num,
+                vs_random=bench_rates.get("vs_random"),
+                vs_heuristic=bench_rates.get("vs_heuristic"),
+                vs_previous=bench_rates.get("vs_previous"),
+                promoted=promoted,
+            )
+
+        # Log loop completion
+        loop_elapsed = time.time() - loop_start
+        _log_history_event(
+            "loop_complete", loop_num,
+            elapsed_s=round(loop_elapsed, 1),
+            games_collected=replay_db.game_count(),
+            transitions_collected=replay_db.transition_count(),
+        )
+
+        # Stage 10: Archive old games (between loops, GPU idle)
+        if not args.skip_archive:
+            _step_archive(args)
 
         loop_num += 1
 
@@ -1241,6 +1429,8 @@ def main():
 
     if _interrupted:
         print("  (Pipeline was interrupted early)")
+
+    _print_history_recap()
 
     # Cleanup
     game_data_store.close()

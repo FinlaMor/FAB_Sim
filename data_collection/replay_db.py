@@ -22,8 +22,16 @@ class ReplayDB:
     @property
     def conn(self) -> sqlite3.Connection:
         if self._conn is None:
-            self._conn = sqlite3.connect(self.db_path)
+            self._conn = sqlite3.connect(self.db_path, timeout=30.0)
             self._conn.row_factory = sqlite3.Row
+            # Enable WAL mode and optimize for concurrent access
+            self._conn.execute("PRAGMA journal_mode=WAL")
+            self._conn.execute("PRAGMA synchronous=NORMAL")
+            self._conn.execute("PRAGMA cache_size=-64000")  # 64MB cache
+            # Memory-map up to 4 GB of the DB file.  Lets the OS page-cache
+            # serve reads directly instead of going through read() syscalls,
+            # which substantially speeds up large bulk-loads of BLOB data.
+            self._conn.execute("PRAGMA mmap_size=4294967296")  # 4 GB
         return self._conn
 
     def _ensure_schema(self) -> None:
@@ -291,22 +299,25 @@ class ReplayDB:
         if not game_ids:
             return None
 
-        placeholders = ",".join("?" * len(game_ids))
+        # Load game IDs into a temp table to avoid SQLite's 999-variable IN() limit.
+        self.conn.execute("CREATE TEMP TABLE IF NOT EXISTS _bulk_game_ids (game_id INTEGER PRIMARY KEY)")
+        self.conn.execute("DELETE FROM _bulk_game_ids")
+        self.conn.executemany("INSERT OR IGNORE INTO _bulk_game_ids VALUES (?)", [(g,) for g in game_ids])
 
         # Detect which columns are populated.
         # Prefer pre-computed embeddings (from re-embedding with a trained transformer)
         # over raw packed features.  Raw features require end-to-end transformer training
         # in the IQL loop, which is very slow on non-CUDA hardware.
-        detect_sql = f"""
+        detect_sql = """
             SELECT e.state_features, e.state_embedding
             FROM transitions t
             JOIN embeddings e ON e.transition_id = t.id
-            WHERE t.game_id IN ({placeholders})
+            JOIN _bulk_game_ids g ON g.game_id = t.game_id
             LIMIT 1
         """
         probe = None
         try:
-            probe = self.conn.execute(detect_sql, game_ids).fetchone()
+            probe = self.conn.execute(detect_sql).fetchone()
         except Exception:
             pass  # DB predates state_features column — fall back to embeddings
 
@@ -324,41 +335,44 @@ class ReplayDB:
         uses_raw_features = has_features and not has_embeddings
 
         if uses_raw_features:
-            sql = f"""
+            sql = """
                 SELECT t.game_id, t.id as transition_id, t.player_id, t.reward, t.done,
                        e.state_features, e.action_features
                 FROM transitions t
                 JOIN embeddings e ON e.transition_id = t.id
-                WHERE t.game_id IN ({placeholders})
-                  AND e.state_features IS NOT NULL
+                JOIN _bulk_game_ids g ON g.game_id = t.game_id
+                WHERE e.state_features IS NOT NULL
                 ORDER BY t.game_id, t.id
                 """
             state_col  = "state_features"
             action_col = "action_features"
+            count_filter = "AND e.state_features IS NOT NULL AND e.action_features IS NOT NULL"
         else:
-            sql = f"""
+            sql = """
                 SELECT t.game_id, t.id as transition_id, t.player_id, t.reward, t.done,
                        e.state_embedding, e.action_embedding
                 FROM transitions t
                 JOIN embeddings e ON e.transition_id = t.id
-                WHERE t.game_id IN ({placeholders})
+                JOIN _bulk_game_ids g ON g.game_id = t.game_id
+                WHERE e.state_embedding IS NOT NULL
+                  AND e.action_embedding IS NOT NULL
                 ORDER BY t.game_id, t.id
                 """
             state_col  = "state_embedding"
             action_col = "action_embedding"
+            count_filter = "AND e.state_embedding IS NOT NULL AND e.action_embedding IS NOT NULL"
 
         # Count rows first so we can pre-allocate without fetchall().
         n = self.conn.execute(
             f"SELECT COUNT(*) FROM transitions t JOIN embeddings e ON e.transition_id = t.id "
-            f"WHERE t.game_id IN ({placeholders})",
-            game_ids,
+            f"JOIN _bulk_game_ids g ON g.game_id = t.game_id {count_filter}"
         ).fetchone()[0]
 
         if n == 0:
             return None
 
         # Determine dimensions from first matching row
-        first = self.conn.execute(sql, game_ids).fetchone()
+        first = self.conn.execute(sql).fetchone()
         state_blob  = first[state_col]
         action_blob = first[action_col]
         if state_blob is None or action_blob is None:
@@ -377,7 +391,7 @@ class ReplayDB:
 
         # Stream rows in chunks
         _CHUNK = 2000
-        cursor = self.conn.execute(sql, game_ids)
+        cursor = self.conn.execute(sql)
         i = 0
         while True:
             batch = cursor.fetchmany(_CHUNK)

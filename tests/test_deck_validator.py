@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import msgpack
 import os
 import sys
 import tempfile
@@ -27,8 +28,12 @@ def card_db() -> CardDB:
 @pytest.fixture(scope="module")
 def slug_index() -> dict:
     from config import SLUG_INDEX_PATH
-    with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
-        data = json.load(f)
+    if SLUG_INDEX_PATH.endswith(".msgpack"):
+        with open(SLUG_INDEX_PATH, "rb") as f:
+            data = msgpack.unpack(f, raw=False)
+    else:
+        with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
+            data = json.load(f)
     return data.get("by_slug", data)
 
 
@@ -54,14 +59,18 @@ def valid_deck_path() -> str:
         pytest.skip("No deck files in decks/generated/")
     # Find first deck that actually passes validation
     _db = CardDB()
-    _si_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "card_data", "slug_index.json")
+    _si_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "card_data", "slug_index.msgpack")
+    if not os.path.exists(_si_path):
+        _si_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "card_data", "slug_index.json")
     if not os.path.exists(_si_path):
         from config import SLUG_INDEX_PATH
         _si_path = SLUG_INDEX_PATH
-    with open(_si_path, encoding="utf-8") as f:
-        _si = json.load(f).get("by_slug", json.load(open(_si_path)))
-    with open(_si_path, encoding="utf-8") as f:
-        _si = json.load(f)
+    if _si_path.endswith(".msgpack"):
+        with open(_si_path, "rb") as f:
+            _si = msgpack.unpack(f, raw=False)
+    else:
+        with open(_si_path, encoding="utf-8") as f:
+            _si = json.load(f)
     _si = _si.get("by_slug", _si)
     for fn in txt_files:
         path = os.path.join(gen_dir, fn)

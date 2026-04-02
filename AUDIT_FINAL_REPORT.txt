@@ -1,0 +1,130 @@
+================================================================================
+FAB SIMULATOR - CARD EFFECTS ENGINE AUDIT
+FINAL COMPREHENSIVE REPORT
+================================================================================
+
+PROJECT: FAB_Sim
+ANALYSIS DATE: March 29, 2026
+SCOPE: All 490 unique cards in decks/generated/ directories
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+Total Cards Analyzed:                 490
+Cards with Engine Effects:              0  (0%)
+Cards Missing Effect Registration:    293  (59.8%) - CRITICAL GAPS
+Cards That Are Stat-Only:             197  (40.2%)
+
+================================================================================
+AUDIT FINDINGS
+================================================================================
+
+The FAB simulator's generated decks contain 293 cards with complex game effects
+that have NO corresponding implementations in the engine.
+
+REGISTERED EFFECT TYPES (What EXISTS):
+  - Equipment activation conditions (11 entries)
+  - Equipment activation costs (4 entries)
+  - Equipment activation effects (13 entries)
+  - Equipment pay costs (18 entries)
+  - Hero passive triggers (HERO_TRIGGERS)
+  - Hero activation conditions
+
+MISSING EFFECT TYPES (What DOES NOT EXIST):
+  - Action card play effects
+  - On-hit abilities
+  - Attack Reaction modifiers
+  - Defense Reaction effects
+  - Instant spell effects
+  - Token creation system
+  - Conditional ability resolution
+  - Deck manipulation (draw, banish, mill)
+  - Card property modification
+  - Aura passive effects
+
+================================================================================
+BREAKDOWN BY CARD TYPE
+================================================================================
+
+ACTION ATTACK CARDS: 164 cards missing
+  Pattern: "when this attacks" or "when this hits" effects
+  
+ATTACK REACTIONS: 14 cards missing
+  Pattern: Target modification + special effects
+  
+DEFENSE REACTIONS: 5 cards missing
+  Pattern: Defense-phase abilities
+  
+INSTANTS: 24 cards missing
+  Pattern: Enter-arena effects, cost modifiers
+  
+EQUIPMENT: 1 card missing
+  Note: Most equipment is handled; this is exceptional
+  
+OTHER: 85 cards missing
+  Pattern: Action modifiers, global effects, token creation
+
+================================================================================
+COMMON MISSING MECHANICS
+================================================================================
+
+1. TOKEN CREATION (100+ cards)
+   "Create a Courage token", "Create a Gold token"
+   Status: NO TOKEN SYSTEM FOUND IN ENGINE
+   
+2. CONDITIONAL ABILITIES (150+ cards)
+   "If you've beaten chest this turn..."
+   Status: NO CONDITION TRACKING FOUND
+   
+3. ON-HIT/ON-ATTACK EFFECTS (120+ cards)
+   "When this hits a hero, banish the top card"
+   Status: NOT IMPLEMENTED
+   
+4. CARD MODIFICATIONS (80+ cards)
+   "Target attack gets +2{p}"
+   Status: LIMITED SUPPORT ONLY
+   
+5. DRAW/DECK MANIPULATION (90+ cards)
+   "Draw a card", "Banish the top card"
+   Status: NO GENERIC SYSTEM FOUND
+   
+6. SUSTAINED EFFECTS (40+ cards)
+   "Your attacks with combo get +1{p} this turn"
+   Status: NO DURATION TRACKING FOUND
+
+================================================================================
+DETAILED REFERENCE FILES
+================================================================================
+
+See companion files for complete details:
+
+1. CARD_AUDIT_SUMMARY.txt
+   - Categorized breakdown of all 293 missing cards
+   - Sample cards from each category with full text
+   - Implementation strategy notes
+
+2. missing_cards_audit.txt
+   - Complete list of all 293 cards
+   - Card types and full functional text
+   - Detailed descriptions of what each card needs
+
+================================================================================
+CONCLUSION
+================================================================================
+
+The FAB simulator engine has good support for equipment activation and hero
+triggers, but critically lacks support for the broader card effect ecosystem.
+
+Nearly 60% of cards in generated decks have complex game effects that are not
+currently implemented. This represents a major architectural gap that must be
+addressed to fully support the card pool.
+
+The most urgent needs are:
+  1. Token creation system
+  2. On-hit/on-attack effect system
+  3. Condition tracking for "if you've..." checks
+  4. Card modification system
+  5. Draw/deck manipulation system
+
+================================================================================

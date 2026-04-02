@@ -154,6 +154,7 @@ def main() -> int:
 
     # Resume from checkpoint if specified
     start_step = 0
+    optimizer_state_dict = None
     if args.resume and Path(args.resume).exists():
         ckpt = torch.load(args.resume, map_location="cpu", weights_only=False)
         if "transformer_state_dict" in ckpt:
@@ -178,6 +179,7 @@ def main() -> int:
                     f"{tuple(saved_mask.shape)} != {tuple(pretrainer.mask_embed.shape)}",
                     flush=True,
                 )
+        optimizer_state_dict = ckpt.get("optimizer_state_dict")
         start_step = ckpt.get("step", 0)
         print(f"[pretrain] Resumed from {args.resume} (checkpoint step {start_step})", flush=True)
 
@@ -194,6 +196,8 @@ def main() -> int:
             log_every=args.log_every,
             device=device,
             checkpoint_dir=checkpoint_dir,
+            start_step=start_step,
+            optimizer_state_dict=optimizer_state_dict,
         )
     except RuntimeError as exc:
         if str(device) != "cpu" and _is_device_runtime_failure(exc):
@@ -210,6 +214,8 @@ def main() -> int:
                 log_every=args.log_every,
                 device=torch.device("cpu"),
                 checkpoint_dir=checkpoint_dir,
+                start_step=start_step,
+                optimizer_state_dict=optimizer_state_dict,
             )
         else:
             raise

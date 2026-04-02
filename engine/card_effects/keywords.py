@@ -391,6 +391,7 @@ def crank(card: Card, state: GameState) -> bool:
         return False
     controller.counters[key] = current - 1
     effect_gain_action_point(state, cid)
+    state.players[cid].current_turn_effects.append("cranked_this_turn")
     return True
 
 

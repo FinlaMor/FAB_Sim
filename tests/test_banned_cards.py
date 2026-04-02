@@ -313,10 +313,13 @@ def test_end_to_end_ban_and_generate(tmp_path, monkeypatch):
 
 
 # ---------------------------------------------------------------------------
-# (f) Production banned list and HeroCardDB integration tests
+# (f) Production legal_formats and HeroCardDB integration tests
 # ---------------------------------------------------------------------------
 
-BANNED_HERO_SLUGS = frozenset({
+# Heroes NOT legal in CC per the official FAB card data legal_formats field.
+# These were previously tracked in banned_cards.json but are now determined
+# by the absence of "ClassicConstructed" in each card's legal_formats.
+CC_ILLEGAL_HERO_SLUGS = frozenset({
     "aurora_shooting_star",
     "azalea_ace_in_the_hole",
     "bravo_star_of_the_show",
@@ -338,7 +341,7 @@ BANNED_HERO_SLUGS = frozenset({
     "zen_tamer_of_purpose",
 })
 
-BANNED_WEAPON_SLUGS = frozenset({
+CC_ILLEGAL_WEAPON_SLUGS = frozenset({
     "star_fall",
     "death_dealer",
     "rosetta_thorn",
@@ -360,69 +363,101 @@ BANNED_WEAPON_SLUGS = frozenset({
 })
 
 
-def test_banned_list_slug_count():
-    """load_banned_cards('cc') returns a frozenset with >= 76 slugs."""
-    from rl_agents.fab_constants import load_banned_cards
-
-    banned = load_banned_cards("cc")
-    assert isinstance(banned, frozenset)
-    assert len(banned) >= 76
-
-
-def test_all_banned_slugs_exist_in_slug_index():
-    """Every slug in load_banned_cards('cc') exists in slug_index.json."""
-    from rl_agents.fab_constants import load_banned_cards
-
-    slug_index_path = os.path.join(ROOT, "card_data", "slug_index.json")
-    if not os.path.exists(slug_index_path):
-        pytest.skip("slug_index.json not available")
-    with open(slug_index_path, encoding="utf-8") as f:
-        slug_index = json.load(f)
-    by_slug = slug_index.get("by_slug", slug_index)
-
-    banned = load_banned_cards("cc")
-    missing = [s for s in banned if s not in by_slug]
-    assert not missing, f"Banned slugs not found in slug_index: {missing}"
+def _load_slug_index_for_test() -> dict:
+    """Load slug_index (msgpack or json) for test assertions."""
+    import msgpack
+    msgpack_path = os.path.join(ROOT, "card_data", "slug_index.msgpack")
+    json_path = os.path.join(ROOT, "card_data", "slug_index.json")
+    if os.path.exists(msgpack_path):
+        with open(msgpack_path, "rb") as f:
+            return msgpack.unpack(f, raw=False).get("by_slug", {})
+    elif os.path.exists(json_path):
+        with open(json_path, encoding="utf-8") as f:
+            return json.load(f).get("by_slug", {})
+    pytest.skip("slug_index not available")
 
 
-def test_banned_heroes_present():
-    """All 19 hero slugs from spec are in load_banned_cards('cc')."""
-    from rl_agents.fab_constants import load_banned_cards
-
-    banned = load_banned_cards("cc")
-    missing = BANNED_HERO_SLUGS - banned
-    assert not missing, f"Missing banned hero slugs: {missing}"
-
-
-def test_banned_weapons_present():
-    """All 18 weapon slugs from spec are in load_banned_cards('cc')."""
-    from rl_agents.fab_constants import load_banned_cards
-
-    banned = load_banned_cards("cc")
-    missing = BANNED_WEAPON_SLUGS - banned
-    assert not missing, f"Missing banned weapon slugs: {missing}"
+def test_cc_illegal_heroes_not_in_cc_legal_formats():
+    """Heroes in CC_ILLEGAL_HERO_SLUGS lack 'ClassicConstructed' in legal_formats."""
+    by_slug = _load_slug_index_for_test()
+    for slug in CC_ILLEGAL_HERO_SLUGS:
+        entry = by_slug.get(slug)
+        if entry is None:
+            continue  # slug not in index, skip
+        legal_fmts = entry.get("legal_formats", [])
+        assert "ClassicConstructed" not in legal_fmts, (
+            f"{slug} should NOT be CC-legal but has ClassicConstructed in legal_formats"
+        )
 
 
-def test_hero_card_db_from_slug_index_excludes_banned_heroes():
-    """HeroCardDB.from_slug_index() excludes banned hero slugs from hero_cards keys."""
+def test_cc_illegal_weapons_not_in_cc_legal_formats():
+    """Weapons in CC_ILLEGAL_WEAPON_SLUGS lack 'ClassicConstructed' in legal_formats."""
+    by_slug = _load_slug_index_for_test()
+    for slug in CC_ILLEGAL_WEAPON_SLUGS:
+        entry = by_slug.get(slug)
+        if entry is None:
+            continue
+        legal_fmts = entry.get("legal_formats", [])
+        assert "ClassicConstructed" not in legal_fmts, (
+            f"{slug} should NOT be CC-legal but has ClassicConstructed in legal_formats"
+        )
+
+
+def test_validate_deck_legality_fmt_param():
+    """validate_deck_legality with fmt= catches cards not legal in format."""
+    from rl_agents.fab_constants import validate_deck_legality
+
+    slug_index = {
+        "test_card": {
+            "name": "Test Card",
+            "types": ["Generic", "Action"],
+            "type_text": "Generic Action",
+            "legal_formats": ["Blitz"],
+        }
+    }
+    violations = validate_deck_legality(
+        deck_cards=[{"card_slug": "test_card"}],
+        equipment=[],
+        hero_types=["Warrior", "Hero"],
+        slug_index=slug_index,
+        fmt="cc",
+    )
+    assert len(violations) == 1
+    assert "not legal in ClassicConstructed" in violations[0]
+
+    # Same card IS legal in Blitz
+    violations_blitz = validate_deck_legality(
+        deck_cards=[{"card_slug": "test_card"}],
+        equipment=[],
+        hero_types=["Warrior", "Hero"],
+        slug_index=slug_index,
+        fmt="blitz",
+    )
+    assert not violations_blitz
+
+
+def test_hero_card_db_from_slug_index_excludes_cc_illegal_heroes():
+    """HeroCardDB.from_slug_index() excludes CC-illegal hero slugs."""
     from rl_agents.deck_search import HeroCardDB
-    from rl_agents.fab_constants import load_banned_cards
 
     db = HeroCardDB.from_slug_index()
-    banned = load_banned_cards("cc")
-    banned_heroes_in_db = set(db.hero_cards.keys()) & BANNED_HERO_SLUGS
-    assert not banned_heroes_in_db, (
-        f"Banned heroes found in hero_cards: {banned_heroes_in_db}"
+    illegal_heroes_in_db = set(db.hero_cards.keys()) & CC_ILLEGAL_HERO_SLUGS
+    assert not illegal_heroes_in_db, (
+        f"CC-illegal heroes found in hero_cards: {illegal_heroes_in_db}"
     )
 
 
-def test_hero_card_db_from_slug_index_excludes_banned_cards():
-    """HeroCardDB.from_slug_index() card pools contain no banned slugs."""
+def test_hero_card_db_from_slug_index_excludes_cc_illegal_cards():
+    """HeroCardDB.from_slug_index() card pools contain no CC-illegal slugs."""
     from rl_agents.deck_search import HeroCardDB
-    from rl_agents.fab_constants import load_banned_cards
 
+    by_slug = _load_slug_index_for_test()
     db = HeroCardDB.from_slug_index()
-    banned = load_banned_cards("cc")
+
+    cc_illegal_slugs = {
+        slug for slug, entry in by_slug.items()
+        if entry.get("legal_formats") and "ClassicConstructed" not in entry.get("legal_formats", [])
+    }
 
     all_card_slugs = set()
     for hero_slug in db.hero_cards:
@@ -433,7 +468,7 @@ def test_hero_card_db_from_slug_index_excludes_banned_cards():
         for card in db.hero_weapons.get(hero_slug, []):
             all_card_slugs.add(card.get("card_slug", card.get("slug", "")))
 
-    banned_in_pools = all_card_slugs & banned
-    assert not banned_in_pools, (
-        f"Banned slugs found in card pools: {banned_in_pools}"
+    illegal_in_pools = all_card_slugs & cc_illegal_slugs
+    assert not illegal_in_pools, (
+        f"CC-illegal slugs found in card pools: {illegal_in_pools}"
     )

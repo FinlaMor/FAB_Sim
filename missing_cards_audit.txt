@@ -1,0 +1,1720 @@
+COMPLETE LIST OF 293 CARDS WITH MISSING EFFECT IMPLEMENTATIONS
+====================================================================================================
+
+1. Affirm Loyalty_Red (affirm_loyalty_red)
+   Types: Draconic, Warrior, Attack Reaction
+   Effect: Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, create a Fealty token.
+
+2. Aftershock_Red (aftershock_red)
+   Types: Guardian, Action, Attack
+   Effect: When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic Surge token.
+
+3. Agile Windup_Red (agile_windup_red)
+   Types: Brute, Warrior, Action, Attack
+   Effect: **Instant** - Discard this: Create an Agility token.
+
+4. Alpha Instinct_Blue (alpha_instinct_blue)
+   Types: Brute, Action, Attack
+   Effect: **Rhinar Specialization**
+
+When this is discard to beat chest, create a Might token.
+
+5. Ancestral Empowerment_Red (ancestral_empowerment_red)
+   Types: Ninja, Attack Reaction
+   Effect: Target Ninja attack action card gains +1{p}.
+
+Draw a card.
+
+6. Ancestral Harmony_Blue (ancestral_harmony_blue)
+   Types: Ninja, Action
+   Effect: Your attacks with **combo** get +1{p} this turn.
+
+Banish the top card of your deck. If it has **combo**, you may play it this turn.
+
+**Go again**
+
+7. Annihilate the Armed_Red (annihilate_the_armed_red)
+   Types: Assassin, Action, Attack
+   Effect: **Contract** - You are contracted to banish opponents' attack action cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+8. Art of Desire: Body_Red (art_of_desire_body_red)
+   Types: Assassin, Action, Attack
+   Effect: **Stealth**
+
+When this hits a hero, banish the top card of their deck.
+
+Whenever this banishes a red card, draw a card and gain 1{h}.
+
+9. Art of the Dragon: Blood_Red (art_of_the_dragon_blood_red)
+   Types: Ninja, Action, Attack
+   Effect: When this attacks, if it is Draconic, it gets **go again** and the next 3 Draconic cards you play this turn cost {r} less to play.
+
+10. Art of the Phoenix: War_Red (art_of_the_phoenix_war_red)
+   Types: Draconic, Instant
+   Effect: As an additional cost to play this, discard a Phoenix Flame. Draconic attack action cards you control get +1{p} this turn. Draw 2 cards.
+
+11. Assault and Battery_Red (assault_and_battery_red)
+   Types: Brute, Action, Attack
+   Effect: **Beat Chest**
+
+When this attacks, if you've **beaten chest** this turn, create an Agility token.
+
+12. Astral Strike_Red (astral_strike_red)
+   Types: Lightning, Action, Attack
+   Effect: When this attacks, if you've destroyed a Lightning Flow this turn, choose 1;
+• Draw a card.
+• This gets +2{p}.
+• This gets **go again**.
+
+13. Avast Ye!_Blue (avast_ye_blue)
+   Types: Pirate, Necromancer, Action
+   Effect: Your next Pirate ally attack this turn gets **go again** and "When this hits a hero, create a Gold token."
+
+**Go again**
+
+14. Banneret of Courage_Yellow (banneret_of_courage_yellow)
+   Types: Light, Warrior, Action, Attack
+   Effect: **Solflare** - When this is **charged** to your hero's soul, create a Courage token.
+
+15. Banneret of Gallantry_Yellow (banneret_of_gallantry_yellow)
+   Types: Light, Warrior, Action, Attack
+   Effect: **Solflare** - When this is **charged** to your hero's soul, create a Quicken token.
+
+16. Bare Destruction_Red (bare_destruction_red)
+   Types: Brute, Action, Attack
+   Effect: **Beat Chest**
+
+When this attacks, if you've beaten chest this turn and you don't control a chest equipment, this gets **go again** and the next Brute attack action card you play this turn gets +2{p}.
+
+17. Bare Fangs_Red (bare_fangs_red)
+   Types: Brute, Action, Attack
+   Effect: When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.
+
+18. Battered, Beaten, and Broken_Yellow (battered_beaten_and_broken_yellow)
+   Types: Reviled, Action, Attack
+   Effect: When this attacks a hero, **intimidate** them.
+
+If you control 3 or more auras, this gets +3{p} and "When this hits a hero, destroy an intimidated card they own."
+
+19. Battlefield Beacon_Yellow (battlefield_beacon_yellow)
+   Types: Light, Warrior, Action, Attack
+   Effect: When this attacks, choose 1 for each card you've banished from your soul this combat chain. You may choose the same mode up to 3 times;
+- Create a Courage token.
+- Create a Toughness token.
+- Create a Vigor token.
+
+20. Be Like Water_Red (be_like_water_red)
+   Types: Ninja, Action, Attack
+   Effect: When this hits, you may pay {r}. If you do, choose Head Jab, Surging Strike, or Twin Twisters. This gains the chosen name.
+
+**Go again**
+
+21. Beacon of Victory_Yellow (beacon_of_victory_yellow)
+   Types: Light, Warrior, Attack Reaction
+   Effect: As an additional cost to play Beacon of Victory, banish X cards from your hero's soul. X can't be 0.
+
+Target attack gains +X{p}.
+
+If you've **charged** this turn, search your deck for an action card with cost X or less, reveal it, put it into your hand, then shuffle your deck.
+
+22. Beast Within_Yellow (beast_within_yellow)
+   Types: Brute, Action, Attack
+   Effect: If Beast Within is put into a graveyard from anywhere other than the combat chain, banish the top card of your deck and lose 1{h}. If it has 6 or more {p}, put it into your hand, otherwise, repeat this process.
+
+23. Become the Bottle_Red (become_the_bottle_red)
+   Types: Ninja, Action, Attack
+   Effect: When this attacks, choose a card on the combat chain. This gets the chosen card’s name. Go again
+
+24. Beseech the Demigon_Red (beseech_the_demigon_red)
+   Types: Shadow, Action
+   Effect: Choose an attack action card in your banished zone. It gets +3{p} until end of turn.
+
+**Go again**
+
+25. Bet Big_Red (bet_big_red)
+   Types: Guardian, Action, Attack
+   Effect: **Betsy Specialization**
+
+When this attacks a hero, you may **wager** a Gold, Might, and Vigor token with them.
+
+26. Big Bertha_Red (big_bertha_red)
+   Types: Mechanologist, Action, Attack
+   Effect: **Boost**
+
+When this is banished from boosting, put a steam counter on a Hyper Driver you control.
+
+27. Big Bully_Red (big_bully_red)
+   Types: Reviled, Brute, Action, Attack
+   Effect: When this attacks a hero, if you have more {h} than them, **the crowd boos** you.
+
+If you've been booed this turn, this card's base {p} is doubled.
+
+28. Big Game Trophy Shot_Yellow (big_game_trophy_shot_yellow)
+   Types: Pirate, Ranger, Action
+   Effect: Your next arrow attack this turn gets +4{p}. If it has harpoon in its name, it gets "When this hits a hero, create a Gold token."
+
+Draw a card, then discard a card.
+
+**Go again**
+
+29. Bios Update_Red (bios_update_red)
+   Types: Mechanologist, Action
+   Effect: The next attack action card you **boost** this turn gains +3{p}.
+
+The next time a Mechanologist item with cost 2 or less is banished to pay a **boost** cost this turn, put it into the arena.
+
+**Go again**
+
+30. Bittering Thorns_Red (bittering_thorns_red)
+   Types: Ninja, Action, Attack
+   Effect: When this hits, your next attack this turn gets +1{p}.
+
+**Go again**
+
+31. Blast to Oblivion_Red (blast_to_oblivion_red)
+   Types: Lightning, Action, Attack
+   Effect: When this attacks, the next time you play an instant card this chain link, you may return target aura permanent with cost 1 or less or target aura token to it's owner's hand.
+
+32. Blessing of Bellona_Yellow (blessing_of_bellona_yellow)
+   Types: Light, Action, Aura
+   Effect: Go again Whenever a card is put into your soul, create a Courage token. At the start of your turn, put this into your soul.
+
+33. Blood Follows Blade_Yellow (blood_follows_blade_yellow)
+   Types: Warrior, Attack Reaction
+   Effect: **Kassai Specialization**
+
+Target sword attack gets **go again** and "When this hits, create a Cintari Sellsword token."
+
+34. Bloodrush Bellow_Yellow (bloodrush_bellow_yellow)
+   Types: Brute, Action
+   Effect: As an additional cost to play Bloodrush Bellow, discard a random card.
+
+Your Brute attacks gain +2{p} this turn.
+
+If the discarded card has 6 or more {p}, draw 2 cards and Bloodrush Bellow gains **go again**.
+
+35. Blue Fin Harpoon_Blue (blue_fin_harpoon_blue)
+   Types: Pirate, Ranger, Action, Arrow, Attack
+   Effect: **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's blue, they discard it and you create a Gold token. If you've activated a cannon this turn, instead look at their hand and you choose the card.
+
+36. Bolt of Courage_Red (bolt_of_courage_red)
+   Types: Light, Warrior, Action, Attack
+   Effect: As an additional cost to play Bolt of Courage, you may **charge** your hero's soul.
+
+If you've **charged** this turn, Bolt of Courage gains "If this hits, draw a card."
+
+37. Bonds of Ancestry_Red (bonds_of_ancestry_red)
+   Types: Ninja, Action, Attack
+   Effect: **Combo** - If a card with Gustwave in its name was the last attack this combat chain, this costs {r}{r} less to play, and has **go again** and "When this attacks, you may banish a card with **combo** from your graveyard. If you do, search your deck for a card with the same name, banish it, then shu
+
+38. Boneyard Marauder_Red (boneyard_marauder_red)
+   Types: Shadow, Brute, Action, Attack
+   Effect: As an additional cost to play Boneyard Marauder, banish 3 random cards from your graveyard.
+
+**Blood Debt**
+
+39. Booze!_Blue (booze_blue)
+   Types: Reviled, Action, Aura
+   Effect: **Go again**
+
+When this enters or leaves the arena, **the crowd boos** you.
+
+At the start of your turn, destroy this.
+
+40. Burning Blade Dance_Red (burning_blade_dance_red)
+   Types: Draconic, Ninja, Action, Attack
+   Effect: If you control 2 or more Draconic chain links, this gets **go again** and "When this hits a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger."
+
+41. Celestial Cataclysm_Yellow (celestial_cataclysm_yellow)
+   Types: Light, Action, Attack
+   Effect: As an additional cost to play Celestial Cataclysm, banish 3 cards from your hero's soul.
+
+**Go again**
+
+42. Censor_Red (censor_red)
+   Types: Generic, Action, Attack
+   Effect: When this hits a hero, name a card. They can't play the named card until the end of their next turn.
+
+43. Cerebellum Processor_Blue (cerebellum_processor_blue)
+   Types: Mechanologist, Action, Item
+   Effect: **Crank**
+
+This enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.
+
+**Once per Turn Action** - 0: Draw a card.
+
+44. Cheating Scoundrel_Red (cheating_scoundrel_red)
+   Types: Pirate, Action
+   Effect: The next attack action card you play this turn gets +3{p} and wagers with the defending hero. The winner creates a Gold token. The next time you would lose a wager this turn, instead you may discard a card. If you do, you win the wager. Go again
+
+45. Chum, Friendly First Mate_Yellow (chum_friendly_first_mate_yellow)
+   Types: Pirate, Necromancer, Action, Ally
+   Effect: **Action** - {t}: **Attack**
+
+**Instant** - {t}, discard a card with watery grave: Until end of turn, opponents must choose this as the target of attacks if able.
+
+**Watery Grave**
+
+46. Cleave_Red (cleave_red)
+   Types: Warrior, Action
+   Effect: Your next axe attack this turn gains +4{p} and "When this hits a hero or ally, you may deal that much damage to another ally controlled by the same hero."
+
+**Go again**
+
+47. Codex of Frailty_Yellow (codex_of_frailty_yellow)
+   Types: Assassin, Ranger, Action
+   Effect: Each hero puts an attack action card from their graveyard face down into their arsenal. Each hero that does, discards a card.
+
+Create a Ponder token under your control and a Frailty token under each opponent's control.
+
+**Go again**
+
+48. Codex of Inertia_Yellow (codex_of_inertia_yellow)
+   Types: Assassin, Ranger, Action
+   Effect: Each hero puts the top card of their deck face down into their arsenal. Each hero that does, discards a card.
+
+Create a Ponder token under your control and an Inertia token under each opponent's control.
+
+**Go again**
+
+49. Coercive Tendency_Blue (coercive_tendency_blue)
+   Types: Assassin, Attack Reaction
+   Effect: **Arakni Specialization**
+
+Look at the top 3 cards of the defending hero's deck. Put them back in any order, then banish the top card of their deck.
+
+If you complete a **contract** this way, your Assassin attacks get **go again** this combat chain.
+
+50. Cog in the Machine_Red (cog_in_the_machine_red)
+   Types: Mechanologist, Action
+   Effect: Create 2 Golden Cog tokens.
+
+You may {t} a cog you control. If you do, put this on the bottom of its owner's deck.
+
+51. Cogwerx Dovetail_Red (cogwerx_dovetail_red)
+   Types: Mechanologist, Action, Attack
+   Effect: When this hits a hero, {u} all cogs you control.
+
+**Thrice per Turn Instant** - {t} a cog you control: This gets +1{p} or **go again**.
+
+52. Cogwerx Workshop_Blue (cogwerx_workshop_blue)
+   Types: Mechanologist, Action
+   Effect: Create a Golden Cog token.
+
+Put a steam counter on up to 2 cogs you control.
+
+53. Cogwerx Zeppelin_Red (cogwerx_zeppelin_red)
+   Types: Mechanologist, Action, Attack
+   Effect: When this hits a hero, you may {t} a cog you control. If you do, create a Golden Cog token.
+
+**Twice per Turn Instant** - {t} a cog you control: This gets +1{p}.
+
+54. Collapsing Trap_Blue (collapsing_trap_blue)
+   Types: Ranger, Defense Reaction, Trap
+   Effect: **Legendary Riptide Specialization**
+
+When this defends an attack with **go again**, the attacking hero discards their hand then draws that many cards minus 1.
+
+55. Command and Conquer_Red (command_and_conquer_red)
+   Types: Generic, Action, Attack
+   Effect: Defense reaction cards can't be played this chain link. When this hits a hero, destroy all cards in their arsenal.
+
+56. Concealed Object_Blue (concealed_object_blue)
+   Types: Reviled, Instant, Item
+   Effect: When this enters the arena, **the crowd boos** you.
+
+**Instant** - {t}: Target attack gets +1{p}.
+
+At the beginning of your end phase, destroy this.
+
+57. Conqueror of the High Seas_Red (conqueror_of_the_high_seas_red)
+   Types: Pirate, Action, Attack
+   Effect: When this hits a hero, destroy all cards in their arsenal. Create a Gold token for each card destroyed this way.
+
+**High Tide** - If there are 2 or more blue cards in your pitch zone, this gets +1{p} and **go again**.
+
+58. Consign to Cosmos // Shock_Yellow (consign_to_cosmos__shock_yellow)
+   Types: Lightning, Wizard, Action, Instant
+   Effect: **Meld**
+
+Banish X instant and/or aura cards from any graveyard, where X is the amount of arcane damage you've dealt this turn.
+
+//
+
+Deal 1 arcane damage to any target.
+
+59. Cosmic Duality_blue (cosmic_duality_blue)
+   Types: Lightning, Illusionist, Action, Attack
+   Effect: Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+**Fragment** (Whenever a card with 2 or more □ defends this, this gets -2□.)
+
+60. Cosmic Duality_red (cosmic_duality_red)
+   Types: Lightning, Illusionist, Action, Attack
+   Effect: Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+**Fragment** (Whenever a card with 2 or more □ defends this, this gets -2□.)
+
+61. Cosmic Duality_yellow (cosmic_duality_yellow)
+   Types: Lightning, Illusionist, Action, Attack
+   Effect: Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+**Fragment** (Whenever a card with 2 or more □ defends this, this gets -2□.)
+
+62. Cranial Crush_Blue (cranial_crush_blue)
+   Types: Guardian, Action, Attack
+   Effect: **Crush** - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase
+
+63. Crankshaft_Red (crankshaft_red)
+   Types: Mechanologist, Action, Attack
+   Effect: **Boost**
+
+When this is banished from boosting, put a steam counter on a Hyper Driver you control.
+
+64. Crash and Bash_Red (crash_and_bash_red)
+   Types: Guardian, Block
+   Effect: When this defends, you may reveal a card with **crush** from your hand. If you do, create a Seismic Surge token.
+
+65. Cruel Ambition_Red (cruel_ambition_red)
+   Types: Reviled, Action
+   Effect: Create 3 Might tokens.
+
+**Go again**
+
+66. Crumble to Eternity_Blue (crumble_to_eternity_blue)
+   Types: Ice, Earth, Action, Aura
+   Effect: **Jarl Specialization**
+
+When this enters the arena, you may put a -1{d} counter on an equipment.
+
+At the beginning of your action phase, destroy this, then your next attack this turn gets **dominate**.
+
+67. Cull_Red (cull_red)
+   Types: Shadow, Runeblade, Action
+   Effect: You may play this from your banished zone.
+
+If a hero has lost {h} this turn, you may play this as thought it were an instant.
+
+Each hero banishes a card from their hand.
+
+**Blood Debt**
+
+68. Cut a Long Story Short_Yellow (cut_a_long_story_short_yellow)
+   Types: Guardian, Action, Attack
+   Effect: If this has {p} greater than its base, it gets +1{p}.
+
+**Tower** - If this has 13 or more {p}, it gets "When this hits a hero, they discard their hand."
+
+69. Deadwood Dirge_Red (deadwood_dirge_red)
+   Types: Runeblade, Action
+   Effect: Destroy an aura you control. If you do, create 3 Runechant tokens.
+
+**Go again**
+
+70. Deadwood Rumbler_Red (deadwood_rumbler_red)
+   Types: Shadow, Brute, Action, Attack
+   Effect: Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, banish a card from a graveyard.
+
+**Blood Debt**
+
+71. Death Touch_Red (death_touch_red)
+   Types: Assassin, Ranger, Action, Attack
+   Effect: Death Touch can't be played from hand.
+
+When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.
+
+72. Deathly Wail_Red (deathly_wail_red)
+   Types: Shadow, Runeblade, Action, Attack
+   Effect: **Rune Gate**
+
+When the combat chain closes, create Runechant tokens equal to the number of heroes who have lost {h} this turn.
+
+**Blood Debt**
+
+73. Deep Recesses of Existence_Blue (deep_recesses_of_existence_blue)
+   Types: Shadow, Runeblade, Action, Attack
+   Effect: **Rune Gate** When the combat chain closes, you may banish this face-down. If you do, for each hero who has lost {h} this turn, banish a card from their graveyard. **Blood Debt**
+
+74. Deep Rooted Evil_Yellow (deep_rooted_evil_yellow)
+   Types: Shadow, Brute, Action, Attack
+   Effect: If a card with 6 or more {p} has been put into your banished zone this turn, you may play Deep Rooted Evil from your banished zone.
+
+**Blood Debt**
+
+75. Demonstrate Devotion_Red (demonstrate_devotion_red)
+   Types: Draconic, Ninja, Action, Attack
+   Effect: If you control 2 or more Draconic chain links, this gets **go again** and "When this attacks a hero, create a Fealty token."
+
+76. Diabolic Offering_Blue (diabolic_offering_blue)
+   Types: Shadow, Brute, Action, Attack
+   Effect: If a card with 6 ore more {p} has been put into your banished zone this turn, Daibolic Offering's {p} and {d} are 6, otherwise they are 0.
+
+**Blood Debt**
+
+77. Dishonor_Blue (dishonor_blue)
+   Types: Ninja, Action, Attack
+   Effect: **Combo** - If Bonds of Ancestry was the last attack this combat chain, this has +2{p}.
+
+When this hits a hero, if you control Surging Strike, Descendent Gustwave, and Bonds of Ancestry, that hero loses all abilities for the rest of the game.
+
+78. Display Loyalty_Red (display_loyalty_red)
+   Types: Draconic, Ninja, Action, Attack
+   Effect: If you control 2 or more Draconic chain links, this gets **go again** and "When this attacks a hero, create a Fealty token."
+
+79. Doomsday_Blue (doomsday_blue)
+   Types: Shadow, Instant
+   Effect: **Legendary Levia Specialization**
+
+Play Doomsday only if there are 6 or more cards with blood debt in your banished zone.
+
+Create a Blasmophet, the Soul Harvester token.
+
+80. Dragon Power_Red (dragon_power_red)
+   Types: Ninja, Action, Attack
+   Effect: When this attacks, if it is Draconic, it gets +3{p}.
+
+81. Draw Swords_Red (draw_swords_red)
+   Types: Warrior, Action
+   Effect: Your next Warrior attack this turn gets +3{p}.
+
+Draw a card.
+
+**Go again**
+
+82. Dread Screamer_Red (dread_screamer_red)
+   Types: Shadow, Brute, Action, Attack
+   Effect: As an additional cost to play Dread Screamer, banish 3 random cards from your graveyard
+
+If a card with 6 or more {p} is banished this way, Dread Screamer gains **go again**.
+
+**Blood Debt**
+
+83. Drill Shot_Red (drill_shot_red)
+   Types: Ranger, Action, Arrow, Attack
+   Effect: If Drill Shot has an aim counter, it has **piercing 1**.
+
+When this hits a hero, put a -1{d} counter on an equipment they control.
+
+84. Drink 'Em Under the Table_Red (drink_em_under_the_table_red)
+   Types: Guardian, Action, Attack
+   Effect: **Betsy Specialization**
+
+When this attacks a hero, you may **wager** with them. The winner draws a card, and the other hero discards a card.
+
+85. Edict of Steel_Red (edict_of_steel_red)
+   Types: Warrior, Action
+   Effect: **Sharpen** target sword you control.
+
+If it has 1 or more +1{p} counters, create a Flurry token.
+
+**Go again**
+
+86. Elemental Strike_Red (elemental_strike_red)
+   Types: Elemental, Action, Attack
+   Effect: As an additional cost to play this, banish a card from your hand. If it’s Earth, this gets +2{p}. Lightning, this gets go again. Ice, this gets dominate.
+
+87. Eloquent Eulogy_Red (eloquent_eulogy_red)
+   Types: Shadow, Runeblade, Action, Attack
+   Effect: **Rune Gate**
+
+When the combat chain closes, if a hero has lost {h} this turn, create an Eloquence token.
+
+**Blood Debt**
+
+88. Endless Arrow_Red (endless_arrow_red)
+   Types: Ranger, Action, Arrow, Attack
+   Effect: When this hits, put it into its owner's hand.
+
+89. Endless Maw_Red (endless_maw_red)
+   Types: Shadow, Brute, Action, Attack
+   Effect: As an additional cost to play Endless Maw, banish 3 random cards from your graveyard.
+
+If a card with 6 or more {p} is banished this way, Endless maw gains +3{p}.
+
+**Blood Debt**
+
+90. Enflame the Firebrand_Red (enflame_the_firebrand_red)
+   Types: Draconic, Ninja, Action, Attack
+   Effect: When this attacks, if you control 2 or more Draconic chain links, this gets go again, 3 or more, your attacks are Draconic this combat chain, 4 or more, this gets +2{p}.
+
+91. Engulfing Shadows_Yellow (engulfing_shadows_yellow)
+   Types: Shadow, Defense, Reaction
+   Effect: If this would be put into your graveyard from anywhere, instead banish it. **Blood Debt**
+
+92. Enlightened Strike_Red (enlightened_strike_red)
+   Types: Generic, Action, Attack
+   Effect: As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck.
+
+Choose 1;
+- When you attack with Enlightened Strike, draw a card.
+- Enlightened Strike gains +2{p}.
+- Enlightened Strike gains **go again**.
+
+93. Envelop in Darkness_Red (envelop_in_darkness_red)
+   Types: Shadow, Runeblade, Action
+   Effect: Create a Runechant token.
+
+The next attack action card you **rune gate** this turn gets +3{p}.
+
+**Go again**
+
+94. Escalate Violence_Blue (escalate_violence_blue)
+   Types: Reviled, Action, Attack
+   Effect: When this attacks, if you control a Might token, create 3 more.
+
+95. Evo Recall_Blue (evo_recall_blue)
+   Types: Mechanologist, Instant, Equipment, Evo, Head
+   Effect: If you have a base head equipped, transform it into this, then equip this.
+
+When this is equipped, put up to 1 Mechanologist action card from your banished zone on top of your deck.
+
+**Arcane Barrier 1**
+
+96. Excessive Bloodloss_Red (excessive_bloodloss_red)
+   Types: Assassin, Action, Attack
+   Effect: **Contract** – You are contracted to banish opponents’ red cards. Whenever you complete this contract, create a Silver token. When this hits a hero, banish the top card of their deck. If it’s red, repeat this process once.
+
+97. Fabricate_Red (fabricate_red)
+   Types: Mechanologist, Instant
+   Effect: Choose 2;
+
+- Equip a base equipment with Proto in its name from your inventory.
+- Evo permanents you control get +1{d} this turn.
+- Put this under an Evo permanent you control.
+- You may banish an Evo from your hand. If you do, draw a card.
+
+98. Fast and Furious_Red (fast_and_furious_red)
+   Types: Mechanologist, Action, Attack
+   Effect: **Boost**
+
+If you've **cranked** this turn, this gets +1{p}.
+
+When this is banished from **boosting**, put a steam counter on an item you control with **crank**.
+
+99. Felling of the Crown_Red (felling_of_the_crown_red)
+   Types: Earth, Action, Attack
+   Effect: If there are 4 or more Earth cards in your banished zone, this gets +4{p}.
+
+**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, each hero puts a card from their hand on the bottom of their deck.
+
+100. Figment of Erudition_Yellow (figment_of_erudition_yellow)
+   Types: Light, Illusionist, Instant, Figment
+   Effect: **Legendary**
+
+When this enters the arena, create a Ponder token.
+
+101. Figment of Judgment_Yellow (figment_of_judgment_yellow)
+   Types: Light, Illusionist, Instant, Figment
+   Effect: **Legendary**
+
+When this enters the arena, you may turn a card in any banished zone face-down.
+
+102. Figment of Protection_Yellow (figment_of_protection_yellow)
+   Types: Light, Illusionist, Instant, Figment
+   Effect: **Legendary**
+
+When this enters the arena, create a Spectral Shield token.
+
+103. Figment of Ravages_Yellow (figment_of_ravages_yellow)
+   Types: Light, Illusionist, Instant, Figment
+   Effect: **Legendary**
+
+When this enters the arena, deal 1 arcane damage to any target.
+
+104. Figment of Rebirth_Yellow (figment_of_rebirth_yellow)
+   Types: Light, Illusionist, Instant, Figment
+   Effect: **Legendary**
+
+When this enters the arena, you may put a yellow action card from your graveyard on top of your deck.
+
+105. Figment of Triumph_Yellow (figment_of_triumph_yellow)
+   Types: Light, Illusionist, Instant, Figment
+   Effect: **Legendary**
+
+When this enters the arena, attack action cards your opponents control get -1{p} this turn.
+
+106. Figment of War_Yellow (figment_of_war_yellow)
+   Types: Light, Illusionist, Instant, Figment
+   Effect: **Legendary**
+
+When this enters the arena, create a Courage token.
+
+107. Fire Tenet: Strike First_Red (fire_tenet_strike_first_red)
+   Types: Ninja, Action, Attack
+   Effect: When this attacks, your next Draconic attack this combat chain gets +1{p}.
+
+**Go again**
+
+108. Fire that Burns Within_Red (fire_that_burns_within_red)
+   Types: Draconic, Action, Attack
+   Effect: When this attacks, you may discard a Phoenix Flame. If you do, draw a card and this gets +2{p}. Go again
+
+109. Flowing Stormstrike_Red (flowing_stormstrike_red)
+   Types: Lightning, Action, Attack
+   Effect: **Twice per Turn Instant** — {r}: This gets +1{p}.
+When this hits, create a Lightning Flow token.
+
+110. Flowstate Embodiment_Red (flowstate_embodiment_red)
+   Types: Lightning, Action, Attack
+   Effect: Whenever you play an instant card this chain link, create an Embodiment of Lightning or Lightning Flow token.
+
+111. For the Dracai_Red (for_the_dracai_red)
+   Types: Draconic, Action, Attack
+   Effect: When this attacks a **marked** hero, create a Fealty token.
+
+112. Frozen to Death_Blue (frozen_to_death_blue)
+   Types: Ice, Guardian, Action
+   Effect: **Ice Fusion**
+
+If this was **fused**, you may destroy an equipment with a -1{d} counter.
+
+You may create a Frostbite token in an exposed head, chest, arms, or legs zone.
+
+113. Funeral Moon_Red (funeral_moon_red)
+   Types: Shadow, Runeblade, Action
+   Effect: You may play this from your banished zone.
+
+If a hero has lost {h} this turn, you may play this as though it were an instant.
+
+Create a Runechant token.
+
+**Blood Debt**
+
+114. Genesis_Yellow (genesis_yellow)
+   Types: Light, Illusionist, Instant, Aura
+   Effect: At the start of your turn, you may put a card from your hand into your hero's soul. If it's an Illusionist card, create a Spectral Shield token. If it's a Light card, draw a card.
+
+**Spectra**
+
+115. Ghost Protocol: Architect_Red (ghost_protocol_architect_red)
+   Types: Mechanologist, Action, Attack
+   Effect: If this was banished from boosting this turn, you may play this from your banished zone. **Evo Upgrade** – When this attacks, search your deck for an Evo with cost less than or equal to the number of Evos you have equipped, banish it, then shuffle.
+
+116. Ghost Protocol: Mainframe_Blue (ghost_protocol_mainframe_blue)
+   Types: Mechanologist, Action, Attack
+   Effect: If this was banished from boosting this turn, you may play this from your banished zone. **Evo Upgrade** – This gets +1{p} for each Evo you have equipped.
+
+117. Glint the Quicksilver_Blue (glint_the_quicksilver_blue)
+   Types: Warrior, Attack Reaction
+   Effect: Target weapon attack gains **go again**.
+
+**Reprise** - If the defending hero has defended with a card from their hand this chain link, draw a card.
+
+118. Gold the Tip_Yellow (gold_the_tip_yellow)
+   Types: Pirate, Ranger, Action
+   Effect: Your next arrow attack this turn gets +3{p}.
+
+If there is a yellow arrow face-up in your arsenal, create a Gold token.
+
+**Go again**
+
+119. Golden Skywarden_Yellow (golden_skywarden_yellow)
+   Types: Pirate, Mechanologist, Action, Attack
+   Effect: **Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +1{d}. If a Golden Cog is destroyed this way, create a Gold token and repeat this process.
+
+120. Golden Tipple_Red (golden_tipple_red)
+   Types: Pirate, Action, Attack
+   Effect: When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.
+
+**Go again**
+
+121. Gone in a Flash_Red (gone_in_a_flash_red)
+   Types: Lightning, Action, Attack
+   Effect: When this attacks, the next time you play an instant card this chain link, you may return this to it's owner's hand.
+
+122. Goon Beatdown_Blue (goon_beatdown_blue)
+   Types: Reviled, Action, Attack
+   Effect: If you control 3 or more auras, this gets +3{p} and "When this hits a hero, **the crowd boos** you."
+
+123. Grandeur of Valahai_Blue (grandeur_of_valahai_blue)
+   Types: Guardian, Resource, Gem
+   Effect: **Legendary**
+
+When you pitch Grandeur of Valahai, create a Seismic Surge token.
+
+124. Graveling Growl_Red (graveling_growl_red)
+   Types: Shadow, Brute, Action, Attack
+   Effect: Play Graveling Growl only if a card with 6 or more {p} has been put into your banished zone this turn.
+
+**Blood Debt**
+
+125. Heist_Red (heist_red)
+   Types: Mechanologist, Action, Attack
+   Effect: **Boost**
+
+When this hits a hero, you may put an item with cost 0 or 1 from any banished zone into the arena under your control.
+
+126. Herald of Erudition_Yellow (herald_of_erudition_yellow)
+   Types: Light, Illusionist, Action, Attack
+   Effect: **Dominate**
+
+If Herald of Erudition hits, put it into your hero's soul and draw 2 cards.
+
+**Phantasm**
+
+127. Herald of Protection_Red (herald_of_protection_red)
+   Types: Light, Illusionist, Action, Attack
+   Effect: When this hits, put it into your hero's soul and create a Spectral Shield token.
+
+**Phantasm**
+
+128. Herald of Ravages_Red (herald_of_ravages_red)
+   Types: Light, Illusionist, Action, Attack
+   Effect: When this hits, put it into your hero's soul and deal 1 arcane damage to target hero.
+
+**Phantasm**
+
+129. Herald of Rebirth_Red (herald_of_rebirth_red)
+   Types: Light, Illusionist, Action, Attack
+   Effect: When this hits, put it into your hero's soul and put up to 1 card with **phantasm** from your graveyard on top of your deck.
+
+**Phantasm**
+
+130. Herald of Triumph_Red (herald_of_triumph_red)
+   Types: Light, Illusionist, Action, Attack
+   Effect: Attack action cards have -1{p} while defending this.
+
+When this hits, put it into your hero's soul.
+
+**Phantasm**
+
+131. Hit the Gas_Blue (hit_the_gas_blue)
+   Types: Mechanologist, Action
+   Effect: **Maxx Specialization**
+
+Turn any number of Hyper Drivers in your banished zone face-down and gain that many action points. If 3 or more cards are turned face-down this way, draw a card.
+
+132. Hold 'em_Red (hold_em_red)
+   Types: Warrior, Action
+   Effect: Your next Warrior attack this turn gets +3{p} and "When this attacks a hero, you may **wager** a Vigor token with them."
+
+**Go again**
+
+133. Hostile Encroachment_Red (hostile_encroachment_red)
+   Types: Guardian, Action, Attack
+   Effect: When this attacks a hero, they draw a card.
+
+**Crush** - When this deals 4 or more damage to a hero, they discard a card.
+
+134. Hot on Their Heels_Red (hot_on_their_heels_red)
+   Types: Draconic, Ninja, Action, Attack
+   Effect: If you control 2 or more Draconic chain links, this gets **go again** and "When this hits a hero, **mark** them."
+
+135. Howl from Beyond_Red (howl_from_beyond_red)
+   Types: Shadow, Action
+   Effect: You may play Howl from Beyond from your banished zone.
+
+The next attack action card you play this turn gains +3{p}.
+
+**Go again**
+
+**Blood Debt**
+
+136. Hungering Slaughterbeast_Red (hungering_slaughterbeast_red)
+   Types: Shadow, Brute, Action, Attack
+   Effect: As an additional cost to play Hungering Slaughterbeast, banish 3 random cards from your graveyard.
+
+**Blood Debt**
+
+137. Hunt the Hunter_Red (hunt_the_hunter_red)
+   Types: Draconic, Action, Attack
+   Effect: When this attacks a hero, if you've played another red card this turn, **mark** them.
+
+138. Hunter or Hunted?_Blue (hunter_or_hunted_blue)
+   Types: Assassin, Defense Reaction
+   Effect: When this defends, name a card. The attacking hero reveals the top card of their deck. If it's the named card, banish it, search their hand, deck, and arsenal for up to 3 cards with that name and banish them, then they shuffle.
+
+**Contract** - While this is defending, you are contracted to banish op
+
+139. Hyper Scrapper_Blue (hyper_scrapper_blue)
+   Types: Mechanologist, Action, Attack
+   Effect: As an additional cost to play this, banish X items from your graveyard.
+
+When this attacks it gets +X{p}. If 3 or more Hyper Drivers were banished to play this, gain {r}{r}{r} {r}{r}{r} and this gets **go again**.
+
+140. Ignite_Red (ignite_red)
+   Types: Draconic, Ninja, Action, Attack
+   Effect: When this attacks, the next Draconic card you play or activate this combat chain costs {r} less to play or activate.
+
+**Go again**
+
+141. In the Palm of Your Hand_Red (in_the_palm_of_your_hand_red)
+   Types: Guardian, Instant, Aura
+   Effect: **Suspense**
+
+When this enters or leaves the arena, draw a card.
+
+142. Inertia Trap_Red (inertia_trap_red)
+   Types: Assassin, Ranger, Defense Reaction, Trap
+   Effect: When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control.
+
+143. Infect_Red (infect_red)
+   Types: Assassin, Action, Attack
+   Effect: **Stealth**
+
+When this hits a hero, create a Bloodrot Pox token under their control.
+
+144. Insult to Injury_Red (insult_to_injury_red)
+   Types: Reviled, Action, Attack
+   Effect: When this attacks a hero, if you have more {h} than them, this gets go again.
+
+145. Jaws of Victory_Red (jaws_of_victory_red)
+   Types: Revered, Brute, Action, Attack
+   Effect: When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.
+
+If you've been cheered this turn, this gets **go again**.
+
+146. Jittery Bones_Red (jittery_bones_red)
+   Types: Pirate, Necromancer, Action, Attack
+   Effect: When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **go again**.
+
+147. King Kraken Harpoon_Red (king_kraken_harpoon_red)
+   Types: Pirate, Ranger, Action, Arrow, Attack
+   Effect: **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's a non-attack action card, they discard it and you create a Gold token. If you've activated a cannon this turn, instead look at their hand and you choose the card.
+
+148. King Shark Harpoon_Red (king_shark_harpoon_red)
+   Types: Pirate, Ranger, Action, Arrow, Attack
+   Effect: **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's an attack action card, they discard it and you create a Gold token. If you've activated a cannon this turn, instead look at their hand and you choose the card.
+
+149. Kiss of Death_Red (kiss_of_death_red)
+   Types: Assassin, Action, Dagger, Attack
+   Effect: **Stealth**
+
+When this hits a hero, they lose 1{h}.
+
+150. Lace with Bloodrot_Red (lace_with_bloodrot_red)
+   Types: Ranger, Action
+   Effect: Your next arrow attack this turn gains +3{p} and "When this hits a hero, create a Bloodrot Pox token under their control."
+
+**Go again**
+
+151. Lead with Speed_Red (lead_with_speed_red)
+   Types: Brute, Warrior, Action
+   Effect: Your next Brute or Warrior attack this turn gets +3{p}.
+
+Create an Agility token.
+
+**Go again**
+
+152. Leave No Witnesses_Red (leave_no_witnesses_red)
+   Types: Assassin, Action, Attack
+   Effect: **Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck and up to 1 card in their arsenal.
+
+153. Leave Them Hanging_Red (leave_them_hanging_red)
+   Types: Reviled, Guardian, Instant, Aura
+   Effect: **Suspense**
+
+When this enters or leaves the arena, **intimidate** target hero.
+
+When this leaves the arena, your next attack this turn gets +4{p}.
+
+154. Legacy of Ikaru_Blue (legacy_of_ikaru_blue)
+   Types: Ninja, Attack Reaction
+   Effect: Target Ninja attack gets +1{p} and "When this hits, if Edge of Autumn was the last attack this combat chain, draw a card."
+
+155. Ley Line of the Old Ones_Blue (ley_line_of_the_old_ones_blue)
+   Types: Guardian, Instant, Aura
+   Effect: **Legendary**
+
+When this enters the arena and whenever you deal damage, create a Seismic Surge token. At the beginning of your end phase, if you control no Seismic Surge tokens, destroy this.
+
+156. Loan Shark_Yellow (loan_shark_yellow)
+   Types: Pirate, Action, Aura
+   Effect: **Go again**
+
+When this enters the arena, create 2 Gold tokens.
+
+At the beginning of your end phase, if you haven't created or stolen a Gold this turn, destroy this, then lose 2{h} unless you discard a card.
+
+157. Lobotomy_Red (lobotomy_red)
+   Types: Assassin, Action, Attack
+   Effect: ****Steal**th** When this attacks, you may equip an Orbitoclast from your inventory. When this hits a hero, if you control an Orbitoclast, they lose all hero card abilities during their next action phase.
+
+158. Looking for a Scrap_Red (looking_for_a_scrap_red)
+   Types: Generic, Action, Attack
+   Effect: As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and **go again**.
+
+159. Loot the Hold_Blue (loot_the_hold_blue)
+   Types: Pirate, Necromancer, Action
+   Effect: Your next Pirate ally attack this turn gets "When this hits a hero, they discard a card. If they do, create a Gold token."
+
+**Go again**
+
+160. Machinations of Dominion_Blue (machinations_of_dominion_blue)
+   Types: Runeblade, Action
+   Effect: The next Runeblade attack action card you play this turn gets **overpower** and "If you've played or created an aura this turn, this gets **go again**."
+
+**Go again**
+
+161. Malefic Incantation_Red (malefic_incantation_red)
+   Types: Runeblade, Action, Aura
+   Effect: **Go again**
+
+This enters the arena with 3 verse counters. When it has none, destroy it.
+
+Once per turn, when you play an attack action card, remove a verse counter from this. If you do, create a Runechant token.
+
+162. Mark of the Beast_Yellow (mark_of_the_beast_yellow)
+   Types: Shadow, Brute, Action, Attack
+   Effect: If Mark of the Beast would be put into your graveyard from anywhere, instead banish it.
+
+**Blood Debt**
+
+163. Mark of the Black Widow_Red (mark_of_the_black_widow_red)
+   Types: Assassin, Action, Attack
+   Effect: **Stealth**
+
+When this hits a **marked** hero, they banish a card from their hand.
+
+164. Mauvrion Skies_Red (mauvrion_skies_red)
+   Types: Runeblade, Action
+   Effect: The next runeblade attack action card you play this turn gains **go again** and "If this hits, create 3 Runechant tokens."
+
+**Go again**
+
+165. Meet Madness_Red (meet_madness_red)
+   Types: Chaos, Assassin, Action, Attack
+   Effect: **Stealth**
+
+When this hits a hero, choose 1 at random;
+- They choose a card in their hand. Banish it.
+- They choose a card in their arsenal. Banish it.
+- Banish the top card of their deck.
+
+166. Meteoric Rise_Red (meteoric_rise_red)
+   Types: Lightning, Action, Attack
+   Effect: **Twice per Turn Instant** — {r}: This gets +1{p}.
+When this hits, create a Lightning Flow token.
+
+167. Mind Warp_Yellow (mind_warp_yellow)
+   Types: Wizard, Action
+   Effect: Deal 2 arcane damage to target hero.
+
+**Surge** - If this deals more than 2 damage to a hero, they shuffle their hand into their deck, then they draw that many cards minus 1.
+
+168. Mocking Blow_Red (mocking_blow_red)
+   Types: Reviled, Action, Attack
+   Effect: When this attacks a hero, if you have more {h} than them, **the crowd boos** you.
+
+If you've been booed this turn, this gets +4{p}.
+
+169. Money Where Ya Mouth Is_Red (money_where_ya_mouth_is_red)
+   Types: Generic, Action
+   Effect: Your next attack this turn gets +3{p} and "When this attacks a hero, you may **wager** a Gold token with them."
+
+170. Mordred Tide_Red (mordred_tide_red)
+   Types: Runeblade, Action
+   Effect: Until end of turn, if you would create one or more Runechant tokens, instead create that many plus 1.
+
+**Go again**
+
+171. Murderous Rabble_Blue (murderous_rabble_blue)
+   Types: Pirate, Action, Attack
+   Effect: When this attacks, reveal the top card of your deck. This gets +X{p}, where X is the pitch value of the card revealed this way.
+
+**Go again**
+
+172. Murky Water_Red (murky_water_red)
+   Types: Ranger, Action, Arrow, Attack
+   Effect: **Riptide Specialization**
+
+If this has an aim counter, it gets +1{p} and **dominate**.
+
+When this hits, you may banish face-down 3 traps from your graveyard. If you do, choose one at random and put it into your arsenal.
+
+173. Nebula Duality_blue (nebula_duality_blue)
+   Types: Lightning, Wizard, Action
+   Effect: Deal 1 arcane damage to any target.
+
+Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+174. Nebula Duality_red (nebula_duality_red)
+   Types: Lightning, Wizard, Action
+   Effect: Deal 3 arcane damage to any target.
+
+Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+175. Nebula Duality_yellow (nebula_duality_yellow)
+   Types: Lightning, Wizard, Action
+   Effect: Deal 2 arcane damage to any target.
+
+Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+176. Null Time Zone_Blue (null_time_zone_blue)
+   Types: Mechanologist, Action, Item
+   Effect: **Crank**
+
+This enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.
+
+When this enters the arena, name a card. The named card can't be pitched or played from hand while this is in the arena.
+
+177. Oblivion_Blue (oblivion_blue)
+   Types: Shadow, Runeblade, Instant
+   Effect: **Legendary Vynnset Specialization**
+
+Play this only if you control exactly 6 Runechants.
+
+Create a Nasreth, the Soul Harrower token.
+
+178. Outland Skirmish_Red (outland_skirmish_red)
+   Types: Warrior, Action
+   Effect: Your next 1H weapon attack this turn gains +3{p}.
+
+The next time a weapon hits this turn, create a Copper token.
+
+**Go again**
+
+179. Overcrowded_Blue (overcrowded_blue)
+   Types: Generic, Action, Attack
+   Effect: **Ambush**
+
+When this attacks or defends, it gets +1{p} +1{d} for each different name among aura tokens in the arena.
+
+180. Oysten, Heart of Gold_Yellow (oysten_heart_of_gold_yellow)
+   Types: Pirate, Necromancer, Action, Ally
+   Effect: **Action** - {t}: Attack
+
+When this dies, create a Gold token.
+
+**Watery Grave**
+
+181. Pain in the Backside_Red (pain_in_the_backside_red)
+   Types: Assassin, Ninja, Action, Attack
+   Effect: When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit.
+
+**Go again**
+
+182. Persuasive Prognosis_Blue (persuasive_prognosis_blue)
+   Types: Assassin, Action, Attack
+   Effect: **Stealth**
+
+When this hits a hero, banish the top card of their deck. Then look at their hand and banish a card with the same color as the banished card.
+
+Whenever this banishes an action card, gain 1{h}.
+
+183. Phoenix Bannerman: Head_Red (phoenix_bannerman_head_red)
+   Types: Draconic, Action
+   Effect: **Legendary** Search your deck for a Phoenix Flame, reveal it, put it into your hand, then shuffle. Create a Ponder token. Go again
+
+184. Pick Up the Point_Red (pick_up_the_point_red)
+   Types: Assassin, Ninja, Action, Attack
+   Effect: When this attacks, you may **retrieve** a dagger from your graveyard.
+
+**Go again**
+
+185. Pledge Fealty_Red (pledge_fealty_red)
+   Types: Draconic, Instant
+   Effect: Create a Fealty token.
+
+186. Plunder the Poor_Red (plunder_the_poor_red)
+   Types: Assassin, Action, Attack
+   Effect: **Contract** - You are contracted to banish opponents' cards with cost 1 or less. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+187. Portside Exchange_Blue (portside_exchange_blue)
+   Types: Pirate, Action
+   Effect: Discard a card, then draw a card. If a yellow card is discarded this way, create a Gold token.
+
+**Go again**
+
+188. Pound of Flesh_Blue (pound_of_flesh_blue)
+   Types: Shadow, Brute, Action
+   Effect: Each hero banishes a card from their hand. Each hero who didn’t banish a card with 6 or more {p} this way loses 1{h}. Go again
+
+189. Premeditate_Red (premeditate_red)
+   Types: Generic, Action
+   Effect: The next time an attack action card hits a hero this turn, create a Ponder token.
+
+The next attack action card you play from arsenal this turn gains +3{p}.
+
+**Go again**
+
+190. Promising Terrain_Blue (promising_terrain_blue)
+   Types: Guardian, Action, Aura
+   Effect: **Go again**
+
+If you would create 1 or more Seismic Surge tokens, instead create that many plus 1.
+
+At the beginning of your action phase, destroy this, then if you control 3 or more Seismic Surge tokens, draw a card and gain 1{h}.
+
+191. Pulping_Red (pulping_red)
+   Types: Brute, Action, Attack
+   Effect: When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **dominate**.
+
+If this is defended by fewer than 2 non-equipment cards, it gets **go again**.
+
+192. Pulsewave Harpoon_Red (pulsewave_harpoon_red)
+   Types: Mechanologist, Action, Attack
+   Effect: When this attacks a hero, they reveal X cards from their hand, where X is the number of times you've **boosted** this combat chain. Choose an action card with {d} less than or equal to X, then add it to this chain link as a defending card.
+
+**Boost**
+
+193. Put 'Em In Their Place_Red (put_em_in_their_place_red)
+   Types: Guardian, Action, Attack
+   Effect: **Valda Specialization**
+
+**Crush** - When this deals 4 or more damage to a hero, they discard their hand, then they draw that many cards.
+
+194. Quickening Sand_Blue (quickening_sand_blue)
+   Types: Ranger, Action, Trap
+   Effect: Create a Quicken token under target hero’s control. Go again When this defends an attack with go again, {t} target hero or ally.
+
+195. Raise an Army_Yellow (raise_an_army_yellow)
+   Types: Warrior, Action
+   Effect: **Kassai Specialization**
+
+As an additional cost to play this, destroy X Gold you control.
+
+Create X Cintari Sellsword tokens.
+
+**Go again**
+
+196. Ravenous Rabble_Red (ravenous_rabble_red)
+   Types: Generic, Action, Attack
+   Effect: When this attacks, reveal the top card of your deck. This gets -X{p}, where X is the pitch value of the card revealed this way.
+
+**Go again**
+
+197. Razor Reflex_Red (razor_reflex_red)
+   Types: Generic, Attack Reaction
+   Effect: Choose 1;
+- Target dagger or sword weapon attack gets +3{p}.
+- Target attack action card with cost 1 or less gets +3{p} and "When this hits, it gets **go again**."
+
+198. Reckless Arithmetic_Blue (reckless_arithmetic_blue)
+   Types: Brute, Action, Attack
+   Effect: When this attacks, roll a 6 sided die. This gets +X{p}, where X is the number rolled.
+
+199. Red Fin Harpoon_Blue (red_fin_harpoon_blue)
+   Types: Pirate, Ranger, Action, Arrow, Attack
+   Effect: **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's red, they discard it and you create a Gold token. If you've activated a cannon this turn, instead look at their hand and you choose the card.
+
+200. Reduce to Runechant_Red (reduce_to_runechant_red)
+   Types: Runeblade, Defense Reaction
+   Effect: Reduce to Runechant costs {r} less to play for each Runechant you control.
+
+Create a Runechant token.
+
+201. Remembrance_Yellow (remembrance_yellow)
+   Types: Generic, Instant
+   Effect: Shuffle up to 3 action cards from your graveyard into your deck.
+
+Banish Remembrance.
+
+202. Retrace the Past_Blue (retrace_the_past_blue)
+   Types: Ninja, Action, Attack
+   Effect: **Katsu Specialization**
+
+**Combo** - When this attacks, if a card with Gustwave in its name was the last attack this combat chain, name a card, then this gets that name, +2{p}, and **go again**.
+
+203. Return Fire_Red (return_fire_red)
+   Types: Ranger, Block
+   Effect: When this defends, you may banish an arrow from your hand. If you do, at the start of your next turn, put it face-up into your arsenal and it gets +3{p} until end of turn.
+
+204. Riches of Trōpal-Dhani_Yellow (riches_of_trpaldhani_yellow)
+   Types: Generic, Resource, Gem
+   Effect: **Legendary**
+
+When this is pitched, create a Gold token.
+
+205. Riggermortis_Yellow (riggermortis_yellow)
+   Types: Pirate, Necromancer, Action, Ally
+   Effect: **Action** - {r}, {t}: **Attack**
+
+**Watery Grave**
+
+206. Righteous Cleansing_Yellow (righteous_cleansing_yellow)
+   Types: Guardian, Action, Attack
+   Effect: **Crush** - If Righteous Cleansing deals 4 or more damage to a hero, look at the top 5 cards of their deck. Banish 1 or more cards with the same name from among them, then put the rest on top of their deck in any order.
+
+207. Rip Off the Top_Yellow (rip_off_the_top_yellow)
+   Types: Brute, Action
+   Effect: Draw a card, then pitch a random card from your hand. If it has 6 or more {p}, your next attack this turn gets +3{p}. Go again
+
+208. Ripple Away_Blue (ripple_away_blue)
+   Types: Generic, Action, Attack
+   Effect: **Instant** - Discard this: If an action card effect would create 1 or more tokens this turn, instead it creates that many minus 1 of each of those tokens.
+
+209. Rising Resentment_Red (rising_resentment_red)
+   Types: Draconic, Ninja, Action, Attack
+   Effect: When Rising Resentment hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it costs {r} less to play and you may play it this turn.
+
+**Go again**
+
+210. Roaring Beam_Yellow (roaring_beam_yellow)
+   Types: Light, Warrior, Attack, Reaction
+   Effect: Create a Courage token. If there are no cards in your soul, return this to its owner’s hand, then charge your soul.
+
+211. Rowdy Locals_Blue (rowdy_locals_blue)
+   Types: Generic, Action, Attack
+   Effect: If this is defended by an action card, this gets +2{p}.
+
+When this hits a hero, discard a card. If you do, they discard a card.
+
+212. Runeblood Incantation_Red (runeblood_incantation_red)
+   Types: Runeblade, Action, Aura
+   Effect: **Go again**
+
+Runeblood Incantation enters the arena with 3 verse counters on it.
+
+At the beginning of your action phase, remove a verse counter from Runeblood Incantation. If you do create a Runechant token. Otherwise, destroy Runeblood Incantation.
+
+213. Sack the Shifty_Red (sack_the_shifty_red)
+   Types: Assassin, Action, Attack
+   Effect: **Contract** - You are contracted to banish opponents' cards with base **go again**. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+214. Saltwater Swell_Red (saltwater_swell_red)
+   Types: Pirate, Action, Attack
+   Effect: When this attacks, reveal the top card of your deck. If it's blue, pitch it.
+
+**Go again**
+
+215. Savage Feast_Red (savage_feast_red)
+   Types: Brute, Action, Attack
+   Effect: As an additional cost to play Savage Feast discard a random card.
+
+When you attack with Savage Feast, if a card with 6 or more {p} was discarded as an additional cost to play it, draw a card.
+
+216. Savor Bloodshed_Red (savor_bloodshed_red)
+   Types: Assassin, Warrior, Action
+   Effect: You next dagger attack this turn gets +4{p}.
+
+The next time you hit a **marked** hero with a dagger this turn, draw a card.
+
+**Go again**
+
+217. Sawbones, Dock Hand_Yellow (sawbones_dock_hand_yellow)
+   Types: Pirate, Necromancer, Action, Ally
+   Effect: **Action** - {r}, {t}: **Attack**
+
+**Instant** - {t}: The next time you or a Pirate you control would be dealt damage this turn, prevent 1 of that damage.
+
+**Watery Grave**
+
+218. Scar Tissue_Red (scar_tissue_red)
+   Types: Assassin, Warrior, Attack Reaction
+   Effect: Target dagger attack gets +3{p} and "When this hits a hero, **mark** them."
+
+219. Scooba, Salty Sea Dog_Yellow (scooba_salty_sea_dog_yellow)
+   Types: Pirate, Necromancer, Action, Ally
+   Effect: **Action** - {r}{r}{r}, {t}: **Attack**
+
+When this attacks, you may put a yellow card from a graveyard on the bottom of its owner's deck. If you do, create a Gold token.
+
+**Watery Grave**
+
+220. Sea Floor Salvage_Blue (sea_floor_salvage_blue)
+   Types: Pirate, Action
+   Effect: Turn a card in a graveyard face-down. If it's yellow, create a Gold token.
+
+**Go again**
+
+221. Sea Legs_Yellow (sea_legs_yellow)
+   Types: Generic, Action, Attack
+   Effect: When this is discarded, create a Goldkiss Rum token.
+
+222. Searing Gaze_Red (searing_gaze_red)
+   Types: Draconic, Warrior, Attack Reaction
+   Effect: Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, it gets "When this hits a hero, **mark** them."
+
+223. Seismic Eruption_Yellow (seismic_eruption_yellow)
+   Types: Guardian, Instant
+   Effect: Create 3 Seismic Surge tokens.
+
+224. Send Packing_Yellow (send_packing_yellow)
+   Types: Brute, Action, Attack
+   Effect: When this attacks a hero, banish a card from their arsenal. When the chain link resolves, if this didn't hit, return the banished card to its owner's hand.
+
+225. Shadow Puppetry_Red (shadow_puppetry_red)
+   Types: Shadow, Action
+   Effect: The next attack action card you play this turn gains +1 {p}, **go again** and "If this attack hits, look at the top card of your deck. You may banish it."
+
+**Go again**
+
+226. Shadowrealm Horror_Red (shadowrealm_horror_red)
+   Types: Shadow, Brute, Action, Attack
+   Effect: As an additional cost to play this, banish 3 random cards in your graveyard.
+
+If 1 or more cards with 6 or more {p} are banished this way, this gets +1{p}. 2 or more, this gets **go again**. 3 or more, you may play a card banished this way this turn.
+
+**Blood Debt**
+
+227. Shake Down_Red (shake_down_red)
+   Types: Assassin, Action, Attack
+   Effect: **Uzuri Specialization**
+
+If you've played or activated an attack reaction this chain link, Shake Down has "When this hits a hero, choose red, yellow, or blue. They reveal their hand. Banish a card of the chosen color."
+
+228. Shallow Water Shark Harpoon_Yellow (shallow_water_shark_harpoon_yellow)
+   Types: Pirate, Ranger, Action, Arrow, Attack
+   Effect: If you’ve activated a cannon this turn, this gets “When this hits a hero, destroy a card in their arsenal. If you do, create a Gold token.”
+
+229. Show Time!_Blue (show_time_blue)
+   Types: Guardian, Action, Aura
+   Effect: **Bravo Specialization**
+
+When Show Time! enters the arena, search your deck for a Guardian attack action card, reveal it and put it into your hand, then shuffle your deck.
+
+At the beginning of your action phase, destroy Show Time! then draw a card.
+
+230. Sigil of Brilliance_Yellow (sigil_of_brilliance_yellow)
+   Types: Lightning, Wizard, Instant, Aura
+   Effect: **Oscilio Specialization**
+
+At the beginning of your action phase, destroy this.
+
+When this leaves the arena, draw a card.
+
+231. Sigil of Conductivity_Blue (sigil_of_conductivity_blue)
+   Types: Lightning, Instant, Aura
+   Effect: **Arcane Shelter 1**
+
+When this leaves the arena, create an Embodiment of Lightning token.
+
+232. Sigil of Lightning_Blue (sigil_of_lightning_blue)
+   Types: Lightning, Instant, Aura
+   Effect: At the beginning of your action phase, destroy this.
+
+When this leaves the arena, create an Embodiment of Lightning token.
+
+233. Silverwind Shuriken_Blue (silverwind_shuriken_blue)
+   Types: Ninja, Action, Shuriken, Item
+   Effect: **Attack Reaction** - Destroy Silverwind Shuriken: Target attack action card with **combo** gains +1{p}.
+
+234. Singing Steelblade_Yellow (singing_steelblade_yellow)
+   Types: Warrior, Attack Reaction
+   Effect: **Dorinthea Specialization**
+
+Target weapon attack gains +1{p}.
+
+**Reprise** - If the defending hero has defended with a card from hand this chain link, search your deck for an attack reaction card, banish it face up, then shuffle your deck. You may play it this chain link.
+
+235. Sink Below_Red (sink_below_red)
+   Types: Generic, Defense Reaction
+   Effect: You may put a card from your hand on the bottom of your deck. If you do, draw a card.
+
+236. Skywarden no.161803_Yellow (skywarden_no161803_yellow)
+   Types: Pirate, Mechanologist, Action, Attack
+   Effect: **Galvanize** – When this defends, you may destroy an item you control. If you do, this gets +1{d}. If a Golden Cog is destroyed this way, create a Gold token.
+
+237. Slay the Scholars_Red (slay_the_scholars_red)
+   Types: Assassin, Action, Attack
+   Effect: **Contract** - You are contracted to banish opponents' 'non-attack' action cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck.
+
+238. Smoldering Steel_Red (smoldering_steel_red)
+   Types: Draconic, Warrior, Attack, Reaction
+   Effect: Target dagger attack gets +1{p} and “When this hits a hero, deal 1 damage to them.” While this is in your graveyard, if 1 or more Frostbite tokens would be created under your control, instead you may banish this.
+
+239. Snatch_Red (snatch_red)
+   Types: Generic, Action, Attack
+   Effect: When this hits, draw a card.
+
+240. Soul Harvest_Blue (soul_harvest_blue)
+   Types: Shadow, Action, Attack
+   Effect: **Legendary Levia Specialization**
+
+As an additional cost to play Soul Harvest, banish 6 cards from your graveyard. It gains +1{p} for each card with **blood debt** banished this way.
+
+If Soul Harvest hits a hero, they banish all cards in their soul and lose {h} equal to the number of cards banished
+
+241. Spark of Genius_Yellow (spark_of_genius_yellow)
+   Types: Mechanologist, Action
+   Effect: **Dash Specialization**
+
+Search your deck for a Mechanologist item card with cost X, put it into the arena, then shuffle your deck.
+
+If you have **boosted** this turn, draw a card.
+
+242. Speed Demon_Red (speed_demon_red)
+   Types: Mechanologist, Action, Attack
+   Effect: **Scrap** If you control a Hyper Driver, this gets +1{p}. When this attacks, if it scrapped a Hyper Driver, create a Hyper Driver token with 2 steam counters.
+
+243. Spike with Bloodrot_Red (spike_with_bloodrot_red)
+   Types: Assassin, Attack Reaction
+   Effect: Target attack action card with **stealth** gains +3{p} and "When this hits a hero, create a Bloodrot Pox token under their control."
+
+244. Spirit of War_Red (spirit_of_war_red)
+   Types: Light, Warrior, Action, Attack
+   Effect: As an additional cost to play this, you may **charge** your hero's soul.
+
+If a yellow card is **charged** this way, whenever an attack action card hits this combat chain, create a Courage token.
+
+245. Splatter Skull_Red (splatter_skull_red)
+   Types: Brute, Action, Attack
+   Effect: When this hits a hero, choose a face-down card in their banished zone that was banished by **intimidate** this turn. Put it into their graveyard.
+
+246. Spoils of War_Red (spoils_of_war_red)
+   Types: Warrior, Action
+   Effect: Your next weapon attack this turn gains +2{p} and **go again**.
+
+Whenever a weapon you control hits this turn, create 2 Copper tokens.
+
+**Go again**
+
+247. Sprocket Rocket_Red (sprocket_rocket_red)
+   Types: Mechanologist, Action, Attack
+   Effect: **Boost**
+ 
+If an item or equipment was banished from boosting this, this gets +1{p}.
+
+248. Standing Ovation_Blue (standing_ovation_blue)
+   Types: Revered, Guardian, Action, Attack
+   Effect: If 3 or more auras of suspense have left the arena this turn, this gets "When this hits a hero, take an extra turn after this one. At the beginning of the next end phase, they draw up to their {i}."
+
+249. Star Struck_Yellow (star_struck_yellow)
+   Types: Guardian, Action, Attack
+   Effect: **Bravo Specialization**
+
+**Crush** - When this deals 4 or more damage to a hero, the only attacks they may play or activate during their next turn are attacks with base {p} greater than the damage dealt this way.
+
+**Unity** - When this defends together with a card from hand, create a Seismic Surge 
+
+250. Steelblade Supremacy_Red (steelblade_supremacy_red)
+   Types: Warrior, Action
+   Effect: **Dorinthea Specialization**
+
+Until end of turn, target weapon gains +2{p} and "Whenever this weapon hits, draw a card."
+
+**Go again**
+
+251. Strongest Survive_Red (strongest_survive_red)
+   Types: Brute, Action, Attack
+   Effect: When this hits a hero, they discard a card unless they reveal a card from their hand with {p} greater than the damage dealt this way.
+
+252. Sunken Treasure_Blue (sunken_treasure_blue)
+   Types: Pirate, Block
+   Effect: When this defends, you may turn a card in a graveyard face-down. If it's yellow, create a Gold token.
+
+253. Supercell_Blue (supercell_blue)
+   Types: Mechanologist, Action
+   Effect: Put X steam counters on X target Hyper Drivers you control.
+
+Create a Hyper Driver token with X steam counters.
+
+If X is 3 or greater, you may shuffle a Construct Nitro Mechanoid from your banished zone into your deck.
+
+254. Surgical Extraction_Blue (surgical_extraction_blue)
+   Types: Assassin, Action, Attack
+   Effect: **Contract**  - You are contracted to banish opponents' blue cards. Whenever you complete this contract, create a Silver token.
+
+When this hits a hero, banish the top card of their deck, then look at their hand and banish a card.
+
+255. Swabbie_Yellow (swabbie_yellow)
+   Types: Pirate, Necromancer, Action, Ally
+   Effect: **Action** - {r}{r}, {t}: **Attack**
+
+**Watery Grave**
+
+256. Swing Big_Red (swing_big_red)
+   Types: Brute, Action, Attack
+   Effect: If Swing Big doesn't hit, the defending hero creates a Quicken token when the combat chain closes.
+
+257. Take Up the Mantle_Yellow (take_up_the_mantle_yellow)
+   Types: Assassin, Attack Reaction
+   Effect: Target attack action card with **stealth** gets +2{p}. If it's attacking a **marked** hero, instead it gets +3{p} and you may banish an attack action card with **stealth** from your graveyard. If you do, the target becomes a copy of the banished card.
+
+258. Tear Asunder_Blue (tear_asunder_blue)
+   Types: Guardian, Action
+   Effect: Your next Guardian attack this turn gains +1{p}, **dominate**, and "When this hits a hero, they discard 2 cards."
+
+**Go again**
+
+259. Tectonic Instability_Blue (tectonic_instability_blue)
+   Types: Guardian, Action
+   Effect: Each hero puts a card from their arsenal on the bottom of their deck. If they do, they draw a card.
+
+Create Seismic Surge tokens equal to the number of cards drawn this way.
+
+**Go again**
+
+260. Teklo Trebuchet 2000_Blue (teklo_trebuchet_2000_blue)
+   Types: Mechanologist, Action, Attack
+   Effect: When this attacks, the next attack you boost this combat chain gets +2{p}. **Boost**
+
+261. Terminator Tank_Red (terminator_tank_red)
+   Types: Mechanologist, Action, Attack
+   Effect: If you have 1 or more Evos equipped, this gets "When this hits a hero, they discard a card,"
+
+- 2 or more, this costs {r}{r}{r} less to play,
+- 3 or more, this gets **overpower**,
+- 4 or more, this gets +3{p}.
+
+262. Test of Strength_Red (test_of_strength_red)
+   Types: Generic, Block
+   Effect: When this defends, **clash** with the attacking hero. The winner creates a Gold token.
+
+263. The Golden Son_Yellow (the_golden_son_yellow)
+   Types: Guardian, Action, Attack
+   Effect: **Victor Specialization**
+
+As an additional cost to play this, you may destroy a Gold you control. If you do, this gets +3{p} and **overpower**.
+
+When you win a **clash** revealing this, create a Gold token.
+
+264. Thick Hide Hunter_Yellow (thick_hide_hunter_yellow)
+   Types: Brute, Action, Attack
+   Effect: When this attacks or defends, discard a random card.
+
+265. Three of a Kind_Red (three_of_a_kind_red)
+   Types: Ranger, Action
+   Effect: Draw 3 cards. Until end of turn, you may only play cards from arsenal.
+
+**Go again**
+
+266. Throw Dagger_Blue (throw_dagger_blue)
+   Types: Assassin, Ninja, Attack Reaction
+   Effect: Target dagger you control that isn't on the active chain link deals 1 damage to the defending hero. If damage is dealt this way, the dagger has hit and you draw a card. Destroy the dagger.
+
+267. Thunk_Red (thunk_red)
+   Types: Guardian, Action, Attack
+   Effect: When you win a **clash** revealing this, create a Might token.
+
+268. Tigrine Reflex_Red (tigerine_reflex_red)
+   Types: Ninja, Action, Attack
+   Effect: **Combo** – If Crouching Tiger was the last attack this combat chain, this gets +1{p} and go again.****Attack** Reaction** — Discard this: Target Ninja attack gets +1{p}. Create a Crouching Tiger in your hand.
+
+269. Tip the Barkeep_Blue (tip_the_barkeep_blue)
+   Types: Pirate, Action
+   Effect: Create a Goldkiss Rum token.
+
+You may give a Gold token you control to another hero. If you do, put this on the bottom of its owner's deck.
+
+**Go again**
+
+270. Torrent of Tempo_Red (torrent_of_tempo_red)
+   Types: Ninja, Action, Attack
+   Effect: When this hits, it gets **go again**.
+
+271. Tough Smashup_Red (tough_smashup_red)
+   Types: Revered, Action, Attack
+   Effect: When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner's deck.
+
+272. Trounce_Red (trounce_red)
+   Types: Guardian, Block
+   Effect: When this defends, **clash** with the attacking hero. Put the revealed cards on the bottom of their owner's deck, then **clash** again.
+
+If a hero wins both **clashes**, they create a Gold, Might, and Vigor token.
+
+273. Two Steps Ahead_Blue (two_steps_ahead_blue)
+   Types: Reviled, Guardian, Action, Aura
+   Effect: At the start of your turn, destroy this, then create a Confidence and 3 Might tokens.
+
+274. Under the Trap-Door_Blue (under_the_trapdoor_blue)
+   Types: Assassin, Action, Attack
+   Effect: **Stealth**
+
+**Instant** - Discard this: Banish target trap from your graveyard. If you do, you may play it this turn and if it would be put into the graveyard this turn, instead banish it.
+
+275. Unsheathed_Red (unsheathed_red)
+   Types: Warrior, Action
+   Effect: Your next sword attack this turn gets +3{p} and "When this attacks, if its {p} is greater than twice its base, it gets **go again**."
+
+**Go again**
+
+276. Up on a Pedestal_Blue (up_on_a_pedestal_blue)
+   Types: Revered, Guardian, Instant, Aura
+   Effect: **Suspense**
+
+When this enters or leaves the arena, you may put a Revered or Guardian attack action card from your graveyard on top of your deck.
+
+277. Valahai Riven_Yellow (valahai_riven_yellow)
+   Types: Guardian, Block
+   Effect: When this defends, you may pay up to {r}{r}{r}. Create that many Seismic **Surge** tokens.
+
+278. Vigorous Smashup_Red (vigorous_smashup_red)
+   Types: Brute, Action, Attack
+   Effect: When this defends, **clash** with the attacking hero. The winner creates a Vigor token. You may put your revealed card on the bottom of its owner's deck.
+
+279. Visit Goldmane Estate_Blue (visit_goldmane_estate_blue)
+   Types: Guardian, Action
+   Effect: **Victor Specialization**
+
+Create a Gold token. Then if you control 3 or more Gold, create that many Might tokens.
+
+**Go again**
+
+280. Voltbound Duality_blue (voltbound_duality_blue)
+   Types: Lightning, Runeblade, Action, Attack
+   Effect: Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+281. Voltbound Duality_red (voltbound_duality_red)
+   Types: Lightning, Runeblade, Action, Attack
+   Effect: Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+282. Voltbound Duality_yellow (voltbound_duality_yellow)
+   Types: Lightning, Runeblade, Action, Attack
+   Effect: Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+
+283. Voltic Impact_Red (voltic_impact_red)
+   Types: Lightning, Action, Attack
+   Effect: **Twice per Turn Instant** — {r}: This gets +1{p}.
+When this hits, create a Lightning Flow token.
+
+284. War Machine_Red (war_machine_red)
+   Types: Mechanologist, Action, Attack
+   Effect: If you have 1 or more Evos equipped, this gets "When this hits a hero, destroy all cards in their arsenal,""
+
+- 2 or more, this costs {r}{r}{r} less to play,
+- 3 or more, this gets **overpower**,
+- 4 or more, this gets +3{p}.
+
+285. Wartune Herald_Red (wartune_herald_red)
+   Types: Light, Illusionist, Action, Attack
+   Effect: When this hits, put it into your hero's soul.
+
+**Phantasm**
+
+286. Whelming Gustwave_Red (whelming_gustwave_red)
+   Types: Ninja, Action, Attack
+   Effect: **Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and "If this hits, draw a card."
+
+287. Whittle from Bone_Red (whittle_from_bone_red)
+   Types: Assassin, Action, Attack
+   Effect: **Stealth**
+
+When this attacks a **marked** hero, equip a Graphene Chelicera token.
+
+288. Widespread Annihilation_Blue (widespread_annihilation_blue)
+   Types: Shadow, Runeblade, Action, Attack
+   Effect: **Rune Gate**
+
+When the combat chain closes, each hero who has lost {h} this turn banishes a card from their hand.
+
+**Blood Debt**
+
+289. Widespread Destruction_Yellow (widespread_destruction_yellow)
+   Types: Shadow, Runeblade, Action, Attack
+   Effect: **Rune Gate**
+
+When the combat chain closes, each hero who has lost {h} this turn banishes a card from their arsenal.
+
+**Blood Debt**
+
+290. Widespread Ruin_Red (widespread_ruin_red)
+   Types: Shadow, Runeblade, Action, Attack
+   Effect: **Rune Gate**
+
+When the combat chain closes, each hero who has lost {h} this turn banishes the top card of their deck.
+
+**Blood Debt**
+
+291. Wild Ride_Red (wild_ride_red)
+   Types: Brute, Action, Attack
+   Effect: When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.
+
+292. Wind Up the Crowd_Blue (wind_up_the_crowd_blue)
+   Types: Revered, Brute, Action, Attack
+   Effect: **Instant** - Discard this: Create a Toughness and a Vigor token.
+
+293. Yellow Fin Harpoon_Blue (yellow_fin_harpoon_blue)
+   Types: Pirate, Ranger, Action, Arrow, Attack
+   Effect: **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's yellow, they discard it and you create a Gold token. If you've activated a cannon this turn, instead look at their hand and you choose the card.

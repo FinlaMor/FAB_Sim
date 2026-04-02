@@ -274,13 +274,12 @@ class IQLTrainer:
             opts.append(self.opt_action_embedder)
         self._schedulers = [LambdaLR(opt, _lr_lambda) for opt in opts]
 
-        # Restore scheduler state from checkpoint if available
-        if self._pending_scheduler_state_dicts is not None:
-            saved = self._pending_scheduler_state_dicts
-            for i, sched in enumerate(self._schedulers):
-                if i < len(saved):
-                    sched.load_state_dict(saved[i])
-            self._pending_scheduler_state_dicts = None
+        # NOTE: We intentionally do NOT restore scheduler state dicts here.
+        # Each loop rebuilds _lr_lambda with a fresh total_steps, so restoring
+        # last_epoch from a prior run would put the cosine schedule past its
+        # end (progress > 1.0 → LR = 0).  A fresh warmup+cosine cycle per
+        # loop is correct because the replay data changes between loops.
+        self._pending_scheduler_state_dicts = None
 
     def _step_schedulers(self) -> None:
         for sched in self._schedulers:
@@ -464,6 +463,38 @@ class IQLTrainer:
             "weight_max": float(weights.max().item()),
         }
 
+    def _snapshot_model_state(self) -> dict[str, dict]:
+        """Snapshot all model state dicts to CPU for best-step restore."""
+        import copy
+        snap: dict[str, dict] = {
+            "q1": copy.deepcopy(self.q1.state_dict()),
+            "q2": copy.deepcopy(self.q2.state_dict()),
+            "value": copy.deepcopy(self.value.state_dict()),
+            "value_target": copy.deepcopy(self.value_target.state_dict()),
+            "actor": copy.deepcopy(self.actor.state_dict()),
+            "state_adapter": copy.deepcopy(self.state_adapter.state_dict()),
+            "action_adapter": copy.deepcopy(self.action_adapter.state_dict()),
+        }
+        if self.transformer is not None:
+            snap["transformer"] = copy.deepcopy(self.transformer.state_dict())
+        if self.action_embedder is not None:
+            snap["action_embedder"] = copy.deepcopy(self.action_embedder.state_dict())
+        return snap
+
+    def _restore_model_state(self, snap: dict[str, dict]) -> None:
+        """Restore model state dicts from a snapshot."""
+        self.q1.load_state_dict(snap["q1"])
+        self.q2.load_state_dict(snap["q2"])
+        self.value.load_state_dict(snap["value"])
+        self.value_target.load_state_dict(snap["value_target"])
+        self.actor.load_state_dict(snap["actor"])
+        self.state_adapter.load_state_dict(snap["state_adapter"])
+        self.action_adapter.load_state_dict(snap["action_adapter"])
+        if "transformer" in snap and self.transformer is not None:
+            self.transformer.load_state_dict(snap["transformer"])
+        if "action_embedder" in snap and self.action_embedder is not None:
+            self.action_embedder.load_state_dict(snap["action_embedder"])
+
     @torch.no_grad()
     def _compute_eval_metrics(
         self,
@@ -638,6 +669,12 @@ class IQLTrainer:
         t0 = time.time()
         step = 0
 
+        # Best-step tracking: snapshot model weights when eval_bc_loss is lowest.
+        # If training collapses, we restore the best snapshot before returning.
+        _best_eval_bc: float = float("inf")
+        _best_step: int = 0
+        _best_snapshot: dict[str, dict] | None = None
+
         # Signal-flag approach: Ctrl+C sets flag even during C-extension calls
         _stop_flag = False
         _prev_handler = signal.getsignal(signal.SIGINT)
@@ -667,6 +704,13 @@ class IQLTrainer:
                         eval_m = self._compute_eval_metrics(eval_s, eval_a, eval_r, eval_s2, eval_d)
                         metrics.update(eval_m)
 
+                        # Track best eval_bc_loss for collapse recovery
+                        bc_loss = eval_m.get("eval_bc_loss")
+                        if bc_loss is not None and bc_loss < _best_eval_bc:
+                            _best_eval_bc = bc_loss
+                            _best_step = step
+                            _best_snapshot = self._snapshot_model_state()
+
                     history.append(metrics)
 
                     line = (
@@ -694,6 +738,29 @@ class IQLTrainer:
 
         if _stop_flag or step < num_steps:
             print(f"[iql] Stopped at step {step}. Returning partial history.", flush=True)
+
+        # Collapse recovery: if final eval_bc_loss is >2× the best seen,
+        # restore the best snapshot so we don't save a collapsed checkpoint.
+        if _best_snapshot is not None and history:
+            final_bc = None
+            for entry in reversed(history):
+                final_bc = entry.get("eval_bc_loss")
+                if final_bc is not None:
+                    break
+            if final_bc is not None and _best_eval_bc > 0 and final_bc > _best_eval_bc * 2.0:
+                print(
+                    f"[iql] COLLAPSE DETECTED: eval_bc_loss {final_bc:.4f} > "
+                    f"2× best {_best_eval_bc:.4f} (step {_best_step}). "
+                    f"Restoring best weights.",
+                    flush=True,
+                )
+                self._restore_model_state(_best_snapshot)
+            else:
+                if _best_step > 0:
+                    print(
+                        f"[iql] best_eval_bc_loss={_best_eval_bc:.4f} at step {_best_step}",
+                        flush=True,
+                    )
 
         return history
 

@@ -61,6 +61,12 @@ class IQLPolicyAgent:
             slug_vocab_size=slug_vocab.size,
             slug_vocab=slug_vocab,
         )
+        def _filter_by_shape(model, sd):
+            model_sd = model.state_dict()
+            return {
+                k: v for k, v in sd.items()
+                if k in model_sd and model_sd[k].shape == v.shape
+            }
         # Prefer trained weights from checkpoint over stale bundle weights
         if "action_embedder_state_dict" in checkpoint_payload:
             ae_sd = checkpoint_payload["action_embedder_state_dict"]
@@ -71,7 +77,8 @@ class IQLPolicyAgent:
             card_sd = embedder_bundle.get("card_embedder_state_dict", {})
             card_prefixed = {f"card_embedder.{k}": v for k, v in card_sd.items()}
             self.action_embedder.load_state_dict(
-                {**card_prefixed, **embedder_bundle["action_embedder_state_dict"]}, strict=False
+                _filter_by_shape(self.action_embedder, {**card_prefixed, **embedder_bundle["action_embedder_state_dict"]}),
+                strict=False,
             )
         self.action_embedder.eval()
 
@@ -110,7 +117,8 @@ class IQLPolicyAgent:
                 slug_vocab=slug_vocab,
             )
             self.state_embedder.load_state_dict(
-                {**card_prefixed, **embedder_bundle["state_embedder_state_dict"]}, strict=False
+                _filter_by_shape(self.state_embedder, {**card_prefixed, **embedder_bundle["state_embedder_state_dict"]}),
+                strict=False,
             )
         self.state_embedder.eval()
 

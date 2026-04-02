@@ -32,15 +32,17 @@ def _resolve_game_ids(
             candidates = sorted(set(int(g) for g in game_ids))
             if not filter_timeout:
                 return candidates
-            # Filter explicit game IDs against timeout flag
-            placeholders = ",".join("?" for _ in candidates)
+            # Filter explicit game IDs against timeout flag.
+            # Use a temp table to avoid SQLite's 999-variable IN() limit.
+            conn.execute("CREATE TEMP TABLE IF NOT EXISTS _filter_game_ids (game_id INTEGER PRIMARY KEY)")
+            conn.execute("DELETE FROM _filter_game_ids")
+            conn.executemany("INSERT OR IGNORE INTO _filter_game_ids VALUES (?)", [(g,) for g in candidates])
             rows = conn.execute(
-                f"""
+                """
                 SELECT game_id FROM games
-                WHERE game_id IN ({placeholders})
-                  AND (ended_on_turn_cap IS NULL OR ended_on_turn_cap = 0)
-                """,
-                candidates,
+                JOIN _filter_game_ids f USING (game_id)
+                WHERE (ended_on_turn_cap IS NULL OR ended_on_turn_cap = 0)
+                """
             ).fetchall()
             filtered = [int(r[0]) for r in rows]
             excluded = len(candidates) - len(filtered)

@@ -25,6 +25,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from rl_agents.embedder_bundle import load_embedder_bundle
+from rl_agents.utils.device import resolve_device as _resolve_device
 
 
 def main() -> int:
@@ -33,6 +34,8 @@ def main() -> int:
     parser.add_argument("--embedder-bundle", type=str, required=True, help="Path to embedder_bundle.pt")
     parser.add_argument("--batch-size", type=int, default=256, help="Batch size for forward passes")
     parser.add_argument("--device", type=str, default="cpu", help="Device for inference")
+    parser.add_argument("--max-games", type=int, default=3000,
+                        help="Only re-embed the most recent N completed games (0 = all)")
     args = parser.parse_args()
 
     print(f"[reembed] Loading embedder bundle from {args.embedder_bundle}...", flush=True)
@@ -85,7 +88,7 @@ def main() -> int:
     action_embedder.load_state_dict(ae_filtered, strict=False)
     action_embedder.eval()
 
-    device = torch.device(args.device)
+    device = _resolve_device(args.device)
     transformer = transformer.to(device)
     action_embedder = action_embedder.to(device)
 
@@ -93,15 +96,34 @@ def main() -> int:
     action_out_dim = action_embedder.get_output_dim()
     print(f"[reembed] Transformer output: {state_out_dim}, ActionEmbedder output: {action_out_dim}", flush=True)
 
-    # Load all transitions that have packed features
+    # Load transitions that have packed features, optionally capped to recent games
     import sqlite3
     conn = sqlite3.connect(args.db_path)
 
-    # Get all transition IDs with packed features
-    rows = conn.execute(
-        "SELECT transition_id, state_features, action_features "
-        "FROM embeddings WHERE state_features IS NOT NULL AND action_features IS NOT NULL"
-    ).fetchall()
+    if args.max_games > 0:
+        game_id_rows = conn.execute(
+            "SELECT game_id FROM games WHERE winner IS NOT NULL "
+            "ORDER BY rowid DESC LIMIT ?",
+            (args.max_games,),
+        ).fetchall()
+        game_ids = [r[0] for r in game_id_rows]
+        if game_ids:
+            placeholders = ",".join("?" * len(game_ids))
+            rows = conn.execute(
+                f"SELECT e.transition_id, e.state_features, e.action_features "
+                f"FROM embeddings e JOIN transitions t ON t.id = e.transition_id "
+                f"WHERE t.game_id IN ({placeholders}) "
+                f"AND e.state_features IS NOT NULL AND e.action_features IS NOT NULL",
+                game_ids,
+            ).fetchall()
+        else:
+            rows = []
+        print(f"[reembed] max_games={args.max_games} → {len(game_ids)} games selected", flush=True)
+    else:
+        rows = conn.execute(
+            "SELECT transition_id, state_features, action_features "
+            "FROM embeddings WHERE state_features IS NOT NULL AND action_features IS NOT NULL"
+        ).fetchall()
     conn.close()
 
     n_total = len(rows)

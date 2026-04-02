@@ -43,6 +43,7 @@ from rl_agents.deck_evaluator import (
     build_evaluator,
     save_checkpoint,
     load_checkpoint,
+    load_state_dict_safe,
 )
 
 CHECKPOINT_DIR = Path("checkpoints")
@@ -84,8 +85,11 @@ def train_epoch(
         card_credits = batch.get("card_credits")
         if card_credits is not None:
             card_credits = card_credits.to(device)
+        card_wr_deltas = batch.get("card_wr_deltas")
+        if card_wr_deltas is not None:
+            card_wr_deltas = card_wr_deltas.to(device)
 
-        logits = model(hero_ids, card_ids, counts, opp_hero_ids, pad_mask, card_credits).squeeze(-1)
+        logits = model(hero_ids, card_ids, counts, opp_hero_ids, pad_mask, card_credits, card_wr_deltas).squeeze(-1)
         loss = nn.functional.binary_cross_entropy_with_logits(logits, labels)
 
         optimizer.zero_grad()
@@ -128,8 +132,11 @@ def eval_epoch(
         card_credits = batch.get("card_credits")
         if card_credits is not None:
             card_credits = card_credits.to(device)
+        card_wr_deltas = batch.get("card_wr_deltas")
+        if card_wr_deltas is not None:
+            card_wr_deltas = card_wr_deltas.to(device)
 
-        logits = model(hero_ids, card_ids, counts, opp_hero_ids, pad_mask, card_credits).squeeze(-1)
+        logits = model(hero_ids, card_ids, counts, opp_hero_ids, pad_mask, card_credits, card_wr_deltas).squeeze(-1)
         loss = nn.functional.binary_cross_entropy_with_logits(logits, labels)
 
         total_loss += loss.item() * labels.size(0)
@@ -317,7 +324,7 @@ def main():
             vocab, ckpt.get("model_type", args.model),
             args.embed_dim, args.hidden_dim, args.n_heads, args.n_layers, args.dropout,
         )
-        model.load_state_dict(ckpt["model_state_dict"])
+        load_state_dict_safe(model, ckpt["model_state_dict"])
         start_epoch = ckpt.get("epoch", 0) + 1
         model_type = ckpt.get("model_type", args.model)
     elif args.bootstrap:

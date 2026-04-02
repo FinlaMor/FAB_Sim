@@ -1,0 +1,35 @@
+{
+  "project_type": "single",
+  "services": {
+    "main": {
+      "path": ".",
+      "tech_stack": ["python", "pytorch", "sqlite3", "pytest"],
+      "port": null,
+      "dev_command": null,
+      "test_command": "python -m pytest tests/ -v"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "sqlite3 (card_stats DB for fablazing data)",
+    "ci_cd": false
+  },
+  "conventions": {
+    "linter": null,
+    "formatter": null,
+    "testing": "pytest",
+    "python_version": "3.12",
+    "slug_format": "underscore (matching slug_index.json keys)",
+    "banned_list_format": "JSON with format keys (cc, blitz, etc.)"
+  },
+  "key_files": {
+    "config": "config.py",
+    "banned_cards_json": "card_data/banned_cards.json",
+    "slug_index": "card_data/slug_index.json",
+    "fab_constants": "rl_agents/fab_constants.py",
+    "deck_search": "rl_agents/deck_search.py",
+    "deck_validator": "rl_agents/deck_validator.py",
+    "heuristic_generator": "scripts/generate_heuristic_decks.py",
+    "ban_manager": "scripts/manage_banned_cards.py"
+  }
+}

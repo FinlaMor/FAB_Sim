@@ -116,7 +116,7 @@ CC_HERO_SLUGS = [
     "vynnset-iron-maiden",
     "oscilio-constella-intelligence",
     "arakni-marionette",
-    "jarl-vetreii",
+    "jarl-vetreidi",
     "arakni-huntsman",
     "dash-io",
     "marlynn-treasure-hunter",

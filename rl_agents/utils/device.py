@@ -7,6 +7,7 @@ train_transformer_iql.py, evaluate_iql_vs_random.py.
 from __future__ import annotations
 
 import torch
+import warnings
 
 
 def resolve_device(device_str: str) -> torch.device:
@@ -23,10 +24,13 @@ def resolve_device(device_str: str) -> torch.device:
         try:
             import torch_directml
             return torch_directml.device()
-        except ImportError as exc:
-            raise RuntimeError(
-                "Requested device 'dml', but torch-directml is not installed in this Python environment."
-            ) from exc
+        except ImportError:
+            warnings.warn(
+                "Requested device 'dml', but torch-directml is not installed; falling back to CPU.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            return torch.device("cpu")
     if normalized == "auto":
         if torch.cuda.is_available():
             return torch.device("cuda")

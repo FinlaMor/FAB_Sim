@@ -1,0 +1,1308 @@
+FAB Card Effects Gap Report
+Total unique deck cards: 702
+Cards with unregistered complex effects: 647
+
+=== ACTION (440) ===
+  aftershock_blue
+    When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic Surge token.
+  aggressive_pounce_red
+    If you’ve intimidated an opponent this turn, this gets go again.
+  agile_windup_yellow
+    **Instant** - Discard this: Create an Agility token.
+  alpha_instinct_blue
+    **Rhinar Specialization**  When this is discard to beat chest, create a Might token.
+  ancestral_harmony_blue
+    Your attacks with **combo** get +1{p} this turn.  Banish the top card of your deck. If it has **combo**, you may play it this turn.  **Go again**
+  angelic_attendant_yellow
+    **Awaken** target figment you control.  Put this into your soul.  **Go again**
+  angelic_wrath_yellow
+    Target attack action card with Herald in its name gets +3{p}
+  annihilate_the_armed_red
+    **Contract** - You are contracted to banish opponents' attack action cards. Whenever you complete this contract, create a Silver token.  When this hit
+  art_of_desire_body_red
+    **Stealth**  When this hits a hero, banish the top card of their deck.  Whenever this banishes a red card, draw a card and gain 1{h}.
+  art_of_the_dragon_blood_red
+    When this attacks, if it is Draconic, it gets **go again** and the next 3 Draconic cards you play this turn cost {r} less to play.
+  art_of_the_phoenix_war_red
+    As an additional cost to play this, discard a Phoenix Flame. Draconic attack action cards you control get +1{p} this turn. Draw 2 cards.
+  assault_and_battery_yellow
+    **Beat Chest**  When this attacks, if you've **beaten chest** this turn, create an Agility token.
+  astral_strike_red
+    When this attacks, if you've destroyed a Lightning Flow this turn, choose 1; • Draw a card. • This gets +2{p}. • This gets **go again**.
+  authority_of_ataya_blue
+    **Legendary**  When this is pitched, defense reaction cards cost opponents an additional {r} to play this turn.
+  avast_ye_blue
+    Your next Pirate ally attack this turn gets **go again** and "When this hits a hero, create a Gold token."  **Go again**
+  back_alley_breakline_blue
+    If an activated ability or action card effect puts Back Alley Breakline face up into a zone from your deck, gain 1 action point.
+  backspin_thrust_red
+    **Once per Turn Instant** - {u} a cog you control: This gets +1{p} or **go again**.
+  banneret_of_courage_yellow
+    **Solflare** - When this is **charged** to your hero's soul, create a Courage token.
+  banneret_of_gallantry_yellow
+    **Solflare** - When this is **charged** to your hero's soul, create a Quicken token.
+  bare_destruction_red
+    **Beat Chest**  When this attacks, if you've beaten chest this turn and you don't control a chest equipment, this gets **go again** and the next Brute
+  bare_fangs_red
+    When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.
+  battered_beaten_and_broken_yellow
+    When this attacks a hero, **intimidate** them.  If you control 3 or more auras, this gets +3{p} and "When this hits a hero, destroy an intimidated car
+  battlefield_beacon_yellow
+    When this attacks, choose 1 for each card you've banished from your soul this combat chain. You may choose the same mode up to 3 times; - Create a Cou
+  be_like_water_red
+    When this hits, you may pay {r}. If you do, choose Head Jab, Surging Strike, or Twin Twisters. This gains the chosen name.  **Go again**
+  beaming_bravado_red
+    As an additional cost to play this, you may **charge** your hero's soul.  If a yellow card is **charged** this way, this gets +1{p}
+  beaming_bravado_yellow
+    As an additional cost to play this, you may **charge** your hero's soul.  If a yellow card is **charged** this way, this gets +1{p}
+  beast_within_yellow
+    If Beast Within is put into a graveyard from anywhere other than the combat chain, banish the top card of your deck and lose 1{h}. If it has 6 or more
+  become_the_bottle_red
+    When this attacks, choose a card on the combat chain. This gets the chosen card’s name. Go again
+  beseech_the_demigon_red
+    Choose an attack action card in your banished zone. It gets +3{p} until end of turn.  **Go again**
+  bet_big_red
+    **Betsy Specialization**  When this attacks a hero, you may **wager** a Gold, Might, and Vigor token with them.
+  big_bertha_blue
+    **Boost**  When this is banished from boosting, put a steam counter on a Hyper Driver you control.
+  big_bully_red
+    When this attacks a hero, if you have more {h} than them, **the crowd boos** you.  If you've been booed this turn, this card's base {p} is doubled.
+  big_game_trophy_shot_yellow
+    Your next arrow attack this turn gets +4{p}. If it has harpoon in its name, it gets "When this hits a hero, create a Gold token."  Draw a card, then d
+  bios_update_red
+    The next attack action card you **boost** this turn gains +3{p}.  The next time a Mechanologist item with cost 2 or less is banished to pay a **boost*
+  bittering_thorns_blue
+    When this hits, your next attack this turn gets +1{p}.  **Go again**
+  bittering_thorns_red
+    When this hits, your next attack this turn gets +1{p}.  **Go again**
+  bittering_thorns_yellow
+    When this hits, your next attack this turn gets +1{p}.  **Go again**
+  blast_rig_red
+    **Evo Upgrade** – This gets +1{p} for each Evo you have equipped. **Boost**
+  blast_to_oblivion_red
+    When this attacks, the next time you play an instant card this chain link, you may return target aura permanent with cost 1 or less or target aura tok
+  blast_to_oblivion_yellow
+    When this attacks, the next time you play an instant card this chain link, you may return target aura permanent with cost 1 or less or target aura tok
+  blaze_headlong_red
+    If you've played another red card this turn, this gets **go again**.
+  blink_blue
+    Gain 1 action point.
+  blood_on_her_hands_yellow
+    **Kassai Specialization**  As an additional cost to play Blood on Her Hands, destroy any number of Copper you control. Choose that many modes. You may
+  bloodrush_bellow_yellow
+    As an additional cost to play Bloodrush Bellow, discard a random card.  Your Brute attacks gain +2{p} this turn.  If the discarded card has 6 or more 
+  blue_fin_harpoon_blue
+    **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's blue, they discard it and you create a Gold token. If you'
+  bolt_of_courage_blue
+    As an additional cost to play Bolt of Courage, you may **charge** your hero's soul.  If you've **charged** this turn, Bolt of Courage gains "If this h
+  bolt_of_courage_red
+    As an additional cost to play Bolt of Courage, you may **charge** your hero's soul.  If you've **charged** this turn, Bolt of Courage gains "If this h
+  bolt_of_courage_yellow
+    As an additional cost to play Bolt of Courage, you may **charge** your hero's soul.  If you've **charged** this turn, Bolt of Courage gains "If this h
+  boltn_shot_blue
+    If Bolt'n' Shot's {p} is greater than its base {p}, it has **go again** and "If this hits, **reload.**"
+  boltn_shot_red
+    If Bolt'n' Shot's {p} is greater than its base {p}, it has **go again** and "If this hits, **reload.**"
+  boltn_shot_yellow
+    If Bolt'n' Shot's {p} is greater than its base {p}, it has **go again** and "If this hits, **reload.**"
+  bonds_of_ancestry_red
+    **Combo** - If a card with Gustwave in its name was the last attack this combat chain, this costs {r}{r} less to play, and has **go again** and "When 
+  boneyard_marauder_red
+    As an additional cost to play Boneyard Marauder, banish 3 random cards from your graveyard.  **Blood Debt**
+  boulder_drop_red
+    **Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.
+  buckwild_blue
+    If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.
+  buckwild_red
+    If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.
+  buckwild_yellow
+    If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.
+  burning_blade_dance_red
+    If you control 2 or more Draconic chain links, this gets **go again** and "When this hits a hero, you may have target dagger you control deal 1 damage
+  call_to_the_grave_blue
+    Search your deck for a card, put it into your graveyard, then shuffle.  **Go again**
+  catch_of_the_day_blue
+    Your next arrow attack this turn gets +2{p}.  If a go fish effect would trigger this turn, instead it triggers twice.  **Go again**
+  celestial_cataclysm_yellow
+    As an additional cost to play Celestial Cataclysm, banish 3 cards from your hero's soul.  **Go again**
+  censor_red
+    When this hits a hero, name a card. They can't play the named card until the end of their next turn.
+  cheating_scoundrel_red
+    The next attack action card you play this turn gets +3{p} and wagers with the defending hero. The winner creates a Gold token. The next time you would
+  chokeslam_blue
+    **Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.
+  chokeslam_red
+    **Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.
+  cinderskin_devotion_blue
+    If you control 2 or more Draconic chain links, this gets **go again**.
+  clash_of_bravado_yellow
+    When this defends, **clash** with the attacking hero. The winner destroys an aura the other hero controls.
+  cleave_red
+    Your next axe attack this turn gains +4{p} and "When this hits a hero or ally, you may deal that much damage to another ally controlled by the same he
+  cloud_cover_red
+    The next time you would be dealt damage this turn, prevent 3/2/1 of that damage.
+  codex_of_frailty_yellow
+    Each hero puts an attack action card from their graveyard face down into their arsenal. Each hero that does, discards a card.  Create a Ponder token u
+  codex_of_inertia_yellow
+    Each hero puts the top card of their deck face down into their arsenal. Each hero that does, discards a card.  Create a Ponder token under your contro
+  cog_in_the_machine_red
+    Create 2 Golden Cog tokens.  You may {t} a cog you control. If you do, put this on the bottom of its owner's deck.
+  cogwerx_dovetail_red
+    When this hits a hero, {u} all cogs you control.  **Thrice per Turn Instant** - {t} a cog you control: This gets +1{p} or **go again**.
+  cogwerx_workshop_blue
+    Create a Golden Cog token.  Put a steam counter on up to 2 cogs you control.
+  cogwerx_zeppelin_blue
+    When this hits a hero, you may {t} a cog you control. If you do, create a Golden Cog token.  **Twice per Turn Instant** - {t} a cog you control: This 
+  cogwerx_zeppelin_red
+    When this hits a hero, you may {t} a cog you control. If you do, create a Golden Cog token.  **Twice per Turn Instant** - {t} a cog you control: This 
+  cogwerx_zeppelin_yellow
+    When this hits a hero, you may {t} a cog you control. If you do, create a Golden Cog token.  **Twice per Turn Instant** - {t} a cog you control: This 
+  colors_of_aria_red
+    While this is face-up in any zone, it’s Earth, Ice, and Lightning.
+  comet_storm__shock_red
+    **Meld**  Deal 5 arcane damage to any target.  //  Deal 1 arcane damage to any target.
+  command_and_conquer_red
+    Defense reaction cards can't be played this chain link. When this hits a hero, destroy all cards in their arsenal.
+  conqueror_of_the_high_seas_red
+    When this hits a hero, destroy all cards in their arsenal. Create a Gold token for each card destroyed this way.  **High Tide** - If there are 2 or mo
+  consign_to_cosmos__shock_yellow
+    **Meld**  Banish X instant and/or aura cards from any graveyard, where X is the amount of arcane damage you've dealt this turn.  //  Deal 1 arcane dam
+  construct_nitro_mechanoid_yellow
+    **Transform** target Mechanologist head, chest, arms, legs, weapon and 3 Hyper Drivers you control into Nitro Mechanoid. If you don't, **negate** this
+  cosmic_duality_blue
+    Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.  **Fragment** (Whenever a card with 2 or more □ defends
+  cosmic_duality_red
+    Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.  **Fragment** (Whenever a card with 2 or more □ defends
+  cosmic_duality_yellow
+    Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.  **Fragment** (Whenever a card with 2 or more □ defends
+  cranial_crush_blue
+    **Crush** - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase
+  crankshaft_blue
+    **Boost**  When this is banished from boosting, put a steam counter on a Hyper Driver you control.
+  crash_and_bash_red
+    When this defends, you may reveal a card with **crush** from your hand. If you do, create a Seismic Surge token.
+  crippling_crush_red
+    **Bravo Specialization**  **Crush** - If Crippling Crush deals 4 or more damage to a hero, they discard 2 random cards.
+  crowd_goes_wild_yellow
+    If you've been cheered this turn, this costs {r}{r}{r} less to play.
+  cruel_ambition_red
+    Create 3 Might tokens.  **Go again**
+  cull_red
+    You may play this from your banished zone.  If a hero has lost {h} this turn, you may play this as thought it were an instant.  Each hero banishes a c
+  current_funnel_blue
+    If the last action card you played this turn was Lightning, this and the next action card you play this turn get **go again**.
+  cut_a_long_story_short_yellow
+    If this has {p} greater than its base, it gets +1{p}.  **Tower** - If this has 13 or more {p}, it gets "When this hits a hero, they discard their hand
+  cut_through_red
+    If you've hit with a dagger this combat chain, this gets +1{p} and **go again**.
+  deadwood_dirge_red
+    Destroy an aura you control. If you do, create 3 Runechant tokens.  **Go again**
+  deadwood_rumbler_blue
+    Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, banish a card from a graveyard.  **Blood Debt**
+  death_touch_red
+    Death Touch can't be played from hand.  When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.
+  deathly_wail_blue
+    **Rune Gate**  When the combat chain closes, create Runechant tokens equal to the number of heroes who have lost {h} this turn.  **Blood Debt**
+  deathly_wail_red
+    **Rune Gate**  When the combat chain closes, create Runechant tokens equal to the number of heroes who have lost {h} this turn.  **Blood Debt**
+  deathly_wail_yellow
+    **Rune Gate**  When the combat chain closes, create Runechant tokens equal to the number of heroes who have lost {h} this turn.  **Blood Debt**
+  debilitate_blue
+    **Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.
+  debilitate_red
+    **Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.
+  deep_recesses_of_existence_blue
+    **Rune Gate** When the combat chain closes, you may banish this face-down. If you do, for each hero who has lost {h} this turn, banish a card from the
+  deep_rooted_evil_yellow
+    If a card with 6 or more {p} has been put into your banished zone this turn, you may play Deep Rooted Evil from your banished zone.  **Blood Debt**
+  demonstrate_devotion_red
+    If you control 2 or more Draconic chain links, this gets **go again** and "When this attacks a hero, create a Fealty token."
+  descendent_gustwave_blue
+    **Combo** - If Surging Strike was the last attack this combat chain, this costs {r} less to play and has +2{p}.  **Go again**
+  descendent_gustwave_red
+    **Combo** - If Surging Strike was the last attack this combat chain, this costs {r} less to play and has +2{p}.  **Go again**
+  descendent_gustwave_yellow
+    **Combo** - If Surging Strike was the last attack this combat chain, this costs {r} less to play and has +2{p}.  **Go again**
+  diabolic_offering_blue
+    If a card with 6 ore more {p} has been put into your banished zone this turn, Daibolic Offering's {p} and {d} are 6, otherwise they are 0.  **Blood De
+  disable_blue
+    **Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.
+  disable_red
+    **Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.
+  disable_yellow
+    **Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.
+  dishonor_blue
+    **Combo** - If Bonds of Ancestry was the last attack this combat chain, this has +2{p}.  When this hits a hero, if you control Surging Strike, Descend
+  display_loyalty_red
+    If you control 2 or more Draconic chain links, this gets **go again** and "When this attacks a hero, create a Fealty token."
+  doomsday_blue
+    **Legendary Levia Specialization**  Play Doomsday only if there are 6 or more cards with blood debt in your banished zone.  Create a Blasmophet, the S
+  dragon_power_blue
+    When this attacks, if it is Draconic, it gets +3{p}.
+  draw_swords_red
+    Your next Warrior attack this turn gets +3{p}.  Draw a card.  **Go again**
+  dread_screamer_red
+    As an additional cost to play Dread Screamer, banish 3 random cards from your graveyard  If a card with 6 or more {p} is banished this way, Dread Scre
+  dread_screamer_yellow
+    As an additional cost to play Dread Screamer, banish 3 random cards from your graveyard  If a card with 6 or more {p} is banished this way, Dread Scre
+  drill_shot_blue
+    If Drill Shot has an aim counter, it has **piercing 1**.  When this hits a hero, put a -1{d} counter on an equipment they control.
+  drill_shot_red
+    If Drill Shot has an aim counter, it has **piercing 1**.  When this hits a hero, put a -1{d} counter on an equipment they control.
+  drill_shot_yellow
+    If Drill Shot has an aim counter, it has **piercing 1**.  When this hits a hero, put a -1{d} counter on an equipment they control.
+  drink_em_under_the_table_red
+    **Betsy Specialization**  When this attacks a hero, you may **wager** with them. The winner draws a card, and the other hero discards a card.
+  duty_bound_blitz_red
+    Play this only if a yellow card has been put into your soul this turn. Go again
+  duty_bound_blitz_yellow
+    Play this only if a yellow card has been put into your soul this turn. Go again
+  edict_of_steel_red
+    **Sharpen** target sword you control.  If it has 1 or more +1{p} counters, create a Flurry token.  **Go again**
+  electrostatic_discharge_red
+    The next attack action card you play this turn with cost 1 or less gets +3{p}.
+  elemental_strike_red
+    As an additional cost to play this, banish a card from your hand. If it’s Earth, this gets +2{p}. Lightning, this gets go again. Ice, this gets domina
+  eloquent_eulogy_red
+    **Rune Gate**  When the combat chain closes, if a hero has lost {h} this turn, create an Eloquence token.  **Blood Debt**
+  emboldened_blade_blue
+    Turn a face-down card in any arsenal face-up. If it's a defense reaction, destroy it and your next weapon attack this turn gets +1{p}.  **Go again**
+  endless_arrow_red
+    When this hits, put it into its owner's hand.
+  endless_maw_red
+    As an additional cost to play Endless Maw, banish 3 random cards from your graveyard.  If a card with 6 or more {p} is banished this way, Endless maw 
+  enflame_the_firebrand_red
+    When this attacks, if you control 2 or more Draconic chain links, this gets go again, 3 or more, your attacks are Draconic this combat chain, 4 or mor
+  engulfing_light_red
+    As an additional cost to play Engulfing Light, you may **charge** your hero's soul.  If you've **charged** this turn, Engulfing Light gains "If this h
+  engulfing_shadows_yellow
+    If this would be put into your graveyard from anywhere, instead banish it. **Blood Debt**
+  enlightened_strike_red
+    As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck.  Choose 1; - When you attack with Enlightened 
+  envelop_in_darkness_red
+    Create a Runechant token.  The next attack action card you **rune gate** this turn gets +3{p}.  **Go again**
+  escalate_violence_blue
+    When this attacks, if you control a Might token, create 3 more.
+  etchings_of_arcana_blue
+    Deal 1 arcane damage to target hero.  **Surge** - If this deals more than 1 damage, you may return an aura with Sigil in its name from your graveyard 
+  etchings_of_arcana_red
+    Deal 3 arcane damage to target hero.  **Surge** - If this deals more than 3 damage, you may return an aura with Sigil in its name from your graveyard 
+  etchings_of_arcana_yellow
+    Deal 2 arcane damage to target hero.  **Surge** - If this deals more than 2 damage, you may return an aura with Sigil in its name from your graveyard 
+  everbloom__life_blue
+    **Meld**  Choose an action card in a graveyard with cost less than the total {h} you've gained this turn. Put it on the bottom of its owner's deck.  *
+  excessive_bloodloss_red
+    **Contract** – You are contracted to banish opponents’ red cards. Whenever you complete this contract, create a Silver token. When this hits a hero, b
+  express_lightning_red
+    As an additional cost to play Express Lightning, you may **charge** your hero's soul.
+  eye_of_ophidia_blue
+    **Legendary**  When you pitch Eye of Ophidia, **opt 2**.
+  fabricate_red
+    Choose 2;  - Equip a base equipment with Proto in its name from your inventory. - Evo permanents you control get +1{d} this turn. - Put this under an 
+  fast_and_furious_red
+    **Boost**  If you've **cranked** this turn, this gets +1{p}.  When this is banished from **boosting**, put a steam counter on an item you control with
+  fearless_confrontation_blue
+    **Instant** - Discard this: Target attack gets -1{p} and loses and can't gain **dominate**.
+  felling_of_the_crown_red
+    If there are 4 or more Earth cards in your banished zone, this gets +4{p}.  **Decompose** - When this attacks, you may banish 2 Earth cards and an act
+  fiddlers_green_red
+    When this is put into your graveyard from anywhere, gain 3{h}.
+  figment_of_erudition_yellow
+    **Legendary**  When this enters the arena, create a Ponder token.
+  figment_of_judgment_yellow
+    **Legendary**  When this enters the arena, you may turn a card in any banished zone face-down.
+  figment_of_protection_yellow
+    **Legendary**  When this enters the arena, create a Spectral Shield token.
+  figment_of_ravages_yellow
+    **Legendary**  When this enters the arena, deal 1 arcane damage to any target.
+  figment_of_rebirth_yellow
+    **Legendary**  When this enters the arena, you may put a yellow action card from your graveyard on top of your deck.
+  figment_of_triumph_yellow
+    **Legendary**  When this enters the arena, attack action cards your opponents control get -1{p} this turn.
+  figment_of_war_yellow
+    **Legendary**  When this enters the arena, create a Courage token.
+  fire_tenet_strike_first_red
+    When this attacks, your next Draconic attack this combat chain gets +1{p}.  **Go again**
+  fire_that_burns_within_red
+    When this attacks, you may discard a Phoenix Flame. If you do, draw a card and this gets +2{p}. Go again
+  flamecall_awakening_red
+    When you attack with Flamecall Awakening, if you've played another red card this turn, you may search your deck for a Phoenix Flame, reveal it, put it
+  flex_strength_blue
+    If this has 6 or more {p}, it gets +3{p}.
+  flittering_charge_red
+    If you've played an instant card this chain link, this gets **go again**.
+  flowing_stormstrike_blue
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  flowing_stormstrike_red
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  flowing_stormstrike_yellow
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  flowstate_embodiment_red
+    Whenever you play an instant card this chain link, create an Embodiment of Lightning or Lightning Flow token.
+  fluster_fist_blue
+    **Combo** - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.
+  fluster_fist_red
+    **Combo** - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.
+  for_the_dracai_red
+    When this attacks a **marked** hero, create a Fealty token.
+  frozen_to_death_blue
+    **Ice Fusion**  If this was **fused**, you may destroy an equipment with a -1{d} counter.  You may create a Frostbite token in an exposed head, chest,
+  fruits_of_the_forest_blue
+    **Instant** - Discard this: Gain 2{h}
+  fruits_of_the_forest_red
+    **Instant** - Discard this: Gain 2{h}
+  fruits_of_the_forest_yellow
+    **Instant** - Discard this: Gain 2{h}
+  funeral_moon_red
+    You may play this from your banished zone.  If a hero has lost {h} this turn, you may play this as though it were an instant.  Create a Runechant toke
+  ghost_protocol_architect_red
+    If this was banished from boosting this turn, you may play this from your banished zone. **Evo Upgrade** – When this attacks, search your deck for an 
+  ghost_protocol_mainframe_blue
+    If this was banished from boosting this turn, you may play this from your banished zone. **Evo Upgrade** – This gets +1{p} for each Evo you have equip
+  glacial_footsteps_blue
+    **Ice Fusion**  If Glacial Footsteps was **fused**, it gains **dominate**.
+  glistening_steelblade_yellow
+    **Dorinthea Specialization**  Your next Dawnblade attack this turn has **go again**.  Whenever Dawnblade hits a hero this turn, put a +1{p} counter on
+  gold_the_tip_yellow
+    Your next arrow attack this turn gets +3{p}.  If there is a yellow arrow face-up in your arsenal, create a Gold token.  **Go again**
+  golden_skywarden_yellow
+    **Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +1{d}. If a Golden Cog is destroyed this way, create a Go
+  golden_tipple_blue
+    When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.  **Go again**
+  gone_in_a_flash_red
+    When this attacks, the next time you play an instant card this chain link, you may return this to it's owner's hand.
+  good_natured_brutality_yellow
+    When this defends, if you have no cards in hand, it gets +6{d} and **the crowd cheers** you.
+  goon_beatdown_blue
+    If you control 3 or more auras, this gets +3{p} and "When this hits a hero, **the crowd boos** you."
+  gorganian_tome
+    **Legendary**  Draw X cards, where X is 1 plus the number of Gorganian Tomes in all graveyards.  **Go again**
+  grandeur_of_valahai_blue
+    **Legendary**  When you pitch Grandeur of Valahai, create a Seismic Surge token.
+  graveling_growl_yellow
+    Play Graveling Growl only if a card with 6 or more {p} has been put into your banished zone this turn.  **Blood Debt**
+  gustwave_of_the_second_wind_red
+    **Combo** - If Surging Strike was the last attack this combat chain, this gets **go again**.
+  headbutt_blue
+    This can't be defended by non-head equipment.  If you have a head equipped and the defending hero doesn't, this gets +1{p}.  **Crush** - When this dea
+  heart_of_fyendal_blue
+    **Legendary**  When you pitch Heart of Fyendal, if you have less {h} than an opposing hero, gain 1{h}.
+  heist_red
+    **Boost**  When this hits a hero, you may put an item with cost 0 or 1 from any banished zone into the arena under your control.
+  herald_of_erudition_yellow
+    **Dominate**  If Herald of Erudition hits, put it into your hero's soul and draw 2 cards.  **Phantasm**
+  herald_of_protection_blue
+    When this hits, put it into your hero's soul and create a Spectral Shield token.  **Phantasm**
+  herald_of_protection_red
+    When this hits, put it into your hero's soul and create a Spectral Shield token.  **Phantasm**
+  herald_of_protection_yellow
+    When this hits, put it into your hero's soul and create a Spectral Shield token.  **Phantasm**
+  herald_of_ravages_yellow
+    When this hits, put it into your hero's soul and deal 1 arcane damage to target hero.  **Phantasm**
+  herald_of_rebirth_yellow
+    When this hits, put it into your hero's soul and put up to 1 card with **phantasm** from your graveyard on top of your deck.  **Phantasm**
+  herald_of_triumph_blue
+    Attack action cards have -1{p} while defending this.  When this hits, put it into your hero's soul.  **Phantasm**
+  herald_of_triumph_red
+    Attack action cards have -1{p} while defending this.  When this hits, put it into your hero's soul.  **Phantasm**
+  herald_of_triumph_yellow
+    Attack action cards have -1{p} while defending this.  When this hits, put it into your hero's soul.  **Phantasm**
+  herald_of_victoria_yellow
+    Instant — Discard this: Until end of turn, attack action cards your opponents control get -1{p} while attacking and defending. **Phantasm**
+  hit_and_run_blue
+    Your next weapon attack this turn gains **go again**.  If you have attacked with a weapon this turn, your next attack this turn gains +1{p}.  **Go aga
+  hit_and_run_red
+    Your next weapon attack this turn gains **go again**.  If you have attacked with a weapon this turn, your next attack this turn gains +3{p}.  **Go aga
+  hit_and_run_yellow
+    Your next weapon attack this turn gains **go again**.  If you have attacked with a weapon this turn, your next attack this turn gains +2{p}.  **Go aga
+  hit_the_gas_blue
+    **Maxx Specialization**  Turn any number of Hyper Drivers in your banished zone face-down and gain that many action points. If 3 or more cards are tur
+  hold_em_blue
+    Your next Warrior attack this turn gets +1{p} and "When this attacks a hero, you may **wager** a Vigor token with them."  **Go again**
+  hold_em_red
+    Your next Warrior attack this turn gets +3{p} and "When this attacks a hero, you may **wager** a Vigor token with them."  **Go again**
+  hold_em_yellow
+    Your next Warrior attack this turn gets +2{p} and "When this attacks a hero, you may **wager** a Vigor token with them."  **Go again**
+  hostile_encroachment_red
+    When this attacks a hero, they draw a card.  **Crush** - When this deals 4 or more damage to a hero, they discard a card.
+  hot_on_their_heels_red
+    If you control 2 or more Draconic chain links, this gets **go again** and "When this hits a hero, **mark** them."
+  howl_from_beyond_red
+    You may play Howl from Beyond from your banished zone.  The next attack action card you play this turn gains +3{p}.  **Go again**  **Blood Debt**
+  hulk_up_blue
+    If you have less {h} than each other hero, this costs {r} less to play.
+  hundred_winds_red
+    **Combo** - If Hundred Winds was the last attack this combat chain, this attack gains +1{p} for each other card named Hundred Winds you control on thi
+  hungering_slaughterbeast_yellow
+    As an additional cost to play Hungering Slaughterbeast, banish 3 random cards from your graveyard.  **Blood Debt**
+  hunt_the_hunter_red
+    When this attacks a hero, if you've played another red card this turn, **mark** them.
+  hyper_scrapper_blue
+    As an additional cost to play this, banish X items from your graveyard.  When this attacks it gets +X{p}. If 3 or more Hyper Drivers were banished to 
+  ignite_red
+    When this attacks, the next Draconic card you play or activate this combat chain costs {r} less to play or activate.  **Go again**
+  imposing_visage_blue
+    Search your deck for an aura card with cost X or less, put it into the arena, then shuffle your deck.  **Go again**
+  infect_red
+    **Stealth**  When this hits a hero, create a Bloodrot Pox token under their control.
+  inflame_red
+    When you attack with Inflame, if you've played another red card this turn, you may return a Phoenix Flame from your graveyard to your hand.  **Go agai
+  insult_to_injury_blue
+    When this attacks a hero, if you have more {h} than them, this gets go again.
+  ironsong_determination_yellow
+    Target weapon's attacks get +1{p} and **dominate** until end of turn.  **Go again**
+  isolate_blue
+    **Stealth**  **Dominate**
+  isolate_red
+    **Stealth**  **Dominate**
+  isolate_yellow
+    **Stealth**  **Dominate**
+  jaws_of_victory_red
+    When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.  If you've been cheered this turn, this gets **go again**.
+  jittery_bones_blue
+    When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **go again**.
+  jump_start_red
+    If you control a Hyper Driver, this costs {r} less to play.  **Boost**
+  king_kraken_harpoon_red
+    **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's a non-attack action card, they discard it and you create a
+  king_shark_harpoon_red
+    **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's an attack action card, they discard it and you create a Go
+  kiss_of_death_red
+    **Stealth**  When this hits a hero, they lose 1{h}.
+  knife_through_blue
+    ****Steal**th** If you’ve hit with a dagger this combat chain, this gets go again.
+  knife_through_red
+    ****Steal**th** If you’ve hit with a dagger this combat chain, this gets go again.
+  knife_through_yellow
+    ****Steal**th** If you’ve hit with a dagger this combat chain, this gets go again.
+  lace_with_bloodrot_red
+    Your next arrow attack this turn gains +3{p} and "When this hits a hero, create a Bloodrot Pox token under their control."  **Go again**
+  lava_burst_red
+    **Rupture** - If Lava Burst is played as chain link 4 or higher, it has +3{p}.
+  lava_vein_loyalty_blue
+    If you control 2 or more Draconic chain links, this gets **go again**.
+  lead_with_speed_red
+    Your next Brute or Warrior attack this turn gets +3{p}.  Create an Agility token.  **Go again**
+  leave_no_witnesses_red
+    **Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.  When this hits a hero, 
+  light_of_sol_yellow
+    **Legendary**  When this is pitched, reveal the top card of your deck. If it's yellow, you may put it into your hero's soul.
+  lightning_press_red
+    Target attack action card with cost 1 or less gains +3{p}.
+  lobotomy_red
+    ****Steal**th** When this attacks, you may equip an Orbitoclast from your inventory. When this hits a hero, if you control an Orbitoclast, they lose a
+  looking_for_a_scrap_red
+    As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and **go again**
+  loot_the_hold_blue
+    Your next Pirate ally attack this turn gets "When this hits a hero, they discard a card. If they do, create a Gold token."  **Go again**
+  lumina_ascension_yellow
+    **Boltyn Specialization**  Until end of turn, weapons you control gain +1{p} and "If this hits, reveal the top card of your deck. If it's a Light card
+  machinations_of_dominion_blue
+    The next Runeblade attack action card you play this turn gets **overpower** and "If you've played or created an aura this turn, this gets **go again**
+  mark_of_the_beast_yellow
+    If Mark of the Beast would be put into your graveyard from anywhere, instead banish it.  **Blood Debt**
+  mark_of_the_black_widow_red
+    **Stealth**  When this hits a **marked** hero, they banish a card from their hand.
+  mark_of_the_black_widow_yellow
+    **Stealth**  When this hits a **marked** hero, they banish a card from their hand.
+  mauvrion_skies_red
+    The next runeblade attack action card you play this turn gains **go again** and "If this hits, create 3 Runechant tokens."  **Go again**
+  maximum_velocity_red
+    Play this only if you've **boosted** 3 or more times this turn.
+  meet_madness_red
+    **Stealth**  When this hits a hero, choose 1 at random; - They choose a card in their hand. Banish it. - They choose a card in their arsenal. Banish i
+  meteoric_rise_blue
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  meteoric_rise_red
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  meteoric_rise_yellow
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  mind_warp_yellow
+    Deal 2 arcane damage to target hero.  **Surge** - If this deals more than 2 damage to a hero, they shuffle their hand into their deck, then they draw 
+  minnowism_red
+    The next attack action card with 3 or less base {p} you play this turn gains +3{p}.  **Go again**
+  money_where_ya_mouth_is_red
+    Your next attack this turn gets +3{p} and "When this attacks a hero, you may **wager** a Gold token with them."
+  mordred_tide_red
+    Until end of turn, if you would create one or more Runechant tokens, instead create that many plus 1.  **Go again**
+  murderous_rabble_blue
+    When this attacks, reveal the top card of your deck. This gets +X{p}, where X is the pitch value of the card revealed this way.  **Go again**
+  murky_water_red
+    **Riptide Specialization**  If this has an aim counter, it gets +1{p} and **dominate**.  When this hits, you may banish face-down 3 traps from your gr
+  nebula_duality_blue
+    Deal 1 arcane damage to any target.  Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+  nebula_duality_red
+    Deal 3 arcane damage to any target.  Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+  nebula_duality_yellow
+    Deal 2 arcane damage to any target.  Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+  no_hero_stands_alone_yellow
+    While this is in any zone, if you've controlled a Toughness token this turn, this gets +3{d} and **ambush**.  When this defends, **clash** with the at
+  null__shock_yellow
+    **Meld**  If target instant card has cost less than the total arcane damage you've dealt to opposing heroes this turn, **negate** it.  //  Deal 1 arca
+  oaken_old_red
+    **Earth and Ice Fusion**  If Oaken Old was **fused**, it gains +2{p}, **dominate**, and "If this hits a hero, they put 2 random cards from their hand 
+  oasis_respite_red
+    Prevent the next 4 damage that would be dealt to target hero this turn by a source of your choice. If they have less life than each other hero, they m
+  oath_of_loyalty_red
+    This may only be played if it's the first action of your turn.  When this is played, until end of turn, you may only play cards that are Draconic.  **
+  oblivion_blue
+    **Legendary Vynnset Specialization**  Play this only if you control exactly 6 Runechants.  Create a Nasreth, the Soul Harrower token.
+  out_pace_red
+    **Boost**  This can't be defended by equipment.
+  outland_skirmish_red
+    Your next 1H weapon attack this turn gains +3{p}.  The next time a weapon hits this turn, create a Copper token.  **Go again**
+  outside_interference_blue
+    **Instant** - Discard this: You may reveal a Reviled attack action card from your inventory and put it into your hand.
+  overcrowded_blue
+    **Ambush**  When this attacks or defends, it gets +1{p} +1{d} for each different name among aura tokens in the arena.
+  pain_in_the_backside_red
+    When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit.  **Go again**
+  palantir_aeronought_red
+    The defending hero must defend this with an equipment they control if able.  **Thrice per Turn Instant** - {t} a cog you control: This gets +1{p}. If 
+  persuasive_prognosis_blue
+    **Stealth**  When this hits a hero, banish the top card of their deck. Then look at their hand and banish a card with the same color as the banished c
+  phoenix_bannerman_head_red
+    **Legendary** Search your deck for a Phoenix Flame, reveal it, put it into your hand, then shuffle. Create a Ponder token. Go again
+  phoenix_flame_red
+    *(A player may add up to 3 Phoenix Flame to their deck in an Uprising limited format.)*  If you control 2 or more Draconic chain links, Phoenix Flame 
+  pick_up_the_point_red
+    When this attacks, you may **retrieve** a dagger from your graveyard.  **Go again**
+  pledge_fealty_red
+    Create a Fealty token.
+  plunder_the_poor_red
+    **Contract** - You are contracted to banish opponents' cards with cost 1 or less. Whenever you complete this contract, create a Silver token.  When th
+  portside_exchange_blue
+    Discard a card, then draw a card. If a yellow card is discarded this way, create a Gold token.  **Go again**
+  pound_of_flesh_blue
+    Each hero banishes a card from their hand. Each hero who didn’t banish a card with 6 or more {p} this way loses 1{h}. Go again
+  power_play_blue
+    If this was played from arsenal, it gets +5{p}.
+  premeditate_red
+    The next time an attack action card hits a hero this turn, create a Ponder token.  The next attack action card you play from arsenal this turn gains +
+  prismatic_leyline_yellow
+    Your next red attack this turn gets +1{p}, your next yellow gets +2{p}, and your next blue gets +3{p}.  **Go again**
+  pulping_red
+    When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **dominate**.  If this is def
+  pulsewave_harpoon_red
+    When this attacks a hero, they reveal X cards from their hand, where X is the number of times you've **boosted** this combat chain. Choose an action c
+  pulverize_red
+    **Heave 3**  If Pulverize hits a hero, their first attack during their next turn has -4{p}.
+  put_em_in_their_place_red
+    **Valda Specialization**  **Crush** - When this deals 4 or more damage to a hero, they discard their hand, then they draw that many cards.
+  quickening_sand_blue
+    Create a Quicken token under target hero’s control. Go again When this defends an attack with go again, {t} target hero or ally.
+  raise_an_army_yellow
+    **Kassai Specialization**  As an additional cost to play this, destroy X Gold you control.  Create X Cintari Sellsword tokens.  **Go again**
+  ravenous_rabble_red
+    When this attacks, reveal the top card of your deck. This gets -X{p}, where X is the pitch value of the card revealed this way.  **Go again**
+  reapers_call_blue
+    **Stealth**  **Instant** - Discard this: **Mark** target opposing hero.
+  reckless_arithmetic_blue
+    When this attacks, roll a 6 sided die. This gets +X{p}, where X is the number rolled.
+  red_fin_harpoon_blue
+    **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's red, they discard it and you create a Gold token. If you'v
+  relentless_pursuit_blue
+    **Mark** target opposing hero.  If you've attacked them this turn, put this on the bottom of its owner's deck.  **Go again**
+  remembrance_yellow
+    Shuffle up to 3 action cards from your graveyard into your deck.  Banish Remembrance.
+  remorseless_red
+    If Remorseless is put into your arsenal face up, until end of turn it gains "Defense reaction cards can't be played from arsenal to Remoreseless's cha
+  retrace_the_past_blue
+    **Katsu Specialization**  **Combo** - When this attacks, if a card with Gustwave in its name was the last attack this combat chain, name a card, then 
+  return_fire_red
+    When this defends, you may banish an arrow from your hand. If you do, at the start of your next turn, put it face-up into your arsenal and it gets +3{
+  riches_of_trpaldhani_yellow
+    **Legendary**  When this is pitched, create a Gold token.
+  right_behind_you_blue
+    When this defends together with another card from hand, this gets +1{d} and you may look at the top card of your deck. You may put it on the bottom.
+  righteous_cleansing_yellow
+    **Crush** - If Righteous Cleansing deals 4 or more damage to a hero, look at the top 5 cards of their deck. Banish 1 or more cards with the same name 
+  rip_off_the_top_yellow
+    Draw a card, then pitch a random card from your hand. If it has 6 or more {p}, your next attack this turn gets +3{p}. Go again
+  ripple_away_blue
+    **Instant** - Discard this: If an action card effect would create 1 or more tokens this turn, instead it creates that many minus 1 of each of those to
+  rise_from_the_ashes_blue
+    The next Draconic or Ninja attack action card you play this turn gains +1{p}.  You may return a Phoenix Flame from your graveyard to your hand.  **Go 
+  rise_from_the_ashes_red
+    The next Draconic or Ninja attack action card you play this turn gains +3{p}.  You may return a Phoenix Flame from your graveyard to your hand.  **Go 
+  rising_resentment_blue
+    When Rising Resentment hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. I
+  rising_resentment_red
+    When Rising Resentment hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. I
+  rising_resentment_yellow
+    When Rising Resentment hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. I
+  roaring_beam_yellow
+    Create a Courage token. If there are no cards in your soul, return this to its owner’s hand, then charge your soul.
+  rockyard_rodeo_blue
+    This card’s {p} is equal to the highest base {p} of weapons you control.
+  rouse_the_ancients_blue
+    As an additional cost to play Rouse the Ancients, you may reveal any number of attack action cards from your hand with 13 or more total {p}. If you do
+  rowdy_locals_blue
+    If this is defended by an action card, this gets +2{p}.  When this hits a hero, discard a card. If you do, they discard a card.
+  sack_the_shifty_red
+    **Contract** - You are contracted to banish opponents' cards with base **go again**. Whenever you complete this contract, create a Silver token.  When
+  salt_the_wound_yellow
+    This gets +1{p} for each attack that has hit this combat chain.
+  saltwater_swell_blue
+    When this attacks, reveal the top card of your deck. If it's blue, pitch it.  **Go again**
+  saltwater_swell_red
+    When this attacks, reveal the top card of your deck. If it's blue, pitch it.  **Go again**
+  sand_sketched_plan_blue
+    **Rhinar Specialization**  Search your deck for a card, put it into your hand, discard a random card, then shuffle your deck.  If the discarded card h
+  savage_feast_red
+    As an additional cost to play Savage Feast discard a random card.  When you attack with Savage Feast, if a card with 6 or more {p} was discarded as an
+  savor_bloodshed_red
+    You next dagger attack this turn gets +4{p}.  The next time you hit a **marked** hero with a dagger this turn, draw a card.  **Go again**
+  sea_floor_salvage_blue
+    Turn a card in a graveyard face-down. If it's yellow, create a Gold token.  **Go again**
+  sea_legs_yellow
+    When this is discarded, create a Goldkiss Rum token.
+  searing_shot_blue
+    If Searing Shot hits a hero, they lose 1{h}.
+  searing_shot_red
+    If Searing Shot hits a hero, they lose 1{h}.
+  searing_shot_yellow
+    If Searing Shot hits a hero, they lose 1{h}.
+  seek_and_destroy_red
+    Your next arrow attack this turn gains +3{p} and "If this hits a hero, at the beginning of their next end phase, they discard all cards in their hand 
+  seismic_eruption_yellow
+    Create 3 Seismic Surge tokens.
+  send_packing_yellow
+    When this attacks a hero, banish a card from their arsenal. When the chain link resolves, if this didn't hit, return the banished card to its owner's 
+  shadow_puppetry_red
+    The next attack action card you play this turn gains +1 {p}, **go again** and "If this attack hits, look at the top card of your deck. You may banish 
+  shadowrealm_horror_red
+    As an additional cost to play this, banish 3 random cards in your graveyard.  If 1 or more cards with 6 or more {p} are banished this way, this gets +
+  shake_down_red
+    **Uzuri Specialization**  If you've played or activated an attack reaction this chain link, Shake Down has "When this hits a hero, choose red, yellow,
+  shallow_water_shark_harpoon_yellow
+    If you’ve activated a cannon this turn, this gets “When this hits a hero, destroy a card in their arsenal. If you do, create a Gold token.”
+  sharpen_steel_red
+    Your next weapon attack this turn gains +3{p}.  **Go again**
+  short_shrift_yellow
+    If this has {p} greater than its base, it gets +1{p}.  **Crush** - When this deals 4 or more damage to a hero, they discard a card.
+  show_of_strength_red
+    This gets -1{p} for each card with 6 or more {p} defending it.
+  sigil_of_solace_red
+    Gain 3{h}
+  singularity_red
+    **Legendary Teklovossen Specialization**  **Transform** your hero, your weapon, and 4 Evos you have equipped into Teklovossen, the Mechropotent. It en
+  sirens_of_safe_harbor_blue
+    When this is put into your graveyard from anywhere, gain 1{h}.
+  sirens_of_safe_harbor_red
+    When this is put into your graveyard from anywhere, gain 1{h}.
+  sirens_of_safe_harbor_yellow
+    When this is put into your graveyard from anywhere, gain 1{h}.
+  sky_skimmer_blue
+    **Once per Turn Instant** - {t} a cog you control: This gets +1{p} or **go again**.
+  sky_skimmer_red
+    **Once per Turn Instant** - {t} a cog you control: This gets +1{p} or **go again**.
+  sky_skimmer_yellow
+    **Once per Turn Instant** - {t} a cog you control: This gets +1{p} or **go again**.
+  skywarden_no161803_yellow
+    **Galvanize** – When this defends, you may destroy an item you control. If you do, this gets +1{d}. If a Golden Cog is destroyed this way, create a Go
+  slay_the_scholars_red
+    **Contract** - You are contracted to banish opponents' 'non-attack' action cards. Whenever you complete this contract, create a Silver token.  When th
+  slice_and_dice_blue
+    Whenever you attack with a sword or dagger this turn;  - If it's your first weapon attack this turn, it gains +1{p}. - If it's your second weapon atta
+  slice_and_dice_red
+    Whenever you attack with a sword or dagger this turn;  - If it's your first weapon attack this turn, it gains +1{p}. - If it's your second weapon atta
+  slice_and_dice_yellow
+    Whenever you attack with a sword or dagger this turn;  - If it's your first weapon attack this turn, it gains +1{p}. - If it's your second weapon atta
+  smoldering_steel_red
+    Target dagger attack gets +1{p} and “When this hits a hero, deal 1 damage to them.” While this is in your graveyard, if 1 or more Frostbite tokens wou
+  snatch_red
+    When this hits, draw a card.
+  sonata_galaxia_red
+    This costs {r} less to play for each Runechant you control.  Search your deck for a Runeblade aura with cost X or less, put it into the arena, then sh
+  song_of_sinew_yellow
+    Reveal the top 4 cards of your deck. Your next attack this turn gets +X{p}, where X is the number of cards with 6 or more {p} revealed this way. Put t
+  soul_harvest_blue
+    **Legendary Levia Specialization**  As an additional cost to play Soul Harvest, banish 6 cards from your graveyard. It gains +1{p} for each card with 
+  soup_up_blue
+    If an item you control has been destroyed this turn, this gets **go again**.  **Galvanize** - When this defends, you may destroy an item you control. 
+  soup_up_red
+    If an item you control has been destroyed this turn, this gets **go again**.  **Galvanize** - When this defends, you may destroy an item you control. 
+  soup_up_yellow
+    If an item you control has been destroyed this turn, this gets **go again**.  **Galvanize** - When this defends, you may destroy an item you control. 
+  spark_of_genius_yellow
+    **Dash Specialization**  Search your deck for a Mechanologist item card with cost X, put it into the arena, then shuffle your deck.  If you have **boo
+  speed_demon_red
+    **Scrap** If you control a Hyper Driver, this gets +1{p}. When this attacks, if it scrapped a Hyper Driver, create a Hyper Driver token with 2 steam c
+  spinal_crush_red
+    **Crush** - If Spinal Crush deals 4 or more damage to a hero, action cards, activated abilities, and attacks they control lose and can't gain **go aga
+  spirit_of_war_red
+    As an additional cost to play this, you may **charge** your hero's soul.  If a yellow card is **charged** this way, whenever an attack action card hit
+  splatter_skull_red
+    When this hits a hero, choose a face-down card in their banished zone that was banished by **intimidate** this turn. Put it into their graveyard.
+  spoils_of_war_red
+    Your next weapon attack this turn gains +2{p} and **go again**.  Whenever a weapon you control hits this turn, create 2 Copper tokens.  **Go again**
+  spreading_flames_red
+    Draconic attacks you control have +1{p} while their base {p} is less than the number of Draconic chain links you control.  **Go again**
+  sprocket_rocket_red
+    **Boost**   If an item or equipment was banished from boosting this, this gets +1{p}.
+  standing_ovation_blue
+    If 3 or more auras of suspense have left the arena this turn, this gets "When this hits a hero, take an extra turn after this one. At the beginning of
+  star_struck_yellow
+    **Bravo Specialization**  **Crush** - When this deals 4 or more damage to a hero, the only attacks they may play or activate during their next turn ar
+  steal_victory_blue
+    When this defends, **steal** an aura token the attacking hero controls.
+  steel_street_enforcement_blue
+    **Evo Upgrade** - While this is defending, it gets +X{d}, where X is the number of Evos you have equipped.
+  steelblade_supremacy_red
+    **Dorinthea Specialization**  Until end of turn, target weapon gains +2{p} and "Whenever this weapon hits, draw a card."  **Go again**
+  strongest_survive_yellow
+    When this hits a hero, they discard a card unless they reveal a card from their hand with {p} greater than the damage dealt this way.
+  succumb_to_temptation_yellow
+    If you've dealt arcane damage this turn, you may play this as though it were an instant.  The next time a Runeblade attack action card you control hit
+  sunken_treasure_blue
+    When this defends, you may turn a card in a graveyard face-down. If it's yellow, create a Gold token.
+  supercell_blue
+    Put X steam counters on X target Hyper Drivers you control.  Create a Hyper Driver token with X steam counters.  If X is 3 or greater, you may shuffle
+  surgical_extraction_blue
+    **Contract**  - You are contracted to banish opponents' blue cards. Whenever you complete this contract, create a Silver token.  When this hits a hero
+  swing_big_red
+    If Swing Big doesn't hit, the defending hero creates a Quicken token when the combat chain closes.
+  swordmasters_shine_red
+    This costs {r} less to play for each +1{p} counter on swords you control. Target weapon attack gets +5{p}.
+  tbone_red
+    If you control a card on the combat chain that was boosted, the defending hero must defend this with an equipment they control if able.  **Boost**
+  tear_asunder_blue
+    Your next Guardian attack this turn gains +1{p}, **dominate**, and "When this hits a hero, they discard 2 cards."  **Go again**
+  tectonic_instability_blue
+    Each hero puts a card from their arsenal on the bottom of their deck. If they do, they draw a card.  Create Seismic Surge tokens equal to the number o
+  teklo_trebuchet_2000_blue
+    When this attacks, the next attack you boost this combat chain gets +2{p}. **Boost**
+  tempest_palm_gustwave_yellow
+    **Combo** - If Surging Strike was the last attack this combat chain, this gets +2{p}.  If this is played at chain link 3 or higher, this gets **go aga
+  terminator_tank_red
+    If you have 1 or more Evos equipped, this gets "When this hits a hero, they discard a card,"  - 2 or more, this costs {r}{r}{r} less to play, - 3 or m
+  test_of_iron_grip_red
+    When this defends, **clash** with the attacking hero. If there is a winner, the other hero discards a card.
+  test_of_strength_red
+    When this defends, **clash** with the attacking hero. The winner creates a Gold token.
+  the_golden_son_yellow
+    **Victor Specialization**  As an additional cost to play this, you may destroy a Gold you control. If you do, this gets +3{p} and **overpower**.  When
+  thick_hide_hunter_yellow
+    When this attacks or defends, discard a random card.
+  three_of_a_kind_red
+    Draw 3 cards. Until end of turn, you may only play cards from arsenal.  **Go again**
+  throw_caution_to_the_wind_blue
+    Reveal the top card of your deck. The next time you would be dealt damage this turn, prevent X of that damage, where X is the pitch value of the card 
+  thump_blue
+    While Thump's {p} is greater than its base {p}, it gains **dominate** and "If this hits a hero, they discard a card."
+  thunk_blue
+    When you win a **clash** revealing this, create a Might token.
+  tigerine_reflex_red
+    **Combo** – If Crouching Tiger was the last attack this combat chain, this gets +1{p} and go again.****Attack** Reaction** — Discard this: Target Ninj
+  tip_the_barkeep_blue
+    Create a Goldkiss Rum token.  You may give a Gold token you control to another hero. If you do, put this on the bottom of its owner's deck.  **Go agai
+  tooth_of_the_dragon_red
+    Your next Draconic attack this turn gets +3{p}.
+  torrent_of_tempo_blue
+    When this hits, it gets **go again**.
+  torrent_of_tempo_red
+    When this hits, it gets **go again**.
+  torrent_of_tempo_yellow
+    When this hits, it gets **go again**.
+  tough_as_a_rok_blue
+    If you have less {h} than each other hero, this card’s base {p} is 6, otherwise it’s 0.
+  tough_smashup_blue
+    When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner'
+  tough_smashup_red
+    When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner'
+  tough_smashup_yellow
+    When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner'
+  trot_along_blue
+    Your next attack with 3 or less base {p} this turn gets **go again**.  **Go again**
+  trounce_red
+    When this defends, **clash** with the attacking hero. Put the revealed cards on the bottom of their owner's deck, then **clash** again.  If a hero win
+  turning_point_blue
+    When this defends, if you have less {h} than the attacking hero, **the crowd cheers** you.  While this is defending, if you've been cheered this turn,
+  under_the_trapdoor_blue
+    **Stealth**  **Instant** - Discard this: Banish target trap from your graveyard. If you do, you may play it this turn and if it would be put into the 
+  unsheathed_red
+    Your next sword attack this turn gets +3{p} and "When this attacks, if its {p} is greater than twice its base, it gets **go again**."  **Go again**
+  v_of_the_vanguard_yellow
+    **Boltyn Specialization**  As an additional cost to play V of the Vanguard, you may **charge** your hero's soul any number of times.  Attacks on this 
+  valahai_riven_yellow
+    When this defends, you may pay up to {r}{r}{r}. Create that many Seismic **Surge** tokens.
+  vigorous_smashup_blue
+    When this defends, **clash** with the attacking hero. The winner creates a Vigor token. You may put your revealed card on the bottom of its owner's de
+  vigorous_smashup_yellow
+    When this defends, **clash** with the attacking hero. The winner creates a Vigor token. You may put your revealed card on the bottom of its owner's de
+  visit_goldmane_estate_blue
+    **Victor Specialization**  Create a Gold token. Then if you control 3 or more Gold, create that many Might tokens.  **Go again**
+  visit_the_golden_anvil_blue
+    **Olympia Specialization**  As an additional cost to play this, destroy X Gold you control.  Equip X weapons and/or equipment from your inventory.
+  voltbound_duality_blue
+    Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+  voltbound_duality_red
+    Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+  voltbound_duality_yellow
+    Instant — ●, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.
+  voltic_impact_blue
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  voltic_impact_red
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  voltic_impact_yellow
+    **Twice per Turn Instant** — {r}: This gets +1{p}. When this hits, create a Lightning Flow token.
+  war_machine_red
+    If you have 1 or more Evos equipped, this gets "When this hits a hero, destroy all cards in their arsenal,""  - 2 or more, this costs {r}{r}{r} less t
+  warmongers_diplomacy_blue
+    Starting with the hero to your left, each hero chooses war or peace.  If they choose war, the only actions they may play or activate during their next
+  warriors_valor_red
+    Your next weapon attack this turn gains +3{p} and "If this hits, the attack gains **go again**."  **Go again**
+  wartune_herald_blue
+    When this hits, put it into your hero's soul.  **Phantasm**
+  wartune_herald_red
+    When this hits, put it into your hero's soul.  **Phantasm**
+  wartune_herald_yellow
+    When this hits, put it into your hero's soul.  **Phantasm**
+  whelming_gustwave_blue
+    **Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and "If this hits, draw a card."
+  whelming_gustwave_red
+    **Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and "If this hits, draw a card."
+  whittle_from_bone_blue
+    **Stealth**  When this attacks a **marked** hero, equip a Graphene Chelicera token.
+  widespread_annihilation_blue
+    **Rune Gate**  When the combat chain closes, each hero who has lost {h} this turn banishes a card from their hand.  **Blood Debt**
+  widespread_destruction_yellow
+    **Rune Gate**  When the combat chain closes, each hero who has lost {h} this turn banishes a card from their arsenal.  **Blood Debt**
+  widespread_ruin_red
+    **Rune Gate**  When the combat chain closes, each hero who has lost {h} this turn banishes the top card of their deck.  **Blood Debt**
+  wild_ride_red
+    When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.
+  wind_up_the_crowd_blue
+    **Instant** - Discard this: Create a Toughness and a Vigor token.
+  winters_bite_blue
+    Target hero discards a card unless they pay {r}.  **Go again**
+  wrecker_romp_blue
+    As an additional cost to play this, discard a random card.
+  wrecker_romp_red
+    As an additional cost to play this, discard a random card.
+  yellow_fin_harpoon_blue
+    **Go Fish** - When this hits a hero, they choose and reveal a card from their hand. If it's yellow, they discard it and you create a Gold token. If yo
+
+=== EQUIPMENT (97) ===
+  aether_crackers
+    When an attack you control hits a hero, you may destroy this. If you do, deal 1 arcane damage to them.
+  anothos
+    **Once per turn Action** - {r}{r}{r}: **Attack**  While there are 2 or more cards with cost 3 or greater in your pitch zone, Anothos has +2{p}.
+  aphrodias
+    **Instant** — {r}, {q}: Deal 2 arcane damage to target hero. Activate this only if an aura with a holo counter has entered the arena under your contro
+  arcanite_skullcap
+    If you have less {h} than your opponent, Arcanite Skullcap gains +1{d} and **Arcane Barrier 3**.  **Battleworn**
+  attention_grabbers
+    When this defends, you may remove a suspense counter from an aura you control. If you do, this gets +2{d} this chain link.  **Blade Break**
+  banksy
+    **Maxx Specialization**  **Once per Turn Action** - {r}: **Attack**. Activate this ability only if you've cranked this turn.  When this hits a hero, p
+  basalt_boots
+    If you control a Seismic **Surge** token, this gets +1{d}. **Temper**
+  blackstone_greaves
+    If you’ve dealt arcane damage this turn, this gets +1{d}. **Temper**
+  boltn_boots
+    ****Attack** Reaction** — {r}, destroy this: Target arrow attack with {p} greater than its base gets go again. **Battleworn**
+  bone_puppetry
+    When this defends, you may return an ally from your graveyard to the arena. If you do, at the beginning of the end phase, destroy it and discard your 
+  boots_to_the_boards
+    When this defends, pay up to {r}{r}{r}. Create that many Toughness tokens.  **Temper**
+  braveforge_bracers
+    **Once per turn Action** - {r}: Your next weapon attack this turn gains +1{p}. Activate this ability only if a weapon you control has hit this turn. *
+  breaker_helm_protos
+    When this defends, you may discard a Hyper Driver. If you do, draw a card and this gets +1{d} until end of turn.  **Temper**
+  breaking_scales
+    **Attack Reaction** - Destroy Breaking Scales: Target attack action card with **combo** gains +1{p}.  **Battleworn**
+  breakwater_undertow
+    **Attack Reaction** - Destroy this: Target Pirate ally attack gets **go again**. When the combat chain closes, destroy the ally.  **Blade Break**
+  breeze_rider_boots
+    When a Ninja attack action card you control hits, you may destroy Breeze Rider Boots. If you do, attack action cards with **combo** gain **go again** 
+  bulls_eye_bracers
+    **Action** - Destroy Bull's Eye Bracers: If you have no cards in your arsenal, you may put an arrow card from your hand face up into your arsenal. It 
+  calming_gesture
+    **Instant** - {r}: destroy this: Create a Spectral Shield token.  **Arcane Barrier 1**
+  carrion_husk
+    If you defend with Carrion Husk, banish it when the combat chain closes.  At the start of your turn, if you have 13 or less {h}, banish Carrion Husk. 
+  cintari_saber
+    **Once per Turn Action** - {r}: **Attack**  Whenever Cintari Saber is defended by 1 or more attack action cards, it gains +1{p} until end of turn.
+  cogwerx_base_arms
+    When this is equipped, put a steam counter on it.  **Once per Turn Instant** - {r}, remove a steam counter from this: Your next Mechanologist attack t
+  cogwerx_tinker_rings
+    When this defends, create a Golden Cog token.  **Blade Break**
+  crown_of_providence
+    When you defend with Crown of Providence, you may put a card from your hand or arsenal on the bottom of your deck. If you do, draw a card.  **Blade Br
+  dawnblade
+    **Once per Turn Action** - {r}: **Attack**  If Dawnblade hits, and it's the second time it has hit this turn, put a +1{p} counter on Dawnblade.  At th
+  dead_threads
+    **Instant** - {t}: Gain {r}. Activate this only if an ally has been put into your graveyard this turn.  **Blade Break**
+  dreadbore
+    **Once per Turn Action** - {r}: You may put an arrow card from your hand face up into an empty arsenal zone you control. If you do, it gains +1{p} unt
+  empyrean_rapture
+    If a card with Herald in its name has been put into your hero's soul during your turn, the first hero ability you activate that turn costs {r}{r} less
+  evo_beta_base_arms_blue
+    If you have a base arms equipped, transform it into this, then equip this. Evo arms cost you {r} less to play. **Battleworn**
+  evo_beta_base_chest_blue
+    If you have a base chest equipped, transform it into this, then equip this. Evo chests cost you {r} less to play. **Battleworn**
+  evo_beta_base_head_blue
+    If you have a base head equipped, transform it into this, then equip this. Evo heads cost you {r} less to play. **Battleworn**
+  evo_beta_base_legs_blue
+    If you have a base legs equipped, transform it into this, then equip this. Evo legs cost you {r} less to play. **Battleworn**
+  evo_recall_blue
+    If you have a base head equipped, transform it into this, then equip this.  When this is equipped, put up to 1 Mechanologist action card from your ban
+  evo_steel_soul_controller_blue
+    If you have base arms equipped, **transform** it into this, then equip this.  When this **transforms** from or into an Evo with a different name, you 
+  evo_steel_soul_memory_blue
+    If you have a base head equipped, **transform** it into this, then equip this.  When this **transforms** from or into an Evo with a different name, yo
+  evo_steel_soul_processor_blue
+    If you have a base chest equipped, **transform** it into this, then equip this.  When this **transforms** from or into an Evo with a different name, g
+  evo_steel_soul_tower_blue
+    If you have a base legs equipped, **transform** it into this, then equip this.  When this **transforms** from or into an Evo with a different name, ga
+  face_purgatory
+    When this defends together with an attack action card and a non-attack action card, the attacking hero discards a card and you draw a card.  **Blade B
+  flail_of_agony
+    **Vynnset Specialization**  **Once per Turn Action** - {h}: **Attack**  When this hits, create a Runechant token.
+  fluttersteps
+    When this is destroyed, you may play your next aura this turn as though it were an instant.  **Ward 1**
+  galvanic_bender
+    **Material** - While this is under a permanent, that permanent has +1{p}.  **Battleworn**
+  gauntlets_of_iron_will
+    When this defends, the next time an attack would gain {p} this chain link, instead it gains that much minus 1.  **Temper**
+  gauntlets_of_tyrannical_rex
+    **Action** - {r}, {t}: Your next attack this turn gets +1{p}. Activate this only if there is a card with 6 or more {p} in your pitch zone. **Go again*
+  golden_gait
+    **Legendary Olympia Specialization**  This counts as a Gold.  **Temper**
+  golden_galea
+    **Legendary Olympia Specialization**  This counts as a Gold.  **Temper**
+  golden_gauntlets
+    **Legendary Olympia Specialization**  This counts as a Gold.  **Temper**
+  golden_heart_plate
+    **Legendary Olympia Specialization**  This counts as a Gold.  **Temper**
+  good_time_chapeau
+    **Betsy Specialization**  **Action** - Destroy a Gold you control: Your next attack this turn gets "When this attacks a hero, **wager** a Might and a 
+  grains_of_bloodspill
+    Whenever a weapon attack you control hits, you may pay {r}. If you do, create a Vigor token.   **Temper**
+  graven_gloves
+    While this is in your graveyard, at the start of your turn, you may destroy 2 Silver you control. If you do, equip this. When this is equipped from an
+  harmonized_kodachi
+    **Once per Turn Action** - {r}: **Attack**  If you have a card in your pitch zone with cost 0, this card's attacks get **go again**.
+  heartened_cross_strap
+    **Action** - Destroy this: The next attack action card you play this turn costs {r}{r} less to play. **Go again**
+  helm_of_halos_grace
+    When this defends, you may **charge** your hero's soul. If a yellow card is **charged** this way, draw a card.  **Blade Break**
+  hexagore_the_death_hydra
+    **Once per Turn Action** - {r}{r}: **Attack**  Whenever you attack with Hexagore, it deals damage to you equal to 6 minus the number of cards with **b
+  ironfist_revelation
+    When this defends, you may turn a face-down card with crush in your arsenal face-up. If you do, put a +1{p} counter on it.  **Temper**
+  ironsong_versus
+    **Once per Turn Action** - **{r}:** Your next sword attack this turn gets "When this hits a hero, create a Courage token."  **Go again**  **Temper**
+  kunai_of_retribution
+    **Once per Turn Action** - {r}, destroy this when the combat chain closes: **Attack**. **Go again**
+  luminaris_angels_glow
+    If there is a yellow card in your pitch zone, the first attack action card with Herald in its name you play each turn and your first angel attack each
+  mask_of_momentum
+    **Once per Turn Effect** - When an attack action card you control is the third or higher chain link in a row to hit, draw a card.  **Blade Break**
+  mask_of_perdition
+    While Mask of Perdition is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip Mask of Perdition.  *
+  mask_of_the_pouncing_lynx
+    When an attack action card you control hits, you may destroy Mask of the Pouncing Lynx. If you do, search your deck for an attack action card with 2 o
+  millers_grindstone
+    **Once per Turn Action** - {r}{r}{r}: **Attack**  When this hits a hero, **clash** with them. If you win, destroy the top card of their deck. If they 
+  new_horizon
+    If you have a face up card in your arsenal, you have an additional arsenal zone.  When this is destroyed, destroy all cards in your arsenal.  **Blade 
+  obsidian_fire_vein
+    **Once per Turn Action** - {r}: **Attack**. If you've played a Draconic card this chain link, this attack gets +1{p} and **go again**.
+  parry_blade
+    **Once per Turn Action** - {r}: **Attack**  This gets +2{d} while defending a weapon attack.  **Blade Break**
+  phantasmal_footsteps
+    Once per turn, when an Illusionist attack action card you control is destroyed, you may pay {r}. If you do, gain 1 action point.  Whenever this defend
+  pillar_of_unity
+    **Unity** – When this defends together with a card from hand, this gets +1{d} until end of turn. **Temper**
+  pouncing_paws
+    **Instant** - Destroy this: Create a Crouching Tiger in your banished zone. You may play it this turn.  **Battleworn**
+  quickdodge_flexors
+    **Defense Reaction** - {r}: Add this to the active chain link as a defending card. It has 2 base {d} this chain link.  At the beginning of the end pha
+  ravenous_meataxe
+    **Once per Turn Action** - {r}{r}: **Attack**  Whenever you attack with Ravenous Meataxe, draw a card then discard a random card. If a card with 6 or 
+  raydn_duskbane
+    **Once per Turn Action** - 0: **Attack**  If you've **charged** this turn, Raydn gains +3{p}.
+  refraction_bolters
+    When a weapon you control hits, you may destroy Refraction Bolters. If you do, the attack gains **go again**.  **Battleworn**
+  rok
+    **Once per Turn Action** - {r}{r}{r}: **Attack**  Activate Rok only if you have no cards in hand.  Damage that would be dealt by Rok can't be prevente
+  savage_claw
+    **Action** — {r}{r}, {t}: **Attack** If a card with 6 or more {p} was pitched to attack with this, the attack gets +1{p}.
+  savage_sash
+    **Action** - Destroy this: Attack action cards with 6 or more {p} cost you {r} less to play this turn. **Go again**  **Temper**
+  scale_peeler
+    **Once per Turn Action** - {r}{r}: **Attack**. **Go again**  **Piercing 1**  When this hits a hero, the next time they defend with 1 or more equipment
+  searing_emberblade
+    **Once per Turn Action** - {r}{r}: **Attack**  If you control 2 or more Draconic chain links, this card's attacks get **go again**.
+  sharp_shooters
+    **Action** - Destroy this: Put an arrow from your hand face-up into your arsenal with an aim counter. **Go again**  **Battleworn**
+  snapdragon_scalers
+    **Attack Reaction** - Destroy this: Target attack action card with cost 1 or less gets **go again**.
+  solforge_gauntlet
+    When the combat chain closes, if this defended, put it into your soul. **Arcane Barrier 1**
+  spellbound_creepers
+    **Once per Turn Instant** - {r}, put a bind counter on Spellbound Creepers: You may play your next 'non-attack' action card this turn as though it wer
+  spiders_bite
+    **Once per Turn Action** - {r}{r}: **Attack**. **Go again**  **Piercing 1**  When this hits a hero, the next time they defend with 1 or more attack ac
+  spitfire
+    **Action** - {t}, {t} a cog you control: **Attack**  When this attacks, you may {t} a cog you control. If you do, the attack gets +1{p}.
+  symbiosis_shot
+    **Dash Specialization**  **Action** - Remove a steam counter from this: **Attack**  Whenever a Mechanologist item enters the arena under your control,
+  synapse_sparkcap
+    **Action** — {t}, banish an Evo from your hand: Create a Ponder token. **Battleworn**
+  talishar_the_lost_prince
+    **Once per Turn Action** - {r}{r}, put a rust counter on Talishar, the Lost Prince: **Attack**  At the beginning of your end phase, if Talishar, the L
+  tectonic_plating
+    **Once per turn Action** - {r}: Create a Seismic Surge aura token. **Go again**  **Battleworn**
+  teklo_foundry_heart
+    **Once per Turn Action** - {r}: Banish the top 2 cards of your deck. Gain {r} for each Mechanologist card banished this way. Activate this ability onl
+  teklo_leveler
+    If you have 1 or more Evos equipped, this gets "**Once per Turn Action** - {r}{r}{r}: **Attack**,"  * 2 or more, this costs {r}{r} less to activate, *
+  tiger_stripe_shuko
+    The second attack action card with 2 or less base {p} you play each turn has +1{p} and "Damage that would be dealt by this can't be prevented."  **Bla
+  titans_fist
+    **Once per Turn Action** - {r}{r}{r}: **Attack**  If there is a card with cost 3 or greater in your pitch zone, Titan's Fist has +1{p}.
+  trench_of_sunken_treasure
+    **Once per Turn Instant** - Put a face down card from your arsenal on the bottom of your deck: Gain {r}  **Arcane Barrier 1**  **Blade Break**
+  unicycle
+    **Instant** - Destroy this: {u} a cog you control.  **Battleworn**
+  valiant_dynamo
+    At the beginning of your end phase, if you have attacked 2 or more times with weapons this turn, you may remove a -1{d} counter from Valiant Dynamo.  
+  vexing_quillhand
+    **Action** - Destroy Vexing Quillhand: Create 2 Runechant tokens. **Go again**  **Arcane Barrier 1**
+  warpath_of_winged_grace
+    When this defends, you may **charge** your hero's soul. If a yellow card is **charged** this way, create a Quicken token.  **Blade Break**
+  wind_cutter
+    ****Attack** Reaction** — {r}, {t}: Search your deck for a Shuriken item, put it into the arena, then shuffle. Activate this only if you’ve hit 2 or m
+  zenith_blade
+    **Hala Specialization**  **Once per Turn Action** - {r}: **Attack**  If this has been sharpened this turn, its first attack this turn gets **go again*
+
+=== AURA_ALLY_ITEM (50) ===
+  arc_light_sentinel_yellow
+    **Prism Specialization**  Opponents may only select Arc Light Sentinel as the target of an attack.  **Spectra**
+  backup_protocol_red_red
+    **Crank**  This enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.  **Instant**
+  blessing_of_bellona_yellow
+    Go again Whenever a card is put into your soul, create a Courage token. At the start of your turn, put this into your soul.
+  boom_grenade_red
+    **Crank**  This enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.  When a Mech
+  boom_grenade_yellow
+    **Crank**  This enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.  When a Mech
+  booze_blue
+    **Go again**  When this enters or leaves the arena, **the crowd boos** you.  At the start of your turn, destroy this.
+  cerebellum_processor_blue
+    **Crank**  This enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.  **Once per
+  channel_lake_frigid_blue
+    **Go again**  Cards and activated abilities cost opposing heroes an additional {r}.  **Channel Ice** - At the beginning of your end phase, put a flow 
+  chum_friendly_first_mate_yellow
+    **Action** - {t}: **Attack**  **Instant** - {t}, discard a card with watery grave: Until end of turn, opponents must choose this as the target of atta
+  concealed_object_blue
+    When this enters the arena, **the crowd boos** you.  **Instant** - {t}: Target attack gets +1{p}.  At the beginning of your end phase, destroy this.
+  copper_cog_blue
+    **Unlimited**  **Crank**  This enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from 
+  crumble_to_eternity_blue
+    **Jarl Specialization**  When this enters the arena, you may put a -1{d} counter on an equipment.  At the beginning of your action phase, destroy this
+  edge_of_their_seats_red
+    **Suspense**  When this leaves the arena, your next attack this turn gets +5{p}.
+  edge_of_their_seats_yellow
+    **Suspense**  When this leaves the arena, your next attack this turn gets +4{p}.
+  genesis_yellow
+    At the start of your turn, you may put a card from your hand into your hero's soul. If it's an Illusionist card, create a Spectral Shield token. If it
+  hyper_driver_red
+    This enters the arena with 3 steam counters. When it has none, destroy it.  Once per turn, when you boost a card, remove a steam counter from this and
+  hyper_driver_yellow
+    This enters the arena with 2 steam counters on it. When this has no steam counters on it, destroy it.  Once per turn, when you boost a card, remove a 
+  in_the_palm_of_your_hand_red
+    **Suspense**  When this enters or leaves the arena, draw a card.
+  leave_them_hanging_red
+    **Suspense**  When this enters or leaves the arena, **intimidate** target hero.  When this leaves the arena, your next attack this turn gets +4{p}.
+  ley_line_of_the_old_ones_blue
+    **Legendary**  When this enters the arena and whenever you deal damage, create a Seismic Surge token. At the beginning of your end phase, if you contr
+  loan_shark_yellow
+    **Go again**  When this enters the arena, create 2 Gold tokens.  At the beginning of your end phase, if you haven't created or stolen a Gold this turn
+  malefic_incantation_red
+    **Go again**  This enters the arena with 3 verse counters. When it has none, destroy it.  Once per turn, when you play an attack action card, remove a
+  malefic_incantation_yellow
+    **Go again**  This enters the arena with 2 verse counters. When it has none, destroy it.  Once per turn, when you play an attack action card, remove a
+  merciful_retribution_yellow
+    Whenever an aura or attack action card you control is destroyed, deal 1 arcane damage to target hero. If it's a non-token Light card, put it into your
+  null_time_zone_blue
+    **Crank**  This enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.  When this 
+  oysten_heart_of_gold_yellow
+    **Action** - {t}: Attack  When this dies, create a Gold token.  **Watery Grave**
+  passing_mirage_blue
+    Your first Illusionist attack each turn loses and can't gain **phantasm**.  **Spectra**
+  pierce_reality_blue
+    The first Illusionist attack action card you play each turn has +2{p}.  **Spectra**
+  promising_terrain_blue
+    **Go again**  If you would create 1 or more Seismic Surge tokens, instead create that many plus 1.  At the beginning of your action phase, destroy thi
+  riggermortis_yellow
+    **Action** - {r}, {t}: **Attack**  **Watery Grave**
+  runeblood_incantation_red
+    **Go again**  Runeblood Incantation enters the arena with 3 verse counters on it.  At the beginning of your action phase, remove a verse counter from 
+  sawbones_dock_hand_yellow
+    **Action** - {r}, {t}: **Attack**  **Instant** - {t}: The next time you or a Pirate you control would be dealt damage this turn, prevent 1 of that dam
+  scooba_salty_sea_dog_yellow
+    **Action** - {r}{r}{r}, {t}: **Attack**  When this attacks, you may put a yellow card from a graveyard on the bottom of its owner's deck. If you do, c
+  seeker_kunai_red
+    ****Attack** Reaction** — {r}, destroy this: Target Assassin attack action card gets +1{p}. While this is in your graveyard, at the start of your turn
+  sharpened_senses_yellow
+    **Go again**  Your weapon attacks get +1{p}. If their {p} is greater than twice their base, they get **go again**.  At the beginning of your end phase
+  shifting_tides_blue
+    **Go again**  At the start of your turn, pitch the top card of your deck. If it's blue, put this on the bottom of your deck, otherwise destroy this.
+  show_time_blue
+    **Bravo Specialization**  When Show Time! enters the arena, search your deck for a Guardian attack action card, reveal it and put it into your hand, t
+  sigil_of_aether_blue
+    At the beginning of your action phase, destroy this.  When this leaves the arena, deal 1 arcane damage to any target. If damage is dealt this way, **a
+  sigil_of_brilliance_yellow
+    **Oscilio Specialization**  At the beginning of your action phase, destroy this.  When this leaves the arena, draw a card.
+  sigil_of_conductivity_blue
+    **Arcane Shelter 1**  When this leaves the arena, create an Embodiment of Lightning token.
+  sigil_of_lightning_blue
+    At the beginning of your action phase, destroy this.  When this leaves the arena, create an Embodiment of Lightning token.
+  silverwind_shuriken_blue
+    **Attack Reaction** - Destroy Silverwind Shuriken: Target attack action card with **combo** gains +1{p}.
+  spirit_of_eirina_yellow
+    **Legendary**  If Spirit of Eirina would be put into your soul, instead put it into the arena.  You may play Lumina Ascension as though it were an ins
+  stardust_spike
+    When this leaves the arena, gain ● and amp 1. (The next time you would deal arcane damage this turn, instead deal that much plus 1.)  **Ward 2** (If y
+  swabbie_yellow
+    **Action** - {r}{r}, {t}: **Attack**  **Watery Grave**
+  teklo_core_blue
+    **Dash Specialization**  Teklo Core enters the arena with 2 steam counters on it. When Teklo Core has no steam counters on it, destroy it.  At the beg
+  teklo_pounder_blue
+    Teklo Pounder enters the arena with 3 steam counters on it. When Teklo Pounder has no steam counters on it, destroy it.  **Once per Turn Effect** - Wh
+  to_be_continued_blue
+    **Suspense**  The first time you would be dealt damage each turn, prevent 1 of that damage.
+  two_steps_ahead_blue
+    At the start of your turn, destroy this, then create a Confidence and 3 Might tokens.
+  up_on_a_pedestal_blue
+    **Suspense**  When this enters or leaves the arena, you may put a Revered or Guardian attack action card from your graveyard on top of your deck.
+
+=== ATTACK_REACTION (39) ===
+  affirm_loyalty_red
+    Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, create a Fealty token.
+  ancestral_empowerment_red
+    Target Ninja attack action card gains +1{p}.  Draw a card.
+  beacon_of_victory_yellow
+    As an additional cost to play Beacon of Victory, banish X cards from your hero's soul. X can't be 0.  Target attack gains +X{p}.  If you've **charged*
+  beat_of_the_ironsong_blue
+    Choose X+1, where X is the number of +1{p} counters on an attacking Dawnblade; - Target Dawnblade attack gets +1{p}. - Target Dawnblade attack gets **
+  blade_flurry_red
+    Target weapon attack gets +2{p}.  Your next weapon attack this turn gets +2{p}.
+  blade_runner_blue
+    Target 1H weapon attack gains **go again**.  Your next weapon attack this turn gains +1{p}.
+  blade_runner_red
+    Target 1H weapon attack gains **go again**.  Your next weapon attack this turn gains +3{p}.
+  blistering_blade_red
+    Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, instead it gets +3{p}.
+  blood_follows_blade_yellow
+    **Kassai Specialization**  Target sword attack gets **go again** and "When this hits, create a Cintari Sellsword token."
+  coercive_tendency_blue
+    **Arakni Specialization**  Look at the top 3 cards of the defending hero's deck. Put them back in any order, then banish the top card of their deck.  
+  cut_to_the_chase_red
+    Target Assassin attack action card with **contract** gains +3{p}.  Look at the top card of the defending hero's deck. You may put it on the bottom.
+  fire_and_brimstone_red
+    **Legendary**  This costs {r} less to play for each Draconic chain link you control.  Daggers you control get +1{p} and you may attack with each of th
+  glint_the_quicksilver_blue
+    Target weapon attack gains **go again**.  **Reprise** - If the defending hero has defended with a card from their hand this chain link, draw a card.
+  hunts_end_red
+    Play this only if you control 3 or more Fealty tokens.  Target dagger attack gets +4{p}.
+  in_the_swing_red
+    Play In the Swing only if you have attacked 2 or more times with weapons this turn.  Target weapon attack gains +3{p}.
+  ironsong_response_red
+    **Reprise** - If the defending hero has defended with a card from their hand this chain link, target weapon attack gains +3{p}.
+  jagged_edge_red
+    Target weapon attack gets +3{p} and "Damage this would deal can't be prevented."
+  legacy_of_ikaru_blue
+    Target Ninja attack gets +1{p} and "When this hits, if Edge of Autumn was the last attack this combat chain, draw a card."
+  long_whisker_loyalty_red
+    For each Draconic chain link you control, choose 1;  * Target dagger attack gains +2{p}. * You may attack with target dagger an additional time this t
+  nip_at_the_heels_blue
+    Target attack with 3 or less base {p} gets +1{p}.
+  overpower_blue
+    Target weapon attack gains +2{p}  **Reprise** - If the defending hero has defended with a card from their hand this chain link, instead it gains +4{p}
+  overpower_red
+    Target weapon attack gains +4{p}  **Reprise** - If the defending hero has defended with a card from their hand this chain link, instead it gains +6{p}
+  overpower_yellow
+    Target weapon attack gains +3{p}  **Reprise** - If the defending hero has defended with a card from their hand this chain link, instead it gains +5{p}
+  provoke_blue
+    If you're attacking with a weapon this chain link, the defending hero reveals a card from their hand. If it's an action card, add it to this chain lin
+  pummel_red
+    Choose 1; - Target club or hammer weapon attack gains +4{p}. - Target attack action with cost 2 or greater gains +4{p} and "If this hits a hero, they 
+  puncture_red
+    Target sword or dagger attack gains +3{p} and **piercing 1**.
+  razor_reflex_red
+    Choose 1; - Target dagger or sword weapon attack gets +3{p}. - Target attack action card with cost 1 or less gets +3{p} and "When this hits, it gets *
+  razors_edge_blue
+    Target attack action card with **stealth** gets +1{p}.
+  razors_edge_red
+    Target attack action card with **stealth** gets +3{p}.
+  razors_edge_yellow
+    Target attack action card with **stealth** gets +2{p}.
+  run_through_yellow
+    Target sword attack gains **go again**.  Your next sword attack this turn gains +2{p}.
+  searing_gaze_red
+    Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, it gets "When this hits a hero, **mark** them."
+  singing_steelblade_yellow
+    **Dorinthea Specialization**  Target weapon attack gains +1{p}.  **Reprise** - If the defending hero has defended with a card from hand this chain lin
+  spike_with_bloodrot_red
+    Target attack action card with **stealth** gains +3{p} and "When this hits a hero, create a Bloodrot Pox token under their control."
+  take_up_the_mantle_yellow
+    Target attack action card with **stealth** gets +2{p}. If it's attacking a **marked** hero, instead it gets +3{p} and you may banish an attack action 
+  tarantula_toxin_red
+    Choose 1 or both;  * Target dagger attack gets +3{p}. * Target card defending an attack with stealth gets -3{d} this turn.
+  throw_dagger_blue
+    Target dagger you control that isn't on the active chain link deals 1 damage to the defending hero. If damage is dealt this way, the dagger has hit an
+  twinning_blade_yellow
+    You may attack an additional time with target sword this turn.
+  up_the_ante_blue
+    **Olympia Specialization**  Choose X+1; - Target attack **wagers** an Agility token with the defending hero. - Target attack **wagers** a Gold token w
+
+=== DEFENSE_REACTION (21) ===
+  blood_in_the_water_red
+    When this defends, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets +2{d}.
+  buzzsaw_trap_blue
+    **Legendary Riptide Specialization**  When this defends an attack with {p} greater than its base, the attack can't gain {p} this turn.
+  collapsing_trap_blue
+    **Legendary Riptide Specialization**  When this defends an attack with **go again**, the attacking hero discards their hand then draws that many cards
+  flic_flak_blue
+    If the next card you defend with this turn is a card with combo, it gains +2{d}.
+  flic_flak_red
+    If the next card you defend with this turn is a card with combo, it gains +2{d}.
+  flic_flak_yellow
+    If the next card you defend with this turn is a card with combo, it gains +2{d}.
+  hunter_or_hunted_blue
+    When this defends, name a card. The attacking hero reveals the top card of their deck. If it's the named card, banish it, search their hand, deck, and
+  inertia_trap_red
+    When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control.
+  lair_of_the_spider_red
+    When this defends an attack with **go again**, **mark** the attacking hero.
+  pulse_of_isenloft_blue
+    **Legendary**  Earth, Ice, and Elemental action cards have +1{d} while defending this turn.
+  reckless_swing_blue
+    As an additional cost to play Reckless Swing, discard a random card.  If the discarded card has 6 or more {p}, deal 2 damage to the attacking hero.
+  reduce_to_runechant_red
+    Reduce to Runechant costs {r} less to play for each Runechant you control.  Create a Runechant token.
+  saving_grace_yellow
+    As an additional cost to play this, you may **charge** your hero's soul.  If you've **charged** this turn, target attack gets -2{p}.
+  shelter_from_the_storm_red
+    **Instant** - Discard this: The next 3 times you would be dealt damage this turn, prevent 1 of that damage.
+  sink_below_blue
+    You may put a card from your hand on the bottom of your deck. If you do, draw a card.
+  sink_below_red
+    You may put a card from your hand on the bottom of your deck. If you do, draw a card.
+  sink_below_yellow
+    You may put a card from your hand on the bottom of your deck. If you do, draw a card.
+  solid_ground_blue
+    This costs {r} less to play for each Seismic Surge you control.
+  soul_shield_yellow
+    Put Soul Shield into your hero's soul when the combat chain closes.
+  staunch_response_red
+    As an additional cost to play Staunch Response you may pay {r}{r}{r}{r}. If you do, Staunch Response gains +3{d}.
+  tarpit_trap_yellow
+    When this defends an attack with **go again**, the next time an attack action card hits this turn, effects don't trigger.
+

@@ -19,6 +19,7 @@ import argparse
 import copy
 import html
 import json
+import msgpack
 import random
 import re
 import sqlite3
@@ -35,11 +36,13 @@ if "rl_agents" not in sys.modules:
     _pkg.__path__ = [str(_PROJECT_ROOT / "rl_agents")]  # type: ignore[assignment]
     _pkg.__package__ = "rl_agents"
     sys.modules["rl_agents"] = _pkg
-from rl_agents.fab_constants import DESCRIPTOR, validate_deck_legality, _expand_hero_classes, _parse_hybrid_supertypes, load_banned_cards  # noqa: E402
+from rl_agents.fab_constants import DESCRIPTOR, validate_deck_legality, _expand_hero_classes, _parse_hybrid_supertypes, FORMAT_MAP  # noqa: E402
 
 DB_PATH = Path("data/fablazing_meta.db")
 OUTPUT_DIR = Path("decks/generated")
-SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
+SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.msgpack"
+
+# FORMAT_MAP imported from fab_constants — shared canonical format name mapping.
 
 MIN_DECK_CARDS = 60
 MAX_COPIES = 3
@@ -73,13 +76,17 @@ _slug_index: dict | None = None
 
 
 def _load_slug_index() -> None:
-    """Load slug_index.json once, populating both _slug_index and _valid_slugs."""
+    """Load slug_index once, populating both _slug_index and _valid_slugs."""
     global _slug_index, _valid_slugs
     if _slug_index is not None:
         return
     if SLUG_INDEX_PATH.exists():
-        with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
-            data = json.load(f)
+        if str(SLUG_INDEX_PATH).endswith(".msgpack"):
+            with open(SLUG_INDEX_PATH, "rb") as f:
+                data = msgpack.unpack(f, raw=False)
+        else:
+            with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
+                data = json.load(f)
         _slug_index = data.get("by_slug", {})
     else:
         _slug_index = {}
@@ -117,26 +124,29 @@ def _fuzzy_slug_match(name: str, threshold: int = 80) -> str | None:
     return match_slug if score >= threshold else None
 
 
-def build_legal_pool(hero_slug: str) -> frozenset[str]:
-    """Return all card slugs from slug_index that are legal for hero_slug.
+def build_legal_pool(hero_slug: str, fmt: str = "cc") -> frozenset[str]:
+    """Return all card slugs from slug_index that are legal for hero_slug in the given format.
 
-    A card is legal if:
-      (a) it has no non-descriptor types  →  Generic, OR
-      (b) all of its non-descriptor types are a subset of the hero's.
+    Uses the ``legal_heroes`` and ``legal_formats`` fields from the card database
+    (sourced from the official FAB card data) to determine legality.
+    A card must be legal for BOTH the hero AND the format.
+
+    Falls back to the old class-subset heuristic when ``legal_heroes`` data is missing.
 
     Returns frozenset() with a warning if the hero isn't found.
     """
     import warnings
     index = _get_slug_index()
+    canon_fmt = FORMAT_MAP.get(fmt, fmt)
 
-    hero_entry = (
-        index.get(hero_slug)
-        or index.get(hero_slug.replace("-", "_"))
-    )
+    # Resolve hero slug to its entry in the index
+    canon = hero_slug.replace("-", "_")
+    hero_entry = index.get(hero_slug) or index.get(canon)
     if hero_entry is None:
         fuzzy_key = _fuzzy_slug_match(hero_slug)
         if fuzzy_key:
             hero_entry = index.get(fuzzy_key)
+            canon = fuzzy_key
 
     if hero_entry is None:
         warnings.warn(
@@ -146,16 +156,39 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
         )
         return frozenset()
 
+    # Get the hero's enum name (e.g. "Kayo", "RKO", "Dromai") from the hero
+    # card entry.  This is the key we match against each card's legal_heroes.
+    hero_enum = hero_entry.get("hero")
+    if hero_enum is None:
+        warnings.warn(
+            f"build_legal_pool: hero '{hero_slug}' has no 'hero' enum field. "
+            "Falling back to class-subset heuristic.",
+            stacklevel=2,
+        )
+        return _build_legal_pool_class_heuristic(hero_slug, hero_entry, index)
+
+    legal: set[str] = set()
+    for slug, entry in index.items():
+        card_legal_heroes = entry.get("legal_heroes")
+        if not card_legal_heroes or hero_enum not in card_legal_heroes:
+            continue
+        # Check format legality (also covers bans — banned cards don't list the format)
+        card_legal_formats = entry.get("legal_formats")
+        if card_legal_formats and canon_fmt in card_legal_formats:
+            legal.add(slug)
+
+    return frozenset(legal)
+
+
+def _build_legal_pool_class_heuristic(
+    hero_slug: str, hero_entry: dict, index: dict
+) -> frozenset[str]:
+    """Legacy class-subset legality check (fallback when legal_heroes is missing)."""
     hero_classes_frozen: frozenset[str] = _expand_hero_classes(
         hero_entry.get("types", []),
         hero_entry.get("card_keywords", []),
     )
-
-    # Build a string of hero name tokens for specialization matching.
-    # e.g. "rhinar_reckless_rampage" → "rhinar reckless rampage"
     _hero_name_tokens: str = hero_slug.replace("-", " ").replace("_", " ").lower()
-
-    # Types that mark a card as non-deck-playable regardless of class legality
     _NON_PLAYABLE: frozenset[str] = frozenset({
         "hero", "macro", "companion", "invocation", "mentor",
         "placeholder card", "landmark",
@@ -164,12 +197,8 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
     legal: set[str] = set()
     for slug, entry in index.items():
         raw_types = frozenset(t.lower() for t in (entry.get("types") or []))
-        # Exclude heroes and non-playable game objects
         if raw_types & _NON_PLAYABLE:
             continue
-
-        # Specialization check: if the card has an "XYZ Specialization" keyword,
-        # only include it when "xyz" appears in this hero's name tokens.
         kws = entry.get("card_keywords") or []
         spec_mismatch = False
         for kw in kws:
@@ -180,19 +209,15 @@ def build_legal_pool(hero_slug: str) -> frozenset[str]:
                     break
         if spec_mismatch:
             continue
-
-        # Check for hybrid cards via ' / ' delimiter in type_text
         type_text = entry.get("type_text", "")
         hybrid = _parse_hybrid_supertypes(type_text)
         if hybrid is not None:
             left_classes, right_classes = hybrid
-            # Hybrid card is legal if EITHER side satisfies hero classes
             left_ok = not left_classes or left_classes <= hero_classes_frozen
             right_ok = not right_classes or right_classes <= hero_classes_frozen
             if left_ok or right_ok:
                 legal.add(slug)
             continue
-
         card_classes = frozenset(
             t for t in raw_types if t not in DESCRIPTOR
         )
@@ -447,27 +472,19 @@ def _is_young_hero(hero_slug: str) -> bool:
 _NON_CC_HERO_TYPES = {"pit-fighter", "adjudicator", "merchant"}
 
 
-def _is_cc_legal_hero(hero_slug: str, banned_slugs: set) -> bool:
-    """Return True if *hero_slug* is legal for Classic Constructed.
+def _is_format_legal_hero(hero_slug: str, fmt: str = "cc") -> bool:
+    """Return True if *hero_slug* is legal for the given format.
 
-    Filters out:
-    - Young heroes (blitz-only)
-    - Heroes whose types are restricted to non-CC formats (Pit-Fighter, Adjudicator, Merchant)
-    - Heroes that appear on the CC banned list
+    Uses the ``legal_formats`` field from the card database.
     """
+    canon_fmt = FORMAT_MAP.get(fmt, fmt)
     norm = hero_slug.replace("-", "_")
-    if norm in banned_slugs or hero_slug in banned_slugs:
-        return False
     index = _get_slug_index()
     entry = index.get(norm) or index.get(hero_slug)
     if entry is None:
         return True  # Unknown hero — let it through and fail later if needed
-    types_lower = {t.lower() for t in (entry.get("types") or [])}
-    if "young" in types_lower:
-        return False
-    if types_lower & _NON_CC_HERO_TYPES:
-        return False
-    return True
+    legal_formats = entry.get("legal_formats") or []
+    return canon_fmt in legal_formats
 
 
 def _list_heroes(conn: sqlite3.Connection, fmt: str = "cc") -> list[str]:
@@ -489,10 +506,8 @@ def _list_heroes(conn: sqlite3.Connection, fmt: str = "cc") -> list[str]:
             continue
         slugs.append(hero_slug)
 
-    # Filter to CC-legal heroes only
-    if fmt == "cc":
-        banned = set(load_banned_cards("cc"))
-        slugs = [s for s in slugs if _is_cc_legal_hero(s, banned)]
+    # Filter to format-legal heroes only
+    slugs = [s for s in slugs if _is_format_legal_hero(s, fmt)]
     return slugs
 
 
@@ -1160,8 +1175,9 @@ def generate_deck(
         fmt: Format string (default 'cc' for Classic Constructed).
         mutate: If True, apply random mutations to the deck.
         rng: Optional Random instance for reproducibility.
-        banned_slugs: Optional override for banned card slugs. If None,
-            load_banned_cards(fmt) is used automatically.
+        banned_slugs: Deprecated — format legality is now determined by the
+            ``legal_formats`` field in slug_index.  Kept for API compatibility
+            but ignored.
 
     Returns:
         A dict with keys:
@@ -1173,14 +1189,9 @@ def generate_deck(
             total_arena_cards: int
     """
     # --- Step 1: Build legal pool from slug_index BEFORE any DB access ---
-    # This is the authoritative gate: only cards whose class types are a subset
-    # of the hero's class+talent types (or Generic) can enter the deck.
-    legal_pool = build_legal_pool(hero_slug)
-
-    # --- Step 1b: Remove banned cards from the legal pool ---
-    _banned = banned_slugs if banned_slugs is not None else load_banned_cards(fmt)
-    if _banned:
-        legal_pool = frozenset(legal_pool - _banned)
+    # The legal_heroes AND legal_formats fields gate legality — banned cards
+    # are already excluded because they won't list the format.
+    legal_pool = build_legal_pool(hero_slug, fmt)
 
     conn = sqlite3.connect(str(db_path))
     try:

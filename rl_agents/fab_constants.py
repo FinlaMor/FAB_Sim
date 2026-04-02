@@ -1,16 +1,12 @@
 """fab_constants.py — Shared constants for FAB card classification.
 
-DESCRIPTOR is the set of type-array words that are equipment/format
-descriptors, NOT class or talent identifiers.  Used in the legality
-subset check: a card is legal for a hero if its non-descriptor types
-are a subset of the hero's non-descriptor types.
+Primary legality is now determined by the ``legal_heroes`` field from the
+upstream card data (``@flesh-and-blood/types``).  Each card lists which hero
+enum values are allowed to use it.  The hero entry's ``hero`` field is the
+join key.
 
-Additions vs removals:
-  - Physical weapon types (sword, axe, flail, etc.)  → DESCRIPTOR
-  - Armor slot names (head, chest, arms, legs, …)    → DESCRIPTOR
-  - Card traits / keywords (revered, reviled, …)     → DESCRIPTOR
-  - Class identifiers (warrior, ninja, brute, …)     → NOT in DESCRIPTOR
-  - Talent identifiers (draconic, shadow, earth, …)  → NOT in DESCRIPTOR
+DESCRIPTOR is kept for backward-compat with ``deck_search.py`` but the
+``validate_deck_legality()`` codepath no longer relies on it.
 """
 
 # fmt: off
@@ -130,19 +126,29 @@ def _expand_hero_classes(
 import json as _json
 from pathlib import Path as _Path
 
+# Map short format codes to the canonical format names stored in
+# slug_index legal_formats (sourced from the official FAB card data).
+FORMAT_MAP: dict[str, str] = {
+    "cc": "ClassicConstructed",
+    "blitz": "Blitz",
+    "draft": "Draft",
+    "sealed": "Sealed",
+    "clash": "Clash",
+    "open": "Open",
+    "ll": "LivingLegend",
+    "upf": "UltimatePitFight",
+    "silverage": "SilverAge",
+}
+
 _BANNED_CARDS_PATH = _Path(__file__).resolve().parent.parent / "card_data" / "banned_cards.json"
 
 
 def load_banned_cards(fmt: str) -> frozenset[str]:
     """Return a frozenset of banned card slugs for the given format.
 
-    Args:
-        fmt: Format key (e.g. ``"cc"`` for Classic Constructed).
-
-    Returns:
-        A frozenset of card slug strings banned in the format.
-        Returns an empty frozenset if the file is missing or the format
-        key is not present.
+    .. deprecated::
+        Use the ``legal_formats`` field from slug_index instead.
+        This function reads from banned_cards.json which is no longer maintained.
     """
     if not _BANNED_CARDS_PATH.exists():
         return frozenset()
@@ -194,46 +200,60 @@ def validate_deck_legality(
     hero_keywords: list[str] | None = None,
     hero_name: str = "",
     banned_slugs: frozenset[str] | None = None,
+    fmt: str | None = None,
+    hero_enum: str = "",
 ) -> list[str]:
     """Check every card in a deck for FAB class/talent legality.
 
     Returns a list of violation strings (empty list = deck is legal).
 
-    FAB rule: a card is legal if it is Generic (no non-descriptor types)
-    OR all of its non-descriptor types are a subset of the hero's
-    non-descriptor types.  Specialization cards additionally require the
-    hero's name to match the specialization constraint.
+    Primary check: uses the upstream ``legal_heroes`` field on each card.
+    A card is legal if the hero's enum value (``hero_enum``) appears in
+    the card's ``legal_heroes`` list.  Cards with an empty/missing
+    ``legal_heroes`` list are assumed legal (they may be tokens or cards
+    without upstream hero restrictions).
 
     Args:
-        deck_cards:  list of card dicts with at least a ``card_slug`` key.
-        equipment:   list of equipment/weapon dicts with at least a ``card_slug`` key.
-        hero_types:  raw type list from slug_index for the hero card
-                     (e.g. ``['Warrior', 'Hero', 'Young']``).
-        slug_index:  the ``by_slug`` dict from slug_index.json.
-        hero_name:   display name of the hero (e.g. ``"Olympia, Prized Fighter"``).
-                     Required for specialization checks; ignored if empty.
+        deck_cards:   list of card dicts with at least a ``card_slug`` key.
+        equipment:    list of equipment/weapon dicts with at least a ``card_slug`` key.
+        hero_types:   raw type list from slug_index for the hero card.
+        slug_index:   the ``by_slug`` dict from slug_index.
+        hero_name:    display name of the hero (for specialization checks).
+        hero_enum:    the hero's ``hero`` field value from slug_index
+                      (e.g. ``"RKO"``, ``"Oscilio"``).  This is the join key
+                      into each card's ``legal_heroes`` list.
+        fmt:          format key for legal_formats checks (default ``None``).
 
     Returns:
         A list of human-readable violation strings.
     """
-    hero_classes: frozenset[str] = _expand_hero_classes(
-        hero_types, hero_keywords or []
-    )
     hero_is_young = "young" in {t.lower() for t in hero_types}
+
+    # Resolve canonical format name for legal_formats checks
+    _canonical_fmt = FORMAT_MAP.get(fmt, fmt) if fmt else None
 
     violations: list[str] = []
     all_cards = list(deck_cards) + list(equipment)
     for card in all_cards:
         slug = card.get("card_slug") or card.get("slug", "")
 
-        # ── banned card check ────────────────────────────────────────────
-        if banned_slugs and slug in banned_slugs:
-            entry_b = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
-            name_b = (entry_b.get("name", slug) if entry_b else slug)
-            violations.append(f"{name_b!r} ({slug}): banned in this format")
         entry = slug_index.get(slug) or slug_index.get(slug.replace("-", "_"))
         if not entry:
             continue  # not in slug_index → cannot verify, skip
+
+        # ── format legality check (preferred) ────────────────────────────
+        if _canonical_fmt:
+            legal_fmts = entry.get("legal_formats", [])
+            if legal_fmts and _canonical_fmt not in legal_fmts:
+                name = entry.get("name", slug)
+                violations.append(
+                    f"{name!r} ({slug}): not legal in {_canonical_fmt}"
+                )
+                continue
+        # ── deprecated banned card check (fallback) ──────────────────────
+        elif banned_slugs and slug in banned_slugs:
+            name = entry.get("name", slug)
+            violations.append(f"{name!r} ({slug}): banned in this format")
 
         # ── specialization check ──────────────────────────────────────────
         if hero_name:
@@ -249,30 +269,12 @@ def validate_deck_legality(
                     )
                 continue  # specialization cards don't need further class checks
 
-        # ── class/talent check ────────────────────────────────────────────
-        # Check for hybrid cards via ' / ' delimiter in type_text
-        type_text = entry.get("type_text", "")
-        hybrid = _parse_hybrid_supertypes(type_text)
-        if hybrid is not None:
-            left_classes, right_classes = hybrid
-            # Hybrid card is legal if EITHER side satisfies hero classes
-            left_ok = not left_classes or left_classes <= hero_classes
-            right_ok = not right_classes or right_classes <= hero_classes
-            if not left_ok and not right_ok:
+        # ── hero legality check (primary: legal_heroes) ──────────────────
+        legal_heroes = entry.get("legal_heroes") or []
+        if hero_enum and legal_heroes:
+            if hero_enum not in legal_heroes:
                 name = entry.get("name", slug)
                 violations.append(
-                    f"{name!r} ({slug}): hybrid card types "
-                    f"{set(left_classes)!r} | {set(right_classes)!r} "
-                    f"— neither side subset of hero types {set(hero_classes)!r}"
-                )
-        else:
-            card_classes: frozenset[str] = frozenset(
-                t.lower() for t in entry.get("types", []) if t.lower() not in DESCRIPTOR
-            )
-            if card_classes and not card_classes <= hero_classes:
-                name = entry.get("name", slug)
-                violations.append(
-                    f"{name!r} ({slug}): card types {set(card_classes)!r} "
-                    f"not subset of hero types {set(hero_classes)!r}"
+                    f"{name!r} ({slug}): not legal for hero {hero_enum!r}"
                 )
     return violations

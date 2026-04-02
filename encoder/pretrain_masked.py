@@ -204,18 +204,22 @@ def pretrain_loop(
     log_every: int = 100,
     device: Optional[torch.device] = None,
     checkpoint_dir: Optional[str] = None,
+    start_step: int = 0,
+    optimizer_state_dict: Optional[dict] = None,
 ) -> list[dict]:
     """Run the masked card prediction pre-training loop.
 
     Args:
         pretrainer: MaskedPretrainer wrapping the transformer
         packed_states: (N, packed_size) tensor of packed state features
-        num_steps: number of training steps
+        num_steps: number of *additional* training steps to run
         batch_size: batch size
         lr: learning rate
         log_every: log metrics every N steps
         device: device to train on (default: CPU)
         checkpoint_dir: if set, save checkpoints every 1000 steps
+        start_step: global step count from a resumed checkpoint
+        optimizer_state_dict: optimizer state to restore on resume
 
     Returns:
         List of metric dicts from logged steps
@@ -232,14 +236,45 @@ def pretrain_loop(
     N = len(packed_states)
     # foreach=False: disables vectorized foreach ops not supported by torch-directml
     optimizer = torch.optim.AdamW(pretrainer.parameters(), lr=lr, weight_decay=1e-4, foreach=False)
+    if optimizer_state_dict is not None:
+        # Validate that optimizer state shapes match current parameters.
+        # If vocab size changed, momentum/variance buffers will be stale.
+        _params = list(pretrainer.parameters())
+        _opt_state = optimizer_state_dict.get("state", {})
+        _shape_ok = True
+        for pid, pstate in _opt_state.items():
+            pid_int = int(pid) if not isinstance(pid, int) else pid
+            if pid_int >= len(_params):
+                _shape_ok = False
+                break
+            for key in ("exp_avg", "exp_avg_sq"):
+                buf = pstate.get(key)
+                if buf is not None and buf.shape != _params[pid_int].shape:
+                    print(f"[pretrain] Optimizer state mismatch: param {pid_int} "
+                          f"{key} {tuple(buf.shape)} != param {tuple(_params[pid_int].shape)}", flush=True)
+                    _shape_ok = False
+                    break
+            if not _shape_ok:
+                break
+        if _shape_ok:
+            try:
+                optimizer.load_state_dict(optimizer_state_dict)
+                print(f"[pretrain] Restored optimizer state (momentum/variance buffers)", flush=True)
+            except Exception as e:
+                print(f"[pretrain] WARNING: Could not restore optimizer state: {e}", flush=True)
+        else:
+            print(f"[pretrain] WARNING: Skipping optimizer restore — parameter shapes changed (vocab resize?)", flush=True)
+    total_steps = start_step + num_steps
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-        optimizer, T_max=num_steps, eta_min=lr * 0.01,
+        optimizer, T_max=total_steps, eta_min=lr * 0.01,
+        last_epoch=start_step if start_step > 0 else -1,
     )
 
     history: list[dict] = []
     t0 = time.time()
 
-    print(f"[pretrain] starting masked card prediction: {num_steps} steps, "
+    end_step = start_step + num_steps
+    print(f"[pretrain] starting masked card prediction: steps {start_step+1}..{end_step}, "
           f"batch_size={batch_size}, N={N}, device={device}", flush=True)
 
     # Pre-generate a large index buffer on CPU and copy to device once.
@@ -248,7 +283,7 @@ def pretrain_loop(
     _idx_buf = torch.randint(0, N, (_IDX_BLOCK,))
     _idx_pos = 0
 
-    for step in range(1, num_steps + 1):
+    for step in range(start_step + 1, start_step + num_steps + 1):
         if _idx_pos + batch_size > _IDX_BLOCK:
             _idx_buf = torch.randint(0, N, (_IDX_BLOCK,))
             _idx_pos = 0

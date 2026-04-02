@@ -449,14 +449,14 @@ def main() -> int:
         else:
             raise
 
-    # Early stopping based on eval loss plateau
+    # Early stopping based on eval_bc_loss plateau
     early_stopped = False
     if args.early_stopping_patience > 0 and len(history) > 0:
         best_eval_loss = float("inf")
         patience_counter = 0
         stop_step = None
         for entry in history:
-            eval_loss = entry.get("eval_loss")
+            eval_loss = entry.get("eval_bc_loss")
             if eval_loss is None:
                 continue
             if eval_loss < best_eval_loss:
@@ -469,7 +469,7 @@ def main() -> int:
                 break
         if stop_step is not None:
             early_stopped = True
-            print(f"[iql] early_stopping triggered at step={stop_step} best_eval_loss={best_eval_loss:.6f}", flush=True)
+            print(f"[iql] early_stopping triggered at step={stop_step} best_eval_bc_loss={best_eval_loss:.6f}", flush=True)
             # Trim history to the stop point
             history = [h for h in history if h.get("step", 0) <= stop_step]
 
@@ -522,7 +522,7 @@ def main() -> int:
 
     if args.auto_eval and args.eval_ratio > 0 and history:
         # Extract final eval metrics from training history
-        eval_entries = [h for h in history if h.get("eval_loss") is not None]
+        eval_entries = [h for h in history if h.get("eval_bc_loss") is not None]
         if eval_entries:
             final_eval = eval_entries[-1]
             eval_metrics = {k: v for k, v in final_eval.items() if k.startswith("eval_") or k == "step"}

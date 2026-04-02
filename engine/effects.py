@@ -247,7 +247,9 @@ class EffectManager:
         import re
         keywords = card.keywords or []
         for kw in keywords:
-            kw_lower = kw.lower().strip()
+            # Normalize CamelCase keywords from card DB (e.g. "ArcaneBarrier" -> "arcane barrier")
+            kw_spaced = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw.strip())
+            kw_lower = kw_spaced.lower()
             kw_base = re.sub(r'\s+\d+$', '', kw_lower).strip()
             num_match = re.search(r'(\d+)$', kw)
             amount = int(num_match.group(1)) if num_match else 0

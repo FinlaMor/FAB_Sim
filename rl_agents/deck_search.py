@@ -30,6 +30,7 @@ from __future__ import annotations
 import copy
 import enum
 import json
+import msgpack
 import random
 import sqlite3
 from dataclasses import dataclass, field
@@ -43,23 +44,34 @@ from rl_agents.deck_evaluator import (
     CardVocab,
     build_evaluator,
     load_checkpoint,
+    load_state_dict_safe,
 )
 
-SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
+SLUG_INDEX_PATH = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.msgpack"
 
-from .fab_constants import DESCRIPTOR, validate_deck_legality, load_banned_cards, _expand_hero_classes
+from .fab_constants import DESCRIPTOR, validate_deck_legality, FORMAT_MAP
 
 _valid_slugs: set[str] | None = None
 
 
+def _load_slug_idx(path: Path | None = None) -> dict:
+    """Load the by_slug dict from slug_index (.msgpack or .json)."""
+    p = path or SLUG_INDEX_PATH
+    if not p.exists():
+        return {}
+    if str(p).endswith(".msgpack"):
+        with open(p, "rb") as f:
+            return msgpack.unpack(f, raw=False).get("by_slug", {})
+    with open(p, encoding="utf-8") as f:
+        return json.load(f).get("by_slug", {})
+
+
 def _get_valid_slugs() -> set[str]:
-    """Load the set of all real card slugs from slug_index.json."""
+    """Load the set of all real card slugs from slug_index."""
     global _valid_slugs
     if _valid_slugs is None:
         if SLUG_INDEX_PATH.exists():
-            with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
-                data = json.load(f)
-            _valid_slugs = set(data.get("by_slug", {}).keys())
+            _valid_slugs = set(_load_slug_idx().keys())
         else:
             _valid_slugs = set()
     return _valid_slugs
@@ -245,23 +257,16 @@ class HeroCardDB:
         _ARMOR_SLOTS = ("head", "chest", "arms", "legs")
 
         # Pre-load slug index for class-weapon matching
-        _slug_idx: dict = {}
-        if SLUG_INDEX_PATH.exists():
-            with open(SLUG_INDEX_PATH, encoding="utf-8") as _f:
-                _slug_idx = json.load(_f).get("by_slug", {})
+        _slug_idx: dict = _load_slug_idx()
         self._slug_idx = _slug_idx
 
-        # Exclude heroes that are not legal in CC format
-        _NON_CC_HERO_TYPES = {"young", "pit-fighter", "adjudicator", "merchant"}
-        if fmt == "cc":
-            heroes = [h for h in heroes
-                      if not _NON_CC_HERO_TYPES & {t.lower() for t in
-                          (_slug_idx.get(h) or _slug_idx.get(h.replace("-", "_")) or {}).get("types", [])}]
-
-        # Exclude banned heroes
-        _banned = load_banned_cards(fmt)
-        if _banned:
-            heroes = [h for h in heroes if h not in _banned and h.replace("-", "_") not in _banned]
+        # Exclude heroes not legal in format (via legal_formats field)
+        _canonical_fmt = FORMAT_MAP.get(fmt, fmt)
+        heroes = [
+            h for h in heroes
+            if _canonical_fmt in
+               (_slug_idx.get(h) or _slug_idx.get(h.replace("-", "_")) or {}).get("legal_formats", [])
+        ]
 
         # Build weapon candidate list with slug_index class types pre-computed.
         # DESCRIPTOR imported from fab_constants — shared with generate_heuristic_decks.py
@@ -342,24 +347,19 @@ class HeroCardDB:
                 else:
                     deck.append(entry)
 
-            # Compute hero class types once (used for both armor and weapon checks)
-            # Use _expand_hero_classes so talent keywords (e.g. Elemental+Lightning) are included
+            # Compute hero enum for legal_heroes checks
             hero_entry = _slug_idx.get(hero) or _slug_idx.get(hero.replace("-", "_"))
-            hero_classes: frozenset = _expand_hero_classes(
-                (hero_entry or {}).get("types", []),
-                (hero_entry or {}).get("card_keywords", []),
-            )
+            _hero_enum: str = (hero_entry or {}).get("hero", "")
 
             def _equip_legal(card_slug: str) -> bool:
-                """True if card's class types are a subset of this hero's class+talents."""
+                """True if card is legal for this hero via legal_heroes check."""
                 entry = _slug_idx.get(card_slug) or _slug_idx.get(card_slug.replace("-", "_"))
                 if not entry:
                     return True  # not in slug_index → treat as generic
-                card_classes = frozenset(
-                    t.lower() for t in entry.get("types", [])
-                    if t.lower() not in DESCRIPTOR
-                )
-                return not card_classes or card_classes <= hero_classes
+                card_legal_heroes = entry.get("legal_heroes") or []
+                if _hero_enum and card_legal_heroes:
+                    return _hero_enum in card_legal_heroes
+                return True  # no legal_heroes data → assume legal
 
             # Pad armor slots with generic equipment where hero is missing a slot.
             # Apply class legality check — e.g. Brute-typed helms must not go on Warriors.
@@ -376,17 +376,15 @@ class HeroCardDB:
                             filled_slots.add(slot)
                             break
 
-            # Ensure hero has at least one weapon via class-matched fallback.
-            # FAB rule: weapon's class types must be a subset of hero's class+talents.
+            # Ensure hero has at least one weapon via legal_heroes fallback.
             if not weap:
                 if hero_entry:
                     existing_slugs = {e["slug"] for e in weap} | {e["slug"] for e in equip}
                     for w, w_classes in _weapon_index:
                         if w["slug"] in existing_slugs:
                             continue
-                        # Legal if weapon has no class types (generic) or all its
-                        # class types are present in the hero's class+talents
-                        if not w_classes or w_classes <= hero_classes:
+                        # Legal if weapon passes legal_heroes check
+                        if _equip_legal(w["slug"]):
                             weap.append(w)
                             existing_slugs.add(w["slug"])
                             break  # one weapon is enough for the fallback
@@ -435,10 +433,17 @@ class HeroCardDB:
                         if total_possible >= MIN_DECK:
                             break
 
-            if _banned:
-                deck = [c for c in deck if c["slug"] not in _banned and c["slug"].replace("-", "_") not in _banned]
-                equip = [c for c in equip if c["slug"] not in _banned and c["slug"].replace("-", "_") not in _banned]
-                weap = [c for c in weap if c["slug"] not in _banned and c["slug"].replace("-", "_") not in _banned]
+            # Filter cards not legal in this format
+            def _fmt_legal(slug: str) -> bool:
+                e = _slug_idx.get(slug) or _slug_idx.get(slug.replace("-", "_"))
+                if not e:
+                    return True
+                legal = e.get("legal_formats", [])
+                return not legal or _canonical_fmt in legal
+
+            deck = [c for c in deck if _fmt_legal(c["slug"])]
+            equip = [c for c in equip if _fmt_legal(c["slug"])]
+            weap = [c for c in weap if _fmt_legal(c["slug"])]
             self.hero_cards[hero] = deck
             self.hero_equipment[hero] = equip
             self.hero_weapons[hero] = weap
@@ -464,12 +469,8 @@ class HeroCardDB:
             obj._slug_idx = {}
             return obj
 
-        with open(idx_path, encoding="utf-8") as f:
-            raw = json.load(f)
-        slug_idx = raw.get("by_slug", {})
+        slug_idx = _load_slug_idx(idx_path)
         obj._slug_idx = slug_idx
-
-        _banned = load_banned_cards("cc")
 
         _ARMOR_SLOTS = {"head", "chest", "arms", "legs"}
         _WEAPON_KEYWORDS = {"weapon", "1h", "2h", "sword", "axe", "bow", "dagger",
@@ -500,20 +501,17 @@ class HeroCardDB:
         all_cards: list[tuple[str, dict]] = []  # (slug, entry) for non-hero cards
 
         for slug, entry in slug_idx.items():
-            types_lower = [t.lower() for t in entry.get("types", [])]
+            types_lower = [t.lower() for t in (entry.get("types") or [])]
             if "hero" in types_lower:
-                if not (_NON_CC_HERO_TYPES & set(types_lower)) and slug not in _banned:
+                legal_fmts = entry.get("legal_formats", [])
+                if legal_fmts and "ClassicConstructed" in legal_fmts:
                     heroes[slug] = entry
             else:
                 all_cards.append((slug, entry))
 
         # Classify each non-hero card
         for hero_slug, hero_entry in heroes.items():
-            # Use _expand_hero_classes so talent grants (e.g. Elemental+Lightning) are included
-            hero_classes = _expand_hero_classes(
-                hero_entry.get("types", []),
-                hero_entry.get("card_keywords", []),
-            )
+            hero_enum = hero_entry.get("hero", "")
             _hero_name_tokens = hero_slug.replace("-", " ").replace("_", " ").lower()
 
             equip: list[dict] = []
@@ -521,14 +519,18 @@ class HeroCardDB:
             deck: list[dict] = []
 
             for card_slug, card_entry in all_cards:
-                if _banned and card_slug in _banned:
+                # Filter cards not legal in CC
+                card_legal_fmts = card_entry.get("legal_formats", [])
+                if card_legal_fmts and "ClassicConstructed" not in card_legal_fmts:
                     continue
-                card_types_lower = [t.lower() for t in card_entry.get("types", [])]
-                card_classes = _non_descriptor_types(card_entry.get("types", []))
+                card_types_lower = [t.lower() for t in (card_entry.get("types") or [])]
+                card_subtypes_lower = [t.lower() for t in (card_entry.get("subtypes") or [])]
 
-                # Legality: card's class/talent types must be subset of hero's
-                if card_classes and not card_classes <= hero_classes:
-                    continue
+                # Legality: use legal_heroes field from upstream card data
+                card_legal_heroes = card_entry.get("legal_heroes") or []
+                if hero_enum and card_legal_heroes:
+                    if hero_enum not in card_legal_heroes:
+                        continue
 
                 # Filter out specialization cards for other heroes
                 _spec_mismatch = False
@@ -546,8 +548,9 @@ class HeroCardDB:
                 is_weapon = "weapon" in card_types_lower
                 is_equipment = _EQUIP_KEYWORD in card_types_lower
                 armor_slot = ""
+                # Armor slots are in subtypes in upstream data (Head, Chest, Arms, Legs)
                 for s in _ARMOR_SLOTS:
-                    if s in card_types_lower:
+                    if s in card_types_lower or s in card_subtypes_lower:
                         armor_slot = s
                         break
                 # Armor slots take priority; items/scrolls should not be classified as weapons
@@ -555,8 +558,8 @@ class HeroCardDB:
                     is_weapon = False
 
                 if is_weapon:
-                    # Determine handedness
-                    if "2h" in card_types_lower:
+                    # Determine handedness (upstream uses TwoHanded/OneHanded in subtypes)
+                    if "2h" in card_types_lower or "twohanded" in card_subtypes_lower:
                         sub = "weapon-2h"
                     else:
                         sub = "weapon-1h"
@@ -1040,19 +1043,26 @@ def _ensure_pool_integrity(
             # Check slug_index for equipment not in the DB
             entry = slug_idx.get(slug) or slug_idx.get(slug.replace("-", "_"))
             if entry:
-                for t in entry.get("types", []):
+                # Armor slots may be in types or subtypes depending on data source
+                for t in (entry.get("types") or []) + (entry.get("subtypes") or []):
                     if t.lower() in _ARMOR_SLOTS:
                         slot = t.lower()
                         break
         if slot in _ARMOR_SLOTS:
             filled_slots.add(slot)
 
-    # Compute hero class types for legality checks
+    # Compute hero enum for legal_heroes checks
     hero_entry = slug_idx.get(hero) or slug_idx.get(hero.replace("-", "_"))
-    hero_classes: frozenset = frozenset(
-        t.lower() for t in (hero_entry or {}).get("types", [])
-        if t.lower() not in DESCRIPTOR
-    )
+    _hero_enum: str = (hero_entry or {}).get("hero", "")
+
+    def _card_legal(card_slug: str) -> bool:
+        entry = slug_idx.get(card_slug) or slug_idx.get(card_slug.replace("-", "_"))
+        if not entry:
+            return True
+        lh = entry.get("legal_heroes") or []
+        if _hero_enum and lh:
+            return _hero_enum in lh
+        return True
 
     # Fill missing armor slots from DB candidates first, then slug_index fallback
     for slot in _ARMOR_SLOTS:
@@ -1064,22 +1074,22 @@ def _ensure_pool_integrity(
             equipment.append(pick["slug"])
             filled_slots.add(slot)
         else:
-            # Fallback: scan slug_index for any class-legal equipment in this slot.
+            # Fallback: scan slug_index for any hero-legal equipment in this slot.
             # Exclude cards that are also Action/Instant/Event (Evo cards, events).
             _NON_EQUIP = {"action", "instant", "event", "token", "hero", "ally", "attack"}
-            slot_type = slot.capitalize()  # "head" → "Head"
             fallbacks = []
             for s, entry in slug_idx.items():
-                types = entry.get("types", [])
+                types = entry.get("types") or []
+                subtypes = entry.get("subtypes") or []
                 types_lower = set(t.lower() for t in types)
-                if "equipment" not in types_lower or slot.lower() not in types_lower:
+                subtypes_lower = set(t.lower() for t in subtypes)
+                if "equipment" not in types_lower:
+                    continue
+                if slot.lower() not in types_lower and slot.lower() not in subtypes_lower:
                     continue
                 if types_lower & _NON_EQUIP:
                     continue
-                card_classes = frozenset(
-                    t.lower() for t in types if t.lower() not in DESCRIPTOR
-                )
-                if not card_classes or card_classes <= hero_classes:
+                if _card_legal(s):
                     fallbacks.append(s)
             if fallbacks:
                 equipment.append(rng.choice(fallbacks))
@@ -1090,21 +1100,17 @@ def _ensure_pool_integrity(
         pick = max(weapon_cards, key=lambda c: c.get("frequency", 0))
         weapons = [pick["slug"]]
     elif not weapons:
-        # Fallback: find any class-legal weapon from slug_index
-        # Exclude tokens and non-standard weapon entries
+        # Fallback: find any hero-legal weapon from slug_index
         _NON_WEAPON = {"token", "event", "hero", "ally"}
         weapon_fallbacks = []
         for s, entry in slug_idx.items():
-            types = entry.get("types", [])
+            types = entry.get("types") or []
             types_lower = set(t.lower() for t in types)
             if "weapon" not in types_lower:
                 continue
             if types_lower & _NON_WEAPON:
                 continue
-            card_classes = frozenset(
-                t.lower() for t in types if t.lower() not in DESCRIPTOR
-            )
-            if not card_classes or card_classes <= hero_classes:
+            if _card_legal(s):
                 weapon_fallbacks.append(s)
         if weapon_fallbacks:
             weapons = [rng.choice(weapon_fallbacks)]
@@ -2100,7 +2106,7 @@ def main():
     ckpt = load_checkpoint(args.checkpoint)
     vocab = CardVocab.from_state_dict(ckpt["vocab"])
     model = build_evaluator(vocab, ckpt.get("model_type", "deepsets"))
-    model.load_state_dict(ckpt["model_state_dict"])
+    load_state_dict_safe(model, ckpt["model_state_dict"])
     model = model.to(device)
     model.eval()
 

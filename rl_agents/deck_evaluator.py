@@ -202,12 +202,12 @@ def load_meta_weights(
 # ---------------------------------------------------------------------------
 
 class CardEmbedding(nn.Module):
-    """Embeds a card as: concat(learned_embedding, count_projection) -> projection.
+    """Embeds a card as: concat(learned_embedding, count_projection, wr_delta_projection) -> projection.
 
-    Concatenation gives the model richer interaction between card identity
-    and copy count than a simple additive combination.
+    Concatenation gives the model richer interaction between card identity,
+    copy count, and win-rate impact than a simple additive combination.
 
-    Input:  card_ids [B, S], counts [B, S]
+    Input:  card_ids [B, S], counts [B, S], wr_deltas [B, S] (optional)
     Output: [B, S, embed_dim]
     """
 
@@ -215,19 +215,30 @@ class CardEmbedding(nn.Module):
         super().__init__()
         self.embed = nn.Embedding(n_cards, embed_dim, padding_idx=pad_idx)
         count_dim = 8
+        wr_dim = 8
         self.count_proj = nn.Linear(1, count_dim, bias=False)
-        self.fuse = nn.Linear(embed_dim + count_dim, embed_dim)
+        self.wr_proj = nn.Linear(1, wr_dim, bias=False)
+        self.fuse = nn.Linear(embed_dim + count_dim + wr_dim, embed_dim)
         nn.init.xavier_uniform_(self.embed.weight)
 
-    def forward(self, card_ids: torch.Tensor, counts: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        card_ids: torch.Tensor,
+        counts: torch.Tensor,
+        wr_deltas: torch.Tensor | None = None,
+    ) -> torch.Tensor:
         """
-        card_ids: [B, S] long
-        counts:   [B, S] float
-        returns:  [B, S, embed_dim]
+        card_ids:  [B, S] long
+        counts:    [B, S] float
+        wr_deltas: [B, S] float (optional, defaults to zeros)
+        returns:   [B, S, embed_dim]
         """
         emb = self.embed(card_ids)  # [B, S, D]
         count_emb = self.count_proj(counts.unsqueeze(-1))  # [B, S, count_dim]
-        return self.fuse(torch.cat([emb, count_emb], dim=-1))  # [B, S, D]
+        if wr_deltas is None:
+            wr_deltas = torch.zeros_like(counts)
+        wr_emb = self.wr_proj(wr_deltas.unsqueeze(-1))  # [B, S, wr_dim]
+        return self.fuse(torch.cat([emb, count_emb, wr_emb], dim=-1))  # [B, S, D]
 
 
 # ---------------------------------------------------------------------------
@@ -282,6 +293,7 @@ class DeepSetsEvaluator(nn.Module):
         opp_hero_ids: torch.Tensor,    # [B]
         pad_mask: torch.Tensor | None = None,   # [B, S] bool, True = pad
         card_credits: torch.Tensor | None = None,  # [B, S] float, 0 = unseen
+        card_wr_deltas: torch.Tensor | None = None,  # [B, S] float, per-card WR delta
     ) -> torch.Tensor:
         """Returns win probability logits [B, 1].
 
@@ -291,7 +303,7 @@ class DeepSetsEvaluator(nn.Module):
         pooling.
         """
         # Card embeddings
-        x = self.card_embed(card_ids, counts)  # [B, S, D]
+        x = self.card_embed(card_ids, counts, card_wr_deltas)  # [B, S, D]
         x = self.phi(x)  # [B, S, H]
 
         # Build effective mask: pad OR zero-credit positions are excluded
@@ -411,12 +423,13 @@ class SetTransformerEvaluator(nn.Module):
         opp_hero_ids: torch.Tensor,    # [B]
         pad_mask: torch.Tensor | None = None,  # [B, S] bool, True = pad
         card_credits: torch.Tensor | None = None,  # [B, S] float (accepted for API compat, used for masking)
+        card_wr_deltas: torch.Tensor | None = None,  # [B, S] float, per-card WR delta
     ) -> torch.Tensor:
         """Returns win probability logits [B, 1]."""
         B, S = card_ids.shape
 
         # Embed cards and hero
-        card_emb = self.card_embed(card_ids, counts)     # [B, S, D]
+        card_emb = self.card_embed(card_ids, counts, card_wr_deltas)     # [B, S, D]
         hero_emb = self.hero_embed(hero_ids).unsqueeze(1)  # [B, 1, D]
 
         # Prepend hero token to the set
@@ -605,6 +618,12 @@ class DeckWinDataset(torch.utils.data.Dataset):
                 "game_idx": game_idx,
             })
 
+        # Precompute per-card win-rate deltas:
+        # For each (hero, card), what is the win-rate when the card was
+        # *played* minus the hero's overall win-rate?
+        self.card_wr_deltas: dict[tuple[str, str], float] = {}
+        self._build_card_wr_deltas()
+
     @property
     def n_games(self) -> int:
         """Number of unique games in the dataset."""
@@ -639,6 +658,50 @@ class DeckWinDataset(torch.utils.data.Dataset):
             elif isinstance(val, str) and val:
                 slugs.append(val)
         return slugs
+
+    def _build_card_wr_deltas(self) -> None:
+        """Compute per-(hero, card) win-rate delta from sample data.
+
+        For each hero:
+          hero_wr = overall win-rate across all games
+        For each card played by that hero:
+          card_wr = win-rate in games where the card was actually played
+          delta   = card_wr - hero_wr
+
+        Positive delta → card improves win-rate when played.
+        Stored in self.card_wr_deltas[(hero_slug, card_slug)] = delta.
+        """
+        # hero -> [wins, total]
+        hero_stats: dict[str, list[int]] = {}
+        # (hero, card) -> [wins, total]  (only games where the card was played)
+        card_stats: dict[tuple[str, str], list[int]] = {}
+
+        for s in self.samples:
+            hero = s["hero_slug"]
+            won = int(s["won"] >= 0.5)  # binary
+
+            if hero not in hero_stats:
+                hero_stats[hero] = [0, 0]
+            hero_stats[hero][0] += won
+            hero_stats[hero][1] += 1
+
+            played = s.get("card_usage", {}).get("played", {})
+            for card_slug in played:
+                key = (hero, card_slug)
+                if key not in card_stats:
+                    card_stats[key] = [0, 0]
+                card_stats[key][0] += won
+                card_stats[key][1] += 1
+
+        # Compute deltas
+        MIN_GAMES = 5  # require at least 5 games to avoid noisy deltas
+        for (hero, card_slug), (wins, total) in card_stats.items():
+            if total < MIN_GAMES:
+                continue
+            hero_wins, hero_total = hero_stats[hero]
+            hero_wr = hero_wins / max(hero_total, 1)
+            card_wr = wins / total
+            self.card_wr_deltas[(hero, card_slug)] = card_wr - hero_wr
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -686,18 +749,24 @@ class DeckWinDataset(torch.utils.data.Dataset):
         usage = sample.get("card_usage", {})
         raw_credits = self._compute_card_credits(deduped_slugs, slug_counter, usage)
 
+        # Look up per-card win-rate deltas (hero-relative)
+        hero = sample["hero_slug"]
+        wr_deltas = [self.card_wr_deltas.get((hero, slug), 0.0) for slug in deduped_slugs]
+
         # Pad / truncate to max_cards
         n = len(card_ids)
         if n > self.max_cards:
             card_ids = card_ids[:self.max_cards]
             counts = counts[:self.max_cards]
             raw_credits = raw_credits[:self.max_cards]
+            wr_deltas = wr_deltas[:self.max_cards]
             n = self.max_cards
 
         pad_len = self.max_cards - n
         card_ids_padded = card_ids + [self.vocab.pad_idx] * pad_len
         counts_padded = counts + [0] * pad_len
         credits_padded = raw_credits + [0.0] * pad_len
+        wr_deltas_padded = wr_deltas + [0.0] * pad_len
         pad_mask = [False] * n + [True] * pad_len
 
         return {
@@ -706,6 +775,7 @@ class DeckWinDataset(torch.utils.data.Dataset):
             "card_ids": torch.tensor(card_ids_padded, dtype=torch.long),
             "counts": torch.tensor(counts_padded, dtype=torch.float),
             "card_credits": torch.tensor(credits_padded, dtype=torch.float),
+            "card_wr_deltas": torch.tensor(wr_deltas_padded, dtype=torch.float),
             "pad_mask": torch.tensor(pad_mask, dtype=torch.bool),
             "label": torch.tensor(sample["won"], dtype=torch.float),
         }
@@ -753,11 +823,12 @@ class FablazingBootstrapDataset(torch.utils.data.Dataset):
         ).fetchall()
 
         # Filter out young heroes (not legal in CC)
-        _slug_idx_path = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.json"
+        _slug_idx_path = Path(__file__).resolve().parent.parent / "card_data" / "slug_index.msgpack"
         _si: dict = {}
         if _slug_idx_path.exists():
-            with open(_slug_idx_path, encoding="utf-8") as _f:
-                _si = json.load(_f).get("by_slug", {})
+            import msgpack as _msgpack
+            with open(_slug_idx_path, "rb") as _f:
+                _si = _msgpack.unpack(_f, raw=False).get("by_slug", {})
 
         def _is_young(slug: str) -> bool:
             entry = _si.get(slug) or _si.get(slug.replace("-", "_"))
@@ -953,4 +1024,30 @@ def save_checkpoint(
 def load_checkpoint(path: str | Path) -> dict:
     """Load model checkpoint. Returns dict with model, vocab, metadata."""
     return torch.load(str(path), map_location="cpu", weights_only=False)
+
+
+def load_state_dict_safe(model: nn.Module, state_dict: dict) -> None:
+    """Load state dict, skipping keys with shape mismatches.
+
+    Logs new (missing), unexpected, and shape-mismatched keys so the caller
+    knows which parameters will be randomly initialised.
+    """
+    current = model.state_dict()
+    filtered = {}
+    skipped_shape: list[str] = []
+    for k, v in state_dict.items():
+        if k in current and v.shape != current[k].shape:
+            skipped_shape.append(f"{k} (ckpt {list(v.shape)} vs model {list(current[k].shape)})")
+        else:
+            filtered[k] = v
+
+    missing, unexpected = model.load_state_dict(filtered, strict=False)
+    # missing includes both truly-new keys AND shape-skipped keys
+    if skipped_shape:
+        print(f"  Shape-mismatched (randomly initialised): {skipped_shape}")
+    new_keys = [k for k in missing if k not in {s.split(" ")[0] for s in skipped_shape}]
+    if new_keys:
+        print(f"  New parameters (randomly initialised): {new_keys}")
+    if unexpected:
+        print(f"  Unexpected keys (ignored): {unexpected}")
 

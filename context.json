@@ -1,0 +1,39 @@
+{
+  "files_to_modify": {
+    "main": [
+      "card_data/banned_cards.json",
+      "rl_agents/deck_search.py",
+      "tests/test_banned_cards.py"
+    ]
+  },
+  "files_to_reference": [
+    "scripts/generate_heuristic_decks.py",
+    "rl_agents/fab_constants.py",
+    "rl_agents/deck_validator.py",
+    "scripts/manage_banned_cards.py"
+  ],
+  "patterns": {
+    "pool_filtering": "legal_pool = frozenset(legal_pool - load_banned_cards(fmt)) — subtract banned set before any deck logic runs",
+    "load_function": "load_banned_cards('cc') from fab_constants.py returns frozenset[str]",
+    "hero_filtering": "List comprehension filtering heroes by type (line 254-258 of deck_search.py for young hero exclusion) — add banned hero filter at same location",
+    "slug_format": "Underscore format matching slug_index.json keys; both builders handle hyphen→underscore conversion via slug.replace('-', '_')",
+    "color_variants": "Cards with colors get _red/_yellow/_blue suffixes; equipment/heroes have no color suffix",
+    "import_pattern": "deck_search.py imports from .fab_constants import DESCRIPTOR, validate_deck_legality — add load_banned_cards to this import"
+  },
+  "existing_implementations": {
+    "description": "Full banned card infrastructure exists: JSON config, loader function, CLI manager, validator integration, and 13 tests. Heuristic deck generator already filters banned cards. ONLY deck_search.py's HeroCardDB is missing the filter.",
+    "relevant_files": [
+      "card_data/banned_cards.json",
+      "rl_agents/fab_constants.py",
+      "scripts/manage_banned_cards.py",
+      "rl_agents/deck_validator.py",
+      "tests/test_banned_cards.py"
+    ]
+  },
+  "gaps": {
+    "deck_search_init": "HeroCardDB.__init__() loads heroes from DB (line 191-193) and never filters against banned list. Young hero filter is at line 254-258 — add banned hero filter after it.",
+    "deck_search_from_slug_index": "HeroCardDB.from_slug_index() identifies heroes from slug_index (line 470-477) and never filters. Add banned hero/card filter here.",
+    "card_pool_filtering": "Per-hero card pools (hero_cards, hero_equipment, hero_weapons) are built in __init__ loop (lines 294-419) without any banned-card check. Filter after building deck/equip/weap lists.",
+    "import_missing": "deck_search.py imports DESCRIPTOR and validate_deck_legality but NOT load_banned_cards from fab_constants"
+  }
+}

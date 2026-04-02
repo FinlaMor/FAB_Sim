@@ -8,7 +8,7 @@ from numpy.random import random
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, EventManager, Event, Player, CombatState, ChainLink, StackEntry
 from engine.deck import load_deck, create_player
-from engine.actions import legal_actions, Action, ActionType
+from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, get_pitchable_cards
 from engine.effects import EffectManager
 from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
 
@@ -81,14 +81,16 @@ def new_game(
         winner=None
         )
 
-    # Player that won coin flip decides who goes first
-    first_player_chose = get_turn_player_choice(state)
-    if environ['debug'] == 'True':
-        with open(environ['debug_file'], 'a') as f:
-            f.write(f'\nplayer {first_player} chose {first_player_chose}\n')
+    # Player that won coin flip decides who goes first (only once at game start)
+    if state.step == Step.BEGIN_GAME:
+        first_player_chose = get_turn_player_choice(state)
+        if environ['debug'] == 'True':
+            with open(environ['debug_file'], 'a') as f:
+                f.write(f'\nplayer {first_player} chose {first_player_chose}\n')
 
-    state.active_player = first_player_chose
-    state.priority_player = first_player_chose
+        state.active_player = first_player_chose
+        state.priority_player = first_player_chose
+        state.step = Step.START_PHASE  # Advance out of BEGIN_GAME so prompt never repeats
 
     # Draw opening hands
     _draw_cards(p1, p1.intellect)
@@ -128,8 +130,7 @@ def new_game(
 def _end_game_on_turn_cap(state: GameState) -> None:
     """Terminate a game that has reached its configured turn cap.
 
-    Winner is determined by life total; ties resolve to the active player to keep
-    the outcome deterministic for replay/training pipelines.
+    Winner is determined by life total; equal life totals are recorded as a draw.
     """
     p1_life = state.players[1].health
     p2_life = state.players[2].health
@@ -139,7 +140,7 @@ def _end_game_on_turn_cap(state: GameState) -> None:
     elif p2_life > p1_life:
         winner = 2
     else:
-        winner = state.active_player
+        winner = None
 
     state.done = True
     state.winner = winner
@@ -152,25 +153,12 @@ def _game_loop(state: GameState) -> None:
     """Iterative main game loop — avoids deep recursion from turn/combat cycling."""
     state._next_phase = "start_of_turn"
 
-    _stalemate_health_history: list[tuple[int, int]] = []
-    _STALEMATE_TURNS = 50  # end game if health unchanged for this many consecutive turns
-
     while not state.done:
         phase = state._next_phase
         # Prevent pathological long games from generating runaway data volume.
         if phase == "start_of_turn" and state.turn_number >= state.max_turns:
             _end_game_on_turn_cap(state)
             break
-        # Stalemate detection: if health hasn't changed in _STALEMATE_TURNS turns, end game.
-        if phase == "start_of_turn":
-            hp = (state.players[1].health, state.players[2].health)
-            _stalemate_health_history.append(hp)
-            if len(_stalemate_health_history) > _STALEMATE_TURNS:
-                _stalemate_health_history.pop(0)
-            if (len(_stalemate_health_history) == _STALEMATE_TURNS
-                    and len(set(_stalemate_health_history)) == 1):
-                _end_game_on_turn_cap(state)
-                break
 
         if phase == "start_of_turn":
             _start_of_turn_phase(state)
@@ -392,12 +380,51 @@ def _attack_step(state: GameState, attack_card: Card) -> None:
     _recalculate_attack_power(state.combat)
 
 def _defend_step(state: GameState) -> None:
-    """Defend Step (7.3)."""
+    """Defend Step (7.3) — sequential per-card binary decisions."""
     state.step = Step.COMBAT_DEFEND
 
-    # 7.3.2: defender declares defending cards (single compound event per 7.3.2d)
+    # 7.3.2: defender declares defending cards
     defender_id = 3 - state.active_player
-    defend_action = get_player_decision(state, defender_id)
+    defender = state.players[defender_id]
+    defendable = get_defendable_cards(state)
+
+    chosen_cards: list = []
+    hand_cards_chosen = 0
+    action_cards_chosen = 0
+
+    for card in defendable:
+        # Dominate constraint: ≤1 hand card defending (CR 8.3.4a)
+        if "Dominate" in state.combat.keywords:
+            if card in defender.hand.cards and hand_cards_chosen >= 1:
+                continue
+        # Overpower constraint: ≤1 action card defending (CR 8.3.22a)
+        if "Overpower" in state.combat.keywords:
+            if getattr(card, 'is_action', False) and action_cards_chosen >= 1:
+                continue
+
+        options = [
+            Action(type=ActionType.DEFEND_CARDS, card_list=[card], card=card),
+            Action(type=ActionType.PASS),
+        ]
+        choice = state.player_agents[defender_id](state, options, f'Defend with {card.slug}?')
+        if isinstance(choice, Action):
+            choice.player_id = defender_id
+
+        if choice.type == ActionType.DEFEND_CARDS:
+            chosen_cards.append(card)
+            if card in defender.hand.cards:
+                hand_cards_chosen += 1
+            if getattr(card, 'is_action', False):
+                action_cards_chosen += 1
+
+    # Build and apply the combined defend action
+    if chosen_cards:
+        defend_action = Action(type=ActionType.DEFEND_CARDS, card_list=chosen_cards)
+        defend_action.player_id = defender_id
+    else:
+        defend_action = Action(type=ActionType.PASS)
+        defend_action.player_id = defender_id
+
     _apply_defend(state, defend_action)
     state.combat.defending_declared = True
 
@@ -443,7 +470,7 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
     state.event_manager.emit('chain_link_resolves', state)
     # CR 8.3.5b: Go Again grants +1 AP at Resolution Step.
     # Keywords may appear as "Go again", "Go Again", or "go_again" depending on source.
-    if any(k.lower().replace(' ', '_') == 'go_again' for k in state.combat.keywords):
+    if any(re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', k).lower() == 'go again' for k in state.combat.keywords):
         state.active().action_points += 1
 
     # 7.6.3: turn player gains priority
@@ -764,7 +791,7 @@ def _apply_watery_grave(card, state: GameState) -> None:
     """CR 8.3.41: If card has Watery Grave and entered graveyard from the arena, turn face-down."""
     if not hasattr(card, 'keywords') or not card.keywords:
         return
-    has_wg = any("watery grave" in kw.lower() for kw in card.keywords)
+    has_wg = any("watery grave" in re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw).lower() for kw in card.keywords)
     if not has_wg:
         return
     from engine.card_effects.keywords import ARENA_ZONE_NAMES
@@ -1104,8 +1131,100 @@ def player_decision_raw(state: GameState, player_id: int, options, context=None)
 # Apply action
 # ---------------------------------------------------------------------------
 
+def _get_action_resource_cost(state: GameState, action: Action) -> int:
+    """Compute the resource cost for an action (used to drive sequential pitching)."""
+    card = action.card
+    if action.type == ActionType.PLAY_CARD:
+        ms = getattr(action, 'meld_side', None)
+        if ms == 'bottom':
+            return 0
+        elif ms == 'both':
+            return card.meld_cost or 0
+        else:
+            return card.cost or 0
+
+    elif action.type in (ActionType.PLAY_ARSENAL, ActionType.PLAY_BANISH):
+        return card.cost or 0
+
+    elif action.type == ActionType.ATTACK_WEAPON:
+        text = card.functional_text or ""
+        match = re.search(r'[-\u2014]\s*((?:\{r\})+)(?:,\s*\{t\})?\s*:', text)
+        return match.group(1).count('{r}') if match else 0
+
+    elif action.type in (ActionType.ACTIVATE_ITEM, ActionType.ACTIVATE_EQUIPMENT, ActionType.ACTIVATE_WEAPON):
+        from engine.card_effects.registry import EQUIPMENT_ACTIVATION_COST as _ACT_COST
+        _cost_val = _ACT_COST.get(card.slug)
+        if _cost_val is not None:
+            player = state.players[action.player_id]
+            if callable(_cost_val):
+                import inspect as _ins
+                return _cost_val(player, state) if len(_ins.signature(_cost_val).parameters) >= 2 else _cost_val(player)
+            return _cost_val
+        if card.cost is not None:
+            return card.cost
+        from engine.actions import _parse_activation_cost_from_text
+        return _parse_activation_cost_from_text(card.functional_text or "")
+
+    elif action.type == ActionType.ACTIVATE_HERO:
+        from engine.card_effects.registry import HERO_ACTIVATION_CONDITIONS
+        player = state.players[action.player_id]
+        hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
+        cost_raw = hero_cfg.get("cost", 0)
+        return cost_raw(player, state) if callable(cost_raw) else cost_raw
+
+    elif action.type in (ActionType.PLAY_ATTACK_REACTION, ActionType.PLAY_DEFENSE_REACTION):
+        return card.cost or 0
+
+    return 0
+
+
+def _pitch_for_cost(state: GameState, action: Action, needed_cost: int) -> None:
+    """Present pitchable hand cards and let the model choose which to pitch.
+
+    Each iteration presents all remaining pitchable cards as options.  The model
+    picks one, it is pitched, and the loop repeats until resources >= needed_cost.
+    The card being played is excluded from pitch candidates.
+    """
+    player = state.players[action.player_id]
+    if needed_cost is None or needed_cost <= 0 or player.resources >= needed_cost:
+        return
+
+    # Exclude the card being played from pitch candidates (it's still in hand at this point)
+    exclude = action.card if action.type in (
+        ActionType.PLAY_CARD, ActionType.PLAY_ATTACK_REACTION,
+        ActionType.PLAY_DEFENSE_REACTION,
+    ) else None
+
+    pitched_slugs: list[str] = []
+    while player.resources < needed_cost:
+        pitchable = get_pitchable_cards(player.hand.cards, exclude_card=exclude)
+        if not pitchable:
+            break  # nothing left to pitch
+        options = [Action(type=ActionType.PLAY_CARD, card=c) for c in pitchable]
+        choice = state.player_agents[action.player_id](state, options, 'Pitch?')
+        if isinstance(choice, Action):
+            choice.player_id = action.player_id
+        card = choice.card
+        player.hand.remove(card)
+        player.pitch.add(card)
+        pitched_slugs.append(card.slug)
+        player.resources += card.pitch or 0
+        state.event_manager.emit(
+            Event(type='card_pitched', data={'card': card, 'pitcher_id': action.player_id}), state)
+
+    if pitched_slugs:
+        state.record_pitch(action.player_id, pitched_slugs)
+
+
 def apply_action(state: GameState, action: Action) -> None:
     """Apply a player action to the game state."""
+    # Sequential pitch: ask model which cards to pitch before dispatching
+    _no_pitch_types = (ActionType.PASS, ActionType.REACTION_PASS, ActionType.DEFEND_CARDS,
+                       ActionType.STORE_ARSENAL, ActionType.DISCARD_ACTIVATE, ActionType.ATTACK_ALLY)
+    if action.type not in _no_pitch_types:
+        cost = _get_action_resource_cost(state, action)
+        _pitch_for_cost(state, action, cost)
+
     if action.type == ActionType.PLAY_CARD:
         _apply_play_card(state, action)
     elif action.type in (ActionType.ACTIVATE_ITEM, ActionType.ACTIVATE_EQUIPMENT, ActionType.ACTIVATE_WEAPON):
@@ -1149,17 +1268,6 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     player = state.players[action.player_id]
     card = action.card
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
-
-    # Pitch cards for resources
-    if action.pitch_cards:
-        pitched_slugs = []
-        for c in action.pitch_cards:
-            player.hand.remove(c)
-            player.pitch.add(c)
-            pitched_slugs.append(c.slug)
-            player.resources += c.pitch or 0
-            state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
-        state.record_pitch(action.player_id, pitched_slugs)
 
     # Meld-side-aware resource deduction.
     # Pitch sequences were already generated for the correct effective cost per side.
@@ -1213,17 +1321,6 @@ def _apply_play_arsenal(state: GameState, action: Action) -> None:
     card = action.card
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
-    # Pitch cards for resources (pitched from hand, not from arsenal)
-    if action.pitch_cards:
-        pitched_slugs = []
-        for c in action.pitch_cards:
-            player.hand.remove(c)
-            player.pitch.add(c)
-            pitched_slugs.append(c.slug)
-            player.resources += c.pitch or 0
-            state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
-        state.record_pitch(action.player_id, pitched_slugs)
-
     player.resources -= card.cost or 0
     player.arsenal.remove(card)
 
@@ -1254,16 +1351,6 @@ def _apply_play_banish(state: GameState, action: Action) -> None:
     player = state.players[action.player_id]
     card = action.card
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
-
-    if action.pitch_cards:
-        pitched_slugs = []
-        for c in action.pitch_cards:
-            player.hand.remove(c)
-            player.pitch.add(c)
-            pitched_slugs.append(c.slug)
-            player.resources += c.pitch or 0
-            state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
-        state.record_pitch(action.player_id, pitched_slugs)
 
     player.resources -= card.cost or 0
     player.banished.remove(card)
@@ -1356,17 +1443,6 @@ def _apply_ally_attack(state: GameState, action: Action) -> None:
 
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
-    # Pitch cards for resources (allies may have resource costs)
-    if action.pitch_cards:
-        pitched_slugs = []
-        for c in action.pitch_cards:
-            player.hand.remove(c)
-            player.pitch.add(c)
-            pitched_slugs.append(c.slug)
-            player.resources += c.pitch or 0
-            state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
-        state.record_pitch(action.player_id, pitched_slugs)
-
     # CR 1.6.2b: Ally attack is an activated ability (activated-layer)
     entry = StackEntry(
         player_id=action.player_id,
@@ -1381,21 +1457,10 @@ def _apply_ally_attack(state: GameState, action: Action) -> None:
 
 
 def _apply_activate(state: GameState, action: Action) -> None:
-    """Activate an equipment/item/weapon ability: pitch, pay cost, exhaust, apply effect."""
+    """Activate an equipment/item/weapon ability: pay cost, exhaust, apply effect."""
     from engine.card_effects.registry import EQUIPMENT_ACTIVATION_EFFECTS
     player = state.players[action.player_id]
     card = action.card
-
-    # Pitch cards for resources
-    if action.pitch_cards:
-        pitched_slugs = []
-        for c in action.pitch_cards:
-            player.hand.remove(c)
-            player.pitch.add(c)
-            pitched_slugs.append(c.slug)
-            player.resources += c.pitch or 0
-            state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
-        state.record_pitch(action.player_id, pitched_slugs)
 
     # Use EQUIPMENT_ACTIVATION_COST override when available (handles tokens/items with resource
     # cost embedded in functional text and a cost field that doesn't reflect activation cost).
@@ -1447,20 +1512,9 @@ def _apply_activate(state: GameState, action: Action) -> None:
         effect_fn(action, player, state)
 
 def _apply_activate_hero(state: GameState, action: Action) -> None:
-    """Activate a hero ability: pitch for cost, tap if required, apply effect."""
+    """Activate a hero ability: tap if required, apply effect."""
     from engine.card_effects.registry import HERO_ACTIVATION_CONDITIONS
     player = state.players[action.player_id]
-
-    # Pitch cards for resources
-    if action.pitch_cards:
-        pitched_slugs = []
-        for c in action.pitch_cards:
-            player.hand.remove(c)
-            player.pitch.add(c)
-            pitched_slugs.append(c.slug)
-            player.resources += c.pitch or 0
-            state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
-        state.record_pitch(action.player_id, pitched_slugs)
 
     hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
     cost_raw = hero_cfg.get("cost", 0)
@@ -1491,17 +1545,6 @@ def _apply_react(state: GameState, action: Action) -> None:
     player = state.players[action.player_id]
     card = action.card
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
-
-    # Pitch cards for resources
-    if action.pitch_cards:
-        pitched_slugs = []
-        for c in action.pitch_cards:
-            player.hand.remove(c)
-            player.pitch.add(c)
-            pitched_slugs.append(c.slug)
-            player.resources += c.pitch or 0
-            state.event_manager.emit(Event(type='card_pitched', data={'card': c, 'pitcher_id': action.player_id}), state)
-        state.record_pitch(action.player_id, pitched_slugs)
 
     player.resources -= card.cost or 0
 

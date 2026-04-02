@@ -30,6 +30,12 @@ _EQUIP_TYPE_TO_SLOT = {
     "Quiver": "weapon",  # 8.2.15a: quiver equips to weapon zone (can share with 2H bow)
 }
 
+# Known hero slug aliases seen in scraped/exported deck headers.
+_HERO_SLUG_ALIASES = {
+    "jarl_vetreii": "jarl_vetreidi",
+    "fab_jarl_vetreii_deck_analysis_": "jarl_vetreidi",
+}
+
 
 def _slugify(name: str) -> str:
     """Convert a card display name to slug format."""
@@ -47,12 +53,59 @@ def _parse_fabrary_card_line(line: str):
         return None
     count = int(m.group(1))
     rest = m.group(2).strip()
-    color_m = re.match(r"^(.+?)\s+\((red|yellow|blue)\)$", rest)
+    color_m = re.match(r"^(.+?)\s+\((red|yellow|blue)\)$", rest, flags=re.IGNORECASE)
     if color_m:
-        slug = _slugify(color_m.group(1)) + "_" + color_m.group(2)
+        base_slug = _slugify(color_m.group(1))
+        color = color_m.group(2).lower()
+        if base_slug.endswith(f"_{color}"):
+            slug = base_slug
+        else:
+            slug = f"{base_slug}_{color}"
     else:
         slug = _slugify(rest)
+    slug = re.sub(r"_(red|yellow|blue)_\1$", r"_\1", slug)
     return count, slug
+
+
+def _resolve_fabrary_slug(slug: str, card_db: CardDB) -> Optional[str]:
+    """Resolve parsed Fabrary slug to a canonical DB slug.
+
+    Handles several real-world cases from generated decks:
+    - short color suffixes (_r/_y/_b)
+    - duplicated color naming (e.g. backup_protocol_red)
+    - unsupported color variants (fallback to available printing by base name)
+    """
+    if card_db.get(slug) is not None:
+        return slug
+
+    if slug.endswith(("_r", "_y", "_b")):
+        short_fixed = slug[:-2]
+        if card_db.get(short_fixed) is not None:
+            return short_fixed
+        slug = short_fixed
+
+    # First try CardDB's canonical resolution as-is.
+    resolved = card_db.resolve_slug(slug)
+    if resolved is not None:
+        return resolved
+
+    for color in ("red", "yellow", "blue"):
+        suffix = f"_{color}"
+        if slug.endswith(suffix):
+            base = slug[:-len(suffix)]
+
+            # Some canon slugs include color in both name and suffix.
+            resolved = card_db.resolve_slug(f"{slug}_{color}")
+            if resolved is not None:
+                return resolved
+
+            # If requested color doesn't exist, fall back to an available printing.
+            resolved = card_db.resolve_slug(base)
+            if resolved is not None:
+                return resolved
+            break
+
+    return None
 
 
 def _is_fabrary_format(lines: list[str]) -> bool:
@@ -83,6 +136,7 @@ def _load_deck_fabrary(lines: list[str], card_db: CardDB) -> dict:
             continue
         if stripped.startswith("Hero:"):
             hero_slug = _slugify(stripped[5:].strip())
+            hero_slug = _HERO_SLUG_ALIASES.get(hero_slug, hero_slug)
             continue
         if stripped == "Arena cards":
             in_arena = True
@@ -97,22 +151,23 @@ def _load_deck_fabrary(lines: list[str], card_db: CardDB) -> dict:
         if parsed is None:
             continue
         count, slug = parsed
+        resolved_slug = _resolve_fabrary_slug(slug, card_db)
+        if resolved_slug is None:
+            continue
+        slug = resolved_slug
 
         if in_arena:
             card = card_db.get(slug)
-            if card is None and slug.endswith(("_r", "_y", "_b")):
-                # Fablazing uses short color codes (_r/_y/_b); try the base slug.
-                card = card_db.get(slug[:-2])
-                if card is not None:
-                    slug = slug[:-2]
             if card is None:
                 continue
             if "Weapon" in card.types:
                 for _ in range(count):
                     weapons.append(slug)
             else:
+                # Upstream schema stores armor slots in subtypes (Head/Chest/Arms/Legs).
+                card_slot_tokens = set((card.types or []) + (card.subtypes or []))
                 for type_name, slot_name in _EQUIP_TYPE_TO_SLOT.items():
-                    if type_name in card.types and slot_name not in equipment:
+                    if type_name in card_slot_tokens and slot_name not in equipment:
                         equipment[slot_name] = slug
                         break
         elif in_deck:

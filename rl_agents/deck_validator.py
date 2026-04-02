@@ -12,9 +12,15 @@ from pathlib import Path
 
 from engine.card import CardDB
 from engine.deck import load_deck
-from rl_agents.fab_constants import load_banned_cards, validate_deck_legality
+from rl_agents.fab_constants import validate_deck_legality
 
 logger = logging.getLogger(__name__)
+
+
+_HERO_SLUG_ALIASES: dict[str, str] = {
+    "jarl_vetreii": "jarl_vetreidi",
+    "fab_jarl_vetreii_deck_analysis_": "jarl_vetreidi",
+}
 
 
 def validate_single_deck(
@@ -42,9 +48,6 @@ def validate_single_deck(
     """
     violations: list[str] = []
 
-    # ── load banned cards for this format ──────────────────────────────────
-    banned_slugs = load_banned_cards(fmt)
-
     # ── load deck ──────────────────────────────────────────────────────────
     try:
         deck_data = load_deck(deck_path, card_db)
@@ -53,6 +56,8 @@ def validate_single_deck(
         return False, violations
 
     hero_slug: str | None = deck_data.get("hero")
+    if hero_slug:
+        hero_slug = _HERO_SLUG_ALIASES.get(hero_slug, hero_slug)
     weapon_slug: str | None = deck_data.get("weapon")
     equipment: dict = deck_data.get("equipment", {})
     cards: list = deck_data.get("cards", [])
@@ -67,7 +72,9 @@ def validate_single_deck(
     weapon_is_2h = False
     if weapons:
         w_card = card_db.get(weapons[0])
-        weapon_is_2h = w_card is not None and "2H" in (w_card.types or [])
+        if w_card is not None:
+            w_tokens = set((w_card.types or []) + (w_card.subtypes or []))
+            weapon_is_2h = "2H" in w_tokens or "TwoHanded" in w_tokens
     if not weapons and hero_slug not in _WEAPONLESS_HEROES:
         violations.append("Deck has no weapon.")
     elif (len(weapons) < 2
@@ -88,8 +95,9 @@ def validate_single_deck(
         if hero_entry is None:
             violations.append(f"Hero slug {hero_slug!r} not found in slug_index.")
         else:
-            hero_types: list[str] = hero_entry.get("types", [])
-            hero_keywords: list[str] = hero_entry.get("card_keywords", [])
+            hero_types: list[str] = hero_entry.get("types", []) or []
+            hero_keywords: list[str] = hero_entry.get("card_keywords", []) or []
+            hero_enum: str = hero_entry.get("hero", "")
 
             # Build card dicts expected by validate_deck_legality
             deck_cards = [{"card_slug": s} for s in cards]
@@ -104,7 +112,8 @@ def validate_single_deck(
                 slug_index=slug_index,
                 hero_keywords=hero_keywords,
                 hero_name=hero_entry.get("name", ""),
-                banned_slugs=banned_slugs,
+                hero_enum=hero_enum,
+                fmt=fmt,
             )
             violations.extend(legality_violations)
     else:

@@ -623,8 +623,8 @@ def main():
                          help="Games to collect per loop iteration (default: 100)")
     games_g.add_argument("--game-workers", type=int, default=4,
                          help="Parallel game workers (default: 4)")
-    games_g.add_argument("--max-turns", type=int, default=50,
-                         help="Turn cap per game (default: 50)")
+    games_g.add_argument("--max-turns", type=int, default=200,
+                         help="Turn cap per game (default: 200)")
 
     # Deck generation
     deck_g = parser.add_argument_group("deck generation")

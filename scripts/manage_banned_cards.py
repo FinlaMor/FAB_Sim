@@ -1,5 +1,11 @@
 """scripts/manage_banned_cards.py
 
+.. deprecated::
+    This script managed banned_cards.json which is no longer used.
+    Card format legality is now determined by the ``legal_formats`` field
+    in slug_index.msgpack (sourced from the official @flesh-and-blood/types
+    package).  This script is kept for reference only.
+
 Manage the banned cards registry for Flesh and Blood formats.
 
 Usage:
@@ -14,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import warnings
 from pathlib import Path
@@ -23,7 +30,8 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
-from config import BANNED_CARDS_PATH  # noqa: E402
+from config import CARD_DATA_DIR  # noqa: E402
+BANNED_CARDS_PATH = os.path.join(CARD_DATA_DIR, "banned_cards.json")
 
 COLORS = ("red", "yellow", "blue")
 
