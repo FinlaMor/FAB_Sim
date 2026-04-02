@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import msgpack
 import re
 from dataclasses import dataclass, field
 from itertools import count
@@ -270,7 +271,7 @@ class Card:
 
     @property
     def has_go_again(self) -> bool:
-        return any(k.lower() == "go again" for k in self.keywords)
+        return any(re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', k).lower() == "go again" for k in self.keywords)
 
     @property
     def has_dominate(self) -> bool:
@@ -363,12 +364,16 @@ class Card:
             'object_id': self.object_id,
         }
 class CardDB:
-    """Wraps slug_index.json for card lookups."""
+    """Wraps slug_index.msgpack for card lookups."""
 
     def __init__(self, path: Optional[str] = None):
         path = path or SLUG_INDEX_PATH
-        with open(path, encoding="utf-8") as f:
-            data = json.load(f)
+        if path.endswith(".msgpack"):
+            with open(path, "rb") as f:
+                data = msgpack.unpack(f, raw=False)
+        else:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
         self._by_slug: dict[str, dict] = data.get("by_slug", {})
         self._by_name: dict[str, list[str]] = data.get("by_name", {})
 
@@ -394,15 +399,21 @@ class CardDB:
                 norm = unicodedata.normalize("NFKD", name_key).encode("ascii", "ignore").decode("ascii")
                 norm = norm.lower().replace("-", " ").replace(",", "").replace("'", "")
                 self._name_normalized[norm] = slugs
-        name_key = base.replace("_", " ")
-        candidates = self._name_normalized.get(name_key, [])
-        if color_suffix:
-            for cand in candidates:
-                if cand.endswith(f"_{color_suffix}"):
-                    return cand
-        elif candidates:
-            return candidates[0]
-        return None
+         # Fuzzy matching if exact name match fails (e.g. due to unicode normalization differences or minor typos)
+        from thefuzz import fuzz
+        if base in self._name_normalized:
+            return self._name_normalized[base][0]
+        max_ratio = 0
+        best_match = None
+        for name_key, slugs in self._name_normalized.items():
+            ratio = fuzz.ratio(base, name_key)
+            if ratio > max_ratio:
+                max_ratio = ratio
+                best_match = slugs[0]
+        if max_ratio >= 80:  # Threshold for fuzzy match acceptance
+            return best_match
+        else:
+            return None
 
     def get(self, slug: str) -> Optional[Card]:
         if slug is None:
