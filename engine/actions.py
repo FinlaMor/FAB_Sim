@@ -27,12 +27,13 @@ class ActionType(Enum):
     PLAY_DEFENSE_REACTION = "play_defense_reaction"
     REACTION_PASS = "reaction_pass"
     ACTIVATE_ITEM = "activate_item"
+    ACTIVATE_ALLY = "activate_ally"
     ATTACK_ALLY = "attack_ally"
     ACTIVATE_EQUIPMENT = "activate_equipment"
     ACTIVATE_WEAPON = "activate_weapon"
     ACTIVATE_HERO = "activate_hero"
     DISCARD_ACTIVATE = "discard_activate"
-    PLAY_BANISH = "play_banish"  # Play a card from the banish zone (e.g. Under the Trap-Door)
+    PLAY_BANISH = "play_banish"  # Play a card from the banish zone
 
 
 @dataclass
