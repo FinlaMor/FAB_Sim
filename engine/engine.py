@@ -48,7 +48,7 @@ def new_game(
     ## For now, pre-sideboard decks in txt files.
 
     # Initialize event manager and effect manager
-    fx_mngr = EventManager()
+    event_mngr = EventManager()
     effect_mngr = EffectManager()
 
     p1_deck = load_deck(p1_deck_path, card_db)
@@ -73,7 +73,7 @@ def new_game(
         done=False,
         max_turns=max_turns,
         card_db=card_db,
-        event_manager=fx_mngr,
+        event_manager=event_mngr,
         effect_manager=effect_mngr,
         priority_player=first_player,
         consecutive_passes=0,
@@ -83,7 +83,7 @@ def new_game(
 
     # Player that won coin flip decides who goes first (only once at game start)
     if state.step == Step.BEGIN_GAME:
-        first_player_chose = get_turn_player_choice(state)
+        first_player_chose = get_turn_player_choice(state, 'Who goes first?')
         if environ['debug'] == 'True':
             with open(environ['debug_file'], 'a') as f:
                 f.write(f'\nplayer {first_player} chose {first_player_chose}\n')
@@ -99,10 +99,10 @@ def new_game(
     # Register triggers and prevention effects for all public cards (hero, equipment, weapons)
     for player_id in state.players:
         for card in state.players[player_id].public_cards:
-            register_card_triggers(card, fx_mngr)
+            register_card_triggers(card, event_mngr)
             effect_mngr.register_prevention_effects(card, state)
         # Register passive hero triggers from HERO_TRIGGERS (B2/B3)
-        register_hero_triggers(state.players[player_id].hero, state.players[player_id], fx_mngr)
+        register_hero_triggers(state.players[player_id].hero, state.players[player_id], event_mngr)
 
     # 9.3.3: global listener — when a marked hero is hit, remove marked condition.
     # Registered AFTER card triggers so on-hit effects (e.g. Mark of the Black Widow)
@@ -115,10 +115,10 @@ def new_game(
         if defender.marked:
             defender.marked = False
 
-    fx_mngr.register('hit', _clear_marked_on_hit)
+    event_mngr.register('hit', _clear_marked_on_hit)
 
     # 4.1.8: start of game event — no priority (4.1.1)
-    fx_mngr.emit('start_of_game', state)
+    event_mngr.emit('start_of_game', state)
     _resolve_all_triggers(state)
 
     # Run the game loop
@@ -974,7 +974,7 @@ def handle_stack(game_state: GameState) -> None:
     opp_fx = [e for e in game_state.stack_entries if e.player_id == opponent_id]
 
     if turn_fx and opp_fx:
-        goes_first = get_turn_player_choice(game_state)
+        goes_first = get_turn_player_choice(game_state, 'Who resolves triggers first?')
     elif turn_fx:
         goes_first = turn_player_id
     elif opp_fx:
@@ -1114,9 +1114,9 @@ def get_player_decision(state: GameState, player_id: int) -> Action:
         choice.player_id = player_id
     return choice
 
-def get_turn_player_choice(state: GameState) -> int:
+def get_turn_player_choice(state: GameState, context: str) -> int:
     """Get decision from turn player for which player acts first."""
-    choice = state.player_agents[state.active_player](state, ('You', 'Opponent'), 'Who goes first?')
+    choice = state.player_agents[state.active_player](state, ('You', 'Opponent'), context)
     if choice == 'You':
         return state.active_player
     else:
