@@ -94,7 +94,7 @@ from engine.state import (
     Step,
 )
 from tests.conftest import _make_card, _make_player, _make_state, _mock_agent
-from engine.engine import _pitch_for_cost, evaluate_play_cost, _apply_play_card
+from engine.engine import _pitch_for_cost, evaluate_play_cost, _apply_play_card, _calculate_resource_cost
 
 
 # ---------------------------------------------------------------------------
@@ -1837,20 +1837,38 @@ class TestPitchSequence:
         assert len(actor.hand.cards) == 0
         assert len(actor.pitch.cards) == 2
 
+@pytest.mark.parametrize('kind,amount,comsume_on_apply,expected',[
+    ('increase', 2, False, 5),  # 3 base + 2 increase = 5
+    ('decrease', 1, False, 2),  # 3 base - 1 decrease = 2
+    ('set', 2, False, 2),       # set base to 2
+    ('increase', 2, True, 5),   # consumed on apply → no increase left
+])
+def test_cost_changes(kind, amount, comsume_on_apply, expected):
+        state = _make_state()
+        mng = ContinuousEffectManager()
+        mng.add_cost_modifier(kind, amount, owner_player_id=1, effect_id='test', consume_on_apply=comsume_on_apply)
 
-    # def test_cost_increase():
-    #     state = _make_state()
-    #     mng = ContinuousEffectManager()
-    #     mng.add_cost_modifier
+        cost = 3
+        play_card = _make_card(slug="test_play_card", name="Test Play Card")
+        play_card.base_pitch = 2
+        play_card.base_cost = cost
+        action = Action(ActionType.PLAY_CARD, 1, play_card)
 
-    # def test_cost_decrease():
-    #     state = _make_state()
-    #     mng = ContinuousEffectManager()
-    #     mng.add_cost_modifier
+        assert mng.recalculate(state, play_card, 'cost', cost, action) == expected
+        if comsume_on_apply:
+            assert mng.recalculate(state, play_card, 'cost', cost, action) == 3
 
-    # def test_cost_set():
-    #     state = _make_state()
-    #     mng = ContinuousEffectManager()
-    #     mng.add_cost_modifier
+def test_mult_cost_modifiers():
+        state = _make_state()
+        mng = ContinuousEffectManager()
+        mng.add_cost_modifier('increase', 3, owner_player_id=1, effect_id='test', consume_on_apply=False)
+        mng.add_cost_modifier('decrease', 1, owner_player_id=1, effect_id='test', consume_on_apply=False)
+        mng.add_cost_modifier('set', 2, owner_player_id=1, effect_id='test', consume_on_apply=False)
 
+        cost = 3
+        play_card = _make_card(slug="test_play_card", name="Test Play Card")
+        play_card.base_pitch = 2
+        play_card.base_cost = cost
+
+        assert mng.recalculate(state, play_card, 'cost', cost, Action(ActionType.PLAY_CARD, 1, play_card)) == 4
     # def test_alternative_cost():
