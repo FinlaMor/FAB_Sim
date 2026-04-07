@@ -81,6 +81,7 @@ class Card:
     exhausted: bool = False
     face_down: bool = False  # CR 8.5.24: face-down = private, face-up = public
     cards_underneath: list = field(default_factory=list)  # Cards placed "under" this card (Mechanologist)
+    permanent_subtype: Optional[str] = None  # Set by SubZoneView when card enters items/auras/allies/tokens/soul
 
     # Ability structure flags (Gap #1 fix - Round 9)
     # Activated abilities (CR 5.2)
@@ -341,11 +342,11 @@ class Card:
         definitively ceases to exist and we want the true final state.
         """
         if self.last_known_state is not None and not force:
-            # Inventory is a staging/default zone, not a rules-relevant public state.
+            # Staging is a temporary zone, not a rules-relevant public state.
             # Allow one replacement once the card is in an actual game zone.
             if not (
-                self.last_known_state.get('zone') == 'inventory'
-                and self.zone != 'inventory'
+                self.last_known_state.get('zone') == 'staging'
+                and self.zone != 'staging'
             ):
                 return self.last_known_state
         snapshot = self.snapshot_state()
@@ -355,6 +356,24 @@ class Card:
     def get_last_known_state(self) -> Optional[dict]:
         """Return the latest recorded last-known-information snapshot, if any."""
         return self.last_known_state
+
+    def reset_to_base_state(self) -> None:
+        """CR 3.0.9: Reset this object in-place — its previous existence ceases to exist.
+
+        Clears all runtime-accumulated state (counters, effects, status flags, temp
+        subtypes) and issues a new object_id so the object has no relation to its
+        prior existence. Base stats and card identity are preserved.
+        """
+        self.object_id = next(_CARD_OBJECT_ID_COUNTER)
+        self.effects = []
+        self.counters = {}
+        self.tapped = False
+        self.exhausted = False
+        self.face_down = False
+        self.cards_underneath = []
+        self.meld_side = None
+        self.last_known_state = None
+        self.permanent_subtype = None
     
     def to_dict(self) -> dict:
         """Convert card object to dict type object for outputting during debug

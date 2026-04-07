@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable, Optional
 from engine.card import Card, CardDB
+from engine.continuous_effects import ContinuousEffectManager
 
 
 class Step(Enum):
@@ -47,8 +48,14 @@ class Zone:
         """Move card into this zone, updating card.prev_zone / card.zone / card.is_public."""
         next_is_public = self.is_public if is_public is None else is_public
         card.remember_last_known_state()
+        was_in_arena = card.is_in_arena
+        was_on_stack = card.zone == 'stack'
         card.prev_zone = card.zone
         card.zone = self.name
+        if next_is_public == False and card.is_public == True: #3.0.9 If an object enters a zone that is not in the arena and is not the stack zone, or a public object becomes private while it is not in the arena, it resets - its previous existence ceases to exist and it becomes a new object with no relation to its previous existence.
+            card.reset_to_base_state()
+        if (was_in_arena or was_on_stack) and not card.is_in_arena:
+            card.reset_to_base_state()
         card.is_public = next_is_public
         if card not in self.cards:
             self.cards.append(card)
@@ -170,6 +177,17 @@ class EventManager:
     def register(self, event_name: str, listener) -> None:
         self.listeners.setdefault(event_name, []).append(listener)
 
+    def unregister(self, event_name: str, listener) -> None:
+        if event_name in self.listeners:
+            try:
+                self.listeners[event_name].remove(listener)
+                # Clean up empty lists
+                if not self.listeners[event_name]:
+                    del self.listeners[event_name]
+            except ValueError:
+                # Listener wasn't in the list
+                pass
+
     def emit(self, event, game_state: GameState) -> None:
         """Emit an event. Accepts an Event object or a string event type."""
         if isinstance(event, str):
@@ -272,11 +290,21 @@ class Player:
         self.class_counters: dict[str, int] = {}
         self.allies_exhausted: list[bool] = []
 
+        # CR 5.1.6a: cost modifiers are now stored in GameState.continuous_effect_manager
+        # as ContinuousEffect objects with prop='cost'. See ContinuousEffectManager.add_cost_modifier().
+
+        # CR 1.14.2a: Chi resource pool (Draconic class).  Chi is drained before
+        # floating resources when paying costs (CR 1.14.2d).
+        self.chi: int = 0
+
         # Conditions (9.3)
         self.marked: bool = False  # 9.3: marked condition — cleared when hit by opponent
 
         # Equipment defense tracking (for Battleworn/Temper/Blade Break)
         self.equipment_defended_this_turn: list[str] = []
+
+        # Cards played from hand/arsenal this turn (Card objects)
+        self.cards_played_this_turn: list = []
     
     @property
     def weapon(self) -> Zone:
@@ -394,7 +422,12 @@ class Player:
             'marked':getattr(self,'marked',False),
 
             # Equipment defense tracking
-            'equipment_defended_this_turn':getattr(self,'equipment_defended_this_turn',[]).copy()
+            'equipment_defended_this_turn':getattr(self,'equipment_defended_this_turn',[]).copy(),
+
+            # CR 5.1.6a cost modifiers live in GameState.continuous_effect_manager
+
+            # CR 1.14.2a chi pool
+            'chi': getattr(self, 'chi', 0),
             }
 
 
@@ -434,8 +467,17 @@ class StackEntry:
 
     @property
     def is_attack(self) -> bool:
+        # Triggered layers are never the attack itself — they are triggered abilities
+        # sourced from a card. Even if the source card is an attack card, the triggered
+        # layer is not an attack layer and must not be treated as one by priority_loop.
+        if self.layer_type == 'triggered':
+            return False
         # CR 1.6.2b: Weapon attacks (activated-layer) must enter combat
         if self.layer_type == 'activated' and self.card and self.card.is_weapon:
+            return True
+        # CR 11.0: Ally attacks (activated-layer) must enter combat.
+        # Ally is a subtype (CR 2.10), not a card type, so check subtypes.
+        if self.layer_type == 'activated' and self.card and 'Ally' in (self.card.subtypes or []):
             return True
         return self.card.is_attack if self.card else False
     
@@ -495,8 +537,25 @@ class CombatState:
     no_defense_reactions: bool = False
     defending_declared: bool = False
     defending_equipment_zones: list[str] = field(default_factory=list)
+    attack_target_card: Optional["Card"] = None  # Set when attack targets a specific card (e.g. Spectra aura) instead of hero
     # Wager system (CR 8.5.46): list of (controller_id, prize_token_slug_or_None)
     wagers: list[tuple[int, str | None]] = field(default_factory=list)
+    # Stage-6 keyword effects added directly during this combat chain link
+    # (e.g. Go Again from triggered abilities). Unioned into combat.keywords by
+    # _recalculate_attack_power so all "X in combat.keywords" checks still work.
+    keyword_effects: set = field(default_factory=set)
+
+    def grant_keyword(self, keyword: str) -> None:
+        """Add a keyword effect and immediately update combat.keywords for read consistency."""
+        self.keyword_effects.add(keyword)
+        if keyword not in self.keywords:
+            self.keywords.append(keyword)
+
+    def revoke_keyword(self, keyword: str) -> None:
+        """Remove a keyword effect and immediately update combat.keywords."""
+        self.keyword_effects.discard(keyword)
+        if keyword in self.keywords:
+            self.keywords.remove(keyword)
 
     @property
     def attack_slug(self) -> Optional[str]:
@@ -537,7 +596,8 @@ class CombatState:
             # Include properties
             'attack_slug': self.attack_slug,
             'defending_slugs': self.defending_slugs,
-            'defending_equipment_slots': self.defending_equipment_slots
+            'defending_equipment_slots': self.defending_equipment_slots,
+            'keyword_effects': list(self.keyword_effects),
         }
 
 
@@ -547,14 +607,16 @@ class GameState:
     active_player: int
     player_agents: dict[int, Callable]
     step: Step
-    turn_number: int
+    turn_number: int       # Round-based: 0 = opening player's first turn; both players' turns within the same round share a number
     combat: Optional[CombatState]
     done: bool
     winner: Optional[int]
+    individual_turns: int = 0  # Raw per-player-turn counter: 1 on first player's first turn, increments every _start_phase
     ended_on_turn_cap: bool = False
     max_turns: int = 200
     card_db: Optional[object] = None  # CardDB instance for effect/trigger access
     event_manager: EventManager = field(default_factory=EventManager)
+    continuous_effect_manager: ContinuousEffectManager = field(default_factory=ContinuousEffectManager)
     effect_manager: Optional[object] = None  # EffectManager from engine.effects
     priority_player: int = 1
     consecutive_passes: int = 0
@@ -663,12 +725,14 @@ class GameState:
             # 'player_agents': {pid: str(agent) for pid, agent in self.player_agents.items()},  # Can't serialize callables, just string representation
             'step': self.step.value if hasattr(self.step, 'value') else str(self.step),
             'turn_number': self.turn_number,
+            'individual_turns': self.individual_turns,
             'max_turns': self.max_turns,
             'combat': self.combat.to_dict() if self.combat else None,
             # 'done': self.done,
             # 'winner': self.winner,
             # 'card_db': '[CardDB]' if self.card_db else None,  # Skip serializing actual CardDB
             'event_manager': '[EventManager]',  # Skip serializing EventManager
+            'continuous_effects_count': len(self.continuous_effect_manager._effects),
             'effect_manager': '[EffectManager]' if self.effect_manager else None,
             'priority_player': self.priority_player,
             # 'consecutive_passes': self.consecutive_passes,

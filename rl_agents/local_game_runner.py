@@ -441,12 +441,44 @@ class EmbeddingRecorderAgent:
         if chain_links == [] and self._last_seen_chain_count > 0:
             self._last_seen_chain_count = 0
 
-        # Record embeddings for Action decisions
-        is_action_choice = isinstance(options[0], Action) and isinstance(choice, Action)
-        if is_action_choice:
-            self._track_action_cards(choice)
+        # For non-Action choices that can be mapped to synthetic Actions, convert
+        # them so they flow through the same embedding/recording path below.
+        synthetic_choice: Action | None = None
+        if len(options) == 2 and set(options) == {'You', 'Opponent'}:
+            # Start-player choice: PASS with player_id encodes who goes first.
+            chosen_player_id = self.player_id if choice == 'You' else (3 - self.player_id)
+            synthetic_choice = Action(type=ActionType.PASS, player_id=chosen_player_id)
+        elif (
+            isinstance(options[0], int)
+            and isinstance(context, (list, tuple))
+            and len(context) == len(options)
+            and context
+            and hasattr(context[0], 'card')
+            and isinstance(choice, int)
+            and 0 <= choice < len(context)
+        ):
+            # Trigger ordering: PASS carrying the chosen trigger's card identity.
+            entry = context[choice]
+            synthetic_choice = Action(
+                type=ActionType.PASS,
+                card=entry.card,
+                player_id=entry.player_id,
+            )
 
-            action_for_embedder = _normalise_action_for_embedder(choice)
+        # Resolve the Action to record: synthetic mapping for non-Action choices,
+        # or the real choice for normal Action decisions.
+        is_action_choice = isinstance(options[0], Action) and isinstance(choice, Action)
+        record_choice: Action | None = (
+            synthetic_choice if synthetic_choice is not None
+            else (choice if isinstance(choice, Action) else None)
+        )
+
+        if record_choice is not None:
+            # _track_action_cards only applies to real Action choices (played/blocked/pitched)
+            if is_action_choice and isinstance(choice, Action):
+                self._track_action_cards(choice)
+
+            action_for_embedder = _normalise_action_for_embedder(record_choice)
             player_counters = state.players[self.player_id].counters
 
             # Decide: end-to-end (raw features) or legacy (pre-computed embeddings)?
@@ -483,7 +515,7 @@ class EmbeddingRecorderAgent:
                 "p1_hp": state.players[1].health,
                 "p2_hp": state.players[2].health,
             }
-            action_json = _serialise_action(choice)
+            action_json = _serialise_action(record_choice)
 
             row_id = self.replay_db.insert_transition(
                 game_id=self.game_id,
@@ -502,7 +534,7 @@ class EmbeddingRecorderAgent:
             self.step_counter[0] += 1
 
             # Also record to TransitionCollector (→ game_data.db rich columns)
-            if self.transition_collector is not None:
+            if self.transition_collector is not None and is_action_choice:
                 self.transition_collector.record_local(
                     player_id=self.player_id,
                     state=state,

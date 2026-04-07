@@ -8,7 +8,7 @@ from numpy.random import random
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, EventManager, Event, Player, CombatState, ChainLink, StackEntry
 from engine.deck import load_deck, create_player
-from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, get_pitchable_cards
+from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, get_pitchable_cards, can_pay_cost
 from engine.effects import EffectManager
 from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
 
@@ -70,6 +70,7 @@ def new_game(
         active_player=first_player,
         step=Step.BEGIN_GAME,
         turn_number=0,
+        individual_turns=0,
         done=False,
         max_turns=max_turns,
         card_db=card_db,
@@ -80,6 +81,10 @@ def new_game(
         combat=None,
         winner=None
         )
+
+    # Register a single dispatcher for keyword static abilities (e.g. Piercing).
+    # One permanent listener is cheaper than registering/deregistering per combat.
+    _setup_static_ability_listeners(state)
 
     # Player that won coin flip decides who goes first (only once at game start)
     if state.step == Step.BEGIN_GAME:
@@ -117,6 +122,10 @@ def new_game(
 
     event_mngr.register('hit', _clear_marked_on_hit)
 
+    # Scan all deck cards for Transcend keyword; if found, register a blue-card-played
+    # hook so effect_transcend() can check whether to flip the card to hand.
+    _setup_transcend_hook_if_needed(state, event_mngr)
+
     # 4.1.8: start of game event — no priority (4.1.1)
     event_mngr.emit('start_of_game', state)
     _resolve_all_triggers(state)
@@ -127,6 +136,41 @@ def new_game(
     return state
 
 
+def _setup_transcend_hook_if_needed(state: GameState, event_mngr: EventManager) -> None:
+    """Scan all deck cards for the Transcend keyword.
+    If any player's deck contains a Transcend card, register a single global
+    'on_play' listener that sets 'blue_card_played_this_turn' in current_turn_effects
+    whenever a blue (pitch=3) card is played.  This flag is what Transcend checks.
+    """
+    has_transcend = False
+    for player in state.players.values():
+        for card in player.deck.cards:
+            if "Transcend" in (card.keywords or []):
+                has_transcend = True
+                break
+        if has_transcend:
+            break
+
+    if not has_transcend:
+        return
+
+    def _blue_card_played_hook(event, game_state):
+        card = event.data.get('card') if isinstance(event.data, dict) else None
+        if card is None:
+            return
+        # Check pitch value: blue cards pitch for 3
+        if (card.base_pitch or 0) != 3:
+            return
+        pid = getattr(card, 'controller', None) or getattr(card, 'owner', None)
+        if pid is None or pid not in game_state.players:
+            return
+        player = game_state.players[pid]
+        if 'blue_card_played_this_turn' not in player.current_turn_effects:
+            player.current_turn_effects.append('blue_card_played_this_turn')
+
+    event_mngr.register('on_play', _blue_card_played_hook)
+
+
 def _end_game_on_turn_cap(state: GameState) -> None:
     """Terminate a game that has reached its configured turn cap.
 
@@ -135,9 +179,9 @@ def _end_game_on_turn_cap(state: GameState) -> None:
     p1_life = state.players[1].health
     p2_life = state.players[2].health
 
-    if p1_life > p2_life:
+    if p1_life > p2_life+30:  # Player 1 wins by 30+ life lead at turn cap
         winner = 1
-    elif p2_life > p1_life:
+    elif p2_life > p1_life+30:  # Player 2 wins by 30+ life lead at turn cap
         winner = 2
     else:
         winner = None
@@ -147,6 +191,8 @@ def _end_game_on_turn_cap(state: GameState) -> None:
     state.ended_on_turn_cap = True
     state.step = Step.END_GAME
     state._next_phase = "end_game"
+    for event_name in state._static_listeners:
+        state.event_manager.unregister(event_name, _meta_dispatcher)
 
 
 def _game_loop(state: GameState) -> None:
@@ -179,28 +225,50 @@ def _game_loop(state: GameState) -> None:
 
 def check_state_based_actions(state: GameState) -> bool:
     """Check state-based actions. Returns True if game has ended.
-    Called after any resolution, damage, or action application."""
+    Called after any resolution, damage, or action application.
+
+    CR 1.10.2b: Living objects (heroes and allies) with 0 or less life are
+    destroyed simultaneously, then triggers from those deaths are ordered.
+    """
+    from engine.card_effects.keywords import _move_to_graveyard
+
+    # Hero death — check both players first (simultaneous)
+    dead_heroes = [pid for pid in state.players if state.players[pid].health <= 0]
+    if dead_heroes:
+        # Last player standing wins; if both die simultaneously it's a draw (no winner set)
+        if len(dead_heroes) == 1:
+            state.winner = 3 - dead_heroes[0]
+        state.done = True
+        state.step = Step.END_GAME
+        return True
+
+    # CR 1.10.2b: Ally death — collect all allies at 0 life, destroy simultaneously
+    dead_allies: list = []
     for pid in state.players:
-        if state.players[pid].health <= 0:
-            state.done = True
-            state.winner = 3 - pid
-            state.step = Step.END_GAME
+        for ally in list(state.players[pid].allies.cards):
+            life = getattr(ally, 'current_life', getattr(ally, 'life', None))
+            if life is not None and life <= 0:
+                dead_allies.append((pid, ally))
+
+    for pid, ally in dead_allies:
+        _move_to_graveyard(ally, state)
+
+    if dead_allies:
+        _resolve_all_triggers(state)
+        if state.done:
             return True
+
     return False
 
 # ---------------------------------------------------------------------------
 # Start Phase (4.2) — no priority (4.2.1)
 # ---------------------------------------------------------------------------
 
-def start_of_turn(state: GameState) -> None:
-    """Legacy entry point — starts the game loop."""
-    _game_loop(state)
-
-
 def _start_of_turn_phase(state: GameState) -> None:
     """Start Phase (4.2) — reset per-turn state, emit start_of_turn."""
 
-    state.turn_number += 1
+    state.individual_turns += 1
+    state.turn_number = (state.individual_turns - 1) // 2
     state.events_this_turn = set()
     player = state.active()
 
@@ -237,6 +305,9 @@ def _start_of_turn_phase(state: GameState) -> None:
     # Clear per-turn class counter flags
     player.class_counters.pop("charged_this_turn", None)
     player.class_counters.pop("boosted_this_turn", None)
+
+    # Clear cards played this turn
+    player.cards_played_this_turn = []
 
     if environ['debug'] == 'True':
         import json
@@ -322,13 +393,13 @@ def _combat_phase_iter(state: GameState) -> None:
         return
 
     # --- 7.2 Attack Step ---
-    _attack_step(state, attack_card)
-    if state.done:
+    _attack_step(state, attack_card, entry=attack_entry)
+    if state.done or state.step == Step.COMBAT_CLOSE:
         return
 
     # --- 7.3 Defend Step ---
     _defend_step(state)
-    if state.done:
+    if state.done or state.step == Step.COMBAT_CLOSE:
         return
 
     # --- 7.4 Reaction Step ---
@@ -347,8 +418,12 @@ def _combat_phase_iter(state: GameState) -> None:
     if state.done:
         return
 
-def _attack_step(state: GameState, attack_card: Card) -> None:
+def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry] = None) -> None:
     """Attack Step (7.2)."""
+
+    if state.done:
+        return
+
     state.step = Step.COMBAT_ATTACK
 
     # 7.2.3: attack moves to combat chain as chain link
@@ -363,12 +438,43 @@ def _attack_step(state: GameState, attack_card: Card) -> None:
         keywords=list(attack_card.keywords),
     )
 
-    # Apply pending turn effects to this attack
+    # Resolve card target from declared_targets (e.g. attack targeting a Spectra aura).
+    if entry and entry.declared_targets:
+        target_slug = entry.declared_targets[0]
+        defender = state.players[3 - state.active_player]
+        target_card = defender.permanents.find(target_slug)
+        if target_card is None:
+            # Also check attacker's own permanents (edge cases like self-targeting)
+            target_card = state.players[state.active_player].permanents.find(target_slug)
+        if target_card is not None:
+            state.combat.attack_target_card = target_card
+            state.combat.attack_target = defender
+
+    # Apply pending turn effects to this attack (may append to attack_card.effects)
     _apply_turn_attack_effects(state, attack_card)
+
+    # Register card.effects as staged ContinuousEffects (CR 6.3 stages 7-8)
+    _register_card_continuous_effects(state, attack_card)
+
+    # Register keyword triggers for this attack card (e.g. Phantasm "defend" listener).
+    # Attack action cards are not public at game start so their triggers are not registered
+    # at new_game time. Register them now when the card enters combat so keyword triggers fire.
+    register_card_triggers(attack_card, state.event_manager)
 
     # 7.2.4: "attack" event — triggers (e.g. Big Bully, Mocking Blow, on_attack_power_bonus)
     # are now queued as StackEntry objects. They resolve during priority_loop below.
+    # 'attacking' fires for any attack (weapon, attack action card, or ally).
+    # 'attacking_hero' fires only when the attack targets the hero (attack_target is None = default hero target).
+    # 'target_of_attack' fires when attack has a specific card target (e.g. Spectra aura).
     state.event_manager.emit(Event(type='attacking', card=attack_card.slug), state)
+    if state.combat.attack_target is None:
+        state.event_manager.emit(Event(type='attacking_hero', card=attack_card.slug), state)
+    if state.combat.attack_target_card is not None:
+        state.event_manager.emit(Event(type='target_of_attack', card=state.combat.attack_target_card.slug), state)
+
+    # Spectra (or similar) may have closed the chain during target_of_attack emit.
+    if state.step == Step.COMBAT_CLOSE:
+        return
 
     # 7.2.5: turn player gains priority — attack event triggers resolve here
     handle_stack(state)
@@ -376,11 +482,18 @@ def _attack_step(state: GameState, attack_card: Card) -> None:
     state.consecutive_passes = 0
     priority_loop(state)
 
+    # Spectra (or similar) may have closed the chain during priority_loop.
+    if state.step == Step.COMBAT_CLOSE or state.combat is None:
+        return
+
     # Recalculate after priority (triggered power buffs have now resolved)
-    _recalculate_attack_power(state.combat)
+    _recalculate_attack_power(state)
 
 def _defend_step(state: GameState) -> None:
     """Defend Step (7.3) — sequential per-card binary decisions."""
+
+    _validate_combat_state(state)
+
     state.step = Step.COMBAT_DEFEND
 
     # 7.3.2: defender declares defending cards
@@ -391,31 +504,39 @@ def _defend_step(state: GameState) -> None:
     chosen_cards: list = []
     hand_cards_chosen = 0
     action_cards_chosen = 0
+    combat_keywords = state.combat.keywords if state.combat else []
 
-    for card in defendable:
-        # Dominate constraint: ≤1 hand card defending (CR 8.3.4a)
-        if "Dominate" in state.combat.keywords:
-            if card in defender.hand.cards and hand_cards_chosen >= 1:
+    while True:
+        # Build the set of cards still available to add as blockers
+        available = []
+        for card in defendable:
+            if card in chosen_cards:
                 continue
-        # Overpower constraint: ≤1 action card defending (CR 8.3.22a)
-        if "Overpower" in state.combat.keywords:
-            if getattr(card, 'is_action', False) and action_cards_chosen >= 1:
+            # Dominate constraint: ≤1 hand card defending (CR 8.3.4a)
+            if "Dominate" in combat_keywords and card in defender.hand.cards and hand_cards_chosen >= 1:
                 continue
+            # Overpower constraint: ≤1 action card defending (CR 8.3.22a)
+            if "Overpower" in combat_keywords and getattr(card, 'is_action', False) and action_cards_chosen >= 1:
+                continue
+            available.append(card)
 
-        options = [
-            Action(type=ActionType.DEFEND_CARDS, card_list=[card], card=card),
-            Action(type=ActionType.PASS),
-        ]
-        choice = state.player_agents[defender_id](state, options, f'Defend with {card.slug}?')
+        if not available:
+            break
+
+        options = [Action(type=ActionType.CHOOSE, card=c) for c in available] + [Action(type=ActionType.PASS)]
+        choice = state.player_agents[defender_id](state, options, 'Add defender?')
         if isinstance(choice, Action):
             choice.player_id = defender_id
 
-        if choice.type == ActionType.DEFEND_CARDS:
-            chosen_cards.append(card)
-            if card in defender.hand.cards:
-                hand_cards_chosen += 1
-            if getattr(card, 'is_action', False):
-                action_cards_chosen += 1
+        if choice.type == ActionType.PASS:
+            break
+
+        card = choice.card
+        chosen_cards.append(card)
+        if card in defender.hand.cards:
+            hand_cards_chosen += 1
+        if getattr(card, 'is_action', False):
+            action_cards_chosen += 1
 
     # Build and apply the combined defend action
     if chosen_cards:
@@ -428,14 +549,21 @@ def _defend_step(state: GameState) -> None:
     _apply_defend(state, defend_action)
     state.combat.defending_declared = True
 
-    # 7.3.3: turn player gains priority
+    # 7.3.3: turn player gains priority — Phantasm trigger resolves here
     handle_stack(state)
     state.priority_player = state.active_player
     state.consecutive_passes = 0
     priority_loop(state)
 
+    # Phantasm (or similar) may have closed the chain during priority_loop.
+    if state.step == Step.COMBAT_CLOSE or state.combat is None:
+        return
+
 def _reaction_step(state: GameState) -> None:
     """Reaction Step (7.4)."""
+
+    _validate_combat_state(state)
+
     state.step = Step.COMBAT_REACTION
 
     # 7.4.2: turn player gains priority
@@ -444,11 +572,18 @@ def _reaction_step(state: GameState) -> None:
     state.consecutive_passes = 0
     priority_loop(state)
 
+    # Phantasm (or similar) may have closed the chain during priority_loop.
+    if state.step == Step.COMBAT_CLOSE or state.combat is None:
+        return
+
     # Recalculate after reactions (e.g. Kayo ability, Pummel, attack reactions)
-    _recalculate_attack_power(state.combat)
+    _recalculate_attack_power(state)
 
 def _damage_step(state: GameState) -> None:
     """Damage Step (7.5)."""
+
+    _validate_combat_state(state)
+
     state.step = Step.COMBAT_DAMAGE
 
     # 7.5.2: calculate and apply damage
@@ -464,6 +599,9 @@ def _damage_step(state: GameState) -> None:
 
 def _resolution_step(state: GameState, _is_root: bool = True) -> None:
     """Resolution Step (7.6)."""
+
+    _validate_combat_state(state)
+    
     state.step = Step.COMBAT_RESOLUTION
 
     # 7.6.2: chain link resolves, go again check
@@ -497,11 +635,11 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
             if state.done:
                 return
 
-        _attack_step(state, attack_card)
-        if state.done:
+        _attack_step(state, attack_card, entry=attack_entry)
+        if state.done or state.step == Step.COMBAT_CLOSE:
             return
         _defend_step(state)
-        if state.done:
+        if state.done or state.step == Step.COMBAT_CLOSE:
             return
         _reaction_step(state)
         if state.done:
@@ -568,16 +706,22 @@ def _end_phase_iter(state: GameState) -> None:
 
     # 4.4.3b: turn player may arsenal a card from hand
     if player.hand.cards and hasattr(player, 'arsenal') and len(player.arsenal.cards) < player.arsenal_limit:
-        options = list(range(len(player.hand.cards))) + [-1]  # -1 = decline
-        choice = player_decision_raw(state, state.active_player, options)
-        if choice != -1:
-            card = player.hand.cards.pop(choice)
-            player.arsenal.add(card)
+        options = [
+            Action(type=ActionType.STORE_ARSENAL, card=c) for c in player.hand.cards
+        ] + [Action(type=ActionType.PASS)]
+        choice = state.player_agents[state.active_player](state, options, 'Arsenal a card?')
+        if isinstance(choice, Action):
+            choice.player_id = state.active_player
+        if choice.type == ActionType.STORE_ARSENAL and choice.card is not None:
+            player.hand.remove(choice.card)
+            player.arsenal.add(choice.card)
     _resolve_all_triggers(state)
     if state.done:
         return
 
     # 4.4.3c: each player moves their pitch zone to bottom of deck (CR 4.4.3c)
+    # Sequential PLAY_CARD choices let the agent pick the order cards go to the
+    # bottom, which matters for long games where the deck cycles back around.
     for pid in state.players:
         p = state.players[pid]
         while p.pitch.cards:
@@ -585,9 +729,14 @@ def _end_phase_iter(state: GameState) -> None:
                 card = p.pitch.cards.pop(0)
                 p.deck.add_bottom(card)
             else:
-                options = list(range(len(p.pitch.cards)))
-                choice = player_decision_raw(state, pid, options)
-                card = p.pitch.cards.pop(choice)
+                options = [Action(type=ActionType.CHOOSE, card=c) for c in p.pitch.cards]
+                choice = state.player_agents[pid](state, options, 'Choose next card for bottom of deck')
+                if isinstance(choice, Action):
+                    choice.player_id = pid
+                card = choice.card
+                if card is None:
+                    card = p.pitch.cards[0]
+                p.pitch.cards.remove(card)
                 p.deck.add_bottom(card)
     _resolve_all_triggers(state)
     if state.done:
@@ -610,12 +759,12 @@ def _end_phase_iter(state: GameState) -> None:
 
     # 4.4.3f: turn player draws up to intellect
     cards_to_draw = max(0, player.intellect - len(player.hand.cards))
-    _draw_cards(player, cards_to_draw)
-    # First turn: non-turn-player also draws up
-    if state.turn_number == 1:
+    _draw_cards(player, cards_to_draw, state)
+    # Turn 0 (opening player's first turn): non-turn-player also draws up
+    if state.turn_number == 0:
         opp = state.inactive()
         opp_draw = max(0, opp.intellect - len(opp.hand.cards))
-        _draw_cards(opp, opp_draw)
+        _draw_cards(opp, opp_draw, state)
     _resolve_all_triggers(state)
     if state.done:
         return
@@ -623,6 +772,8 @@ def _end_phase_iter(state: GameState) -> None:
     # 4.4.4: turn ends, effects that last "until end of turn" / "this turn" end
     player.current_turn_effects = []
     state.effect_manager.clear_turn_effects()  # CR 4.4.4 / CR 6.2.2a: remove end_of_turn ContinuousEffects
+    state.continuous_effect_manager.clear_transient()  # CR 6.3: remove non-persistent staged effects
+    state.continuous_effect_manager.clear_cost_modifiers(state.active_player)  # CR 5.1.6a: turn-scoped cost effects
     state.event_manager.emit('end_of_turn', state)
     _resolve_all_triggers(state)
     if state.done:
@@ -637,14 +788,19 @@ def _end_phase_iter(state: GameState) -> None:
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _draw_cards(player: Player, count: int) -> None:
-    """Draw up to count cards from deck into hand."""
+def _draw_cards(player: Player, count: int, state: Optional[GameState] = None) -> None:
+    """Draw up to count cards from deck into hand.
+    Pass state to emit card_drawn events (omit for pre-trigger opening hand draws)."""
     for _ in range(count):
         if not player.deck.cards:
             return
         card = player.deck.pop_top()
         if card is not None:
             player.hand.add(card)
+            if state is not None:
+                state.event_manager.emit(
+                    Event(type='card_drawn', data={'card': card, 'player_id': player.player_id}),
+                    state)
 
 def _resolve_all_triggers(state: GameState) -> None:
     """Order and resolve all triggers on the stack without giving players priority."""
@@ -690,26 +846,132 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
         player.current_turn_effects.remove(key)
 
 
-def _recalculate_attack_power(combat) -> None:
-    """Recalculate attack power from base power + continuous effects on the attack card."""
-    card = combat.attack_card
-    power = card.base_power or 0
+def _setup_static_ability_listeners(state: GameState) -> None:
+    """Register the static ability meta-dispatcher for every event in STATIC_ABILITY_ZONES.
+
+    One dispatcher handles all static ability events.  Adding a new event to
+    STATIC_ABILITY_ZONES in registry.py automatically wires it here at game start.
+    """
+    from engine.card_effects.registry import (
+        CARD_STATIC_ABILITIES,
+        KEYWORD_STATIC_ABILITIES,
+        STATIC_ABILITY_ZONES,
+    )
+
+    def _meta_dispatcher(event, state: GameState) -> None:
+        zone_fn = STATIC_ABILITY_ZONES.get(event.type)
+        if not zone_fn:
+            return
+        for card in zone_fn(state):
+            if card is None:
+                continue
+            # Per-card statics
+            for ev_name, handler in CARD_STATIC_ABILITIES.get(getattr(card, 'slug', ''), []):
+                if ev_name == event.type:
+                    handler(event, state, card)
+            # Keyword statics (e.g. Piercing) — checked for every card in the zone
+            for kw in getattr(card, 'keywords', []):
+                kw_base = kw.lower().split()[0]
+                kw_handler = KEYWORD_STATIC_ABILITIES.get(kw_base)
+                if kw_handler:
+                    parts = kw.split()
+                    n = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 1
+                    kw_handler(n, state, card)
+
+    for event_name in STATIC_ABILITY_ZONES:
+        state.event_manager.register(event_name, _meta_dispatcher)
+
+    state._static_listeners = list(STATIC_ABILITY_ZONES.keys())  # Track registered events
+
+def destroy_aura(state: GameState, player_id: int, card) -> None:
+    """Remove an aura from a player's zone and emit 'aura_destroyed' for static listeners.
+
+    All code that destroys auras should call this instead of player.auras.remove()
+    directly, so Merciful Retribution and similar statics fire correctly.
+    """
+    from engine.state import Event
+    state.players[player_id].auras.remove(card)
+    state.event_manager.emit(
+        Event(type='aura_destroyed', data={'card': card, 'player_id': player_id}),
+        state,
+    )
+
+def _validate_combat_state(state: GameState) -> None:
+    if not state.combat or state.done:
+        raise RuntimeError("Invalid combat state: no active combat or game already ended")
+
+def _register_card_continuous_effects(state: GameState, card: Card) -> None:
+    """Register card.effects list as ContinuousEffects for the current attack.
+
+    Clears existing per-attack power/keyword effects first so prior chain links
+    don't bleed into new ones.  Called from _attack_step after
+    _apply_turn_attack_effects so any effects that function appends to
+    card.effects are also captured here.
+    """
+    from engine.continuous_effects import ContinuousEffect, next_timestamp
+    mgr = state.continuous_effect_manager
+    # Purge leftover per-attack staged effects from any previous chain link
+    mgr.remove_by_prop('power')
+    mgr.remove_by_prop('keywords')
     for effect_type, fn in getattr(card, 'effects', []):
         if effect_type == "base_power":
-            power = fn(power)
-    for effect_type, fn in getattr(card, 'effects', []):
-        if effect_type == "base_power_multiply":
-            power = fn(power)
-    # CR 8.3.23: Piercing — static ability evaluated fresh each recalculation.
-    # Replaces the triggered approach (keywords.py piercing() is now a noop).
-    for kw in getattr(card, 'keywords', []):
-        if kw.lower().startswith('piercing'):
-            parts = kw.split()
-            n = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 1
-            if any(c.is_equipment for c in (combat.defending_cards or [])):
-                power += n
-            break
-    combat.attack_power = power
+            # Stage 7 substage 2 (set-like transform — fn takes current and returns new)
+            eid = f"card_effect_{card.slug}_{effect_type}_{id(fn)}"
+            mgr.add(ContinuousEffect(
+                stage=7,
+                substage=2,
+                timestamp=next_timestamp(),
+                prop='power',
+                source_slug=card.slug,
+                effect_id=eid,
+                apply_fn=lambda val, _s, _c, _fn=fn: _fn(val),
+                persistent=False,
+            ))
+        elif effect_type == "base_power_multiply":
+            # Stage 7 substage 3 (multiply)
+            eid = f"card_effect_{card.slug}_{effect_type}_{id(fn)}"
+            mgr.add(ContinuousEffect(
+                stage=7,
+                substage=3,
+                timestamp=next_timestamp(),
+                prop='power',
+                source_slug=card.slug,
+                effect_id=eid,
+                apply_fn=lambda val, _s, _c, _fn=fn: _fn(val),
+                persistent=False,
+            ))
+
+
+def _recalculate_attack_power(state: GameState) -> None:
+    """Recalculate attack power using the CR 6.3 staging system.
+
+    Stage 6: keywords/abilities (Go Again, Dominate, Overpower, Stealth, etc.)
+    Stage 7: base numeric values (set, multiply, add) — from card.effects
+    Stage 8: transient power bonuses (static abilities like Piercing)
+
+    After the staged calculation, any keywords added directly to
+    combat.keyword_effects (by triggered abilities during this chain link) are
+    unioned in so all "X in combat.keywords" checks see them.
+    """
+    combat = state.combat
+    card = combat.attack_card
+    mgr = state.continuous_effect_manager
+
+    # Stage 6: rebuild effective keywords from printed + staged effects + direct additions
+    base_keywords: set = set(card.keywords or [])
+    effective_keywords: set = mgr.recalculate(state, card, 'keywords', base_keywords)
+    # Union with keywords added directly to combat this chain link
+    effective_keywords = effective_keywords | set(combat.keyword_effects)
+    combat.keywords = list(effective_keywords)
+
+    # Stages 7-8: recalculate effective power via staged effects
+    base_power = card.base_power or 0
+    combat.attack_power = mgr.recalculate(state, card, 'power', base_power)
+
+    # Fire the static ability event so CARD_STATIC_ABILITIES and
+    # KEYWORD_STATIC_ABILITIES can also apply (they modify combat.attack_power
+    # and combat.keywords directly, which is fine — they run AFTER staged calc).
+    state.event_manager.emit('recalculate_attack_power', state)
 
 def _resolve_damage(state: GameState) -> None:
     """Damage Step (7.5.2) — calculate and apply damage."""
@@ -718,7 +980,7 @@ def _resolve_damage(state: GameState) -> None:
     defender = state.players[defender_id]
 
     # Recalculate attack power from continuous effects before damage
-    _recalculate_attack_power(combat)
+    _recalculate_attack_power(state)
 
     total_defense = sum((c.defense or 0) for c in combat.defending_cards)
     combat.total_defense = total_defense
@@ -734,7 +996,10 @@ def _resolve_damage(state: GameState) -> None:
     if net_damage > 0:
         defender.health -= net_damage
         # 7.5.5: hit event (physical damage from attack)
+        # 'hit' fires for any hit (hero or ally — ally-hit path to be added).
+        # 'hit_hero' fires only when the hit target is the hero (current _resolve_damage always targets the hero).
         state.event_manager.emit(Event(type='hit', card=combat.attack_card.slug, data={'damage': net_damage}), state)
+        state.event_manager.emit(Event(type='hit_hero', card=combat.attack_card.slug, data={'damage': net_damage}), state)
         state.event_manager.emit(Event(type='damage_dealt', data={'damage': net_damage, 'target': defender_id}), state)
         combat.hit = True
     else:
@@ -820,11 +1085,15 @@ def _close_combat_chain(state: GameState) -> None:
         attacker.graveyard.add(attack_card)
         _apply_watery_grave(attack_card, state)
 
-    # Defending cards: equipment stays, hand cards go to graveyard
+    # Defending cards: hand/arsenal cards go to graveyard.
+    # Equipment zone transitions are owned entirely by keyword triggers
+    # (Blade Break → graveyard, Temper → graveyard if d≤0, Battleworn/Guardwell → stay).
+    # Those triggers already fired in _resolve_all_triggers above, so this loop
+    # does nothing for equipment.
     for card in combat.defending_cards:
         state.remember_last_known(card)
         if card.is_equipment:
-            pass  # 7.7.5: equipment returns to equipped zone
+            pass  # handled by keyword trigger (or stays equipped if no keyword)
         else:
             defender.graveyard.add(card)
             _apply_watery_grave(card, state)
@@ -841,6 +1110,8 @@ def _close_combat_chain(state: GameState) -> None:
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""
     combat = state.combat
+    if not combat:
+        return
     if action.type == ActionType.PASS:
         return
     defender = state.players[3 - combat.attacker_id]
@@ -888,6 +1159,8 @@ def resolve_stack(game_state: GameState) -> None:
                     entry.meld_effect_top(entry.card, game_state, entry)
                 else:
                     entry.meld_effect_top(entry.card, game_state)
+            if entry.card is not None:
+                game_state.stack.remove(entry.card)  # CR 3.0.1: card leaves stack zone on resolution
             game_state.process_cease_to_exist(entry.card)
             card = entry.card
             if card and not entry.is_attack and card.has_go_again:
@@ -908,10 +1181,15 @@ def resolve_stack(game_state: GameState) -> None:
                    and "Figment" in _card_types)
     _is_aura = (entry.layer_type == 'card' and card is not None
                 and "Aura" in _card_types and not _is_figment)
+    # CR 2.10: "Ally" is a subtype, not a card type. Check both fields for
+    # compatibility with slug_index data where Ally cards have types=[] and
+    # subtypes=['Ally', ...].
+    _card_subtypes = card.subtypes or [] if card else []
     _is_ally = (entry.layer_type == 'card' and card is not None
-                and "Ally" in _card_types)
+                and ("Ally" in _card_types or "Ally" in _card_subtypes))
 
     if entry.layer_type == 'card' and card and not _is_figment and not _is_aura and not _is_ally:
+        game_state.stack.remove(card)  # CR 3.0.1: card leaves stack zone on resolution
         game_state.process_cease_to_exist(card)
 
     if entry.effect_fn:
@@ -939,7 +1217,7 @@ def resolve_stack(game_state: GameState) -> None:
             elif hasattr(card, 'life') and card.life is not None:
                 card.current_life = card.life
         else:
-            if "Ally" in _card_types:
+            if "Ally" in _card_types or "Ally" in _card_subtypes:
                 card.permanent_subtype = "Ally"
             player.permanents.add(card, is_public=True)
         # Register triggers for the card now that it's in the arena
@@ -950,11 +1228,19 @@ def resolve_stack(game_state: GameState) -> None:
             Event(type='enters_arena', data={'card': card, 'player_id': player_id}),
             game_state)
 
-    # CR 5.3.5 / 8.3.5a: non-attack layers with go again grant an action point on resolution.
+    # CR 5.3.5 / 8.3.5a: non-attack card layers with go again grant an action point on resolution.
     # CR 8.5.7b: non-turn-players cannot gain action points — check player is turn-player.
     # (Attack go again is handled separately in _resolution_step via combat.keywords.)
-    if card and not entry.is_attack and card.has_go_again:
-        if entry.player_id == game_state.active_player:
+    # Only applies to 'card' layer types — triggered/activated layers sourced from attack cards
+    # must not grant Go Again even if the source card has the keyword.
+    # Check both printed keywords AND any "Go Again" granted via continuous effects (CR 6.2).
+    if card and not entry.is_attack and entry.layer_type == 'card':
+        base_kws = set(card.keywords or [])
+        effective_kws = game_state.continuous_effect_manager.recalculate(
+            game_state, card, 'keywords', base_kws)
+        _ga_strings = {"Go Again", "Go again", "go again"}
+        has_effective_go_again = bool(effective_kws & _ga_strings) or card.has_go_again
+        if has_effective_go_again and entry.player_id == game_state.active_player:
             game_state.players[entry.player_id].action_points += 1
 
     game_state.priority_player = game_state.active_player
@@ -1027,8 +1313,14 @@ def get_player_order_decision(game_state, player_id, triggered_abilities):
         if len(remaining) == 1:
             order.append(remaining.pop(0))
             break
-        choice = game_state.player_agents[player_id](game_state, list(range(len(remaining))))
-        order.append(remaining.pop(choice))
+        options = [
+            Action(type=ActionType.CHOOSE, card=entry.card, card_idx=i)
+            for i, entry in enumerate(remaining)
+        ]
+        choice = game_state.player_agents[player_id](game_state, options, context=remaining)
+        if isinstance(choice, Action):
+            choice.player_id = player_id
+        order.append(remaining.pop(choice.card_idx or 0))
     return order
 
 def priority_loop(state: GameState) -> None:
@@ -1045,6 +1337,8 @@ def priority_loop(state: GameState) -> None:
     while True:
         if state.done:
             return
+        if state.step == Step.COMBAT_CLOSE:
+            return  # A triggered ability closed the chain; exit immediately
 
         _loop_iters += 1
         if _loop_iters > _MAX_PRIORITY_ITERS:
@@ -1098,7 +1392,7 @@ def priority_loop(state: GameState) -> None:
 # Player decisions
 # ---------------------------------------------------------------------------
 
-def get_player_decision(state: GameState, player_id: int) -> Action:
+def get_player_decision(state: GameState, player_id: int, context: str | None = None) -> Action:
     """Get action decision from player agent."""
     legal = legal_actions(state, state.card_db)
 
@@ -1109,18 +1403,21 @@ def get_player_decision(state: GameState, player_id: int) -> Action:
         forced.player_id = player_id
         return forced
 
-    choice = state.player_agents[player_id](state, legal, context='What do you do?')
+    choice = state.player_agents[player_id](state, legal, context=context if context else 'What do you do?')
     if isinstance(choice, Action):
         choice.player_id = player_id
     return choice
 
 def get_turn_player_choice(state: GameState, context: str) -> int:
     """Get decision from turn player for which player acts first."""
-    choice = state.player_agents[state.active_player](state, ('You', 'Opponent'), context)
-    if choice == 'You':
-        return state.active_player
-    else:
-        return 3 - state.active_player
+    options = [
+        Action(type=ActionType.CHOOSE, card_idx=0),  # 0 = self goes first
+        Action(type=ActionType.CHOOSE, card_idx=1),  # 1 = opponent goes first
+    ]
+    choice = state.player_agents[state.active_player](state, options, context)
+    if isinstance(choice, Action):
+        choice.player_id = state.active_player
+    return state.active_player if (choice.card_idx == 0) else 3 - state.active_player
 
 def player_decision_raw(state: GameState, player_id: int, options, context=None) -> int:
     """Get a raw choice from player agent (index into options list)."""
@@ -1131,8 +1428,12 @@ def player_decision_raw(state: GameState, player_id: int, options, context=None)
 # Apply action
 # ---------------------------------------------------------------------------
 
-def _get_action_resource_cost(state: GameState, action: Action) -> int:
-    """Compute the resource cost for an action (used to drive sequential pitching)."""
+def _get_base_resource_cost(state: GameState, action: Action) -> int:
+    """Compute the base resource cost for an action before any modifiers.
+
+    Renamed from _get_action_resource_cost — call _calculate_resource_cost
+    for the full CR 5.1.6a modifier pipeline.
+    """
     card = action.card
     if action.type == ActionType.PLAY_CARD:
         ms = getattr(action, 'meld_side', None)
@@ -1178,15 +1479,225 @@ def _get_action_resource_cost(state: GameState, action: Action) -> int:
     return 0
 
 
-def _pitch_for_cost(state: GameState, action: Action, needed_cost: int) -> None:
+def _calculate_resource_cost(state: GameState, action: Action) -> int:
+    """CR 5.1.6: Calculate final resource cost after all modifiers.
+
+    Order per CR 5.1.6a:
+    1. Base cost (from card/ability definition)
+    2. CR 5.1.6c: alternative cost replaces base resource cost with 0
+    3. SET effects applied in timestamp order      (substage 2)
+    4. INCREASE effects applied in timestamp order (substage 5)
+    5. DECREASE effects applied in timestamp order (substage 6)
+    Floored at 0.
+
+    Delegates to ContinuousEffectManager.recalculate() with prop='cost'
+    and action= context so condition_fn(card, action, state) works correctly.
+    """
+    card = action.card
+
+    # CR 5.1.3c: at most one alternative cost may be declared per play — enforced by
+    # the Optional[str] field (single value only).  Validate no list was smuggled in.
+    alt = getattr(action, 'alternative_cost_used', None)
+    assert not isinstance(alt, (list, tuple)), \
+        f"CR 5.1.3c: only one alternative cost allowed per action; got {alt!r}"
+
+    # CR 5.1.6c: alternative cost sets base resource cost to 0
+    if alt:
+        base_cost = 0
+    else:
+        base_cost = _get_base_resource_cost(state, action)
+
+    mgr = state.continuous_effect_manager
+    cost = mgr.recalculate(state, card, 'cost', base_cost, action=action)
+    return max(0, cost)  # CR 5.1.6a: floor at 0
+
+
+def _apply_chi_toward_resources(state: GameState, player_id: int, needed_cost: int) -> None:
+    """CR 1.14.2d: Drain chi into floating resources before spending resources.
+
+    Chi converts 1-for-1 into resources for the purpose of the current payment.
+    Only converts as much chi as needed to cover the shortfall.
+    """
+    player = state.players[player_id]
+    chi = getattr(player, 'chi', 0)
+    if chi <= 0 or needed_cost <= 0:
+        return
+    shortfall = needed_cost - player.resources
+    if shortfall <= 0:
+        return
+    chi_applied = min(chi, shortfall)
+    player.resources += chi_applied
+    player.chi -= chi_applied
+
+
+def _check_still_legal(state: GameState, action: Action) -> bool:
+    """CR 5.1.5: Re-verify legality after cost declarations but before payment.
+
+    Checks that fundamental preconditions still hold — primarily that the player
+    still has the action point(s) required.  Returns False if the action should
+    be cancelled.
+    """
+    player = state.players[action.player_id]
+    _action_speed_types = (
+        ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL, ActionType.PLAY_BANISH,
+        ActionType.ATTACK_WEAPON, ActionType.ACTIVATE_ITEM,
+        ActionType.ACTIVATE_EQUIPMENT, ActionType.ACTIVATE_WEAPON,
+        ActionType.ACTIVATE_HERO, ActionType.ATTACK_ALLY,
+    )
+    if action.type in _action_speed_types:
+        if player.action_points < 1:
+            return False
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Effect-costs (CR 5.1.8–5.1.9)
+# ---------------------------------------------------------------------------
+
+# EFFECT_COSTS: slug -> fn(state, player_id, action) -> bool
+# Returns True if cost successfully paid (or waived), False if unresolvable.
+# Called in apply_action BEFORE _apply_play_card puts the card on the stack.
+EFFECT_COSTS: dict = {}
+
+
+def _10000_year_reunion_effect_cost(state: GameState, player_id: int, action,
+                                    check: bool = False) -> bool:
+    """10,000 Year Reunion alt cost: remove 3 +1{p} counters from controlled auras.
+
+    Only fires when alternative_cost_used == "remove_p_counters".
+    Normal 8{r} payment path returns True immediately (no effect-cost).
+    check=True: verify ≥3 counters exist without removing them.
+    check=False: agent chooses one aura per counter to remove (one at a time, 3 total).
+    """
+    if getattr(action, 'alternative_cost_used', None) != "remove_p_counters":
+        return True  # Normal cost path — no effect-cost applies
+    player = state.players[player_id]
+    total = sum(
+        player.counters.get((c.slug, "permanents", "+1{p}"), 0)
+        for c in player.auras.cards
+    )
+    if total < 3:
+        return False
+    if not check:
+        from engine.card_effects.keywords import _ask_player
+        remaining = 3
+        while remaining > 0:
+            eligible = [
+                c for c in player.auras.cards
+                if player.counters.get((c.slug, "permanents", "+1{p}"), 0) > 0
+            ]
+            if not eligible:
+                break
+            pick = _ask_player(
+                state, player_id, [c.slug for c in eligible],
+                context=f"10,000 Year Reunion: choose an aura to remove a +1{{p}} counter from ({remaining} remaining)",
+            )
+            chosen = next((c for c in eligible if c.slug == str(pick)), eligible[0])
+            key = (chosen.slug, "permanents", "+1{p}")
+            player.counters[key] = player.counters.get(key, 0) - 1
+            remaining -= 1
+    return True
+
+
+EFFECT_COSTS["10000_year_reunion_red"] = _10000_year_reunion_effect_cost
+
+
+def _scrap_effect_cost(state: GameState, player_id: int, action) -> bool:
+    """Scrap (CR 8.3.32): optional additional cost — banish an item or equipment from graveyard."""
+    from engine.card_effects.keywords import _ask_player
+    player = state.players[player_id]
+    eligible = [
+        c for c in player.graveyard.cards
+        if any(t in (c.types or []) for t in ("Item", "Equipment"))
+    ]
+    if not eligible:
+        return True  # optional — nothing to banish, cost waived
+    choice = _ask_player(state, player_id, [True, False],
+                         context="Scrap: banish an item/equipment from your graveyard as additional cost?")
+    if not choice:
+        return True  # player declined — cost is optional
+    pick = _ask_player(state, player_id, [c.slug for c in eligible],
+                       context="Choose item or equipment to banish for Scrap")
+    target = player.graveyard.find(str(pick)) if pick is not None else None
+    if target:
+        from engine.card_effects.keywords import banish_card
+        player.graveyard.remove(target)
+        banish_card(state, player, target, face_up=True)
+    action.additional_cost_paid = True
+    return True
+
+
+def _beat_chest_effect_cost(state: GameState, player_id: int, action) -> bool:
+    """Beat Chest (CR 8.3.33): optional additional cost — discard a card with 6+ power from hand."""
+    from engine.card_effects.keywords import _ask_player
+    player = state.players[player_id]
+    card = action.card
+    eligible = [
+        c for c in player.hand.cards
+        if (c.power or 0) >= 6 and c.slug != (card.slug if card else None)
+    ]
+    if not eligible:
+        return True  # optional — nothing eligible, cost waived
+    choice = _ask_player(state, player_id, [True, False],
+                         context="Beat Chest: discard a card with 6+ power as additional cost?")
+    if not choice:
+        return True  # player declined
+    pick = _ask_player(state, player_id, [c.slug for c in eligible],
+                       context="Choose a card with 6+ power to discard for Beat Chest")
+    target = player.hand.find(str(pick)) if pick is not None else None
+    if target:
+        player.hand.remove(target)
+        player.graveyard.add(target)
+    action.additional_cost_paid = True
+    return True
+
+
+def _pay_effect_costs(state: GameState, action: Action) -> bool:
+    """CR 5.1.8–5.1.9: Calculate and pay effect-costs before the card enters the stack.
+
+    Returns True if all effect-costs were paid successfully (or there were none).
+    Returns False if a mandatory effect-cost could not be paid (action cancelled).
+    """
+    card = action.card
+    if card is None:
+        return True
+    # Slug-registered effect costs take priority
+    cost_fn = EFFECT_COSTS.get(card.slug)
+    if cost_fn is not None:
+        return cost_fn(state, action.player_id, action)
+    # Keyword-based effect costs: Scrap and Beat Chest are additional costs on the card
+    player_id = action.player_id
+    if player_id is None:
+        return True
+    keywords_lower = [k.lower() for k in (card.keywords or [])]
+    if any(k == "scrap" or k.startswith("scrap ") for k in keywords_lower):
+        if not _scrap_effect_cost(state, player_id, action):
+            return False
+    if any(k == "beat chest" or k.startswith("beat chest ") for k in keywords_lower):
+        if not _beat_chest_effect_cost(state, player_id, action):
+            return False
+    return True
+
+
+def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
+                    for_chi: bool = False) -> None:
     """Present pitchable hand cards and let the model choose which to pitch.
 
     Each iteration presents all remaining pitchable cards as options.  The model
-    picks one, it is pitched, and the loop repeats until resources >= needed_cost.
+    picks one, it is pitched, and the loop repeats until the pool >= needed_cost.
     The card being played is excluded from pitch candidates.
+
+    for_chi=False (default): pitching fills player.resources.  Any card can be pitched.
+    for_chi=True: pitching fills player.chi.  Only cards with the Draconic class
+        (i.e. cards that generate chi when pitched) are eligible.  Resources CANNOT
+        be pitched for chi costs (CR 1.14.2a).
     """
     player = state.players[action.player_id]
-    if needed_cost is None or needed_cost <= 0 or player.resources >= needed_cost:
+    if needed_cost is None or needed_cost <= 0:
+        return
+
+    pool = player.chi if for_chi else player.resources
+    if pool >= needed_cost:
         return
 
     # Exclude the card being played from pitch candidates (it's still in hand at this point)
@@ -1196,19 +1707,39 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int) -> None:
     ) else None
 
     pitched_slugs: list[str] = []
-    while player.resources < needed_cost:
+    while (player.chi if for_chi else player.resources) < needed_cost:
         pitchable = get_pitchable_cards(player.hand.cards, exclude_card=exclude)
+        if for_chi:
+            # Only Draconic cards generate chi when pitched (CR 1.14.2a)
+            pitchable = [c for c in pitchable
+                         if "Draconic" in (c.types or []) or "Draconic" in (c.subtypes or [])]
         if not pitchable:
             break  # nothing left to pitch
-        options = [Action(type=ActionType.PLAY_CARD, card=c) for c in pitchable]
-        choice = state.player_agents[action.player_id](state, options, 'Pitch?')
+        context = 'Pitch for chi?' if for_chi else 'Pitch?'
+        options = [Action(type=ActionType.CHOOSE, card=c) for c in pitchable]
+        choice = state.player_agents[action.player_id](state, options, context)
         if isinstance(choice, Action):
             choice.player_id = action.player_id
         card = choice.card
+        if card is None:
+            break
         player.hand.remove(card)
         player.pitch.add(card)
         pitched_slugs.append(card.slug)
-        player.resources += card.pitch or 0
+        pitch_val = card.base_pitch or card.pitch or 0
+        if for_chi:
+            player.chi += pitch_val
+        elif getattr(card, 'pitch_gives_chi', False) and action.player_id is not None:
+            # Cards like inner_chi can fill either pool — ask the player
+            from engine.card_effects.keywords import _ask_player as _apk
+            chi_choice = _apk(state, action.player_id, ['chi', 'resources'],
+                              context=f"Pitch {card.slug} for {pitch_val} chi or {pitch_val} resources?")
+            if str(chi_choice) == 'chi':
+                player.chi += pitch_val
+            else:
+                player.resources += pitch_val
+        else:
+            player.resources += pitch_val
         state.event_manager.emit(
             Event(type='card_pitched', data={'card': card, 'pitcher_id': action.player_id}), state)
 
@@ -1216,14 +1747,134 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int) -> None:
         state.record_pitch(action.player_id, pitched_slugs)
 
 
+def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
+    """Unified cost gate for playing a card or activating an ability.
+
+    Implements the full CR 5.1 cost sequence in one place so that the
+    legality check (legal_actions) and the payment (apply_action) always
+    use identical logic.
+
+    check=True  (CR 5.1.5 / 5.1.8a):
+        Verify ALL costs are payable without changing any game state.
+        Returns True if the action is affordable, False if it should be
+        excluded from the legal-action list.
+
+    check=False (CR 5.1.7 / 5.1.9):
+        Deduct ALL costs from the game state.  Returns True unconditionally
+        (caller is responsible for having called check=True first).
+
+    Cost sequence per CR 5.1.6 / 1.14.2:
+      1. Resource asset-cost
+           • Base = card.cost (CR 2.2.2)
+           • Alternative cost declared → base set to 0 (CR 5.1.6c)
+           • Continuous-effect modifiers applied (CR 5.1.6a): set → increase → decrease, floor 0
+           • Chi drains into resources before spending (CR 1.14.2d)
+           • Pitch cards from hand to cover shortfall (CR 1.14.2d / 5.1.7)
+      2. Action-point asset-cost
+           • 0 for Instant-speed; 1 for action-speed (CR 5.1.6b)
+           • Continuous-effect modifiers applied (CR 5.1.6a)
+      3. Life asset-cost  (CR 1.14.2e)
+           • Hero activations may carry a life cost registered in HERO_ACTIVATION_CONDITIONS
+      4. Effect-costs  (CR 5.1.8–5.1.9)
+           • Slug-registered in EFFECT_COSTS; keyword-driven (Scrap, Beat Chest)
+           • check=True evaluates payability without paying
+           • check=False pays them (irreversible side-effects happen here)
+    """
+    if action.player_id is None:
+        return True
+    player = state.players[action.player_id]
+
+    # --- 1. Resource asset-cost -------------------------------------------
+    resource_cost = _calculate_resource_cost(state, action)
+
+    if check:
+        # CR 5.1.6a / 1.14.2b: can the player cover the cost via resources + pitch?
+        exclude = action.card if action.type in (
+            ActionType.PLAY_CARD, ActionType.PLAY_ATTACK_REACTION,
+            ActionType.PLAY_DEFENSE_REACTION,
+        ) else None
+        chi = getattr(player, 'chi', 0)
+        effective_resources = player.resources + chi
+        if effective_resources < resource_cost:
+            if not can_pay_cost(player.hand.cards, resource_cost,
+                                effective_resources, exclude_card=exclude):
+                return False
+    else:
+        # CR 1.14.2d: drain chi first, then pitch to cover remainder
+        _apply_chi_toward_resources(state, action.player_id, resource_cost)
+        _pitch_for_cost(state, action, resource_cost)
+        # Deduct final resource cost using the pre-calculated modified value
+        action.resource_cost = resource_cost
+        player.resources -= resource_cost
+
+    # --- 2. Action-point asset-cost ----------------------------------------
+    # (Already checked by _check_still_legal / legal_actions AP guards;
+    #  the actual deduction is handled inside each _apply_* dispatcher since
+    #  it interacts with Instant-speed and meld-side logic there.)
+
+    # --- 3. Life asset-cost (CR 1.14.2e) ------------------------------------
+    life_cost: int = 0
+    if action.type == ActionType.ACTIVATE_HERO and player.hero is not None:
+        from engine.card_effects.registry import HERO_ACTIVATION_CONDITIONS
+        hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
+        raw_life = hero_cfg.get("life_cost", 0)
+        _lv = raw_life(player, state) if callable(raw_life) else raw_life
+        life_cost = _lv if isinstance(_lv, int) else 0
+
+    if life_cost > 0:
+        if check:
+            if player.health <= life_cost:  # CR 1.14.2b: must be able to pay in full
+                return False
+        else:
+            player.health -= life_cost
+
+    # --- 4. Effect-costs (CR 5.1.8–5.1.9) ----------------------------------
+    if action.type in (ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL, ActionType.PLAY_BANISH):
+        card = action.card
+        if card is not None:
+            if check:
+                # CR 5.1.8a: verify each effect-cost is resolvable before paying any
+                cost_fn = EFFECT_COSTS.get(card.slug)
+                if cost_fn is not None:
+                    # Registered cost functions support a dry-run check= kwarg if the
+                    # function accepts it; otherwise assume payable (optional costs).
+                    import inspect as _ins
+                    sig = _ins.signature(cost_fn)
+                    if 'check' in sig.parameters:
+                        if not cost_fn(state, action.player_id, action, check=True):
+                            return False
+                # Keyword effect-costs: Scrap requires graveyard item/equipment;
+                # Beat Chest requires a 6+ power card in hand.
+                kws = [k.lower() for k in (card.keywords or [])]
+                if any(k == "scrap" or k.startswith("scrap ") for k in kws):
+                    eligible = [
+                        c for c in player.graveyard.cards
+                        if "Item" in (c.types or []) or "Equipment" in (c.types or [])
+                    ]
+                    if not eligible:
+                        return False  # mandatory Scrap with no valid target
+                # Beat Chest is optional — never blocks legality
+            else:
+                # Pay effect-costs
+                if not _pay_effect_costs(state, action):
+                    return False
+
+    return True
+
+
 def apply_action(state: GameState, action: Action) -> None:
     """Apply a player action to the game state."""
     # Sequential pitch: ask model which cards to pitch before dispatching
     _no_pitch_types = (ActionType.PASS, ActionType.REACTION_PASS, ActionType.DEFEND_CARDS,
-                       ActionType.STORE_ARSENAL, ActionType.DISCARD_ACTIVATE, ActionType.ATTACK_ALLY)
+                       ActionType.STORE_ARSENAL, ActionType.DISCARD_ACTIVATE, ActionType.ATTACK_ALLY,
+                       ActionType.CHOOSE)
     if action.type not in _no_pitch_types:
-        cost = _get_action_resource_cost(state, action)
-        _pitch_for_cost(state, action, cost)
+        # CR 5.1.5: Verify legality BEFORE any cost payment (declare → check → pay).
+        if not _check_still_legal(state, action):
+            return
+        # CR 5.1.6–5.1.9: Pay all costs (resource, chi, pitch, life, effect-costs).
+        if not evaluate_play_cost(state, action, check=False):
+            return
 
     if action.type == ActionType.PLAY_CARD:
         _apply_play_card(state, action)
@@ -1245,6 +1896,8 @@ def apply_action(state: GameState, action: Action) -> None:
         _apply_ally_attack(state, action)
     elif action.type == ActionType.DISCARD_ACTIVATE:
         _apply_discard_activate(state, action)
+    elif action.type == ActionType.CHOOSE:
+        pass  # Choice is conveyed by selection of this Action object; no state mutation needed
 
 
 def _stack_declarations_from_action(action: Action) -> tuple[list[str], list[str], Optional[int]]:
@@ -1272,12 +1925,7 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # Meld-side-aware resource deduction.
     # Pitch sequences were already generated for the correct effective cost per side.
     _meld_side = getattr(action, 'meld_side', None)
-    if _meld_side == 'bottom':
-        pass  # bottom side (Shock/Life) is always free
-    elif _meld_side == 'both':
-        player.resources -= card.meld_cost or 0
-    else:
-        player.resources -= card.cost or 0  # top, None (instant-speed), or regular card
+    # Resource cost already deducted by evaluate_play_cost in apply_action.
     player.hand.remove(card)
 
     # Meld-side-aware action point deduction.
@@ -1292,9 +1940,9 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # Tag the card so on_play triggers know which side is resolving
     card.meld_side = _meld_side
 
-    # CR 3.0.1 / CR 5.3.4c: card enters stack zone
-    card.prev_zone = card.zone
-    card.zone = 'stack'
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone (Zone.add keeps card.zone in sync)
+    if card is not None:
+        state.stack.add(card)
 
     # CR 5.1.2 / CR 3.15.4: card enters stack, on_play triggers sit above it (LIFO)
     entry = StackEntry(
@@ -1313,7 +1961,8 @@ def _apply_play_card(state: GameState, action: Action) -> None:
         entry.meld_effect_bottom = _meld_effs.get('bottom')
         entry.meld_effect_top = _meld_effs.get('top')
     state.stack_entries.append(entry)
-    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'meld_side': _meld_side}), state)
+    player.cards_played_this_turn.append(card)
+    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'meld_side': _meld_side, 'target': action.target}), state)
 
 def _apply_play_arsenal(state: GameState, action: Action) -> None:
     """Play a card from arsenal: pitch from hand for cost, place on stack (CR 3.3.4, CR 5.1.1a)."""
@@ -1321,21 +1970,21 @@ def _apply_play_arsenal(state: GameState, action: Action) -> None:
     card = action.card
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
-    player.resources -= card.cost or 0
+    # Resource cost already deducted by evaluate_play_cost in apply_action.
     player.arsenal.remove(card)
 
     if "Instant" not in (card.types or []):
         player.action_points -= 1
 
-    # CR 3.0.1 / CR 5.3.4c: card enters stack zone
-    card.prev_zone = card.zone
-    card.zone = 'stack'
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone (Zone.add keeps card.zone in sync)
+    if card is not None:
+        state.stack.add(card)
 
     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
     # CR 3.15.4: layer position is N+1 where N is existing layers
     entry = StackEntry(
-        player_id=action.player_id, 
-        card=card, 
+        player_id=action.player_id,
+        card=card,
         from_arsenal=True,
         layer_type='card',
         layer_position=len(state.stack_entries) + 1,
@@ -1344,7 +1993,8 @@ def _apply_play_arsenal(state: GameState, action: Action) -> None:
         declared_x=declared_x,
     )
     state.stack_entries.append(entry)
-    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card}), state)
+    player.cards_played_this_turn.append(card)
+    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'target': action.target}), state)
 
 def _apply_play_banish(state: GameState, action: Action) -> None:
     """Play a card from the banish zone (e.g. via Under the Trap-Door trap_door_playable_ flag)."""
@@ -1352,7 +2002,7 @@ def _apply_play_banish(state: GameState, action: Action) -> None:
     card = action.card
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
-    player.resources -= card.cost or 0
+    # Resource cost already deducted by evaluate_play_cost in apply_action.
     player.banished.remove(card)
     # Consume the playable flag (trap-door or infiltrate)
     for prefix in (f"trap_door_playable_{card.slug}", f"infiltrate_play_{card.slug}"):
@@ -1364,13 +2014,13 @@ def _apply_play_banish(state: GameState, action: Action) -> None:
     if "Instant" not in (card.types or []):
         player.action_points -= 1
 
-    # CR 3.0.1 / CR 5.3.4c: card enters stack zone
-    card.prev_zone = card.zone
-    card.zone = 'stack'
+    # CR 3.0.1 / CR 5.3.4c: card enters stack zone (Zone.add keeps card.zone in sync)
+    if card is not None:
+        state.stack.add(card)
 
     # CR 3.15.4: layer position is N+1 where N is existing layers
     entry = StackEntry(
-        player_id=action.player_id, 
+        player_id=action.player_id,
         card=card,
         layer_type='card',
         layer_position=len(state.stack_entries) + 1,
@@ -1379,7 +2029,7 @@ def _apply_play_banish(state: GameState, action: Action) -> None:
         declared_x=declared_x,
     )
     state.stack_entries.append(entry)
-    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card}), state)
+    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'target': action.target}), state)
 
 def _apply_weapon_attack(state: GameState, action: Action) -> None:
     """Attack with a weapon: exhaust weapon, place attack on stack."""
@@ -1393,8 +2043,9 @@ def _apply_weapon_attack(state: GameState, action: Action) -> None:
     if "banish a card from under" in text.lower():
         underneath = getattr(weapon_card, 'cards_underneath', [])
         if underneath:
+            from engine.card_effects.keywords import banish_card
             banished = underneath.pop(0)
-            player.banished.add(banished)
+            banish_card(state, player, banished, face_up=True)
 
     # Pay "{t} a cog you control" cost if required (e.g., Spitfire)
     if "{t} a cog you control" in text and "Attack" in text:
@@ -1423,13 +2074,28 @@ def _apply_weapon_attack(state: GameState, action: Action) -> None:
     )
     state.stack_entries.append(entry)
 
+def _ally_attack_resource_cost(ally_card) -> int:
+    """Parse the resource cost of an ally's attack ability from functional text.
+    Falls back to card.cost if set. Returns 0 if no cost found."""
+    if ally_card.cost is not None:
+        return int(ally_card.cost)
+    text = ally_card.functional_text or ""
+    # Match "Action - {r}{r}:" or "Once per Turn Action - {r}:" patterns
+    match = re.search(r'\*\*(?:[\w\s]+ )?[Aa]ction\*\*\s*[-\u2014]\s*((?:\{[rR]\})*)', text)
+    if match and match.group(1):
+        return match.group(1).lower().count('{r}')
+    return 0
+
+
 def _apply_ally_attack(state: GameState, action: Action) -> None:
     """Ally attacks (CR 11.0): exhaust the ally, place attack on stack."""
     player = state.players[action.player_id]
     ally_card = action.card
 
-    # Spend one action point
+    # Spend one action point and deduct resource cost
     player.action_points -= 1
+    resource_cost = _ally_attack_resource_cost(ally_card)
+    player.resources -= resource_cost
 
     # Mark the ally exhausted so it cannot attack again this turn
     idx = action.card_idx
@@ -1546,7 +2212,7 @@ def _apply_react(state: GameState, action: Action) -> None:
     card = action.card
     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
 
-    player.resources -= card.cost or 0
+    # Resource cost already deducted by evaluate_play_cost in apply_action.
 
     # Reactions can be played from hand or arsenal; remove from the declared source zone.
     if action.from_arsenal:
@@ -1585,7 +2251,7 @@ def _apply_react(state: GameState, action: Action) -> None:
         declared_x=declared_x,
     )
     state.stack_entries.append(entry)
-    state.event_manager.emit(Event(type='on_play', card=card.slug), state)
+    state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'target': action.target}), state)
 
 def _apply_discard_activate(state: GameState, action: Action) -> None:
     """Activate a 'Instant - Discard this:' hand ability. Cost: discard the card."""

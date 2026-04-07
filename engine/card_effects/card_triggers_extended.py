@@ -19,7 +19,7 @@ from engine.card_effects.keywords import (
     _controller_id, _get_controller, _get_opponent_of, _ask_player,
     _move_to_graveyard, _draw_cards, _remove_from_current_zone,
     effect_draw, effect_discard, effect_banish, effect_banish_top_deck,
-    effect_deal_damage, effect_deal_arcane,
+    effect_deal_damage, effect_deal_arcane, effect_deal_arcane_to_target,
     effect_gain_life, effect_lose_life,
     effect_gain_action_point, effect_gain_resources,
     effect_destroy, effect_opt, effect_intimidate,
@@ -32,6 +32,7 @@ from engine.card_effects.keywords import (
     effect_put_arsenal, roll_die, effect_steal_token,
     effect_negate, effect_reload,
     crush_check, reprise_check, combo_check, surge_check, rupture_check,
+    fusion, _pitch_for_cost,
 )
 from engine.card_effects.registry import TURN_ATTACK_EFFECTS
 
@@ -44,7 +45,7 @@ def _make_nap(n):
         attack_card.base_power = (attack_card.base_power or 0) + n
     return apply_fn
 
-for _n in [1, 2, 3, 4, 5]:
+for _n in [1, 2, 3, 4, 5, 6]:
     _key = f"next_attack_+{_n}"
     if _key not in TURN_ATTACK_EFFECTS:
         TURN_ATTACK_EFFECTS[_key] = {"apply_fn": _make_nap(_n)}
@@ -201,7 +202,7 @@ def _factory_attacking_go_again_if(condition_fn):
             return
         if condition_fn(card, state):
             if state.combat and "Go Again" not in state.combat.keywords:
-                state.combat.keywords.append("Go Again")
+                state.combat.grant_keyword("Go Again")
     return effect
 
 
@@ -210,7 +211,7 @@ def _factory_on_hit_go_again():
         if not _is_this_attacking(card, event, state):
             return
         if state.combat and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
     return effect
 
 
@@ -246,7 +247,7 @@ def _factory_ar_go_again():
     """Factory: attack reaction giving go again."""
     def effect(card, event, state):
         if state.combat and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
     return effect
 
 
@@ -396,6 +397,200 @@ def _register(slug, triggers_list):
 # ACTION cards (440)
 # ---------------------------------------------------------------
 
+# -- aegis_archangel_of_protection --
+# Ally. Once per Turn Action - {r}{r}: Attack.
+# Ward 4 static ability (card_keywords has 'Ward' without number — registered manually).
+# On attack trigger: may banish a card from soul → create 2 Spectral Shields.
+# If Aegis ceases to exist before the trigger resolves, it fails (check in effect_fn).
+def _aegis_enters_arena(card, event, state):
+    """Register Ward 4 as a replacement effect on the effect_manager."""
+    if state.effect_manager is not None:
+        from engine.effects import _make_ward
+        state.effect_manager.add_replacement(_make_ward(card, 4))
+
+def _aegis_on_attack(card, event, state):
+    """When Aegis attacks: optionally banish a soul card to create 2 Spectral Shields."""
+    cid = _controller_id(card)
+    player = state.players[cid]
+    # Fail silently if Aegis has left the arena (destroyed, banished, etc.)
+    _arena_zones = {"permanents", "combat_chain", "head", "chest", "arms",
+                    "legs", "weapon1", "weapon2", "hero"}
+    if card.zone not in _arena_zones:
+        return
+    if not player.soul.cards:
+        return
+    choice = _ask_player(state, cid, [True, False],
+                         context="Aegis: banish a card from your hero's soul to create 2 Spectral Shields?")
+    if not choice:
+        return
+    # Choose which soul card to banish (player choice if multiple)
+    if len(player.soul.cards) > 1:
+        pick = _ask_player(state, cid, [c.slug for c in player.soul.cards],
+                           context="Aegis: choose a card from your soul to banish")
+        soul_card = next((c for c in player.soul.cards if c.slug == str(pick)),
+                         player.soul.cards[0])
+    else:
+        soul_card = player.soul.cards[0]
+    effect_banish(state, cid, soul_card)
+    create_token(state, cid, "spectral_shield")
+    create_token(state, cid, "spectral_shield")
+
+_register("aegis_archangel_of_protection", [
+    TriggerDef(event_type="enters_arena", effect_fn=_aegis_enters_arena),
+    TriggerDef(event_type="attacking", condition_fn=_is_this_attacking,
+               effect_fn=_aegis_on_attack),
+])
+
+
+# -- aether_arc_blue --
+# Cost: 0{r}, 1AP. Deal 1 arcane damage to each opposing hero.
+# Create a Ponder token for each hero dealt damage this way.
+# In 1v1: one opponent, one potential Ponder.
+# Ponder is only created if damage actually went through (effect_deal_arcane returns > 0).
+def _aether_arc_play(card, event, state):
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    damage_dealt = effect_deal_arcane(state, opp_id, 1, source=card)
+    if damage_dealt > 0:
+        create_token(state, cid, "ponder")
+
+_register("aether_arc_blue", [
+    TriggerDef(event_type="on_play", effect_fn=_aether_arc_play),
+])
+
+
+# -- aether_dart (red/yellow/blue) --
+# "Deal N arcane damage to any target."
+# 'any target' = heroes (either player) OR allies (either player) — anything with a {l} value.
+# The target is declared at play time and stored in action.target → event.data['target'].
+_AETHER_DART_DAMAGE = {"aether_dart_red": 3, "aether_dart_yellow": 2, "aether_dart_blue": 1}
+
+def _aether_dart_play(card, event, state):
+    cid = _controller_id(card)
+    target = event.data.get('target') if hasattr(event, 'data') else None
+    amount = _AETHER_DART_DAMAGE.get(card.slug, 0)
+    if target is None:
+        # Fallback: no target declared, deal to opposing hero
+        effect_deal_arcane(state, 3 - cid, amount, source=card)
+        return
+    effect_deal_arcane_to_target(state, target, amount, source=card)
+
+for _slug in ("aether_dart_red", "aether_dart_yellow", "aether_dart_blue"):
+    _register(_slug, [
+        TriggerDef(event_type="on_play", effect_fn=_aether_dart_play),
+    ])
+
+
+# -- aether_hail (red/yellow/blue) --
+# "Deal N arcane damage to any target." (cost: 1{r}, 1AP)
+# Identical targeting logic to aether_dart — any living object with {l}.
+_AETHER_HAIL_DAMAGE = {"aether_hail_red": 4, "aether_hail_yellow": 3, "aether_hail_blue": 2}
+
+def _aether_hail_play(card, event, state):
+    cid = _controller_id(card)
+    target = event.data.get('target') if hasattr(event, 'data') else None
+    amount = _AETHER_HAIL_DAMAGE.get(card.slug, 0)
+    if target is None:
+        effect_deal_arcane(state, 3 - cid, amount, source=card)
+        return
+    effect_deal_arcane_to_target(state, target, amount, source=card)
+
+for _slug in ("aether_hail_red", "aether_hail_yellow", "aether_hail_blue"):
+    _register(_slug, [
+        TriggerDef(event_type="on_play", effect_fn=_aether_hail_play),
+    ])
+
+
+# -- aether_icevein (red/yellow/blue) --
+# Cost: 3{r}, 1AP. Optional additional cost: Ice Fusion (reveal an Elemental card from hand).
+# Effect: Deal N arcane damage to any target.
+# If fused and dealt damage to a hero: that hero's controller discards a card unless they pay {r}{r}.
+#   - If hand is empty: skip the choice entirely.
+#   - If they can afford {r}{r} (resources + pitching): offer the choice.
+#   - If they cannot afford {r}{r}: force discard (agent chooses which card).
+_AETHER_ICEVEIN_DAMAGE = {"aether_icevein_red": 5, "aether_icevein_yellow": 4, "aether_icevein_blue": 3}
+
+def _aether_icevein_play(card, event, state):
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+
+    # Ice Fusion: optional reveal of an Elemental card from hand
+    was_fused = fusion(card, "Elemental", state)
+    card._was_fused = was_fused
+
+    # Deal arcane damage to any target
+    target = event.data.get('target') if hasattr(event, 'data') else None
+    amount = _AETHER_ICEVEIN_DAMAGE.get(card.slug, 0)
+
+    if target is None:
+        damage_dealt = effect_deal_arcane(state, opp_id, amount, source=card)
+        target_is_hero = True
+        hit_player_id = opp_id
+    else:
+        _types = target.types or []
+        _subtypes = target.subtypes or []
+        target_is_hero = "Hero" in _types
+        target_owner = target.controller if target.controller is not None else target.owner
+        hit_player_id = target_owner
+        damage_dealt = effect_deal_arcane_to_target(state, target, amount, source=card)
+
+    # Fused + hit a hero: discard a card or pay {r}{r}
+    if not was_fused or not target_is_hero or damage_dealt <= 0:
+        return
+
+    hit_player = state.players[hit_player_id]
+    if not hit_player.hand.cards:
+        return  # hand empty: skip entirely
+
+    # Check if the player can afford 2{r} (resources + pitching)
+    from engine.actions import find_all_valid_pitch_sequences
+    hand_for_pitch = list(hit_player.hand.cards)
+    needed = max(0, 2 - hit_player.resources)
+    can_pay = (hit_player.resources >= 2) or bool(
+        find_all_valid_pitch_sequences(hand_for_pitch, needed, hit_player.resources)
+    )
+
+    paid = False
+    if can_pay:
+        choice = _ask_player(state, hit_player_id, [True, False],
+                             context="Aether Icevein (fused): pay {r}{r} or discard a card?")
+        if choice:
+            _pitch_for_cost(hit_player, 2, state)
+            paid = True
+
+    if not paid:
+        # Force discard: agent chooses which card
+        slugs = [c.slug for c in hit_player.hand.cards]
+        pick = _ask_player(state, hit_player_id, slugs,
+                           context="Aether Icevein (fused): choose a card to discard")
+        chosen = hit_player.hand.find(str(pick))
+        if chosen is None:
+            chosen = hit_player.hand.cards[0]
+        hit_player.hand.remove(chosen)
+        hit_player.graveyard.add(chosen)
+
+for _slug in ("aether_icevein_red", "aether_icevein_yellow", "aether_icevein_blue"):
+    _register(_slug, [
+        TriggerDef(event_type="on_play", effect_fn=_aether_icevein_play),
+    ])
+
+
+# -- adrenaline_rush (red/yellow/blue) --
+# When you play this, if you have less {h} than an opposing hero, this gets +3{p}.
+def _adrenaline_rush_play(card, event, state):
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    my_health = state.players[cid].health
+    opp_health = state.players[opp_id].health
+    if my_health < opp_health:
+        card.effects.append(("base_power", lambda base: base + 3))
+
+for _slug in ("adrenaline_rush_red", "adrenaline_rush_yellow", "adrenaline_rush_blue"):
+    _register(_slug, [
+        TriggerDef(event_type="on_play", effect_fn=_adrenaline_rush_play),
+    ])
+
+
 # -- aftershock_blue --
 # When this attacks, if you've controlled a Seismic Surge token this turn, create one.
 def _aftershock_attacking(card, event, state):
@@ -479,7 +674,7 @@ def _art_dragon_blood_attacking(card, event, state):
     if not _is_this_attacking(card, event, state):
         return
     if state.combat and "Go Again" not in state.combat.keywords:
-        state.combat.keywords.append("Go Again")
+        state.combat.grant_keyword("Go Again")
 
 _register("art_of_the_dragon_blood", [
     TriggerDef(event_type="attacking", effect_fn=_art_dragon_blood_attacking),
@@ -568,7 +763,7 @@ def _bare_destruction_attacking(card, event, state):
     if not any("beat_chest" in e for e in player.current_turn_effects):
         return
     if state.combat and "Go Again" not in state.combat.keywords:
-        state.combat.keywords.append("Go Again")
+        state.combat.grant_keyword("Go Again")
     player.current_turn_effects.append("next_brute_attack_+2")
 
 _register("bare_destruction", [
@@ -746,7 +941,7 @@ def _boltn_shot_attacking(card, event, state):
         return
     if state.combat and state.combat.attack_power > (card.power or 0):
         if "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("boltn_shot", [
     TriggerDef(event_type="attacking", effect_fn=_boltn_shot_attacking),
@@ -757,7 +952,7 @@ _register("boltn_shot", [
 def _bonds_of_ancestry_play(card, event, state):
     if combo_check(state, ["gustwave"]):
         if state.combat and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("bonds_of_ancestry", [
     TriggerDef(event_type="on_play", effect_fn=_bonds_of_ancestry_play),
@@ -806,7 +1001,7 @@ def _burning_blade_dance_attacking(card, event, state):
         return
     if _has_draconic_chain_links(state, 2):
         if state.combat and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("burning_blade_dance", [
     TriggerDef(event_type="attacking", effect_fn=_burning_blade_dance_attacking),
@@ -1016,7 +1211,7 @@ def _cut_through_attacking(card, event, state):
     if dagger_hit and state.combat:
         state.combat.attack_power += 1
         if "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("cut_through", [
     TriggerDef(event_type="attacking", effect_fn=_cut_through_attacking),
@@ -1092,7 +1287,7 @@ def _demonstrate_devotion_attacking(card, event, state):
         return
     if _has_draconic_chain_links(state, 2):
         if state.combat and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
         create_token(state, _controller_id(card), "fealty")
 
 _register("demonstrate_devotion", [
@@ -1189,7 +1384,7 @@ def _dread_screamer_play(card, event, state):
         if has_6p and state.combat:
             state.combat.attack_power += 3
             if "Go Again" not in state.combat.keywords:
-                state.combat.keywords.append("Go Again")
+                state.combat.grant_keyword("Go Again")
 
 _register("dread_screamer", [
     TriggerDef(event_type="on_play", effect_fn=_dread_screamer_play),
@@ -1279,7 +1474,7 @@ def _enflame_attacking(card, event, state):
         return
     if _has_draconic_chain_links(state, 2):
         if state.combat and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
     if _has_draconic_chain_links(state, 4):
         if state.combat:
             state.combat.attack_power += 3
@@ -1466,7 +1661,7 @@ def _fire_burns_within_attacking(card, event, state):
         if state.combat:
             state.combat.attack_power += 2
             if "Go Again" not in state.combat.keywords:
-                state.combat.keywords.append("Go Again")
+                state.combat.grant_keyword("Go Again")
 
 _register("fire_that_burns_within", [
     TriggerDef(event_type="attacking", effect_fn=_fire_burns_within_attacking, is_optional=True),
@@ -1644,7 +1839,7 @@ _register("graveling_growl", [
 _register("gustwave_of_the_second_wind", [
     TriggerDef(event_type="on_play",
                effect_fn=lambda c, e, s: (
-                   s.combat.keywords.append("Go Again")
+                   s.combat.grant_keyword("Go Again")
                    if combo_check(s, ["surging_strike"]) and s.combat and "Go Again" not in s.combat.keywords
                    else None)),
 ])
@@ -1795,7 +1990,7 @@ def _hot_on_heels_attacking(card, event, state):
         return
     if _has_draconic_chain_links(state, 2):
         if state.combat and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("hot_on_their_heels", [
     TriggerDef(event_type="attacking", effect_fn=_hot_on_heels_attacking),
@@ -1878,7 +2073,7 @@ _register("inflame", [
 _register("insult_to_injury_blue", [
     TriggerDef(event_type="attacking",
                effect_fn=lambda c, e, s: (
-                   s.combat.keywords.append("Go Again")
+                   s.combat.grant_keyword("Go Again")
                    if _is_this_attacking(c, e, s) and s.combat
                    and s.players[_controller_id(c)].health > s.players[3 - _controller_id(c)].health
                    and "Go Again" not in s.combat.keywords
@@ -1908,7 +2103,7 @@ def _jaws_of_victory_attacking(card, event, state):
         state.players[cid].current_turn_effects.append("crowd_cheered")
     if any("crowd_cheered" in e for e in state.players[cid].current_turn_effects):
         if state.combat and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("jaws_of_victory", [
     TriggerDef(event_type="attacking", effect_fn=_jaws_of_victory_attacking),
@@ -2244,7 +2439,7 @@ _register("prismatic_leyline", [
 # When attacks, draw then discard random. If 6+p, dominate. Simplified.
 def _pulping_bonus(card, state):
     if state.combat:
-        state.combat.keywords.append("Dominate") if "Dominate" not in state.combat.keywords else None
+        state.combat.grant_keyword("Dominate") if "Dominate" not in state.combat.keywords else None
 
 _register("pulping", [
     TriggerDef(event_type="attacking",
@@ -2491,7 +2686,7 @@ def _savage_feast_play(card, event, state):
         if state.combat:
             state.combat.attack_power += 2
             if "Go Again" not in state.combat.keywords:
-                state.combat.keywords.append("Go Again")
+                state.combat.grant_keyword("Go Again")
 
 _register("savage_feast", [
     TriggerDef(event_type="on_play", effect_fn=_savage_feast_play),
@@ -2820,7 +3015,7 @@ def _tempest_palm_play(card, event, state):
             state.combat.attack_power += 2
     chain_len = len(getattr(state, 'chain_links', [])) + 1
     if chain_len >= 3 and state.combat and "Go Again" not in state.combat.keywords:
-        state.combat.keywords.append("Go Again")
+        state.combat.grant_keyword("Go Again")
 
 _register("tempest_palm_gustwave", [
     TriggerDef(event_type="on_play", effect_fn=_tempest_palm_play),
@@ -2861,7 +3056,7 @@ def _thump_attacking(card, event, state):
         return
     if state.combat and state.combat.attack_power > (card.power or 0):
         if "Dominate" not in state.combat.keywords:
-            state.combat.keywords.append("Dominate")
+            state.combat.grant_keyword("Dominate")
 
 _register("thump", [
     TriggerDef(event_type="attacking", effect_fn=_thump_attacking),
@@ -2882,7 +3077,7 @@ _register("tigerine_reflex", [
     TriggerDef(event_type="on_play",
                effect_fn=lambda c, e, s: (
                    (s.combat.__setattr__('attack_power', s.combat.attack_power + 1),
-                    s.combat.keywords.append("Go Again") if "Go Again" not in s.combat.keywords else None)
+                    s.combat.grant_keyword("Go Again") if "Go Again" not in s.combat.keywords else None)
                    if combo_check(s, ["crouching_tiger"]) and s.combat else None)),
 ])
 
@@ -3030,7 +3225,7 @@ def _whelming_gustwave_play(card, event, state):
         if state.combat:
             state.combat.attack_power += 1
             if "Go Again" not in state.combat.keywords:
-                state.combat.keywords.append("Go Again")
+                state.combat.grant_keyword("Go Again")
 
 _register("whelming_gustwave", [
     TriggerDef(event_type="on_play", effect_fn=_whelming_gustwave_play),
@@ -3083,7 +3278,7 @@ _register("widespread_ruin", [
 # When attacks, draw then discard random. If 6+p, go again.
 def _wild_ride_bonus(card, state):
     if state.combat and "Go Again" not in state.combat.keywords:
-        state.combat.keywords.append("Go Again")
+        state.combat.grant_keyword("Go Again")
 
 _register("wild_ride", [
     TriggerDef(event_type="attacking",
@@ -3160,10 +3355,33 @@ _register("trounce", [
 # ---------------------------------------------------------------
 
 # -- aether_crackers --
-# On hit, destroy this, deal 1 arcane.
+# "When an attack you control hits a hero, you may destroy this. If you do, deal 1 arcane damage to them."
+# Trigger: hit (fires only for hero hits in _resolve_damage — no ally-hit path exists)
+# Condition: the controller of aether_crackers is the attacker
+# Optional: ask player yes/no
+def _aether_crackers_hit(card, event, state):
+    if not state.combat:
+        return
+    cid = _controller_id(card)
+    # Only fires when an attack the controller controls hits
+    if state.combat.attacker_id != cid:
+        return
+    # Card must still be in the arms zone (not already destroyed this combat)
+    player = state.players[cid]
+    if card not in player.arms.cards:
+        return
+    choice = _ask_player(state, cid, [True, False],
+                         context="Destroy Aether Crackers to deal 1 arcane damage to the hero that was hit?")
+    if not choice:
+        return
+    # Destroy: remove from arms, move to graveyard
+    _move_to_graveyard(card, state)
+    # Deal 1 arcane to the hit hero (always the defender in a hero-targeting attack)
+    defender_id = 3 - cid
+    effect_deal_arcane(state, defender_id, 1, source=card)
+
 _register("aether_crackers", [
-    TriggerDef(event_type="hit",
-               effect_fn=lambda c, e, s: effect_deal_arcane(s, 3 - _controller_id(c), 1, source=c)),
+    TriggerDef(event_type="hit_hero", effect_fn=_aether_crackers_hit, is_optional=True),
 ])
 
 # -- anothos --
@@ -3322,7 +3540,7 @@ def _cintari_saber_defend(card, event, state):
         types = dc.types or []
         if "Attack" in types and "Action" in types:
             if "Go Again" not in state.combat.keywords:
-                state.combat.keywords.append("Go Again")
+                state.combat.grant_keyword("Go Again")
             return
 
 _register("cintari_saber", [
@@ -3564,7 +3782,7 @@ _register("graven_gloves", [
 _register("harmonized_kodachi", [
     TriggerDef(event_type="attacking",
                effect_fn=lambda c, e, s: (
-                   s.combat.keywords.append("Go Again")
+                   s.combat.grant_keyword("Go Again")
                    if _is_this_attacking(c, e, s) and s.combat and "Go Again" not in s.combat.keywords
                    and any(cc.cost == 0 for cc in s.players[_controller_id(c)].pitch.cards)
                    else None)),
@@ -3750,7 +3968,7 @@ def _obsidian_fire_vein_attacking(card, event, state):
     if played_draconic:
         state.combat.attack_power += 1
         if "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("obsidian_fire_vein", [
     TriggerDef(event_type="attacking", effect_fn=_obsidian_fire_vein_attacking),
@@ -4014,7 +4232,7 @@ _register("wind_cutter", [
 _register("zenith_blade", [
     TriggerDef(event_type="attacking",
                effect_fn=lambda c, e, s: (
-                   s.combat.keywords.append("Go Again")
+                   s.combat.grant_keyword("Go Again")
                    if _is_this_attacking(c, e, s) and s.combat and "Go Again" not in s.combat.keywords
                    else None)),
 ])
@@ -4087,6 +4305,16 @@ _register("crumble_to_eternity", [
     TriggerDef(event_type="enters_arena", effect_fn=lambda c, e, s: None),
 ])
 
+# -- act_of_glory (red: +6p, yellow: +5p, blue: +4p) --
+# Aura with Suspense (keyword triggers auto-registered via triggers.py keyword parser).
+# Card-specific: when it leaves the arena, the next attack this turn gets +Np.
+for _slug, _n in [("act_of_glory_red", 6), ("act_of_glory_yellow", 5), ("act_of_glory_blue", 4)]:
+    _register(_slug, [
+        TriggerDef(event_type="leaves_arena",
+                   effect_fn=lambda c, e, s, n=_n: s.players[_controller_id(c)].current_turn_effects.append(
+                       f"next_attack_+{n}")),
+    ])
+
 # -- edge_of_their_seats (red: +5p, yellow: +4p) --
 # Suspense. When leaves arena, next attack +Np.
 for _slug, _n in [("edge_of_their_seats_red", 5), ("edge_of_their_seats_yellow", 4)]:
@@ -4102,6 +4330,35 @@ _register("genesis", [
     TriggerDef(event_type="start_of_turn",
                effect_fn=lambda c, e, s: create_token(s, _controller_id(c), "spectral_shield")
                if _controller_id(c) == s.active_player else None),
+])
+
+# -- absorbtion_zone_yellow --
+# Cost: 0. Item. Instant.
+# Enters with 3 steam counters. Whenever controller boosts, remove a steam counter.
+# When no steam counters remain, destroy this.
+# Note: no start-of-turn counter loss (unlike most steam items).
+def _absorbtion_zone_enters(card, event, state):
+    cid = _controller_id(card)
+    key = (card.slug, card.zone, "steam")
+    state.players[cid].counters[key] = 3
+
+def _absorbtion_zone_on_boost(card, event, state):
+    cid = _controller_id(card)
+    # Only react when this item's controller is the one who boosted
+    if event.data.get("player_id") != cid:
+        return
+    player = state.players[cid]
+    key = (card.slug, card.zone, "steam")
+    current = player.counters.get(key, 0)
+    if current <= 0:
+        return
+    player.counters[key] = current - 1
+    if player.counters[key] == 0:
+        effect_destroy(state, cid, card)
+
+_register("absorbtion_zone_yellow", [
+    TriggerDef(event_type="enters_arena", effect_fn=_absorbtion_zone_enters),
+    TriggerDef(event_type="boosted", effect_fn=_absorbtion_zone_on_boost),
 ])
 
 # -- hyper_driver (red: 3 steam, yellow: 2 steam) --
@@ -4243,7 +4500,7 @@ def _sharpened_senses_attacking(card, event, state):
     base = state.combat.attack_card.power if state.combat.attack_card else 0
     if state.combat.attack_power > 2 * (base or 0):
         if "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("sharpened_senses", [
     TriggerDef(event_type="attacking", effect_fn=_sharpened_senses_attacking),
@@ -4378,14 +4635,14 @@ _register("blade_flurry", [
 _register("blade_runner_red", [
     TriggerDef(event_type="on_play",
                effect_fn=lambda c, e, s: (
-                   (s.combat.keywords.append("Go Again") if s.combat and "Go Again" not in s.combat.keywords else None),
+                   (s.combat.grant_keyword("Go Again") if s.combat and "Go Again" not in s.combat.keywords else None),
                    s.players[_controller_id(c)].current_turn_effects.append("next_attack_+3"),
                )),
 ])
 _register("blade_runner_blue", [
     TriggerDef(event_type="on_play",
                effect_fn=lambda c, e, s: (
-                   (s.combat.keywords.append("Go Again") if s.combat and "Go Again" not in s.combat.keywords else None),
+                   (s.combat.grant_keyword("Go Again") if s.combat and "Go Again" not in s.combat.keywords else None),
                    s.players[_controller_id(c)].current_turn_effects.append("next_attack_+1"),
                )),
 ])
@@ -4435,7 +4692,7 @@ _register("fire_and_brimstone", [
 # Target weapon gets go again. Reprise: draw.
 def _glint_quicksilver_effect(card, event, state):
     if state.combat and "Go Again" not in state.combat.keywords:
-        state.combat.keywords.append("Go Again")
+        state.combat.grant_keyword("Go Again")
     if reprise_check(state):
         effect_draw(state, _controller_id(card), 1)
 
@@ -4527,7 +4784,7 @@ for _slug, _n in [("razors_edge_red", 3), ("razors_edge_yellow", 2), ("razors_ed
 # Target sword gets go again. Next sword +2p.
 def _run_through_effect(card, event, state):
     if state.combat and "Go Again" not in state.combat.keywords:
-        state.combat.keywords.append("Go Again")
+        state.combat.grant_keyword("Go Again")
     state.players[_controller_id(card)].current_turn_effects.append("next_attack_+2")
 
 _register("run_through", [
@@ -4551,7 +4808,7 @@ def _singing_steelblade_effect(card, event, state):
         bonus = 2 if reprise_check(state) else 1
         state.combat.attack_power += bonus
         if reprise_check(state) and "Go Again" not in state.combat.keywords:
-            state.combat.keywords.append("Go Again")
+            state.combat.grant_keyword("Go Again")
 
 _register("singing_steelblade", [
     TriggerDef(event_type="on_play", effect_fn=_singing_steelblade_effect),
@@ -4808,7 +5065,7 @@ def _nitro_mechanoid_attacking(card, event, state):
     if not _is_this_attacking(card, event, state) or not state.combat:
         return
     if "Overpower" not in state.combat.keywords:
-        state.combat.keywords.append("Overpower")
+        state.combat.grant_keyword("Overpower")
 
 _register("nitro_mechanoid", [
     TriggerDef(event_type="attacking", effect_fn=_nitro_mechanoid_attacking),
@@ -4948,6 +5205,264 @@ def _quick_clicks_activate(card, event, state):
 _register("quick_clicks", [
     TriggerDef(event_type="on_play", effect_fn=_quick_clicks_activate),
 ])
+
+
+# -- 10000_year_reunion_red --
+# Cost: 8{r} OR remove 3 +1{p} counters from auras (alt cost handled in actions.py + engine.py).
+# Aura. Enters arena with Ward 10.
+# Ward can stack: each enters_arena registers a fresh Ward 10 directly on the effect manager,
+# independent of card.keywords, so multiple copies in play each provide their own Ward 10.
+def _10000_year_enters_arena(card, event, state):
+    """On enters_arena: register a Ward 10 replacement effect for this card instance."""
+    if state.effect_manager is not None:
+        from engine.effects import _make_ward
+        state.effect_manager.add_replacement(_make_ward(card, 10))
+
+_register("10000_year_reunion_red", [
+    TriggerDef(event_type="enters_arena", effect_fn=_10000_year_enters_arena),
+])
+
+
+# -- a_good_clean_fight_red --
+# Cost: 3{r}. Attack Action.
+# While attacking: opponent's public non-equipment cards have functional text blanked
+# and their triggers suppressed.
+# Restoration happens when the combat chain closes.
+
+def _agcf_get_targets(state, attacker_id):
+    """Return opponent's public, non-equipment cards that should be suppressed."""
+    opp = state.players[3 - attacker_id]
+    targets = []
+    for zone in (opp.hand, opp.head, opp.chest, opp.arms, opp.legs,
+                 opp.weapon1, opp.weapon2, opp.permanents, opp.hero_zone):
+        for card in list(zone.cards):
+            if not card.is_public:
+                continue
+            if "Equipment" in (card.types or []):
+                continue
+            targets.append(card)
+    return targets
+
+
+def _agcf_attacking(card, event, state):
+    """Apply suppression when A Good Clean Fight enters the combat chain."""
+    if not state.combat or state.combat.attack_card is not card:
+        return
+    attacker_id = _controller_id(card)
+    targets = _agcf_get_targets(state, attacker_id)
+
+    # Unique suppression function — identity used for later removal
+    def _suppress_text(base):
+        return ''
+
+    for c in targets:
+        c._triggers_suppressed = True
+        c.effects.append(('base_functional_text', _suppress_text))
+
+    # Store on the attack card for restoration at chain close
+    card._agcf_suppressed_cards = targets
+    card._agcf_suppress_fn = _suppress_text
+
+
+def _agcf_chain_close(card, event, state):
+    """Restore suppressed cards when the combat chain closes."""
+    suppressed = getattr(card, '_agcf_suppressed_cards', [])
+    suppress_fn = getattr(card, '_agcf_suppress_fn', None)
+
+    for c in suppressed:
+        # Remove trigger suppression flag
+        c._triggers_suppressed = False
+        # Remove the functional_text blanker by identity
+        if suppress_fn is not None:
+            c.effects = [(tag, fn) for tag, fn in c.effects
+                         if not (tag == 'base_functional_text' and fn is suppress_fn)]
+
+    # Clean up
+    card._agcf_suppressed_cards = []
+    card._agcf_suppress_fn = None
+
+
+_register("a_good_clean_fight_red", [
+    TriggerDef(event_type="attacking", effect_fn=_agcf_attacking),
+    TriggerDef(event_type="combat_chain_close", effect_fn=_agcf_chain_close),
+])
+
+
+# -- a_drop_in_the_ocean_blue --
+# Cost 0{r}. Instant.
+# Targets: any attack card currently on the combat chain (current attack OR a previous
+# chain link's attack card that is still physically on the chain zone).
+# Effect: chosen attack gets -1{p} permanently (added to card.effects).
+# Transcend: if a blue card was played this turn (other than this card), flip to hand
+# as "inner_chi" (transcended state). Otherwise goes to graveyard normally.
+#
+# inner_chi: the back face. Pitches for 3{r} OR 3{c} (chi). Implemented as a card
+# in the DB with base_pitch=3 and a pitch_gives_chi flag. The choice between chi and
+# resource is made at pitch time in _pitch_for_cost (for_chi=True path).
+
+def _a_drop_in_the_ocean_play(card, event, state):
+    from engine.card_effects.keywords import _ask_player, _remove_from_current_zone, effect_transcend
+    cid = _controller_id(card)
+
+    # Build target list: all attack cards currently on the combat chain
+    targets = [c for c in state.combat_chain.cards if c.is_attack or "Attack" in (c.types or [])]
+    # Also include the current attack card if it exists and isn't already in combat_chain
+    if state.combat and state.combat.attack_card:
+        ac = state.combat.attack_card
+        if ac not in targets:
+            targets.append(ac)
+
+    if not targets:
+        return  # no valid targets (shouldn't happen — PLAY_TARGET_CONDITIONS guards this)
+
+    # Ask player to choose which attack to debuff
+    pick = _ask_player(state, cid, [c.slug for c in targets],
+                       context="A Drop in the Ocean: choose an attack on the combat chain to give -1{p}")
+    chosen = next((c for c in targets if c.slug == str(pick)), targets[0])
+
+    # Apply -1{p} as a persistent card effect
+    chosen.effects.append(("base_power", lambda base: base - 1))
+    # Immediately recalculate combat power if this is the current attack
+    if state.combat and state.combat.attack_card is chosen:
+        from engine.engine import _recalculate_attack_power
+        _recalculate_attack_power(state)
+
+    # Transcend check: if a blue card was played this turn, flip to hand as inner_chi
+    player = state.players[cid]
+    if any(c.base_color == 'blue' for c in player.cards_played_this_turn):
+        effect_transcend(state, cid, source=card)
+    # else: normal resolution — card goes to graveyard (engine handles this for non-aura instants)
+
+
+def _a_drop_in_the_ocean_target_condition(state, pid):
+    """Legal only when there is at least one attack card on the combat chain."""
+    targets = [c for c in state.combat_chain.cards
+               if c.is_attack or "Attack" in (c.types or [])]
+    if not targets and state.combat and state.combat.attack_card:
+        return True
+    return bool(targets)
+
+
+_register("a_drop_in_the_ocean_blue", [
+    TriggerDef(event_type="on_play", effect_fn=_a_drop_in_the_ocean_play),
+])
+
+# Register play target condition so the card can't be played with no valid target
+from engine.card_effects.registry import PLAY_TARGET_CONDITIONS
+PLAY_TARGET_CONDITIONS["a_drop_in_the_ocean"] = _a_drop_in_the_ocean_target_condition
+
+# inner_chi: back face of A Drop in the Ocean.
+# Pitches for 3{r} or 3{c}. The pitch choice is a player decision at pitch time.
+# The card DB should have base_pitch=3. We flag it with pitch_gives_chi=True so
+# _pitch_for_cost can offer the chi option when it's among the pitchable cards.
+# No on_play effect — inner_chi is purely a pitch resource card.
+def _inner_chi_entered_hand(card, event, state):
+    """Mark inner_chi so pitch logic knows it can give chi instead of resources."""
+    card.pitch_gives_chi = True  # picked up by _pitch_for_cost
+
+_register("inner_chi", [
+    # No gameplay trigger — pitch effect handled by engine
+])
+
+
+# ============================================================
+# absorb_in_aether (red/yellow/blue)
+# DR, cost 1{r}. Printed defense: 4/3/2.
+# On resolution: the next non-permanent card PLAYED this turn that deals
+# arcane damage deals +2 more on ALL its arcane damage instances.
+#
+# Unlike amp_N (which buffs only the next arcane damage EVENT), arcane_play_amp
+# replaces the card's text — all arcane damage on that card is buffed.
+# e.g. Forked Lightning (two arcane damage hits) would deal +2 on BOTH.
+#
+# Implementation: register a one-shot on_play listener that stamps the next
+# non-permanent played card with _arcane_play_amp=2. effect_deal_arcane reads
+# the stamp but does NOT consume it, so all instances on the same card benefit.
+# ============================================================
+_ARCANE_PLAY_AMP_PERMANENT_TYPES = {
+    "Aura", "Item", "Ally", "Equipment", "Figment", "Token", "Landmark"
+}
+
+def _absorb_in_aether_play(card, event, state):
+    cid = _controller_id(card)
+
+    def _stamp_next_arcane_card(ev, gs):
+        played = ev.data.get("card") if ev.data else None
+        if played is None or played is card:
+            return
+        played_cid = _controller_id(played)
+        if played_cid != cid:
+            return
+        if set(played.types or []) & _ARCANE_PLAY_AMP_PERMANENT_TYPES:
+            return  # auras/items already in play don't benefit
+        # Stamp the card instance: ALL arcane damage from it gets +2
+        played._arcane_play_amp = getattr(played, '_arcane_play_amp', 0) + 2
+        # One-shot: unregister both listeners
+        gs.event_manager.unregister('on_play', _stamp_next_arcane_card)
+        gs.event_manager.unregister('end_of_turn', _cleanup)
+
+    def _cleanup(ev, gs):
+        gs.event_manager.unregister('on_play', _stamp_next_arcane_card)
+        gs.event_manager.unregister('end_of_turn', _cleanup)
+
+    state.event_manager.register('on_play', _stamp_next_arcane_card)
+    state.event_manager.register('end_of_turn', _cleanup)
+
+for _slug in ("absorb_in_aether_red", "absorb_in_aether_yellow", "absorb_in_aether_blue"):
+    _register(_slug, [
+        TriggerDef(event_type="on_play", effect_fn=_absorb_in_aether_play),
+    ])
+
+
+# ============================================================
+# aether_flare (red/yellow/blue)
+# Cost: 1{r}, 1AP. Deal N arcane damage to target opposing hero.
+# Then: the next card YOU play this turn with base_arcane_damage > 0
+#   stamps _arcane_play_amp = X (actual damage dealt after prevention).
+#   This means ALL arcane damage events on that card are each increased by X.
+# Listener is cleaned up at end of turn if no qualifying card is played.
+# ============================================================
+_AETHER_FLARE_BASE = {"aether_flare_red": 3, "aether_flare_yellow": 2, "aether_flare_blue": 1}
+
+def _aether_flare_play(card, event, state):
+    cid = _controller_id(card)
+    opp_id = 3 - cid
+    base = _AETHER_FLARE_BASE.get(card.slug, 0)
+
+    # Deal arcane damage to opposing hero; capture actual amount after prevention
+    x = effect_deal_arcane(state, opp_id, base, source=card)
+    if x <= 0:
+        return  # all damage was prevented; no buff to register
+
+    # One-shot on_play listener: stamp the next arcane card played this turn
+    def _stamp_next_arcane(ev, gs):
+        played = ev.data.get("card") if ev.data else None
+        if played is None or played is card:
+            return
+        played_cid = _controller_id(played)
+        if played_cid != cid:
+            return
+        # Only cards that intrinsically deal arcane damage
+        if not (played.base_arcane_damage or 0) > 0:
+            return
+        # Stamp: ALL arcane damage events on this card get +X
+        played._arcane_play_amp = getattr(played, '_arcane_play_amp', 0) + x
+        # One-shot: unregister both listeners
+        gs.event_manager.unregister('on_play', _stamp_next_arcane)
+        gs.event_manager.unregister('end_of_turn', _cleanup)
+
+    # End-of-turn cleanup in case no qualifying card was played
+    def _cleanup(ev, gs):
+        gs.event_manager.unregister('on_play', _stamp_next_arcane)
+        gs.event_manager.unregister('end_of_turn', _cleanup)
+
+    state.event_manager.register('on_play', _stamp_next_arcane)
+    state.event_manager.register('end_of_turn', _cleanup)
+
+for _slug in ("aether_flare_red", "aether_flare_yellow", "aether_flare_blue"):
+    _register(_slug, [
+        TriggerDef(event_type="on_play", effect_fn=_aether_flare_play),
+    ])
 
 
 # ============================================================

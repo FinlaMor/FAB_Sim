@@ -214,9 +214,22 @@ class EffectManager:
         self.replacement_effects.append(effect)
 
     def apply_replacements(self, event: dict, state: GameState) -> dict:
-        """Apply replacement effects to an event in rules order (6.5).
+        """Apply replacement effects to an event in rules order (CR 6.5).
 
-        Order: self/identity → standard → prevention → outcome
+        Order: self/identity → standard → prevention → outcome (CR 6.5.1)
+
+        CR 6.4.5: A replacement effect can only replace a given event once.
+        CR 6.5.2: When multiple prevention effects apply, the AFFECTED player
+        (damage target) chooses which to apply, one at a time. After each
+        application the remaining active effects are re-evaluated — the player
+        keeps choosing until either all damage is prevented or no more
+        prevention effects are available.
+
+        Unpreventable damage: self-sacrifice prevention effects (Ward, Spellvoid,
+        Arcane Shelter) still fire and destroy themselves — but do not reduce
+        damage. The loop does NOT stop early, so every effect gets a chance to
+        attempt prevention (and fail). Fixed-cost effects (Arcane Barrier, Quell)
+        do not fire against unpreventable damage at all.
         """
         type_order = [
             ReplacementType.SELF,
@@ -225,18 +238,54 @@ class EffectManager:
             ReplacementType.PREVENTION,
             ReplacementType.OUTCOME,
         ]
-        for rtype in type_order:
-            active = [
-                r for r in self.replacement_effects
-                if r.replacement_type == rtype and r.is_active(event, state)
-            ]
-            for r in active:
-                event = r.apply(event, state)
-                if event.get("amount", 0) <= 0:
-                    break  # All damage prevented, stop checking
+        applied_ids: set = set()
+        is_unpreventable = bool(event.get("unpreventable", False))
 
-        # Clean up consumed one-shot replacements
-        self.replacement_effects = [r for r in self.replacement_effects if not r.consumed]
+        for rtype in type_order:
+            if rtype == ReplacementType.PREVENTION:
+                # Step-by-step: affected player picks one prevention effect at a time.
+                while True:
+                    active = [
+                        r for r in self.replacement_effects
+                        if r.replacement_type == rtype
+                        and r.is_active(event, state)
+                        and id(r) not in applied_ids
+                    ]
+                    if not active:
+                        break
+                    # Normal damage: stop once fully prevented
+                    if not is_unpreventable and event.get("amount", 0) <= 0:
+                        break
+
+                    # Affected player (damage target) chooses which effect to apply next
+                    chosen = _choose_prevention(active, event, state)
+                    event = chosen.apply(event, state)
+                    applied_ids.add(id(chosen))
+                    # Purge consumed effects immediately so they don't re-appear in choices
+                    self.replacement_effects = [
+                        r for r in self.replacement_effects if not r.consumed
+                    ]
+            else:
+                active = [
+                    r for r in self.replacement_effects
+                    if r.replacement_type == rtype
+                    and r.is_active(event, state)
+                    and id(r) not in applied_ids
+                ]
+                if not active:
+                    continue
+                # CR 6.5.2: affected/active player orders multiple same-type effects
+                if len(active) > 1:
+                    active = _order_effects(active, event, state)
+                for r in active:
+                    if id(r) in applied_ids:
+                        continue
+                    event = r.apply(event, state)
+                    applied_ids.add(id(r))
+                self.replacement_effects = [
+                    r for r in self.replacement_effects if not r.consumed
+                ]
+
         return event
 
     # -- Prevention effect builders --
@@ -267,11 +316,100 @@ class EffectManager:
 
 
 # ---------------------------------------------------------------------------
+# Replacement-effect ordering helpers (CR 6.5.2)
+# ---------------------------------------------------------------------------
+
+def _affected_player(event: dict, state: "GameState") -> int:
+    """Return the player id of the damage target, falling back to active player."""
+    pid = event.get("target_player_id")
+    if pid is not None:
+        return pid
+    return getattr(state, "active_player", 1)
+
+
+def _choose_prevention(effects: list, event: dict, state: "GameState") -> "ReplacementEffect":
+    """CR 6.5.2: Affected player picks which prevention effect to apply next.
+
+    Presents a CHOOSE action for each available effect. The context string names
+    the source card so the player can identify Ward, Arcane Barrier, etc.
+    Falls back to list order when no agent is available.
+    """
+    if len(effects) == 1:
+        return effects[0]
+    affected_pid = _affected_player(event, state)
+    try:
+        from engine.actions import Action, ActionType
+        options = [
+            Action(
+                type=ActionType.CHOOSE,
+                card_idx=i,
+                card=r.source_card,
+                slot=getattr(r.source_card, "slug", None),
+            )
+            for i, r in enumerate(effects)
+        ]
+        agents = getattr(state, "player_agents", {})
+        agent = agents.get(affected_pid)
+        if agent is not None:
+            choice = agent(
+                state, options,
+                f"Choose which prevention effect applies next (CR 6.5.2) — "
+                f"{event.get('amount', 0)} damage remaining",
+            )
+            idx = getattr(choice, "card_idx", 0) or 0
+            idx = max(0, min(idx, len(effects) - 1))
+            return effects[idx]
+    except Exception:
+        pass
+    return effects[0]
+
+
+def _order_effects(effects: list, event: dict, state: "GameState") -> list:
+    """CR 6.5.2: Affected player orders multiple same-type non-prevention effects."""
+    if len(effects) <= 1:
+        return effects
+    affected_pid = _affected_player(event, state)
+    try:
+        from engine.actions import Action, ActionType
+        ordered: list = []
+        remaining = list(effects)
+        while len(remaining) > 1:
+            options = [
+                Action(
+                    type=ActionType.CHOOSE,
+                    card_idx=i,
+                    card=r.source_card,
+                    slot=getattr(r.source_card, "slug", None),
+                )
+                for i, r in enumerate(remaining)
+            ]
+            agents = getattr(state, "player_agents", {})
+            agent = agents.get(affected_pid)
+            if agent is None:
+                break
+            choice = agent(
+                state, options,
+                "Choose which replacement effect applies first (CR 6.5.2)",
+            )
+            idx = getattr(choice, "card_idx", 0) or 0
+            idx = max(0, min(idx, len(remaining) - 1))
+            ordered.append(remaining.pop(idx))
+        ordered.extend(remaining)
+        return ordered
+    except Exception:
+        return effects
+
+
+# ---------------------------------------------------------------------------
 # Prevention effect builders
 # ---------------------------------------------------------------------------
 
 def _make_ward(source_card: Card, amount: int) -> ReplacementEffect:
-    """8.3.20: Ward N — destroy this to prevent N damage. NOT optional."""
+    """8.3.20: Ward N — destroy this to prevent N damage. NOT optional.
+
+    Unpreventable damage: the card still destroys itself (the cost is paid) but
+    the damage amount is not reduced — Ward cannot prevent unpreventable damage.
+    """
     def _condition(event, state):
         if event.get("type") != "damage" or event.get("amount", 0) <= 0:
             return False
@@ -283,9 +421,10 @@ def _make_ward(source_card: Card, amount: int) -> ReplacementEffect:
 
     def _replace(event, state):
         from engine.card_effects.keywords import _move_to_graveyard
-        prevented = min(amount, event.get("amount", 0))
-        _move_to_graveyard(source_card, state)
-        event["amount"] = event.get("amount", 0) - prevented
+        _move_to_graveyard(source_card, state)  # Cost always paid (destroy this)
+        if not event.get("unpreventable", False):
+            prevented = min(amount, event.get("amount", 0))
+            event["amount"] = event.get("amount", 0) - prevented
         return event
 
     return ReplacementEffect(
@@ -306,6 +445,8 @@ def _make_arcane_barrier(source_card: Card, amount: int) -> ReplacementEffect:
             return False
         if event.get("amount", 0) <= 0:
             return False
+        if event.get("unpreventable", False):
+            return False  # CR 6.4.10: fixed-cost effects cannot prevent unpreventable damage
         target_pid = event.get("target_player_id")
         cid = source_card.controller if source_card.controller is not None else source_card.owner
         return target_pid == cid and source_card.zone in (
@@ -369,6 +510,8 @@ def _make_quell(source_card: Card, amount: int) -> ReplacementEffect:
     def _condition(event, state):
         if event.get("type") != "damage" or event.get("amount", 0) <= 0:
             return False
+        if event.get("unpreventable", False):
+            return False  # fixed-cost effects cannot prevent unpreventable damage
         target_pid = event.get("target_player_id")
         cid = source_card.controller if source_card.controller is not None else source_card.owner
         return target_pid == cid and source_card.zone in (

@@ -375,10 +375,8 @@ def test_defending_hero_is_false():
 def test_reprise_check_true():
     state = _make_state()
     state.combat = _make_combat(attacker_id=1)
-    # reprise_check looks at defending_cards with prev_zone == "hand"
-    def_card = _make_card("def1", owner=2)
-    def_card.prev_zone = "hand"
-    state.combat.defending_cards = [def_card]
+    # reprise_check uses defender_used_hand_card (set when defend action is applied)
+    state.combat.defender_used_hand_card = True
     card = _make_card(owner=1)
     fn = _make_condition("reprise_check", {}, None)
     assert fn(card, None, state) is True

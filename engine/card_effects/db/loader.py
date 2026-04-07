@@ -82,7 +82,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         def _fn(card, event, state):
             if state.combat:
                 if "go_again" not in state.combat.keywords:
-                    state.combat.keywords.append("go_again")
+                    state.combat.grant_keyword("go_again")
         return _fn
 
     if effect_type == "intimidate":
@@ -168,7 +168,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         def _fn(card, event, state, _kw=kw):
             if state.combat:
                 if _kw not in state.combat.keywords:
-                    state.combat.keywords.append(_kw)
+                    state.combat.grant_keyword(_kw)
         return _fn
 
     if effect_type == "remove_counter":

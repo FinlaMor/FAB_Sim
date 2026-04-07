@@ -98,21 +98,48 @@ def _remove_from_current_zone(card: Card, state: GameState) -> bool:
     return False
 
 
+def banish_card(state: GameState, player: "Player", card: Card, face_up: bool = True) -> None:
+    """Banish a card to *player*'s banish zone (CR 8.5.1).
+
+    All banish operations should go through this helper so that the
+    'card_banished' event fires consistently for any registered listeners.
+    """
+    from engine.state import Event
+    player.banished.add(card, is_public=face_up)
+    state.event_manager.emit(
+        Event(type='card_banished',
+              data={'card': card, 'player_id': player.player_id, 'face_up': face_up}),
+        state)
+
+
 def _move_to_graveyard(card: Card, state: GameState) -> None:
     """Destroy a card — move it to its OWNER's graveyard (8.5.4).
-    Emits leaves_arena if card was in an arena zone, and card_destroyed."""
+
+    CR 8.3.x (Ephemeral): if the card has the Ephemeral keyword, it ceases to
+    exist instead of entering the graveyard.  Emits leaves_arena if card was in
+    an arena zone, and card_destroyed (or card_ceased_to_exist for Ephemeral).
+    """
+    from engine.state import Event
     was_arena = _was_in_arena(card) or card.zone in ARENA_ZONE_NAMES
     state.process_cease_to_exist(card)
     _remove_from_current_zone(card, state)
+
+    # CR 8.3 Ephemeral: if card would be put in the graveyard, instead it ceases to exist.
+    is_ephemeral = any(
+        kw.lower() == 'ephemeral'
+        for kw in (getattr(card, 'keywords', None) or [])
+    )
+    if is_ephemeral:
+        if was_arena:
+            state.event_manager.emit(Event(type='leaves_arena', data={'card': card}), state)
+        state.event_manager.emit(Event(type='card_ceased_to_exist', data={'card': card}), state)
+        return
+
     owner = _get_owner(state, card)
     owner.graveyard.add(card)  # add() updates card.prev_zone and card.zone
     if was_arena:
-        state.event_manager.emit(
-            type('Event', (), {'type': 'leaves_arena', 'data': {'card': card}})(),
-            state)
-    state.event_manager.emit(
-        type('Event', (), {'type': 'card_destroyed', 'data': {'card': card}})(),
-        state)
+        state.event_manager.emit(Event(type='leaves_arena', data={'card': card}), state)
+    state.event_manager.emit(Event(type='card_destroyed', data={'card': card}), state)
 
 
 def _draw_cards(player: Player, count: int) -> list:
@@ -144,6 +171,14 @@ def _deal_damage(state: GameState, target_player: Player, amount: int,
     actual = event.get("amount", 0)
     if actual > 0:
         target_player.health -= actual
+        from engine.state import Event as _Event
+        state.event_manager.emit(
+            _Event(type='damage_dealt', data={
+                'amount': actual,
+                'damage_type': damage_type,
+                'target_player_id': target_player.player_id,
+                'source': source,
+            }), state)
     return actual
 
 
@@ -278,11 +313,15 @@ def phantasm_destroy(card: Card, event: Event, state: GameState) -> None:
     """8.3.13: Destroy the phantasm attack (state-trigger re-checked on resolve)."""
     if phantasm_check(card, event, state):
         _move_to_graveyard(card, state)
+        from engine.engine import _close_step
+        _close_step(state)
 
 
 def spectra_destroy(card: Card, event: Event, state: GameState) -> None:
-    """8.3.14: When this becomes target of an attack, destroy it."""
+    """8.3.14: When this becomes target of an attack, destroy it. Combat chain immediately closes."""
     _move_to_graveyard(card, state)
+    from engine.engine import _close_step
+    _close_step(state)
 
 
 def blood_debt(card: Card, event: Event, state: GameState) -> None:
@@ -293,14 +332,31 @@ def blood_debt(card: Card, event: Event, state: GameState) -> None:
 
 
 def suspense_remove_counter(card: Card, event: Event, state: GameState) -> None:
-    """8.3.42: At start of turn, remove a suspense counter. Destroy when 0."""
+    """CR 8.3.42: At start of turn, remove a suspense counter.
+    When the counter reaches 0, push a triggered-layer onto the stack with
+    destruction as its resolution effect so both players receive priority
+    before the aura is destroyed (CR 6.6.6 / CR 5.3)."""
+    from engine.state import StackEntry, Event as _Event
     controller = _get_controller(state, card)
     key = (card.slug, card.zone, "suspense")
     current = controller.counters.get(key, 0)
     if current > 0:
         controller.counters[key] = current - 1
     if controller.counters.get(key, 0) <= 0:
-        _move_to_graveyard(card, state)
+        # Capture card reference for the closure
+        _card = card
+        def _destroy_suspense_aura(c, gs):
+            _move_to_graveyard(_card, gs)
+        entry = StackEntry(
+            player_id=controller.player_id,
+            card=card,
+            layer_type='triggered',
+            layer_position=len(state.stack_entries) + 1,
+            is_triggered=True,
+            trigger_event='suspense_expired',
+            effect_fn=_destroy_suspense_aura,
+        )
+        state.stack_entries.append(entry)
 
 
 def suspense_enter(card: Card, state: GameState) -> None:
@@ -336,7 +392,19 @@ def boost(card: Card, state: GameState) -> bool:
         return False
     top = controller.deck.pop_top()
     if top:
-        controller.banished.add(top)  # add() updates zone tracking
+        banish_card(state, controller, top, face_up=True)
+        # Track each boost in current_turn_effects.
+        # "boosted_this_turn" is appended once per boost so:
+        #   - boolean check: "boosted_this_turn" in player.current_turn_effects
+        #   - count check:   sum(1 for e in current_turn_effects if e == "boosted_this_turn")
+        # Also set class_counters flag for legacy checks (Maxx hero condition etc.)
+        controller.current_turn_effects.append("boosted_this_turn")
+        controller.class_counters["boosted_this_turn"] = True
+        # Emit event so items/abilities can react to each boost (e.g. Absorbtion Zone)
+        from engine.state import Event
+        state.event_manager.emit(
+            Event(type='boosted', data={'player_id': cid, 'banished_card': top}),
+            state)
         if "Mechanologist" in top.types:
             if "Go again" not in card.keywords:
                 card.keywords.append("Go again")
@@ -574,7 +642,12 @@ def galvanize(card: Card, state: GameState) -> bool:
 
 def effect_draw(state: GameState, player_id: int, count: int = 1) -> list:
     """8.5.6: Draw N cards."""
-    return _draw_cards(state.players[player_id], count)
+    from engine.state import Event
+    drawn = _draw_cards(state.players[player_id], count)
+    for card in drawn:
+        state.event_manager.emit(
+            Event(type='card_drawn', data={'card': card, 'player_id': player_id}), state)
+    return drawn
 
 
 def effect_discard(state: GameState, player_id: int, count: int = 1,
@@ -609,12 +682,7 @@ def effect_banish(state: GameState, card: Card, face_up: bool = True,
     banisher_id: player who caused the banish (for contract tracking)."""
     _remove_from_current_zone(card, state)
     owner = _get_owner(state, card)
-    owner.banished.add(card, is_public=face_up)  # add() updates zone tracking
-    # Emit card_banished event for contract mechanics (8.5.39)
-    state.event_manager.emit(
-        type('Event', (), {'type': 'card_banished',
-                           'data': {'card': card, 'banisher_id': banisher_id}})(),
-        state)
+    banish_card(state, owner, card, face_up=face_up)
 
 
 def effect_deal_damage(state: GameState, target_player_id: int, amount: int,
@@ -626,6 +694,15 @@ def effect_deal_damage(state: GameState, target_player_id: int, amount: int,
 def effect_deal_arcane(state: GameState, target_player_id: int, amount: int,
                        source: Card = None) -> int:
     """8.5.3b: Deal arcane damage, applying amp before prevention."""
+    # arcane_play_amp_N: buffs ALL arcane damage on the played card (not just the
+    # first event, unlike amp_N). The card is stamped with _arcane_play_amp=N at
+    # play time (see _absorb_in_aether_play / effect_register_arcane_play_amp).
+    # We read the stamp here but do NOT consume it — the same card may deal arcane
+    # damage multiple times (e.g. Forked Lightning) and all instances should benefit.
+    if source is not None:
+        _apa = getattr(source, '_arcane_play_amp', 0)
+        if _apa:
+            amount += _apa
     # CR 8.5.47: consume the first amp_N effect owned by the source controller
     if source is not None:
         source_id = _controller_id(source)
@@ -660,14 +737,89 @@ def effect_deal_arcane(state: GameState, target_player_id: int, amount: int,
     return result
 
 
+def effect_deal_arcane_to_target(state: GameState, target_card: Card, amount: int,
+                                  source: Card = None) -> int:
+    """Deal arcane damage to any target (hero card OR ally card).
+
+    CR 1.3.3 / 8.5.3b: 'any target' can be any living object with a {l} value.
+    - Hero target: routes through effect_deal_arcane (applies Arcane Barrier / prevention).
+    - Ally target: decrements current_life directly (Arcane Barrier is a hero-only keyword).
+      State-based actions handle ally death at 0 life.
+    Returns actual damage dealt.
+    """
+    if target_card is None or amount <= 0:
+        return 0
+
+    # Determine target type
+    _types = target_card.types or []
+    _subtypes = target_card.subtypes or []
+
+    if "Hero" in _types:
+        # Route through full arcane damage pipeline (Arcane Barrier, amp, prevention)
+        target_id = target_card.controller if target_card.controller is not None else target_card.owner
+        return effect_deal_arcane(state, target_id, amount, source)
+
+    if "Ally" in _subtypes:
+        # Apply amp/arcane_play_amp to the amount (same pre-processing as effect_deal_arcane)
+        if source is not None:
+            _apa = getattr(source, '_arcane_play_amp', 0)
+            if _apa:
+                amount += _apa
+        if source is not None:
+            source_id = _controller_id(source)
+            source_player = state.players.get(source_id)
+            if source_player:
+                for i, eff in enumerate(source_player.current_turn_effects):
+                    if isinstance(eff, str) and eff.startswith("amp_"):
+                        try:
+                            n = int(eff[4:])
+                            amount += n
+                            source_player.current_turn_effects.pop(i)
+                        except ValueError:
+                            pass
+                        break
+        # Decrement ally life directly (no Arcane Barrier for allies per CR)
+        current = getattr(target_card, 'current_life', None)
+        if current is None:
+            return 0
+        actual = min(amount, current)
+        target_card.current_life -= actual
+        from engine.state import Event
+        state.event_manager.emit(
+            Event(type='damage_dealt', data={
+                'amount': actual,
+                'damage_type': 'arcane',
+                'target_card': target_card,
+                'source': source,
+            }), state)
+        # Check for ally death at 0 life
+        from engine.engine import check_state_based_actions
+        check_state_based_actions(state)
+        return actual
+
+    return 0
+
+
 def effect_gain_life(state: GameState, player_id: int, amount: int) -> None:
     """8.5.7a: Gain life."""
+    from engine.state import Event
+    if amount <= 0:
+        return
     state.players[player_id].health += amount
+    state.event_manager.emit(
+        Event(type='life_gained', data={'player_id': player_id, 'amount': amount}),
+        state)
 
 
 def effect_lose_life(state: GameState, player_id: int, amount: int) -> None:
     """8.5.12a: Lose life (not damage)."""
+    from engine.state import Event
+    if amount <= 0:
+        return
     state.players[player_id].health -= amount
+    state.event_manager.emit(
+        Event(type='life_lost', data={'player_id': player_id, 'amount': amount}),
+        state)
 
 
 def effect_gain_action_point(state: GameState, player_id: int, amount: int = 1) -> None:
@@ -768,7 +920,7 @@ def effect_intimidate(state: GameState, target_player_id: int,
     idx = rng.randint(0, len(target.hand.cards) - 1)
     card = target.hand.cards[idx]
     target.hand.remove(card)
-    target.banished.add(card, is_public=False)  # add() updates zone tracking
+    banish_card(state, target, card, face_up=False)
 
     # CR 8.5.10: register a one-shot delayed trigger to return the card at start of end phase
     banished_card_ref = card
@@ -883,7 +1035,7 @@ def effect_banish_top_deck(state: GameState, player_id: int, count: int = 1,
             break
         card = player.deck.pop_top()
         if card is not None:
-            player.banished.add(card, is_public=face_up)
+            banish_card(state, player, card, face_up=face_up)
             banished.append(card)
     return banished
 
@@ -1221,6 +1373,12 @@ ITEM_TOKENS = frozenset({
     "gold", "silver", "copper", "hyper_driver", "golden_cog", "goldkiss_rum",
 })
 
+# Ally tokens: routed to player.allies, can attack (power from slug_index).
+# Maps slug -> (subtypes, base_power, base_life)
+ALLY_TOKENS: dict[str, dict] = {
+    "aether_ashwing": {"subtypes": ["Ally", "Dragon"], "power": 1, "life": 1},
+}
+
 
 def _create_token(state: GameState, player: Player, token_slug: str,
                   count: int = 1) -> list:
@@ -1279,6 +1437,18 @@ def _create_token(state: GameState, player: Player, token_slug: str,
         elif token_slug in ITEM_TOKENS:
             token.types.append("Item")
             player.items.add(token)
+        elif token_slug in ALLY_TOKENS:
+            # Ally tokens enter the allies zone and can attack
+            ally_data = ALLY_TOKENS[token_slug]
+            token.subtypes = list(ally_data.get("subtypes", ["Ally"]))
+            token.base_power = ally_data.get("power")
+            token.base_life = ally_data.get("life")
+            token.current_life = token.base_life
+            token.permanent_subtype = "Ally"
+            player.allies.add(token)
+            # Extend allies_exhausted list to match new ally count
+            while len(player.allies_exhausted) < len(player.allies.cards):
+                player.allies_exhausted.append(False)
         else:
             player.tokens.add(token)
 
@@ -1440,13 +1610,13 @@ def effect_decompose(state: GameState, card: Card, player_id: int) -> bool:
         if len(earth_cards) > i:
             c = earth_cards[i]
             player.graveyard.remove(c)
-            player.banished.add(c, is_public=True)
+            banish_card(state, player, c, face_up=True)
     # Banish 1 action card from graveyard
     action_cards = [c for c in player.graveyard.cards if "Action" in (c.types or [])]
     if action_cards:
         c = action_cards[0]
         player.graveyard.remove(c)
-        player.banished.add(c, is_public=True)
+        banish_card(state, player, c, face_up=True)
     return True
 
 

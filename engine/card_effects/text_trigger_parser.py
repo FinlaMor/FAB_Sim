@@ -97,19 +97,19 @@ def _eff_defense_bonus(n: int):
 def _eff_go_again():
     def fn(card, event, state):
         if state.combat and "go_again" not in state.combat.keywords:
-            state.combat.keywords.append("go_again")
+            state.combat.grant_keyword("go_again")
     return fn
 
 def _eff_dominate():
     def fn(card, event, state):
         if state.combat and "dominate" not in state.combat.keywords:
-            state.combat.keywords.append("dominate")
+            state.combat.grant_keyword("dominate")
     return fn
 
 def _eff_overpower():
     def fn(card, event, state):
         if state.combat and "overpower" not in state.combat.keywords:
-            state.combat.keywords.append("overpower")
+            state.combat.grant_keyword("overpower")
     return fn
 
 def _eff_intimidate():
@@ -161,10 +161,11 @@ def _eff_banish_top(n: int):
         from engine.card_effects.keywords import _controller_id
         cid = _controller_id(card)
         target = state.players[3 - cid]
+        from engine.card_effects.keywords import banish_card
         for _ in range(n):
             if target.deck.cards:
                 top = target.deck.pop_top()
-                target.banished.add(top, is_public=True)
+                banish_card(state, target, top, face_up=True)
     return fn
 
 def _eff_prevent_damage(n: int):
@@ -192,7 +193,7 @@ def _eff_self_gain_go_again():
     def fn(card, event, state):
         if state.combat and state.combat.attack_card is card:
             if "go_again" not in state.combat.keywords:
-                state.combat.keywords.append("go_again")
+                state.combat.grant_keyword("go_again")
         else:
             from engine.card_effects.keywords import _controller_id
             cid = _controller_id(card)

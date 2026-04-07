@@ -138,16 +138,16 @@ class TestKeywordsThatProduceTriggers:
         assert triggers[0].event_type == "on_play"
 
     def test_scrap(self):
+        # Scrap is now handled as an effect-cost in _pay_effect_costs (pre-stack),
+        # not as an on_play trigger — no triggers expected.
         triggers = build_keyword_triggers(_card_with_keywords("Scrap"))
-        assert len(triggers) == 1
-        assert triggers[0].event_type == "on_play"
-        assert triggers[0].is_optional is True
+        assert triggers == []
 
     def test_beat_chest(self):
+        # Beat Chest is now handled as an effect-cost in _pay_effect_costs (pre-stack),
+        # not as an on_play trigger — no triggers expected.
         triggers = build_keyword_triggers(_card_with_keywords("Beat Chest"))
-        assert len(triggers) == 1
-        assert triggers[0].event_type == "on_play"
-        assert triggers[0].is_optional is True
+        assert triggers == []
 
 
 # ---------------------------------------------------------------------------

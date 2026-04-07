@@ -21,7 +21,7 @@ import time
 import torch
 
 from config import DECKS_DIR, SLUG_INDEX_PATH
-from engine.actions import Action
+from engine.actions import Action, ActionType
 from engine.card import CardDB
 from encoder.action_embedder import ActionEmbedder
 from encoder.card_embedder import SlugVocab
@@ -145,15 +145,16 @@ class IQLPolicyAgent:
             return options[0]
         return self.rng.choice(list(options))
 
-    def __call__(self, state, options, context=None):
-        if not isinstance(options, (list, tuple)) or not options:
-            return options
+    def _score_actions(self, state, actions: list[Action]) -> int:
+        """Score a list of synthetic/real Actions via the actor; return the best index.
 
-        if not isinstance(options[0], Action):
-            return self._fallback_choice(options)
-
-        if len(options) == 1:
-            return options[0]
+        Ties are broken randomly.  Caller is responsible for supplying at least
+        one action — returns 0 for an empty list.
+        """
+        if not actions:
+            return 0
+        if len(actions) == 1:
+            return 0
 
         with torch.no_grad():
             state_emb = self.state_embedder(state, perspective_player=self.player_id)
@@ -162,24 +163,74 @@ class IQLPolicyAgent:
 
             player_counters = state.players[self.player_id].counters
             best_score = None
-            best_actions: list[Action] = []
+            best_indices: list[int] = []
 
-            for action in options:
+            for i, action in enumerate(actions):
                 action_for_embedder = _normalise_action_for_embedder(action, self.player_id)
                 action_emb = self.action_embedder(
                     action_for_embedder,
                     player_counters=player_counters,
                 ).float()
-                action_latent = self.trainer.encode_actions(action_emb.unsqueeze(0).to(self.device).float()).squeeze(0).cpu()
+                action_latent = self.trainer.encode_actions(
+                    action_emb.unsqueeze(0).to(self.device).float()
+                ).squeeze(0).cpu()
                 score = -torch.sum((predicted_action - action_latent) ** 2).item()
 
                 if best_score is None or score > best_score + 1e-9:
                     best_score = score
-                    best_actions = [action]
+                    best_indices = [i]
                 elif abs(score - best_score) <= 1e-9:
-                    best_actions.append(action)
+                    best_indices.append(i)
 
-        return self.rng.choice(best_actions)
+        return self.rng.choice(best_indices)
+
+    @staticmethod
+    def _trigger_to_synthetic_action(entry) -> Action:
+        """Map a StackEntry to a PASS Action that carries the trigger's card/player identity."""
+        return Action(
+            type=ActionType.PASS,
+            card=entry.card,
+            player_id=entry.player_id,
+        )
+
+    def __call__(self, state, options, context=None):
+        if not isinstance(options, (list, tuple)) or not options:
+            return options
+
+        # ── Start-player choice: ('You', 'Opponent') ──────────────────────
+        # Map each string to a PASS Action that differs only by player_id so
+        # the actor can discriminate based on who goes first.
+        if len(options) == 2 and set(options) == {'You', 'Opponent'}:
+            opp_id = 3 - self.player_id
+            synthetic = [
+                Action(type=ActionType.PASS, player_id=self.player_id),  # 'You'
+                Action(type=ActionType.PASS, player_id=opp_id),          # 'Opponent'
+            ]
+            best_idx = self._score_actions(state, synthetic)
+            return options[best_idx]
+
+        # ── Trigger ordering: list[int] with context=list[StackEntry] ─────
+        # Each integer N means "put remaining[N] on the stack next".  We embed
+        # each candidate trigger as a PASS carrying its card, so the actor can
+        # eventually learn to prefer certain resolution orders.
+        if (
+            isinstance(options[0], int)
+            and isinstance(context, (list, tuple))
+            and len(context) == len(options)
+            and context
+            and hasattr(context[0], 'card')
+        ):
+            synthetic = [self._trigger_to_synthetic_action(context[i]) for i in range(len(options))]
+            return self._score_actions(state, synthetic)
+
+        if not isinstance(options[0], Action):
+            return self._fallback_choice(options)
+
+        if len(options) == 1:
+            return options[0]
+
+        best_idx = self._score_actions(state, list(options))
+        return options[best_idx]
 
 
 def _build_parser() -> argparse.ArgumentParser:

@@ -287,12 +287,17 @@ def create_player(
         card.is_public = False
 
     # Place weapon
+    # CR 3.0.2 / 8.2.10b: 2H weapons occupy both weapon zones simultaneously,
+    # which prevents equipping a second weapon.
     weapon_slug = deck_data.get("weapon")
     if weapon_slug:
         wc = get_card_info(weapon_slug, card_db)
         wc.owner = player_id
         wc.controller = player_id
-        player.weapon.add(wc)
+        player.weapon1.add(wc)
+        is_two_handed = "2H" in (wc.types or [])
+        if is_two_handed:
+            player.weapon2.add(wc)  # same object in both zones — CR 3.0.2
 
     # Place equipment
     for slot_name, equip_slug in deck_data.get("equipment", {}).items():

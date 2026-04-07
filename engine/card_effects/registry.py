@@ -7,6 +7,107 @@ Design: each card slug maps to a callable in one of the registries.
 Effect functions receive (state, player_id, card_db) and mutate state in place.
 """
 
+# ---------------------------------------------------------------------------
+# Static ability system
+# ---------------------------------------------------------------------------
+# Three registries work together through a single meta-dispatcher
+# registered once at game start (_setup_static_ability_listeners in engine.py).
+#
+# STATIC_ABILITY_ZONES  — event_name -> fn(state) -> list[Card]
+#   Defines which cards to inspect for each event type.  Adding a new event
+#   here automatically wires it into the dispatcher.
+#
+# KEYWORD_STATIC_ABILITIES — keyword_prefix -> fn(n, state, card)
+#   Generic keyword handlers that apply to any card carrying that keyword.
+#   n is the numeric suffix (1 if absent).
+#
+# CARD_STATIC_ABILITIES — slug -> list[tuple[event_name, fn(event, state, card)]]
+#   Per-card handlers for unique or complex statics that aren't keyword-based.
+# ---------------------------------------------------------------------------
+
+def _all_arena_cards(state) -> list:
+    """All permanents across both players' arenas (equipment, items, auras, allies, hero)."""
+    cards = []
+    for p in state.players.values():
+        for zone in (p.head, p.chest, p.arms, p.legs,
+                     p.weapon1, p.weapon2, p.permanents,
+                     p.hero_zone, p.items, p.auras, p.allies):
+            cards.extend(zone.cards)
+    return cards
+
+
+STATIC_ABILITY_ZONES: dict = {
+    # Recalculating attack power — only the attacking card carries attack statics.
+    'recalculate_attack_power': lambda state: (
+        [state.combat.attack_card] if state.combat and state.combat.attack_card else []
+    ),
+    # Aura destroyed — any in-play permanent can react.
+    'aura_destroyed': lambda state: _all_arena_cards(state),
+}
+
+
+# keyword_prefix -> fn(n: int, state, card) -> None
+def _piercing_static(n: int, state, card) -> None:
+    """CR 8.3.23: Piercing — add n to attack power when blocking with equipment."""
+    if any(getattr(c, 'is_equipment', False) for c in (state.combat.defending_cards or [])):
+        state.combat.attack_power += n
+
+
+KEYWORD_STATIC_ABILITIES: dict = {
+    "piercing": _piercing_static,
+}
+
+
+# slug -> list of (event_name, fn(event, state, card))
+CARD_STATIC_ABILITIES: dict = {}
+
+
+# ── Outmuscle (all colors) ────────────────────────────────────────────────
+# "Go Again — while Outmuscle is not blocked by a card with 6 or more power."
+# (Yellow/Blue thresholds differ — simplified here to card's own attack power.)
+_OUTMUSCLE_THRESHOLDS = {
+    'outmuscle_red': 6,
+    'outmuscle_yellow': 5,
+    'outmuscle_blue': 4,
+}
+
+def _outmuscle_static(event, state, card) -> None:
+    if not state.combat:
+        return
+    threshold = _OUTMUSCLE_THRESHOLDS.get(card.slug, 6)
+    defending_max = max(
+        (c.power or 0) for c in state.combat.defending_cards
+    ) if state.combat.defending_cards else 0
+    if defending_max >= threshold:
+        state.combat.revoke_keyword('Go Again')
+    else:
+        state.combat.grant_keyword('Go Again')
+
+for _slug in _OUTMUSCLE_THRESHOLDS:
+    CARD_STATIC_ABILITIES[_slug] = [('recalculate_attack_power', _outmuscle_static)]
+
+
+# ── Merciful Retribution ──────────────────────────────────────────────────
+# "Whenever an aura you control is destroyed, deal 1 arcane damage to target opponent."
+def _merciful_retribution_static(event, state, card) -> None:
+    from engine.engine import _apply_arcane_damage
+    # Find which player owns this Merciful Retribution
+    owner_id = None
+    for pid, player in state.players.items():
+        if card in player.auras.cards or card in player.items.cards or card in player.permanents.cards:
+            owner_id = pid
+            break
+    if owner_id is None:
+        return
+    # Only fire when one of the owner's auras was the destroyed one
+    destroyed_card = event.data.get('card')
+    destroyed_owner = event.data.get('player_id')
+    if destroyed_owner != owner_id:
+        return
+    _apply_arcane_damage(state, 3 - owner_id, 1)
+
+CARD_STATIC_ABILITIES['merciful_retribution'] = [('aura_destroyed', _merciful_retribution_static)]
+
 # Weapon attack conditions: slug -> fn(state, player) -> bool
 # Return False to suppress ATTACK_WEAPON from legal actions for that weapon.
 WEAPON_ATTACK_CONDITIONS: dict = {
@@ -55,6 +156,22 @@ EQUIPMENT_ACTIVATION_CONDITIONS = {
     # Old Knocker: requires hero not tapped (tap hero is cost)
     "old_knocker": lambda player, slot_name, equip_card: not player.hero.tapped,
 }
+
+def _aether_ironweave_condition(player, slot_name, equip_card, state):
+    """Aether Ironweave: only activatable if you have played both an attack action
+    and a non-attack action card this turn."""
+    played = getattr(player, 'cards_played_this_turn', [])
+    has_attack_action = any(
+        'Action' in (c.types or []) and 'Attack' in (c.subtypes or [])
+        for c in played
+    )
+    has_non_attack_action = any(
+        'Action' in (c.types or []) and 'Attack' not in (c.subtypes or [])
+        for c in played
+    )
+    return has_attack_action and has_non_attack_action
+
+EQUIPMENT_ACTIVATION_CONDITIONS["aether_ironweave"] = _aether_ironweave_condition
 
 # Override activation costs for equipment whose cost is in functional text, not the cost field.
 # Used by actions.py pitch sequence finder instead of equip_card.cost.
@@ -273,11 +390,22 @@ def _achilles_accelerator_pay_cost(action, player, state):
 
 def _achilles_accelerator_condition(player, slot_name, equip_card, state=None) -> bool:
     """Only activatable if the player has boosted this turn."""
-    return bool(player.class_counters.get("boosted_this_turn"))
+    return "boosted_this_turn" in player.current_turn_effects
 
 def _storm_striders_effect(action, player, state):
     """Effect: next Wizard non-attack action card this turn costs {r} less."""
-    player.current_turn_effects.append("storm_striders_cost_reduction")
+    state.continuous_effect_manager.add_cost_modifier(
+        kind="decrease",
+        amount=1,
+        owner_player_id=player.player_id,
+        effect_id="storm_striders_cost_reduction",
+        condition_fn=lambda card, act, s: (
+            "wizard" in [t.lower() for t in (card.types or [])]
+            and not getattr(card, 'is_attack', False)
+        ),
+        consume_on_apply=True,
+        source_slug="storm_striders",
+    )
 
 def _halo_of_illumination_effect(action, player, state):
     """Effect: put a card from hand into soul; if Light, draw a card."""
@@ -295,6 +423,45 @@ def _achilles_accelerator_effect(action, player, state):
     """Effect: gain 1 action point."""
     player.action_points += 1
 
+
+def _adaptive_alpha_mold_effect(action, player, state):
+    """Shared effect for Adaptive Alpha Mold / Dissolver / Plating.
+    Move the card from its current slot to another empty equipment slot
+    (head/chest/arms/legs). If multiple empty slots exist, ask the player to
+    choose. If no empty slot exists, resolves with no movement."""
+    card = action.card
+    # Find current slot
+    current_slot = None
+    for slot in ("head", "chest", "arms", "legs"):
+        zone = player.zone_by_name(slot)
+        if zone and card in zone.cards:
+            current_slot = slot
+            break
+    if current_slot is None:
+        return  # shouldn't happen; card must be in a slot to be activated
+
+    # Find empty equipment slots (other than current)
+    empty_slots = [
+        s for s in ("head", "chest", "arms", "legs")
+        if s != current_slot and not player.zone_by_name(s).cards
+    ]
+    if not empty_slots:
+        return  # no empty destination — ability resolves with no movement
+
+    if len(empty_slots) == 1:
+        dest_slot = empty_slots[0]
+    else:
+        from engine.card_effects.keywords import _ask_player
+        pick = _ask_player(state, player.player_id, empty_slots,
+                           context=f"Choose an empty equipment zone to move {card.slug} to")
+        dest_slot = str(pick) if str(pick) in empty_slots else empty_slots[0]
+
+    # Move card from current slot to destination slot
+    src_zone = player.zone_by_name(current_slot)
+    dst_zone = player.zone_by_name(dest_slot)
+    src_zone.remove(card)
+    dst_zone.add(card, is_public=True)  # Zone.add sets card.zone = dest_slot
+
 # ---------------------------------------------------------------------------
 # Radiant-* equipment: "Instant – Banish this and a card from hero's soul"
 # Condition: soul must have a card. Pay: banish self from slot + banish soul card.
@@ -305,36 +472,40 @@ def _radiant_condition(player, slot_name, equip_card, state=None) -> bool:
 
 def _radiant_head_pay_cost(action, player, state):
     """Banish self from head + banish top soul card."""
+    from engine.card_effects.keywords import banish_card
     player.head.remove(action.card)
-    player.banished.add(action.card)
+    banish_card(state, player, action.card)
     if player.soul.cards:
         soul_card = player.soul.cards[0]
         player.soul.remove(soul_card)
-        player.banished.add(soul_card)
+        banish_card(state, player, soul_card)
 
 def _radiant_chest_pay_cost(action, player, state):
+    from engine.card_effects.keywords import banish_card
     player.chest.remove(action.card)
-    player.banished.add(action.card)
+    banish_card(state, player, action.card)
     if player.soul.cards:
         soul_card = player.soul.cards[0]
         player.soul.remove(soul_card)
-        player.banished.add(soul_card)
+        banish_card(state, player, soul_card)
 
 def _radiant_arms_pay_cost(action, player, state):
+    from engine.card_effects.keywords import banish_card
     player.arms.remove(action.card)
-    player.banished.add(action.card)
+    banish_card(state, player, action.card)
     if player.soul.cards:
         soul_card = player.soul.cards[0]
         player.soul.remove(soul_card)
-        player.banished.add(soul_card)
+        banish_card(state, player, soul_card)
 
 def _radiant_legs_pay_cost(action, player, state):
+    from engine.card_effects.keywords import banish_card
     player.legs.remove(action.card)
-    player.banished.add(action.card)
+    banish_card(state, player, action.card)
     if player.soul.cards:
         soul_card = player.soul.cards[0]
         player.soul.remove(soul_card)
-        player.banished.add(soul_card)
+        banish_card(state, player, soul_card)
 
 # Ragamuffin's Hat: "Instant – Destroy Ragamuffin's Hat"  (head slot)
 # _head_destroy_pay_cost already exists — reused.
@@ -455,6 +626,16 @@ def _sealace_effect(action, player, state):
         if "Go again" not in card.keywords:
             card.keywords.append("Go again")
 
+def _aether_conduit_effect(action, player, state):
+    """**Once per Turn Action** - {r}{r}: Deal 2 arcane damage to target hero."""
+    from engine.card_effects.keywords import effect_deal_arcane
+    target_card = action.target
+    if target_card is not None and hasattr(target_card, 'owner'):
+        target_id = target_card.controller if target_card.controller is not None else target_card.owner
+    else:
+        target_id = 3 - action.player_id  # fallback: opponent
+    effect_deal_arcane(state, target_id, 2, source=action.card)
+
 def _aether_bindings_effect(action, player, state):
     """Effect: Until end of turn, whenever Sigil aura leaves arena, amp 1."""
     player.current_turn_effects.append("aether_bindings_sigil_amp")
@@ -472,6 +653,9 @@ def _shock_charmers_effect(action, player, state):
     player.current_turn_effects.append("shock_charmers_hit_damage")
 
 EQUIPMENT_ACTIVATION_EFFECTS = {
+    "adaptive_alpha_mold": _adaptive_alpha_mold_effect,
+    "adaptive_dissolver": _adaptive_alpha_mold_effect,
+    "adaptive_plating": _adaptive_alpha_mold_effect,
     "scabskin_leathers": _scabskin_roll_d6,
     "fyendals_spring_tunic": _fst_spend_energy,
     "hammerhead_harpoon_cannon": _hammerhead_effect,
@@ -479,6 +663,7 @@ EQUIPMENT_ACTIVATION_EFFECTS = {
     "goldbaited_hook": _goldbaited_hook_effect,
     "quiver_of_abyssal_depths": _quiver_effect,
     "sealace_sarong": _sealace_effect,
+    "aether_conduit": _aether_conduit_effect,
     "aether_bindings_of_the_third_age": _aether_bindings_effect,
     "lightning_greaves": _lightning_greaves_effect,
     "old_knocker": _old_knocker_effect,
@@ -487,6 +672,13 @@ EQUIPMENT_ACTIVATION_EFFECTS = {
     "achilles_accelerator": _achilles_accelerator_effect,
     "shock_charmers": _shock_charmers_effect,
 }
+
+def _aether_ironweave_effect(action, player, state):
+    """Gain {r}{r} and Go Again. Destroy-self cost handled by generic engine fallback."""
+    player.resources += 2
+    player.action_points += 1  # Go Again (equipment activations bypass stack, no auto-GA)
+
+EQUIPMENT_ACTIVATION_EFFECTS["aether_ironweave"] = _aether_ironweave_effect
 
 # ---------------------------------------------------------------------------
 # Turn attack effects — consumed when the next attack is declared
@@ -533,7 +725,7 @@ def _bravo_dominate_apply(attack_card, player, state):
     if "Dominate" not in attack_card.keywords:
         attack_card.keywords.append("Dominate")
     if state.combat and "Dominate" not in (state.combat.keywords or []):
-        state.combat.keywords.append("Dominate")
+        state.combat.grant_keyword("Dominate")
 
 def _electrostatic_next_attack_apply(attack_card, player, state):
     """Electrostatic Discharge: next attack action with cost ≤1 gets +3{p}."""
@@ -1210,7 +1402,7 @@ def _dragonscaler_effect(action, player, state) -> None:
 
     if target_type == "current":
         if "go_again" not in state.combat.keywords and "Go again" not in state.combat.keywords:
-            state.combat.keywords.append("go_again")
+            state.combat.grant_keyword("go_again")
         attack = target_obj
         if attack.keywords is None:
             attack.keywords = []
@@ -1358,8 +1550,9 @@ def _katsu_on_hit_trigger(player, event, state):
     pick2 = _ask_player(state, player.player_id, [c.slug for c in combo_cards],
                         context="Katsu: choose a combo card to banish face-up")
     found = next((c for c in combo_cards if c.slug == pick2), combo_cards[0])
+    from engine.card_effects.keywords import banish_card
     player.deck.remove(found)
-    player.banished.add(found, is_public=True)
+    banish_card(state, player, found, face_up=True)
     player.current_turn_effects.append(("katsu_banished_playable", found.slug))
     effect_shuffle(state, player.player_id)
 
@@ -1412,7 +1605,7 @@ def _betsy_wager_trigger(player, event, state):
     player.resources -= 2
     state.combat.attack_power = (state.combat.attack_power or 0) + 1
     if "Overpower" not in state.combat.keywords:
-        state.combat.keywords.append("Overpower")
+        state.combat.grant_keyword("Overpower")
 
 
 def _data_doll_banished_from_deck_trigger(player, event, state):
@@ -1565,6 +1758,7 @@ def _kassai_pay_cost(player, state):
     yellows = [c for c in player.graveyard.cards if (c.pitch or 0) == 2]
     if len(reds) < 2 or len(yellows) < 2:
         return False
+    from engine.card_effects.keywords import banish_card
     # Banish 2 reds
     for _ in range(2):
         avail = [c for c in player.graveyard.cards if (c.pitch or 0) == 1]
@@ -1574,7 +1768,7 @@ def _kassai_pay_cost(player, state):
                            context="Kassai: choose a red card from graveyard to banish")
         card = next((c for c in avail if c.slug == pick), avail[0])
         player.graveyard.remove(card)
-        player.banished.add(card)
+        banish_card(state, player, card)
     # Banish 2 yellows
     for _ in range(2):
         avail = [c for c in player.graveyard.cards if (c.pitch or 0) == 2]
@@ -1584,7 +1778,7 @@ def _kassai_pay_cost(player, state):
                            context="Kassai: choose a yellow card from graveyard to banish")
         card = next((c for c in avail if c.slug == pick), avail[0])
         player.graveyard.remove(card)
-        player.banished.add(card)
+        banish_card(state, player, card)
     return True
 
 def _kassai_activate(action, player, state):
@@ -1600,8 +1794,20 @@ def _kassai_draw_trigger(player, event, state):
     data = event.data if isinstance(event.data, dict) else {}
     if data.get('player_id') != player.player_id:
         return
-    if "kassai_sword_cost_reduction" not in player.current_turn_effects:
-        player.current_turn_effects.append("kassai_sword_cost_reduction")
+    mgr = state.continuous_effect_manager
+    if not any(e.effect_id == "kassai_sword_cost_reduction" for e in mgr._effects if e.prop == 'cost'):
+        mgr.add_cost_modifier(
+            kind="decrease",
+            amount=1,
+            owner_player_id=player.player_id,
+            effect_id="kassai_sword_cost_reduction",
+            condition_fn=lambda card, act, s: (
+                act.type.value == "attack_weapon"
+                and any("sword" in t.lower() for t in (card.types or []))
+            ),
+            consume_on_apply=False,  # persists until end of turn
+            source_slug="kassai",
+        )
 
 
 def _kassai_weapon_hit_trigger(player, event, state):
@@ -1678,8 +1884,9 @@ def _boltyn_ar_pay_cost(player, state):
     pick = _ask_player(state, player.player_id, options,
                        context="Boltyn AR: choose a card from soul to banish")
     card = next((c for c in player.soul.cards if c.slug == pick), player.soul.cards[0])
+    from engine.card_effects.keywords import banish_card
     player.soul.remove(card)
-    player.banished.add(card)
+    banish_card(state, player, card)
     return True
 
 
@@ -1695,7 +1902,7 @@ def _boltyn_ar_effect(action, player, state):
     if "Go again" not in kw:
         ac.keywords = list(kw) + ["Go again"]
     if "Go again" not in (state.combat.keywords or []):
-        state.combat.keywords.append("Go again")
+        state.combat.grant_keyword("Go again")
 
 
 # 10. Fai, Rising Rebellion — Instant {r}{r}{r}: Return Phoenix Flame from graveyard
@@ -1746,8 +1953,9 @@ def _vynnset_start_of_turn_trigger(player, event, state):
     pick = _ask_player(state, player.player_id, [c.slug for c in player.hand.cards],
                        context="Vynnset: choose a card from hand to banish")
     card = player.hand.find(pick) or player.hand.cards[0]
+    from engine.card_effects.keywords import banish_card
     player.hand.remove(card)
-    player.banished.add(card, is_public=True)
+    banish_card(state, player, card, face_up=True)
     create_token(state, player.player_id, "runechant", 1)
 
 
@@ -2068,8 +2276,8 @@ def _aurora_pay_cost(player, state):
         pick = _ask_player(state, player.player_id, [c.slug for c in lightning_flows],
                            context="Aurora: choose a Lightning Flow to destroy")
         target = next((c for c in lightning_flows if c.slug == pick), lightning_flows[0])
-    player.auras.remove(target)
-    player.graveyard.add(target)
+    from engine.engine import destroy_aura
+    destroy_aura(state, player.player_id, target)
     return True
 
 def _aurora_effect(action, player, state):
@@ -2105,8 +2313,8 @@ def _oscilio_forked_pay_cost(player, state):
         pick = _ask_player(state, player.player_id, [c.slug for c in lightning_flows],
                            context="Oscilio Forked: choose a Lightning Flow to destroy")
         target = next((c for c in lightning_flows if c.slug == pick), lightning_flows[0])
-    player.auras.remove(target)
-    player.graveyard.add(target)
+    from engine.engine import destroy_aura
+    destroy_aura(state, player.player_id, target)
     # Discard a card — track if it's an Instant
     from engine.card_effects.keywords import effect_discard
     discarded = effect_discard(state, player.player_id, 1)
@@ -2256,7 +2464,7 @@ def _arakni_marionette_hit_trigger(player, event, state):
         if "Go again" not in kw:
             ac.keywords = list(kw) + ["Go again"]
         if "Go again" not in (state.combat.keywords or []):
-            state.combat.keywords.append("Go again")
+            state.combat.grant_keyword("Go again")
 
 
 # Fix 11: Arakni, Marionette — end phase trigger
@@ -2460,8 +2668,9 @@ def _prism_awaken_pay_cost(player, state):
     pick = _ask_player(state, player.player_id, options,
                        context="Prism Awaken: choose a card from soul to banish")
     card = next((c for c in player.soul.cards if c.slug == pick), player.soul.cards[0])
+    from engine.card_effects.keywords import banish_card
     player.soul.remove(card)
-    player.banished.add(card)
+    banish_card(state, player, card)
     return True
 
 
@@ -2551,8 +2760,9 @@ def _uzuri_attack_trigger(player, event, state):
     player.current_turn_effects.append("uzuri_switchblade_used")
 
     # Banish face-down (opponent gets response window here in full rules)
+    from engine.card_effects.keywords import banish_card
     card.face_down = True
-    player.banished.add(card)
+    banish_card(state, player, card, face_up=False)
 
     # Turn face-up and check: is it an Attack Action with cost <= 2?
     card.face_down = False
@@ -2578,8 +2788,8 @@ def _zyggy_pay_cost(player, state):
     if not flows:
         return False
     flow = flows[0]
-    player.auras.remove(flow)
-    player.graveyard.add(flow)
+    from engine.engine import destroy_aura
+    destroy_aura(state, player.player_id, flow)
     return True
 
 def _zyggy_effect(action, player, state):
@@ -2597,9 +2807,10 @@ def _zyggy_effect(action, player, state):
         pick = _ask_player(state, player.player_id, options,
                            context="Zyggy: choose a Lightning aura to banish and return with holo counter")
         target = next((c for c in lightning_auras if c.slug == pick), lightning_auras[0])
-    # Banish and return with holo counter
+    # Banish and return with holo counter (transient — card returns to auras immediately)
+    from engine.card_effects.keywords import banish_card
     player.auras.remove(target)
-    player.banished.add(target)
+    banish_card(state, player, target)
     player.banished.remove(target)
     player.auras.add(target)
     key = (target.slug, 'auras', 'holo')
@@ -2639,7 +2850,7 @@ def _arakni_slipped_attack_trigger(player, event, state):
     if "Go again" not in kw:
         ac.keywords = list(kw) + ["Go again"]
     if "Go again" not in (state.combat.keywords or []):
-        state.combat.keywords.append("Go again")
+        state.combat.grant_keyword("Go again")
     player.current_turn_effects.append("arakni_slipped_stealth_ga_used")
 
 # 14. Arakni, Huntsman — passive on play
@@ -2698,13 +2909,21 @@ def _fang_hit_trigger(player, event, state):
     create_token(state, player.player_id, "fealty", 1)
     # Recheck Fealty count after creating the new token
     fealty_count = _fang_count_fealty(player)
+    mgr = state.continuous_effect_manager
     if fealty_count >= 3:
-        if "fang_dagger_cost_0" not in player.current_turn_effects:
-            player.current_turn_effects.append("fang_dagger_cost_0")
+        if not any(e.effect_id == "fang_dagger_cost_0" for e in mgr._effects if e.prop == 'cost'):
+            mgr.add_cost_modifier(
+                kind="set",
+                amount=0,
+                owner_player_id=player.player_id,
+                effect_id="fang_dagger_cost_0",
+                condition_fn=lambda card, act, s: act.type.value == "attack_weapon",
+                consume_on_apply=False,  # re-evaluated each time; removed below if Fealty drops
+                source_slug="fang_dagger",
+            )
     else:
-        # Clear flag if Fealty dropped below 3 (e.g., tokens were destroyed)
-        while "fang_dagger_cost_0" in player.current_turn_effects:
-            player.current_turn_effects.remove("fang_dagger_cost_0")
+        # Clear if Fealty dropped below 3
+        mgr.remove_cost_modifier_by_id("fang_dagger_cost_0")
 
 
 

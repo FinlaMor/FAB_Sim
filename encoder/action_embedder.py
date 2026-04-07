@@ -6,7 +6,7 @@ Converts Action objects into fixed-size neural network embeddings suitable for:
 - Q-learning action representations
 
 Architecture:
-- ActionType: 17-dim one-hot → 64-dim projection (PASS, ATTACK_WEAPON, PLAY_CARD, etc.)
+- ActionType: 19-dim one-hot → 64-dim projection (PASS, ATTACK_WEAPON, PLAY_CARD, etc.)
 - Player ID: 1-dim binary (0 or 1)
 - Card: d_model-dim from CardEmbedder (if present)
 - Card index: 1-dim normalized (position in hand/zone)
@@ -85,13 +85,15 @@ ACTION_PACKED_SIZE = (
 )
 
 
-# Action type vocabulary (17 types from ActionType enum)
+# Action type vocabulary (19 types — subset of ActionType enum used by the model)
+# defend_cards and pitch_card are excluded: both use iterative CHOOSE loops.
 ACTION_TYPES = [
-    "pass", "attack_weapon", "play_card", "play_arsenal", "defend_cards",
+    "pass", "attack_weapon", "play_card", "play_arsenal",
     "defend_equipment", "store_arsenal", "play_attack_reaction",
     "play_defense_reaction", "reaction_pass", "activate_item",
-    "attack_ally", "activate_equipment", "activate_weapon",
-    "activate_hero", "discard_activate", "play_banish"
+    "activate_ally", "attack_ally", "activate_equipment", "activate_weapon",
+    "activate_hero", "discard_activate", "play_banish",
+    "choose", "pitch_to_deck",
 ]
 
 # Equipment slot vocabulary (4 slots per CR 8.2.10a - Off-Hand is weapon subtype, not equipment)
@@ -132,7 +134,7 @@ class ActionEmbedder(nn.Module):
         # Lazily initialized to avoid loading the DB unless slug lookups are needed.
         self._card_db = None
         
-        # Action type embedding: 17-dim one-hot → d_model projection
+        # Action type embedding: 19-dim one-hot → 64-dim projection
         self.action_type_embed = nn.Linear(len(ACTION_TYPES), 64)
         
         # Slot embedding: 4-dim one-hot → 32-dim projection
@@ -543,7 +545,7 @@ class ActionEmbedder(nn.Module):
         """
         features = []
         
-        # 1. Action type (17-dim one-hot → 64-dim projection)
+        # 1. Action type (19-dim one-hot → 64-dim projection)
         action_type_idx = ACTION_TYPES.index(action.type.value)
         action_type_onehot = torch.zeros(len(ACTION_TYPES))
         action_type_onehot[action_type_idx] = 1.0

@@ -208,59 +208,6 @@ def build_keyword_triggers(card: Card) -> list[TriggerDef]:
                 
             ))
 
-        elif kw_base == "scrap":
-            # 8.3.32: Optional additional cost — banish an item/equipment from graveyard
-            def _scrap_effect(c, e, s):
-                from engine.card_effects.keywords import _ask_player, _controller_id
-                cid = _controller_id(c)
-                controller = s.players[cid]
-                eligible = [card for card in controller.graveyard.cards
-                            if "Item" in card.types or "Equipment" in card.types]
-                if not eligible:
-                    return
-                choice = _ask_player(s, cid, [True, False],
-                                     context="Scrap: banish an item/equipment from your graveyard as additional cost?")
-                if not choice:
-                    return
-                pick = _ask_player(s, cid, [x.slug for x in eligible],
-                                   context="Choose item or equipment to banish for Scrap")
-                target = controller.graveyard.find(pick)
-                if target:
-                    effect_banish(s, target, face_up=True)
-            triggers.append(TriggerDef(
-                event_type="on_play",
-                effect_fn=_scrap_effect,
-                is_optional=True,
-                
-            ))
-
-        elif kw_base == "beat chest":
-            # 8.3.33: Optional additional cost — discard a card with 6+ power
-            def _beat_chest_effect(c, e, s):
-                from engine.card_effects.keywords import _ask_player, _controller_id
-                cid = _controller_id(c)
-                controller = s.players[cid]
-                eligible = [card for card in controller.hand.cards
-                            if card.power is not None and card.power >= 6
-                            and card.slug != c.slug]
-                if not eligible:
-                    return
-                choice = _ask_player(s, cid, [True, False],
-                                     context="Beat Chest: discard a card with 6+ power as additional cost?")
-                if not choice:
-                    return
-                pick = _ask_player(s, cid, [x.slug for x in eligible],
-                                   context="Choose a card with 6+ power to discard for Beat Chest")
-                target = controller.hand.find(pick)
-                if target:
-                    effect_discard(s, cid, 1)
-            triggers.append(TriggerDef(
-                event_type="on_play",
-                effect_fn=_beat_chest_effect,
-                is_optional=True,
-                
-            ))
-
         # --- Numbered abilities ---
         elif kw_base == "piercing":
             n = kw_num
@@ -399,10 +346,11 @@ def on_hit_banish_top(count: int = 1) -> TriggerDef:
     def _effect(c, e, s):
         target_id = 3 - _controller_id(c)
         target = s.players[target_id]
+        from engine.card_effects.keywords import banish_card
         for _ in range(count):
             if target.deck.cards:
                 top = target.deck.pop_top()
-                target.banished.add(top, is_public=True)
+                banish_card(s, target, top, face_up=True)
     return TriggerDef(event_type="hit", effect_fn=_effect)
 
 
@@ -542,10 +490,11 @@ def on_play_banish_top(count: int = 1) -> TriggerDef:
     def _effect(c, e, s):
         cid = _controller_id(c)
         player = s.players[cid]
+        from engine.card_effects.keywords import banish_card
         for _ in range(count):
             if player.deck.cards:
                 top = player.deck.pop_top()
-                player.banished.add(top, is_public=True)
+                banish_card(s, player, top, face_up=True)
     return TriggerDef(event_type="on_play", effect_fn=_effect)
 
 
@@ -732,7 +681,7 @@ def _chain_of_brutality_attacking(card, event, state):
         return
     if state.combat.attack_power >= 6:
         if 'go_again' not in state.combat.keywords:
-            state.combat.keywords.append('go_again')
+            state.combat.grant_keyword('go_again')
 
 def _chain_of_brutality_hit(card, event, state):
     if not state.combat or state.combat.attack_card.slug != card.slug:
@@ -992,7 +941,7 @@ def _insult_to_injury_effect(card, event, state):
     cid = _controller_id(card)
     if state.players[cid].health > state.players[3 - cid].health:
         if 'go_again' not in state.combat.keywords:
-            state.combat.keywords.append('go_again')
+            state.combat.grant_keyword('go_again')
 
 CARD_TRIGGERS["insult_to_injury"] = [
     TriggerDef(event_type="attacking", effect_fn=_insult_to_injury_effect),
@@ -2953,16 +2902,24 @@ MELD_EFFECT_REGISTRY: dict = {
 
 
 # -- aether_bindings_of_the_third_age --
-# "Whenever a Sigil aura you control leaves the arena this turn, amp 1."
+# "Whenever a Sigil aura permanent you control leaves the arena this turn, amp 1."
 def _aether_bindings_sigil_leave(card, event, state):
     cid = _controller_id(card)
     player = state.players[cid]
     if "aether_bindings_sigil_amp" not in player.current_turn_effects:
         return
-    if hasattr(event, 'data') and event.data.get('card'):
-        leaving = event.data['card']
-        if "sigil" in leaving.slug.lower() and _controller_id(leaving) == cid:
-            effect_amp(state, cid, 1)
+    if not (hasattr(event, 'data') and event.data.get('card')):
+        return
+    leaving = event.data['card']
+    # CR 1.3.3: a deck-card is a permanent while in the arena (not combat chain)
+    # Check by prev_zone to distinguish a sigil aura in permanents vs on combat chain
+    is_permanent = leaving.prev_zone == "permanents"
+    is_sigil_aura = (
+        "sigil" in (leaving.name or "").lower()
+        and "Aura" in (leaving.subtypes or [])
+    )
+    if is_sigil_aura and is_permanent and _controller_id(leaving) == cid:
+        effect_amp(state, cid, 1)
 
 CARD_TRIGGERS["aether_bindings_of_the_third_age"] = [
     TriggerDef(event_type="leaves_arena", effect_fn=_aether_bindings_sigil_leave),
@@ -3483,6 +3440,10 @@ def register_card_triggers(card: Card, event_manager) -> None:
                 # CR 5.4.6a / CR 1.7.4: triggered-static abilities are only functional
                 # when their source card is public (face-up in a public zone).
                 if not source_card.is_public:
+                    return
+                # Static suppression: e.g. A Good Clean Fight silences opponent cards
+                # while attacking.  Set card._triggers_suppressed = True to disable.
+                if getattr(source_card, '_triggers_suppressed', False):
                     return
                 if trig.condition_fn and not trig.condition_fn(source_card, event, state):
                     return

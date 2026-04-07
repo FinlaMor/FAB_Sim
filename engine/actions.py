@@ -34,6 +34,9 @@ class ActionType(Enum):
     ACTIVATE_HERO = "activate_hero"
     DISCARD_ACTIVATE = "discard_activate"
     PLAY_BANISH = "play_banish"  # Play a card from the banish zone
+    CHOOSE = "choose"              # Generic choice action for multi-option prompts (e.g. modal abilities, target selection)
+    PITCH_CARD = "pitch_card"       # Pay for a cost by pitching a hand card
+    PITCH_TO_DECK = "pitch_to_deck"  # End-phase ordering: place pitched card to bottom of deck
 
 
 @dataclass
@@ -76,6 +79,7 @@ class Action:
     is_melded: Optional[bool] = None               # Legacy meld flag (kept for compat)
     meld_side: Optional[str] = None                # Meld side: 'top', 'bottom', 'both', or None (CR 8.3.38)
     alternative_cost_used: Optional[str] = None    # Alternative cost name if used (CR 5.1.3c)
+    additional_cost_paid: bool = False              # CR 5.1.9: effect-costs have been paid
 
     def __repr__(self):
         parts = [self.type.value]
@@ -196,6 +200,75 @@ def _get_pitch_value(card: Card) -> int:
     """Get the pitch/resource value of a card."""
     return card.pitch or 0
 
+
+def _can_afford_action(state: GameState, action: Action) -> bool:
+    """Check whether a player can afford all costs of an action.
+
+    Mirrors evaluate_play_cost(check=True) in engine.py but lives here to
+    avoid circular imports. Uses _calculate_resource_cost for the modified
+    cost so continuous-effect reductions are accounted for.
+
+    CR 5.1.6 / 1.14.2 cost sequence checked:
+      1. Resource asset-cost (card.cost modified by continuous effects + alt cost)
+      2. Life asset-cost (hero activations with life_cost)
+      3. Effect-costs: Scrap requires graveyard item/equipment
+    """
+    if action.player_id is None:
+        return True
+    player = state.players[action.player_id]
+
+    # --- 1. Resource cost ---
+    # Lazy import to avoid circular dependency; _calculate_resource_cost is in engine.py
+    try:
+        from engine.engine import _calculate_resource_cost
+        resource_cost = _calculate_resource_cost(state, action)
+    except ImportError:
+        # Fallback to raw card cost if engine not importable (e.g. during early init)
+        resource_cost = (action.card.cost or 0) if action.card else 0
+
+    exclude = action.card if action.type in (
+        ActionType.PLAY_CARD, ActionType.PLAY_ATTACK_REACTION,
+        ActionType.PLAY_DEFENSE_REACTION,
+    ) else None
+    chi = getattr(player, 'chi', 0)
+    effective_resources = player.resources + chi
+    if not can_pay_cost(player.hand.cards, resource_cost, effective_resources, exclude_card=exclude):
+        return False
+
+    # --- 2. Life cost (hero activations) ---
+    if action.type == ActionType.ACTIVATE_HERO and player.hero is not None:
+        hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
+        raw_life = hero_cfg.get("life_cost", 0)
+        life_cost = raw_life(player, state) if callable(raw_life) else raw_life
+        life_cost = life_cost if isinstance(life_cost, int) else 0
+        if life_cost > 0 and player.health <= life_cost:
+            return False
+
+    # --- 3. Mandatory effect-costs ---
+    if action.type in (ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL, ActionType.PLAY_BANISH):
+        card = action.card
+        if card is not None:
+            kws = [k.lower() for k in (card.keywords or [])]
+            if any(k == "scrap" or k.startswith("scrap ") for k in kws):
+                eligible = [
+                    c for c in player.graveyard.cards
+                    if "Item" in (c.types or []) or "Equipment" in (c.types or [])
+                ]
+                if not eligible:
+                    return False  # mandatory Scrap cost can't be paid
+            # Alternative-cost effect-cost checks (CR 5.1.3c / 5.1.8)
+            alt = getattr(action, 'alternative_cost_used', None)
+            if alt == "remove_p_counters":
+                # 10000_year_reunion_red: need ≥3 +1{p} counters across controlled auras
+                total = sum(
+                    player.counters.get((c.slug, "permanents", "+1{p}"), 0)
+                    for c in player.auras.cards
+                )
+                if total < 3:
+                    return False
+
+    return True
+
 def _weapon_can_attack(weapon_card) -> bool:
     text = weapon_card.functional_text or ""
     if "**Attack**" not in text and ": Attack" not in text:
@@ -225,6 +298,79 @@ def _parse_activation_cost_from_text(text: str) -> int:
     if match:
         return match.group(1).count('{r}')
     return 0
+
+
+# ---------------------------------------------------------------------------
+# Targeting helpers
+# ---------------------------------------------------------------------------
+
+_RE_ANY_TARGET      = re.compile(r'\bany target\b', re.I)
+_RE_TARGET_OPP_HERO = re.compile(r'\btarget (?:opposing|opponent\'?s?) hero\b', re.I)
+_RE_TARGET_HERO     = re.compile(r'\btarget hero\b', re.I)
+
+
+def _attackable_permanents(state: 'GameState', defender_id: int) -> list['Card']:
+    """CR 1.4.5a: return permanents in the defender's arena that can be attacked.
+
+    An object is attackable if it has a life property (allies) OR it is made
+    attackable by an effect. Spectra (CR 8.3.14) is the canonical effect that
+    makes an aura a legal attack target.
+    """
+    defender = state.players[defender_id]
+    targets = []
+    for card in defender.permanents.cards:
+        # Allies are living (have life / health tracked externally) — always attackable
+        if "Ally" in (card.subtypes or []) or "Ally" in (card.types or []):
+            targets.append(card)
+            continue
+        # Spectra keyword makes the permanent a legal attack target (CR 8.3.14)
+        if any(k.lower() == "spectra" for k in (card.keywords or [])):
+            targets.append(card)
+    return targets
+
+
+def _legal_targets_for_card(state: 'GameState', player_id: int, card: 'Card') -> list:
+    """Return valid target Card objects for a card's explicit targeting requirement.
+
+    - 'any target'            → any living object (heroes + allies) for either player
+    - 'target opposing hero'  → opponent's hero only
+    - 'target hero'           → either player's hero (self or opponent)
+    - no target specifier     → [None]  (untargeted; default logic applies in effect fn)
+
+    Returns [None] for untargeted cards so callers always get exactly one action when
+    no explicit targeting is present, preserving existing behavior.
+    """
+    text = card.functional_text or ""
+    opp_id = 3 - player_id
+    player = state.players[player_id]
+    opp = state.players[opp_id]
+
+    if _RE_ANY_TARGET.search(text):
+        targets: list = []
+        if player.hero:
+            targets.append(player.hero)
+        if opp.hero:
+            targets.append(opp.hero)
+        for ally in list(player.allies.cards):
+            if getattr(ally, 'current_life', None):
+                targets.append(ally)
+        for ally in list(opp.allies.cards):
+            if getattr(ally, 'current_life', None):
+                targets.append(ally)
+        return targets if targets else [None]
+
+    if _RE_TARGET_OPP_HERO.search(text):
+        return [opp.hero] if opp.hero else [None]
+
+    if _RE_TARGET_HERO.search(text):
+        targets = []
+        if player.hero:
+            targets.append(player.hero)
+        if opp.hero:
+            targets.append(opp.hero)
+        return targets if targets else [None]
+
+    return [None]
 
 
 # ---------------------------------------------------------------------------
@@ -327,12 +473,24 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             if weapon_cond is None or weapon_cond(state, player):
                 weapon_cost_val = _weapon_cost(weapon_card)
                 if can_pay_cost(player.hand.cards, weapon_cost_val, player.resources):
+                    # Default target: opponent's hero (target=None)
                     actions.append(Action(
                         type=ActionType.ATTACK_WEAPON,
                         card=weapon_card,
                         attack_source=weapon_card,
                         is_attack_proxy=True,
                     ))
+                    # CR 1.4.5a: also offer attacks targeting each attackable permanent
+                    defender_id = 3 - pp
+                    for _target in _attackable_permanents(state, defender_id):
+                        actions.append(Action(
+                            type=ActionType.ATTACK_WEAPON,
+                            card=weapon_card,
+                            attack_source=weapon_card,
+                            is_attack_proxy=True,
+                            target=_target,
+                            targets=[_target.slug],
+                        ))
 
         # Cards that can't be played from hand
         CANT_PLAY_FROM_HAND = {"death_touch"}
@@ -353,27 +511,30 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 # BOTTOM side — instant-speed (Shock "1 arcane" / Life "gain 1{h}"), free, no AP
                 # MELDED     — action-speed, costs 2× base cost plus modifiers, AP required, dual resolution
                 null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(card) else None
-                if player.action_points > 0 and can_pay_cost(player.hand.cards, card.cost or 0, player.resources, exclude_card=card):
-                    if null_targets is not None:
-                        for target_entry in null_targets:
-                            actions.append(Action(
-                                type=ActionType.PLAY_CARD,
-                                card_idx=i,
-                                card=card,
-                                meld_side='top',
-                                target=target_entry.card,
-                                targets=[f"oid:{target_entry.card.object_id}"],
-                            ))
-                    else:
-                        actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
-                                              meld_side='top'))
+                if player.action_points > 0:
+                    _top_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, meld_side='top')
+                    _top_action.player_id = pp
+                    if _can_afford_action(state, _top_action):
+                        if null_targets is not None:
+                            for target_entry in null_targets:
+                                actions.append(Action(
+                                    type=ActionType.PLAY_CARD,
+                                    card_idx=i,
+                                    card=card,
+                                    meld_side='top',
+                                    target=target_entry.card,
+                                    targets=[f"oid:{target_entry.card.object_id}"],
+                                ))
+                        else:
+                            actions.append(_top_action)
                 # Bottom side is always playable at instant speed (no AP needed, cost 0)
                 actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
                                       meld_side='bottom'))
                 # Melded requires an action point
                 if player.action_points > 0:
-                    meld_cost = card.meld_cost or 0
-                    if can_pay_cost(player.hand.cards, meld_cost, player.resources, exclude_card=card):
+                    _both_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, meld_side='both')
+                    _both_action.player_id = pp
+                    if _can_afford_action(state, _both_action):
                         if null_targets is not None:
                             for target_entry in null_targets:
                                 actions.append(Action(
@@ -385,8 +546,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                                     targets=[f"oid:{target_entry.card.object_id}"],
                                 ))
                         else:
-                            actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
-                                                  meld_side='both'))
+                            actions.append(_both_action)
             else:
                 if card.is_action and player.action_points <= 0:
                     continue
@@ -401,9 +561,28 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                         and not getattr(card, 'can_target_permanent', False)
                         and state.combat is None):
                     continue
-                effective_cost = card.cost
-                if can_pay_cost(player.hand.cards, effective_cost, player.resources, exclude_card=card):
-                    actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card))
+                for _t in _legal_targets_for_card(state, pp, card):
+                    _play_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, target=_t)
+                    _play_action.player_id = pp
+                    if _can_afford_action(state, _play_action):
+                        actions.append(_play_action)
+                # CR 1.4.5a: attack action cards may also target attackable permanents
+                if card.is_attack:
+                    _def_id = 3 - pp
+                    for _target in _attackable_permanents(state, _def_id):
+                        _pa = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                                     target=_target, targets=[_target.slug])
+                        _pa.player_id = pp
+                        if _can_afford_action(state, _pa):
+                            actions.append(_pa)
+                # Cards with non-resource alternative costs: also emit alt-cost variants
+                _ALT_COST_CARDS = {"10000_year_reunion_red"}
+                if card.slug in _ALT_COST_CARDS:
+                    _alt_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                                        alternative_cost_used="remove_p_counters")
+                    _alt_action.player_id = pp
+                    if _can_afford_action(state, _alt_action):
+                        actions.append(_alt_action)
 
         # PLAY_ARSENAL — only face-up (public) cards can be played (CR 3.0.4b, CR 5.1.2b)
         arsenal_card = player.arsenal.top
@@ -422,8 +601,9 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                                       and not getattr(arsenal_card, 'can_target_permanent', False)
                                       and state.combat is None))
                     if not _no_target:
-                        effective_cost = arsenal_card.cost
-                        if can_pay_cost(player.hand.cards, effective_cost, player.resources):
+                        _ars_action = Action(type=ActionType.PLAY_ARSENAL, card=arsenal_card, from_arsenal=True)
+                        _ars_action.player_id = pp
+                        if _can_afford_action(state, _ars_action):
                             null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(arsenal_card) else None
                             if not (null_targets is not None and not null_targets):
                                 if null_targets is not None:
@@ -436,23 +616,23 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                                             targets=[f"oid:{target_entry.card.object_id}"],
                                         ))
                                 else:
-                                    actions.append(Action(
-                                        type=ActionType.PLAY_ARSENAL,
-                                        card=arsenal_card,
-                                        from_arsenal=True,
-                                    ))
+                                    for _t in _legal_targets_for_card(state, pp, arsenal_card):
+                                        actions.append(Action(
+                                            type=ActionType.PLAY_ARSENAL,
+                                            card=arsenal_card,
+                                            from_arsenal=True,
+                                            target=_t,
+                                        ))
 
         # ACTIVATE_ITEM
         for i, card in enumerate(player.items.cards):
             text = card.functional_text or ""
             if "**Instant**" in text or ("**Action**" in text and player.action_points > 0):
-                effective_cost = card.cost
-                if can_pay_cost(player.hand.cards, effective_cost, player.resources):
-                    actions.append(Action(
-                        type=ActionType.ACTIVATE_ITEM, 
-                        card_idx=i, 
-                        card=card, 
-                        ))
+                for _t in _legal_targets_for_card(state, pp, card):
+                    _item_action = Action(type=ActionType.ACTIVATE_ITEM, card_idx=i, card=card, target=_t)
+                    _item_action.player_id = pp
+                    if _can_afford_action(state, _item_action):
+                        actions.append(_item_action)
 
         # ACTIVATE_EQUIPMENT (non-weapon)
         for slot_name in ("head", "chest", "arms", "legs"):
@@ -488,23 +668,11 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 if not _cond_result:
                     continue
             
-            cost_override = EQUIPMENT_ACTIVATION_COST.get(equip_slug)
-            if cost_override is not None:
-                if callable(cost_override):
-                    import inspect
-                    effective_cost = cost_override(player, state) if len(inspect.signature(cost_override).parameters) >= 2 else cost_override(player)
-                else:
-                    effective_cost = cost_override
-            else:
-                effective_cost = equip_card.cost
-                if effective_cost is None:
-                    effective_cost = _parse_activation_cost_from_text(text)
-            if can_pay_cost(player.hand.cards, effective_cost, player.resources):
-                actions.append(Action(
-                    type=ActionType.ACTIVATE_EQUIPMENT,
-                    card=equip_card,
-                    slot=slot_name
-                    ))
+            for _t in _legal_targets_for_card(state, pp, equip_card):
+                _equip_action = Action(type=ActionType.ACTIVATE_EQUIPMENT, card=equip_card, slot=slot_name, target=_t)
+                _equip_action.player_id = pp
+                if _can_afford_action(state, _equip_action):
+                    actions.append(_equip_action)
 
         # ACTIVATE_WEAPON activate abilities (e.g. Hammerhead Harpoon Cannon)
         if not player.weapon_exhausted and weapon_card is not None and not _weapon_can_attack(weapon_card):
@@ -523,24 +691,48 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             if (r"{t}" in text) and weapon_card.tapped:
                 can_activate_weapon = False
             if can_activate_weapon:
-                cost_override = EQUIPMENT_ACTIVATION_COST.get(weapon_slug)
-                if cost_override is not None:
-                    cost = cost_override(player) if callable(cost_override) else cost_override
-                else:
-                    cost = weapon_card.cost
-                    if cost is None:
-                        cost = _parse_activation_cost_from_text(text)
-                if can_pay_cost(player.hand.cards, cost, player.resources):
-                    actions.append(Action(
-                        type=ActionType.ACTIVATE_WEAPON,
-                        card=weapon_card,
-                    ))
+                for _t in _legal_targets_for_card(state, pp, weapon_card):
+                    _wpn_action = Action(type=ActionType.ACTIVATE_WEAPON, card=weapon_card, target=_t)
+                    _wpn_action.player_id = pp
+                    if _can_afford_action(state, _wpn_action):
+                        actions.append(_wpn_action)
 
         # ATTACK_ALLY — allies can attack once per turn (CR 11.0)
         if player.action_points > 0 and not state.stack_entries:
             for i, ally_card in enumerate(player.allies.cards):
                 exhausted = player.allies_exhausted[i] if i < len(player.allies_exhausted) else False
-                if not exhausted and ally_card.power is not None and ally_card.power > 0:
+                if exhausted or ally_card.power is None or ally_card.power <= 0:
+                    continue
+                # Check ally has an attack activation (built-in or granted externally)
+                _ftext = ally_card.functional_text or ""
+                _has_attack_activation = bool(re.search(
+                    r'\*\*(?:[\w\s]+\s)?[Aa]ction\*\*\s*[-\u2014][^:]*:\s*\*\*[Aa]ttack\*\*',
+                    _ftext
+                ))
+                _granted_key = f"ally_attack_granted_{ally_card.slug}"
+                if not _has_attack_activation and _granted_key not in player.current_turn_effects:
+                    continue
+                # Check resource affordability (cost may be in card.cost or functional text)
+                try:
+                    from engine.engine import _ally_attack_resource_cost
+                    ally_cost = _ally_attack_resource_cost(ally_card)
+                except ImportError:
+                    ally_cost = ally_card.cost or 0
+                if player.resources < ally_cost and not can_pay_cost(
+                        player.hand.cards, ally_cost, player.resources):
+                    continue
+                # Default target: opponent's hero (target=None)
+                actions.append(Action(
+                    type=ActionType.ATTACK_ALLY,
+                    card_idx=i,
+                    card=ally_card,
+                    player_id=pp,
+                    is_attack_proxy=False,
+                    attack_source=ally_card,
+                ))
+                # CR 1.4.5a: also offer attacks targeting each attackable permanent
+                defender_id = 3 - pp
+                for _target in _attackable_permanents(state, defender_id):
                     actions.append(Action(
                         type=ActionType.ATTACK_ALLY,
                         card_idx=i,
@@ -548,6 +740,8 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                         player_id=pp,
                         is_attack_proxy=False,
                         attack_source=ally_card,
+                        target=_target,
+                        targets=[_target.slug],
                     ))
 
     # DISCARD_ACTIVATE — "Instant - Discard this:" hand abilities (no pitch cost)
@@ -564,8 +758,10 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             is_instant = "Instant" in (card.types or [])
             if card.is_action and player.action_points <= 0 and not is_instant:
                 continue
-            if can_pay_cost(player.hand.cards, card.cost, player.resources):
-                actions.append(Action(type=ActionType.PLAY_BANISH, card=card, player_id=pp))
+            for _t in _legal_targets_for_card(state, pp, card):
+                _ban_action = Action(type=ActionType.PLAY_BANISH, card=card, player_id=pp, target=_t)
+                if _can_afford_action(state, _ban_action):
+                    actions.append(_ban_action)
 
     # ACTIVATE_HERO — hero abilities (Action-timing requires AP, Instant doesn't)
     hero_card = player.hero
@@ -579,9 +775,9 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
     if hero_cfg is not None:
         cond_fn = hero_cfg.get("condition_fn")
         if cond_fn and cond_fn(player, state):
-            hero_cost_raw = hero_cfg.get("cost", 0)
-            hero_cost = hero_cost_raw(player, state) if callable(hero_cost_raw) else hero_cost_raw
-            if can_pay_cost(player.hand.cards, hero_cost, player.resources):
+            _hero_action = Action(type=ActionType.ACTIVATE_HERO, card=hero_card)
+            _hero_action.player_id = pp
+            if _can_afford_action(state, _hero_action):
                 target_fn = hero_cfg.get("target_fn")
                 if target_fn:
                     targets = target_fn(player, state)
@@ -592,10 +788,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                             target=target_card,
                         ))
                 else:
-                    actions.append(Action(
-                        type=ActionType.ACTIVATE_HERO,
-                        card=hero_card,
-                    ))
+                    actions.append(_hero_action)
 
     return actions
 
@@ -689,7 +882,8 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 continue
             effective_cost = card.cost
             if can_pay_cost(player.hand.cards, effective_cost, player.resources, exclude_card=card):
-                actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card))
+                for _t in _legal_targets_for_card(state, pp, card):
+                    actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, target=_t))
 
     # Instants from arsenal
     for i, card in enumerate(player.arsenal.cards):
@@ -711,7 +905,8 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                     targets=[f"oid:{target_entry.card.object_id}"],
                 ))
         else:
-            actions.append(Action(type=ActionType.PLAY_ARSENAL, card_idx=i, card=card))
+            for _t in _legal_targets_for_card(state, pp, card):
+                actions.append(Action(type=ActionType.PLAY_ARSENAL, card_idx=i, card=card, target=_t))
 
     # ACTIVATE_EQUIPMENT (non-weapon) in reaction step
     # Only attacker can activate attack reaction equipment; only defender can activate defense reaction equipment
@@ -768,10 +963,12 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             if effective_cost is None:
                 effective_cost = _parse_activation_cost_from_text(text)
         if can_pay_cost(player.hand.cards, effective_cost, player.resources):
-            actions.append(Action(
-                type=ActionType.ACTIVATE_EQUIPMENT,
-                card=equip_card,
-                slot=slot_name
+            for _t in _legal_targets_for_card(state, pp, equip_card):
+                actions.append(Action(
+                    type=ActionType.ACTIVATE_EQUIPMENT,
+                    card=equip_card,
+                    slot=slot_name,
+                    target=_t,
                 ))
 
     # ACTIVATE_ITEM (Instant)
@@ -796,7 +993,8 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 continue
 
         if can_activate_item:
-            actions.append(Action(type=ActionType.ACTIVATE_ITEM, card=card))
+            for _t in _legal_targets_for_card(state, pp, card):
+                actions.append(Action(type=ActionType.ACTIVATE_ITEM, card=card, target=_t))
 
     if pp == attacker_id:
         # Attack reactions from hand
@@ -808,8 +1006,9 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 continue
             effective_cost = card.cost
             if can_pay_cost(player.hand.cards, effective_cost, player.resources, exclude_card=card):
-                actions.append(Action(type=ActionType.PLAY_ATTACK_REACTION, card=card))
-        
+                for _t in _legal_targets_for_card(state, pp, card):
+                    actions.append(Action(type=ActionType.PLAY_ATTACK_REACTION, card=card, target=_t))
+
         # Attack reactions from arsenal
         for i, card in enumerate(player.arsenal.cards):
             if "Attack Reaction" not in card.types:
@@ -819,13 +1018,13 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                 continue
             effective_cost = card.cost
             if can_pay_cost(player.hand.cards, effective_cost, player.resources):
-                actions.append(
-                    Action(
+                for _t in _legal_targets_for_card(state, pp, card):
+                    actions.append(Action(
                         type=ActionType.PLAY_ATTACK_REACTION,
                         card=card,
                         from_arsenal=True,
-                    )
-                )
+                        target=_t,
+                    ))
 
     elif pp == defender_id:
         # If attack targets an ally (not the hero), defender cannot play DRs
@@ -842,7 +1041,8 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                         continue
                     effective_cost = card.cost
                     if can_pay_cost(player.hand.cards, effective_cost, player.resources, exclude_card=card):
-                        actions.append(Action(type=ActionType.PLAY_DEFENSE_REACTION, card=card))
+                        for _t in _legal_targets_for_card(state, pp, card):
+                            actions.append(Action(type=ActionType.PLAY_DEFENSE_REACTION, card=card, target=_t))
 
             # Defense reaction from arsenal — blocked by no_defense_reactions (CR 7.4.2c),
             # but NOT by dominate (CR 8.3.4b scopes dominate to "from hand" only).
@@ -856,13 +1056,13 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                         continue
                     effective_cost = card.cost
                     if can_pay_cost(player.hand.cards, effective_cost, player.resources):
-                        actions.append(
-                            Action(
+                        for _t in _legal_targets_for_card(state, pp, card):
+                            actions.append(Action(
                                 type=ActionType.PLAY_DEFENSE_REACTION,
                                 card=card,
                                 from_arsenal=True,
-                            )
-                        )
+                                target=_t,
+                            ))
 
     return actions
 

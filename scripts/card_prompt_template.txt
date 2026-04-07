@@ -1,0 +1,6 @@
+Implement the following card and its color variants if applicable.
+You should only need to change the programs in the card_effects folder. If you think you need to change something else, ask for user input first.
+First check if the card is already implemented in the card effects folder. This could include explicit implementation or if it is captured by the trigger parsers.
+The goal is to have as close to a rules accurate representation of the card(s) per the comprehensive rules in the docs/refs folder. This includes giving priority to both players if the card makes a layer on the stack both before and after the card effect resolves. If ANYTHING is not explicitly by-the-rules, check with the user for how you should proceed.
+
+Card: __CARD__
