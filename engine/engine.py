@@ -1688,7 +1688,7 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
     The card being played is excluded from pitch candidates.
 
     for_chi=False (default): pitching fills player.resources.  Any card can be pitched.
-    for_chi=True: pitching fills player.chi.  Only cards with the Draconic class
+    for_chi=True: pitching fills player.chi.  Only cards with the name 'inner_chi'
         (i.e. cards that generate chi when pitched) are eligible.  Resources CANNOT
         be pitched for chi costs (CR 1.14.2a).
     """

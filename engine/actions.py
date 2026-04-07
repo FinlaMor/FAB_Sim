@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Optional
 import sys
 from itertools import count
-sys.path.insert(0, r"C:\Users\Joseph\Desktop\FAB_Coach")
+sys.path.insert(0, r"C:\Users\Joseph\Desktop\FAB_Sim")
 
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, Zone
