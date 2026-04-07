@@ -20,6 +20,14 @@ SECTION 4 — Event dispatch coverage
   Tests that EventManager fires listeners for every event type the engine
   emits.  Cards that register on_hit / start_of_turn / etc. listeners can
   trust the dispatch mechanism is correct.
+
+SECTION 5 — Targeting coverage
+  Tests for legal_actions and targeting rules.  For example, when an 
+  arcane action specifies target hero vs any target, legal_actions should
+  only return valid targets.
+
+SECTION 6 — Pitching coverage
+    Tests for find_all_valid_pitch_sequences and pitch legality rules.
 """
 from __future__ import annotations
 
@@ -54,7 +62,22 @@ from engine.card_effects.keywords import (
     ward,
     watery_grave,
 )
-from engine.actions import Action, ActionType, legal_actions, _attackable_permanents
+from engine.actions import (
+    Action, 
+    ActionType,
+    _legal_action_step, 
+    legal_actions, 
+    _attackable_permanents, 
+    find_all_valid_pitch_sequences, 
+    _legal_targets_for_card, 
+    get_defendable_cards,
+    get_pitchable_cards,
+    _legal_action_step,
+    _legal_defend_step,
+    _legal_reaction_step,
+    _legal_end_turn_step,
+    _can_afford_action
+)
 from engine.card_effects.registry import (
     EQUIPMENT_ACTIVATION_CONDITIONS,
     EQUIPMENT_ACTIVATION_EFFECTS,

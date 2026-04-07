@@ -139,6 +139,7 @@ def get_pitchable_cards(hand_cards: list[Card], exclude_card: Card | None = None
 
 def find_all_valid_pitch_sequences(hand_cards: list[Card], target_cost: int, current_resources: int = 0, max_seqs: int = 10) -> list[list[Card]]:
     """
+    **DEPRECATED: now uses a binary decision that cycles through pitchable cards one at a time instead of enumerating all sequences to avoid combinatorial explosion.**
     Find all legal ordered pitch sequences for paying target_cost.
 
     CR 5.1.6/5.1.7: Pitching is sequential. After each card is pitched the game
