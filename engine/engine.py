@@ -340,7 +340,7 @@ def _action_phase_iter(state: GameState) -> None:
 
     # 4.3.3: turn player gains priority
     # Order any triggers from start_of_action_phase, then enter priority loop
-    handle_stack(state)
+    order_stack(state)
     state.priority_player = state.active_player
     state.consecutive_passes = 0
     priority_loop(state)
@@ -385,7 +385,7 @@ def _combat_phase_iter(state: GameState) -> None:
     # 7.1.2: turn player unconditionally gains priority in the Layer Step (CR 7.1.2).
     # Players may play instants/reactions before the attack resolves regardless of stack state.
     if state.stack_entries:
-        handle_stack(state)
+        order_stack(state)
     state.priority_player = state.active_player
     state.consecutive_passes = 0
     priority_loop(state)
@@ -477,7 +477,7 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
         return
 
     # 7.2.5: turn player gains priority — attack event triggers resolve here
-    handle_stack(state)
+    order_stack(state)
     state.priority_player = state.active_player
     state.consecutive_passes = 0
     priority_loop(state)
@@ -550,7 +550,7 @@ def _defend_step(state: GameState) -> None:
     state.combat.defending_declared = True
 
     # 7.3.3: turn player gains priority — Phantasm trigger resolves here
-    handle_stack(state)
+    order_stack(state)
     state.priority_player = state.active_player
     state.consecutive_passes = 0
     priority_loop(state)
@@ -567,7 +567,7 @@ def _reaction_step(state: GameState) -> None:
     state.step = Step.COMBAT_REACTION
 
     # 7.4.2: turn player gains priority
-    handle_stack(state)
+    order_stack(state)
     state.priority_player = state.active_player
     state.consecutive_passes = 0
     priority_loop(state)
@@ -592,7 +592,7 @@ def _damage_step(state: GameState) -> None:
         return
 
     # 7.5.3: turn player gains priority
-    handle_stack(state)
+    order_stack(state)
     state.priority_player = state.active_player
     state.consecutive_passes = 0
     priority_loop(state)
@@ -612,7 +612,7 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
         state.active().action_points += 1
 
     # 7.6.3: turn player gains priority
-    handle_stack(state)
+    order_stack(state)
     state.priority_player = state.active_player
     state.consecutive_passes = 0
     priority_loop(state)
@@ -628,7 +628,7 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
         # New chain link starts from Layer Step
         state.step = Step.COMBAT_LAYER
         if state.stack_entries:
-            handle_stack(state)
+            order_stack(state)
             state.priority_player = state.active_player
             state.consecutive_passes = 0
             priority_loop(state)
@@ -804,7 +804,7 @@ def _draw_cards(player: Player, count: int, state: Optional[GameState] = None) -
 
 def _resolve_all_triggers(state: GameState) -> None:
     """Order and resolve all triggers on the stack without giving players priority."""
-    handle_stack(state)
+    order_stack(state)
     _iters = 0
     _MAX_TRIGGER_ITERS = 500
     while state.stack_entries:
@@ -821,7 +821,7 @@ def _resolve_all_triggers(state: GameState) -> None:
         if check_state_based_actions(state):
             return
         if state.stack_entries:
-            handle_stack(state)
+            order_stack(state)
 
 def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
     """Consume pending turn effects that modify the next attack (from registry).
@@ -1247,7 +1247,7 @@ def resolve_stack(game_state: GameState) -> None:
     game_state.consecutive_passes = 0
     game_state.last_acted_player = None
 
-def handle_stack(game_state: GameState) -> None:
+def order_stack(game_state: GameState) -> None:
     """Order triggered abilities on the stack (6.6.6b).
     ONLY orders — does NOT resolve. Called once when triggers first appear."""
     if not game_state.stack_entries:
@@ -1369,7 +1369,7 @@ def priority_loop(state: GameState) -> None:
                     if check_state_based_actions(state):
                         return
                     # New triggers from resolution get ordered
-                    handle_stack(state)
+                    order_stack(state)
                     state.consecutive_passes = 0
                     state.priority_player = state.active_player
                 else:
@@ -1384,7 +1384,7 @@ def priority_loop(state: GameState) -> None:
             if check_state_based_actions(state):
                 return
             # New triggers from the action get ordered on top
-            handle_stack(state)
+            order_stack(state)
             # CR 1.11.5: acting player regains priority after playing/activating
             state.priority_player = current_player
 
