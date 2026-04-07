@@ -1710,9 +1710,8 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
     while (player.chi if for_chi else player.resources) < needed_cost:
         pitchable = get_pitchable_cards(player.hand.cards, exclude_card=exclude)
         if for_chi:
-            # Only Draconic cards generate chi when pitched (CR 1.14.2a)
             pitchable = [c for c in pitchable
-                         if "Draconic" in (c.types or []) or "Draconic" in (c.subtypes or [])]
+                         if "Chi" in (c.types or []) or "Chi" in (c.subtypes or [])]
         if not pitchable:
             break  # nothing left to pitch
         context = 'Pitch for chi?' if for_chi else 'Pitch?'

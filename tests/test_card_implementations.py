@@ -94,7 +94,7 @@ from engine.state import (
     Step,
 )
 from tests.conftest import _make_card, _make_player, _make_state, _mock_agent
-from engine.engine import _pitch_for_cost
+from engine.engine import _pitch_for_cost, evaluate_play_cost, _apply_play_card
 
 
 # ---------------------------------------------------------------------------
@@ -104,7 +104,7 @@ from engine.engine import _pitch_for_cost
 def _scripted_agent(*answers):
     """Return an agent callable that pops answers in order."""
     queue = list(answers)
-    def _agent(state, options, **kwargs):
+    def _agent(state, options, context, **kwargs):
         return queue.pop(0) if queue else (options[0] if options else None)
     return _agent
 
@@ -1777,33 +1777,47 @@ class TestPitchSequence:
     def test_pitch_for_card_from_hand(self):
         state = _make_state()
         actor = state.players[1]
-        blue_card = _make_card(slug="test_card_blue", name="Test Card Blue", pitch=3, color='blue')
-        red_card = _make_card(slug="test_card_red", name="Test Card Red", pitch=1, color='red')
-        cost = 3
-        play_card = _make_card(slug="test_play_card", cost=cost, pitch=2)
+        blue_card = _make_card(slug="test_card_blue", name="Test Card Blue")
+        blue_card.base_pitch = 3
+        blue_card.base_color = 'blue'
+        red_card = _make_card(slug="test_card_red", name="Test Card Red")
+        red_card.base_pitch = 1
+        red_card.base_color = 'red'
+        play_card = _make_card(slug="test_play_card", name="Test Play Card")
+        play_card.base_pitch = 2
+        play_card.base_cost = 3
         actor.hand.add(blue_card)
         actor.hand.add(red_card)
         actor.hand.add(play_card)
 
-        assert can_pay_cost(actor.hand.cards, cost, actor.resources, play_card)
+        assert can_pay_cost(actor.hand.cards, play_card.base_cost, actor.resources, play_card)
         assert len(get_pitchable_cards(actor.hand.cards, play_card)) == 2
         assert len(get_pitchable_cards(actor.hand.cards)) == 3
 
         #test pitch blue then red
-        agent = _scripted_agent([0, 0])
+        agent = _scripted_agent(Action(ActionType.CHOOSE, card=blue_card, player_id=1), 
+                                 Action(ActionType.CHOOSE, card=red_card, player_id=1)
+                                 )
         state.player_agents = {1:agent}
-        _pitch_for_cost(state,Action(ActionType.PLAY_CARD,1,play_card),play_card.cost)
+        evaluate_play_cost(state,Action(ActionType.PLAY_CARD,1,play_card),check=False)
+        _apply_play_card(state, Action(ActionType.PLAY_CARD,1,play_card))
         assert actor.resources == 0
         assert len(actor.hand.cards) == 1
         assert len(actor.pitch.cards) == 1
 
-    def test_over_pitch():
+    def test_over_pitch(self):
         state = _make_state()
         actor = state.players[1]
-        blue_card = _make_card(slug="test_card_blue", name="Test Card Blue", pitch=3, color='blue')
-        red_card = _make_card(slug="test_card_red", name="Test Card Red", pitch=1, color='red')
+        blue_card = _make_card(slug="test_card_blue", name="Test Card Blue")
+        blue_card.base_pitch = 3
+        blue_card.base_color = 'blue'
+        red_card = _make_card(slug="test_card_red", name="Test Card Red")
+        red_card.base_pitch = 1
+        red_card.base_color = 'red'
         cost = 3
-        play_card = _make_card(slug="test_play_card", cost=cost, pitch=2)
+        play_card = _make_card(slug="test_play_card", name="Test Play Card")
+        play_card.base_pitch = 2
+        play_card.base_cost = cost
         actor.hand.add(blue_card)
         actor.hand.add(red_card)
         actor.hand.add(play_card)
@@ -1813,27 +1827,30 @@ class TestPitchSequence:
         assert len(get_pitchable_cards(actor.hand.cards)) == 3
 
         #test pitch red then blue
-        agent = _scripted_agent([1, 0])
+        agent = _scripted_agent(Action(ActionType.CHOOSE,card=red_card, player_id=1), 
+                                 Action(ActionType.CHOOSE,card=blue_card, player_id=1)
+                                 )
         state.player_agents = {1:agent}
-        _pitch_for_cost(state,Action(ActionType.PLAY_CARD,1,play_card),play_card.cost)
+        evaluate_play_cost(state,Action(ActionType.PLAY_CARD,1,play_card),check=False)
+        _apply_play_card(state, Action(ActionType.PLAY_CARD,1,play_card))
         assert actor.resources == 1
         assert len(actor.hand.cards) == 0
         assert len(actor.pitch.cards) == 2
 
 
-    def test_cost_increase():
-        state = _make_state()
-        mng = ContinuousEffectManager()
-        mng.add_cost_modifier
+    # def test_cost_increase():
+    #     state = _make_state()
+    #     mng = ContinuousEffectManager()
+    #     mng.add_cost_modifier
 
-    def test_cost_decrease():
-        state = _make_state()
-        mng = ContinuousEffectManager()
-        mng.add_cost_modifier
+    # def test_cost_decrease():
+    #     state = _make_state()
+    #     mng = ContinuousEffectManager()
+    #     mng.add_cost_modifier
 
-    def test_cost_set():
-        state = _make_state()
-        mng = ContinuousEffectManager()
-        mng.add_cost_modifier
+    # def test_cost_set():
+    #     state = _make_state()
+    #     mng = ContinuousEffectManager()
+    #     mng.add_cost_modifier
 
-    def test_alternative_cost():
+    # def test_alternative_cost():
