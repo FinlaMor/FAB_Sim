@@ -564,129 +564,6 @@ class TestSpectra:
 
 
 # ---------------------------------------------------------------------------
-# CR 1.4.5a  Attackable targets
-# ---------------------------------------------------------------------------
-
-class TestAttackableTargets:
-    """CR 1.4.5a: valid attack targets are the opponent's hero, living permanents
-    (allies), and permanents made attackable by an effect (Spectra)."""
-
-    def _weapon(self, player):
-        weapon = _make_card("test_sword", types=["Weapon"], base_power=3,
-                            base_functional_text="Once per Turn Action — **Attack**")
-        weapon.owner = player.player_id
-        weapon.controller = player.player_id
-        weapon.zone = "weapon1"
-        weapon.is_public = True
-        player.weapon1.cards.append(weapon)
-        return weapon
-
-    # --- _attackable_permanents helper ---
-
-    def test_no_attackable_permanents_when_none_present(self):
-        state = _make_state()
-        assert _attackable_permanents(state, 1) == []
-
-    def test_spectra_aura_is_attackable(self):
-        state = _make_state()
-        aura = _make_card("spectral_shield", types=["Aura"], keywords=["Spectra"])
-        aura.owner = 1
-        aura.controller = 1
-        state.players[1].permanents.add(aura)
-        result = _attackable_permanents(state, 1)
-        assert aura in result
-
-    def test_non_spectra_aura_is_not_attackable(self):
-        state = _make_state()
-        aura = _make_card("plain_aura", types=["Aura"])
-        aura.owner = 1
-        aura.controller = 1
-        state.players[1].permanents.add(aura)
-        assert _attackable_permanents(state, 1) == []
-
-    def test_ally_is_attackable(self):
-        state = _make_state()
-        ally = _make_card("test_ally", types=["Permanent"], subtypes=["Ally"])
-        ally.owner = 1
-        ally.controller = 1
-        state.players[1].allies.add(ally)
-        result = _attackable_permanents(state, 1)
-        assert ally in result
-
-    # --- legal_actions generates targeted attack variants ---
-
-    def test_weapon_attack_offers_spectra_target(self):
-        """When a Spectra aura is in play, ATTACK_WEAPON actions include a
-        targeted variant (target=aura) in addition to the default hero attack."""
-        state = _make_state()
-        state.active_player = 2
-        state.priority_player = 2
-        state.players[2].action_points = 1
-        state.players[2].resources = 0
-
-        aura = _make_card("spectral_shield", types=["Aura"], keywords=["Spectra"])
-        aura.owner = 1
-        aura.controller = 1
-        state.players[1].permanents.add(aura)
-
-        self._weapon(state.players[2])
-
-        from engine.card import CardDB
-        db = CardDB()
-        acts = legal_actions(state, db)
-        weapon_acts = [a for a in acts if a.type == ActionType.ATTACK_WEAPON]
-        # One default (hero) + one targeted (aura)
-        assert len(weapon_acts) == 2
-        targeted = [a for a in weapon_acts if a.target is not None]
-        assert len(targeted) == 1
-        assert targeted[0].target is aura
-        assert targeted[0].targets == [aura.slug]
-
-    def test_weapon_attack_no_extra_targets_without_spectra(self):
-        """Without any Spectra/Ally permanents, only the default hero attack is offered."""
-        state = _make_state()
-        state.active_player = 2
-        state.priority_player = 2
-        state.players[2].action_points = 1
-        state.players[2].resources = 0
-        self._weapon(state.players[2])
-
-        from engine.card import CardDB
-        db = CardDB()
-        acts = legal_actions(state, db)
-        weapon_acts = [a for a in acts if a.type == ActionType.ATTACK_WEAPON]
-        assert len(weapon_acts) == 1
-        assert weapon_acts[0].target is None
-
-    def test_attack_card_offers_spectra_target(self):
-        """A PLAY_CARD attack action also generates a targeted variant for a
-        Spectra aura on the board."""
-        state = _make_state()
-        state.active_player = 2
-        state.priority_player = 2
-        state.players[2].action_points = 1
-        state.players[2].resources = 10  # plenty to pay
-
-        aura = _make_card("spectral_shield", types=["Aura"], keywords=["Spectra"])
-        aura.owner = 1
-        aura.controller = 1
-        state.players[1].permanents.add(aura)
-
-        attack = _make_card("test_attack", types=["Action", "Attack"], base_power=3, base_cost=0)
-        attack.owner = 2
-        attack.controller = 2
-        state.players[2].hand.add(attack)
-
-        from engine.card import CardDB
-        db = CardDB()
-        acts = legal_actions(state, db)
-        play_attacks = [a for a in acts
-                        if a.type == ActionType.PLAY_CARD and a.card is attack]
-        targeted = [a for a in play_attacks if a.target is not None and a.targets]
-        assert any(a.target is aura for a in targeted)
-
-
-# ---------------------------------------------------------------------------
 # CR 8.3.11  Blood Debt
 # ---------------------------------------------------------------------------
 
@@ -1179,6 +1056,146 @@ class TestTranscend:
 # SECTION 2 — PER-CARD IMPLEMENTATION TESTS
 # ===========================================================================
 
+# ===========================================================================
+# 10,000 Year Reunion alternate cost
+# ===========================================================================
+
+
+class Test10000YearReunion:
+    """10,000 Year Reunion alternate cost: remove 3 +1{p} counters from auras.
+
+    Implementation: engine.engine._10000_year_reunion_effect_cost
+    Registered in EFFECT_COSTS["10000_year_reunion_red"].
+    """
+
+    _COST_FN = staticmethod(
+        __import__("engine.engine", fromlist=["EFFECT_COSTS"]).EFFECT_COSTS[
+            "10000_year_reunion_red"
+        ]
+    )
+
+    # ── helpers ──────────────────────────────────────────────────────────────
+
+    def _action(self, alt: bool = True):
+        """Minimal action stub."""
+        class _Act:
+            alternative_cost_used = "remove_p_counters" if alt else None
+        return _Act()
+
+    def _add_aura(self, state: GameState, slug: str, counters: int) -> Card:
+        card = _make_card(slug, types=["Aura"])
+        card.owner = 1
+        card.controller = 1
+        state.players[1].auras.add(card)
+        if counters:
+            state.players[1].counters[(slug, "permanents", "+1{p}")] = counters
+        return card
+
+    # ── normal-cost path (alternative_cost_used is None) ─────────────────────
+
+    def test_normal_cost_path_returns_true_immediately(self):
+        """When normal cost is used, effect-cost function is a no-op and returns True."""
+        state = _make_state()
+        action = self._action(alt=False)
+        result = self._COST_FN(state, 1, action, check=True)
+        assert result is True
+
+    def test_normal_cost_path_does_not_touch_counters(self):
+        state = _make_state()
+        self._add_aura(state, "some_aura", 2)
+        action = self._action(alt=False)
+        self._COST_FN(state, 1, action, check=False)
+        assert state.players[1].counters[("some_aura", "permanents", "+1{p}")] == 2
+
+    # ── check=True (legality probe) ───────────────────────────────────────────
+
+    def test_check_true_when_exactly_three_counters(self):
+        state = _make_state()
+        self._add_aura(state, "aura_a", 3)
+        action = self._action()
+        assert self._COST_FN(state, 1, action, check=True) is True
+
+    def test_check_true_when_counters_spread_across_auras(self):
+        state = _make_state()
+        self._add_aura(state, "aura_a", 1)
+        self._add_aura(state, "aura_b", 1)
+        self._add_aura(state, "aura_c", 1)
+        action = self._action()
+        assert self._COST_FN(state, 1, action, check=True) is True
+
+    def test_check_true_when_more_than_three_counters(self):
+        state = _make_state()
+        self._add_aura(state, "aura_a", 5)
+        action = self._action()
+        assert self._COST_FN(state, 1, action, check=True) is True
+
+    def test_check_false_when_no_counters(self):
+        state = _make_state()
+        # aura present but zero counters
+        self._add_aura(state, "aura_a", 0)
+        action = self._action()
+        assert self._COST_FN(state, 1, action, check=True) is False
+
+    def test_check_false_when_fewer_than_three_counters(self):
+        state = _make_state()
+        self._add_aura(state, "aura_a", 1)
+        self._add_aura(state, "aura_b", 1)
+        action = self._action()
+        assert self._COST_FN(state, 1, action, check=True) is False
+
+    def test_check_false_when_no_auras_at_all(self):
+        state = _make_state()
+        action = self._action()
+        assert self._COST_FN(state, 1, action, check=True) is False
+
+    # ── check=False (execution) — counters actually removed ──────────────────
+
+    def test_removes_exactly_three_counters_from_single_aura(self):
+        state = _make_state()
+        self._add_aura(state, "aura_a", 5)
+        action = self._action()
+        # agent always picks "aura_a"
+        state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_a")
+        self._COST_FN(state, 1, action, check=False)
+        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 2
+
+    def test_removes_counters_spread_across_two_auras(self):
+        state = _make_state()
+        self._add_aura(state, "aura_a", 2)
+        self._add_aura(state, "aura_b", 1)
+        action = self._action()
+        # agent picks: a, a, b
+        state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_b")
+        self._COST_FN(state, 1, action, check=False)
+        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 0
+        assert state.players[1].counters[("aura_b", "permanents", "+1{p}")] == 0
+
+    def test_removes_one_counter_per_aura_across_three(self):
+        state = _make_state()
+        self._add_aura(state, "aura_x", 1)
+        self._add_aura(state, "aura_y", 1)
+        self._add_aura(state, "aura_z", 1)
+        action = self._action()
+        state.player_agents[1] = _scripted_agent("aura_x", "aura_y", "aura_z")
+        self._COST_FN(state, 1, action, check=False)
+        for slug in ("aura_x", "aura_y", "aura_z"):
+            assert state.players[1].counters[(slug, "permanents", "+1{p}")] == 0
+
+    def test_check_does_not_remove_counters(self):
+        """check=True must never mutate counters."""
+        state = _make_state()
+        self._add_aura(state, "aura_a", 3)
+        action = self._action()
+        self._COST_FN(state, 1, action, check=True)
+        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 3
+
+    def test_returns_true_after_successful_removal(self):
+        state = _make_state()
+        self._add_aura(state, "aura_a", 3)
+        action = self._action()
+        state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_a")
+        result = self._COST_FN(state, 1, action, check=False)
+        assert result is True
 
 # ---------------------------------------------------------------------------
 # Aether Ironweave
@@ -1282,28 +1299,6 @@ def test_aether_icevein_correct_arcane_value(slug, expected_arcane):
     assert card is not None, f"{slug} not found in card DB"
     assert card.base_arcane_damage == expected_arcane
 
-
-# ---------------------------------------------------------------------------
-# cards_played_this_turn list — integration with engine
-# ---------------------------------------------------------------------------
-
-class TestCardsPlayedThisTurn:
-    """Verify the tracking list resets each turn and covers both play paths."""
-
-    def test_initialises_empty(self):
-        state = _make_state()
-        assert state.players[1].cards_played_this_turn == []
-        assert state.players[2].cards_played_this_turn == []
-
-    def test_cleared_at_start_of_turn(self):
-        """Simulated via direct manipulation — full engine turn tested elsewhere."""
-        state = _make_state()
-        c = _make_card("some_card")
-        state.players[1].cards_played_this_turn.append(c)
-        assert len(state.players[1].cards_played_this_turn) == 1
-        # Simulate what _start_of_turn does
-        state.players[1].cards_played_this_turn = []
-        assert state.players[1].cards_played_this_turn == []
 
 
 # ===========================================================================
@@ -1623,142 +1618,154 @@ class TestEventDispatch:
 
 
 # ===========================================================================
-# SECTION 2 (continued) — 10,000 Year Reunion alternate cost
+# SECTION 5 — ATTACK TARGETS AND LEGAL ACTION GENERATION
 # ===========================================================================
 
+# ---------------------------------------------------------------------------
+# CR 1.4.5a  Attackable targets
+# ---------------------------------------------------------------------------
 
-class Test10000YearReunion:
-    """10,000 Year Reunion alternate cost: remove 3 +1{p} counters from auras.
+class TestAttackableTargets:
+    """CR 1.4.5a: valid attack targets are the opponent's hero, living permanents
+    (allies), and permanents made attackable by an effect (Spectra)."""
 
-    Implementation: engine.engine._10000_year_reunion_effect_cost
-    Registered in EFFECT_COSTS["10000_year_reunion_red"].
-    """
+    def _weapon(self, player):
+        weapon = _make_card("test_sword", types=["Weapon"], base_power=3,
+                            base_functional_text="Once per Turn Action — **Attack**")
+        weapon.owner = player.player_id
+        weapon.controller = player.player_id
+        weapon.zone = "weapon1"
+        weapon.is_public = True
+        player.weapon1.cards.append(weapon)
+        return weapon
 
-    _COST_FN = staticmethod(
-        __import__("engine.engine", fromlist=["EFFECT_COSTS"]).EFFECT_COSTS[
-            "10000_year_reunion_red"
-        ]
-    )
+    # --- _attackable_permanents helper ---
 
-    # ── helpers ──────────────────────────────────────────────────────────────
-
-    def _action(self, alt: bool = True):
-        """Minimal action stub."""
-        class _Act:
-            alternative_cost_used = "remove_p_counters" if alt else None
-        return _Act()
-
-    def _add_aura(self, state: GameState, slug: str, counters: int) -> Card:
-        card = _make_card(slug, types=["Aura"])
-        card.owner = 1
-        card.controller = 1
-        state.players[1].auras.add(card)
-        if counters:
-            state.players[1].counters[(slug, "permanents", "+1{p}")] = counters
-        return card
-
-    # ── normal-cost path (alternative_cost_used is None) ─────────────────────
-
-    def test_normal_cost_path_returns_true_immediately(self):
-        """When normal cost is used, effect-cost function is a no-op and returns True."""
+    def test_no_attackable_permanents_when_none_present(self):
         state = _make_state()
-        action = self._action(alt=False)
-        result = self._COST_FN(state, 1, action, check=True)
-        assert result is True
+        assert _attackable_permanents(state, 1) == []
 
-    def test_normal_cost_path_does_not_touch_counters(self):
+    def test_spectra_aura_is_attackable(self):
         state = _make_state()
-        self._add_aura(state, "some_aura", 2)
-        action = self._action(alt=False)
-        self._COST_FN(state, 1, action, check=False)
-        assert state.players[1].counters[("some_aura", "permanents", "+1{p}")] == 2
+        aura = _make_card("spectral_shield", types=["Aura"], keywords=["Spectra"])
+        aura.owner = 1
+        aura.controller = 1
+        state.players[1].permanents.add(aura)
+        result = _attackable_permanents(state, 1)
+        assert aura in result
 
-    # ── check=True (legality probe) ───────────────────────────────────────────
-
-    def test_check_true_when_exactly_three_counters(self):
+    def test_non_spectra_aura_is_not_attackable(self):
         state = _make_state()
-        self._add_aura(state, "aura_a", 3)
-        action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is True
+        aura = _make_card("plain_aura", types=["Aura"])
+        aura.owner = 1
+        aura.controller = 1
+        state.players[1].permanents.add(aura)
+        assert _attackable_permanents(state, 1) == []
 
-    def test_check_true_when_counters_spread_across_auras(self):
+    def test_ally_is_attackable(self):
         state = _make_state()
-        self._add_aura(state, "aura_a", 1)
-        self._add_aura(state, "aura_b", 1)
-        self._add_aura(state, "aura_c", 1)
-        action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is True
+        ally = _make_card("test_ally", types=["Permanent"], subtypes=["Ally"])
+        ally.owner = 1
+        ally.controller = 1
+        state.players[1].allies.add(ally)
+        result = _attackable_permanents(state, 1)
+        assert ally in result
 
-    def test_check_true_when_more_than_three_counters(self):
+    # --- legal_actions generates targeted attack variants ---
+
+    def test_weapon_attack_offers_spectra_target(self):
+        """When a Spectra aura is in play, ATTACK_WEAPON actions include a
+        targeted variant (target=aura) in addition to the default hero attack."""
         state = _make_state()
-        self._add_aura(state, "aura_a", 5)
-        action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is True
+        state.active_player = 2
+        state.priority_player = 2
+        state.players[2].action_points = 1
+        state.players[2].resources = 0
 
-    def test_check_false_when_no_counters(self):
+        aura = _make_card("spectral_shield", types=["Aura"], keywords=["Spectra"])
+        aura.owner = 1
+        aura.controller = 1
+        state.players[1].permanents.add(aura)
+
+        self._weapon(state.players[2])
+
+        from engine.card import CardDB
+        db = CardDB()
+        acts = legal_actions(state, db)
+        weapon_acts = [a for a in acts if a.type == ActionType.ATTACK_WEAPON]
+        # One default (hero) + one targeted (aura)
+        assert len(weapon_acts) == 2
+        targeted = [a for a in weapon_acts if a.target is not None]
+        assert len(targeted) == 1
+        assert targeted[0].target is aura
+        assert targeted[0].targets == [aura.slug]
+
+    def test_weapon_attack_no_extra_targets_without_spectra(self):
+        """Without any Spectra/Ally permanents, only the default hero attack is offered."""
         state = _make_state()
-        # aura present but zero counters
-        self._add_aura(state, "aura_a", 0)
-        action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is False
+        state.active_player = 2
+        state.priority_player = 2
+        state.players[2].action_points = 1
+        state.players[2].resources = 0
+        self._weapon(state.players[2])
 
-    def test_check_false_when_fewer_than_three_counters(self):
+        from engine.card import CardDB
+        db = CardDB()
+        acts = legal_actions(state, db)
+        weapon_acts = [a for a in acts if a.type == ActionType.ATTACK_WEAPON]
+        assert len(weapon_acts) == 1
+        assert weapon_acts[0].target is None
+
+    def test_attack_card_offers_spectra_target(self):
+        """A PLAY_CARD attack action also generates a targeted variant for a
+        Spectra aura on the board."""
         state = _make_state()
-        self._add_aura(state, "aura_a", 1)
-        self._add_aura(state, "aura_b", 1)
-        action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is False
+        state.active_player = 2
+        state.priority_player = 2
+        state.players[2].action_points = 1
+        state.players[2].resources = 10  # plenty to pay
 
-    def test_check_false_when_no_auras_at_all(self):
+        aura = _make_card("spectral_shield", types=["Aura"], keywords=["Spectra"])
+        aura.owner = 1
+        aura.controller = 1
+        state.players[1].permanents.add(aura)
+
+        attack = _make_card("test_attack", types=["Action", "Attack"], base_power=3, base_cost=0)
+        attack.owner = 2
+        attack.controller = 2
+        state.players[2].hand.add(attack)
+
+        from engine.card import CardDB
+        db = CardDB()
+        acts = legal_actions(state, db)
+        play_attacks = [a for a in acts
+                        if a.type == ActionType.PLAY_CARD and a.card is attack]
+        targeted = [a for a in play_attacks if a.target is not None and a.targets]
+        assert any(a.target is aura for a in targeted)
+
+# ---------------------------------------------------------------------------
+# cards_played_this_turn list — integration with engine
+# ---------------------------------------------------------------------------
+
+class TestCardsPlayedThisTurn:
+    """Verify the tracking list resets each turn and covers both play paths."""
+
+    def test_initialises_empty(self):
         state = _make_state()
-        action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is False
+        assert state.players[1].cards_played_this_turn == []
+        assert state.players[2].cards_played_this_turn == []
 
-    # ── check=False (execution) — counters actually removed ──────────────────
-
-    def test_removes_exactly_three_counters_from_single_aura(self):
+    def test_cleared_at_start_of_turn(self):
+        """Simulated via direct manipulation — full engine turn tested elsewhere."""
         state = _make_state()
-        self._add_aura(state, "aura_a", 5)
-        action = self._action()
-        # agent always picks "aura_a"
-        state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_a")
-        self._COST_FN(state, 1, action, check=False)
-        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 2
+        c = _make_card("some_card")
+        state.players[1].cards_played_this_turn.append(c)
+        assert len(state.players[1].cards_played_this_turn) == 1
+        # Simulate what _start_of_turn does
+        state.players[1].cards_played_this_turn = []
+        assert state.players[1].cards_played_this_turn == []
 
-    def test_removes_counters_spread_across_two_auras(self):
-        state = _make_state()
-        self._add_aura(state, "aura_a", 2)
-        self._add_aura(state, "aura_b", 1)
-        action = self._action()
-        # agent picks: a, a, b
-        state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_b")
-        self._COST_FN(state, 1, action, check=False)
-        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 0
-        assert state.players[1].counters[("aura_b", "permanents", "+1{p}")] == 0
+# ===========================================================================
+# SECTION 6 — PITCHABLE CARD IMPLEMENTATIONS
+# ===========================================================================
 
-    def test_removes_one_counter_per_aura_across_three(self):
-        state = _make_state()
-        self._add_aura(state, "aura_x", 1)
-        self._add_aura(state, "aura_y", 1)
-        self._add_aura(state, "aura_z", 1)
-        action = self._action()
-        state.player_agents[1] = _scripted_agent("aura_x", "aura_y", "aura_z")
-        self._COST_FN(state, 1, action, check=False)
-        for slug in ("aura_x", "aura_y", "aura_z"):
-            assert state.players[1].counters[(slug, "permanents", "+1{p}")] == 0
-
-    def test_check_does_not_remove_counters(self):
-        """check=True must never mutate counters."""
-        state = _make_state()
-        self._add_aura(state, "aura_a", 3)
-        action = self._action()
-        self._COST_FN(state, 1, action, check=True)
-        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 3
-
-    def test_returns_true_after_successful_removal(self):
-        state = _make_state()
-        self._add_aura(state, "aura_a", 3)
-        action = self._action()
-        state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_a")
-        result = self._COST_FN(state, 1, action, check=False)
-        assert result is True
