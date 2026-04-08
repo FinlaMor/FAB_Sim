@@ -39,9 +39,20 @@ def _action_legal_check(state, card, player_id) -> bool:
         if not state.step.endswith('resolution'):
             can_play_or_activate = False
         # 7.6.3a: During resolution, the attacking hero may play/activate an attack action
-        elif 'attack' in card.base_text_box or 'attack' in card.base_functional_text:
+        if 'attack' in card.base_text_box or 'attack' in card.base_functional_text:
             if player_id != state.combat.attacker_id:
                 can_play_or_activate = False
+    
+    # 8.1.1c: Actions have an additional asset cost of one action-point
+    if state.players[player_id].action_points < 1:
+        can_play_or_activate = False
+    
+    # 8.1.1d: Actions that can be 'played as an instant' only require priority.
+    if 'play_as_instant' not in state.effect_manager.continuous_effects:
+        can_play_or_activate = False
+
+    return can_play_or_activate
+
 
 def available_actions(state, player_id):
 
