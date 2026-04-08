@@ -78,7 +78,7 @@ class Action:
     x_value_declared: Optional[int] = None         # X-cost value declared (CR 1.12.2, 5.1.3a)
     is_melded: Optional[bool] = None               # Legacy meld flag (kept for compat)
     meld_side: Optional[str] = None                # Meld side: 'top', 'bottom', 'both', or None (CR 8.3.38)
-    alternate_cost: Optional[list[str]] = None  # Alternate cost names declared by player (CR 5.1.3c)
+    alternate_cost: Optional[dict[str, int]] = None  # Alternate cost names declared by player (CR 5.1.3c)
     additional_costs: Optional[dict[str, int]] = None           # CR 5.1.9: effect-costs have been paid
     life_cost: Optional[int] = None                      # Life cost (CR 1.14.2e)
 
@@ -271,7 +271,9 @@ def _can_afford_action(state: GameState, action: Action) -> bool, dict[str, int]
                         can_afford = True  # mandatory effect-cost for alt cost can't be paid
                     else:
                         can_afford = False
-                    how_afford[f"alternate_cost"] = can_afford
+                    how_afford["alternate_cost"] = can_afford
+
+    can_afford = how_afford['resource_cost'] or how_afford['alternate_cost']
 
     return can_afford, how_afford
 
@@ -586,7 +588,39 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                     if card.is_action and not card.is_attack and player.action_points > 0:
                         action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card)
                         can_pay, how_afford = _can_afford_action(state, action)
-                        if how_afford.get('resources') or how_afford.get('alternate_cost'):
+                        if not can_pay:
+                            continue
+                        if how_afford['resource_cost'] and how_afford['alternate_cost']:
+                            actions.append(action)
+
+                            alt_action = action
+                            setattr(alt_action, 'alternate_cost', {action.card.slug: 1})
+                            actions.append(alt_action)
+
+                        elif how_afford['alternate_cost']:
+                            setattr(action, 'alternate_cost', {action.card.slug: 1})
+                            actions.append(action)
+                        
+                        else:
+                            actions.append(action)
+
+                        if any(how_afford[k] for k in (how_afford.key() or []) if not k in ['resource_cost', 'alternate_cost']):
+                            from engine.card_effects.effect_cost import KEYWORD_COSTS
+                            additional_cost_dict = {}
+                            for keyword, cost_fn in KEYWORD_COSTS.items():
+                                if keyword in ([kw.lower() for kw in (how_afford.keys() or [])]):
+                                    if cost_fn(state, action.player_id, action, check=True):
+                                            additional_cost_dict[keyword] = True
+                            if len(additional_cost_dict.keys()) > 1:
+                                from itertools import combinations as com
+                                key_combos = com([key for key in additional_cost_dict.keys()], len(additional_cost_dict.keys()))
+                                for combo in key_combos:
+                                    for key in combo:
+                                        
+                                        
+                        if how_afford.get('resources'):
+                            actions.append()
+                            how_afford.get('alternate_cost'):
                             if how_afford.get('life', None) is False:
                                 continue  # Can't afford life cost, skip this action
                             for pay in ['resource_cost', 'alternate_cost']:
