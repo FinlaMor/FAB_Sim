@@ -588,6 +588,8 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                     if card.is_action and not card.is_attack and player.action_points > 0:
                         action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card)
                         can_pay, how_afford = _can_afford_action(state, action)
+                        if how_afford.get('life', None) is False:
+                            continue  # Can't afford life cost, skip this action
                         if not can_pay:
                             continue
                         if how_afford['resource_cost'] and how_afford['alternate_cost']:
@@ -604,29 +606,6 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                         else:
                             actions.append(action)
 
-                        if any(how_afford[k] for k in (how_afford.key() or []) if not k in ['resource_cost', 'alternate_cost']):
-                            from engine.card_effects.effect_cost import KEYWORD_COSTS
-                            additional_cost_dict = {}
-                            for keyword, cost_fn in KEYWORD_COSTS.items():
-                                if keyword in ([kw.lower() for kw in (how_afford.keys() or [])]):
-                                    if cost_fn(state, action.player_id, action, check=True):
-                                            additional_cost_dict[keyword] = True
-                            if len(additional_cost_dict.keys()) > 1:
-                                from itertools import combinations as com
-                                key_combos = com([key for key in additional_cost_dict.keys()], len(additional_cost_dict.keys()))
-                                for combo in key_combos:
-                                    for key in combo:
-                                        
-                                        
-                        if how_afford.get('resources'):
-                            actions.append()
-                            how_afford.get('alternate_cost'):
-                            if how_afford.get('life', None) is False:
-                                continue  # Can't afford life cost, skip this action
-                            for pay in ['resource_cost', 'alternate_cost']:
-                                if how_afford.get(pay):
-                                    setattr(action, f"{pay}_cost", )
-                                actions.append(action)
 
         # PLAY_ARSENAL — only face-up (public) cards can be played (CR 3.0.4b, CR 5.1.2b)
         arsenal_card = player.arsenal.top
