@@ -13,7 +13,7 @@ sys.path.insert(0, r"C:\Users\Joseph\Desktop\FAB_Sim")
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, Zone
 from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS, PLAY_TARGET_CONDITIONS, WEAPON_ATTACK_CONDITIONS
-from engine.card_effects.effect_cost import EFFECT_COSTS, _scrap_effect_cost, _beat_chest_effect_cost
+from engine.card_effects.effect_cost import KEYWORD_COSTS, ALTERNATE_COSTS
 
 class ActionType(Enum):
     PASS = "pass"
@@ -78,9 +78,9 @@ class Action:
     x_value_declared: Optional[int] = None         # X-cost value declared (CR 1.12.2, 5.1.3a)
     is_melded: Optional[bool] = None               # Legacy meld flag (kept for compat)
     meld_side: Optional[str] = None                # Meld side: 'top', 'bottom', 'both', or None (CR 8.3.38)
-    alternate_costs: Optional[list[str]] = None  # Alternate cost names declared by player (CR 5.1.3c)
-    alternative_cost_used: Optional[dict[str, int]] = None    # Alternative cost name if used (CR 5.1.3c)
-    additional_costs: Optional[dict[str, bool]] = None           # CR 5.1.9: effect-costs have been paid
+    alternate_cost: Optional[list[str]] = None  # Alternate cost names declared by player (CR 5.1.3c)
+    additional_costs: Optional[dict[str, int]] = None           # CR 5.1.9: effect-costs have been paid
+    life_cost: Optional[int] = None                      # Life cost (CR 1.14.2e)
 
     def __repr__(self):
         parts = [self.type.value]
@@ -203,7 +203,7 @@ def _get_pitch_value(card: Card) -> int:
     return card.pitch or 0
 
 
-def _can_afford_action(state: GameState, action: Action) -> bool:
+def _can_afford_action(state: GameState, action: Action) -> bool, dict[str, int]:
     """Check whether a player can afford all costs of an action.
 
     Mirrors evaluate_play_cost(check=True) in engine.py but lives here to
@@ -215,8 +215,10 @@ def _can_afford_action(state: GameState, action: Action) -> bool:
       2. Life asset-cost (hero activations with life_cost)
       3. Effect-costs: Scrap requires graveyard item/equipment
     """
+    can_afford = True
+    how_afford = {}
     if action.player_id is None:
-        return True
+        return can_afford, how_afford
     player = state.players[action.player_id]
 
     # --- 1. Resource cost ---
@@ -228,52 +230,50 @@ def _can_afford_action(state: GameState, action: Action) -> bool:
         # Fallback to raw card cost if engine not importable (e.g. during early init)
         resource_cost = (action.card.cost or 0) if action.card else 0
 
-    exclude = action.card if action.type in (
-        ActionType.PLAY_CARD, ActionType.PLAY_ATTACK_REACTION,
-        ActionType.PLAY_DEFENSE_REACTION,
-    ) else None
+    exclude = action.card if hasattr(action, 'card') and action.card is not None else None
     chi = getattr(player, 'chi', 0)
     effective_resources = player.resources + chi
     if not can_pay_cost(player.hand.cards, resource_cost, effective_resources, exclude_card=exclude):
-        return False
+        can_afford = False
+    else:
+        can_afford = True
+    how_afford['resources'] = can_afford
+
 
     # --- 2. Life cost (hero activations) ---
-    if action.type == ActionType.ACTIVATE_HERO and player.hero is not None:
-        hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
-        raw_life = hero_cfg.get("life_cost", 0)
-        life_cost = raw_life(player, state) if callable(raw_life) else raw_life
-        life_cost = life_cost if isinstance(life_cost, int) else 0
+    if hasattr(action, 'life_cost')and (action.life_cost or 0) > 0 and player.hero is not None:
+        life_cost = action.life_cost
         if life_cost > 0 and player.health <= life_cost:
-            return False
+            can_afford = False
+        else:
+            can_afford = True
+        how_afford['life'] = can_afford
 
-    # --- 3. Mandatory effect-costs ---
-    if action.type in (ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL, ActionType.PLAY_BANISH):
-        card = action.card
+    # --- 3. effect-costs ---
+    if getattr(action, 'additional_costs', None) is not None:
+        card = getattr(action, 'card', None)
         if card is not None:
-            kws = [k.lower() for k in (card.keywords or [])]
-            if any(k == "scrap" or k.startswith("scrap ") for k in kws):
-                eligible = [
-                    c for c in player.graveyard.cards
-                    if "Item" in (c.types or []) or "Equipment" in (c.types or [])
-                ]
-                if not eligible:
-                    return False  # Scrap cost can't be paid
-            if any(k == "beat chest" or k.startswith("beat chest ") for k in kws):
-                eligible = [
-                    c for c in player.hand.cards
-                    if (c.power or 0) >= 6 and c.slug != card.slug
-                ]
-                if not eligible:
-                    return False  # Beat Chest cost can't be paid
-            # Alternative-cost effect-cost checks (CR 5.1.3c / 5.1.8)
-            alt = getattr(action, 'alternative_cost_used', None)
-            if alt and any(card.slug in c for c in alt.keys()):
-                 if EFFECT_COSTS.get(card.slug) is not None:
-                    cost_fn = EFFECT_COSTS.get(card.slug)
-                    if cost_fn and not cost_fn(state, action, check=True):
-                        return False  # mandatory effect-cost for alt cost can't be paid
+            from engine.card_effects.effect_cost import KEYWORD_COSTS
+            for keyword, cost_fn in KEYWORD_COSTS.items():
+                if keyword in ([kw.lower() for kw in (card.keywords or [])]):
+                    if not cost_fn(state, action.player_id, action, check=True):
+                        can_afford = False
+                    else:
+                        can_afford = True
+                    how_afford[keyword] = can_afford
 
-    return True
+            # Alternative-cost effect-cost checks (CR 5.1.3c / 5.1.8)
+            alt = getattr(action, 'alternative_costs', None)
+            if alt and any(card.slug in c for c in alt.keys()):
+                 if ALTERNATE_COSTS.get(card.slug) is not None:
+                    cost_fn = ALTERNATE_COSTS.get(card.slug)
+                    if cost_fn and cost_fn(state, action, check=True):
+                        can_afford = True  # mandatory effect-cost for alt cost can't be paid
+                    else:
+                        can_afford = False
+                    how_afford[f"alternate_cost"] = can_afford
+
+    return can_afford, how_afford
 
 def _weapon_can_attack(weapon_card) -> bool:
     text = weapon_card.functional_text or ""
@@ -581,13 +581,18 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                         _pa.player_id = pp
                         if _can_afford_action(state, _pa):
                             actions.append(_pa)
-                # Cards with non-resource alternative costs: also emit alt-cost variants
-                if card.slug in EFFECT_COSTS.keys():
-                    _alt_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
-                                        alternative_cost_used="remove_p_counters")
-                    _alt_action.player_id = pp
-                    if _can_afford_action(state, _alt_action):
-                        actions.append(_alt_action)
+                else:
+                    # capture non-attack actions
+                    if card.is_action and not card.is_attack and player.action_points > 0:
+                        action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card)
+                        can_pay, how_afford = _can_afford_action(state, action)
+                        if how_afford.get('resources') or how_afford.get('alternate_cost'):
+                            if how_afford.get('life', None) is False:
+                                continue  # Can't afford life cost, skip this action
+                            for pay in ['resource_cost', 'alternate_cost']:
+                                if how_afford.get(pay):
+                                    setattr(action, f"{pay}_cost", )
+                                actions.append(action)
 
         # PLAY_ARSENAL — only face-up (public) cards can be played (CR 3.0.4b, CR 5.1.2b)
         arsenal_card = player.arsenal.top

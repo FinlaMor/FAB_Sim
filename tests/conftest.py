@@ -25,7 +25,7 @@ def _make_player(pid: int = 1) -> Player:
     return Player(pid, _make_hero(pid))
 
 
-def _mock_agent(state, options, **kwargs):
+def _mock_agent(state, options, context, **kwargs):
     if options:
         return options[0]
     return None

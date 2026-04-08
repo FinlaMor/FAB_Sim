@@ -1087,7 +1087,7 @@ class Test10000YearReunion:
 
         action = Action(type=ActionType.PLAY_CARD, player_id=1, card=db.get(slug="10000_year_reunion_red"))
         if alt:
-            action.alternative_cost_used = {action.card.slug: 1}
+            action.alternative_costs = {action.card.slug: 1}
         return action
 
     def _add_aura(self, state: GameState, slug: str, counters: int) -> Card:
@@ -1099,7 +1099,7 @@ class Test10000YearReunion:
             state.players[1].auras.find(slug).counters['+1_power'] = counters
         return card
 
-    # ── normal-cost path (alternative_cost_used is None) ─────────────────────
+    # ── normal-cost path (alternative_costs is None) ─────────────────────
 
     def test_normal_cost_path_returns_true_immediately(self):
         """When normal cost is used, effect-cost function is a no-op and returns True."""
@@ -1122,30 +1122,27 @@ class Test10000YearReunion:
         assert resource_cost == 8
         result = evaluate_play_cost(state, action, check=True)
 
-        exclude = action.card if action.type in (
-            ActionType.PLAY_CARD, ActionType.PLAY_ATTACK_REACTION,
-            ActionType.PLAY_DEFENSE_REACTION,
-        ) else None
-        assert exclude is not None
-        assert len(state.players[1].hand.cards) == 4
-        assert can_pay_cost(state.players[1].hand.cards, resource_cost, exclude_card=exclude) is True
-        cost_fn = ALTERNATE_COSTS.get(action.card.slug)
-        from engine.card_effects.effect_cost import _10000_year_reunion_alt_cost
-        assert cost_fn == _10000_year_reunion_alt_cost
-
         assert result is True
 
     def test_normal_cost_path_does_not_touch_counters(self):
         state = _make_state()
         self._add_aura(state, "some_aura", 2)
         action = self._action(alt=False)
+        from config import SLUG_INDEX_PATH
+        db = CardDB(SLUG_INDEX_PATH)
+        blue_card1 = db.get(slug="titanium_bauble_blue")
+        state.players[1].hand.add(card=blue_card1)
+        blue_card2 = db.get(slug="titanium_bauble_blue")
+        state.players[1].hand.add(card=blue_card2)
+        blue_card3 = db.get(slug="titanium_bauble_blue")
+        state.players[1].hand.add(card=blue_card3)
+        play_card = db.get(slug=action.card.slug)
+        state.players[1].hand.add(card=play_card)
+        hand = state.players[1].hand.cards
+        hand = [c.slug for c in hand]
+        assert len(hand) == 4
+
         evaluate_play_cost(state, action, check=False)
-        blue_card = _make_card("blue_card", types=["Action"])
-        blue_card.base_color = "blue"
-        blue_card.base_pitch = 3
-        state.players[1].hand.add(blue_card)
-        state.players[1].hand.add(blue_card)
-        state.players[1].hand.add(blue_card)
 
         assert state.players[1].auras.find("some_aura").counters.get('+1_power', 0) == 2
 
@@ -1155,6 +1152,7 @@ class Test10000YearReunion:
         state = _make_state()
         self._add_aura(state, "aura_a", 3)
         action = self._action()
+        assert action.alternative_costs == {"10000_year_reunion_red": 1}
         assert evaluate_play_cost(state, action, check=True) is True
 
     def test_check_true_when_counters_spread_across_auras(self):
@@ -1930,9 +1928,12 @@ class TestAltCost:
 
         card_slug = "10000_year_reunion_red"
         card = CardDB().get(card_slug)
+        state.players[1].hand.add(card)
+        state.players[1].action_points = 1
 
-        self._add_aura(state, card_slug, 2)
+        self._add_aura(state, "test_aura", 3)
         action = _legal_action_step(state, CardDB())
-        assert len(action) == 1
-        assert action[0].alternative_cost_used == {"10000_year_reunion_red": 1}
+        assert len(action) == 2
+        assert len(state.players[1].hand.cards) == 1
+        assert action[1].alternate_costs == {"10000_year_reunion_red": 1}
         

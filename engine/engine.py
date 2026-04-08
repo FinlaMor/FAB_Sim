@@ -11,7 +11,7 @@ from engine.deck import load_deck, create_player
 from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, get_pitchable_cards, can_pay_cost
 from engine.effects import EffectManager
 from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
-from engine.card_effects.effect_cost import EFFECT_COSTS, _scrap_effect_cost, _beat_chest_effect_cost
+from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
 
 def new_game(
         p1_deck_path: Optional[str],
@@ -1519,7 +1519,7 @@ def _calculate_resource_cost(state: GameState, action: Action) -> int:
 
     # CR 5.1.3c: at most one alternative cost may be declared per play — enforced by
     # the Optional[str] field (single value only).  Validate no list was smuggled in.
-    alt = getattr(action, 'alternative_cost_used', None)
+    alt = getattr(action, 'alternative_costs', None)
     assert not isinstance(alt, (list, tuple)), \
         f"CR 5.1.3c: only one alternative cost allowed per action; got {alt!r}"
 
@@ -1583,20 +1583,16 @@ def _pay_effect_costs(state: GameState, action: Action) -> bool:
     if card is None:
         return True
     # Slug-registered effect costs take priority
-    cost_fn = EFFECT_COSTS.get(card.slug)
+    cost_fn = ALTERNATE_COSTS.get(card.slug)
     if cost_fn is not None:
         return cost_fn(state, action.player_id, action)
     # Keyword-based effect costs: Scrap and Beat Chest are additional costs on the card
     player_id = action.player_id
     if player_id is None:
         return True
-    keywords_lower = [k.lower() for k in (card.keywords or [])]
-    if any(k == "scrap" or k.startswith("scrap ") for k in keywords_lower):
-        if not _scrap_effect_cost(state, player_id, action):
-            return False
-    if any(k == "beat chest" or k.startswith("beat chest ") for k in keywords_lower):
-        if not _beat_chest_effect_cost(state, player_id, action):
-            return False
+    for keyword, fn in KEYWORD_COSTS.items():
+        if keyword in (card.keywords or []) and hasattr(action, 'additional_costs') and action.additional_costs.get(keyword):
+            fn(state, player_id, action, check=False)
     return True
 
 
@@ -1622,10 +1618,7 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
         return
 
     # Exclude the card being played from pitch candidates (it's still in hand at this point)
-    exclude = action.card if action.type in (
-        ActionType.PLAY_CARD, ActionType.PLAY_ATTACK_REACTION,
-        ActionType.PLAY_DEFENSE_REACTION,
-    ) else None
+    exclude = action.card if hasattr(action, "card") else None
 
     pitched_slugs: list[str] = []
     while (player.chi if for_chi else player.resources) < needed_cost:
@@ -1700,8 +1693,11 @@ def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
            • check=True evaluates payability without paying
            • check=False pays them (irreversible side-effects happen here)
     """
+
+    can_pay = True
+
     if action.player_id is None:
-        return True
+        return can_pay
     player = state.players[action.player_id]
 
     # --- 1. Resource asset-cost -------------------------------------------
@@ -1709,16 +1705,13 @@ def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
 
     if check:
         # CR 5.1.6a / 1.14.2b: can the player cover the cost via resources + pitch?
-        exclude = action.card if action.type in (
-            ActionType.PLAY_CARD, ActionType.PLAY_ATTACK_REACTION,
-            ActionType.PLAY_DEFENSE_REACTION,
-        ) else None
+        exclude = action.card if hasattr(action, "card") and isinstance(action.card, Card) else None
         chi = getattr(player, 'chi', 0)
         effective_resources = player.resources + chi
-        if effective_resources < resource_cost:
+        if (effective_resources < resource_cost) and not hasattr(action, "alternative_costs"):
             if not can_pay_cost(player.hand.cards, resource_cost,
                                 effective_resources, exclude_card=exclude):
-                return False
+                can_pay = False
     else:
         # CR 1.14.2d: drain chi first, then pitch to cover remainder
         _apply_chi_toward_resources(state, action.player_id, resource_cost)
@@ -1734,33 +1727,27 @@ def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
 
     # --- 3. Life asset-cost (CR 1.14.2e) ------------------------------------
     life_cost: int = 0
-    if action.type == ActionType.ACTIVATE_HERO and player.hero is not None:
-        from engine.card_effects.registry import HERO_ACTIVATION_CONDITIONS
-        hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
-        raw_life = hero_cfg.get("life_cost", 0)
-        _lv = raw_life(player, state) if callable(raw_life) else raw_life
-        life_cost = _lv if isinstance(_lv, int) else 0
-
-    if life_cost > 0:
+    if hasattr(action, "life_cost") and (action.life_cost or 0) > 0 and player.hero is not None:
+        life_cost = action.life_cost
         if check:
             if player.health <= life_cost:  # CR 1.14.2b: must be able to pay in full
-                return False
+                can_pay = False
         else:
             player.health -= life_cost
 
     # --- 4. Effect-costs (CR 5.1.8–5.1.9) ----------------------------------
     if action.type in (ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL, ActionType.PLAY_BANISH):
         card = action.card
-        if hasattr(action, "additional_costs") and any(action.additional_costs.values()): # check for any additional costs declared by keywords
+        if hasattr(action, "additional_costs") and any(c is not None for c in action.additional_costs or []): # check for any additional costs declared by keywords
             from engine.card_effects.registry import KEYWORD_COSTS
             for keyword, fn in KEYWORD_COSTS.items():
                 if keyword in action.additional_costs.keys() and action.additional_costs[keyword]:
                     fn(state, action.player_id, action, check=check)
-        if action.alternative_cost_used and action.alternative_cost_used.get(card.slug, 0) > 0:
+        if getattr(action, 'alternative_costs', None) and action.alternative_costs.get(card.slug, 0) > 0:
             if card is not None:
                 if check:
                     # CR 5.1.8a: verify each effect-cost is resolvable before paying any
-                    cost_fn = EFFECT_COSTS.get(card.slug)
+                    cost_fn = ALTERNATE_COSTS.get(card.slug)
                     if cost_fn is not None:
                         # Registered cost functions support a dry-run check= kwarg if the
                         # function accepts it; otherwise assume payable (optional costs).
@@ -1768,13 +1755,13 @@ def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
                         sig = _ins.signature(cost_fn)
                         if 'check' in sig.parameters:
                             if not cost_fn(state, action.player_id, action, check=True):
-                                return False
+                                can_pay = False
                 else:
                     # Pay effect-costs
                     if not _pay_effect_costs(state, action):
-                        return False
+                        can_pay = False
 
-    return True
+    return can_pay
 
 
 def apply_action(state: GameState, action: Action) -> None:

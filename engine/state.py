@@ -272,8 +272,8 @@ class Player:
         self.auras = SubZoneView(self.permanents, "Aura")
         self.allies = SubZoneView(self.permanents, "Ally")
         self.tokens = SubZoneView(self.permanents, "Token")
-        self.soul = SubZoneView(self.hero_zone, "Soul")
         self.hero_zone = Zone("hero", player_id)
+        self.soul = SubZoneView(self.hero_zone, "Soul")
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
 
         # Hero card setup
