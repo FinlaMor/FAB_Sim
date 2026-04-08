@@ -12,6 +12,7 @@ from enum import Enum
 from typing import Callable, Optional
 from engine.card import Card, CardDB
 from engine.continuous_effects import ContinuousEffectManager
+from engine.effects import EffectManager
 
 
 class Step(Enum):
@@ -246,7 +247,7 @@ class Player:
         self.health: int = hero_card.life or 40
         self.intellect: int = hero_card.intellect or 4
         self.resources: int = 0
-        self.action_points: int = 1
+        self.action_points: int = 0
         self.counters: dict[tuple[str, str, str], int] = {} # e.g {["dawnblade", "weapon", "plus_attack"]:1, ["tectonic_plating", "chest", "minus_defense"]:-1}
 
         # All zones
@@ -645,7 +646,7 @@ class GameState:
     card_db: Optional[object] = None  # CardDB instance for effect/trigger access
     event_manager: EventManager = field(default_factory=EventManager)
     continuous_effect_manager: ContinuousEffectManager = field(default_factory=ContinuousEffectManager)
-    effect_manager: Optional[object] = None  # EffectManager from engine.effects
+    effect_manager: EffectManager = field(default_factory=EffectManager) # EffectManager from engine.effects
     priority_player: int = 1
     consecutive_passes: int = 0
     events_this_turn: set[str] = field(default_factory=set)
