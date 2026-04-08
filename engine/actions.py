@@ -13,7 +13,7 @@ sys.path.insert(0, r"C:\Users\Joseph\Desktop\FAB_Sim")
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, Zone
 from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS, PLAY_TARGET_CONDITIONS, WEAPON_ATTACK_CONDITIONS
-
+from engine.card_effects.effect_cost import EFFECT_COSTS, _scrap_effect_cost, _beat_chest_effect_cost
 
 class ActionType(Enum):
     PASS = "pass"
@@ -78,8 +78,9 @@ class Action:
     x_value_declared: Optional[int] = None         # X-cost value declared (CR 1.12.2, 5.1.3a)
     is_melded: Optional[bool] = None               # Legacy meld flag (kept for compat)
     meld_side: Optional[str] = None                # Meld side: 'top', 'bottom', 'both', or None (CR 8.3.38)
-    alternative_cost_used: Optional[str] = None    # Alternative cost name if used (CR 5.1.3c)
-    additional_cost_paid: bool = False              # CR 5.1.9: effect-costs have been paid
+    alternate_costs: Optional[list[str]] = None  # Alternate cost names declared by player (CR 5.1.3c)
+    alternative_cost_used: Optional[dict[str, int]] = None    # Alternative cost name if used (CR 5.1.3c)
+    additional_costs: Optional[dict[str, bool]] = None           # CR 5.1.9: effect-costs have been paid
 
     def __repr__(self):
         parts = [self.type.value]
@@ -256,17 +257,21 @@ def _can_afford_action(state: GameState, action: Action) -> bool:
                     if "Item" in (c.types or []) or "Equipment" in (c.types or [])
                 ]
                 if not eligible:
-                    return False  # mandatory Scrap cost can't be paid
+                    return False  # Scrap cost can't be paid
+            if any(k == "beat chest" or k.startswith("beat chest ") for k in kws):
+                eligible = [
+                    c for c in player.hand.cards
+                    if (c.power or 0) >= 6 and c.slug != card.slug
+                ]
+                if not eligible:
+                    return False  # Beat Chest cost can't be paid
             # Alternative-cost effect-cost checks (CR 5.1.3c / 5.1.8)
             alt = getattr(action, 'alternative_cost_used', None)
-            if alt == "remove_p_counters":
-                # 10000_year_reunion_red: need ≥3 +1{p} counters across controlled auras
-                total = sum(
-                    player.counters.get((c.slug, "permanents", "+1{p}"), 0)
-                    for c in player.auras.cards
-                )
-                if total < 3:
-                    return False
+            if alt and any(card.slug in c for c in alt.keys()):
+                 if EFFECT_COSTS.get(card.slug) is not None:
+                    cost_fn = EFFECT_COSTS.get(card.slug)
+                    if cost_fn and not cost_fn(state, action, check=True):
+                        return False  # mandatory effect-cost for alt cost can't be paid
 
     return True
 
@@ -577,8 +582,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                         if _can_afford_action(state, _pa):
                             actions.append(_pa)
                 # Cards with non-resource alternative costs: also emit alt-cost variants
-                _ALT_COST_CARDS = {"10000_year_reunion_red"}
-                if card.slug in _ALT_COST_CARDS:
+                if card.slug in EFFECT_COSTS.keys():
                     _alt_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
                                         alternative_cost_used="remove_p_counters")
                     _alt_action.player_id = pp

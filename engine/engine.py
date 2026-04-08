@@ -11,6 +11,7 @@ from engine.deck import load_deck, create_player
 from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, get_pitchable_cards, can_pay_cost
 from engine.effects import EffectManager
 from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
+from engine.card_effects.effect_cost import EFFECT_COSTS, _scrap_effect_cost, _beat_chest_effect_cost
 
 def new_game(
         p1_deck_path: Optional[str],
@@ -1406,6 +1407,27 @@ def get_player_decision(state: GameState, player_id: int, context: str | None = 
     choice = state.player_agents[player_id](state, legal, context=context if context else 'What do you do?')
     if isinstance(choice, Action):
         choice.player_id = player_id
+    
+    if isinstance(choice.card, Card):
+        # Check for additional costs
+        from engine.card_effects.registry import KEYWORD_COSTS
+        if any(kw in (choice.card.keywords or []) for kw in KEYWORD_COSTS):
+            if not hasattr(choice, "additional_costs") or not isinstance(choice.additional_costs, dict):
+                choice.additional_costs = {}
+            for keyword, fn in KEYWORD_COSTS.items():
+                if keyword in (choice.card.keywords or []):
+                    additional_cost_check = fn(state, choice.player_id, choice, check=True)
+                    if additional_cost_check:
+                        additional_cost_choice = state.player_agents[player_id](state, 
+                                                                                [Action(type=ActionType.CHOOSE, card_idx=0), # 0 = don't pay additional cost
+                                                                                 Action(type=ActionType.CHOOSE, card_idx=1)], # 1 = pay additional cost
+                                                            context=f"Additional cost for {keyword} keyword on {choice.card.name}:")
+                        if additional_cost_choice.card_idx == 1:
+                            choice.additional_costs[keyword] = True
+                        else:
+                            choice.additional_costs[keyword] = False
+
+
     return choice
 
 def get_turn_player_choice(state: GameState, context: str) -> int:
@@ -1549,107 +1571,6 @@ def _check_still_legal(state: GameState, action: Action) -> bool:
             return False
     return True
 
-
-# ---------------------------------------------------------------------------
-# Effect-costs (CR 5.1.8–5.1.9)
-# ---------------------------------------------------------------------------
-
-# EFFECT_COSTS: slug -> fn(state, player_id, action) -> bool
-# Returns True if cost successfully paid (or waived), False if unresolvable.
-# Called in apply_action BEFORE _apply_play_card puts the card on the stack.
-EFFECT_COSTS: dict = {}
-
-
-def _10000_year_reunion_effect_cost(state: GameState, player_id: int, action,
-                                    check: bool = False) -> bool:
-    """10,000 Year Reunion alt cost: remove 3 +1{p} counters from controlled auras.
-
-    Only fires when alternative_cost_used == "remove_p_counters".
-    Normal 8{r} payment path returns True immediately (no effect-cost).
-    check=True: verify ≥3 counters exist without removing them.
-    check=False: agent chooses one aura per counter to remove (one at a time, 3 total).
-    """
-    if getattr(action, 'alternative_cost_used', None) != "remove_p_counters":
-        return True  # Normal cost path — no effect-cost applies
-    player = state.players[player_id]
-    total = sum(
-        player.counters.get((c.slug, "permanents", "+1{p}"), 0)
-        for c in player.auras.cards
-    )
-    if total < 3:
-        return False
-    if not check:
-        from engine.card_effects.keywords import _ask_player
-        remaining = 3
-        while remaining > 0:
-            eligible = [
-                c for c in player.auras.cards
-                if player.counters.get((c.slug, "permanents", "+1{p}"), 0) > 0
-            ]
-            if not eligible:
-                break
-            pick = _ask_player(
-                state, player_id, [c.slug for c in eligible],
-                context=f"10,000 Year Reunion: choose an aura to remove a +1{{p}} counter from ({remaining} remaining)",
-            )
-            chosen = next((c for c in eligible if c.slug == str(pick)), eligible[0])
-            key = (chosen.slug, "permanents", "+1{p}")
-            player.counters[key] = player.counters.get(key, 0) - 1
-            remaining -= 1
-    return True
-
-
-EFFECT_COSTS["10000_year_reunion_red"] = _10000_year_reunion_effect_cost
-
-
-def _scrap_effect_cost(state: GameState, player_id: int, action) -> bool:
-    """Scrap (CR 8.3.32): optional additional cost — banish an item or equipment from graveyard."""
-    from engine.card_effects.keywords import _ask_player
-    player = state.players[player_id]
-    eligible = [
-        c for c in player.graveyard.cards
-        if any(t in (c.types or []) for t in ("Item", "Equipment"))
-    ]
-    if not eligible:
-        return True  # optional — nothing to banish, cost waived
-    choice = _ask_player(state, player_id, [True, False],
-                         context="Scrap: banish an item/equipment from your graveyard as additional cost?")
-    if not choice:
-        return True  # player declined — cost is optional
-    pick = _ask_player(state, player_id, [c.slug for c in eligible],
-                       context="Choose item or equipment to banish for Scrap")
-    target = player.graveyard.find(str(pick)) if pick is not None else None
-    if target:
-        from engine.card_effects.keywords import banish_card
-        player.graveyard.remove(target)
-        banish_card(state, player, target, face_up=True)
-    action.additional_cost_paid = True
-    return True
-
-
-def _beat_chest_effect_cost(state: GameState, player_id: int, action) -> bool:
-    """Beat Chest (CR 8.3.33): optional additional cost — discard a card with 6+ power from hand."""
-    from engine.card_effects.keywords import _ask_player
-    player = state.players[player_id]
-    card = action.card
-    eligible = [
-        c for c in player.hand.cards
-        if (c.power or 0) >= 6 and c.slug != (card.slug if card else None)
-    ]
-    if not eligible:
-        return True  # optional — nothing eligible, cost waived
-    choice = _ask_player(state, player_id, [True, False],
-                         context="Beat Chest: discard a card with 6+ power as additional cost?")
-    if not choice:
-        return True  # player declined
-    pick = _ask_player(state, player_id, [c.slug for c in eligible],
-                       context="Choose a card with 6+ power to discard for Beat Chest")
-    target = player.hand.find(str(pick)) if pick is not None else None
-    if target:
-        player.hand.remove(target)
-        player.graveyard.add(target)
-    action.additional_cost_paid = True
-    return True
 
 
 def _pay_effect_costs(state: GameState, action: Action) -> bool:
@@ -1830,33 +1751,28 @@ def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
     # --- 4. Effect-costs (CR 5.1.8–5.1.9) ----------------------------------
     if action.type in (ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL, ActionType.PLAY_BANISH):
         card = action.card
-        if card is not None:
-            if check:
-                # CR 5.1.8a: verify each effect-cost is resolvable before paying any
-                cost_fn = EFFECT_COSTS.get(card.slug)
-                if cost_fn is not None:
-                    # Registered cost functions support a dry-run check= kwarg if the
-                    # function accepts it; otherwise assume payable (optional costs).
-                    import inspect as _ins
-                    sig = _ins.signature(cost_fn)
-                    if 'check' in sig.parameters:
-                        if not cost_fn(state, action.player_id, action, check=True):
-                            return False
-                # Keyword effect-costs: Scrap requires graveyard item/equipment;
-                # Beat Chest requires a 6+ power card in hand.
-                kws = [k.lower() for k in (card.keywords or [])]
-                if any(k == "scrap" or k.startswith("scrap ") for k in kws):
-                    eligible = [
-                        c for c in player.graveyard.cards
-                        if "Item" in (c.types or []) or "Equipment" in (c.types or [])
-                    ]
-                    if not eligible:
-                        return False  # mandatory Scrap with no valid target
-                # Beat Chest is optional — never blocks legality
-            else:
-                # Pay effect-costs
-                if not _pay_effect_costs(state, action):
-                    return False
+        if hasattr(action, "additional_costs") and any(action.additional_costs.values()): # check for any additional costs declared by keywords
+            from engine.card_effects.registry import KEYWORD_COSTS
+            for keyword, fn in KEYWORD_COSTS.items():
+                if keyword in action.additional_costs.keys() and action.additional_costs[keyword]:
+                    fn(state, action.player_id, action, check=check)
+        if action.alternative_cost_used and action.alternative_cost_used.get(card.slug, 0) > 0:
+            if card is not None:
+                if check:
+                    # CR 5.1.8a: verify each effect-cost is resolvable before paying any
+                    cost_fn = EFFECT_COSTS.get(card.slug)
+                    if cost_fn is not None:
+                        # Registered cost functions support a dry-run check= kwarg if the
+                        # function accepts it; otherwise assume payable (optional costs).
+                        import inspect as _ins
+                        sig = _ins.signature(cost_fn)
+                        if 'check' in sig.parameters:
+                            if not cost_fn(state, action.player_id, action, check=True):
+                                return False
+                else:
+                    # Pay effect-costs
+                    if not _pay_effect_costs(state, action):
+                        return False
 
     return True
 

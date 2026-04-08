@@ -272,7 +272,7 @@ class Player:
         self.auras = SubZoneView(self.permanents, "Aura")
         self.allies = SubZoneView(self.permanents, "Ally")
         self.tokens = SubZoneView(self.permanents, "Token")
-        self.soul = SubZoneView(self.permanents, "Soul")
+        self.soul = SubZoneView(self.hero_zone, "Soul")
         self.hero_zone = Zone("hero", player_id)
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
 
@@ -293,7 +293,7 @@ class Player:
         # CR 5.1.6a: cost modifiers are now stored in GameState.continuous_effect_manager
         # as ContinuousEffect objects with prop='cost'. See ContinuousEffectManager.add_cost_modifier().
 
-        # CR 1.14.2a: Chi resource pool (Draconic class).  Chi is drained before
+        # CR 1.14.2a: Chi resource pool.  Chi is drained before
         # floating resources when paying costs (CR 1.14.2d).
         self.chi: int = 0
 

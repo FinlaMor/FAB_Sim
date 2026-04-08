@@ -95,7 +95,7 @@ from engine.state import (
 )
 from tests.conftest import _make_card, _make_player, _make_state, _mock_agent
 from engine.engine import _pitch_for_cost, evaluate_play_cost, _apply_play_card, _calculate_resource_cost
-
+from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
 
 # ---------------------------------------------------------------------------
 # Shared helpers
@@ -1066,14 +1066,14 @@ class TestTranscend:
 
 
 class Test10000YearReunion:
-    """10,000 Year Reunion alternate cost: remove 3 +1{p} counters from auras.
+    """10,000 Year Reunion alternate cost: remove 3 +1_power counters from auras.
 
-    Implementation: engine.engine._10000_year_reunion_effect_cost
-    Registered in EFFECT_COSTS["10000_year_reunion_red"].
+    Implementation: engine.card_effects.effect_cost._10000_year_reunion_effect_cost
+    Registered in ALTERNATE_COSTS["10000_year_reunion_red"].
     """
 
     _COST_FN = staticmethod(
-        __import__("engine.engine", fromlist=["EFFECT_COSTS"]).EFFECT_COSTS[
+        __import__("engine.card_effects.effect_cost", fromlist=["ALTERNATE_COSTS"]).ALTERNATE_COSTS[
             "10000_year_reunion_red"
         ]
     )
@@ -1082,9 +1082,13 @@ class Test10000YearReunion:
 
     def _action(self, alt: bool = True):
         """Minimal action stub."""
-        class _Act:
-            alternative_cost_used = "remove_p_counters" if alt else None
-        return _Act()
+        from config import SLUG_INDEX_PATH
+        db = CardDB(SLUG_INDEX_PATH)
+
+        action = Action(type=ActionType.PLAY_CARD, player_id=1, card=db.get(slug="10000_year_reunion_red"))
+        if alt:
+            action.alternative_cost_used = {action.card.slug: 1}
+        return action
 
     def _add_aura(self, state: GameState, slug: str, counters: int) -> Card:
         card = _make_card(slug, types=["Aura"])
@@ -1092,7 +1096,7 @@ class Test10000YearReunion:
         card.controller = 1
         state.players[1].auras.add(card)
         if counters:
-            state.players[1].counters[(slug, "permanents", "+1{p}")] = counters
+            state.players[1].auras.find(slug).counters['+1_power'] = counters
         return card
 
     # ── normal-cost path (alternative_cost_used is None) ─────────────────────
@@ -1101,15 +1105,49 @@ class Test10000YearReunion:
         """When normal cost is used, effect-cost function is a no-op and returns True."""
         state = _make_state()
         action = self._action(alt=False)
-        result = self._COST_FN(state, 1, action, check=True)
+        from config import SLUG_INDEX_PATH
+        db = CardDB(SLUG_INDEX_PATH)
+        blue_card1 = db.get(slug="titanium_bauble_blue")
+        state.players[1].hand.add(card=blue_card1)
+        blue_card2 = db.get(slug="titanium_bauble_blue")
+        state.players[1].hand.add(card=blue_card2)
+        blue_card3 = db.get(slug="titanium_bauble_blue")
+        state.players[1].hand.add(card=blue_card3)
+        play_card = db.get(slug=action.card.slug)
+        state.players[1].hand.add(card=play_card)
+        hand = state.players[1].hand.cards
+        hand = [c.slug for c in hand]
+        assert len(hand) == 4
+        resource_cost = _calculate_resource_cost(state, action)
+        assert resource_cost == 8
+        result = evaluate_play_cost(state, action, check=True)
+
+        exclude = action.card if action.type in (
+            ActionType.PLAY_CARD, ActionType.PLAY_ATTACK_REACTION,
+            ActionType.PLAY_DEFENSE_REACTION,
+        ) else None
+        assert exclude is not None
+        assert len(state.players[1].hand.cards) == 4
+        assert can_pay_cost(state.players[1].hand.cards, resource_cost, exclude_card=exclude) is True
+        cost_fn = ALTERNATE_COSTS.get(action.card.slug)
+        from engine.card_effects.effect_cost import _10000_year_reunion_alt_cost
+        assert cost_fn == _10000_year_reunion_alt_cost
+
         assert result is True
 
     def test_normal_cost_path_does_not_touch_counters(self):
         state = _make_state()
         self._add_aura(state, "some_aura", 2)
         action = self._action(alt=False)
-        self._COST_FN(state, 1, action, check=False)
-        assert state.players[1].counters[("some_aura", "permanents", "+1{p}")] == 2
+        evaluate_play_cost(state, action, check=False)
+        blue_card = _make_card("blue_card", types=["Action"])
+        blue_card.base_color = "blue"
+        blue_card.base_pitch = 3
+        state.players[1].hand.add(blue_card)
+        state.players[1].hand.add(blue_card)
+        state.players[1].hand.add(blue_card)
+
+        assert state.players[1].auras.find("some_aura").counters.get('+1_power', 0) == 2
 
     # ── check=True (legality probe) ───────────────────────────────────────────
 
@@ -1117,7 +1155,7 @@ class Test10000YearReunion:
         state = _make_state()
         self._add_aura(state, "aura_a", 3)
         action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is True
+        assert evaluate_play_cost(state, action, check=True) is True
 
     def test_check_true_when_counters_spread_across_auras(self):
         state = _make_state()
@@ -1125,32 +1163,36 @@ class Test10000YearReunion:
         self._add_aura(state, "aura_b", 1)
         self._add_aura(state, "aura_c", 1)
         action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is True
+        assert evaluate_play_cost(state, action, check=True) is True
 
     def test_check_true_when_more_than_three_counters(self):
         state = _make_state()
         self._add_aura(state, "aura_a", 5)
         action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is True
+        assert evaluate_play_cost(state, action, check=True) is True
 
     def test_check_false_when_no_counters(self):
         state = _make_state()
         # aura present but zero counters
         self._add_aura(state, "aura_a", 0)
         action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is False
+
+        from engine.card_effects.effect_cost import _10000_year_reunion_alt_cost
+        assert _10000_year_reunion_alt_cost(state, 1, action, check=True) is False
+
+        assert evaluate_play_cost(state, action, check=True) is False
 
     def test_check_false_when_fewer_than_three_counters(self):
         state = _make_state()
         self._add_aura(state, "aura_a", 1)
         self._add_aura(state, "aura_b", 1)
         action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is False
+        assert evaluate_play_cost(state, action, check=True) is False
 
     def test_check_false_when_no_auras_at_all(self):
         state = _make_state()
         action = self._action()
-        assert self._COST_FN(state, 1, action, check=True) is False
+        assert evaluate_play_cost(state, action, check=True) is False
 
     # ── check=False (execution) — counters actually removed ──────────────────
 
@@ -1160,8 +1202,8 @@ class Test10000YearReunion:
         action = self._action()
         # agent always picks "aura_a"
         state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_a")
-        self._COST_FN(state, 1, action, check=False)
-        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 2
+        evaluate_play_cost(state, action, check=False)
+        assert state.players[1].auras.find("aura_a").counters.get('+1_power', 0) == 2
 
     def test_removes_counters_spread_across_two_auras(self):
         state = _make_state()
@@ -1170,9 +1212,9 @@ class Test10000YearReunion:
         action = self._action()
         # agent picks: a, a, b
         state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_b")
-        self._COST_FN(state, 1, action, check=False)
-        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 0
-        assert state.players[1].counters[("aura_b", "permanents", "+1{p}")] == 0
+        evaluate_play_cost(state, action, check=False)
+        assert state.players[1].auras.find("aura_a").counters.get('+1_power', 0) == 0
+        assert state.players[1].auras.find("aura_b").counters.get('+1_power', 0) == 0
 
     def test_removes_one_counter_per_aura_across_three(self):
         state = _make_state()
@@ -1181,24 +1223,24 @@ class Test10000YearReunion:
         self._add_aura(state, "aura_z", 1)
         action = self._action()
         state.player_agents[1] = _scripted_agent("aura_x", "aura_y", "aura_z")
-        self._COST_FN(state, 1, action, check=False)
+        evaluate_play_cost(state, action, check=False)
         for slug in ("aura_x", "aura_y", "aura_z"):
-            assert state.players[1].counters[(slug, "permanents", "+1{p}")] == 0
+            assert state.players[1].auras.find(slug).counters.get('+1_power', 0) == 0
 
     def test_check_does_not_remove_counters(self):
         """check=True must never mutate counters."""
         state = _make_state()
         self._add_aura(state, "aura_a", 3)
         action = self._action()
-        self._COST_FN(state, 1, action, check=True)
-        assert state.players[1].counters[("aura_a", "permanents", "+1{p}")] == 3
+        evaluate_play_cost(state, action, check=True)
+        assert state.players[1].auras.find("aura_a").counters.get('+1_power', 0) == 3
 
     def test_returns_true_after_successful_removal(self):
         state = _make_state()
         self._add_aura(state, "aura_a", 3)
         action = self._action()
         state.player_agents[1] = _scripted_agent("aura_a", "aura_a", "aura_a")
-        result = self._COST_FN(state, 1, action, check=False)
+        result = evaluate_play_cost(state, action, check=False)
         assert result is True
 
 # ---------------------------------------------------------------------------
@@ -1871,4 +1913,26 @@ def test_mult_cost_modifiers():
         play_card.base_cost = cost
 
         assert mng.recalculate(state, play_card, 'cost', cost, Action(ActionType.PLAY_CARD, 1, play_card)) == 4
-    # def test_alternative_cost():
+
+class TestAltCost:
+
+    def _add_aura(self, state: GameState, slug: str, counters: int) -> Card:
+        card = _make_card(slug, types=["Aura"])
+        card.owner = 1
+        card.controller = 1
+        state.players[1].auras.add(card)
+        if counters:
+            state.players[1].counters[(slug, "permanents", "+1_power")] = counters
+        return card
+
+    def test_alternative_cost(self):
+        state = _make_state()
+
+        card_slug = "10000_year_reunion_red"
+        card = CardDB().get(card_slug)
+
+        self._add_aura(state, card_slug, 2)
+        action = _legal_action_step(state, CardDB())
+        assert len(action) == 1
+        assert action[0].alternative_cost_used == {"10000_year_reunion_red": 1}
+        
