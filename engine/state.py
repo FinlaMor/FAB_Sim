@@ -247,9 +247,6 @@ class Player:
         self.intellect: int = hero_card.intellect or 4
         self.resources: int = 0
         self.action_points: int = 1
-        self.weapon_exhausted: bool = False
-        self.weapon_power_bonus: int = 0
-        self.hero_power_exhausted: bool = False
         self.counters: dict[tuple[str, str, str], int] = {} # e.g {["dawnblade", "weapon", "plus_attack"]:1, ["tectonic_plating", "chest", "minus_defense"]:-1}
 
         # All zones
@@ -275,20 +272,19 @@ class Player:
         self.hero_zone = Zone("hero", player_id)
         self.soul = SubZoneView(self.hero_zone, "Soul")
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
-
+        self.pitch_history = list[Card] = []
         # Hero card setup
-        hero_card.zone = "hero"
         hero_card.owner = player_id
         hero_card.controller = player_id
-        hero_card.is_public = True
-        self.hero_zone.cards.append(hero_card)
+        self.hero_zone.add(hero_card)
 
         # Turn tracking
         self.arsenal_limit: int = 1
-        self.current_turn_effects: list[str] = []
+        self.current_turn_counters: list[str] = []
         self.next_turn_effects: list[str] = []
         self.class_counters: dict[str, int] = {}
         self.allies_exhausted: list[bool] = []
+        self.current_turn_effect: list[str] = []
 
         # CR 5.1.6a: cost modifiers are now stored in GameState.continuous_effect_manager
         # as ContinuousEffect objects with prop='cost'. See ContinuousEffectManager.add_cost_modifier().
@@ -326,6 +322,30 @@ class Player:
         cards = []
         for z in zones:
             cards.extend(c for c in z.cards if c.is_public)
+        return cards
+
+    @property
+    def playable_cards(self) -> list[Card]:
+        zones = self.all_zones()
+        cards = []
+        for z in zones:
+            cards.extend(c for c in z.cards if c.playable)
+        return cards
+    
+    @property
+    def activatable_cards(self) -> list[Card]:
+        zones = self.all_zones()
+        cards = []
+        for z in zones:
+            cards.extend(c for c in z.cards if c.has_activated_ability)
+        return cards
+
+    @property
+    def defendable_cards(self) -> list[Card]:
+        zones = self.all_zones()
+        cards = []
+        for z in zones:
+            cards.extend(c for c in z.cards if c.has_defense)
         return cards
 
     @property
@@ -622,7 +642,7 @@ class GameState:
     consecutive_passes: int = 0
     events_this_turn: set[str] = field(default_factory=set)
     chain_links: list[ChainLink] = field(default_factory=list)
-    pitch_history: dict[int, dict[int, list[str]]] = field(default_factory=lambda: {1: {}, 2: {}})  # {player_id: {turn: [slug, ...]}}
+    pitch_history: dict[int, dict[int, list[Card]]] = field(default_factory=lambda: {1: {}, 2: {}})  # {player_id: {turn: [slug, ...]}}
     # Stack zone (CR 3.0.1): LIFO; Zone tracks which cards are on the stack;
     # stack_entries holds the parallel metadata (player_id, from_arsenal).
     stack: Zone = field(default_factory=lambda: Zone("stack"))

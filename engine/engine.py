@@ -21,18 +21,10 @@ def new_game(
         card_db: CardDB,
         p1_seed: Optional[int] = None,
         p2_seed: Optional[int] = None,
-    debug_file: Optional[str] = None,
     max_turns: int = 200,
 ) -> GameState:
     """Create a new game state with the given deck paths and card database."""
     agents = {1: p1_agent, 2: p2_agent}
-
-    if debug_file:
-        environ['debug_file'] = debug_file
-        environ['debug'] = 'True'
-        print(f'DEBUG ACTIVE')
-    else:
-        environ.setdefault('debug', 'False')
 
     if sum([x is None for x in (p1_deck_path, p2_deck_path)]) == 2:
         raise ValueError("At least one deck path must be provided.")
@@ -44,9 +36,7 @@ def new_game(
         p1_deck_path = p2_deck_path if p1_deck_path is None else p1_deck_path
         p2_deck_path = p1_deck_path if p2_deck_path is None else p2_deck_path
 
-    # Start of Game
-    ## Reveal Heroes - for future code, reveal hero cards to both players then they decide on which cards to include in deck.
-    ## For now, pre-sideboard decks in txt files.
+    # Start of Game CR 4.1
 
     # Initialize event manager and effect manager
     event_mngr = EventManager()
@@ -58,8 +48,11 @@ def new_game(
     p1 = create_player(p1_deck, player_id=1, card_db=card_db, seed=p1_seed)
     p2 = create_player(p2_deck, player_id=2, card_db=card_db, seed=p2_seed)
 
-    ## Player is selected to decide who goes first
-    # Use a seeded RNG for reproducibility when seeds are provided (P3-6)
+    ## CR 4.1.2 Reveal Heroes - for future code, reveal hero cards to both players then they decide on which cards to include in deck.
+    ## For now, pre-sideboard decks in txt files.
+
+    ## CR 4.1.3: Player is selected to decide who goes first
+    # Use a seeded RNG for reproducibility when seeds are provided
     import numpy.random as _npr
     _coin_seed = (p1_seed or 0) ^ (p2_seed or 0) ^ 0xFAB
     _coin_rng = _npr.RandomState(_coin_seed)
@@ -87,28 +80,43 @@ def new_game(
     # One permanent listener is cheaper than registering/deregistering per combat.
     _setup_static_ability_listeners(state)
 
-    # Player that won coin flip decides who goes first (only once at game start)
+    # Player that won coin flip decides who goes first (once at game start)
     if state.step == Step.BEGIN_GAME:
         first_player_chose = get_turn_player_choice(state, 'Who goes first?')
-        if environ['debug'] == 'True':
-            with open(environ['debug_file'], 'a') as f:
-                f.write(f'\nplayer {first_player} chose {first_player_chose}\n')
-
         state.active_player = first_player_chose
         state.priority_player = first_player_chose
         state.step = Step.START_PHASE  # Advance out of BEGIN_GAME so prompt never repeats
 
-    # Draw opening hands
-    _draw_cards(p1, p1.intellect)
-    _draw_cards(p2, p2.intellect)
+    # CR 4.1.4: Players choose arena cards. Placeholder for future implementation.
+    # For now, the deck txt files are pre-sideboarded at 5/6 arena cards.
+
+    # CR 4.1.5: Players choose deck cards. Placeholder for future implementation.
+    # For now, the deck txt files are pre-sideboarded at 60 deck cards.
 
     # Register triggers and prevention effects for all public cards (hero, equipment, weapons)
     for player_id in state.players:
         for card in state.players[player_id].public_cards:
             register_card_triggers(card, event_mngr)
             effect_mngr.register_prevention_effects(card, state)
-        # Register passive hero triggers from HERO_TRIGGERS (B2/B3)
+        # Register passive hero triggers from HERO_TRIGGERS
         register_hero_triggers(state.players[player_id].hero, state.players[player_id], event_mngr)
+
+    # CR 4.1.5b: Check metastatic abilities for heroes that allows deck cards to start in
+    # a different zone ie Fai's pheonix flame, or Dash IE's item.
+
+    # CR 4.1.6: All cards not chosen are put in inventory. Not applicable yet.
+    # All cards start in inventory "zone" by default
+
+    # CR 4.1.7: Decks presented to opponent for shuffling. Not applicable.
+
+    # CR 4.1.8: Cards are equipped. Any cards to be put in different zones are put there. "start of game" event fires.
+    # Start of game event — no priority
+    event_mngr.emit('start_of_game', state)
+    _resolve_all_triggers(state)
+
+    # CR 4.1.9: Both players draw up to their intellect and the first-turn player begins their first turn.
+    _draw_cards(p1, p1.intellect)
+    _draw_cards(p2, p2.intellect)
 
     # 9.3.3: global listener — when a marked hero is hit, remove marked condition.
     # Registered AFTER card triggers so on-hit effects (e.g. Mark of the Black Widow)
@@ -123,59 +131,15 @@ def new_game(
 
     event_mngr.register('hit', _clear_marked_on_hit)
 
-    # Scan all deck cards for Transcend keyword; if found, register a blue-card-played
-    # hook so effect_transcend() can check whether to flip the card to hand.
-    _setup_transcend_hook_if_needed(state, event_mngr)
-
-    # 4.1.8: start of game event — no priority (4.1.1)
-    event_mngr.emit('start_of_game', state)
-    _resolve_all_triggers(state)
-
     # Run the game loop
     _game_loop(state)
 
     return state
 
-
-def _setup_transcend_hook_if_needed(state: GameState, event_mngr: EventManager) -> None:
-    """Scan all deck cards for the Transcend keyword.
-    If any player's deck contains a Transcend card, register a single global
-    'on_play' listener that sets 'blue_card_played_this_turn' in current_turn_effects
-    whenever a blue (pitch=3) card is played.  This flag is what Transcend checks.
-    """
-    has_transcend = False
-    for player in state.players.values():
-        for card in player.deck.cards:
-            if "Transcend" in (card.keywords or []):
-                has_transcend = True
-                break
-        if has_transcend:
-            break
-
-    if not has_transcend:
-        return
-
-    def _blue_card_played_hook(event, game_state):
-        card = event.data.get('card') if isinstance(event.data, dict) else None
-        if card is None:
-            return
-        # Check pitch value: blue cards pitch for 3
-        if (card.base_pitch or 0) != 3:
-            return
-        pid = getattr(card, 'controller', None) or getattr(card, 'owner', None)
-        if pid is None or pid not in game_state.players:
-            return
-        player = game_state.players[pid]
-        if 'blue_card_played_this_turn' not in player.current_turn_effects:
-            player.current_turn_effects.append('blue_card_played_this_turn')
-
-    event_mngr.register('on_play', _blue_card_played_hook)
-
-
 def _end_game_on_turn_cap(state: GameState) -> None:
     """Terminate a game that has reached its configured turn cap.
 
-    Winner is determined by life total; equal life totals are recorded as a draw.
+    Winner is determined by life total if one player has 30 more life than another; <30 life difference is recorded as a draw.
     """
     p1_life = state.players[1].health
     p2_life = state.players[2].health
@@ -202,7 +166,6 @@ def _game_loop(state: GameState) -> None:
 
     while not state.done:
         phase = state._next_phase
-        # Prevent pathological long games from generating runaway data volume.
         if phase == "start_of_turn" and state.turn_number >= state.max_turns:
             _end_game_on_turn_cap(state)
             break
@@ -261,6 +224,27 @@ def check_state_based_actions(state: GameState) -> bool:
 
     return False
 
+def start_of_turn_refresh_player(state: GameState, playerid: int):
+    """Restore player defaults for assets, once-per-turn effects, etc.
+    """
+    player = state.players[playerid]
+
+    for card in player.arena_cards:
+        if getattr(card, 'has_once_per_turn_limit'):
+            setattr(card, 'activations', 1)
+        if getattr(card, 'has_twice_per_turn_limit'):
+            setattr(card, 'activations', 2)
+        if getattr(card, 'has_thrice_per_turn_limit'):
+            setattr(card, 'activations', 3)
+            
+    setattr(player, 'resources', 0)
+    setattr(player, 'chi', 0)
+    setattr(player, 'action_points', 0)
+
+    assert len(player.pitch.cards) == 0  # pitched cards already moved to deck bottom in end phase
+
+    
+
 # ---------------------------------------------------------------------------
 # Start Phase (4.2) — no priority (4.2.1)
 # ---------------------------------------------------------------------------
@@ -269,51 +253,30 @@ def _start_of_turn_phase(state: GameState) -> None:
     """Start Phase (4.2) — reset per-turn state, emit start_of_turn."""
 
     state.individual_turns += 1
-    state.turn_number = (state.individual_turns - 1) // 2
+    state.turn_number = (state.individual_turns - 1) // 2 # Turn 0 is drastically different from the rest of the game since BOTH players draw up at end phase.
     state.events_this_turn = set()
     player = state.active()
 
-    player.weapon_exhausted = False
-    player.weapon_power_bonus = 0
-    player.hero_power_exhausted = False
-    player.resources = 0
-    assert len(player.pitch.cards) == 0  # pitched cards already moved to deck bottom in end phase
+    # Refresh all X-per-turn activations for each player. Set assets to 0.
+    start_of_turn_refresh_player(state, 1)
+    start_of_turn_refresh_player(state, 2)
 
     # Rotate turn effects
     player.current_turn_effects = player.next_turn_effects[:]
     player.next_turn_effects = []
 
-    # Reset ally exhaustion
-    player.allies_exhausted = [False] * len(player.allies.cards)
-
     # Clear equipment-defended tracking (safety net)
     player.equipment_defended_this_turn = []
-
-    # Reset card.exhausted for all equipment in arena (covers "once per turn" and {t}-cost instants)
-    for _zone in (player.head, player.chest, player.arms, player.legs):
-        for _card in _zone.cards:
-            _card.exhausted = False
-    for _card in player.weapon.cards:
-        _card.exhausted = False
 
     # Clear combat chain link history
     state.chain_links = []
 
-    # Clear per-chain-link hit-tracking counters (mask_of_momentum streak etc.)
-    for _key in [k for k in player.class_counters if k.startswith("current_link_hit")]:
-        del player.class_counters[_key]
-
-    # Clear per-turn class counter flags
-    player.class_counters.pop("charged_this_turn", None)
-    player.class_counters.pop("boosted_this_turn", None)
+    # Clear current turn counters
+    state.active().current_turn_counters = []
+    state.inactive().current_turn_counters = []
 
     # Clear cards played this turn
     player.cards_played_this_turn = []
-
-    if environ['debug'] == 'True':
-        import json
-        with open(environ['debug_file'], 'a') as f:
-            f.write(f'Start of turn {state.turn_number}: {json.dumps(state.to_dict())}\n')
 
     # 4.2.2: "effects that last until the 'start of turn' end" before the event fires
     state.effect_manager.clear_start_of_turn_effects()  # CR 4.2.2: remove end_of_next_turn ContinuousEffects
@@ -725,9 +688,11 @@ def _end_phase_iter(state: GameState) -> None:
     # bottom, which matters for long games where the deck cycles back around.
     for pid in state.players:
         p = state.players[pid]
+        state.pitch_history[pid][state.turn_number] = list(state.players[pid].pitch.cards)
         while p.pitch.cards:
             if len(p.pitch.cards) == 1:
                 card = p.pitch.cards.pop(0)
+                p.pitch_history.append(card)
                 p.deck.add_bottom(card)
             else:
                 options = [Action(type=ActionType.CHOOSE, card=c) for c in p.pitch.cards]
@@ -737,6 +702,7 @@ def _end_phase_iter(state: GameState) -> None:
                 card = choice.card
                 if card is None:
                     card = p.pitch.cards[0]
+                p.pitch_history.append(card)
                 p.pitch.cards.remove(card)
                 p.deck.add_bottom(card)
     _resolve_all_triggers(state)
@@ -754,6 +720,7 @@ def _end_phase_iter(state: GameState) -> None:
     for pid in state.players:
         state.players[pid].action_points = 0
         state.players[pid].resources = 0
+        state.players[pid].chi = 0
     _resolve_all_triggers(state)
     if state.done:
         return
