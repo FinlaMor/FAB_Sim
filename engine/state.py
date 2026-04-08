@@ -339,6 +339,14 @@ class Player:
         for z in zones:
             cards.extend(c for c in z.cards if c.has_activated_ability)
         return cards
+    
+    @property
+    def all_cards(self) -> list[Card]:
+        zones = self.all_zones()
+        cards = []
+        for z in zones:
+            cards.extend(z.cards)
+        return cards
 
     @property
     def defendable_cards(self) -> list[Card]:
