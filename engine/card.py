@@ -44,30 +44,66 @@ def _derive_category(raw: dict) -> str:
 class Card:
     # Required fields (no defaults)
     slug: str
-    name: str
 
-    # Stats
-    types: list[str] = field(default_factory=list)
-    subtypes: list[str] = field(default_factory=list)
-    supertypes: list[str] = field(default_factory=list)
-    keywords: list[str] = field(default_factory=list)
-    category: str = "deck"
+# "Raw" fields are derived directly from the database values for the card.
+# Immutable once loaded
+    raw_name: Optional[str] = None
+    raw_pitch: Optional[int] = None
+    raw_cost: Optional[int] = None
+    raw_power: Optional[int] = None
+    raw_defense: Optional[int] = None
+    raw_health: Optional[int] = None
+    raw_intelligence: Optional[int] = None
+    raw_arcane: Optional[int] = None
+    raw_color: Optional[str] = None
+    raw_types: Optional[list[str]] = None
+    raw_text_box: str = ""
+    raw_subtypes: Optional[list[str]] = None
+    raw_card_keyworda: Optional[list[str]] = None
+    raw_functional_text: Optional[str] = None
+    raw_type_text: Optional[str] = None
+    raw_classes: Optional[list[str]] = None
+    raw_legal_heroes: Optional[list[str]] = None
+    raw_legal_formats: Optional[list[str]] = None
+    raw_played_horizontally: Optional[bool] = None
+
+# 'Base' characteristics can be changed by the effects of card is they specify 'base'
+# Only fields without a 'base' value are legal_heroes, legal_formats, and played_horizontally
+    base_name = Optional[str] = None
     base_pitch: Optional[int] = None
     base_cost: Optional[int] = None
+    base_x_cost: Optional[int] = None
     base_power: Optional[int] = None
     base_defense: Optional[int] = None
-    base_life: Optional[int] = None
-    base_intellect: Optional[int] = None
-    base_arcane_damage: Optional[int] = None
+    base_health: Optional[int] = None
+    base_intelligence: Optional[int] = None
+    base_arcane: Optional[int] = None
     base_color: Optional[str] = None
+    base_types: Optional[list[str]] = None
     base_text_box: str = ""
-    base_functional_text: str = ""
-    activation_cost: Optional[int] = None  # For weapon/equipment activated abilities
+    base_subtypes: Optional[list[str]] = None
+    base_card_keyworda: Optional[list[str]] = None
+    base_functional_text: Optional[str] = None
+    base_type_text: Optional[str] = None
+    base_classes: Optional[list[str]] = None
+    
+    # Characteristics that are calculated or parsed from the 'raw' fields
+    category: Optional[str] = None
+    raw_playable: bool = False # Immutable. True if card isinherently playable from hand/arsenal without continuous effects.
+    raw_activatable: bool = False # Immutable. True if card inherently has activated abilities without continuous effects.
+    activation_cost: Optional[int] = None  
     abilities_and_effects: list[str] = field(default_factory=list)  # From slug_index
     effects: list[tuple[str, function]] = field(default_factory=list)
     counters: dict[str, int] = field(default_factory=dict)  # Card-specific counters
     object_id: int = field(default_factory=lambda: next(_CARD_OBJECT_ID_COUNTER))
     last_known_state: Optional[dict] = field(default=None, repr=False)
+    life_cost: Optional[int] = None  # For cards with life payment costs (e.g. "Pay 1 life")
+    chi_cost: Optional[int] = None
+    activation_conditions: Optional[bool] = None
+    play_conditions: Optional[bool] = None
+    alternate_cost: Optional[bool] = None
+    mandatory_additional_costs: Optional[bool] = None
+    optional_additional_costs: Optional[bool] = None
 
     # Zone tracking
     zone: str = "inventory"
@@ -78,6 +114,10 @@ class Card:
 
     # State
     tapped: bool = False
+    base_activations: Optional[int] = None
+    activations: Optional[int] = None
+    playable: bool = False  # Runtime flag for whether the card is currently playable (subject to continuous effects)
+    activatable: bool = False  # Runtime flag for whether the card's activated abilities are currently usable
     exhausted: bool = False
     face_down: bool = False  # CR 8.5.24: face-down = private, face-up = public
     cards_underneath: list = field(default_factory=list)  # Cards placed "under" this card (Mechanologist)
@@ -90,6 +130,7 @@ class Card:
     has_action_activation: bool = False
     has_instant_activation: bool = False
     has_attack_reaction_activation: bool = False
+    has_defense_reaction_activation: bool = False
     has_non_resource_activation_cost: bool = False
     has_conditional_activation: bool = False
     # Triggered abilities (CR 5.4.6)
@@ -105,12 +146,12 @@ class Card:
     has_continuous_buff: bool = False
     has_replacement_effect: bool = False
     has_prevention_effect: bool = False
-    # Targeting requirements (CR 1.4, Gap #2 fix - Round 9)
+    # Targeting requirements (CR 1.4)
     requires_target: bool = False
     can_target_hero: bool = False
     can_target_attack: bool = False
     can_target_permanent: bool = False
-    # Multi-ability decomposition (Gap #3 fix - Round 9)
+    # Multi-ability decomposition
     has_multiple_ability_types: bool = False
     ability_type_count: int = 0  # Count of distinct ability types (0-3)
     # Meld side tracking (CR 8.3.38): set by engine when the card is played
@@ -171,12 +212,12 @@ class Card:
         return val
     
     @property
-    def life(self):
-        if self.base_life is None:
+    def health(self):
+        if self.base_health is None:
             return None
-        val = self.base_life
-        for func in [x[1] for x in self.effects if x[0] == 'base_life']:
-            val = func(self.base_life)
+        val = self.base_health
+        for func in [x[1] for x in self.effects if x[0] == 'base_health']:
+            val = func(self.base_health)
         return val
     
     @property
@@ -443,44 +484,40 @@ class CardDB:
         raw = self._by_slug[resolved]
         slug = resolved  # use canonical slug
 
-        raw_defense = raw.get("defense")
-        defense_val = _int_or_none(raw_defense)
+        card = Card(slug=slug)
 
-        raw_pitch = raw.get("pitch")
-        pitch_val = _int_or_none(raw_pitch)
-        # Ensure pitch is at least 0 for arithmetic safety
-        if pitch_val is None:
-            pitch_val = 0
-
-        raw_cost = raw.get("cost")
-        cost_val = _int_or_none(raw_cost)
-
-        raw_power = raw.get("power")
-        power_val = _int_or_none(raw_power)
-        life_val = _int_or_none(raw.get("health"))
-        intellect_val = _int_or_none(raw.get("intelligence"))
-        arcane_val = _int_or_none(raw.get("arcane"))
-
-        types = raw.get("types") or []
-        subtypes_list = raw.get("subtypes") or []
-        supertypes_list = raw.get("supertypes") or []
-        keywords = raw.get("card_keywords") or raw.get("keywords") or []
-        functional_text = raw.get("functional_text") or ""
-        abilities_list = raw.get("abilities_and_effects") or []
+        # Generate 'raw' card values
+        for kw, value in raw.items():
+            if value.isnumeric():
+                setattr(card, f'raw_{kw}', _int_or_none(value))
+            elif value.strip().lower() in ['true', 'false']:
+                setattr(card, f'raw_{kw}', bool(value))
+            else:
+                setattr(card, f'raw_{kw}', value)
         
+        # Generate 'base' card values
+        for kw, value in raw.items():
+            if kw in ['legal_heroes', 'legal_formats', 'played_horizontally']:
+                continue
+            if value.isnumeric():
+                setattr(card, f'base_{kw}', _int_or_none(value))
+            elif value.strip().lower() in ['true', 'false']:
+                setattr(card, f'base_{kw}', bool(value))
+            else:
+                setattr(card, f'base_{kw}', value)
+
         # Parse activation cost from abilities (e.g., "Once per Turn Action - {r}{r}" -> cost=2)
-        activation_cost_val = None
-        if abilities_list:
+        abilities_list = getattr(card, 'raw_functional_text', '').split(r"\n\n")
+        if abilities_list != '':
             import re
             for ability in abilities_list:
                 # Match patterns like "{r}", "{r}{r}", "{r}{r}{r}" for resource cost
                 match = re.search(r'\{([rR])\}', ability)
                 if match:
                     # Count all {r} occurrences
-                    activation_cost_val = ability.count('{r}') + ability.count('{R}')
+                    card.activation_cost = ability.count('{r}') + ability.count('{R}')
                     break
 
-        # Parse ability structure flags (Gap #1 fix - Round 9)
         import re
         ability_flags = {
             'has_activated_ability': False,
@@ -512,19 +549,22 @@ class CardDB:
         # Parse from abilities_and_effects list (type indicators)
         for ability_type in abilities_list:
             if ability_type:
-                ability_flags['has_activated_ability'] = True
-                if 'Once per Turn' in ability_type:
-                    ability_flags['has_once_per_turn_limit'] = True
-                if 'Action' in ability_type and 'Reaction' not in ability_type:
-                    ability_flags['has_action_activation'] = True
-                if 'Instant' in ability_type:
-                    ability_flags['has_instant_activation'] = True
-                if 'Attack Reaction' in ability_type or 'Defense Reaction' in ability_type:
-                    ability_flags['has_attack_reaction_activation'] = True
+                setattr(card,'has_activated_ability', True)
+                for text in ['per turn', 'action', 'instant', 'attack reaction', 'defense reaction']:
+                    if text == 'per turn' and text in ability_type.lower():
+                        num = 1 if 'once per turn' in ability_type.lower() else None
+                        num = 2 if 'twice per turn' in ability_type.lower() else num
+                        num = 3 if 'thrice per turn' in ability_type.lower() else num
+                        card.base_activations = num
+                        card.activations = num
+                        card.has_once_per_turn_limit = True
+                    else:
+                        if text in ability_type.lower():
+                            setattr(card, f'has_{text.replace(' ', '_')}_activation', True)
         
         # Parse from functional_text (detailed ability patterns)
-        if functional_text:
-            func_lower = functional_text.lower()
+        if card.raw_functional_text:
+            func_lower = card.raw_functional_text.lower()
             
             # Non-resource activation costs (Round 9 fix - comprehensive)
             # Includes: destroy, discard, remove/banish, life payment, Gold tokens, counter removal
@@ -540,7 +580,7 @@ class CardDB:
             ]
             if any(re.search(pattern, func_lower) for pattern in non_resource_patterns):
                 if any(sep in func_lower for sep in [' - ', ': ', ',then', 'additional cost']):  # In activation cost section
-                    ability_flags['has_non_resource_activation_cost'] = True
+                    setattr(card, 'has_non_resource_activation_cost', True)
             
             # Triggered abilities (CR 5.4.6) - refined pattern to reduce false positives
             trigger_pattern = r'\b(when|whenever|at the)\b'
@@ -548,10 +588,10 @@ class CardDB:
                 # Exclude "when you play this" patterns (those are play-static, not triggered)
                 # Use word boundary to avoid excluding "when you play this and..." compound triggers
                 if not re.search(r'\b(when you play this|this is played)\b(?!\s+and)', func_lower):
-                    ability_flags['has_triggered_ability'] = True
+                    setattr(card, 'has_triggered_ability', True)
                     
                     if 'when this hits' in func_lower or 'when this attacks' in func_lower:
-                        ability_flags['has_on_hit_trigger'] = True
+                        setattr(card,'has_on_hit_trigger', True)
                     
                     # ETB triggers - expanded patterns (Round 9 fix)
                     etb_patterns = [
@@ -561,30 +601,30 @@ class CardDB:
                         r'as (this|~|[A-Z][a-z]+) enters',  # "As ~ enters" or "As Name enters"
                     ]
                     if any(re.search(pattern, func_lower) for pattern in etb_patterns):
-                        ability_flags['has_etb_trigger'] = True
+                        setattr(card,'has_etb_trigger', True)
                     
                     if 'leaves the arena' in func_lower or 'this leaves' in func_lower:
-                        ability_flags['has_leaves_arena_trigger'] = True
+                        setattr(card,'has_leaves_arena_trigger', True)
                     if 'start of' in func_lower and 'turn' in func_lower:
-                        ability_flags['has_start_of_turn_trigger'] = True
+                        setattr(card,'has_start_of_turn_trigger', True)
                     if 'end of' in func_lower and 'turn' in func_lower:
-                        ability_flags['has_end_of_turn_trigger'] = True
+                        setattr(card,'has_end_of_turn_trigger', True)
             
             # Static abilities (CR 5.4)
             if 'while ' in func_lower:
-                ability_flags['has_static_ability'] = True
-                ability_flags['has_while_condition'] = True
+                setattr(card, 'has_static_ability', True)
+                setattr(card,'has_while_condition', True)
             
             # Continuous buffs (modify other cards)
             if re.search(r'(attack|card|equipment|weapon)s? (you control|get|gain)', func_lower):
-                ability_flags['has_static_ability'] = True
-                ability_flags['has_continuous_buff'] = True
+                setattr(card,'has_static_ability', True)
+                setattr(card,'has_continuous_buff', True)
             
             # Replacement/prevention effects (CR 6.4)
             if 'instead' in func_lower or 'prevent' in func_lower:
-                ability_flags['has_replacement_effect'] = True
+                setattr(card,'has_replacement_effect', True)
                 if 'prevent' in func_lower and 'damage' in func_lower:
-                    ability_flags['has_prevention_effect'] = True
+                    setattr(card,'has_prevention_effect', True)
             
             # Targeting requirements (CR 1.4, 1.8.5, Round 9 Gap #2 fix - refined)
             # CR 1.8.5: "target [DESCRIPTION]" or "[DESCRIPTION] (target/targets)"
@@ -608,12 +648,12 @@ class CardDB:
                         has_valid_targeting = True
             
             if has_valid_targeting:
-                ability_flags['requires_target'] = True
+                setattr(card,'requires_target', True)
                 
                 # Determine target types from functional text (flexible patterns allow modifiers)
                 # Hero/player targeting: "target [modifiers] hero/player"
                 if re.search(r'target\b.*?\b(hero|player)\b', func_lower):
-                    ability_flags['can_target_hero'] = True
+                    setattr(card,'can_target_hero', True)
                 
                 # Attack targeting: "target [modifiers] attack" but NOT verb forms like "may attack"
                 # Exclude verb patterns: "may attack", "can attack", "to attack", "cannot attack"
@@ -625,11 +665,11 @@ class CardDB:
                         context = attack_match.group(1)  # Text between "target" and "attack"
                         # If context ends with modal verbs, "attack" is likely a verb
                         if not re.search(r'\b(may|can|must|to|cannot|should|will|would)\s+$', context):
-                            ability_flags['can_target_attack'] = True
+                            setattr(card,'can_target_attack', True)
                 
                 # Permanent targeting: "target [modifiers] card/equipment/weapon/ally/permanent/aura"
                 if re.search(r'target\b.*?\b(card|equipment|weapon|ally|permanent|aura)\b', func_lower):
-                    ability_flags['can_target_permanent'] = True
+                    setattr(card,'can_target_permanent', True)
                 
                 # Support CR 1.8.5 alternate format: "[DESCRIPTION] (target)"
                 # Look for object types before "(target)" or "(targets)"
@@ -638,68 +678,23 @@ class CardDB:
                     if target_phrase:
                         phrase = target_phrase.group(1)
                         if re.search(r'\b(hero|player)\b', phrase):
-                            ability_flags['can_target_hero'] = True
+                            setattr(card,'can_target_hero', True)
                         if re.search(r'\battack\b', phrase):
-                            ability_flags['can_target_attack'] = True
+                            setattr(card,'can_target_attack', True)
                         if re.search(r'\b(card|equipment|weapon|ally|permanent|aura)\b', phrase):
-                            ability_flags['can_target_permanent'] = True
+                            setattr(card,'can_target_permanent', True)
         
-        # Multi-ability decomposition (Gap #3 fix - Round 9)
-        ability_type_count = 0
-        if ability_flags['has_activated_ability']:
-            ability_type_count += 1
-        if ability_flags['has_triggered_ability']:
-            ability_type_count += 1
-        if ability_flags['has_static_ability']:
-            ability_type_count += 1
-        ability_flags['ability_type_count'] = ability_type_count
-        ability_flags['has_multiple_ability_types'] = ability_type_count >= 2
+        # Multi-ability decomposition
+        ability_count = 0
+        for ability in abilities_list:
+            if ":" in ability:
+                ability_count += 1
+        
+        setattr(card,'ability_type_count', ability_count)
+        setattr(card, 'has_multiple_ability_types', ability_count >= 2)
 
-        # Derive color: prefer slug suffix (authoritative), fall back to pitch value.
-        # Single-version cards may have a pitch value without a color suffix in their slug.
-        color: Optional[str] = None
-        if slug.endswith("_red"):
-            color = "red"
-        elif slug.endswith("_yellow"):
-            color = "yellow"
-        elif slug.endswith("_blue"):
-            color = "blue"
-        elif pitch_val == 1:
-            color = "red"
-        elif pitch_val == 2:
-            color = "yellow"
-        elif pitch_val == 3:
-            color = "blue"
 
-        return Card(
-            slug=slug,
-            name=raw.get("name", slug),
-            types=if_not_none(types),
-            subtypes=if_not_none(subtypes_list),
-            supertypes=if_not_none(supertypes_list),
-            keywords=if_not_none(keywords),
-            category=if_not_none(_derive_category(raw)),
-            base_pitch=if_not_none(pitch_val),
-            base_cost=if_not_none(cost_val),
-            base_power=if_not_none(power_val),
-            base_defense=if_not_none(defense_val),
-            base_life=if_not_none(life_val),
-            base_intellect=if_not_none(intellect_val),
-            base_arcane_damage=if_not_none(arcane_val),
-            base_color=if_not_none(color),
-            base_text_box=if_not_none(raw.get("text") or ""),
-            base_functional_text=if_not_none(functional_text),
-            activation_cost=if_not_none(activation_cost_val),
-            abilities_and_effects=if_not_none(abilities_list),
-            zone="inventory",
-            prev_zone="",
-            owner=0,
-            controller=None,
-            is_public=False,
-            tapped=False,
-            exhausted=False,
-            **ability_flags,
-        )
+        return card
 
     def __contains__(self, slug: str) -> bool:
         return slug in self._by_slug

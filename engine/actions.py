@@ -17,23 +17,24 @@ from engine.card_effects.effect_cost import KEYWORD_COSTS, ALTERNATE_COSTS
 
 class ActionType(Enum):
     PASS = "pass"
-    ATTACK_WEAPON = "attack_weapon"
+    # ATTACK_WEAPON = "attack_weapon"
     PLAY_CARD = "play_card"
-    PLAY_ARSENAL = "play_arsenal"
+    # PLAY_ARSENAL = "play_arsenal"
     DEFEND_CARDS = "defend_cards"
-    DEFEND_EQUIPMENT = "defend_equipment"
+    # DEFEND_EQUIPMENT = "defend_equipment"
     STORE_ARSENAL = "store_arsenal"
-    PLAY_ATTACK_REACTION = "play_attack_reaction"
-    PLAY_DEFENSE_REACTION = "play_defense_reaction"
-    REACTION_PASS = "reaction_pass"
-    ACTIVATE_ITEM = "activate_item"
-    ACTIVATE_ALLY = "activate_ally"
+    # PLAY_ATTACK_REACTION = "play_attack_reaction"
+    # PLAY_DEFENSE_REACTION = "play_defense_reaction"
+    # REACTION_PASS = "reaction_pass"
+    ACTIVATE_CARD = "activate_card"
+    # ACTIVATE_ITEM = "activate_item"
+    # ACTIVATE_ALLY = "activate_ally"
     ATTACK_ALLY = "attack_ally"
-    ACTIVATE_EQUIPMENT = "activate_equipment"
-    ACTIVATE_WEAPON = "activate_weapon"
-    ACTIVATE_HERO = "activate_hero"
-    DISCARD_ACTIVATE = "discard_activate"
-    PLAY_BANISH = "play_banish"  # Play a card from the banish zone
+    # ACTIVATE_EQUIPMENT = "activate_equipment"
+    # ACTIVATE_WEAPON = "activate_weapon"
+    # ACTIVATE_HERO = "activate_hero"
+    # DISCARD_ACTIVATE = "discard_activate"
+    # PLAY_BANISH = "play_banish"  # Play a card from the banish zone
     CHOOSE = "choose"              # Generic choice action for multi-option prompts (e.g. modal abilities, target selection)
     PITCH_CARD = "pitch_card"       # Pay for a cost by pitching a hand card
     PITCH_TO_DECK = "pitch_to_deck"  # End-phase ordering: place pitched card to bottom of deck
@@ -44,7 +45,7 @@ class Action:
     type: ActionType
     player_id: Optional[int] = None
     card: Optional[Card] = None
-    card_idx: Optional[int] = None
+    choose_index: Optional[int] = None
     pitch_cards: list[str] = field(default_factory=list)
     from_arsenal: bool = False
     slot: Optional[str] = None
@@ -54,38 +55,23 @@ class Action:
     attack_source: Optional[Card] = None      # Source object for attack proxies/layers (CR 1.4.3, 1.4.4)
     is_attack_proxy: Optional[bool] = None    # Attack represented by a proxy object
     is_attack_layer: Optional[bool] = None    # Attack represented by a non-card layer
-    
-    # Game context (added Round 3 for CR compliance)
-    phase: Optional[str] = None              # "start", "action", "end" (CR 4.0.3)
-    step: Optional[Step] = None              # Current game step (CR 4.0.4)
-    chain_link_number: Optional[int] = None  # Position in combat chain, 0 if none (CR 7.0.3b)
-    priority_player: Optional[int] = None    # Which player has priority (CR 1.10)
-    
-    # Action economy (added Round 5 for CR 4.3.2, 5.1.6-7, 8.1.1c, 8.3.5)
-    action_points_available: Optional[int] = None  # Current action points (CR 4.3.2)
-    resources_available: Optional[int] = None      # Floating resources (CR 5.1.6)
-    action_cost: Optional[int] = None              # Action point cost (CR 8.1.1c)
-    resource_cost: Optional[int] = None            # Resource cost (CR 5.1.7)
     has_go_again: Optional[bool] = None            # Action chaining (CR 8.3.5)
-    
-    # Action speed (added Round 6 for CR 8.1.1a/b/c, 8.1.6a)
-    is_instant_speed: Optional[bool] = None        # Card/ability is Instant type (CR 8.1.6a)
-    is_action_speed: Optional[bool] = None         # Card/ability is Action type (CR 8.1.1a/b)
     played_as_instant: Optional[bool] = None       # Action played "as though instant" (CR 8.1.1d)
     
-    # Modal and optional choices (added Round 9 for CR 1.7.5, 5.1.3 - Gap #1 fix +10 points)
     modes_selected: Optional[list[int]] = None     # Indices of selected modes (CR 1.7.5)
     x_value_declared: Optional[int] = None         # X-cost value declared (CR 1.12.2, 5.1.3a)
     is_melded: Optional[bool] = None               # Legacy meld flag (kept for compat)
     meld_side: Optional[str] = None                # Meld side: 'top', 'bottom', 'both', or None (CR 8.3.38)
-    alternate_cost: Optional[dict[str, int]] = None  # Alternate cost names declared by player (CR 5.1.3c)
-    additional_costs: Optional[dict[str, int]] = None           # CR 5.1.9: effect-costs have been paid
+
+    resource_cost: Optional[int] = None
+    alternate_cost: Optional[bool] = None  # Alternate cost names declared by player (CR 5.1.3c)
+    additional_costs: Optional[bool] = None           # CR 5.1.9: effect-costs have been paid
     life_cost: Optional[int] = None                      # Life cost (CR 1.14.2e)
 
     def __repr__(self):
         parts = [self.type.value]
-        if self.card_idx is not None:
-            parts.append(f"card_index={self.card_idx}")
+        if self.choose_index is not None:
+            parts.append(f"choose_index={self.choose_index}")
         if self.card is not None:
             parts.append(f"card={self.card}")
         if self.pitch_cards:
