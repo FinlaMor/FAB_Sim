@@ -59,7 +59,7 @@ class Card:
     raw_types: Optional[list[str]] = None
     raw_text_box: str = ""
     raw_subtypes: Optional[list[str]] = None
-    raw_card_keyworda: Optional[list[str]] = None
+    raw_card_keywords: Optional[list[str]] = None
     raw_functional_text: Optional[str] = None
     raw_type_text: Optional[str] = None
     raw_classes: Optional[list[str]] = None
@@ -69,23 +69,43 @@ class Card:
 
 # 'Base' characteristics can be changed by the effects of card is they specify 'base'
 # Only fields without a 'base' value are legal_heroes, legal_formats, and played_horizontally
-    base_name = Optional[str] = None
-    base_pitch: Optional[int] = None
-    base_cost: Optional[int] = None
+    base_name = Optional[str] = raw_name
+    base_pitch: Optional[int] = raw_pitch
+    base_cost: Optional[int] = raw_cost
     base_x_cost: Optional[int] = None
-    base_power: Optional[int] = None
-    base_defense: Optional[int] = None
-    base_health: Optional[int] = None
-    base_intelligence: Optional[int] = None
-    base_arcane: Optional[int] = None
-    base_color: Optional[str] = None
-    base_types: list[str]
-    base_text_box: str = ""
-    base_subtypes: list[str]
-    base_card_keywords: Optional[list[str]] = None
-    base_functional_text: Optional[str] = None
-    base_type_text: Optional[str] = None
-    base_classes: Optional[list[str]] = None
+    base_power: Optional[int] = raw_power
+    base_defense: Optional[int] = raw_defense
+    base_life: Optional[int] = raw_health
+    base_intellect: Optional[int] = raw_intelligence
+    base_arcane: Optional[int] = raw_arcane
+    base_color: Optional[str] = raw_color
+    base_types: list[str] = raw_types or []
+    base_text_box: str = raw_text_box
+    base_subtypes: Optional[list[str]] = raw_subtypes
+    base_keywords: Optional[list[str]] = raw_card_keywords
+    base_functional_text: Optional[str] = raw_functional_text
+    base_type_text: Optional[str] = raw_type_text
+    base_classes: Optional[list[str]] = raw_classes
+
+# These characteristics are the ones most likely to be modified by effects or events.
+    name = Optional[str] = base_name
+    pitch: Optional[int] = base_pitch
+    cost: Optional[int] = base_cost
+    x_cost: Optional[int] = base_x_cost
+    power: Optional[int] = base_power
+    defense: Optional[int] = base_defense
+    health: Optional[int] = base_life
+    intellect: Optional[int] = base_intellect
+    arcane: Optional[int] = base_arcane
+    color: Optional[str] = base_color
+    types: list[str] = base_types
+    text_box: str = base_text_box
+    subtypes: list[str] = base_subtypes or []
+    keywords: Optional[list[str]] = base_keywords
+    functional_text: Optional[str] = base_functional_text
+    type_text: Optional[str] = base_type_text
+    classes: Optional[list[str]] = base_classes
+
     
     # Characteristics that are calculated or parsed from the 'raw' fields
     category: Optional[str] = None
@@ -157,28 +177,9 @@ class Card:
     # Meld side tracking (CR 8.3.38): set by engine when the card is played
     meld_side: Optional[str] = None  # 'top', 'bottom', 'both', or None
 
-    # ---------------------------------------------------------------------------
-    # Computed properties
-    # ---------------------------------------------------------------------------
-    @property
-    def pitch(self):
-        if self.base_pitch is None:
-            return None
-        val = self.base_pitch
-        for func in [x[1] for x in self.effects if x[0] == 'base_pitch']:
-            val = func(self.base_pitch)
-        return val
-
-
-    @property
-    def cost(self):
-        if self.base_cost is None:
-            return None
-
-        val = self.base_cost
-        for func in [x[1] for x in self.effects if x[0] == 'base_cost']:
-            val = func(self.base_cost)
-        return val
+# ===============================================================================
+# Computed Methods
+# ===============================================================================
 
     @property
     def meld_cost(self):
@@ -192,78 +193,6 @@ class Card:
         # Meld doubles printed cost first, then applies the same net modifier.
         modifier_delta = single_side_cost - self.base_cost
         return (self.base_cost * 2) + modifier_delta
-
-    @property
-    def power(self):
-        if self.base_power is None:
-            return None
-        val = self.base_power
-        for func in [x[1] for x in self.effects if x[0] == 'base_power']:
-            val = func(self.base_power)
-        return val
-
-    @property
-    def defense(self):
-        if self.base_defense is None:
-            return None
-        val = self.base_defense
-        for func in [x[1] for x in self.effects if x[0] == 'base_defense']:
-            val = func(self.base_defense)
-        return val
-    
-    @property
-    def health(self):
-        if self.base_health is None:
-            return None
-        val = self.base_health
-        for func in [x[1] for x in self.effects if x[0] == 'base_health']:
-            val = func(self.base_health)
-        return val
-
-    @property
-    def intelligence(self):
-        if self.base_intelligence is None:
-            return None
-        val = self.base_intelligence
-        for func in [x[1] for x in self.effects if x[0] == 'base_intelligence']:
-            val = func(self.base_intelligence)
-        return val
-    
-    @property
-    def color(self):
-        if self.base_color is None:
-            return None
-        val = self.base_color
-        for func in [x[1] for x in self.effects if x[0] == 'base_color']:
-            val = func(self.base_color)
-        return val
-
-    @property
-    def text_box(self):
-        if self.base_text_box is None:
-            return None
-        val = self.base_text_box
-        for func in [x[1] for x in self.effects if x[0] == 'base_text_box']:
-            val = func(self.base_text_box)
-        return val
-    
-    @property
-    def functional_text(self):
-        if self.base_functional_text is None:
-            return None
-        val = self.base_functional_text
-        for func in [x[1] for x in self.effects if x[0] == 'base_functional_text']:
-            val = func(self.base_functional_text)
-        return val
-    
-    @property
-    def arcane_damage(self):
-        if self.base_arcane_damage is None:
-            return None
-        val = self.base_arcane_damage
-        for func in [x[1] for x in self.effects if x[0] == 'base_arcane_damage']:
-            val = func(self.base_arcane_damage)
-        return val
 
     @property
     def has_defense(self) -> bool:
@@ -351,7 +280,7 @@ class Card:
         return {
             'object_id': self.object_id,
             'slug': self.slug,
-            'name': self.base_name,
+            'name': self.name,
             'zone': self.zone,
             'prev_zone': self.prev_zone,
             'owner': self.owner,
@@ -365,12 +294,11 @@ class Card:
             'power': self.power,
             'defense': self.defense,
             'health': self.health,
-            'intelligence': self.intelligence,
-            'arcane_damage': self.arcane_damage,
+            'intelligence': self.intellect,
+            'arcane_damage': self.arcane,
             'types': list(self.base_types),
-            'subtypes': list(self.base_subtypes),
-            'supertypes': list(self.base_supertypes),
-            'keywords': list(self.keywords),
+            'subtypes': list(self.subtypes),
+            'keywords': list(self.keywords or []),
             'counters': dict(self.counters),
         }
 

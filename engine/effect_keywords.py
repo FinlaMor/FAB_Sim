@@ -10,6 +10,8 @@ Replacement effects are applied via `state.effect_manager.apply_replacements`
 before execution. Triggers are emitted via `state.event_manager.emit` after.
 
 CR 8.5 Effect Keywords implemented here
+
+Event object expected attributes per apply_replacements:
 """
 from __future__ import annotations
 
@@ -33,7 +35,7 @@ class BanishEvent:
     """
     type: str = "banish"
     card: Card = None
-    source_player_id: int = None      # who is doing the banishing
+    source_player_id: int = None      # who is causing the banishing
     target_player_id: int = None      # who owns the card being banished
     origin_zone: str = None           # where the card came from ("hand", "deck", etc.)
     destination: str = "banished"     # replacement effects can change this
@@ -65,9 +67,9 @@ def banish(state: GameState, card: Card, source_player_id: int,
         return event
 
     # execute the move
-    player = state.players[target_player_id]
-    getattr(player, origin_zone).remove(card)
-    player.banished.append(card)          # or move to event.destination if redirected
+    player = state.players[event.target_player_id]
+    getattr(player, event.origin_zone).remove(card)
+    getattr(player, event.destination).add(card)
 
     # trigger: "when a card is banished" listeners fire after (CR 8.5.1)
     state.event_manager.emit(event, state)
