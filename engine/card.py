@@ -79,10 +79,10 @@ class Card:
     base_intelligence: Optional[int] = None
     base_arcane: Optional[int] = None
     base_color: Optional[str] = None
-    base_types: Optional[list[str]] = None
+    base_types: list[str]
     base_text_box: str = ""
-    base_subtypes: Optional[list[str]] = None
-    base_card_keyworda: Optional[list[str]] = None
+    base_subtypes: list[str]
+    base_card_keywords: Optional[list[str]] = None
     base_functional_text: Optional[str] = None
     base_type_text: Optional[str] = None
     base_classes: Optional[list[str]] = None
@@ -123,7 +123,7 @@ class Card:
     cards_underneath: list = field(default_factory=list)  # Cards placed "under" this card (Mechanologist)
     permanent_subtype: Optional[str] = None  # Set by SubZoneView when card enters items/auras/allies/tokens/soul
 
-    # Ability structure flags (Gap #1 fix - Round 9)
+    # Ability structure flags
     # Activated abilities (CR 5.2)
     has_activated_ability: bool = False
     has_once_per_turn_limit: bool = False
@@ -219,14 +219,14 @@ class Card:
         for func in [x[1] for x in self.effects if x[0] == 'base_health']:
             val = func(self.base_health)
         return val
-    
+
     @property
-    def intellect(self):
-        if self.base_intellect is None:
+    def intelligence(self):
+        if self.base_intelligence is None:
             return None
-        val = self.base_intellect
-        for func in [x[1] for x in self.effects if x[0] == 'base_intellect']:
-            val = func(self.base_intellect)
+        val = self.base_intelligence
+        for func in [x[1] for x in self.effects if x[0] == 'base_intelligence']:
+            val = func(self.base_intelligence)
         return val
     
     @property
@@ -285,53 +285,53 @@ class Card:
 
     @property
     def is_attack(self) -> bool:
-        return "Attack" in self.types
+        return "Attack" in (self.base_types or [])
 
     @property
     def is_action(self) -> bool:
-        return "Action" in self.types
+        return "Action" in (self.base_types or [])
 
     @property
     def is_instant(self) -> bool:
-        return "Instant" in self.types
+        return "Instant" in (self.base_types or [])
 
     @property
     def is_weapon(self) -> bool:
-        return "Weapon" in self.types
+        return "Weapon" in (self.base_types or [])
 
     @property
     def is_equipment(self) -> bool:
-        return "Equipment" in self.types
+        return "Equipment" in (self.base_types or [])
 
     @property
     def is_hero(self) -> bool:
-        return "Hero" in self.types
+        return "Hero" in (self.base_types or [])
 
     @property
     def is_defense_reaction(self) -> bool:
-        return "Defense Reaction" in self.types
+        return "Defense Reaction" in (self.base_types or [])
 
     @property
     def has_go_again(self) -> bool:
-        return any(re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', k).lower() == "go again" for k in self.keywords)
+        return any(re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', k).lower() == "go again" for k in (self.keywords or []))
 
     @property
     def has_dominate(self) -> bool:
-        return any(k.lower() == "dominate" for k in self.keywords)
+        return any(k.lower() == "dominate" for k in (self.keywords or []))
 
     @property
     def has_on_hit(self) -> bool:
-        return any(k.lower() == "on hit" for k in self.keywords)
+        return any(k.lower() == "on hit" for k in (self.keywords or []))
 
     @property
     def has_reprise(self) -> bool:
-        return any(k.lower() == "reprise" for k in self.keywords)
+        return any(k.lower() == "reprise" for k in (self.keywords or []))
     
     def get_keyword_value(self, keyword_name: str) -> Optional[int]:
         """Extract numeric value from a keyword (e.g., 'Ward 10' -> 10).
         Returns None if keyword not found or has no numeric value."""
         import re
-        for kw in self.keywords:
+        for kw in (self.keywords or []):
             # Match keyword with optional number
             match = re.match(rf'^{re.escape(keyword_name)}\s+(\d+)$', kw, re.IGNORECASE)
             if match:
@@ -351,7 +351,7 @@ class Card:
         return {
             'object_id': self.object_id,
             'slug': self.slug,
-            'name': self.name,
+            'name': self.base_name,
             'zone': self.zone,
             'prev_zone': self.prev_zone,
             'owner': self.owner,
@@ -364,12 +364,12 @@ class Card:
             'cost': self.cost,
             'power': self.power,
             'defense': self.defense,
-            'life': self.life,
-            'intellect': self.intellect,
+            'health': self.health,
+            'intelligence': self.intelligence,
             'arcane_damage': self.arcane_damage,
-            'types': list(self.types),
-            'subtypes': list(self.subtypes),
-            'supertypes': list(self.supertypes),
+            'types': list(self.base_types),
+            'subtypes': list(self.base_subtypes),
+            'supertypes': list(self.base_supertypes),
             'keywords': list(self.keywords),
             'counters': dict(self.counters),
         }

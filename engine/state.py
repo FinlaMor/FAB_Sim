@@ -304,12 +304,6 @@ class Player:
         self.cards_played_this_turn: list = []
     
     @property
-    def weapon(self) -> Zone:
-        """Backward compatibility: returns weapon1.
-        Use weapon1/weapon2 explicitly for CR-compliant dual-zone handling."""
-        return self.weapon1
-
-    @property
     def arena_cards(self) -> list[Card]:
         arena_zones = [self.head, self.chest, self.arms, self.legs, self.weapon1, self.weapon2, self.permanents, self.hero_zone]
         cards = []
@@ -555,7 +549,7 @@ class CombatState:
     attack_power: int
     attack_card: Card
     keywords: list[str]
-    attack_target: Optional[Player] = None    
+    attack_target: Card   
     base_attack_power: int = 0
     from_weapon: bool = False
     attack_source: Optional[Card] = None
@@ -649,6 +643,7 @@ class GameState:
     effect_manager: EffectManager = field(default_factory=EffectManager) # EffectManager from engine.effects
     priority_player: int = 1
     consecutive_passes: int = 0
+    game_history: dict[int, list[str]] = field(default_factory=dict) # {turn number: [events]}
     events_this_turn: set[str] = field(default_factory=set)
     chain_links: list[ChainLink] = field(default_factory=list)
     pitch_history: dict[int, dict[int, list[Card]]] = field(default_factory=lambda: {1: {}, 2: {}})  # {player_id: {turn: [slug, ...]}}

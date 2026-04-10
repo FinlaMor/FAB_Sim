@@ -15,7 +15,8 @@ from engine.state import CombatState, GameState, Player, Step, Zone
 # ---------------------------------------------------------------------------
 
 def _make_hero(pid: int = 1) -> Card:
-    c = Card(slug="test_hero", name="Test Hero", types=["Hero"], base_life=40, base_intellect=4)
+    c = Card(slug="test_hero", raw_name="Test Hero", raw_types=["Hero"], base_health=40,
+            base_intelligence=4)
     c.owner = pid
     c.controller = pid
     return c
@@ -46,15 +47,14 @@ def _make_state() -> GameState:
     )
 
 
-def _make_card(slug: str = "test_card", name: str = "Test Card", **kwargs) -> Card:
+def _make_card(slug: str = "test_card", name: str = "Test Card", 
+               types: list[str] = []) -> Card:
     """Create a Card with sensible defaults, overridable via kwargs."""
-    defaults = dict(
-        slug=slug,
-        name=name,
-        types=kwargs.pop("types", ["Action"]),
-    )
-    defaults.update(kwargs)
-    return Card(**defaults)
+    slug=slug
+    raw_name=name
+    raw_types=types if types != [] else None
+
+    return Card(slug=slug,raw_name=raw_name, raw_types=raw_types if raw_types is not None else None)
 
 
 def _make_combat(attacker_id: int = 1, attack_card: Card | None = None) -> CombatState:
@@ -63,13 +63,18 @@ def _make_combat(attacker_id: int = 1, attack_card: Card | None = None) -> Comba
         attack_card = _make_card(
             slug="test_attack",
             name="Test Attack",
-            types=["Action", "Attack"],
-            base_power=3,
-        )
+            types=["Action", "Attack"])
+        
+        attack_card.base_power=3
         attack_card.owner = attacker_id
         attack_card.controller = attacker_id
+
+        opp = 3 - attacker_id
+        opp_hero = _make_hero(opp)
+
     return CombatState(
         attacker_id=attacker_id,
+        attack_target=opp_hero,
         link_id=1,
         attack_power=attack_card.base_power or 0,
         attack_card=attack_card,

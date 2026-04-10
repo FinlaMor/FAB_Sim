@@ -28,6 +28,7 @@ _EQUIP_TYPE_TO_SLOT = {
     "Arms": "arms",
     "Legs": "legs",
     "Quiver": "weapon",  # 8.2.15a: quiver equips to weapon zone (can share with 2H bow)
+    'Offhand': "weapon",
 }
 
 # Known hero slug aliases seen in scraped/exported deck headers.
@@ -186,7 +187,7 @@ def _load_deck_fabrary(lines: list[str], card_db: CardDB) -> dict:
 def load_deck(path: str, card_db: CardDB) -> dict:
     """Load a deck from a text file."""
     hero_slug: Optional[str] = None
-    weapon_slug: Optional[str] = None
+    weapon_slugs: list[str] = []
     equipment: dict[str, str] = {}
     cards: list[str] = []
 
@@ -208,19 +209,20 @@ def load_deck(path: str, card_db: CardDB) -> dict:
         if parts[0] == "hero":
             hero_slug = parts[1]
         elif parts[0] == "weapon":
-            weapon_slug = parts[1]
+            weapon_slugs.append(parts[1])
         elif parts[0] == "equipment":
             equip_slug = parts[1]
             card = card_db.get(equip_slug)
             if card is not None:
                 slot_found = False
                 for type_name, slot_name in _EQUIP_TYPE_TO_SLOT.items():
-                    if type_name in card.types:
+                    if type_name in (card.raw_types or []):
                         equipment[slot_name] = equip_slug
                         slot_found = True
                         break
                 if not slot_found:
-                    equipment[equip_slug] = equip_slug
+                    raise ValueError(f"Equipment Slot not found: {card.slug}")
+                    #equipment[equip_slug] = equip_slug
         else:
             try:
                 count = int(parts[0])
@@ -232,12 +234,10 @@ def load_deck(path: str, card_db: CardDB) -> dict:
 
     if hero_slug is None:
         raise ValueError(f"No hero found in deck file: {path}")
-    if weapon_slug is None:
-        raise ValueError(f"No weapon found in deck file: {path}")
 
     return {
         "hero": hero_slug,
-        "weapon": weapon_slug,
+        "weapon": weapon_slugs,
         "equipment": equipment,
         "cards": cards,
     }
@@ -269,10 +269,10 @@ def create_player(
     player = Player(player_id=player_id, hero_card=hero_card)
 
     # Override health/intellect from card db if set
-    if hero_card.life and hero_card.life > 0:
-        player.health = hero_card.life
-    if hero_card.intellect and hero_card.intellect > 0:
-        player.intellect = hero_card.intellect
+    if hero_card.raw_health and hero_card.raw_health > 0:
+        player.health = hero_card.raw_health
+    if hero_card.raw_intelligence and hero_card.raw_intelligence > 0:
+        player.intellect = hero_card.raw_intelligence
 
     # Shuffle and load deck
     deck_slugs = list(deck_data["cards"])
@@ -289,28 +289,41 @@ def create_player(
     # Place weapon
     # CR 3.0.2 / 8.2.10b: 2H weapons occupy both weapon zones simultaneously,
     # which prevents equipping a second weapon.
-    weapon_slug = deck_data.get("weapon")
-    if weapon_slug:
-        wc = get_card_info(weapon_slug, card_db)
-        wc.owner = player_id
-        wc.controller = player_id
-        player.weapon1.add(wc)
-        is_two_handed = "2H" in (wc.types or [])
-        if is_two_handed:
-            player.weapon2.add(wc)  # same object in both zones — CR 3.0.2
+    weapon_slugs = deck_data.get("weapon")
+    if weapon_slugs:
+        for weapon_slug in weapon_slugs:
+            wc = get_card_info(weapon_slug, card_db)
+            wc.owner = player_id
+            wc.controller = player_id
+            if not player.weapon1.top:
+                player.weapon1.add(wc)
+                is_two_handed = "2H" in (wc.raw_types or [])
+                if is_two_handed:
+                    player.weapon2.add(wc)  # same object in both zones — CR 3.0.2
+            else:
+                if not player.weapon2.top:
+                    player.weapon2.add(wc)
+                else:
+                    continue
+            
+        
 
     # Place equipment
     for slot_name, equip_slug in deck_data.get("equipment", {}).items():
-        equip_zone = player.zone_by_name(slot_name)
-        if equip_zone is None:
-            continue
-        ec = get_card_info(equip_slug, card_db)
-        ec.owner = player_id
-        ec.controller = player_id
-        equip_zone.add(ec)
-
-        # # Initialize Battleworn defense counters
-        # if _kw(ec, 'Battleworn') and ec.defense is not None and ec.defense > 0:
-        #     player.set_equipment_counter(slot_name, ec.defense)
+        if slot_name != 'weapon':
+            equip_zone = player.zone_by_name(slot_name)
+            if equip_zone is None:
+                continue
+            ec = get_card_info(equip_slug, card_db)
+            ec.owner = player_id
+            ec.controller = player_id
+            equip_zone.add(ec)
+        else:
+            if player.weapon1.top is None and player.weapon2.top is None:
+                player.weapon1.add(get_card_info(equip_slug, card_db))
+            elif player.weapon1.top is not None and player.weapon2.top is None:
+                player.weapon2.add(get_card_info(equip_slug, card_db))
+            else:
+                continue
 
     return player

@@ -62,6 +62,8 @@ class Action:
     x_value_declared: Optional[int] = None         # X-cost value declared (CR 1.12.2, 5.1.3a)
     is_melded: Optional[bool] = None               # Legacy meld flag (kept for compat)
     meld_side: Optional[str] = None                # Meld side: 'top', 'bottom', 'both', or None (CR 8.3.38)
+    alternate_cost_declared = Optional[bool] = None
+    additional_costs_declared = Optional[dict[str, bool]] = None
 
     resource_cost: Optional[int] = None
     alternate_cost: Optional[bool] = None  # Alternate cost names declared by player (CR 5.1.3c)
@@ -114,14 +116,6 @@ def can_pay_cost(hand_cards: list[Card], target_cost: int, current_resources: in
         if c is not exclude_card and c.pitch is not None and c.pitch > 0
     )
     return total_pitch >= needed
-
-
-def get_pitchable_cards(hand_cards: list[Card], exclude_card: Card | None = None) -> list[Card]:
-    """Return hand cards that can be pitched (pitch > 0), excluding *exclude_card*."""
-    return [
-        c for c in hand_cards
-        if c is not exclude_card and c.pitch is not None and c.pitch > 0
-    ]
 
 
 def find_all_valid_pitch_sequences(hand_cards: list[Card], target_cost: int, current_resources: int = 0, max_seqs: int = 10) -> list[list[Card]]:

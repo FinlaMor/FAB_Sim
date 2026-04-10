@@ -4,4 +4,5 @@
 	- [ ] additional cost format
 	- [ ] effect format
 	- [ ] counters format
-- [ ] Need to update actions.legal_actions to search the card registries for activation conditions instead of calling them specifically (like the weapons)
+- [x] Need to update actions.legal_actions to search the card registries for activation conditions instead of calling them specifically (like the weapons)
+- [ ] Implement Chi payment system
