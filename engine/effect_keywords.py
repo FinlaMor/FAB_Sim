@@ -9,39 +9,71 @@ Functions accept `state: GameState` and any required targets/values.
 Replacement effects are applied via `state.effect_manager.apply_replacements`
 before execution. Triggers are emitted via `state.event_manager.emit` after.
 
-CR 8.5 Effect Keywords implemented here:
-    banish          (8.5.1)  — move object to banished zone
-    create_token    (8.5.2)  — create a token and place it in the arena
-    deal_damage     (8.5.3)  — deal generic, physical, or arcane damage
-    destroy         (8.5.4)  — move object to graveyard
-    discard         (8.5.5)  — move card from hand to graveyard
-    draw            (8.5.6)  — move top card of deck to hand
-    gain            (8.5.7)  — increase a living object's {h} or grant action points
-    lose            (8.5.12) — decrease a living object's {h}
-    put_counter     (8.5.14) — place a counter on an object
-    remove_counter  (8.5.16) — remove a counter from an object
-    search          (8.5.19) — search a zone for a card matching criteria
-    shuffle         (8.5.20) — randomise a zone
-    opt             (8.5.22) — look at top N cards, return in any order
-    charge          (8.5.29) — put a card into a hero's soul
-    equip           (8.5.41) — equip an object to the appropriate zone
-    pitch           (8.5.44) — pitch a card for its resource value
-
-Not implemented (no current card requires simulator support):
-    look (8.5.11), reveal (8.5.17), roll (8.5.18), name (8.5.21),
-    reload (8.5.23), turn (8.5.24), become/copy (8.5.25), negate (8.5.26),
-    repeat (8.5.27), reroll (8.5.28), distribute (8.5.30), pay (8.5.31),
-    add_defend (8.5.32), ignore (8.5.33), freeze (8.5.34), gain_control (8.5.35),
-    transform (8.5.36), unfreeze (8.5.37), attack (8.5.38), contract (8.5.39),
-    create_card (8.5.40), move_counter (8.5.42), awaken (8.5.43), clash (8.5.45),
-    wager (8.5.46), amp (8.5.47), transcend (8.5.48), exchange (8.5.49),
-    mark (8.5.50), retrieve (8.5.51), give (8.5.53), steal (8.5.54),
-    tap (8.5.55), untap (8.5.56), crowd_cheer/boo (8.5.57)
+CR 8.5 Effect Keywords implemented here
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
+from dataclasses import dataclass, field
 
 if TYPE_CHECKING:
     from engine.state import GameState
+    from engine.effects import EffectManager
     from engine.card import Card
+
+# in effect_keywords.py
+
+@dataclass
+class BanishEvent:
+    """CR 8.5.1 — move an object to the banished zone.
+    
+    Replacement effects can modify:
+        destination  — e.g. redirect to graveyard instead (card still considered banished, CR 8.5.1b)
+        cancelled    — prevent the banish entirely
+    """
+    type: str = "banish"
+    card: Card = None
+    source_player_id: int = None      # who is doing the banishing
+    target_player_id: int = None      # who owns the card being banished
+    origin_zone: str = None           # where the card came from ("hand", "deck", etc.)
+    destination: str = "banished"     # replacement effects can change this
+    until_condition: str = None       # e.g. "end_of_turn" for temporary banish (CR 8.5.1c)
+    cancelled: bool = False
+
+
+def banish(state: GameState, card: Card, source_player_id: int,
+           origin_zone: str, until_condition: str = None) -> BanishEvent:
+    """CR 8.5.1 — banish a card.
+    
+    Returns the event so callers can inspect what actually happened
+    (e.g. was it redirected? cancelled?).
+    """
+    target_player_id = card.owner
+
+    event = BanishEvent(
+        card=card,
+        source_player_id=source_player_id,
+        target_player_id=target_player_id,
+        origin_zone=origin_zone,
+        until_condition=until_condition,
+    )
+
+    # replacement effects fire before the move (CR 6.5)
+    state.effect_manager.apply_replacements(event, state)
+
+    if event.cancelled:
+        return event
+
+    # execute the move
+    player = state.players[target_player_id]
+    getattr(player, origin_zone).remove(card)
+    player.banished.append(card)          # or move to event.destination if redirected
+
+    # trigger: "when a card is banished" listeners fire after (CR 8.5.1)
+    state.event_manager.emit(event, state)
+
+    # CR 8.5.1c: register delayed return effect if temporary
+    if event.until_condition:
+        _register_return_from_banish(state, card, target_player_id, event.until_condition)
+
+    return event
