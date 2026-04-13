@@ -3673,3 +3673,108 @@ def test_steal_emits_steal_event():
 
     assert len(received) == 1
     assert received[0].data["previous_controller_id"] == 2
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.32 — add (defend)
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import add_defend, AddDefendEvent
+from engine.state import CombatState
+
+
+def _make_combat(attacker_id: int = 1) -> CombatState:
+    attack_card = _make_card("attack_card")
+    defender_hero = _make_card("defender_hero")
+    return CombatState(
+        attacker_id=attacker_id,
+        link_id=1,
+        attack_power=4,
+        attack_card=attack_card,
+        keywords=[],
+        attack_target=defender_hero,
+        base_attack_power=4,
+    )
+
+
+def test_add_defend_adds_card_to_combat_defending_cards():
+    """CR 8.5.32 — card is added to combat.defending_cards."""
+    state = _make_state()
+    state.combat = _make_combat(attacker_id=1)
+    card = _make_card("block_card")
+    card.raw_defense = 3
+    card.defense = 3
+    card.owner = 2
+    state.players[2].hand.add(card)
+
+    event = add_defend(state, card, source_player_id=2)
+
+    assert not event.canceled
+    assert card in state.combat.defending_cards
+    assert state.combat.total_defense == 3
+
+
+def test_add_defend_from_hand_sets_defender_used_hand_card():
+    """add_defend from hand sets defender_used_hand_card for Dominate/Reprise."""
+    state = _make_state()
+    state.combat = _make_combat(attacker_id=1)
+    card = _make_card("block_card")
+    card.owner = 2
+    state.players[2].hand.add(card)
+
+    add_defend(state, card, source_player_id=2)
+
+    assert state.combat.defender_used_hand_card
+
+
+def test_add_defend_fails_when_no_combat():
+    """CR 8.5.32a — fails if combat is not active."""
+    state = _make_state()
+    state.combat = None
+    card = _make_card("block_card")
+    card.owner = 2
+
+    event = add_defend(state, card)
+
+    assert event.canceled
+    assert card not in (state.combat.defending_cards if state.combat else [])
+
+
+def test_add_defend_replacement_can_cancel():
+    """CR 8.5.32a — replacement effect can prevent the defend."""
+    from engine.effects import ReplacementEffect, ReplacementType
+    from tests.conftest import _make_card as _mc
+    state = _make_state()
+    state.combat = _make_combat(attacker_id=1)
+    card = _make_card("block_card")
+    card.owner = 2
+    state.players[2].hand.add(card)
+
+    source = _mc("effect_source")
+    state.effect_manager.replacement_effects.append(ReplacementEffect(
+        source_card=source,
+        replacement_type=ReplacementType.STANDARD,
+        condition_fn=lambda e, s: e.get("type") == "add_defend",
+        replace_fn=lambda e, s: {**e, "canceled": True},
+    ))
+
+    event = add_defend(state, card)
+
+    assert event.canceled
+    assert card not in state.combat.defending_cards
+
+
+def test_add_defend_emits_event():
+    """add_defend emits 'add_defend' event."""
+    state = _make_state()
+    state.combat = _make_combat(attacker_id=1)
+    card = _make_card("block_card")
+    card.owner = 2
+    state.players[2].hand.add(card)
+
+    received = []
+    state.event_manager.register("add_defend", lambda ev, s: received.append(ev))
+    add_defend(state, card)
+
+    assert len(received) == 1
+    assert received[0].data["card"] == "block_card"

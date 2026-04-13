@@ -3476,3 +3476,82 @@ def steal(state: GameState, target_card: Card, new_controller_id: int,
     }), state)
 
     return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.32 — add (defend)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class AddDefendEvent:
+    type: str = "add_defend"
+    card: Optional[Card] = None
+    chain_link: int | None = None       # which chain link (None = current)
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def add_defend(state: GameState, card: Card,
+               chain_link: int | None = None,
+               source_player_id: int | None = None) -> AddDefendEvent:
+    """CR 8.5.32 — add a card to the current chain link as a defender.
+
+    CR 8.5.32a: if an effect prevents the card from defending on the specified
+    chain link, the defend effect fails and the card is not moved.
+
+    The card is removed from its current zone (typically hand) and added to
+    combat.defending_cards. Defense value is credited to combat.total_defense.
+    """
+    event = AddDefendEvent(
+        card=card,
+        chain_link=chain_link,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    combat = state.combat
+    if combat is None:
+        event.canceled = True
+        return event
+
+    c: Card = event.card
+    if c is None:
+        event.canceled = True
+        return event
+
+    # CR 8.5.32a: replacement effects may have canceled; also check combat is open
+    # Remove from source zone (usually hand of defending player)
+    defender_id = 3 - combat.attacker_id
+    src_zone = state.get_zone(c.zone, defender_id)
+    if src_zone is None:
+        src_zone = state.get_zone(c.zone, coo(c))
+
+    in_hand = c in (state.players[defender_id].hand.cards if defender_id in state.players else [])
+    if src_zone is not None and c in src_zone.cards:
+        src_zone.remove(c)
+
+    # Track hand card usage for Dominate / Reprise
+    if in_hand:
+        combat.defender_used_hand_card = True
+
+    # Add to defending cards and credit defense value
+    combat.defending_cards.append(c)
+    defense_val = c.defense or 0
+    combat.total_defense += defense_val
+    if c.is_equipment:
+        combat.defending_equipment_defense += defense_val
+
+    state.event_manager.emit(Event(type="add_defend", data={
+        "card": c.slug,
+        "chain_link": event.chain_link,
+        "source_player_id": event.source_player_id,
+        "defense_value": defense_val,
+    }), state)
+
+    return event
