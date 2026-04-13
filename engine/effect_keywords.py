@@ -300,11 +300,6 @@ class DiscardEvent:
 def discard(state: GameState, discard_target: Card, discard_source: Card | None,
             origin: str = "hand") -> DiscardEvent:
     discard_player_id = coo(discard_target)
-    # CR 8.5.5b: if player has no cards in hand, discard effect fails
-    if len(state.players[discard_player_id].hand.cards) == 0:
-        return DiscardEvent(discard_target=discard_target, discard_player=discard_player_id,
-                            canceled=True)
-
     source_player = coo(discard_source) if discard_source is not None else None
 
     event = DiscardEvent(
@@ -320,6 +315,13 @@ def discard(state: GameState, discard_target: Card, discard_source: Card | None,
     event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
 
     if event.canceled:
+        return event
+
+    # CR 8.5.5b: if player has no cards in the origin zone, discard effect fails
+    # (checked AFTER replacement effects which may redirect origin or cancel)
+    origin_zone = getattr(state.players[event.discard_player], event.origin, None)
+    if origin_zone is None or len(origin_zone.cards) == 0:
+        event.canceled = True
         return event
 
     # execute the discard
@@ -477,7 +479,7 @@ def gain(state: GameState, asset_type: str, amount: int, source_player_id: int,
     elif event.asset_type == AssetType.ACTION_POINTS:
         state.players[event.target_player_id].action_points += event.amount
     elif event.asset_type == AssetType.CHI:
-        state.players[event.target_player_id].resources += event.amount  # CR 1.13.5b: chi is interchangeable with resources
+        state.players[event.target_player_id].chi += event.amount
 
     state.event_manager.emit(Event(type="gain", data={
         "asset_type": event.asset_type,
@@ -858,13 +860,14 @@ def lose(state: GameState, asset_type: str, amount: int,
         if event.target_card is not None:
             event.target_card.life = max(0, (event.target_card.life or 0) - event.amount)
         elif pid is not None:
+            # CR: life CAN go negative; game loss is checked separately
             state.players[pid].life -= event.amount
     elif event.asset_type == AssetType.RESOURCES and pid is not None:
         state.players[pid].resources = max(0, state.players[pid].resources - event.amount)
     elif event.asset_type == AssetType.ACTION_POINTS and pid is not None:
         state.players[pid].action_points = max(0, state.players[pid].action_points - event.amount)
     elif event.asset_type == AssetType.CHI and pid is not None:
-        state.players[pid].resources = max(0, state.players[pid].resources - event.amount)
+        state.players[pid].chi = max(0, state.players[pid].chi - event.amount)
 
     state.event_manager.emit(Event(type="lose", data={
         "asset_type": event.asset_type,
@@ -1178,8 +1181,8 @@ def put_object(state: GameState, target_card: Card, destination_zone: str,
 
     card: Card = event.target_card
 
-    # remove from current zone
-    src_zone = state.get_zone(card.zone, card.owner)
+    # remove from current zone (use controller, not owner — card may have changed control)
+    src_zone = state.get_zone(card.zone, coo(card))
     if src_zone is not None:
         src_zone.remove(card)
 
@@ -1700,6 +1703,11 @@ def negate(state: GameState, layer, source_player_id: int | None = None) -> Nega
     if event.canceled:
         return event
 
+    # CR 8.5.26: the layer is cleared from the stack and it does not resolve
+    if hasattr(layer, 'negated'):
+        layer.negated = True
+    else:
+        setattr(layer, 'negated', True)
     state.stack.remove(layer)
 
     state.event_manager.emit(Event(type="negate", data={
@@ -1721,9 +1729,18 @@ class RepeatEvent:
     canceled: bool = False
 
 
-def repeat(state: GameState, process: Callable[[], None],
-           source_player_id: int | None = None) -> RepeatEvent:
-    """CR 8.5.27 — execute a callable again."""
+_REPEAT_MAX_ITERATIONS = 1000
+
+
+def repeat(state: GameState, process: Callable[[], bool],
+           source_player_id: int | None = None,
+           max_iterations: int = _REPEAT_MAX_ITERATIONS) -> RepeatEvent:
+    """CR 8.5.27 — execute a callable repeatedly.
+
+    CR 8.5.27b: stops when the instructions fail to advance the game state.
+    The callable should return True if it advanced state, False otherwise.
+    Also enforces a hard cap (max_iterations) to prevent infinite loops.
+    """
     event = RepeatEvent(
         source_player_id=source_player_id,
     )
@@ -1735,7 +1752,11 @@ def repeat(state: GameState, process: Callable[[], None],
     if event.canceled:
         return event
 
-    process()
+    # CR 8.5.27b: repeat until process fails to advance or hard cap hit
+    for _ in range(max_iterations):
+        result = process()
+        if result is False:
+            break
 
     state.event_manager.emit(Event(type="repeat", data={
         "source_player_id": event.source_player_id,
@@ -1761,23 +1782,30 @@ class RerollEvent:
 def reroll(state: GameState, dice_results: list[int], faces: int = 6,
            rng=None,
            source_player_id: int | None = None) -> RerollEvent:
-    """CR 8.5.28 — reroll specified dice. Returns new results."""
+    """CR 8.5.28 — reroll specified dice. Returns new results.
+
+    CR 8.5.28: Reroll is a replacement effect that replaces a die roll result.
+    The reroll event passes through apply_replacements so other replacement
+    effects can interact with/modify the new results.
+    """
+    _rng = rng if rng is not None else random
+    new_results = tuple(_rng.randint(1, faces) for _ in dice_results)
+
     event = RerollEvent(
         original_results=tuple(dice_results),
+        new_results=new_results,
         faces=faces,
         source_player_id=source_player_id,
     )
 
+    # CR 8.5.28: reroll IS a replacement effect — pass through the pipeline
+    # so other replacements can modify the new results
     event_dict = vars(event).copy()
     event_dict = state.effect_manager.apply_replacements(event_dict, state)
     event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
 
     if event.canceled:
         return event
-
-    _rng = rng if rng is not None else random
-    new_results = tuple(_rng.randint(1, faces) for _ in dice_results)
-    event = dataclasses.replace(event, new_results=new_results)
 
     state.event_manager.emit(Event(type="reroll", data={
         "original_results": list(event.original_results),
@@ -1988,9 +2016,23 @@ def freeze(state: GameState, target_card: Card,
 
     target_card.counters["__frozen__"] = target_card.counters.get("__frozen__", 0) + 1
 
+    # CR 8.5.34b: if no duration is specified, freeze until start of controller's next turn
+    effective_condition = event.until_condition
+    if effective_condition is None:
+        effective_condition = "start_of_turn"
+        controller_id = coo(target_card)
+
+        def _unfreeze_on_turn_start(ev, s: GameState) -> None:
+            # Only unfreeze if it's the frozen card's controller's turn
+            if s.active_player == controller_id:
+                s.event_manager.unregister("start_of_turn", _unfreeze_on_turn_start)
+                target_card.counters["__frozen__"] = max(0, target_card.counters.get("__frozen__", 0) - 1)
+
+        state.event_manager.register("start_of_turn", _unfreeze_on_turn_start)
+
     state.event_manager.emit(Event(type="freeze", data={
         "target": target_card.slug,
-        "until_condition": until_condition,
+        "until_condition": effective_condition,
         "source_player_id": event.source_player_id,
     }), state)
 
@@ -2253,11 +2295,10 @@ def clash(state: GameState, player1_id: int, player2_id: int,
     card1 = deck1.cards[-1] if deck1 and len(deck1.cards) > 0 else None
     card2 = deck2.cards[-1] if deck2 and len(deck2.cards) > 0 else None
 
-    # Reveal the cards
-    if card1 is not None:
-        card1.is_public = True
-    if card2 is not None:
-        card2.is_public = True
+    # Reveal the cards via reveal() so replacement effects on reveal can fire
+    cards_to_reveal = [c for c in (card1, card2) if c is not None]
+    if cards_to_reveal:
+        reveal(state, cards_to_reveal, source_player_id=source_player_id)
 
     power1 = getattr(card1, 'power', None) or 0 if card1 else 0
     power2 = getattr(card2, 'power', None) or 0 if card2 else 0
@@ -2376,14 +2417,16 @@ def exchange(state: GameState, card_a: Card, card_b: Card,
     # Record original locations
     zone_a_name = card_a.zone
     owner_a = card_a.owner
+    controller_a = coo(card_a)
     public_a = card_a.is_public
     zone_b_name = card_b.zone
     owner_b = card_b.owner
+    controller_b = coo(card_b)
     public_b = card_b.is_public
 
     # Remove both from their zones
-    zone_a = state.get_zone(zone_a_name, owner_a)
-    zone_b = state.get_zone(zone_b_name, owner_b)
+    zone_a = state.get_zone(zone_a_name, controller_a)
+    zone_b = state.get_zone(zone_b_name, controller_b)
 
     if zone_a is None or zone_b is None:
         event.canceled = True
@@ -2391,6 +2434,10 @@ def exchange(state: GameState, card_a: Card, card_b: Card,
 
     zone_a.remove(card_a)
     zone_b.remove(card_b)
+
+    # CR 8.5.49: swap zone, visibility, AND control
+    card_a.controller = controller_b
+    card_b.controller = controller_a
 
     # Swap: put card_a in card_b's zone and vice versa
     zone_b.add(card_a, public_b)
@@ -2707,12 +2754,18 @@ class IgnoreEvent:
 
 
 def ignore(state: GameState, description: str = "",
+           ignored_event_type: str | None = None,
+           condition_fn: Callable | None = None,
+           source_card: Card | None = None,
            source_player_id: int | None = None) -> IgnoreEvent:
-    """CR 8.5.33 — placeholder for ignore effects.
+    """CR 8.5.33 — ignore is a replacement effect.
 
-    Full implementation deferred; specific cards (e.g. ready_to_roll) implement
-    their ignore logic directly in their card-effect registry functions.
-    This function records the intent and emits the event for trigger purposes.
+    CR 8.5.33: Registers a replacement effect that cancels events matching
+    ignored_event_type (and optional condition_fn). The replacement effect
+    fires once and then removes itself.
+
+    If ignored_event_type is None, this acts as a record-only call (for cards
+    that implement their ignore logic directly in their card-effect functions).
     """
     event = IgnoreEvent(
         source_player_id=source_player_id,
@@ -2726,8 +2779,35 @@ def ignore(state: GameState, description: str = "",
     if event.canceled:
         return event
 
+    # CR 8.5.33: register a one-shot replacement effect that cancels the target event
+    if ignored_event_type is not None:
+        from engine.effects import ReplacementEffect, ReplacementType
+        _source = source_card or Card(slug="__ignore_source__")
+
+        def _ignore_condition(evt, s):
+            if evt.get("type") != ignored_event_type:
+                return False
+            return condition_fn(evt, s) if condition_fn else True
+
+        def _ignore_replace(evt, s):
+            # Cancel the event and remove this one-shot replacement
+            state.effect_manager.replacement_effects[:] = [
+                r for r in state.effect_manager.replacement_effects
+                if r is not _rep
+            ]
+            return {**evt, "canceled": True}
+
+        _rep = ReplacementEffect(
+            source_card=_source,
+            replacement_type=ReplacementType.STANDARD,
+            condition_fn=_ignore_condition,
+            replace_fn=_ignore_replace,
+        )
+        state.effect_manager.replacement_effects.append(_rep)
+
     state.event_manager.emit(Event(type="ignore", data={
         "description": event.description,
+        "ignored_event_type": ignored_event_type,
         "source_player_id": event.source_player_id,
     }), state)
 
@@ -3047,7 +3127,19 @@ def create_card(state: GameState, slug: str, dest_player_id: int,
         return event
 
     dest_player = event.dest_player_id or 0
-    new_card = Card(slug=event.slug, owner=dest_player, raw_types=["Action"])
+
+    # CR 8.5.40a: properties defined by the printed card (card database lookup)
+    db_card = None
+    if state.card_db is not None and hasattr(state.card_db, 'get'):
+        db_card = state.card_db.get(event.slug)
+
+    if db_card is not None:
+        new_card = db_card
+        new_card.owner = dest_player
+    else:
+        # Fallback when no card_db available — minimal card with Action type
+        new_card = Card(slug=event.slug, owner=dest_player, raw_types=["Action"])
+
     event.created_card = new_card
 
     zone = state.get_zone(event.dest_zone, dest_player)
@@ -3163,10 +3255,13 @@ def wager(state: GameState, attack_card: Card, prize: str,
         event.canceled = True
         return event
 
-    # Store wager data on the card for resolution at end of chain link
-    card.counters['__wager_prize__'] = event.prize
-    card.counters['__wager_controller__'] = event.controller_id
-    card.counters['__wager_opponent__'] = event.opponent_id
+    # Store wager data on the card for resolution at end of chain link.
+    # Use a dedicated wager_data dict (not counters which is dict[str, int]).
+    if not hasattr(card, 'wager_data'):
+        card.wager_data = {}
+    card.wager_data['prize'] = event.prize
+    card.wager_data['controller_id'] = event.controller_id
+    card.wager_data['opponent_id'] = event.opponent_id
 
     state.event_manager.emit(Event(type="wager", data={
         "attack_card": card.slug,

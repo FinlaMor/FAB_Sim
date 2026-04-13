@@ -2350,7 +2350,7 @@ from engine.effect_keywords import negate, NegateEvent
 
 
 def test_negate_removes_layer_from_stack():
-    """Negate removes a layer from state.stack."""
+    """Negate removes a layer from state.stack and marks it as negated."""
     state = _make_state()
     card = _make_card("on_stack")
     state.stack.add(card)
@@ -2359,6 +2359,8 @@ def test_negate_removes_layer_from_stack():
 
     assert not event.canceled
     assert card not in state.stack.cards
+    # CR 8.5.26: layer is marked as not-resolving
+    assert getattr(card, 'negated', False) is True
 
 
 def test_negate_not_on_stack_cancels():
@@ -2381,7 +2383,10 @@ def test_repeat_calls_process():
     """Repeat executes the callable."""
     state = _make_state()
     called = []
-    event = repeat(state, process=lambda: called.append(True))
+    def _once():
+        called.append(True)
+        return False  # stop after one iteration
+    event = repeat(state, process=_once)
     assert not event.canceled
     assert len(called) == 1
 
@@ -2391,8 +2396,30 @@ def test_repeat_emits_event():
     state = _make_state()
     received = []
     state.event_manager.register("repeat", lambda ev, s: received.append(ev))
-    repeat(state, process=lambda: None)
+    repeat(state, process=lambda: False)
     assert len(received) == 1
+
+
+def test_repeat_stops_when_process_returns_false():
+    """CR 8.5.27b: repeat stops when instructions fail to advance game state."""
+    state = _make_state()
+    call_count = [0]
+    def _three_times():
+        call_count[0] += 1
+        return call_count[0] < 3  # True twice, then False
+    repeat(state, process=_three_times)
+    assert call_count[0] == 3
+
+
+def test_repeat_respects_max_iterations():
+    """Hard cap prevents infinite loops."""
+    state = _make_state()
+    call_count = [0]
+    def _always_true():
+        call_count[0] += 1
+        return True
+    repeat(state, process=_always_true, max_iterations=5)
+    assert call_count[0] == 5
 
 
 # ---------------------------------------------------------------------------
@@ -2839,10 +2866,12 @@ def test_exchange_swaps_zones():
     state = _make_state()
     card_a = _make_card("card_a")
     card_a.owner = 1
+    card_a.controller = 1
     state.players[1].hand.add(card_a)
 
     card_b = _make_card("card_b")
     card_b.owner = 1
+    card_b.controller = 1
     state.players[1].graveyard.add(card_b)
 
     event = exchange(state, card_a=card_a, card_b=card_b)
@@ -2850,6 +2879,26 @@ def test_exchange_swaps_zones():
     assert not event.canceled
     assert card_a in state.players[1].graveyard.cards
     assert card_b in state.players[1].hand.cards
+
+
+def test_exchange_swaps_control():
+    """CR 8.5.49: exchange swaps zone, visibility, AND control."""
+    state = _make_state()
+    card_a = _make_card("card_a")
+    card_a.owner = 1
+    card_a.controller = 1
+    state.players[1].hand.add(card_a)
+
+    card_b = _make_card("card_b")
+    card_b.owner = 2
+    card_b.controller = 2
+    state.players[2].hand.add(card_b)
+
+    exchange(state, card_a=card_a, card_b=card_b)
+
+    # Control should be swapped
+    assert card_a.controller == 2
+    assert card_b.controller == 1
 
 
 def test_exchange_emits_event():
@@ -3448,9 +3497,9 @@ def test_wager_stores_prize_on_card():
     event = wager(state, atk, prize="Might", controller_id=1, opponent_id=2)
 
     assert not event.canceled
-    assert atk.counters.get("__wager_prize__") == "Might"
-    assert atk.counters.get("__wager_controller__") == 1
-    assert atk.counters.get("__wager_opponent__") == 2
+    assert atk.wager_data['prize'] == "Might"
+    assert atk.wager_data['controller_id'] == 1
+    assert atk.wager_data['opponent_id'] == 2
 
 
 def test_wager_emits_event():
@@ -3778,3 +3827,122 @@ def test_add_defend_emits_event():
 
     assert len(received) == 1
     assert received[0].data["card"] == "block_card"
+
+
+# ---------------------------------------------------------------------------
+# Additional audit fix tests
+# ---------------------------------------------------------------------------
+
+def test_freeze_default_duration_unregisters_on_turn_start():
+    """CR 8.5.34b: freeze with no duration unfreezes at start of controller's next turn."""
+    state = _make_state()
+    card = _make_card("ice_target")
+    card.owner = 1
+    card.controller = 1
+    state.active_player = 1
+
+    freeze(state, target_card=card)  # no until_condition
+    assert card.counters.get("__frozen__", 0) == 1
+
+    # Simulate start_of_turn for the controller
+    state.event_manager.emit(Event(type="start_of_turn", data={}), state)
+
+    assert card.counters.get("__frozen__", 0) == 0
+
+
+def test_freeze_explicit_duration_does_not_auto_unfreeze():
+    """freeze() with explicit until_condition does NOT register auto-unfreeze."""
+    state = _make_state()
+    card = _make_card("ice_target")
+    card.owner = 1
+    card.controller = 1
+    state.active_player = 1
+
+    freeze(state, target_card=card, until_condition="end_of_turn")
+    assert card.counters.get("__frozen__", 0) == 1
+
+    # start_of_turn should NOT unfreeze since explicit condition was given
+    state.event_manager.emit(Event(type="start_of_turn", data={}), state)
+    assert card.counters.get("__frozen__", 0) == 1
+
+
+def test_ignore_registers_replacement_effect():
+    """CR 8.5.33: ignore registers a one-shot replacement that cancels matching events."""
+    from engine.effect_keywords import ignore
+    state = _make_state()
+
+    initial_count = len(state.effect_manager.replacement_effects)
+    ignore(state, description="ignore next damage", ignored_event_type="deal_damage")
+
+    assert len(state.effect_manager.replacement_effects) == initial_count + 1
+
+
+def test_ignore_without_event_type_is_record_only():
+    """ignore() with no ignored_event_type just emits event, no replacement registered."""
+    from engine.effect_keywords import ignore
+    state = _make_state()
+
+    initial_count = len(state.effect_manager.replacement_effects)
+    ignore(state, description="record only")
+
+    assert len(state.effect_manager.replacement_effects) == initial_count
+
+
+def test_clash_uses_reveal_emits_reveal_event():
+    """clash() routes through reveal() which emits a 'reveal' event."""
+    state = _make_state()
+    c1 = _make_card("strong")
+    c1.owner = 1
+    c1.power = 5
+    state.players[1].deck.add(c1)
+
+    c2 = _make_card("weak")
+    c2.owner = 2
+    c2.power = 2
+    state.players[2].deck.add(c2)
+
+    reveal_events = []
+    state.event_manager.register("reveal", lambda ev, s: reveal_events.append(ev))
+
+    clash(state, player1_id=1, player2_id=2)
+
+    assert len(reveal_events) == 1
+
+
+def test_put_object_uses_controller_for_source():
+    """put_object removes card from controller's zone, not owner's."""
+    from engine.effect_keywords import put_object
+    state = _make_state()
+    card = _make_card("controlled_card")
+    card.owner = 1
+    card.controller = 2  # controlled by player 2
+    state.players[2].hand.add(card)
+
+    # Move to owner's graveyard (owner=1, so graveyard zone entry accepts it)
+    event = put_object(state, card, destination_zone="graveyard", destination_player_id=1)
+
+    assert not event.canceled
+    # Card was in player 2's hand (controller), should be removed from there
+    assert card not in state.players[2].hand.cards
+    assert card in state.players[1].graveyard.cards
+
+
+def test_gain_chi_goes_to_chi_pool():
+    """gain() CHI adds to player.chi, not resources."""
+    state = _make_state()
+    state.players[1].chi = 0
+
+    gain(state, asset_type=AssetType.CHI, amount=3, source_player_id=1, target_player_id=1)
+
+    assert state.players[1].chi == 3
+    assert state.players[1].resources == 0
+
+
+def test_lose_chi_subtracts_from_chi_pool():
+    """lose() CHI subtracts from player.chi, not resources."""
+    state = _make_state()
+    state.players[1].chi = 5
+
+    lose(state, asset_type=AssetType.CHI, amount=2, target_player_id=1)
+
+    assert state.players[1].chi == 3
