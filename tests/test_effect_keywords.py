@@ -3232,3 +3232,444 @@ def test_gain_control_equipment_zone_fails_wrong_owner():
     # card returned to player 1's hand
     assert card in state.players[1].hand.cards
     assert card.controller == 1
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.36 — transform
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import transform, TransformEvent
+
+
+def test_transform_puts_objects_under_permanent():
+    """CR 8.5.36 — source card is placed under the permanent."""
+    state = _make_state()
+    obj = _make_card("obj_card")
+    obj.owner = 1
+    state.players[1].hand.add(obj)
+
+    perm = _make_item_card("perm_card")
+    perm.owner = 1
+    state.players[1].permanents.add(perm)
+
+    event = transform(state, [obj], perm, source_player_id=1)
+
+    assert not event.canceled
+    assert obj in perm.cards_underneath
+    assert obj.is_sub_card
+
+
+def test_transform_canceled_when_no_objects():
+    """CR 8.5.36d — empty objects list fails."""
+    state = _make_state()
+    perm = _make_item_card("perm_card")
+    perm.owner = 1
+    state.players[1].permanents.add(perm)
+
+    event = transform(state, [], perm, source_player_id=1)
+    assert event.canceled
+
+
+def test_transform_emits_event():
+    """transform emits a 'transform' event."""
+    state = _make_state()
+    obj = _make_card("obj_card")
+    obj.owner = 1
+    state.players[1].hand.add(obj)
+    perm = _make_item_card("perm_card")
+    perm.owner = 1
+    state.players[1].permanents.add(perm)
+
+    received = []
+    state.event_manager.register("transform", lambda ev, s: received.append(ev))
+    transform(state, [obj], perm, source_player_id=1)
+
+    assert len(received) == 1
+    assert "obj_card" in received[0].data["objects"]
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.38 — attack
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import attack, AttackEvent
+
+
+def test_attack_emits_event():
+    """CR 8.5.38 — attack emits 'attack' event."""
+    state = _make_state()
+    card = _make_card("swing_card")
+    card.owner = 1
+
+    received = []
+    state.event_manager.register("attack", lambda ev, s: received.append(ev))
+    event = attack(state, card, target_id=2, source_player_id=1)
+
+    assert not event.canceled
+    assert len(received) == 1
+    assert received[0].data["target_id"] == 2
+
+
+def test_attack_replacement_can_cancel():
+    """Replacement effect can cancel the attack event."""
+    from engine.effects import ReplacementEffect, ReplacementType
+    from tests.conftest import _make_card as _mc
+    state = _make_state()
+    card = _make_card("swing_card")
+    card.owner = 1
+
+    source = _mc("effect_source")
+    state.effect_manager.replacement_effects.append(ReplacementEffect(
+        source_card=source,
+        replacement_type=ReplacementType.STANDARD,
+        condition_fn=lambda e, s: e.get("type") == "attack",
+        replace_fn=lambda e, s: {**e, "canceled": True},
+    ))
+
+    event = attack(state, card, target_id=2)
+    assert event.canceled
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.39 — contract
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import contract, ContractEvent
+
+
+def test_contract_records_on_player():
+    """CR 8.5.39 — contract sets a flag on the player."""
+    state = _make_state()
+
+    event = contract(state, player_id=1, condition="attack three times",
+                     reward="+3 life", source_card_slug="quest_card")
+
+    assert not event.canceled
+    assert state.players[1].class_counters.get("contract_quest_card") == 1
+
+
+def test_contract_fails_for_missing_player():
+    """contract fails if player_id doesn't exist."""
+    state = _make_state()
+    event = contract(state, player_id=99, condition="do something", reward="prize")
+    assert event.canceled
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.40 — create (card)
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import create_card, CreateCardEvent
+
+
+def test_create_card_adds_to_zone():
+    """CR 8.5.40 — created card appears in the specified zone."""
+    state = _make_state()
+
+    event = create_card(state, slug="new_card", dest_player_id=1, dest_zone="hand")
+
+    assert not event.canceled
+    assert event.created_card is not None
+    slugs = [c.slug for c in state.players[1].hand.cards]
+    assert "new_card" in slugs
+
+
+def test_create_card_emits_event():
+    """create_card emits 'create_card' event."""
+    state = _make_state()
+    received = []
+    state.event_manager.register("create_card", lambda ev, s: received.append(ev))
+
+    create_card(state, slug="test_card", dest_player_id=2, dest_zone="hand")
+
+    assert len(received) == 1
+    assert received[0].data["dest_player_id"] == 2
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.43 — awaken
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import awaken, AwakenEvent
+
+
+def test_awaken_flips_double_faced_card():
+    """CR 8.5.43 — awaken sets back_face_active on a double-faced card."""
+    state = _make_state()
+    card = _make_card("double_faced_card")
+    card.owner = 1
+    # Simulate double-faced card by injecting the back_face_slug attribute
+    object.__setattr__(card, 'back_face_slug', 'double_faced_card_back') if hasattr(type(card), '__slots__') else setattr(card, 'back_face_slug', 'double_faced_card_back')
+    state.players[1].hand.add(card)
+
+    event = awaken(state, card, source_player_id=1)
+
+    assert not event.canceled
+    assert card.counters.get("__back_face_active__")
+
+
+def test_awaken_fails_if_no_back_face():
+    """CR 8.5.43a — awaken fails if card is not double-faced."""
+    state = _make_state()
+    card = _make_card("single_card")
+    card.owner = 1
+    state.players[1].hand.add(card)
+
+    event = awaken(state, card)
+    assert event.canceled
+
+
+def test_awaken_fails_if_already_awakened():
+    """CR 8.5.43a — awaken fails if back face is already active."""
+    state = _make_state()
+    card = _make_card("double_faced_card")
+    card.owner = 1
+    setattr(card, 'back_face_slug', 'double_faced_card_back')
+    card.counters["__back_face_active__"] = 1
+    state.players[1].hand.add(card)
+
+    event = awaken(state, card)
+    assert event.canceled
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.46 — wager
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import wager, WagerEvent
+
+
+def test_wager_stores_prize_on_card():
+    """CR 8.5.46 — wager records prize data on the attack card."""
+    state = _make_state()
+    atk = _make_card("attack_card")
+    atk.owner = 1
+
+    event = wager(state, atk, prize="Might", controller_id=1, opponent_id=2)
+
+    assert not event.canceled
+    assert atk.counters.get("__wager_prize__") == "Might"
+    assert atk.counters.get("__wager_controller__") == 1
+    assert atk.counters.get("__wager_opponent__") == 2
+
+
+def test_wager_emits_event():
+    """wager emits 'wager' event."""
+    state = _make_state()
+    atk = _make_card("attack_card")
+    received = []
+    state.event_manager.register("wager", lambda ev, s: received.append(ev))
+
+    wager(state, atk, prize="Agility")
+
+    assert len(received) == 1
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.48 — transcend
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import transcend, TranscendEvent
+
+
+def test_transcend_moves_card_to_hand_with_back_face():
+    """CR 8.5.48 — transcend puts card in owner's hand with back-face active."""
+    state = _make_state()
+    card = _make_card("transcend_card")
+    card.owner = 1
+    card.controller = 1
+    state.players[1].permanents.add(card)
+
+    event = transcend(state, card, player_id=1)
+
+    assert not event.canceled
+    assert card in state.players[1].hand.cards
+    assert card not in state.players[1].permanents.cards
+    assert card.counters.get("__back_face_active__")
+
+
+def test_transcend_emits_event():
+    """transcend emits 'transcend' event."""
+    state = _make_state()
+    card = _make_card("transcend_card")
+    card.owner = 1
+    state.players[1].permanents.add(card)
+    received = []
+    state.event_manager.register("transcend", lambda ev, s: received.append(ev))
+
+    transcend(state, card)
+
+    assert len(received) == 1
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.51 — retrieve
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import retrieve, RetrieveEvent
+
+
+def _make_weapon_card(slug):
+    """Make a card that passes weapon zone entry (needs 'Weapon' in raw_types)."""
+    card = _make_card(slug)
+    card.raw_types = ["Weapon"]
+    card.raw_subtypes = ["1H"]
+    return card
+
+
+def test_retrieve_equips_weapon_from_graveyard():
+    """CR 8.5.51 — pays 1r and equips card from graveyard to weapon zone."""
+    state = _make_state()
+    card = _make_weapon_card("sword")
+    card.owner = 1
+    state.players[1].graveyard.add(card)
+    state.players[1].resources = 2
+
+    event = retrieve(state, card, player_id=1)
+
+    assert not event.canceled
+    assert event.cost_paid
+    assert state.players[1].resources == 1
+    assert card in state.players[1].weapon1.cards
+
+
+def test_retrieve_fails_no_resources():
+    """CR 8.5.51a — fails when player has no resources."""
+    state = _make_state()
+    card = _make_weapon_card("sword")
+    card.owner = 1
+    state.players[1].graveyard.add(card)
+    state.players[1].resources = 0
+
+    event = retrieve(state, card, player_id=1)
+
+    assert event.canceled
+
+
+def test_retrieve_fails_non_equipment():
+    """CR 8.5.51a — fails for a card with no equipment subtype."""
+    state = _make_state()
+    card = _make_card("action_card")
+    card.raw_subtypes = []
+    card.owner = 1
+    state.players[1].graveyard.add(card)
+    state.players[1].resources = 3
+
+    event = retrieve(state, card, player_id=1)
+
+    assert event.canceled
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.52 — return to the brood
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import return_to_the_brood, ReturnToTheBroodEvent
+
+
+def test_return_to_the_brood_removes_become_copy_effects():
+    """CR 8.5.52 — removes become/copy continuous effects on player's hero."""
+    state = _make_state()
+
+    # Inject a plain object acting as a become_copy effect on player 1
+    class FakeBecomeEffect:
+        effect_type = "become_copy"
+        target_player_id = 1
+
+    state.effect_manager.continuous_effects.append(FakeBecomeEffect())
+    assert len(state.effect_manager.continuous_effects) >= 1
+
+    event = return_to_the_brood(state, player_id=1)
+
+    assert not event.canceled
+    remaining = [e for e in state.effect_manager.continuous_effects
+                 if getattr(e, 'effect_type', None) == 'become_copy'
+                 and getattr(e, 'target_player_id', None) == 1]
+    assert len(remaining) == 0
+
+
+def test_return_to_the_brood_emits_event():
+    """return_to_the_brood emits 'return_to_the_brood' event."""
+    state = _make_state()
+    received = []
+    state.event_manager.register("return_to_the_brood", lambda ev, s: received.append(ev))
+
+    return_to_the_brood(state, player_id=1)
+
+    assert len(received) == 1
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.53 — give
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import give, GiveEvent
+
+
+def test_give_transfers_control():
+    """CR 8.5.53 — give moves card to new controller's permanents zone."""
+    state = _make_state()
+    card = _make_item_card("item_card")
+    card.owner = 1
+    card.controller = 1
+    state.players[1].permanents.add(card)
+
+    event = give(state, card, new_controller_id=2, source_player_id=1)
+
+    assert not event.canceled
+    assert card.controller == 2
+    assert card in state.players[2].permanents.cards
+
+
+def test_give_emits_give_event():
+    """give emits its own 'give' event (in addition to gain_control)."""
+    state = _make_state()
+    card = _make_item_card("item_card")
+    card.owner = 1
+    card.controller = 1
+    state.players[1].permanents.add(card)
+    received = []
+    state.event_manager.register("give", lambda ev, s: received.append(ev))
+
+    give(state, card, new_controller_id=2)
+
+    assert len(received) == 1
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.54 — steal
+# ---------------------------------------------------------------------------
+
+from engine.effect_keywords import steal, StealEvent
+
+
+def test_steal_transfers_control():
+    """CR 8.5.54 — steal moves card from opponent to stealer's permanents zone."""
+    state = _make_state()
+    card = _make_item_card("item_card")
+    card.owner = 2
+    card.controller = 2
+    state.players[2].permanents.add(card)
+
+    event = steal(state, card, new_controller_id=1, source_player_id=1)
+
+    assert not event.canceled
+    assert card.controller == 1
+    assert card in state.players[1].permanents.cards
+    assert card.owner == 2   # ownership unchanged
+
+
+def test_steal_emits_steal_event():
+    """steal emits its own 'steal' event."""
+    state = _make_state()
+    card = _make_item_card("item_card")
+    card.owner = 2
+    card.controller = 2
+    state.players[2].permanents.add(card)
+    received = []
+    state.event_manager.register("steal", lambda ev, s: received.append(ev))
+
+    steal(state, card, new_controller_id=1)
+
+    assert len(received) == 1
+    assert received[0].data["previous_controller_id"] == 2
