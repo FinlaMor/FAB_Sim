@@ -388,6 +388,272 @@ class SubZoneView:
         }
 
 
+# ---------------------------------------------------------------------------
+# Game History (CR-agnostic; human-readable + IQL-embeddable)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class HistoryEntry:
+    """One recorded event in the game log."""
+    seq: int                          # global monotonic sequence number
+    turn: int                         # state.turn_number when emitted
+    individual_turn: int              # state.individual_turns (per-player counter)
+    active_player_id: int             # state.active_player when emitted
+    event_type: str                   # Event.type string
+    data: dict = field(default_factory=dict)
+    text: str = ""                    # pre-rendered human-readable line
+
+    def __repr__(self) -> str:
+        return f"[T{self.turn}|P{self.active_player_id}] {self.text or self.event_type}"
+
+
+# Human-readable renderers per event type
+_EVENT_RENDERERS: dict[str, "Callable[[HistoryEntry], str]"] = {}
+
+def _render(entry: "HistoryEntry") -> str:
+    renderer = _EVENT_RENDERERS.get(entry.event_type)
+    if renderer:
+        try:
+            return renderer(entry)
+        except Exception:
+            pass
+    # fallback: event_type + data keys
+    parts = [f"{k}={v}" for k, v in entry.data.items() if v is not None]
+    return f"{entry.event_type}({', '.join(parts)})" if parts else entry.event_type
+
+
+def _reg(event_type: str):
+    """Decorator to register a human-readable renderer for an event type."""
+    def decorator(fn):
+        _EVENT_RENDERERS[event_type] = fn
+        return fn
+    return decorator
+
+
+@_reg("discard")
+def _r_discard(e):
+    card = e.data.get("target") or e.data.get("discard_target", "?")
+    return f"P{e.active_player_id} discarded {card}"
+
+@_reg("draw")
+def _r_draw(e):
+    n = e.data.get("total_drawn", 1)
+    pid = e.data.get("draw_player", e.active_player_id)
+    return f"P{pid} drew {n} card{'s' if n != 1 else ''}"
+
+@_reg("gain")
+def _r_gain(e):
+    pid = e.data.get("target_player_id", e.active_player_id)
+    return f"P{pid} gained {e.data.get('amount')} {e.data.get('asset_type','?')}"
+
+@_reg("lose")
+def _r_lose(e):
+    pid = e.data.get("target_player_id", e.active_player_id)
+    return f"P{pid} lost {e.data.get('amount')} {e.data.get('asset_type','?')}"
+
+@_reg("deal_damage")
+def _r_damage(e):
+    tgt = e.data.get("target") or e.data.get("damage_target", "?")
+    return f"P{e.active_player_id} dealt {e.data.get('amount')} {e.data.get('damage_type','generic')} dmg to {tgt}"
+
+@_reg("destroy")
+def _r_destroy(e):
+    return f"{e.data.get('target','?')} destroyed"
+
+@_reg("banish")
+def _r_banish(e):
+    return f"{e.data.get('target','?')} banished"
+
+@_reg("put_object")
+def _r_put(e):
+    return f"{e.data.get('target','?')} → {e.data.get('destination_zone','?')} (P{e.data.get('destination_player_id','?')})"
+
+@_reg("play_card")
+def _r_play(e):
+    pid = e.data.get("player_id", e.active_player_id)
+    return f"P{pid} played {e.data.get('card','?')}"
+
+@_reg("attack")
+def _r_attack(e):
+    pid = e.data.get("player_id", e.active_player_id)
+    return f"P{pid} attacks with {e.data.get('card','?')} (power={e.data.get('power','?')})"
+
+@_reg("pitch")
+def _r_pitch(e):
+    return f"P{e.active_player_id} pitched {e.data.get('target','?')} for {e.data.get('pitch_value','?')}r"
+
+@_reg("put_counter")
+def _r_put_counter(e):
+    return f"+{e.data.get('amount',1)} {e.data.get('counter_type','?')} counter on {e.data.get('target','?')}"
+
+@_reg("remove_counter")
+def _r_rm_counter(e):
+    return f"-{e.data.get('actual_removed',1)} {e.data.get('counter_type','?')} counter from {e.data.get('target','?')}"
+
+@_reg("tap")
+def _r_tap(e):    return f"{e.data.get('target','?')} tapped"
+
+@_reg("untap")
+def _r_untap(e):  return f"{e.data.get('target','?')} untapped"
+
+@_reg("create_token")
+def _r_token(e):
+    pid = e.data.get("target_player_id", e.active_player_id)
+    return f"P{pid} created {e.data.get('token_type','?')} token"
+
+@_reg("gain_control")
+def _r_gain_ctrl(e):
+    return f"P{e.data.get('new_controller_id','?')} gained control of {e.data.get('target','?')}"
+
+@_reg("shuffle")
+def _r_shuffle(e):
+    return f"P{e.data.get('target_player_id','?')} shuffled deck"
+
+@_reg("reveal")
+def _r_reveal(e):
+    targets = e.data.get("targets", [])
+    return f"P{e.active_player_id} revealed {', '.join(targets)}"
+
+@_reg("search")
+def _r_search(e):
+    chosen = e.data.get("chosen")
+    if chosen:
+        return f"P{e.data.get('search_player_id','?')} searched → {chosen}"
+    return f"P{e.data.get('search_player_id','?')} searched (failed)"
+
+@_reg("clash")
+def _r_clash(e):
+    w = e.data.get("winner_id")
+    return f"Clash: P{w} wins" if w else "Clash: tie"
+
+@_reg("intimidate")
+def _r_intimidate(e):
+    tgt = e.data.get("target_player_id", "?")
+    card = e.data.get("banished_card")
+    return f"P{e.active_player_id} intimidated P{tgt}" + (f" → banished {card}" if card else "")
+
+@_reg("freeze")
+def _r_freeze(e):
+    return f"{e.data.get('target','?')} frozen until {e.data.get('until_condition','?')}"
+
+@_reg("mark")
+def _r_mark(e):
+    return f"P{e.data.get('target_player_id','?')} marked"
+
+@_reg("charge")
+def _r_charge(e):
+    return f"P{e.data.get('player_id','?')} charged {e.data.get('target','?')} to soul"
+
+@_reg("become_copy")
+def _r_copy(e):
+    return f"{e.data.get('subject','?')} became a copy of {e.data.get('reference','?')}"
+
+
+class GameHistory:
+    """Records every event emitted during a game.
+
+    Dual-mode:
+    - In-memory: entries stored in self.entries (default)
+    - External: pass a backend object with .append(entry_dict) to stream
+      entries elsewhere (e.g. SQLite, file, network)
+
+    Human-readable output via to_text().
+    IQL-embeddable output via to_features().
+    """
+
+    def __init__(self, backend=None):
+        self.entries: list[HistoryEntry] = []
+        self._seq: int = 0
+        self._backend = backend   # optional external sink
+
+    def record(self, event: "Event", state: "GameState") -> None:
+        """Called by EventManager.emit on every event."""
+        self._seq += 1
+        entry = HistoryEntry(
+            seq=self._seq,
+            turn=getattr(state, "turn_number", 0),
+            individual_turn=getattr(state, "individual_turns", 0),
+            active_player_id=getattr(state, "active_player", 0),
+            event_type=event.type,
+            data=dict(event.data) if getattr(event, 'data', None) is not None else {},
+        )
+        entry.text = _render(entry)
+        self.entries.append(entry)
+        if self._backend is not None:
+            self._backend.append(entry.__dict__)
+
+    # ------------------------------------------------------------------
+    # Filtering
+    # ------------------------------------------------------------------
+
+    def this_turn(self, turn: int) -> list[HistoryEntry]:
+        return [e for e in self.entries if e.turn == turn]
+
+    def by_player(self, player_id: int) -> list[HistoryEntry]:
+        return [e for e in self.entries if e.active_player_id == player_id]
+
+    def by_type(self, event_type: str) -> list[HistoryEntry]:
+        return [e for e in self.entries if e.event_type == event_type]
+
+    def cards_played(self, player_id: int, turn: int | None = None) -> list[str]:
+        """Return slugs of cards played by player_id (optionally filtered by turn)."""
+        entries = [e for e in self.entries
+                   if e.event_type == "play_card"
+                   and e.data.get("player_id") == player_id]
+        if turn is not None:
+            entries = [e for e in entries if e.turn == turn]
+        return [e.data.get("card", "") for e in entries]
+
+    # ------------------------------------------------------------------
+    # Human-readable output
+    # ------------------------------------------------------------------
+
+    def to_text(self, turn: int | None = None, player_id: int | None = None) -> str:
+        """Return a human-readable game log.
+
+        Optionally filtered to a specific turn and/or player.
+        Each line: [seq] [T{turn}|P{player}] {text}
+        """
+        entries = self.entries
+        if turn is not None:
+            entries = [e for e in entries if e.turn == turn]
+        if player_id is not None:
+            entries = [e for e in entries if e.active_player_id == player_id]
+        lines = [f"[{e.seq:>4}] [T{e.turn}|P{e.active_player_id}] {e.text}" for e in entries]
+        return "\n".join(lines)
+
+    def __repr__(self) -> str:
+        return f"GameHistory({len(self.entries)} events, {self._seq} seq)"
+
+    # ------------------------------------------------------------------
+    # IQL embedding interface
+    # ------------------------------------------------------------------
+
+    def to_features(self, current_turn: int, lookback: int = 1,
+                    max_events: int = 50) -> list[dict]:
+        """Return recent history as a list of feature dicts for IQL embedding.
+
+        Returns up to max_events entries from the last `lookback` turns,
+        most recent first. Each dict contains:
+          seq, turn, individual_turn, active_player_id, event_type, text, data
+        """
+        min_turn = max(0, current_turn - lookback)
+        recent = [e for e in self.entries if e.turn >= min_turn]
+        recent = recent[-max_events:]   # cap
+        return [
+            {
+                "seq": e.seq,
+                "turn": e.turn,
+                "individual_turn": e.individual_turn,
+                "active_player_id": e.active_player_id,
+                "event_type": e.event_type,
+                "text": e.text,
+                "data": e.data,
+            }
+            for e in reversed(recent)   # most recent first
+        ]
+
+
 class EventManager:
     def __init__(self):
         self.listeners: dict = {}
@@ -414,6 +680,10 @@ class EventManager:
         # Track coarse event history for state embedding features.
         if hasattr(game_state, 'events_this_turn') and isinstance(game_state.events_this_turn, set):
             game_state.events_this_turn.add(event.type)
+
+        # Record into structured game history
+        if hasattr(game_state, 'history') and isinstance(game_state.history, GameHistory):
+            game_state.history.record(event, game_state)
 
         for listener in list(self.listeners.get(event.type, [])):
             listener(event, game_state)
@@ -871,7 +1141,7 @@ class GameState:
     effect_manager: EffectManager = field(default_factory=EffectManager) # EffectManager from engine.effects
     priority_player: int = 1
     consecutive_passes: int = 0
-    game_history: dict[int, list[str]] = field(default_factory=dict) # {turn number: [events]}
+    history: GameHistory = field(default_factory=GameHistory)
     events_this_turn: set[str] = field(default_factory=set)
     chain_links: list[ChainLink] = field(default_factory=list)
     pitch_history: dict[int, dict[int, list[Card]]] = field(default_factory=lambda: {1: {}, 2: {}})  # {player_id: {turn: [slug, ...]}}
