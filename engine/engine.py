@@ -8,7 +8,7 @@ from numpy.random import random
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, EventManager, Event, Player, CombatState, ChainLink, StackEntry
 from engine.deck import load_deck, create_player
-from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, get_pitchable_cards, can_pay_cost
+from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, can_pay_cost
 from engine.effects import EffectManager
 from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
 from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS

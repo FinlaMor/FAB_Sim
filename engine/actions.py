@@ -62,8 +62,8 @@ class Action:
     x_value_declared: Optional[int] = None         # X-cost value declared (CR 1.12.2, 5.1.3a)
     is_melded: Optional[bool] = None               # Legacy meld flag (kept for compat)
     meld_side: Optional[str] = None                # Meld side: 'top', 'bottom', 'both', or None (CR 8.3.38)
-    alternate_cost_declared = Optional[bool] = None
-    additional_costs_declared = Optional[dict[str, bool]] = None
+    alternate_cost_declared: Optional[bool] = None
+    additional_costs_declared: Optional[dict[str, bool]] = None
 
     resource_cost: Optional[int] = None
     alternate_cost: Optional[bool] = None  # Alternate cost names declared by player (CR 5.1.3c)
@@ -183,7 +183,7 @@ def _get_pitch_value(card: Card) -> int:
     return card.pitch or 0
 
 
-def _can_afford_action(state: GameState, action: Action) -> bool, dict[str, int]:
+def _can_afford_action(state: GameState, action: Action) -> tuple[bool, dict[str, int]]:
     """Check whether a player can afford all costs of an action.
 
     Mirrors evaluate_play_cost(check=True) in engine.py but lives here to

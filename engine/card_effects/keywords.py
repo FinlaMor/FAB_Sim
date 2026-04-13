@@ -315,6 +315,7 @@ def phantasm_destroy(card: Card, event: Event, state: GameState) -> None:
         _move_to_graveyard(card, state)
         from engine.engine import _close_step
         _close_step(state)
+        
 
 
 def spectra_destroy(card: Card, event: Event, state: GameState) -> None:

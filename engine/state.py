@@ -11,8 +11,129 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable, Optional
 from engine.card import Card, CardDB
+from engine.context import is_effect_context
 from engine.continuous_effects import ContinuousEffectManager
 from engine.effects import EffectManager
+
+# ---------------------------------------------------------------------------
+# Zone entry rules (CR 3.0.11 / 3.0.12 / 3.0.12a)
+# ---------------------------------------------------------------------------
+
+# CR 1.3.2c — deck-card types
+_DECK_CARD_TYPES = frozenset({
+    "Action", "AttackReaction", "Attack Reaction", "Block",
+    "DefenseReaction", "Defense Reaction", "Instant", "Mentor", "Resource",
+})
+
+# CR 1.3.2 — deck-card subtypes that allow entry to the permanent zone
+_PERMANENT_SUBTYPES = frozenset({
+    "Affliction", "Ally", "Ash", "Aura", "Construct",
+    "Figment", "Invocation", "Item", "Landmark",
+})
+
+# Equipment slot subtypes per zone (CR 3.2.2a, 3.5.2a, 3.10.2a, 3.12.2a, 3.16.2a)
+_EQUIPMENT_ZONE_SUBTYPES: dict[str, frozenset[str]] = {
+    "arms":    frozenset({"Arms"}),
+    "chest":   frozenset({"Chest"}),
+    "head":    frozenset({"Head"}),
+    "legs":    frozenset({"Legs"}),
+    "weapon":  frozenset({"Weapon", "OffHand", "Off-Hand", "Quiver"}),
+    "weapon1": frozenset({"Weapon", "OffHand", "Off-Hand", "Quiver"}),
+    "weapon2": frozenset({"Weapon", "OffHand", "Off-Hand", "Quiver"}),
+}
+
+
+def _is_token(card: Card) -> bool:
+    types = [t.lower() for t in (card.raw_types or card.types or [])]
+    return "token" in types
+
+
+def _is_deck_card(card: Card) -> bool:
+    types = set(card.raw_types or card.types or [])
+    return bool(types & _DECK_CARD_TYPES)
+
+
+def _has_permanent_subtype(card: Card) -> bool:
+    subtypes = set(card.raw_subtypes or card.subtypes or [])
+    return bool(subtypes & _PERMANENT_SUBTYPES)
+
+
+class ZoneEntryResult:
+    """Outcome of a zone entry rule check."""
+    ALLOW = "allow"
+    CLEAR = "clear"            # redirect to graveyard (rule path, CR 3.0.12)
+    CEASE_TO_EXIST = "cease"   # token/macro — just removed (CR 3.0.12a)
+    FAIL = "fail"              # effect path — move simply doesn't happen (CR 3.0.11)
+
+
+def _check_zone_entry(zone: "Zone", card: Card, source: str) -> str:
+    """Return a ZoneEntryResult for card entering zone from the given source.
+
+    source: "rule" (engine-initiated) or "effect" (card-effect-initiated).
+    """
+    name = zone.name
+
+    # --- owner-only zones (hand, deck, pitch, graveyard, banished, arsenal) ---
+    if name in ("hand", "deck", "pitch", "graveyard", "banished", "arsenal"):
+        # Tokens cease to exist on entry to graveyard/banished (CR 3.0.12a)
+        if name in ("graveyard", "banished") and _is_token(card):
+            return ZoneEntryResult.CEASE_TO_EXIST
+        # Non-deck-cards can't enter hand/deck/pitch/arsenal (CR 3.9.2, 3.7.2, 3.14.2, 3.3.2)
+        if name in ("hand", "deck", "pitch", "arsenal") and not _is_deck_card(card):
+            return ZoneEntryResult.FAIL if source == "effect" else ZoneEntryResult.CLEAR
+        # Wrong owner
+        if zone.owner_id is not None and card.owner != zone.owner_id:
+            return ZoneEntryResult.FAIL if source == "effect" else ZoneEntryResult.CLEAR
+        # Arsenal full (CR 3.3.2a — both rule and effect fail; rule "clears" = would redirect to grave)
+        if name == "arsenal" and zone.player is not None:
+            # check all arsenal zones for this player
+            arsenal_zones = [z for z in _get_player_zones(zone.player) if z.name == "arsenal"]
+            if all(len(z.cards) >= 1 for z in arsenal_zones):
+                return ZoneEntryResult.FAIL if source == "effect" else ZoneEntryResult.CLEAR
+
+    # --- equipment slot zones (CR 3.2.2a, 3.5.2a, 3.10.2a, 3.12.2a, 3.16.2a) ---
+    if name in _EQUIPMENT_ZONE_SUBTYPES:
+        allowed_subtypes = _EQUIPMENT_ZONE_SUBTYPES[name]
+        card_subtypes = set(card.raw_subtypes or card.subtypes or [])
+        card_types = set(card.raw_types or card.types or [])
+        # Must have matching subtype OR type Weapon (for weapon zones)
+        has_match = bool(card_subtypes & allowed_subtypes) or (
+            name in ("weapon", "weapon1", "weapon2") and "Weapon" in card_types
+        )
+        if not has_match:
+            return ZoneEntryResult.FAIL if source == "effect" else ZoneEntryResult.CLEAR
+
+    # --- hero zone (CR 3.11.2) ---
+    if name == "hero":
+        card_types = set(card.raw_types or card.types or [])
+        if "Hero" not in card_types:
+            return ZoneEntryResult.FAIL if source == "effect" else ZoneEntryResult.CLEAR
+
+    # --- permanent zone (CR 3.13.2, 1.3.2c/d) ---
+    if name == "permanents":
+        # deck-cards only allowed if they have a permanent subtype
+        if _is_deck_card(card) and not _has_permanent_subtype(card):
+            return ZoneEntryResult.FAIL if source == "effect" else ZoneEntryResult.CLEAR
+
+    return ZoneEntryResult.ALLOW
+
+
+def _get_player_zones(player) -> list["Zone"]:
+    """Return all Zone objects owned by player (for arsenal-full check)."""
+    return [v for v in vars(player).values() if isinstance(v, Zone)]
+
+
+def _clear_sub_cards(card: "Card") -> None:
+    """CR 3.0.14e: when a top-card ceases to exist, its sub-cards are cleared.
+
+    Each sub-card has its is_sub_card / top_card back-ref cleared and its zone
+    set to 'ceased_to_exist' so lookups don't find stale references.
+    """
+    for sub in list(getattr(card, "cards_underneath", [])):
+        sub.is_sub_card = False
+        sub.top_card = None
+        sub.zone = "ceased_to_exist"
+    card.cards_underneath = []
 
 
 class Step(Enum):
@@ -34,19 +155,84 @@ class Step(Enum):
 
 
 class Zone:
-    """A named collection of Card objects. The fundamental building block of OO game state."""
+    """A named collection of Card objects. The fundamental building block of OO game state.
+    Total of 15 zones per 3.15:
 
-    def __init__(self, name: str, owner_id: Optional[int] = None):
+        Shared zones:
+            stack,
+            combat chain
+
+        Public zones (one per player):
+            weapon (broken down further by engine into weapon1 and weapon2), 
+            arms,
+            banished,
+            chest,
+            graveyard,
+            head,
+            hero,
+            legs,
+            permanent,
+            pitch  
+        
+        Private zones (one per player):
+            arsenal,
+            deck,
+            hand
+        
+        Zones solely created for/by the engine:
+            inventory (not TECHNICALLY a zone)
+            staging (an internal implementation zone - cards pass through it briefly during initialization before entering an actual game zone)
+    """
+
+    def __init__(self, name: str, owner_id: Optional[int] = None, player=None):
         self.name = name
         self.owner_id = owner_id
+        self.player = player  # back-reference to Player; set after Player.__init__
+        self.players: Optional[dict] = None  # back-reference to all players; set by GameState.__post_init__
         self.cards: list[Card] = []
 
     @property
     def is_public(self) -> bool:
         return self.name not in ('hand', 'deck', 'arsenal', 'inventory')
 
-    def add(self, card: Card, is_public: Optional[bool] = None) -> None:
-        """Move card into this zone, updating card.prev_zone / card.zone / card.is_public."""
+    def add(self, card: Card, is_public: Optional[bool] = None) -> str:
+        """Move card into this zone, updating card.prev_zone / card.zone / card.is_public.
+
+        Returns a ZoneEntryResult indicating what happened:
+          ALLOW           — card entered normally
+          FAIL            — effect-source move rejected; card not moved
+          CLEAR           — rule-source violation; caller should redirect to graveyard
+          CEASE_TO_EXIST  — token entered a zone it can't occupy; card removed from game
+        """
+        source = "effect" if is_effect_context() else "rule"
+        result = _check_zone_entry(self, card, source)
+
+        if result == ZoneEntryResult.FAIL:
+            return result
+        if result == ZoneEntryResult.CEASE_TO_EXIST:
+            # CR 3.0.12a: token simply leaves its current zone and ceases to exist
+            if self.player is not None:
+                for z in _get_player_zones(self.player):
+                    if card in z.cards:
+                        z.cards.remove(card)
+                        break
+            # CR 3.0.14e: clear sub-cards when top-card ceases to exist
+            _clear_sub_cards(card)
+            card.zone = "ceased_to_exist"
+            return result
+        if result == ZoneEntryResult.CLEAR:
+            # CR 3.0.12: redirect to the card owner's graveyard
+            owner_player = None
+            if self.players is not None and card.owner is not None:
+                owner_player = self.players.get(card.owner)
+            elif self.player is not None:
+                owner_player = self.player
+            if owner_player is not None:
+                inner = owner_player.graveyard.add(card, is_public)
+                # Propagate CEASE_TO_EXIST (e.g. token→hand→graveyard chain)
+                return inner if inner == ZoneEntryResult.CEASE_TO_EXIST else ZoneEntryResult.CLEAR
+            # No player ref — fall through and allow (best-effort)
+
         next_is_public = self.is_public if is_public is None else is_public
         card.remember_last_known_state()
         was_in_arena = card.is_in_arena
@@ -60,10 +246,13 @@ class Zone:
         card.is_public = next_is_public
         if card not in self.cards:
             self.cards.append(card)
+        return ZoneEntryResult.ALLOW
 
     def remove(self, card: Card) -> bool:
         if card in self.cards:
             self.cards.remove(card)
+            # CR 3.0.14e: clearing sub-cards when top-card leaves its zone
+            _clear_sub_cards(card)
             return True
         return False
 
@@ -81,6 +270,30 @@ class Zone:
         card.zone = self.name
         card.is_public = next_is_public
         self.cards.append(card)
+
+    def add_under(self, top_card: "Card", sub_card: "Card") -> bool:
+        """Place sub_card underneath top_card in this zone (CR 3.0.14).
+
+        top_card must already be in this zone. sub_card is appended to
+        top_card.cards_underneath — it does not appear in zone.cards directly.
+
+        CR 3.0.14b: becoming a sub-card causes the card to cease to exist as its
+        previous self and become a new object (reset). is_sub_card is set True.
+        CR 3.0.14d: sub-card inherits top-card's visibility.
+        Returns True on success, False if top_card is not in this zone.
+        """
+        if top_card not in self.cards:
+            return False
+        # CR 3.0.14b: card becomes new object on entering as sub-card
+        sub_card.reset_to_base_state()
+        sub_card.prev_zone = sub_card.zone
+        sub_card.zone = self.name
+        sub_card.is_sub_card = True
+        sub_card.top_card = top_card
+        # CR 3.0.14d: inherit visibility from top-card
+        sub_card.is_public = top_card.is_public
+        top_card.cards_underneath.append(sub_card)
+        return True
 
     def pop_top(self) -> Optional[Card]:
         return self.cards.pop(0) if self.cards else None
@@ -154,6 +367,10 @@ class SubZoneView:
         for card in cards:
             self.add(card)
 
+    def add_under(self, top_card: "Card", sub_card: "Card") -> bool:
+        """Delegate add_under to the parent zone."""
+        return self.parent.add_under(top_card, sub_card)
+
     def _matches(self, card: Card) -> bool:
         return getattr(card, 'permanent_subtype', None) == self.subtype
 
@@ -198,7 +415,7 @@ class EventManager:
         if hasattr(game_state, 'events_this_turn') and isinstance(game_state.events_this_turn, set):
             game_state.events_this_turn.add(event.type)
 
-        for listener in self.listeners.get(event.type, []):
+        for listener in list(self.listeners.get(event.type, [])):
             listener(event, game_state)
 
 @dataclass
@@ -244,8 +461,8 @@ class Player:
     def __init__(self, player_id: int, hero_card: Card):
         self.player_id = player_id
         self.hero = hero_card
-        self.health: int = hero_card.life or 40
-        self.intellect: int = hero_card.intellect or 4
+        self.life: int = hero_card.raw_life or 40
+        self.intellect: int = hero_card.raw_intellect or 4
         self.resources: int = 0
         self.action_points: int = 0
         self.counters: dict[tuple[str, str, str], int] = {} # e.g {["dawnblade", "weapon", "plus_attack"]:1, ["tectonic_plating", "chest", "minus_defense"]:-1}
@@ -273,11 +490,15 @@ class Player:
         self.hero_zone = Zone("hero", player_id)
         self.soul = SubZoneView(self.hero_zone, "Soul")
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
-        self.pitch_history = list[Card] = []
+        self.pitch_history: list[Card] = []
         # Hero card setup
         hero_card.owner = player_id
         hero_card.controller = player_id
         self.hero_zone.add(hero_card)
+
+        # Wire player back-reference into all owned zones
+        for zone in _get_player_zones(self):
+            zone.player = self
 
         # Turn tracking
         self.arsenal_limit: int = 1
@@ -383,6 +604,13 @@ class Player:
             if c:
                 return c
         return None
+    
+    def find_all_cards(self, slug:str) -> Optional[list[Card]]:
+        cards = []
+        for c in self.all_cards:
+            if c.slug == slug:
+                cards.append(c)
+        return cards
 
     @property
     def arsenal_card(self) -> Optional[Card]:
@@ -656,6 +884,12 @@ class GameState:
     landmarks: list[tuple[int, str]] = field(default_factory=list)
     last_acted_player: Optional[int] = None
     last_known_cache: dict[int, dict] = field(default_factory=dict)
+
+    def __post_init__(self):
+        # Wire players dict into every zone so CLEAR redirects can reach any player's graveyard.
+        for player in self.players.values():
+            for zone in _get_player_zones(player):
+                zone.players = self.players
 
     def active(self) -> Player:
         return self.players[self.active_player]

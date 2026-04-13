@@ -15,15 +15,26 @@ Event object expected attributes per apply_replacements:
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+import dataclasses
+import random
+from typing import TYPE_CHECKING, Optional, Callable
 from dataclasses import dataclass, field
 
+
+from engine.state import GameState, Event
+from engine.context import effect_context
+from engine.card import Card
+from engine.continuous_effects import ContinuousEffect, next_timestamp
+
 if TYPE_CHECKING:
-    from engine.state import GameState
     from engine.effects import EffectManager
-    from engine.card import Card
 
 # in effect_keywords.py
+
+#helpers
+def coo(card: Card, return_owner: bool=False) -> int|None:
+    """Takes in card object. Returns Int of card's controller and falls back to card owner."""
+    return card.controller if card.controller is not None else card.owner
 
 @dataclass
 class BanishEvent:
@@ -61,7 +72,8 @@ def banish(state: GameState, card: Card, source_player_id: int,
     )
 
     # replacement effects fire before the move (CR 6.5)
-    state.effect_manager.apply_replacements(event, state)
+    event_dict = state.effect_manager.apply_replacements(vars(event).copy(), state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
 
     if event.cancelled:
         return event
@@ -76,6 +88,2747 @@ def banish(state: GameState, card: Card, source_player_id: int,
 
     # CR 8.5.1c: register delayed return effect if temporary
     if event.until_condition:
-        _register_return_from_banish(state, card, target_player_id, event.until_condition)
+        _register_return_from_banish(state, card=card, target_player_id=target_player_id, origin_zone=origin_zone, until_condition=until_condition)
+
+    return event
+
+def _register_return_from_banish(state, card, target_player_id, origin_zone, until_condition):
+    
+    def handler(event, s: GameState) -> None:
+        player = s.players[target_player_id]
+        s.event_manager.unregister(until_condition, handler)
+
+        # find where the card is now
+        if card in player.banished.cards:
+            player.banished.remove(card)
+        elif card.is_in_arena or card.zone == 'stack':
+            # CR 3.0.9b: still referenceable, return it from wherever it is
+            getattr(player, card.zone).remove(card)
+        else:
+            # CR 3.0.9: card entered a non-arena/non-stack zone — ceased to exist, return fails
+            return
+
+        getattr(player, origin_zone).add(card)
+        s.event_manager.emit(Event(type="return_from_banish", card=card.slug), s)
+
+    state.event_manager.register(until_condition, handler)
+
+@dataclass
+class CreateTokenEvent:
+    """CR 8.5.2 — create a token and put it in the arena under the control of player_id.
+    
+    Replacement effects can modify:
+        number of tokens created - increase or decrease (mordred tide, ripple away)
+    """
+    token: Card                              # token to be created (required)
+    source_player_id: int = None             # who is causing the tokens to be created
+    target_player_id: int = None             # who controls the token. Per 8.5.2c
+    type: str = "create_token"
+    destination: str = "tokens"              # replacement effects can change this
+    number: int = 1                          # number to create; can be modified
+    canceled: bool = False
+
+
+def create_token(state: GameState, token: str, source_player_id: int, target_player_id: int,
+           number: int=1, destination: str='tokens') -> CreateTokenEvent:
+    """CR 8.5.2 Create (token) is a discrete effect. 
+    To create a token, product the specified token and put it in the arena."""
+    
+    card = state.card_db.get(token)
+
+    event = CreateTokenEvent(
+                            token=card, 
+                             target_player_id=target_player_id, 
+                             number=number, 
+                             source_player_id=source_player_id,
+                             destination=destination, 
+    )
+
+    event_dict = state.effect_manager.apply_replacements(vars(event).copy(), state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.number == 0 or event.canceled:
+        return event
+
+    # execute the creation — each token is a distinct Card object (CR 8.5.2)
+    controller = state.players[target_player_id]
+    for _ in range(event.number):
+        token_card = state.card_db.get(token)
+        token_card.owner = target_player_id
+        token_card.controller = target_player_id
+        getattr(controller, event.destination).add(token_card)
+
+    # trigger: "when {token} enters the arena" listeners fire after (CR 8.5.2b)
+    state.event_manager.emit(Event(type="create_token", data={"token": card.slug, "player_id": target_player_id}), state)
+
+    return event
+
+class DamageType:
+    GENERIC = "generic"
+    PHYSICAL = "physical"
+    ARCANE = "arcane"
+
+@dataclass
+class DamageEvent:
+    """CR 8.5.3 Deal (damage) is a discrete effect. To deal damage to an object, that
+    object loses {h} equal to the damage dealt. Only living objects may be targeted.
+    All living cards in slug_index have in their types or subtypes either 'ally' or
+    'hero' (including the 'demi-hero' subtype)
+    """
+    type: str = "damage"
+    amount: int = 0
+    damage_type: str = DamageType.PHYSICAL
+    source_player_id: int = None
+    damage_source: str = None
+    damage_source_card: Card | None = None
+    damage_target: Card = None
+    canceled: bool = False
+
+
+def deal_damage(state: GameState, amount: int, damage_type: str, source_player_id: int, damage_target: Card, damage_source: str,
+                damage_source_card: Card=None, canceled: bool=False):
+
+    event = DamageEvent(
+        amount=amount,
+        damage_type=damage_type,
+        source_player_id=source_player_id,
+        damage_source=damage_source,
+        damage_source_card=damage_source_card,
+        damage_target=damage_target,
+    )
+
+    # CR 8.5.3c: non-living targets cannot be damaged
+    all_types = [t.lower() for t in (damage_target.types or []) + (damage_target.subtypes or [])]
+    is_living = any(t in ('hero', 'demi-hero', 'demihero', 'ally') for t in all_types)
+    if not is_living:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict["target_player_id"] = damage_target.controller
+    event_dict["unpreventable"] = False
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.amount == 0 or event.canceled:
+        return event
+
+    # execute the damage
+    if any(t in ('hero', 'demi-hero', 'demihero') for t in all_types):
+        target_player = state.players[damage_target.controller]
+        target_player.life -= event.amount
+        state.event_manager.emit(Event(type="damage", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug}), state)
+        if damage_type == DamageType.PHYSICAL and event.amount > 0:
+            state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': 'hero'}), state)
+    else:
+        # ally damage
+        damage_target.life = max(0, (damage_target.life or 0) - event.amount)
+        state.event_manager.emit(Event(type="damage", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug}), state)
+        if damage_type == DamageType.PHYSICAL and event.amount > 0:
+            state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': 'ally'}), state)
+        if damage_target.life == 0:
+            controller = state.players[damage_target.controller]
+            controller.allies.remove(damage_target)
+            controller.graveyard.add(damage_target)
+            state.event_manager.emit(Event(type="ally_died", data={"ally": damage_target.slug}), state)
+
+    return event
+
+@dataclass
+class DestroyEvent:
+    """ CR 8.5.4 Destroy is a discrete effect. To destroy an object, put it into its owner's graveyard.
+    """
+    target: Card
+    destroy_source: Card
+    source_player_id: int|None
+    type: str='destroy'
+    canceled: bool=False
+
+def destroy(state: GameState, destroy_target: Card, destroy_source: Card):
+    """ CR 8.5.4 Destroy is a discrete effect. To destroy an object, put it into its owner's graveyard.
+    """
+    source_player_id = coo(destroy_source)
+
+    event = DestroyEvent(
+        target=destroy_target,
+        destroy_source=destroy_source,
+        source_player_id=source_player_id,
+        canceled=False,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+    
+    # execute the destroy
+    target_player_id = coo(event.target)
+    zone = event.target.zone
+    destroy_player = state.players[target_player_id]
+    destroy_target = event.target
+    destroy_source = event.destroy_source
+
+    zone_obj = destroy_player.zone_by_name(zone)
+    if zone_obj is not None:
+        zone_obj.remove(destroy_target)
+    state.players[destroy_target.owner].graveyard.add(destroy_target)
+
+    state.event_manager.emit(Event(type="destroy", data={
+        "target": destroy_target.slug,
+        "target_type": destroy_target.types,
+        "target_subtypes": destroy_target.subtypes,
+        "source": destroy_source.slug,
+        "source_player": destroy_source.controller if destroy_source.controller else destroy_source.owner,
+    }), state)
+
+    return event
+
+@dataclass
+class DiscardEvent:
+    type: str = "discard"
+    discard_target: Optional[Card] = None
+    discard_player: int | None = None
+    discard_source: Optional[Card] = None
+    discard_source_player: int | None = None
+    origin: str = "hand"
+    destination: str = "graveyard"
+    canceled: bool = False
+
+
+def discard(state: GameState, discard_target: Card, discard_source: Card | None,
+            origin: str = "hand") -> DiscardEvent:
+    discard_player_id = coo(discard_target)
+    # CR 8.5.5b: if player has no cards in hand, discard effect fails
+    if len(state.players[discard_player_id].hand.cards) == 0:
+        return DiscardEvent(discard_target=discard_target, discard_player=discard_player_id,
+                            canceled=True)
+
+    source_player = coo(discard_source) if discard_source is not None else None
+
+    event = DiscardEvent(
+        discard_target=discard_target,
+        discard_source=discard_source,
+        discard_source_player=source_player,
+        discard_player=discard_player_id,
+        origin=origin,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    # execute the discard
+    assert event.discard_target is not None and event.discard_player is not None
+    target = event.discard_target
+    player = state.players[event.discard_player]
+    source = event.discard_source
+
+    getattr(player, event.origin).remove(target)
+    getattr(player, event.destination).add(target)
+    state.event_manager.emit(Event(type="discard", data={
+        "target": target.slug,
+        "target_type": target.types,
+        "target_subtypes": target.subtypes,
+        "source": source.slug if source is not None else None,
+        "source_player": coo(source) if source is not None else None,
+    }), state)
+
+    return event
+
+@dataclass
+class DrawEvent:
+    type: str = "draw"
+    draw_player: int | None = None
+    source: Optional[Card] = None
+    source_player: int | None = None
+    origin: str = "deck"
+    destination: str = "hand"
+    number: int = 1
+    canceled: bool = False
+
+
+def draw(state: GameState, draw_player: int, source: Optional[Card] = None,
+         number: int = 1) -> DrawEvent:
+    """CR 8.5.6 — draw a card (or number of cards).
+
+    Moves the top card(s) of the deck to the player's hand.
+    If the deck is empty, emits a 'deck_empty' event (loss condition per CR 8.5.6).
+    """
+    source_player = coo(source) if source is not None else None
+
+    event = DrawEvent(
+        draw_player=draw_player,
+        source=source,
+        source_player=source_player,
+        number=number,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    player = state.players[event.draw_player]
+    drawn = 0
+
+    for _ in range(event.number):
+        card = getattr(player, event.origin).pop_top()
+        if card is None:
+            # CR 8.5.6b: deck empty — draw fails, emit loss condition signal
+            state.event_manager.emit(Event(type="deck_empty", data={"player_id": event.draw_player}), state)
+            break
+        getattr(player, event.destination).add(card)
+        drawn += 1
+        state.event_manager.emit(Event(type="draw", data={
+            "draw_player": draw_player,
+            "source": source.slug if source is not None else None,
+            "source_player": source_player,
+            "destination": event.destination,
+            "origin": event.origin,
+        }), state)
+
+    # CR 8.5.6b: total_draw only fires if at least one card was actually drawn
+    if drawn > 0:
+        state.event_manager.emit(Event(type="total_draw", data={
+            "draw_player": draw_player,
+            "source": source.slug if source is not None else None,
+            "source_player": source_player,
+            "destination": event.destination,
+            "origin": event.origin,
+            "number": drawn,
+        }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.7 — gain (asset)
+# ---------------------------------------------------------------------------
+
+class AssetType:
+    LIFE = "life"           # {h} — increases life total of player or living object
+    RESOURCES = "resources" # {r} — increases player's resource points
+    ACTION_POINTS = "action_points"  # {a} — CR 8.5.7b: only for turn player
+    CHI = "chi"             # {c} — increases player's chi points (CR 1.13.5)
+
+
+@dataclass
+class GainEvent:
+    type: str = "gain"
+    asset_type: str = AssetType.LIFE
+    amount: int = 0
+    source_player_id: int | None = None
+    target_player_id: int | None = None   # set when target is a player
+    target_card: Optional[Card] = None    # set when target is a living object (ally)
+    canceled: bool = False
+
+
+def gain(state: GameState, asset_type: str, amount: int, source_player_id: int,
+         target_player_id: int | None = None,
+         target_card: Optional[Card] = None) -> GainEvent:
+    """CR 8.5.7 — gain an asset.
+
+    Exactly one of target_player_id or target_card must be provided.
+    Returns a GainEvent; check event.canceled if the gain was rejected.
+    """
+    event = GainEvent(
+        asset_type=asset_type,
+        amount=amount,
+        source_player_id=source_player_id,
+        target_player_id=target_player_id,
+        target_card=target_card,
+    )
+
+    # CR 8.5.7b: non-turn-player cannot gain action points
+    if asset_type == AssetType.ACTION_POINTS:
+        if target_player_id is not None and target_player_id != state.active_player:
+            event.canceled = True
+            return event
+
+    # CR 8.5.7a: gaining {h} on an object without the life property fails
+    if asset_type == AssetType.LIFE and target_card is not None:
+        is_living = True if getattr(target_card, 'life') != None else False
+        if not is_living:
+            event.canceled = True
+            return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled or event.amount <= 0:
+        return event
+
+    # execute the gain
+    if event.asset_type == AssetType.LIFE:
+        if event.target_card is not None:
+            event.target_card.life = (event.target_card.life or 0) + event.amount
+        else:
+            state.players[event.target_player_id].life += event.amount
+    elif event.asset_type == AssetType.RESOURCES:
+        state.players[event.target_player_id].resources += event.amount
+    elif event.asset_type == AssetType.ACTION_POINTS:
+        state.players[event.target_player_id].action_points += event.amount
+    elif event.asset_type == AssetType.CHI:
+        state.players[event.target_player_id].resources += event.amount  # CR 1.13.5b: chi is interchangeable with resources
+
+    state.event_manager.emit(Event(type="gain", data={
+        "asset_type": event.asset_type,
+        "amount": event.amount,
+        "source_player_id": event.source_player_id,
+        "target_player_id": event.target_player_id,
+        "target_card": event.target_card.slug if event.target_card is not None else None,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.8 — gets (numerical property)
+# ---------------------------------------------------------------------------
+
+class GetsKind:
+    ADD = "add"         # +N  — stage 8 substage 5
+    SUBTRACT = "sub"    # -N  — stage 8 substage 6
+    SET = "set"         # base = N — stage 8 substage 2
+
+
+_GETS_SUBSTAGE = {
+    GetsKind.SET: 2,
+    GetsKind.ADD: 5,
+    GetsKind.SUBTRACT: 6,
+}
+
+# Supported numerical properties (CR 8.5.8)
+_GETS_VALID_PROPS = frozenset({"power", "defense", "cost", "life"})
+
+
+@dataclass
+class GetsEvent:
+    type: str = "gets"
+    prop: str = ""                          # "power", "defense", "cost", "life"
+    kind: str = GetsKind.ADD               # GetsKind constant
+    amount: int = 0
+    source_card: Optional[Card] = None
+    source_player_id: int | None = None
+    target_card: Optional[Card] = None      # card being modified
+    effect_id: str = ""                     # for later removal
+    until_condition: str | None = None      # e.g. "end_of_turn"; None = persistent
+    canceled: bool = False
+
+
+def gets(state: GameState, prop: str, kind: str, amount: int,
+         source_card: Optional[Card], target_card: Card,
+         until_condition: str | None = None,
+         effect_id: str = "") -> GetsEvent:
+    """CR 8.5.8 — modify a numerical property of an object as a continuous effect.
+
+    Registers a ContinuousEffect with the state's continuous_effect_manager.
+    If until_condition is set, automatically removes the effect when that event fires.
+    """
+    source_player_id = coo(source_card) if source_card is not None else None
+
+    event = GetsEvent(
+        prop=prop,
+        kind=kind,
+        amount=amount,
+        source_card=source_card,
+        source_player_id=source_player_id,
+        target_card=target_card,
+        effect_id=effect_id or f"gets_{prop}_{id(target_card)}_{next_timestamp()}",
+        until_condition=until_condition,
+    )
+
+    # CR 8.5.8a: property must exist on the object
+    if prop not in _GETS_VALID_PROPS:
+        event.canceled = True
+        return event
+    if getattr(target_card, prop, None) is None and kind != GetsKind.SET:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    substage = _GETS_SUBSTAGE[event.kind]
+    eid = event.effect_id
+    slug = source_card.slug if source_card is not None else "unknown"
+    target = event.target_card
+    amt = event.amount
+    k = event.kind
+
+    def apply_fn(current_value, s, card):
+        if card is not target:
+            return current_value
+        if k == GetsKind.SET:
+            return amt
+        if k == GetsKind.ADD:
+            return (current_value or 0) + amt
+        if k == GetsKind.SUBTRACT:
+            return max(0, (current_value or 0) - amt)
+        return current_value
+
+    ce = ContinuousEffect(
+        stage=8,
+        substage=substage,
+        timestamp=next_timestamp(),
+        prop=event.prop,
+        source_slug=slug,
+        apply_fn=apply_fn,
+        effect_id=eid,
+        persistent=True,
+        condition_fn=lambda s, card: card is target,
+    )
+    state.continuous_effect_manager.add(ce)
+
+    # register automatic removal if temporary
+    if event.until_condition:
+        def _remove_handler(ev, s: GameState) -> None:
+            s.continuous_effect_manager.remove_by_id(eid)
+            s.event_manager.unregister(event.until_condition, _remove_handler)
+        state.event_manager.register(event.until_condition, _remove_handler)
+
+    state.event_manager.emit(Event(type="gets", data={
+        "prop": event.prop,
+        "kind": event.kind,
+        "amount": event.amount,
+        "source": slug,
+        "target": target_card.slug,
+        "effect_id": eid,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.9 — gets/is (non-numerical property)
+# CR 8.5.13 — loses (non-numerical property)
+# ---------------------------------------------------------------------------
+
+# Supported non-numerical properties and their CR stage mappings
+_PROP_STAGE = {
+    "keywords": 6,   # CR 6.3 stage 6
+    "types": 4,      # CR 6.3 stage 4
+    "subtypes": 4,   # CR 6.3 stage 4
+}
+
+
+@dataclass
+class GetsPropertyEvent:
+    """CR 8.5.9 / 8.5.13 — add or remove a non-numerical property on a card."""
+    type: str = "is_property"
+    prop: str = ""                          # "keywords", "types", "subtypes"
+    value: str = ""                         # the property value to add/remove
+    remove: bool = False                    # True = loses (CR 8.5.13), False = gets (CR 8.5.9)
+    source_card: Optional[Card] = None
+    source_player_id: int | None = None
+    target_card: Optional[Card] = None
+    effect_id: str = ""
+    until_condition: str | None = None
+    canceled: bool = False
+
+
+def gets_property(state: GameState, prop: str, value: str,
+                source_card: Optional[Card], target_card: Card,
+                remove: bool = False,
+                until_condition: str | None = None,
+                effect_id: str = "") -> GetsPropertyEvent:
+    """CR 8.5.9 — target card gains the specified non-numerical property (keyword/type/subtype).
+    CR 8.5.13 — set remove=True to make the card lose the property instead.
+
+    Registers a ContinuousEffect with the appropriate stage.
+    If until_condition is set, automatically removes the effect when that event fires.
+    """
+    source_player_id = coo(source_card) if source_card is not None else None
+
+    event = GetsPropertyEvent(
+        prop=prop,
+        value=value,
+        remove=remove,
+        source_card=source_card,
+        source_player_id=source_player_id,
+        target_card=target_card,
+        effect_id=effect_id or f"is_property_{prop}_{value}_{id(target_card)}_{next_timestamp()}",
+        until_condition=until_condition,
+    )
+
+    if prop not in _PROP_STAGE:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    stage = _PROP_STAGE[event.prop]
+    eid = event.effect_id
+    slug = source_card.slug if source_card is not None else "unknown"
+    target = event.target_card
+    v = event.value
+    is_remove = event.remove
+
+    def apply_fn(current_value, s, card):
+        if card is not target:
+            return current_value
+        # current_value is a set for keywords, list for types/subtypes
+        if isinstance(current_value, set):
+            result = set(current_value)
+            if is_remove:
+                result.discard(v)
+            else:
+                result.add(v)
+            return result
+        else:
+            result = list(current_value) if current_value else []
+            if is_remove:
+                return [x for x in result if x != v]
+            else:
+                return result if v in result else result + [v]
+
+    ce = ContinuousEffect(
+        stage=stage,
+        substage=1,
+        timestamp=next_timestamp(),
+        prop=event.prop,
+        source_slug=slug,
+        apply_fn=apply_fn,
+        effect_id=eid,
+        persistent=True,
+        condition_fn=lambda s, card: card is target,
+    )
+    state.continuous_effect_manager.add(ce)
+
+    if event.until_condition:
+        def _remove_handler(ev, s: GameState) -> None:
+            s.continuous_effect_manager.remove_by_id(eid)
+            s.event_manager.unregister(event.until_condition, _remove_handler)
+        state.event_manager.register(event.until_condition, _remove_handler)
+
+    state.event_manager.emit(Event(type="gets_property", data={
+        "prop": event.prop,
+        "value": event.value,
+        "remove": event.remove,
+        "source": slug,
+        "target": target_card.slug,
+        "effect_id": eid,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.10 — intimidate
+# ---------------------------------------------------------------------------
+
+@dataclass
+class IntimidateEvent:
+    """CR 8.5.10 — banish a random card from target's hand face-down; return at end phase.
+
+    Player is considered intimidated even if hand was empty (CR 8.5.10a).
+    Each intimidate instance tracks only its own banished card (CR 8.5.10c).
+    """
+    type: str = "intimidate"
+    source_player_id: int | None = None
+    target_player_id: int | None = None
+    banished_card: Optional[Card] = None   # None if hand was empty (still intimidated)
+    canceled: bool = False
+
+
+def intimidate(state: GameState, source_player_id: int,
+               target_player_id: int) -> IntimidateEvent:
+    """CR 8.5.10 — intimidate target player.
+
+    Banishes a random card from their hand face-down.
+    Registers a delayed trigger to return it at beginning of end phase.
+    """
+    event = IntimidateEvent(
+        source_player_id=source_player_id,
+        target_player_id=target_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    target_player = state.players[event.target_player_id]
+    hand = target_player.hand.cards
+
+    banished_card = None
+    if hand:
+        # CR 8.5.10: random card from hand, banished face-down
+        banished_card = random.choice(hand)
+        target_player.hand.remove(banished_card)
+        target_player.banished.add(banished_card, is_public=False)
+
+    event.banished_card = banished_card
+
+    # CR 8.5.10c: register delayed return — each instance tracks its own card
+    if banished_card is not None:
+        def _return_handler(ev, s: GameState) -> None:
+            s.event_manager.unregister("end_phase_beginning", _return_handler)
+            p = s.players[event.target_player_id]
+            # Only return if still in banished zone (CR 8.5.10c)
+            if banished_card in p.banished.cards:
+                p.banished.remove(banished_card)
+                p.hand.add(banished_card)
+                s.event_manager.emit(Event(type="intimidate_return", data={
+                    "target_player_id": event.target_player_id,
+                    "card": banished_card.slug,
+                }), s)
+
+        state.event_manager.register("end_phase_beginning", _return_handler)
+
+    # CR 8.5.10a: emit intimidated event regardless of whether a card was banished
+    state.event_manager.emit(Event(type="intimidate", data={
+        "source_player_id": event.source_player_id,
+        "target_player_id": event.target_player_id,
+        "banished_card": banished_card.slug if banished_card is not None else None,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.11 — look
+# ---------------------------------------------------------------------------
+
+@dataclass
+class LookEvent:
+    """CR 8.5.11 — grant one or more players visibility into a private card.
+
+    Discrete (no until_condition): caller is responsible for revoking visibility
+    after the viewing window ends (e.g. end of an effect resolution).
+    Continuous (until_condition set): visibility auto-revoked when event fires.
+
+    CR 8.5.11b: card does not become public — is_public stays False.
+    CR 8.5.11c: if card is already public, look fails.
+    """
+    type: str = "look"
+    looker_ids: tuple = ()
+    target_card: Optional[Card] = None
+    source_player_id: int | None = None
+    until_condition: str | None = None
+    canceled: bool = False
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.12 — lose (asset)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class LoseEvent:
+    type: str = "lose"
+    asset_type: str = AssetType.LIFE
+    amount: int = 0
+    source_player_id: int | None = None
+    target_player_id: int | None = None   # set when target is a player
+    target_card: Optional[Card] = None    # set when target is a living object (ally)
+    canceled: bool = False
+
+
+def lose(state: GameState, asset_type: str, amount: int,
+         source_player_id: int | None = None,
+         target_player_id: int | None = None,
+         target_card: Optional[Card] = None) -> "LoseEvent":
+    """CR 8.5.12 — lose an asset (decrease a player's or object's asset by amount).
+
+    Exactly one of target_player_id or target_card should be provided.
+    CR 8.5.12a: losing {h} on an object without the life property fails.
+    CR 8.5.12b: losing life is not considered damage.
+    """
+    event = LoseEvent(
+        asset_type=asset_type,
+        amount=amount,
+        source_player_id=source_player_id,
+        target_player_id=target_player_id,
+        target_card=target_card,
+    )
+
+    # CR 8.5.12a: losing {h} on an object without the life property fails
+    if asset_type == AssetType.LIFE and target_card is not None:
+        if getattr(target_card, 'life', None) is None:
+            event.canceled = True
+            return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled or event.amount <= 0:
+        return event
+
+    pid = event.target_player_id
+
+    # execute the loss
+    if event.asset_type == AssetType.LIFE:
+        if event.target_card is not None:
+            event.target_card.life = max(0, (event.target_card.life or 0) - event.amount)
+        elif pid is not None:
+            state.players[pid].life -= event.amount
+    elif event.asset_type == AssetType.RESOURCES and pid is not None:
+        state.players[pid].resources = max(0, state.players[pid].resources - event.amount)
+    elif event.asset_type == AssetType.ACTION_POINTS and pid is not None:
+        state.players[pid].action_points = max(0, state.players[pid].action_points - event.amount)
+    elif event.asset_type == AssetType.CHI and pid is not None:
+        state.players[pid].resources = max(0, state.players[pid].resources - event.amount)
+
+    state.event_manager.emit(Event(type="lose", data={
+        "asset_type": event.asset_type,
+        "amount": event.amount,
+        "source_player_id": event.source_player_id,
+        "target_player_id": event.target_player_id,
+        "target_card": event.target_card.slug if event.target_card is not None else None,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.11 — look
+# ---------------------------------------------------------------------------
+
+def look(state: GameState, target_card: Card, looker_ids: tuple | list,
+         source_player_id: int | None = None,
+         until_condition: str | None = None) -> LookEvent:
+    """CR 8.5.11 — let specified players look at a private card.
+
+    Adds player IDs to card.known_by. If until_condition is set, removes them
+    automatically when that event fires.
+    """
+    event = LookEvent(
+        looker_ids=tuple(looker_ids),
+        target_card=target_card,
+        source_player_id=source_player_id,
+        until_condition=until_condition,
+    )
+
+    # CR 8.5.11c: already public — look fails
+    if target_card.is_public:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    # Grant visibility (CR 8.5.11b: card does not become public)
+    for pid in event.looker_ids:
+        target_card.known_by.add(pid)
+
+    if event.until_condition:
+        def _remove_handler(ev, s: GameState) -> None:
+            s.event_manager.unregister(event.until_condition, _remove_handler)
+            for pid in event.looker_ids:
+                target_card.known_by.discard(pid)
+        state.event_manager.register(event.until_condition, _remove_handler)
+
+    state.event_manager.emit(Event(type="look", data={
+        "looker_ids": list(event.looker_ids),
+        "target": target_card.slug,
+        "until_condition": event.until_condition,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.14 — put (counter)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class PutCounterEvent:
+    type: str = "put_counter"
+    counter_type: str = ""
+    amount: int = 1
+    target_card: Optional[Card] = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def put_counter(state: GameState, counter_type: str, target_card: Card,
+                amount: int = 1,
+                source_player_id: int | None = None) -> PutCounterEvent:
+    """CR 8.5.14 — put one or more counters of a given type onto an object.
+
+    Counters are stored in card.counters: dict[str, int].
+    amount defaults to 1; pass a larger value to put multiple in one event
+    (all counters placed simultaneously as a single discrete effect).
+    """
+    event = PutCounterEvent(
+        counter_type=counter_type,
+        amount=amount,
+        target_card=target_card,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled or event.amount <= 0 or event.target_card is None:
+        return event
+
+    card: Card = event.target_card
+    card.counters[event.counter_type] = card.counters.get(event.counter_type, 0) + event.amount
+
+    state.event_manager.emit(Event(type="put_counter", data={
+        "counter_type": event.counter_type,
+        "amount": event.amount,
+        "target": card.slug,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.16 — remove (counter)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class RemoveCounterEvent:
+    type: str = "remove_counter"
+    counter_type: str = ""
+    amount: int = 1
+    target_card: Optional[Card] = None
+    source_player_id: int | None = None
+    actual_removed: int = 0   # how many were actually removed (may be < amount if not enough)
+    canceled: bool = False
+
+
+def remove_counter(state: GameState, counter_type: str, target_card: Card,
+                   amount: int = 1,
+                   source_player_id: int | None = None) -> RemoveCounterEvent:
+    """CR 8.5.16 — remove one or more counters of a given type from an object.
+
+    CR 8.5.16a: when multiple identical counters exist, it is irrelevant which
+    is removed — we simply decrement the count.
+    CR 8.5.16b: multiple counters are removed simultaneously (single event).
+
+    If the card has fewer counters than requested, removes as many as exist
+    (caller must check event.actual_removed if the exact count matters).
+    """
+    event = RemoveCounterEvent(
+        counter_type=counter_type,
+        amount=amount,
+        target_card=target_card,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled or event.amount <= 0 or event.target_card is None:
+        return event
+
+    card: Card = event.target_card
+    current = card.counters.get(event.counter_type, 0)
+    removed = min(current, event.amount)
+    event.actual_removed = removed
+
+    if removed > 0:
+        new_count = current - removed
+        if new_count == 0:
+            card.counters.pop(event.counter_type, None)
+        else:
+            card.counters[event.counter_type] = new_count
+
+    state.event_manager.emit(Event(type="remove_counter", data={
+        "counter_type": event.counter_type,
+        "amount": event.amount,
+        "actual_removed": removed,
+        "target": card.slug,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.17 — reveal
+# ---------------------------------------------------------------------------
+
+@dataclass
+class RevealEvent:
+    type: str = "reveal"
+    target_cards: tuple = field(default_factory=tuple)   # cards revealed (CR 8.5.17e: may be N)
+    source_player_id: int | None = None
+    until_condition: str | None = None   # None = discrete; set = continuous
+    canceled: bool = False
+
+
+def reveal(state: GameState, target_cards: list | tuple,
+           source_player_id: int | None = None,
+           until_condition: str | None = None) -> RevealEvent:
+    """CR 8.5.17 — reveal one or more private cards.
+
+    Discrete (no until_condition): each card is made public, event emitted,
+    then immediately made private again (CR 8.5.17b).
+    Continuous (until_condition set): cards remain public until that event fires.
+    CR 8.5.17d: if any target card is already public, the reveal for that card fails.
+    CR 8.5.17c: position/zone unchanged.
+    """
+    # filter to only non-public cards (CR 8.5.17d per-card)
+    eligible = [c for c in target_cards if not c.is_public]
+
+    event = RevealEvent(
+        target_cards=tuple(eligible),
+        source_player_id=source_player_id,
+        until_condition=until_condition,
+    )
+
+    # if ALL targets are already public, whole effect fails
+    if not eligible:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    cards: tuple = event.target_cards
+
+    # make cards public
+    for card in cards:
+        card.is_public = True
+
+    state.event_manager.emit(Event(type="reveal", data={
+        "targets": [c.slug for c in cards],
+        "source_player_id": event.source_player_id,
+        "until_condition": event.until_condition,
+    }), state)
+
+    if event.until_condition:
+        # continuous: restore privacy when condition fires
+        condition: str = event.until_condition
+        def _restore_handler(ev, s: GameState) -> None:
+            s.event_manager.unregister(condition, _restore_handler)
+            for card in cards:
+                card.is_public = False
+        state.event_manager.register(condition, _restore_handler)
+    else:
+        # discrete: immediately make private again (CR 8.5.17b)
+        for card in cards:
+            card.is_public = False
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.15 — put / return (object)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class PutObjectEvent:
+    type: str = "put_object"
+    target_card: Optional[Card] = None
+    destination_zone: str = ""
+    destination_player_id: int | None = None
+    source_player_id: int | None = None
+    is_public: bool | None = None       # None = use zone default
+    canceled: bool = False
+
+
+def put_object(state: GameState, target_card: Card, destination_zone: str,
+               destination_player_id: int | None = None,
+               source_player_id: int | None = None,
+               is_public: bool | None = None) -> PutObjectEvent:
+    """CR 8.5.15 — move an object from its current zone to a specified zone.
+
+    destination_player_id: whose zone to target; defaults to card.owner.
+    is_public: override the destination zone's default visibility.
+    Move goes through Zone.add() so zone entry rules are respected.
+    """
+    dest_pid = destination_player_id if destination_player_id is not None else target_card.owner
+
+    event = PutObjectEvent(
+        target_card=target_card,
+        destination_zone=destination_zone,
+        destination_player_id=dest_pid,
+        source_player_id=source_player_id,
+        is_public=is_public,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled or event.target_card is None:
+        return event
+
+    card: Card = event.target_card
+
+    # remove from current zone
+    src_zone = state.get_zone(card.zone, card.owner)
+    if src_zone is not None:
+        src_zone.remove(card)
+
+    # add to destination zone (effect context so zone entry uses FAIL not CLEAR)
+    dest_zone = state.get_zone(event.destination_zone, event.destination_player_id)
+    if dest_zone is None:
+        if src_zone is not None:
+            src_zone.add(card)
+        event.canceled = True
+        return event
+
+    from engine.state import ZoneEntryResult
+    with effect_context():
+        result = dest_zone.add(card, event.is_public)
+
+    if result == ZoneEntryResult.FAIL:
+        # destination rejected the card — return to source
+        if src_zone is not None:
+            src_zone.add(card)
+        event.canceled = True
+        return event
+
+    state.event_manager.emit(Event(type="put_object", data={
+        "target": card.slug,
+        "destination_zone": event.destination_zone,
+        "destination_player_id": event.destination_player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.18 — roll (die)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class RollEvent:
+    type: str = "roll"
+    num_dice: int = 1
+    faces: int = 6
+    results: tuple = field(default_factory=tuple)   # one int per die (CR 8.5.18a: simultaneous)
+    total: int = 0
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def roll(state: GameState, num_dice: int = 1, faces: int = 6,
+         source_player_id: int | None = None,
+         rng=None) -> RollEvent:
+    """CR 8.5.18 — roll one or more dice.
+
+    CR 8.5.18a: multiple dice are rolled simultaneously (single event).
+    CR 8.5.18b: die faces are 1..faces with equal probability.
+
+    rng: optional random.Random instance for deterministic tests.
+    """
+    event = RollEvent(
+        num_dice=num_dice,
+        faces=faces,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    _rng = rng if rng is not None else random
+    results = tuple(_rng.randint(1, event.faces) for _ in range(event.num_dice))
+    event.results = results
+    event.total = sum(results)
+
+    state.event_manager.emit(Event(type="roll", data={
+        "num_dice": event.num_dice,
+        "faces": event.faces,
+        "results": list(results),
+        "total": event.total,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.19 — search
+# ---------------------------------------------------------------------------
+
+@dataclass
+class SearchEvent:
+    type: str = "search"
+    search_player_id: int | None = None
+    source_player_id: int | None = None
+    zones: tuple = field(default_factory=tuple)        # zone names searched
+    eligible_cards: tuple = field(default_factory=tuple)
+    chosen_card: Optional[Card] = None                 # None = search failed/declined
+    failed: bool = False   # True when zone empty (CR 8.5.19d) or failed legitimately
+    canceled: bool = False
+
+
+def search(state: GameState,
+           search_player_id: int,
+           zone_names: list[str],
+           selector: Callable[[list[Card], bool], Optional[Card]],
+           filter_fn: Callable[[Card], bool] | None = None,
+           source_player_id: int | None = None) -> SearchEvent:
+    """CR 8.5.19 — search for a card in a set of zones.
+
+    search_player_id: the player doing the searching.
+    zone_names: list of zone name strings (e.g. ["deck"]) on search_player_id's side.
+    filter_fn: optional predicate — only cards that pass are eligible.
+               If None, all cards in the zones are eligible (CR 8.5.19c).
+    selector: callback(eligible_cards, can_fail) -> Card | None.
+              can_fail=True means the player is allowed to return None (fail the search).
+              The engine / AI agent implements this callback.
+
+    CR 8.5.19d: if all specified zones are empty, the effect fails immediately.
+    CR 8.5.19a: filter given + no public matches → can_fail=True.
+    CR 8.5.19b: filter given + public matches exist → can_fail=False.
+    CR 8.5.19c: no filter + zone non-empty → can_fail=False.
+    """
+    # gather all cards from the specified zones
+    all_cards: list[Card] = []
+    for zone_name in zone_names:
+        zone = state.get_zone(zone_name, search_player_id)
+        if zone is not None:
+            all_cards.extend(zone.cards)
+
+    event = SearchEvent(
+        search_player_id=search_player_id,
+        zones=tuple(zone_names),
+        source_player_id=source_player_id,
+    )
+
+    # CR 8.5.19d: empty zone — fail immediately
+    if not all_cards:
+        event.failed = True
+        return event
+
+    # apply filter
+    eligible = [c for c in all_cards if filter_fn is None or filter_fn(c)]
+
+    # no eligible cards after filter — fail
+    if not eligible:
+        event.failed = True
+        return event
+
+    event.eligible_cards = tuple(eligible)
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    # determine if the player can decline (CR 8.5.19a)
+    if filter_fn is not None:
+        has_public_match = any(c.is_public for c in eligible)
+        can_fail = not has_public_match   # 8.5.19a: may fail if no public match
+    else:
+        can_fail = False   # CR 8.5.19c: must choose when no filter
+
+    chosen = selector(list(event.eligible_cards), can_fail)
+
+    if chosen is None:
+        # player declined (only legal when can_fail=True)
+        event.failed = True
+    else:
+        event.chosen_card = chosen
+
+    state.event_manager.emit(Event(type="search", data={
+        "search_player_id": event.search_player_id,
+        "zones": list(event.zones),
+        "chosen": chosen.slug if chosen is not None else None,
+        "failed": event.failed,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.20 — shuffle
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ShuffleEvent:
+    type: str = "shuffle"
+    zone_name: str = "deck"
+    target_player_id: int | None = None
+    cards_added: tuple = field(default_factory=tuple)  # CR 8.5.20b: cards shuffled in
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def shuffle(state: GameState,
+            target_player_id: int,
+            zone_name: str = "deck",
+            cards_to_add: list | None = None,
+            source_player_id: int | None = None,
+            rng=None) -> ShuffleEvent:
+    """CR 8.5.20 — shuffle a zone (default: the player's deck).
+
+    CR 8.5.20a: shuffling an empty zone is still considered shuffled.
+    CR 8.5.20b: cards_to_add are placed into the zone first, then the zone is shuffled.
+    CR 8.5.20c: if no zone specified, defaults to the player's deck.
+
+    rng: optional random.Random for deterministic tests.
+    """
+    event = ShuffleEvent(
+        zone_name=zone_name,
+        target_player_id=target_player_id,
+        cards_added=tuple(cards_to_add) if cards_to_add else (),
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled or event.target_player_id is None:
+        return event
+
+    zone = state.get_zone(event.zone_name, event.target_player_id)
+    if zone is None:
+        event.canceled = True
+        return event
+
+    # CR 8.5.20b: add cards first
+    for card in event.cards_added:
+        zone.cards.append(card)
+        card.prev_zone = card.zone
+        card.zone = zone.name
+
+    # shuffle in place (CR 8.5.20a: even empty zones are "shuffled")
+    _rng = rng if rng is not None else random
+    _rng.shuffle(zone.cards)
+
+    state.event_manager.emit(Event(type="shuffle", data={
+        "zone_name": event.zone_name,
+        "target_player_id": event.target_player_id,
+        "cards_added": [c.slug for c in event.cards_added],
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.21 — name
+# ---------------------------------------------------------------------------
+
+@dataclass
+class NameEvent:
+    type: str = "name"
+    named_value: str = ""
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def name(state: GameState, named_value: str,
+         source_player_id: int | None = None) -> NameEvent:
+    """CR 8.5.21 — store a named string.
+
+    Just records the chosen name; no state change beyond the event.
+    """
+    event = NameEvent(
+        named_value=named_value,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    state.event_manager.emit(Event(type="name", data={
+        "named_value": event.named_value,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.22 — opt
+# ---------------------------------------------------------------------------
+
+@dataclass
+class OptEvent:
+    type: str = "opt"
+    n: int = 1
+    top_cards: tuple = field(default_factory=tuple)
+    bottom_cards: tuple = field(default_factory=tuple)
+    target_player_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def opt(state: GameState, n: int, target_player_id: int,
+        selector: Callable[[list], tuple[list, list]],
+        source_player_id: int | None = None) -> OptEvent:
+    """CR 8.5.22 — look at top N cards, put any back top or bottom in any order.
+
+    CR 8.5.22a: if deck has fewer than N cards, use all available.
+    CR 8.5.22b: if deck is empty, opt fails.
+
+    selector: Callable[[list[Card]], tuple[list[Card], list[Card]]]
+        Returns (cards_to_put_on_top, cards_to_put_on_bottom).
+    """
+    event = OptEvent(
+        n=n,
+        target_player_id=target_player_id,
+        source_player_id=source_player_id,
+    )
+
+    deck = state.get_zone("deck", target_player_id)
+
+    # CR 8.5.22b: empty deck fails
+    if deck is None or len(deck.cards) == 0:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    # CR 8.5.22a: if deck < N, use all
+    actual_n = min(event.n, len(deck.cards))
+    looked = deck.cards[-actual_n:]  # top N cards (end of list = top)
+
+    top_cards, bottom_cards = selector(list(looked))
+
+    # Remove looked cards from deck
+    for c in looked:
+        deck.cards.remove(c)
+
+    # Put bottom cards at index 0 (bottom of deck)
+    for c in bottom_cards:
+        deck.cards.insert(0, c)
+
+    # Put top cards at end (top of deck)
+    for c in top_cards:
+        deck.cards.append(c)
+
+    event = dataclasses.replace(event,
+        top_cards=tuple(top_cards),
+        bottom_cards=tuple(bottom_cards),
+    )
+
+    state.event_manager.emit(Event(type="opt", data={
+        "n": event.n,
+        "target_player_id": event.target_player_id,
+        "source_player_id": event.source_player_id,
+        "top_count": len(top_cards),
+        "bottom_count": len(bottom_cards),
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.23 — reload
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ReloadEvent:
+    type: str = "reload"
+    card: Optional[Card] = None
+    player_id: int | None = None
+    chose_to_reload: bool = False
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def reload(state: GameState, card: Card, player_id: int,
+           chose_to_reload: bool = False,
+           source_player_id: int | None = None) -> ReloadEvent:
+    """CR 8.5.23 — optionally move a card from hand to arsenal face-down.
+
+    CR 8.5.23a: all arsenal zones must be empty for reload to succeed.
+    If chose_to_reload is False, no move happens (event not canceled, just no-op).
+    """
+    event = ReloadEvent(
+        card=card,
+        player_id=player_id,
+        chose_to_reload=chose_to_reload,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    if not event.chose_to_reload:
+        # Player declined; event succeeds but nothing moves
+        return event
+
+    # CR 8.5.23a: arsenal must be empty
+    arsenal = state.get_zone("arsenal", player_id)
+    if arsenal is None or len(arsenal.cards) > 0:
+        event.canceled = True
+        return event
+
+    # Move card from hand to arsenal face-down
+    hand = state.get_zone("hand", player_id)
+    if hand is not None and card in hand.cards:
+        hand.remove(card)
+    card.is_public = False
+    arsenal.add(card, is_public=False)
+
+    state.event_manager.emit(Event(type="reload", data={
+        "card": card.slug,
+        "player_id": player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.24 — turn (face-up / face-down)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class TurnEvent:
+    type: str = "turn"
+    card: Optional[Card] = None
+    face_up: bool = True
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def turn(state: GameState, card: Card, face_up: bool,
+         source_player_id: int | None = None) -> TurnEvent:
+    """CR 8.5.24 — flip a card face-up (public) or face-down (private).
+
+    CR 8.5.24a: fails if already at target visibility.
+    """
+    event = TurnEvent(
+        card=card,
+        face_up=face_up,
+        source_player_id=source_player_id,
+    )
+
+    # CR 8.5.24a: already at target state — fail
+    if face_up and card.is_public:
+        event.canceled = True
+        return event
+    if not face_up and not card.is_public:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    card.is_public = face_up
+
+    state.event_manager.emit(Event(type="turn", data={
+        "card": card.slug,
+        "face_up": face_up,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.26 — negate
+# ---------------------------------------------------------------------------
+
+@dataclass
+class NegateEvent:
+    type: str = "negate"
+    layer: object = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def negate(state: GameState, layer, source_player_id: int | None = None) -> NegateEvent:
+    """CR 8.5.26 — remove a layer from the stack.
+
+    If the layer is not on the stack, the negate is canceled.
+    """
+    event = NegateEvent(
+        layer=layer,
+        source_player_id=source_player_id,
+    )
+
+    # Check if state has a stack
+    if not hasattr(state, 'stack') or not hasattr(state.stack, 'cards'):
+        event.canceled = True
+        return event
+
+    # Layer must be on the stack
+    if layer not in state.stack.cards:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    state.stack.remove(layer)
+
+    state.event_manager.emit(Event(type="negate", data={
+        "layer": getattr(layer, 'slug', str(layer)),
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.27 — repeat
+# ---------------------------------------------------------------------------
+
+@dataclass
+class RepeatEvent:
+    type: str = "repeat"
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def repeat(state: GameState, process: Callable[[], None],
+           source_player_id: int | None = None) -> RepeatEvent:
+    """CR 8.5.27 — execute a callable again."""
+    event = RepeatEvent(
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    process()
+
+    state.event_manager.emit(Event(type="repeat", data={
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.28 — reroll
+# ---------------------------------------------------------------------------
+
+@dataclass
+class RerollEvent:
+    type: str = "reroll"
+    original_results: tuple = field(default_factory=tuple)
+    new_results: tuple = field(default_factory=tuple)
+    faces: int = 6
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def reroll(state: GameState, dice_results: list[int], faces: int = 6,
+           rng=None,
+           source_player_id: int | None = None) -> RerollEvent:
+    """CR 8.5.28 — reroll specified dice. Returns new results."""
+    event = RerollEvent(
+        original_results=tuple(dice_results),
+        faces=faces,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    _rng = rng if rng is not None else random
+    new_results = tuple(_rng.randint(1, faces) for _ in dice_results)
+    event = dataclasses.replace(event, new_results=new_results)
+
+    state.event_manager.emit(Event(type="reroll", data={
+        "original_results": list(event.original_results),
+        "new_results": list(event.new_results),
+        "faces": faces,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.29 — charge
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ChargeEvent:
+    type: str = "charge"
+    card: Optional[Card] = None
+    player_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def charge(state: GameState, card: Card, player_id: int,
+           source_player_id: int | None = None) -> ChargeEvent:
+    """CR 8.5.29 — move a card from hand to soul.
+
+    CR 8.5.29b: only via this effect counts as 'charged'.
+    """
+    event = ChargeEvent(
+        card=card,
+        player_id=player_id,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    hand = state.get_zone("hand", player_id)
+    if hand is not None and card in hand.cards:
+        hand.remove(card)
+
+    # Soul is a SubZoneView over hero_zone. Direct add via SubZoneView
+    # sets permanent_subtype and delegates to parent. Use effect_context
+    # so zone entry uses FAIL (not CLEAR/graveyard redirect).
+    player = state.players[player_id]
+    card.permanent_subtype = "Soul"
+    card.prev_zone = card.zone
+    card.zone = player.hero_zone.name
+    card.is_public = player.hero_zone.is_public
+    player.hero_zone.cards.append(card)
+
+    state.event_manager.emit(Event(type="charge", data={
+        "card": card.slug,
+        "player_id": player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.30 — distribute
+# ---------------------------------------------------------------------------
+
+@dataclass
+class DistributeEvent:
+    type: str = "distribute"
+    counter_type: str = ""
+    distribution: list = field(default_factory=list)  # list of (Card, int) tuples
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def distribute(state: GameState, counter_type: str, distribution: list,
+               source_player_id: int | None = None) -> DistributeEvent:
+    """CR 8.5.30 — put N counters total across a set of target cards.
+
+    distribution: list of (Card, int) tuples mapping each target card to its counter count.
+    Uses put_counter internally for each target.
+    """
+    event = DistributeEvent(
+        counter_type=counter_type,
+        distribution=distribution,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    for target_card, amount in event.distribution:
+        if amount > 0:
+            put_counter(state, counter_type=event.counter_type,
+                        target_card=target_card, amount=amount,
+                        source_player_id=source_player_id)
+
+    state.event_manager.emit(Event(type="distribute", data={
+        "counter_type": event.counter_type,
+        "total": sum(amt for _, amt in event.distribution),
+        "targets": len(event.distribution),
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.31 — pay
+# ---------------------------------------------------------------------------
+
+@dataclass
+class PayEvent:
+    type: str = "pay"
+    asset_type: str = AssetType.RESOURCES
+    amount: int = 0
+    player_id: int | None = None
+    chose_to_pay: bool = True
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def pay(state: GameState, asset_type: str, amount: int, player_id: int,
+        chose_to_pay: bool = True,
+        source_player_id: int | None = None) -> PayEvent:
+    """CR 8.5.31 — pay an asset cost.
+
+    CR 8.5.31a: optional — player can refuse (chose_to_pay=False).
+    Deducts from the player's resources/life/action_points.
+    """
+    event = PayEvent(
+        asset_type=asset_type,
+        amount=amount,
+        player_id=player_id,
+        chose_to_pay=chose_to_pay,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    if not event.chose_to_pay:
+        # Player declined to pay
+        return event
+
+    player = state.players[player_id]
+    if event.asset_type == AssetType.LIFE:
+        player.life -= event.amount
+    elif event.asset_type == AssetType.RESOURCES:
+        player.resources = max(0, player.resources - event.amount)
+    elif event.asset_type == AssetType.ACTION_POINTS:
+        player.action_points = max(0, player.action_points - event.amount)
+
+    state.event_manager.emit(Event(type="pay", data={
+        "asset_type": event.asset_type,
+        "amount": event.amount,
+        "player_id": player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.34 — freeze
+# ---------------------------------------------------------------------------
+
+@dataclass
+class FreezeEvent:
+    type: str = "freeze"
+    target_card: Optional[Card] = None
+    until_condition: str | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def freeze(state: GameState, target_card: Card,
+           until_condition: str | None = None,
+           source_player_id: int | None = None) -> FreezeEvent:
+    """CR 8.5.34 — freeze a card (cannot be played/activated).
+
+    Tracked via card.counters['__frozen__']. Duration handled by event subscription.
+    """
+    event = FreezeEvent(
+        target_card=target_card,
+        until_condition=until_condition,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    target_card.counters["__frozen__"] = target_card.counters.get("__frozen__", 0) + 1
+
+    state.event_manager.emit(Event(type="freeze", data={
+        "target": target_card.slug,
+        "until_condition": until_condition,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.37 — unfreeze
+# ---------------------------------------------------------------------------
+
+@dataclass
+class UnfreezeEvent:
+    type: str = "unfreeze"
+    target_card: Optional[Card] = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def unfreeze(state: GameState, target_card: Card,
+             source_player_id: int | None = None) -> UnfreezeEvent:
+    """CR 8.5.37 — remove all freeze effects from a card.
+
+    CR 8.5.37b: fails if card is not frozen.
+    """
+    event = UnfreezeEvent(
+        target_card=target_card,
+        source_player_id=source_player_id,
+    )
+
+    # CR 8.5.37b: not frozen — fail
+    if target_card.counters.get("__frozen__", 0) <= 0:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    target_card.counters.pop("__frozen__", None)
+
+    state.event_manager.emit(Event(type="unfreeze", data={
+        "target": target_card.slug,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.41 — equip
+# ---------------------------------------------------------------------------
+
+@dataclass
+class EquipEvent:
+    type: str = "equip"
+    card: Optional[Card] = None
+    zone_name: str = ""
+    player_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def equip(state: GameState, card: Card, zone_name: str, player_id: int,
+          source_player_id: int | None = None) -> EquipEvent:
+    """CR 8.5.41 — put a card into an equipment/weapon zone.
+
+    Uses put_object internally. Zone entry rules validate equipment subtype.
+    """
+    event = EquipEvent(
+        card=card,
+        zone_name=zone_name,
+        player_id=player_id,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    result = put_object(state, target_card=card,
+                        destination_zone=event.zone_name,
+                        destination_player_id=player_id,
+                        source_player_id=source_player_id)
+
+    if result.canceled:
+        event.canceled = True
+        return event
+
+    state.event_manager.emit(Event(type="equip", data={
+        "card": card.slug,
+        "zone_name": event.zone_name,
+        "player_id": player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.42 — move counter
+# ---------------------------------------------------------------------------
+
+@dataclass
+class MoveCounterEvent:
+    type: str = "move_counter"
+    counter_type: str = ""
+    from_card: Optional[Card] = None
+    to_card: Optional[Card] = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def move_counter(state: GameState, counter_type: str, from_card: Card,
+                 to_card: Card,
+                 source_player_id: int | None = None) -> MoveCounterEvent:
+    """CR 8.5.42 — remove a counter from one card and put it on another.
+
+    CR 8.5.42a: if no counter of the specified type exists on from_card, nothing happens.
+    Uses remove_counter + put_counter internally.
+    """
+    event = MoveCounterEvent(
+        counter_type=counter_type,
+        from_card=from_card,
+        to_card=to_card,
+        source_player_id=source_player_id,
+    )
+
+    # CR 8.5.42a: no counter to move
+    if from_card.counters.get(counter_type, 0) <= 0:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    rem = remove_counter(state, counter_type=event.counter_type,
+                         target_card=from_card, amount=1,
+                         source_player_id=source_player_id)
+
+    if rem.actual_removed > 0:
+        put_counter(state, counter_type=event.counter_type,
+                    target_card=to_card, amount=1,
+                    source_player_id=source_player_id)
+
+    state.event_manager.emit(Event(type="move_counter", data={
+        "counter_type": event.counter_type,
+        "from": from_card.slug,
+        "to": to_card.slug,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.44 — pitch
+# ---------------------------------------------------------------------------
+
+@dataclass
+class PitchEvent:
+    type: str = "pitch"
+    card: Optional[Card] = None
+    player_id: int | None = None
+    pitch_value: int = 0
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def pitch(state: GameState, card: Card, player_id: int,
+          source_player_id: int | None = None) -> PitchEvent:
+    """CR 8.5.44 — put card in pitch zone, gain resources equal to pitch value.
+
+    Uses put_object to move to 'pitch' zone, then gain(resources, pitch_value).
+    """
+    pv = getattr(card, 'pitch', None) or getattr(card, 'raw_pitch', None) or 0
+
+    event = PitchEvent(
+        card=card,
+        player_id=player_id,
+        pitch_value=pv,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    put_object(state, target_card=card, destination_zone="pitch",
+               destination_player_id=player_id,
+               source_player_id=source_player_id)
+
+    if event.pitch_value > 0:
+        gain(state, asset_type=AssetType.RESOURCES, amount=event.pitch_value,
+             source_player_id=source_player_id or player_id, target_player_id=player_id)
+
+    state.event_manager.emit(Event(type="pitch", data={
+        "card": card.slug,
+        "player_id": player_id,
+        "pitch_value": event.pitch_value,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.45 — clash
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ClashEvent:
+    type: str = "clash"
+    player1_id: int | None = None
+    player2_id: int | None = None
+    card1: Optional[Card] = None
+    card2: Optional[Card] = None
+    power1: int | None = None
+    power2: int | None = None
+    winner_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def clash(state: GameState, player1_id: int, player2_id: int,
+          source_player_id: int | None = None) -> ClashEvent:
+    """CR 8.5.45 — both players reveal top deck card; highest power wins.
+
+    CR 8.5.45b: if a player has no deck card, they lose the clash.
+    CR 8.5.45c: if tied, no winner (winner_id=None).
+    """
+    event = ClashEvent(
+        player1_id=player1_id,
+        player2_id=player2_id,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    deck1 = state.get_zone("deck", player1_id)
+    deck2 = state.get_zone("deck", player2_id)
+
+    card1 = deck1.cards[-1] if deck1 and len(deck1.cards) > 0 else None
+    card2 = deck2.cards[-1] if deck2 and len(deck2.cards) > 0 else None
+
+    # Reveal the cards
+    if card1 is not None:
+        card1.is_public = True
+    if card2 is not None:
+        card2.is_public = True
+
+    power1 = getattr(card1, 'power', None) or 0 if card1 else 0
+    power2 = getattr(card2, 'power', None) or 0 if card2 else 0
+
+    # CR 8.5.45b: no deck card = lose
+    if card1 is None and card2 is not None:
+        winner = player2_id
+    elif card2 is None and card1 is not None:
+        winner = player1_id
+    elif card1 is None and card2 is None:
+        winner = None
+    elif power1 > power2:
+        winner = player1_id
+    elif power2 > power1:
+        winner = player2_id
+    else:
+        # CR 8.5.45c: tie — no winner
+        winner = None
+
+    event = dataclasses.replace(event,
+        card1=card1, card2=card2,
+        power1=power1, power2=power2,
+        winner_id=winner,
+    )
+
+    state.event_manager.emit(Event(type="clash", data={
+        "player1_id": player1_id,
+        "player2_id": player2_id,
+        "card1": card1.slug if card1 else None,
+        "card2": card2.slug if card2 else None,
+        "power1": power1,
+        "power2": power2,
+        "winner_id": winner,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.47 — amp
+# ---------------------------------------------------------------------------
+
+@dataclass
+class AmpEvent:
+    type: str = "amp"
+    amount: int = 0
+    player_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def amp(state: GameState, amount: int, player_id: int,
+        source_player_id: int | None = None) -> AmpEvent:
+    """CR 8.5.47 — next arcane damage this turn deals +N.
+
+    Stored in player.class_counters['amp'].
+    """
+    event = AmpEvent(
+        amount=amount,
+        player_id=player_id,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    player = state.players[player_id]
+    player.class_counters["amp"] = player.class_counters.get("amp", 0) + event.amount
+
+    state.event_manager.emit(Event(type="amp", data={
+        "amount": event.amount,
+        "player_id": player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.49 — exchange
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ExchangeEvent:
+    type: str = "exchange"
+    card_a: Optional[Card] = None
+    card_b: Optional[Card] = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def exchange(state: GameState, card_a: Card, card_b: Card,
+             source_player_id: int | None = None) -> ExchangeEvent:
+    """CR 8.5.49 — swap two cards' zones.
+
+    CR 8.5.49a: simultaneous; fails if either move fails.
+    """
+    event = ExchangeEvent(
+        card_a=card_a,
+        card_b=card_b,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    # Record original locations
+    zone_a_name = card_a.zone
+    owner_a = card_a.owner
+    public_a = card_a.is_public
+    zone_b_name = card_b.zone
+    owner_b = card_b.owner
+    public_b = card_b.is_public
+
+    # Remove both from their zones
+    zone_a = state.get_zone(zone_a_name, owner_a)
+    zone_b = state.get_zone(zone_b_name, owner_b)
+
+    if zone_a is None or zone_b is None:
+        event.canceled = True
+        return event
+
+    zone_a.remove(card_a)
+    zone_b.remove(card_b)
+
+    # Swap: put card_a in card_b's zone and vice versa
+    zone_b.add(card_a, public_b)
+    zone_a.add(card_b, public_a)
+
+    state.event_manager.emit(Event(type="exchange", data={
+        "card_a": card_a.slug,
+        "card_b": card_b.slug,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.50 — mark
+# ---------------------------------------------------------------------------
+
+@dataclass
+class MarkEvent:
+    type: str = "mark"
+    target_player_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def mark(state: GameState, target_player_id: int,
+         source_player_id: int | None = None) -> MarkEvent:
+    """CR 8.5.50 — give hero the marked condition.
+
+    Sets class_counters['marked'] = 1 on the target player.
+    """
+    event = MarkEvent(
+        target_player_id=target_player_id,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    state.players[target_player_id].class_counters["marked"] = 1
+
+    state.event_manager.emit(Event(type="mark", data={
+        "target_player_id": target_player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.55 — tap
+# ---------------------------------------------------------------------------
+
+@dataclass
+class TapEvent:
+    type: str = "tap"
+    card: Optional[Card] = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def tap(state: GameState, card: Card,
+        source_player_id: int | None = None) -> TapEvent:
+    """CR 8.5.55 — change untapped to tapped.
+
+    CR 8.5.55a: fails if already tapped.
+    """
+    event = TapEvent(
+        card=card,
+        source_player_id=source_player_id,
+    )
+
+    # CR 8.5.55a: already tapped — fail
+    if card.tapped:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    card.tapped = True
+
+    state.event_manager.emit(Event(type="tap", data={
+        "card": card.slug,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.56 — untap
+# ---------------------------------------------------------------------------
+
+@dataclass
+class UntapEvent:
+    type: str = "untap"
+    card: Optional[Card] = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def untap(state: GameState, card: Card,
+          source_player_id: int | None = None) -> UntapEvent:
+    """CR 8.5.56 — change tapped to untapped.
+
+    CR 8.5.56a: fails if already untapped.
+    """
+    event = UntapEvent(
+        card=card,
+        source_player_id=source_player_id,
+    )
+
+    # CR 8.5.56a: already untapped — fail
+    if not card.tapped:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    card.tapped = False
+
+    state.event_manager.emit(Event(type="untap", data={
+        "card": card.slug,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.57 — crowd cheers / boos
+# ---------------------------------------------------------------------------
+
+@dataclass
+class CheerEvent:
+    type: str = "cheer"
+    target_player_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def cheer(state: GameState, target_player_id: int,
+          source_player_id: int | None = None) -> CheerEvent:
+    """CR 8.5.57 — crowd cheers for a player.
+
+    Sets class_counters['cheered_this_turn'] = 1 on the target player.
+    """
+    event = CheerEvent(
+        target_player_id=target_player_id,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    state.players[target_player_id].class_counters["cheered_this_turn"] = 1
+
+    state.event_manager.emit(Event(type="cheer", data={
+        "target_player_id": target_player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+@dataclass
+class BooEvent:
+    type: str = "boo"
+    target_player_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def boo(state: GameState, target_player_id: int,
+        source_player_id: int | None = None) -> BooEvent:
+    """CR 8.5.57 — crowd boos a player.
+
+    Sets class_counters['booed_this_turn'] = 1 on the target player.
+    """
+    event = BooEvent(
+        target_player_id=target_player_id,
+        source_player_id=source_player_id,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    state.players[target_player_id].class_counters["booed_this_turn"] = 1
+
+    state.event_manager.emit(Event(type="boo", data={
+        "target_player_id": target_player_id,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.25 — become / copy
+# ---------------------------------------------------------------------------
+
+# Copyable properties: the base_* fields that define a card's modifiable printed stats.
+# CR 8.5.25a: "copyable properties of a card are determined by the printed properties"
+# raw_* fields are the card's immutable original print — they are NEVER changed by effects.
+# base_* fields are the starting values that effects (including become/copy) can alter.
+# The active name/power/etc. fields are derived from base_* + continuous effects.
+_COPYABLE_FIELDS: tuple[str, ...] = (
+    "base_name", "base_pitch", "base_cost", "base_x_cost", "base_power",
+    "base_defense", "base_life", "base_intellect", "base_arcane", "base_color",
+    "base_types", "base_text_box", "base_subtypes", "base_keywords",
+    "base_functional_text", "base_type_text", "base_classes",
+    "category", "raw_playable", "raw_activatable", "activation_cost",
+    "abilities_and_effects", "effects",
+    "talents", "shorthands", "meta", "metatypes", "traits",
+    "fusions", "bonds", "flows", "specializations",
+    "special_cost", "special_power", "special_defense",
+    "special_life", "special_arcane",
+)
+
+
+@dataclass
+class BecomeCopyEvent:
+    type: str = "become_copy"
+    subject_card: Optional[Card] = None    # card that becomes the copy
+    reference_card: Optional[Card] = None  # card being copied
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def become_copy(state: GameState, subject_card: Card, reference_card: Card,
+                source_player_id: int | None = None) -> BecomeCopyEvent:
+    """CR 8.5.25 — subject_card becomes a copy of reference_card.
+
+    CR 8.5.25a: only copyable (printed) properties are transferred.
+    CR 8.5.25c: future changes to reference_card do not affect subject_card.
+    CR 8.5.25d: if subject already IS reference, effect fails.
+
+    Non-copyable properties (zone, owner, controller, counters, tapped,
+    object_id, known_by, etc.) are preserved on the subject.
+    """
+    event = BecomeCopyEvent(
+        subject_card=subject_card,
+        reference_card=reference_card,
+        source_player_id=source_player_id,
+    )
+
+    # CR 8.5.25d: already a copy of the same reference — fail
+    if subject_card is reference_card:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled or event.subject_card is None or event.reference_card is None:
+        return event
+
+    subj: Card = event.subject_card
+    ref: Card = event.reference_card
+
+    # snapshot copyable properties from reference (CR 8.5.25c: snapshot, not live reference)
+    import copy as _copy
+    for field_name in _COPYABLE_FIELDS:
+        if hasattr(ref, field_name):
+            val = getattr(ref, field_name)
+            # deep-copy mutable containers so changes to ref don't affect subj
+            if isinstance(val, (list, dict, set)):
+                val = _copy.deepcopy(val)
+            setattr(subj, field_name, val)
+
+    state.event_manager.emit(Event(type="become_copy", data={
+        "subject": subj.slug,
+        "reference": ref.slug,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.33 — ignore
+# ---------------------------------------------------------------------------
+
+@dataclass
+class IgnoreEvent:
+    type: str = "ignore"
+    source_player_id: int | None = None
+    description: str = ""   # human-readable note on what is being ignored
+    canceled: bool = False
+
+
+def ignore(state: GameState, description: str = "",
+           source_player_id: int | None = None) -> IgnoreEvent:
+    """CR 8.5.33 — placeholder for ignore effects.
+
+    Full implementation deferred; specific cards (e.g. ready_to_roll) implement
+    their ignore logic directly in their card-effect registry functions.
+    This function records the intent and emits the event for trigger purposes.
+    """
+    event = IgnoreEvent(
+        source_player_id=source_player_id,
+        description=description,
+    )
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled:
+        return event
+
+    state.event_manager.emit(Event(type="ignore", data={
+        "description": event.description,
+        "source_player_id": event.source_player_id,
+    }), state)
+
+    return event
+
+
+# ---------------------------------------------------------------------------
+# CR 8.5.35 — gain (control)
+# ---------------------------------------------------------------------------
+
+# Zones that correspond to equipment slots — CR 8.5.35a applies here
+_EQUIPMENT_ZONES = {"head", "chest", "arms", "legs", "weapon", "weapon1", "weapon2"}
+
+
+@dataclass
+class GainControlEvent:
+    type: str = "gain_control"
+    target_card: Optional[Card] = None
+    new_controller_id: int | None = None
+    previous_controller_id: int | None = None
+    source_player_id: int | None = None
+    canceled: bool = False
+
+
+def gain_control(state: GameState, target_card: Card, new_controller_id: int,
+                 source_player_id: int | None = None) -> GainControlEvent:
+    """CR 8.5.35 — new_controller_id gains control of target_card.
+
+    The card moves to the same zone type on the new controller's side.
+    CR 8.5.35a: if the card is in an equipment zone, the new controller must be
+    able to equip it (zone entry rules apply); if not, the effect fails.
+
+    card.controller is updated to new_controller_id.
+    card.owner is NOT changed (ownership ≠ control).
+    """
+    prev_controller = target_card.controller if target_card.controller is not None else target_card.owner
+
+    event = GainControlEvent(
+        target_card=target_card,
+        new_controller_id=new_controller_id,
+        previous_controller_id=prev_controller,
+        source_player_id=source_player_id,
+    )
+
+    # no-op if already controlled by new_controller
+    if prev_controller == new_controller_id:
+        event.canceled = True
+        return event
+
+    event_dict = vars(event).copy()
+    event_dict = state.effect_manager.apply_replacements(event_dict, state)
+    event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
+
+    if event.canceled or event.target_card is None or event.new_controller_id is None:
+        return event
+
+    card: Card = event.target_card
+    zone_name = card.zone
+
+    # locate and remove from current zone (keyed by prev_controller, not owner)
+    src_zone = state.get_zone(zone_name, event.previous_controller_id)
+    if src_zone is None:
+        # try owner as fallback
+        src_zone = state.get_zone(zone_name, card.owner)
+    if src_zone is not None:
+        src_zone.remove(card)
+
+    # update controller
+    card.controller = event.new_controller_id
+
+    # CR 8.5.35a: move to same zone on new controller's side
+    dest_zone = state.get_zone(zone_name, event.new_controller_id)
+    if dest_zone is None:
+        # zone doesn't exist for new controller — fail, restore
+        card.controller = event.previous_controller_id
+        if src_zone is not None:
+            src_zone.add(card)
+        event.canceled = True
+        return event
+
+    from engine.state import ZoneEntryResult
+    with effect_context():
+        result = dest_zone.add(card, card.is_public)
+
+    if result == ZoneEntryResult.FAIL:
+        # CR 8.5.35a: can't equip / zone rejected — fail, restore
+        card.controller = event.previous_controller_id
+        if src_zone is not None:
+            src_zone.add(card)
+        event.canceled = True
+        return event
+
+    state.event_manager.emit(Event(type="gain_control", data={
+        "target": card.slug,
+        "new_controller_id": event.new_controller_id,
+        "previous_controller_id": event.previous_controller_id,
+        "source_player_id": event.source_player_id,
+    }), state)
 
     return event
