@@ -23,7 +23,26 @@ Optional abilities:
 Zone tracking:
   Every Zone.remove() must be followed by a Zone.add() to keep card.zone / card.prev_zone
   consistent. Zone.add() sets prev_zone = old zone and zone = new zone name.
-"""
+
+Effect Keywords available from engine.effect_keywords:
+- banish: banish a card
+- create_token: creates a token object and places in the arena
+- deal_damage: deals damage to a living object of type generic, physical, or arcane.
+- destroy: destroys a target object
+- discard: discards a card from hand
+- draw: places the top card of the deck into the players hand
+- gain: gains an asset (AssetType: LIFE, RESOURCES, ACTION_POINTS, CHI)
+- gets: modifies a numerical property of a card. continuous effect.
+- gets_property: target card gains a non-numerical property (keyword/type/subtype)
+- intimidate: banishes a card from hand face_down. returned at start of end phase before arsenal choice
+- lose: lose asset (AssetType: LIFE, RESOURCES, ACTION_POINTS, CHI)
+- look: specified players look at a private card. (card does NOT become public)
+- put_counter: put one or more counters on an object
+- remove_counter: opposite of put_counter
+- reveal: a card is made public and either stays that way or is flipped back down.
+
+  
+  """
 
 from __future__ import annotations
 from typing import TYPE_CHECKING
