@@ -10,23 +10,12 @@ Two parallel tracks. Work both simultaneously — engine gaps block card impleme
 Goal: any legal FAB play is correctly modelled, regardless of which cards are in play.
 
 ### CR 8.5 Effect Keywords (`effect_keywords.py`)
-- [ ] Audit all ~30 primitives against current CR 8.5 — confirm each matches the rules text
+- [ ] Audit all primitives against current CR 8.5 — confirm each matches the rules text
 - [ ] need to confirm that event.x variables are used after replacement effects
 - [ ] shuffle needs to update player pitch histories. they wouldn't know the order anymore
 - [ ] `gets` / `gets_property` — verify continuous effect duration and cleanup
 - [ ] `search` — confirm full zone search pattern (deck shuffle after)
 - [ ] `opt` — confirm N look / choose any to top or bottom
-
-### Action Types (`actions.py`)
-Several `ActionType` variants are commented out, meaning those game actions can't be legally generated:
-- [ ] `ATTACK_WEAPON` — weapon attacks
-- [ ] `PLAY_ARSENAL` — play from arsenal (currently merged into PLAY_CARD?)
-- [ ] `DEFEND_EQUIPMENT` — block with equipment
-- [ ] `PLAY_ATTACK_REACTION` / `PLAY_DEFENSE_REACTION`
-- [ ] `REACTION_PASS`
-- [ ] `ACTIVATE_ITEM` / `ACTIVATE_ALLY` / `ACTIVATE_EQUIPMENT` / `ACTIVATE_WEAPON` / `ACTIVATE_HERO`
-- [ ] `DISCARD_ACTIVATE` — discard-cost activations
-- [ ] `PLAY_BANISH` — play from banish zone
 
 ### Continuous Effects (`continuous_effects.py` / `effects.py`)
 - [ ] Clarify which `ContinuousEffect` class is authoritative (two exist)

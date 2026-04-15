@@ -1,0 +1,27 @@
+- [ ] Deck compiling
+	- [ ] cards loading correctly (creating card object)
+	- [ ] all equipment in appropriate zones
+	- [ ] hero in hero zone
+- [ ] For each step, need to check events fire and effect keywords are used where appropriate.
+- [ ] Turn Sequence
+	- [ ] Turn flow should be:
+		- [ ] Start phase: no priority. players can decide trigger orders but otherwise stack resolves as if players are both passing
+		- [ ] Action Phase: Turn player gets action point. non-turn player can't gain action points.
+			- [ ] Turn player plays/activates non-attack card: goes on stack, priority loop
+			- [ ] Turn player plays/activate attack card: goes on stack, priority loop, when resolves (becomes attacking) move to attack step
+- [ ] Legal action generation
+	- [ ] Confirm the playable cards are checked first. Use example hero, then use gravy ability, then use rune gate with vynset, then dash io.
+	- [ ] Confirm affordability for cards chosen: generic cost check, mandatory costs, optional costs, mandatory conditions
+	- [ ] Confirm ALL legal/affordable actions are presented to the actor.
+- [ ] Combat
+	- [ ] Enters combat when a card is played/activated with the keyword 'attack'
+	- [ ] Correct step sequencing: 
+		- [ ] layer step (priority loop), 
+		- [ ] attack step (priority loop), 
+		- [ ] block step (priority loop with defending player going first), 
+		- [ ] reaction step (priority loop), 
+		- [ ] damage step (priority loop), check damage/hit triggers applied correctly at start of step
+		- [ ] resolution step (priority loop)
+	- [ ] Confirm turn player gets priority after chain closes as long as >1 legal action. 
+	- [ ] Both players get priority after chain close before end turn.
+- [ ] Confirm <= 0 health results in end of game
