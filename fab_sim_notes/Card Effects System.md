@@ -9,7 +9,7 @@ This layer bridges the rules engine and individual card text. It has three sub-s
 ---
 
 ## 1. Registries (`registry.py`)
-Dict maps: `slug → callable`. The engine looks up slugs here — never uses if-chains or slug-prefix hacks.
+Dict maps: `slug → callable`. The engine looks up slugs here — never uses if-chains. might use slug-prefix hacks for color variants.
 
 | Registry | When called | Signature |
 |----------|-------------|-----------|
@@ -83,7 +83,7 @@ TriggerDef(
 
 ## 4. Cost System (`effect_cost.py`)
 - `ALTERNATE_COSTS` — e.g. banish a card instead of paying resources
-- `KEYWORD_COSTS` — e.g. Chi payment for Ninja abilities
+- `KEYWORD_COSTS` — e.g. Beat Chest, Scrap
 
 ---
 

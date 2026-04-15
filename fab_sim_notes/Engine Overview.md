@@ -8,13 +8,13 @@ Implements FAB Comprehensive Rules as a Python state machine. A game is a sequen
 ## Data Flow
 
 ```
-Agent picks action
-  ↓
 play.available_actions()    ← playability + affordability
   ↓
 actions.legal_actions()     ← filter by game step + card conditions
   ↓
-play.apply_action()
+Agent picks action
+  ↓
+play.apply_action()         ← change gamestate according to action selection
   ↓
 engine._apply_*()           ← step-specific logic
   ↓
@@ -36,7 +36,7 @@ ACTION_PHASE
   → DAMAGE: _calculate_damage()
   → combat_chain_close or pass
 END_PHASE
-  → _end_turn(): pitch ordering, discard/draw to intellect
+  → _end_turn(): pitch ordering, draw to intellect
 ```
 
 ## Key Classes
@@ -85,7 +85,8 @@ Intercept an event before it fires and redirect it (e.g. "prevent the next N dam
 ## Key Invariants
 - Effect functions **mutate state in place** — never return new state
 - Legal action generation must be **pure** (no state mutation)
-- `card.owner` is immutable; `card.controller` changes with gain-control effects
+- `card.owner` is immutable (player that brought the card to the table)
+- `card.controller` changes with regular play/gain-control effects
 - Tokens cease to exist entering graveyard/banished (CR 3.0.12a — `ZoneEntryResult.CEASE_TO_EXIST`)
 
 ## Known Gaps

@@ -14,7 +14,7 @@ Converts `GameState` → tensors for the neural network.
 - `card_embedder.py` — card → embedding
 - `feature_schema.py` — defines feature columns (~45 numerical + ~10 JSON zone fields)
 - `game_transformer.py` — transformer architecture over game state
-- `pretrain_masked.py` — masked pretraining for card embeddings
+- `pretrain_masked.py` — masked pretraining for transformer attention
 
 ### `rl_agents/`
 - `iql.py` — IQL model definition

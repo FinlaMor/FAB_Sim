@@ -5,11 +5,11 @@ See also: [[Architecture Hub]] | [[Card Effects System]] | [[Work Tracks]]
 Implementation priority: cards needed by target decks first, then full set coverage.
 
 ## Target Decks (Immediate Priority)
-| Hero | Format | Status |
-|------|--------|--------|
-| Kayo | CC | ✅ Done (OUT set) |
-| Victor | CC | ❌ Not started |
-| Mario | CC | ❌ Not started |
+| Hero   | Format | Status        |
+| ------ | ------ | ------------- |
+| Kayo   | CC     | ✅ Done        |
+| Victor | CC     | ❌ Not started |
+| Mario  | CC     | ❌ Not started |
 
 ## Set Implementation Status
 
