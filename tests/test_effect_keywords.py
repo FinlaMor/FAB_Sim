@@ -2202,19 +2202,22 @@ from engine.effect_keywords import opt, OptEvent
 
 
 def test_opt_puts_cards_top_and_bottom():
-    """Opt N: selector splits cards to top and bottom."""
+    """Opt N: selector splits cards to top and bottom, deck order preserved."""
     state = _make_state()
     _fill_deck_slugs(state, 1, ["a", "b", "c"])
-    # top of deck is end of list: c is top, b middle, a bottom
+    # deck[0]=top: a is top, b middle, c is bottom
 
+    # Look at top 2 (a, b); put a on top, b on bottom
     def selector(cards):
-        # put first on top, rest on bottom
         return ([cards[0]], cards[1:])
 
     event = opt(state, n=2, target_player_id=1, selector=selector)
     assert not event.canceled
     assert len(event.top_cards) == 1
     assert len(event.bottom_cards) == 1
+    deck = [c.slug for c in state.players[1].deck.cards]
+    assert deck[0] == "a"   # top_cards[0] → deck[0]
+    assert deck[-1] == "b"  # bottom_cards[0] → deck[-1]
 
 
 def test_opt_empty_deck_cancels():

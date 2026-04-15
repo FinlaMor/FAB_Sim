@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING, Optional, Callable
 from dataclasses import dataclass, field
 
 
-from engine.state import GameState, Event
+from engine.state import GameState, Event, StackEntry
 from engine.context import effect_context
 from engine.card import Card
 from engine.continuous_effects import ContinuousEffect, next_timestamp
@@ -1519,7 +1519,7 @@ def opt(state: GameState, n: int, target_player_id: int,
 
     # CR 8.5.22a: if deck < N, use all
     actual_n = min(event.n, len(deck.cards))
-    looked = deck.cards[-actual_n:]  # top N cards (end of list = top)
+    looked = deck.cards[:actual_n]  # top N cards (cards[0] = top)
 
     top_cards, bottom_cards = selector(list(looked))
 
@@ -1527,12 +1527,12 @@ def opt(state: GameState, n: int, target_player_id: int,
     for c in looked:
         deck.cards.remove(c)
 
-    # Put bottom cards at index 0 (bottom of deck)
-    for c in bottom_cards:
+    # Put top cards: top_cards[0] = topmost; insert reversed so [0] lands at deck[0]
+    for c in reversed(top_cards):
         deck.cards.insert(0, c)
 
-    # Put top cards at end (top of deck)
-    for c in top_cards:
+    # Put bottom cards: bottom_cards[0] = absolute bottom; append reversed so [0] lands at deck[-1]
+    for c in reversed(bottom_cards):
         deck.cards.append(c)
 
     event = dataclasses.replace(event,
@@ -1702,14 +1702,13 @@ def negate(state: GameState, layer, source_player_id: int | None = None) -> Nega
 
     if event.canceled:
         return event
-
+    
+    layer = event.layer
+    
     # CR 8.5.26: the layer is cleared from the stack and it does not resolve
-    if hasattr(layer, 'negated'):
-        layer.negated = True
-    else:
-        setattr(layer, 'negated', True)
-    state.stack.remove(layer)
+    setattr(layer, 'negated', True)
 
+    state.stack.remove(layer)
     state.event_manager.emit(Event(type="negate", data={
         "layer": getattr(layer, 'slug', str(layer)),
         "source_player_id": event.source_player_id,
@@ -1753,9 +1752,10 @@ def repeat(state: GameState, process: Callable[[], bool],
         return event
 
     # CR 8.5.27b: repeat until process fails to advance or hard cap hit
+    # process() must return a truthy value if it advanced state, falsy otherwise
     for _ in range(max_iterations):
         result = process()
-        if result is False:
+        if not result:
             break
 
     state.event_manager.emit(Event(type="repeat", data={
@@ -1773,7 +1773,6 @@ def repeat(state: GameState, process: Callable[[], bool],
 class RerollEvent:
     type: str = "reroll"
     original_results: tuple = field(default_factory=tuple)
-    new_results: tuple = field(default_factory=tuple)
     faces: int = 6
     source_player_id: int | None = None
     canceled: bool = False
@@ -1788,12 +1787,9 @@ def reroll(state: GameState, dice_results: list[int], faces: int = 6,
     The reroll event passes through apply_replacements so other replacement
     effects can interact with/modify the new results.
     """
-    _rng = rng if rng is not None else random
-    new_results = tuple(_rng.randint(1, faces) for _ in dice_results)
 
     event = RerollEvent(
         original_results=tuple(dice_results),
-        new_results=new_results,
         faces=faces,
         source_player_id=source_player_id,
     )
@@ -1806,10 +1802,13 @@ def reroll(state: GameState, dice_results: list[int], faces: int = 6,
 
     if event.canceled:
         return event
+    
+    _rng = rng if rng is not None else random
+    new_results = tuple(_rng.randint(1, event.faces) for _ in event.original_results)
 
     state.event_manager.emit(Event(type="reroll", data={
         "original_results": list(event.original_results),
-        "new_results": list(event.new_results),
+        "new_results": list(new_results),
         "faces": faces,
         "source_player_id": event.source_player_id,
     }), state)
@@ -1823,10 +1822,12 @@ def reroll(state: GameState, dice_results: list[int], faces: int = 6,
 
 @dataclass
 class ChargeEvent:
+    player_id: int
+    card: Card
     type: str = "charge"
-    card: Optional[Card] = None
-    player_id: int | None = None
     source_player_id: int | None = None
+    origin: str='hand'
+    destination: str='soul'
     canceled: bool = False
 
 
@@ -1848,20 +1849,26 @@ def charge(state: GameState, card: Card, player_id: int,
 
     if event.canceled:
         return event
-
-    hand = state.get_zone("hand", player_id)
-    if hand is not None and card in hand.cards:
-        hand.remove(card)
+    
+    origin = state.get_zone(event.origin, player_id)
+    if origin is not None and card in origin.cards:
+        origin.remove(card)
 
     # Soul is a SubZoneView over hero_zone. Direct add via SubZoneView
     # sets permanent_subtype and delegates to parent. Use effect_context
     # so zone entry uses FAIL (not CLEAR/graveyard redirect).
+    
+    player_id = event.player_id
     player = state.players[player_id]
+    card = event.card
+    
     card.permanent_subtype = "Soul"
-    card.prev_zone = card.zone
-    card.zone = player.hero_zone.name
-    card.is_public = player.hero_zone.is_public
-    player.hero_zone.cards.append(card)
+    card.prev_zone = event.origin
+    card.zone = event.destination
+    top_card = getattr(player, event.destination).top()
+    card.is_public = top_card.is_public
+    getattr(player, event.destination).add_under(top_card, card)
+
 
     state.event_manager.emit(Event(type="charge", data={
         "card": card.slug,

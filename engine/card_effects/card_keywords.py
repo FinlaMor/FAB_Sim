@@ -40,7 +40,18 @@ Effect Keywords available from engine.effect_keywords:
 - put_counter: put one or more counters on an object
 - remove_counter: opposite of put_counter
 - reveal: a card is made public and either stays that way or is flipped back down.
-
+- put_object: move an object to a specified zone
+- roll: rolls one or more dice
+- search: search for a card in a set of zones
+- shuffle: shuffles cards in a specified zone
+- name: stores a named card
+- opt: look at top N cards, choose any number to put on top or bottom.
+- reload: option to move a card from hand to arsenal face-down. all arsenal zones must be empty.
+- turn: flip a card up (become public) or down (become private)
+- negate: remove a layer from the stack
+- repeat: execute a callable repeatly
+- reroll: reroll a die. returns potentially new results
+- charge: move a card from hand to soul 
   
   """
 
