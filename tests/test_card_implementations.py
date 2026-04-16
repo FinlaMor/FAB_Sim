@@ -118,8 +118,11 @@ def _make_combat_state(
     atk = _make_card("test_attack", types=["Action", "Attack"], base_power=attack_power)
     atk.owner = attacker_id
     atk.controller = attacker_id
+    defender = _make_card(slug='defend_test_hero', name='defend_test_hero',types=['hero'])
+
     return CombatState(
         attacker_id=attacker_id,
+        attack_target=defender,
         link_id=1,
         attack_power=attack_power,
         base_attack_power=attack_power,

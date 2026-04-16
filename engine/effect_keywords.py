@@ -39,7 +39,7 @@ def coo(card: Card, return_owner: bool=False) -> int|None:
 def create_emit_event(event) -> Event:
     return Event(
         type=event.type,
-        card=event.card.slug if event.card is not None else None,
+        card=event.card.slug if hasattr(event, 'card') and event.card is not None else getattr(event, 'target'),
         target=event.target if event.target is not None else None,
         data={k: v for k, v in vars(event).items() if k not in ('type', 'card', 'target')}
     )
@@ -58,7 +58,7 @@ class BanishEvent:
         cancelled    — prevent the banish entirely
     """
     type: str = EventType.BANISH
-    card: Card = None
+    target: Card = None
     source_player_id: int = None      # who is causing the banishing
     target_player_id: int = None      # who owns the card being banished
     origin_zone: str = None           # where the card came from ("hand", "deck", etc.)
@@ -77,7 +77,7 @@ def banish(state: GameState, card: Card, source_player_id: int,
     target_player_id = card.owner
 
     event = BanishEvent(
-        card=card,
+        target=card,
         source_player_id=source_player_id,
         target_player_id=target_player_id,
         origin_zone=origin_zone,
@@ -93,7 +93,7 @@ def banish(state: GameState, card: Card, source_player_id: int,
 
     # execute the move
     player = state.players[event.target_player_id]
-    card = event.card
+    card = event.target
     getattr(player, event.origin_zone).remove(card)
     getattr(player, event.destination).add(card)
 
@@ -1876,14 +1876,13 @@ def charge(state: GameState, card: Card, player_id: int,
     player_id = event.player_id
     player = state.players[player_id]
     card = event.card
-    
-    card.permanent_subtype = "Soul"
-    card.prev_zone = event.origin
-    card.zone = event.destination
-    top_card = getattr(player, event.destination).top()
-    card.is_public = top_card.is_public
-    getattr(player, event.destination).add_under(top_card, card)
-
+    zone = getattr(player, event.destination)
+    zone.add(card)
+    if zone.name == 'soul':
+        card.reset_to_base_state()
+        card.is_sub_card = True
+        card.top_card = player.hero
+        player.hero.cards_underneath.append(card)
 
     state.event_manager.emit(Event(type="charge", data={
         "card": card.slug,
@@ -2982,7 +2981,7 @@ def transform(state: GameState, objects: list[Card], permanent: Card,
 
     # CR 8.5.36b: if permanent is not yet in an arena zone, put it there
     perm_zone = state.get_zone(perm.zone, controller_id) if perm.zone else None
-    if perm_zone is None or perm.zone not in ("permanents", "items", "allies", "auras", "layers"):
+    if perm_zone is None or perm.zone not in ("permanents", "items", "allies", "auras", "layers", "hero"):
         dest_zone = state.get_zone("permanents", controller_id)
         if dest_zone is not None:
             dest_zone.add(perm)
@@ -2999,7 +2998,7 @@ def transform(state: GameState, objects: list[Card], permanent: Card,
         src_zone = state.get_zone(src_zone_name, src_controller)
         if src_zone is not None:
             src_zone.remove(obj)
-        success = perm_zone.add_under(perm, obj)
+        success = perm_zone.add_under(obj)
         if not success:
             event.canceled = True
             return event

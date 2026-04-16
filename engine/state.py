@@ -271,7 +271,7 @@ class Zone:
         card.is_public = next_is_public
         self.cards.append(card)
 
-    def add_under(self, top_card: "Card", sub_card: "Card") -> bool:
+    def add_under(self, sub_card: "Card") -> bool:
         """Place sub_card underneath top_card in this zone (CR 3.0.14).
 
         top_card must already be in this zone. sub_card is appended to
@@ -282,17 +282,21 @@ class Zone:
         CR 3.0.14d: sub-card inherits top-card's visibility.
         Returns True on success, False if top_card is not in this zone.
         """
-        if top_card not in self.cards:
+        top_card = self.top if len(self.cards) > 0 else None
+        if top_card not in self.cards :
             return False
         # CR 3.0.14b: card becomes new object on entering as sub-card
         sub_card.reset_to_base_state()
         sub_card.prev_zone = sub_card.zone
         sub_card.zone = self.name
         sub_card.is_sub_card = True
-        sub_card.top_card = top_card
-        # CR 3.0.14d: inherit visibility from top-card
-        sub_card.is_public = top_card.is_public
-        top_card.cards_underneath.append(sub_card)
+        if top_card:
+            sub_card.top_card = top_card
+            # CR 3.0.14d: inherit visibility from top-card
+            sub_card.is_public = top_card.is_public
+            top_card.cards_underneath.append(sub_card)
+        else:
+            sub_card.is_public = self.is_public
         return True
 
     def pop_top(self) -> Optional[Card]:
@@ -349,6 +353,10 @@ class SubZoneView:
     @property
     def cards(self) -> list[Card]:
         return [c for c in self.parent.cards if self._matches(c)]
+    
+    @property
+    def is_public(self) -> bool:
+        return self.parent.is_public
 
     def add(self, card: Card, is_public=None) -> None:
         card.permanent_subtype = self.subtype
@@ -367,9 +375,8 @@ class SubZoneView:
         for card in cards:
             self.add(card)
 
-    def add_under(self, top_card: "Card", sub_card: "Card") -> bool:
-        """Delegate add_under to the parent zone."""
-        return self.parent.add_under(top_card, sub_card)
+    def add_under(self, sub_card: "Card") -> bool:
+        return self.parent.add_under(sub_card)
 
     def _matches(self, card: Card) -> bool:
         return getattr(card, 'permanent_subtype', None) == self.subtype
@@ -759,8 +766,8 @@ class Player:
         self.auras = SubZoneView(self.permanents, "Aura")
         self.allies = SubZoneView(self.permanents, "Ally")
         self.tokens = SubZoneView(self.permanents, "Token")
-        self.hero_zone = Zone("hero", player_id)
-        self.soul = SubZoneView(self.hero_zone, "Soul")
+        self.hero_zone = Zone("hero_zone", player_id)
+        self.soul = Zone("soul", player_id) # Not a real zone but useful for the engine.
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
         self.pitch_history: list[Card] = []
         # Hero card setup
@@ -1050,7 +1057,6 @@ class CombatState:
     attack_power: int
     attack_card: Card
     keywords: list[str]
-    attack_target: Card   
     base_attack_power: int = 0
     from_weapon: bool = False
     attack_source: Optional[Card] = None
@@ -1061,7 +1067,7 @@ class CombatState:
     no_defense_reactions: bool = False
     defending_declared: bool = False
     defending_equipment_zones: list[str] = field(default_factory=list)
-    attack_target_card: Optional["Card"] = None  # Set when attack targets a specific card (e.g. Spectra aura) instead of hero
+    attack_target: Optional["Card"] = None  # Set when attack targets a specific card (e.g. Spectra aura, ally) instead of hero
     # Wager system (CR 8.5.46): list of (controller_id, prize_token_slug_or_None)
     wagers: list[tuple[int, str | None]] = field(default_factory=list)
     # Stage-6 keyword effects added directly during this combat chain link

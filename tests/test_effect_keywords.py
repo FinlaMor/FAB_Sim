@@ -148,6 +148,7 @@ def test_banish_return_fails_if_card_ceased_to_exist():
     # Orig_card would not share same zones as card. precondition for next checks
     orig_card.zone = card.zone
     orig_card.prev_zone = card.prev_zone
+    orig_card.is_public = True # copy was made when card was in hand and private
 
     assert orig_card is not card # check if card in graveyard is a new instance of the card (3.0.9)
     assert orig_card == card
@@ -2473,22 +2474,51 @@ def test_reroll_emits_event():
 from engine.effect_keywords import charge, ChargeEvent
 
 
-def test_charge_moves_card_to_soul():
+def test_charge_moves_card_to_empty_soul():
     """Charge moves card from hand to soul zone."""
     state = _make_state()
     card = _add_to_hand(state, 1, _make_card("soul_card"))
 
     event = charge(state, card=card, player_id=1)
-
+    player = state.players[1]
+    print(card.zone)
+    print(card.prev_zone)
     assert not event.canceled
-    assert card not in state.players[1].hand.cards
+    assert card not in player.hand.cards
+    assert card.is_sub_card
+    assert card.top_card is player.hero
+    assert card is player.hero.cards_underneath[0]
+    assert len(player.soul.cards) == 1
     assert card in state.players[1].soul.cards
+
+def test_charge_moves_card_to_non_empty_soul():
+    state = _make_state()
+    card = _add_to_hand(state, 1, _make_card("soul_card"))
+    card2 = _add_to_hand(state, 1, _make_card("soul_card_2"))
+    event = charge(state, card=card, player_id=1)
+    event2 = charge(state, card=card2, player_id=1)
+
+    player = state.players[1]
+    assert not event.canceled
+    assert not event2.canceled
+    assert card not in player.hand.cards
+    assert card2 not in player.hand.cards
+    assert card.is_sub_card
+    assert card2.is_sub_card
+    assert card.top_card is player.hero
+    assert card2.top_card is player.hero
+    assert card is player.hero.cards_underneath[0]
+    assert card2 is player.hero.cards_underneath[1]
+    assert len(player.soul.cards) == 2
+    assert card in player.soul.cards
+    assert card2 in player.soul.cards
 
 
 def test_charge_emits_event():
     """charge() emits a 'charge' event."""
     state = _make_state()
     card = _add_to_hand(state, 1, _make_card("soul_card"))
+
     received = []
     state.event_manager.register("charge", lambda ev, s: received.append(ev))
     charge(state, card=card, player_id=1)
