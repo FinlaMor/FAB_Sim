@@ -39,40 +39,40 @@ from engine.card_effects.triggers import TriggerDef
 
 def _eff_draw(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_draw, _controller_id
+        from engine.card_effects.card_keywords import effect_draw, _controller_id
         effect_draw(state, _controller_id(card), n)
     return fn
 
 def _eff_deal_arcane(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_deal_arcane, _controller_id
+        from engine.card_effects.card_keywords import effect_deal_arcane, _controller_id
         cid = _controller_id(card)
         effect_deal_arcane(state, 3 - cid, n, card)
     return fn
 
 def _eff_deal_damage(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_deal_damage, _controller_id
+        from engine.card_effects.card_keywords import effect_deal_damage, _controller_id
         cid = _controller_id(card)
         effect_deal_damage(state, 3 - cid, n, card)
     return fn
 
 def _eff_gain_life(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_gain_life, _controller_id
+        from engine.card_effects.card_keywords import effect_gain_life, _controller_id
         effect_gain_life(state, _controller_id(card), n)
     return fn
 
 def _eff_lose_life(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_lose_life, _controller_id
+        from engine.card_effects.card_keywords import effect_lose_life, _controller_id
         cid = _controller_id(card)
         effect_lose_life(state, 3 - cid, n)
     return fn
 
 def _eff_discard(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_discard, _controller_id
+        from engine.card_effects.card_keywords import effect_discard, _controller_id
         cid = _controller_id(card)
         effect_discard(state, 3 - cid, n)
     return fn
@@ -84,7 +84,7 @@ def _eff_power_bonus(n: int):
 
 def _eff_next_attack_power(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import _controller_id
+        from engine.card_effects.card_keywords import _controller_id
         cid = _controller_id(card)
         state.players[cid].current_turn_effects.append(f"next_attack_+{n}")
     return fn
@@ -114,54 +114,54 @@ def _eff_overpower():
 
 def _eff_intimidate():
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_intimidate, _controller_id
+        from engine.card_effects.card_keywords import effect_intimidate, _controller_id
         cid = _controller_id(card)
         effect_intimidate(state, 3 - cid, card)
     return fn
 
 def _eff_create_token(token_slug: str, count: int = 1):
     def fn(card, event, state):
-        from engine.card_effects.keywords import create_token, _controller_id
+        from engine.card_effects.card_keywords import create_token, _controller_id
         create_token(state, _controller_id(card), token_slug, count)
     return fn
 
 def _eff_create_token_opponent(token_slug: str, count: int = 1):
     def fn(card, event, state):
-        from engine.card_effects.keywords import create_token, _controller_id
+        from engine.card_effects.card_keywords import create_token, _controller_id
         cid = _controller_id(card)
         create_token(state, 3 - cid, token_slug, count)
     return fn
 
 def _eff_opt(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_opt, _controller_id
+        from engine.card_effects.card_keywords import effect_opt, _controller_id
         effect_opt(state, _controller_id(card), n)
     return fn
 
 def _eff_gain_action_point():
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_gain_action_point, _controller_id
+        from engine.card_effects.card_keywords import effect_gain_action_point, _controller_id
         effect_gain_action_point(state, _controller_id(card))
     return fn
 
 def _eff_gain_resources(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_gain_resources, _controller_id
+        from engine.card_effects.card_keywords import effect_gain_resources, _controller_id
         effect_gain_resources(state, _controller_id(card), n)
     return fn
 
 def _eff_amp(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_amp, _controller_id
+        from engine.card_effects.card_keywords import effect_amp, _controller_id
         effect_amp(state, _controller_id(card), n)
     return fn
 
 def _eff_banish_top(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import _controller_id
+        from engine.card_effects.card_keywords import _controller_id
         cid = _controller_id(card)
         target = state.players[3 - cid]
-        from engine.card_effects.keywords import banish_card
+        from engine.card_effects.card_keywords import banish_card
         for _ in range(n):
             if target.deck.cards:
                 top = target.deck.pop_top()
@@ -170,20 +170,20 @@ def _eff_banish_top(n: int):
 
 def _eff_prevent_damage(n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import _controller_id
+        from engine.card_effects.card_keywords import _controller_id
         cid = _controller_id(card)
         state.players[cid].current_turn_effects.append(f"prevent_next_{n}")
     return fn
 
 def _eff_put_counter(counter_type: str, n: int):
     def fn(card, event, state):
-        from engine.card_effects.keywords import effect_put_counter
+        from engine.card_effects.card_keywords import effect_put_counter
         effect_put_counter(state, card, counter_type, n)
     return fn
 
 def _eff_next_attack_keyword(keyword: str):
     def fn(card, event, state):
-        from engine.card_effects.keywords import _controller_id
+        from engine.card_effects.card_keywords import _controller_id
         cid = _controller_id(card)
         state.players[cid].current_turn_effects.append(f"next_attack_{keyword}")
     return fn
@@ -195,7 +195,7 @@ def _eff_self_gain_go_again():
             if "go_again" not in state.combat.keywords:
                 state.combat.grant_keyword("go_again")
         else:
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             state.players[cid].current_turn_effects.append("next_action_go_again")
     return fn
@@ -579,14 +579,14 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
 
     if cond_key == 'less_health':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return state.players[cid].health < state.players[3 - cid].health
         return cond
 
     if cond_key == 'more_health':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return state.players[cid].health > state.players[3 - cid].health
         return cond
@@ -604,7 +604,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
         if pitch_val is None:
             return None
         def cond(card, event, state, _n=n, _pv=pitch_val):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             count = sum(1 for c in state.players[cid].pitch.cards if c.pitch == _pv)
             return count >= _n
@@ -614,7 +614,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
         n = int(match.group(1))
         type_word = match.group(2).strip().title()
         def cond(card, event, state, _n=n, _tw=type_word):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             count = sum(1 for c in state.players[cid].banished.cards
                         if _tw in (c.subtypes or []) or _tw in (c.types or []))
@@ -624,7 +624,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
     if cond_key == 'pitch_has_power':
         n = int(match.group(1))
         def cond(card, event, state, _n=n):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any(c.power is not None and c.power >= _n
                        for c in state.players[cid].pitch.cards)
@@ -632,7 +632,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
 
     if cond_key == 'cheered_this_turn':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return "crowd_cheers" in state.players[cid].current_turn_effects
         return cond
@@ -643,7 +643,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
         if not token_slug:
             return None
         def cond(card, event, state, _ts=token_slug):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any(c.slug == _ts for c in state.players[cid].items.cards)
         return cond
@@ -660,7 +660,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
 
     if cond_key == 'empty_hand':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return len(state.players[cid].hand.cards) == 0
         return cond
@@ -668,7 +668,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
     if cond_key == 'discarded_power':
         n = int(match.group(1))
         def cond(card, event, state, _n=n):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any(f"discarded_{_n}p" in eff
                        for eff in state.players[cid].current_turn_effects)
@@ -680,7 +680,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
         if not token_slug:
             return None
         def cond(card, event, state, _ts=token_slug):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any(f"controlled_{_ts}" in eff
                        for eff in state.players[cid].current_turn_effects)
@@ -704,14 +704,14 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
 
     if cond_key == 'dealt_arcane_this_turn':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any("dealt_arcane" in eff for eff in state.players[cid].current_turn_effects)
         return cond
 
     if cond_key == 'intimidated_this_turn':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any("intimidated" in eff for eff in state.players[cid].current_turn_effects)
         return cond
@@ -730,7 +730,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
         n = int(match.group(1))
         type_word = match.group(2).strip()
         def cond(card, event, state, _n=n, _tw=type_word):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             tw_title = _tw.title()
             count = sum(1 for c in state.players[cid].items.cards
@@ -741,7 +741,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
     if cond_key == 'played_type_this_turn':
         type_word = match.group(1).strip().lower()
         def cond(card, event, state, _tw=type_word):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any(f"played_{_tw}" in eff for eff in state.players[cid].current_turn_effects)
         return cond
@@ -766,14 +766,14 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
         if pitch_val is None:
             return None
         def cond(card, event, state, _pv=pitch_val):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any(c.pitch == _pv for c in state.players[cid].pitch.cards)
         return cond
 
     if cond_key == 'drawn_this_turn':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any("drawn_card" in eff for eff in state.players[cid].current_turn_effects)
         return cond
@@ -781,14 +781,14 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
     if cond_key == 'banished_power_this_turn':
         n = int(match.group(1))
         def cond(card, event, state, _n=n):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any(f"banished_{_n}p" in eff for eff in state.players[cid].current_turn_effects)
         return cond
 
     if cond_key == 'created_this_turn':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return any("created_card" in eff or "created_token" in eff
                        for eff in state.players[cid].current_turn_effects)
@@ -797,7 +797,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
     if cond_key == 'boosted_this_turn':
         n = int(match.group(1))
         def cond(card, event, state, _n=n):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             count = sum(1 for eff in state.players[cid].current_turn_effects if "boosted" in eff)
             return count >= _n
@@ -805,7 +805,7 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
 
     if cond_key == 'has_card_in_arsenal':
         def cond(card, event, state):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.card_keywords import _controller_id
             cid = _controller_id(card)
             return len(state.players[cid].arsenal.cards) > 0
         return cond
@@ -819,31 +819,31 @@ def _build_condition(cond_key: str, match: re.Match) -> Optional[Callable]:
 
 def _make_crush_condition():
     def cond(card, event, state):
-        from engine.card_effects.keywords import crush_check
+        from engine.card_effects.card_keywords import crush_check
         return crush_check(event, state)
     return cond
 
 def _make_reprise_condition():
     def cond(card, event, state):
-        from engine.card_effects.keywords import reprise_check
+        from engine.card_effects.card_keywords import reprise_check
         return reprise_check(state)
     return cond
 
 def _make_combo_condition():
     def cond(card, event, state):
-        from engine.card_effects.keywords import combo_check
+        from engine.card_effects.card_keywords import combo_check
         return combo_check(state, [])
     return cond
 
 def _make_surge_condition():
     def cond(card, event, state):
-        from engine.card_effects.keywords import surge_check
+        from engine.card_effects.card_keywords import surge_check
         return surge_check(event, 0)
     return cond
 
 def _make_rupture_condition():
     def cond(card, event, state):
-        from engine.card_effects.keywords import rupture_check
+        from engine.card_effects.card_keywords import rupture_check
         return rupture_check(state)
     return cond
 

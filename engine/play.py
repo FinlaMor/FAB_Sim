@@ -7,9 +7,9 @@ Program for
 from typing import Optional
 
 from engine.actions import Action, ActionType
-from card_effects.additional_conditions import ADDITIONAL_CONDITIONS
-from card_effects.additional_costs import ADDITIONAL_COSTS
-from card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
+from engine.card_effects.additional_conditions import ADDITIONAL_CONDITIONS
+from engine.card_effects.additional_costs import ADDITIONAL_COSTS
+from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
 from engine.card import Card
 from engine.state import GameState, Player, Event, StackEntry
 
@@ -46,7 +46,7 @@ def available_actions(state, player_id) -> list[Action]:
         if can_play:
             affordable_actions.append(action)
     for card in activatable_cards:
-        can_activate, action = _cost_check(state, card, player_id, action, playable=False):
+        can_activate, action = _cost_check(state, card, player_id, action, playable=False)
         if can_activate:
             affordable_actions.append(action)
     
@@ -533,7 +533,7 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
             player.chi += pitch_val
         elif getattr(card, 'pitch_gives_chi', False) and action.player_id is not None:
             # Cards like inner_chi can fill either pool — ask the player
-            from engine.card_effects.keywords import _ask_player as _apk
+            from engine.card_effects.card_keywords import _ask_player as _apk
             chi_choice = _apk(state, action.player_id, ['chi', 'resources'],
                               context=f"Pitch {card.slug} for {pitch_val} chi or {pitch_val} resources?")
             if str(chi_choice) == 'chi':
@@ -553,6 +553,30 @@ def get_pitchable_cards(hand_cards: list[Card], exclude_card: Card | None = None
         c for c in hand_cards
         if c is not exclude_card and c.pitch is not None and c.pitch > 0
     ]
+
+
+def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
+    """Check or pay the resource cost for an action (CR 5.1.6 / 1.14.2).
+
+    check=True  — return True if the player can afford the action (no state change).
+    check=False — pitch cards and deduct resources to pay the cost; return True.
+    """
+    from engine.actions import can_pay_cost
+    if action.player_id is None:
+        return True
+    player = state.players[action.player_id]
+    resource_cost = _calculate_resource_cost(state, action)
+    if check:
+        exclude = action.card if isinstance(getattr(action, 'card', None), Card) else None
+        effective = player.resources + getattr(player, 'chi', 0)
+        if effective >= resource_cost:
+            return True
+        return can_pay_cost(player.hand.cards, resource_cost, effective, exclude_card=exclude)
+    else:
+        _pitch_for_cost(state, action, resource_cost)
+        action.resource_cost = resource_cost
+        player.resources = max(0, player.resources - resource_cost)
+        return True
 def _pay_costs(state, player_id, action):
 
     player = state.players[player_id]

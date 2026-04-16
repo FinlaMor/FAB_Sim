@@ -11,7 +11,7 @@ KEYWORD_COSTS: dict = {}
 
 def _scrap_effect_cost(state: GameState, player_id: int, action, check: bool = True) -> bool:
     """Scrap (CR 8.3.32): optional additional cost — banish an item or equipment from graveyard."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     player = state.players[player_id]
     eligible = [
         c for c in player.graveyard.cards
@@ -27,7 +27,7 @@ def _scrap_effect_cost(state: GameState, player_id: int, action, check: bool = T
                        context="Choose item or equipment to banish for Scrap")
     target = player.graveyard.find(str(pick)) if pick is not None else None
     if target:
-        from engine.card_effects.keywords import banish_card
+        from engine.card_effects.card_keywords import banish_card
         player.graveyard.remove(target)
         banish_card(state, player, target, face_up=True)
     return True
@@ -35,7 +35,7 @@ KEYWORD_COSTS['scrap'] = _scrap_effect_cost
 
 def _beat_chest_effect_cost(state: GameState, player_id: int, action, check: bool = True) -> bool:
     """Beat Chest (CR 8.3.33): optional additional cost — discard a card with 6+ power from hand."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     player = state.players[player_id]
     card = action.card
     eligible = [
@@ -90,7 +90,7 @@ def _10000_year_reunion_alt_cost(state: GameState, player_id: int, action,
     if total < 3:
         return False
     if not check:
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         remaining = 3
         while remaining > 0:
             eligible = [

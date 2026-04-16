@@ -200,7 +200,7 @@ def _deal_damage(state: GameState, target_player: Player, amount: int,
         event = state.effect_manager.apply_replacements(event, state)
     actual = event.get("amount", 0)
     if actual > 0:
-        target_player.health -= actual
+        target_player.life -= actual
         from engine.state import Event as _Event
         state.event_manager.emit(
             _Event(type='damage_dealt', data={
@@ -224,6 +224,10 @@ def _apply_defense_counter(card: Card, state: GameState, count: int = 1) -> None
         return base - p.counters.get(k, 0)
     _apply._counter_key = key
     card.effects.append(("base_defense", _apply))
+    # Also update card.defense immediately so keyword tests and out-of-engine
+    # callers see the correct value without waiting for the engine recalc pass.
+    if card.base_defense is not None:
+        card.defense = _apply(card.base_defense)
 
 
 def _pitch_for_cost(controller: Player, amount: int, state: GameState,
@@ -359,7 +363,7 @@ def blood_debt(card: Card, event: Event, state: GameState) -> None:
     """8.3.11: While in banished zone (public), at beginning of end phase, lose 1 life."""
     if card.zone == "banished" and card.is_public:
         owner = _get_owner(state, card)
-        owner.health -= 1
+        owner.life -= 1
 
 
 def suspense_remove_counter(card: Card, event: Event, state: GameState) -> None:
@@ -836,7 +840,7 @@ def effect_gain_life(state: GameState, player_id: int, amount: int) -> None:
     from engine.state import Event
     if amount <= 0:
         return
-    state.players[player_id].health += amount
+    state.players[player_id].life += amount
     state.event_manager.emit(
         Event(type='life_gained', data={'player_id': player_id, 'amount': amount}),
         state)
@@ -847,7 +851,7 @@ def effect_lose_life(state: GameState, player_id: int, amount: int) -> None:
     from engine.state import Event
     if amount <= 0:
         return
-    state.players[player_id].health -= amount
+    state.players[player_id].life -= amount
     state.event_manager.emit(
         Event(type='life_lost', data={'player_id': player_id, 'amount': amount}),
         state)

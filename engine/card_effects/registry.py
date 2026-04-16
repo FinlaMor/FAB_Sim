@@ -222,7 +222,7 @@ def _kayo_set_6_base_power(action, player, state):
 def _marlynn_create_harpoon(action, player, state):
     """Marlynn hero ability effect: Create Goldfin Harpoon in hand. Go again.
     Cost (Gold destruction + tap) is paid before this resolves."""
-    from engine.card_effects.keywords import create_token_card
+    from engine.card_effects.card_keywords import create_token_card
     harpoon = create_token_card("goldfin_harpoon_yellow", player.player_id)
     player.hand.add(harpoon)
     player.action_points += 1
@@ -234,7 +234,7 @@ def _marlynn_pay_cost(player, state):
     golds = [c for c in player.items.cards if "gold" in [t.lower() for t in (c.types or [])] and "token" in [t.lower() for t in (c.types or [])]]
     if not golds:
         return False
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     if len(golds) == 1:
         gold = golds[0]
     else:
@@ -249,14 +249,14 @@ def _marlynn_pay_cost(player, state):
 def _oscilio_discard_instant_draw(action, player, state):
     """Oscilio hero ability effect: draw a card.
     Cost (discard instant) is paid before this resolves."""
-    from engine.card_effects.keywords import effect_draw
+    from engine.card_effects.card_keywords import effect_draw
     effect_draw(state, player.player_id, 1)
     player.current_turn_effects.append("oscilio_used")
 
 
 def _oscilio_pay_cost(player, state):
     """Pay Oscilio's hero ability cost: discard an instant."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     instants = [c for c in player.hand.cards if c.is_instant]
     if not instants:
         return False
@@ -451,7 +451,7 @@ def _adaptive_alpha_mold_effect(action, player, state):
     if len(empty_slots) == 1:
         dest_slot = empty_slots[0]
     else:
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         pick = _ask_player(state, player.player_id, empty_slots,
                            context=f"Choose an empty equipment zone to move {card.slug} to")
         dest_slot = str(pick) if str(pick) in empty_slots else empty_slots[0]
@@ -472,7 +472,7 @@ def _radiant_condition(player, slot_name, equip_card, state=None) -> bool:
 
 def _radiant_head_pay_cost(action, player, state):
     """Banish self from head + banish top soul card."""
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.head.remove(action.card)
     banish_card(state, player, action.card)
     if player.soul.cards:
@@ -481,7 +481,7 @@ def _radiant_head_pay_cost(action, player, state):
         banish_card(state, player, soul_card)
 
 def _radiant_chest_pay_cost(action, player, state):
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.chest.remove(action.card)
     banish_card(state, player, action.card)
     if player.soul.cards:
@@ -490,7 +490,7 @@ def _radiant_chest_pay_cost(action, player, state):
         banish_card(state, player, soul_card)
 
 def _radiant_arms_pay_cost(action, player, state):
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.arms.remove(action.card)
     banish_card(state, player, action.card)
     if player.soul.cards:
@@ -499,7 +499,7 @@ def _radiant_arms_pay_cost(action, player, state):
         banish_card(state, player, soul_card)
 
 def _radiant_legs_pay_cost(action, player, state):
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.legs.remove(action.card)
     banish_card(state, player, action.card)
     if player.soul.cards:
@@ -584,7 +584,7 @@ def _hammerhead_effect(action, player, state):
 
 def _volzar_effect(action, player, state):
     """Effect: Amp X where X = number of Lightning cards played this turn."""
-    from engine.card_effects.keywords import effect_amp
+    from engine.card_effects.card_keywords import effect_amp
     lightning_count = player.current_turn_effects.count("played_lightning")
     if lightning_count > 0:
         effect_amp(state, player.player_id, lightning_count)
@@ -598,7 +598,7 @@ def _goldbaited_hook_effect(action, player, state):
 
 def _quiver_effect(action, player, state):
     """Effect: shuffle up to 3 arrows with different names from graveyard into deck."""
-    from engine.card_effects.keywords import _ask_player, effect_shuffle
+    from engine.card_effects.card_keywords import _ask_player, effect_shuffle
     arrows = [c for c in player.graveyard.cards if "arrow" in [t.lower() for t in (c.types or [])]]
     selected_names = set()
     for _ in range(3):
@@ -628,7 +628,7 @@ def _sealace_effect(action, player, state):
 
 def _aether_conduit_effect(action, player, state):
     """**Once per Turn Action** - {r}{r}: Deal 2 arcane damage to target hero."""
-    from engine.card_effects.keywords import effect_deal_arcane
+    from engine.card_effects.card_keywords import effect_deal_arcane
     target_card = action.target
     if target_card is not None and hasattr(target_card, 'owner'):
         target_id = target_card.controller if target_card.controller is not None else target_card.owner
@@ -853,7 +853,7 @@ def _under_the_trap_door_discard_effect(action, player, state):
     """Instant - Discard this: Banish target trap from your graveyard.
     If you do, you may play it this turn and if it would be put into the graveyard this turn,
     instead banish it."""
-    from engine.card_effects.keywords import _ask_player, effect_banish
+    from engine.card_effects.card_keywords import _ask_player, effect_banish
     from engine.state import ReplacementEffect
     cid = player.player_id
     traps = [c for c in player.graveyard.cards if "trap" in [t.lower() for t in (c.types or [])]]
@@ -947,19 +947,19 @@ def _item_gain_2r(action, player, state):
 
 def _item_draw_go_again(action, player, state):
     """Draw a card and go again. (gold, silver, copper, diamond)"""
-    from engine.card_effects.keywords import effect_draw
+    from engine.card_effects.card_keywords import effect_draw
     effect_draw(state, player.player_id, 1)
     player.action_points += 1
 
 def _item_gain_2h_go_again(action, player, state):
     """Gain 2{h} and go again. (healing_potion_blue, pounamu_amulet_blue)"""
-    from engine.card_effects.keywords import effect_gain_life
+    from engine.card_effects.card_keywords import effect_gain_life
     effect_gain_life(state, player.player_id, 2)
     player.action_points += 1
 
 def _item_opt2(action, player, state):
     """Opt 2. (clarity_potion_blue, opal_amulet_blue)"""
-    from engine.card_effects.keywords import effect_opt
+    from engine.card_effects.card_keywords import effect_opt
     effect_opt(state, player.player_id, 2)
 
 def _diamond_amulet_effect(action, player, state):
@@ -995,7 +995,7 @@ def _platinum_amulet_effect(action, player, state):
 def _crazy_brew_effect(action, player, state):
     """Roll a d6. 1-2: lose 2{h} GA. 3-4: gain 2{h} GA. 5-6: gain {r}{r}, +2AP, next attack +2{p}."""
     import random as _rng
-    from engine.card_effects.keywords import effect_gain_life, effect_lose_life
+    from engine.card_effects.card_keywords import effect_gain_life, effect_lose_life
     roll = _rng.randint(1, 6)
     if roll <= 2:
         effect_lose_life(state, player.player_id, 2)
@@ -1017,7 +1017,7 @@ def _potion_of_deja_vu_effect(action, player, state):
 
 def _potion_of_luck_effect(action, player, state):
     """Shuffle your hand and arsenal into your deck then draw that many cards."""
-    from engine.card_effects.keywords import effect_draw, effect_shuffle
+    from engine.card_effects.card_keywords import effect_draw, effect_shuffle
     total = len(player.hand.cards) + len(player.arsenal.cards)
     for c in list(player.hand.cards):
         player.hand.remove(c)
@@ -1099,7 +1099,7 @@ def _amulet_of_earth_effect(action, player, state):
 
 def _amulet_of_echoes_effect(action, player, state):
     """If opponent played 2+ cards with same name this turn: they discard 2."""
-    from engine.card_effects.keywords import effect_discard
+    from engine.card_effects.card_keywords import effect_discard
     opp = state.players[3 - player.player_id]
     name_counts: dict = {}
     for slug in getattr(opp, 'cards_played_this_turn', []):
@@ -1115,7 +1115,7 @@ def _amulet_of_ice_effect(action, player, state):
         if opp.resources >= 2:
             opp.resources -= 2
         else:
-            from engine.card_effects.keywords import effect_discard
+            from engine.card_effects.card_keywords import effect_discard
             effect_discard(state, opp.player_id, 1)
 
 def _amulet_of_ignition_effect(action, player, state):
@@ -1158,7 +1158,7 @@ def _amulet_of_oblation_effect(action, player, state):
 
 def _amulet_of_havencall_effect(action, player, state):
     """If no cards in hand: search deck for Rally the Rearguard and add to chain link. (Simplified: draw it.)"""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cards = [c for c in player.deck.cards if c.slug == "rally_the_rearguard"]
     if cards:
         target = cards[0]
@@ -1168,13 +1168,13 @@ def _amulet_of_havencall_effect(action, player, state):
             state.combat.defending_cards.append(target)
         else:
             player.hand.add(target)
-        from engine.card_effects.keywords import effect_shuffle
+        from engine.card_effects.card_keywords import effect_shuffle
         effect_shuffle(state, player.player_id)
 
 def _backup_protocol_effect(color_pitch: int):
     """Return a Mech attack action card of the given pitch value from graveyard to hand."""
     def _effect(action, player, state):
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         candidates = [c for c in player.graveyard.cards
                       if "mechanologist" in [t.lower() for t in (c.types or [])] and "attack" in [t.lower() for t in (c.types or [])]
                       and "action" in [t.lower() for t in (c.types or [])] and (c.pitch or 0) == color_pitch]
@@ -1223,7 +1223,7 @@ def _silverwind_shuriken_effect(action, player, state):
 
 def _assembly_module_effect(action, player, state):
     """Search deck for a Hyper Driver and put it into the arena. (Simplified.)"""
-    from engine.card_effects.keywords import effect_shuffle, create_token
+    from engine.card_effects.card_keywords import effect_shuffle, create_token
     candidates = [c for c in player.deck.cards if "hyper_driver" in c.slug.lower()]
     if candidates:
         target = candidates[0]
@@ -1364,7 +1364,7 @@ def _dragonscaler_pay_cost(action, player, state) -> None:
 def _dragonscaler_effect(action, player, state) -> None:
     """Effect: target Draconic attack gets go again.
     Weapon/ally attacks also flag player for an extra attack this turn."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
 
     targets = []
     if state.combat and state.combat.attack_card:
@@ -1475,7 +1475,7 @@ def _dorinthea_weapon_hit_passive(player, event, state):
 
 
 def _viserai_runeblade_trigger(player, event, state):
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     data = event.data if isinstance(event.data, dict) else {}
     played_card = data.get('card')
     if played_card is None:
@@ -1499,7 +1499,7 @@ def _briar_attack_damage_trigger(player, event, state):
             ac = state.combat.attack_card
             types_lower = [t.lower() for t in (ac.types or [])]
             if ac.controller == player.player_id and "attack" in types_lower and "action" in types_lower:
-                from engine.card_effects.keywords import create_token
+                from engine.card_effects.card_keywords import create_token
                 create_token(state, player.player_id, "embodiment_of_earth", 1)
                 player.current_turn_effects.append("briar_earth_trigger_used")
 
@@ -1515,7 +1515,7 @@ def _briar_second_nonattack_trigger(player, event, state):
         return
     count = player.current_turn_effects.count("played_nonattack_action")
     if count == 1:
-        from engine.card_effects.keywords import create_token
+        from engine.card_effects.card_keywords import create_token
         create_token(state, player.player_id, "embodiment_of_lightning", 1)
 
 
@@ -1534,7 +1534,7 @@ def _katsu_on_hit_trigger(player, event, state):
     zero_cost = [c for c in player.hand.cards if (c.cost or 0) == 0]
     if not zero_cost:
         return
-    from engine.card_effects.keywords import _ask_player, effect_shuffle
+    from engine.card_effects.card_keywords import _ask_player, effect_shuffle
     choice = _ask_player(state, player.player_id, [True, False],
                          context="Katsu: discard a 0-cost card to search for a combo card?")
     if not choice:
@@ -1550,7 +1550,7 @@ def _katsu_on_hit_trigger(player, event, state):
     pick2 = _ask_player(state, player.player_id, [c.slug for c in combo_cards],
                         context="Katsu: choose a combo card to banish face-up")
     found = next((c for c in combo_cards if c.slug == pick2), combo_cards[0])
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.deck.remove(found)
     banish_card(state, player, found, face_up=True)
     player.current_turn_effects.append(("katsu_banished_playable", found.slug))
@@ -1563,7 +1563,7 @@ def _olympia_wager_win_trigger(player, event, state):
     data = event.data if isinstance(event.data, dict) else {}
     if data.get('winner') != player.player_id:
         return
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "gold", 1)
     player.current_turn_effects.append("olympia_wager_win_used")
 
@@ -1574,7 +1574,7 @@ def _victor_gold_creation_trigger(player, event, state):
     data = event.data if isinstance(event.data, dict) else {}
     if data.get('player_id') != player.player_id:
         return
-    from engine.card_effects.keywords import effect_draw
+    from engine.card_effects.card_keywords import effect_draw
     effect_draw(state, player.player_id, 1)
     player.current_turn_effects.append("victor_gold_draw_used")
 
@@ -1587,7 +1587,7 @@ def _valda_opponent_draw_trigger(player, event, state):
     if data.get('player_id', -1) == player.player_id:
         return
     count = data.get('count', 1)
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     for _ in range(count):
         create_token(state, player.player_id, "seismic_surge", 1)
 
@@ -1597,7 +1597,7 @@ def _betsy_wager_trigger(player, event, state):
         return
     if state.combat.attack_card.controller != player.player_id:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     choice = _ask_player(state, player.player_id, [True, False],
                          context="Betsy: pay {r}{r} to give this attack +1{p} and overpower?")
     if not choice or player.resources < 2:
@@ -1646,7 +1646,7 @@ def _riptide_play_from_hand_trigger(player, event, state):
         return
     if player.arsenal.cards or not player.hand.cards:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     choice = _ask_player(state, player.player_id, [True, False],
                          context="Riptide: put a card from hand face-down into arsenal?")
     if not choice:
@@ -1674,7 +1674,7 @@ def _rhinar_reckless_discard_trigger(player, event, state):
         return
     power = card.power if card.power is not None else 0
     if power >= 6:
-        from engine.card_effects.keywords import effect_intimidate
+        from engine.card_effects.card_keywords import effect_intimidate
         opp_id = 3 - player.player_id
         effect_intimidate(state, opp_id)
 
@@ -1707,7 +1707,7 @@ def _kayo_underhanded_boo_trigger(player, event, state):
     data = event.data if isinstance(event.data, dict) else {}
     if data.get('player_id') != player.player_id:
         return
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "vigor", 1)
 
 
@@ -1731,7 +1731,7 @@ def _dash_io_start_of_turn_trigger(player, event, state):
         return
     if (top.cost or 0) > 1:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     choice = _ask_player(state, player.player_id, [True, False],
                          context=f"Dash I/O: play {top.name} (cost {top.cost}) from top of deck?")
     if not choice:
@@ -1753,12 +1753,12 @@ def _dash_io_start_of_turn_trigger(player, event, state):
 # Effect: next time weapon hits hero this turn, create Gold + go again.
 def _kassai_pay_cost(player, state):
     """Pay Kassai cost: banish 2 red and 2 yellow cards from graveyard."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     reds = [c for c in player.graveyard.cards if (c.pitch or 0) == 1]
     yellows = [c for c in player.graveyard.cards if (c.pitch or 0) == 2]
     if len(reds) < 2 or len(yellows) < 2:
         return False
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     # Banish 2 reds
     for _ in range(2):
         avail = [c for c in player.graveyard.cards if (c.pitch or 0) == 1]
@@ -1819,7 +1819,7 @@ def _kassai_weapon_hit_trigger(player, event, state):
     if not state.combat.from_weapon:
         return
     player.current_turn_effects.remove("kassai_weapon_hit_gold")
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "gold", 1)
 
 
@@ -1836,7 +1836,7 @@ def _marlynn_draw_arrow_arsenal_trigger(player, event, state):
     arrows = [c for c in player.hand.cards if "arrow" in ([t.lower() for t in c.types] or [])]
     if not arrows or player.arsenal.cards:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     choice = _ask_player(state, player.player_id, [True, False],
                          context="Marlynn: put an Arrow from hand face-up into arsenal?")
     if not choice:
@@ -1879,12 +1879,12 @@ def _boltyn_ar_pay_cost(player, state):
     """Pay Boltyn AR cost: banish a card from soul."""
     if not player.soul.cards:
         return False
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     options = [c.slug for c in player.soul.cards]
     pick = _ask_player(state, player.player_id, options,
                        context="Boltyn AR: choose a card from soul to banish")
     card = next((c for c in player.soul.cards if c.slug == pick), player.soul.cards[0])
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.soul.remove(card)
     banish_card(state, player, card)
     return True
@@ -1936,7 +1936,7 @@ def _fai_activate(action, player, state):
         player.hand.add(flame)
     else:
         # Fallback: create one if none in graveyard (shouldn't happen with correct condition)
-        from engine.card_effects.keywords import create_token_card
+        from engine.card_effects.card_keywords import create_token_card
         flame = create_token_card("phoenix_flame", player.player_id)
         player.hand.add(flame)
     player.current_turn_effects.append("fai_used")
@@ -1949,11 +1949,11 @@ def _vynnset_start_of_turn_trigger(player, event, state):
         return
     if not player.hand.cards:
         return
-    from engine.card_effects.keywords import _ask_player, effect_banish, create_token
+    from engine.card_effects.card_keywords import _ask_player, effect_banish, create_token
     pick = _ask_player(state, player.player_id, [c.slug for c in player.hand.cards],
                        context="Vynnset: choose a card from hand to banish")
     card = player.hand.find(pick) or player.hand.cards[0]
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.hand.remove(card)
     banish_card(state, player, card, face_up=True)
     create_token(state, player.player_id, "runechant", 1)
@@ -1978,7 +1978,7 @@ def _vynnset_shadow_naa_trigger(player, event, state):
         return
     if "action" not in [t.lower() for t in types] and "instant" not in [t.lower() for t in types]:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     choice = _ask_player(state, player.player_id, [True, False],
                          context="Vynnset: pay 1 life so next Runechant damage can't be prevented?")
     if not choice:
@@ -2014,7 +2014,7 @@ def _jarl_ice_play_trigger(player, event, state):
     types = played_card.types or []
     if "ice" not in [t.lower() for t in types]:
         return
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     opp_id = 3 - player.player_id
     opp = state.players[opp_id]
     # Check for exposed (empty) equipment zones: head, chest, arms, legs
@@ -2047,7 +2047,7 @@ def _jarl_ice_play_trigger(player, event, state):
 # handler in keywords.py already processes them.
 def _maxx_activate(action, player, state):
     """Create a Hyper Driver token with 2 steam counters."""
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     tokens = create_token(state, player.player_id, "hyper_driver", 1)
     if tokens:
         token = tokens[0]
@@ -2063,14 +2063,14 @@ def _maxx_hyper_driver_crank_trigger(player, event, state):
         return
     if "hyper" not in card.slug or "driver" not in card.slug:
         return
-    from engine.card_effects.keywords import crank
+    from engine.card_effects.card_keywords import crank
     crank(card, state)
 
 
 # 15. Hala, Bladesaint of the Vow — Action {r}{r}{r}, {t}: Sharpen target sword (+1 counter)
 def _hala_activate(action, player, state):
     """Add a +1{p} counter to a weapon (sword). Go again."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     weapons = []
     for zone in [player.weapon1, player.weapon2]:
         for c in getattr(zone, 'cards', []):
@@ -2101,13 +2101,13 @@ def _cindra_hit_marked_trigger(player, event, state):
     opp_id = 3 - player.player_id
     opp = state.players.get(opp_id)
     if opp and opp.class_counters.get("marked", 0) > 0:
-        from engine.card_effects.keywords import create_token
+        from engine.card_effects.card_keywords import create_token
         create_token(state, player.player_id, "fealty", 1)
 
 # Cindra activation: Once per Turn Instant {r}{r}{r}: equip up to 2 Draconic daggers from graveyard
 def _cindra_activate(action, player, state):
     """Equip up to 2 Draconic daggers from graveyard to weapon zones."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     for _ in range(2):
         daggers = [c for c in player.graveyard.cards
                    if "dagger" in [t.lower() for t in (c.types or [])]
@@ -2269,7 +2269,7 @@ def _aurora_pay_cost(player, state):
     lightning_flows = [c for c in player.auras.cards if "lightning_flow" in c.slug]
     if not lightning_flows:
         return False
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     if len(lightning_flows) == 1:
         target = lightning_flows[0]
     else:
@@ -2282,7 +2282,7 @@ def _aurora_pay_cost(player, state):
 
 def _aurora_effect(action, player, state):
     """Aurora effect: create Embodiment of Lightning token."""
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "embodiment_of_lightning", 1)
 
 HERO_ACTIVATION_CONDITIONS["aurora_legacy_of_tempest"] = {
@@ -2305,7 +2305,7 @@ def _oscilio_forked_pay_cost(player, state):
     lightning_flows = [c for c in player.auras.cards if "lightning_flow" in c.slug]
     if not lightning_flows or not player.hand.cards:
         return False
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     # Destroy Lightning Flow
     if len(lightning_flows) == 1:
         target = lightning_flows[0]
@@ -2316,7 +2316,7 @@ def _oscilio_forked_pay_cost(player, state):
     from engine.engine import destroy_aura
     destroy_aura(state, player.player_id, target)
     # Discard a card — track if it's an Instant
-    from engine.card_effects.keywords import effect_discard
+    from engine.card_effects.card_keywords import effect_discard
     discarded = effect_discard(state, player.player_id, 1)
     if discarded and discarded[0].is_instant:
         # Store on state temporarily so effect_fn can pick it up
@@ -2328,7 +2328,7 @@ def _oscilio_forked_pay_cost(player, state):
 def _oscilio_forked_effect(action, player, state):
     """Oscilio Forked effect: create a Ponder token.
     Fix 10: If an instant was discarded, mark it as playable this turn."""
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "ponder", 1)
     # Check if the card discarded during pay_cost was an Instant
     discarded_slug = getattr(state, '_oscilio_forked_discarded_instant', None)
@@ -2358,7 +2358,7 @@ def _puffin_pay_cost(player, state):
     golds = [c for c in player.items.cards if "gold" in [t.lower() for t in (c.types or [])] and "token" in [t.lower() for t in (c.types or [])]]
     if not golds:
         return False
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     if len(golds) == 1:
         gold = golds[0]
     else:
@@ -2371,7 +2371,7 @@ def _puffin_pay_cost(player, state):
 
 def _puffin_effect(action, player, state):
     """Puffin effect: create Golden Cog token."""
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "golden_cog", 1)
 
 HERO_ACTIVATION_CONDITIONS["puffin_hightail"] = {
@@ -2391,7 +2391,7 @@ def _puffin_crank_trigger(player, event, state):
     """When an item is cranked, track count. On second crank, draw a card."""
     crank_count = player.current_turn_effects.count("cranked_this_turn")
     if crank_count == 1:  # This is the second crank (first was already appended)
-        from engine.card_effects.keywords import effect_draw
+        from engine.card_effects.card_keywords import effect_draw
         effect_draw(state, player.player_id, 1)
 
 # 4. Tuffnut, Bumbling Hulkster — hero activation
@@ -2418,7 +2418,7 @@ def _tuffnut_crowd_cheers_trigger(player, event, state):
     data = event.data if isinstance(event.data, dict) else {}
     if data.get('player_id') != player.player_id:
         return
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "toughness", 1)
 
 HERO_ACTIVATION_CONDITIONS["tuffnut_bumbling_hulkster"] = {
@@ -2492,7 +2492,7 @@ def _gravy_pay_cost(player, state):
     golds = [c for c in player.items.cards if "gold" in [t.lower() for t in (c.types or [])] and "token" in [t.lower() for t in (c.types or [])]]
     if not golds:
         return False
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     if len(golds) == 1:
         gold = golds[0]
     else:
@@ -2505,7 +2505,7 @@ def _gravy_pay_cost(player, state):
 
 def _gravy_effect(action, player, state):
     """Gravy Bones effect: draw a card, then discard a card."""
-    from engine.card_effects.keywords import effect_draw, effect_discard
+    from engine.card_effects.card_keywords import effect_draw, effect_discard
     effect_draw(state, player.player_id, 1)
     effect_discard(state, player.player_id, 1)
 
@@ -2542,7 +2542,7 @@ def _gravy_graveyard_trigger(player, event, state):
 # Instant - {r}{r}, {t}: The crowd boos you. Defending action cards you control get +1{d} this turn.
 def _lyath_effect(action, player, state):
     """Lyath: crowd boos you, defending action cards get +1{d} this turn."""
-    from engine.card_effects.keywords import effect_crowd_boos
+    from engine.card_effects.card_keywords import effect_crowd_boos
     effect_crowd_boos(state, player.player_id)
     player.current_turn_effects.append("lyath_defending_actions_+1d")
 
@@ -2551,7 +2551,7 @@ def _lyath_crowd_boos_trigger(player, event, state):
     data = event.data if isinstance(event.data, dict) else {}
     if data.get('player_id') != player.player_id:
         return
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "might", 1)
 
 HERO_ACTIVATION_CONDITIONS["lyath_goldmane_vile_savant"] = {
@@ -2566,7 +2566,7 @@ HERO_ACTIVATION_CONDITIONS["lyath_goldmane_vile_savant"] = {
 # Instant - {t}, remove suspense counter from aura: put aura from hand into arena with suspense counter
 def _pleiades_pay_cost(player, state):
     """Pay Pleiades cost: remove a suspense counter from an aura."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     auras_with_suspense = [c for c in player.auras.cards
                            if player.counters.get((c.slug, 'auras', 'suspense'), 0) > 0]
     if not auras_with_suspense:
@@ -2584,7 +2584,7 @@ def _pleiades_pay_cost(player, state):
 def _pleiades_effect(action, player, state):
     """Pleiades: put a suspense counter on an aura with Suspense you control.
     Fix 13: Filter target auras to only those with Suspense keyword/type."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     # Filter auras to those with Suspense keyword or that already have suspense counters
     auras = [c for c in player.auras.cards
              if "suspense" in [k.lower() for k in (c.keywords or [])]
@@ -2610,7 +2610,7 @@ def _pleiades_crowd_cheers_trigger(player, event, state):
     data = event.data if isinstance(event.data, dict) else {}
     if data.get('player_id') != player.player_id:
         return
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "confidence", 1)
 
 HERO_ACTIVATION_CONDITIONS["pleiades_superstar"] = {
@@ -2642,7 +2642,7 @@ def _prism_awakener_soul_trigger(player, event, state):
     if "herald" not in card_name.lower():
         return
     # Search for Figment
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     figments = [c for c in player.deck.cards if "figment" in [t.lower() for t in (c.types or [])]]
     if not figments:
         return
@@ -2654,7 +2654,7 @@ def _prism_awakener_soul_trigger(player, event, state):
     target = next((c for c in figments if c.slug == pick), figments[0])
     player.deck.remove(target)
     player.permanents.add(target)  # Put figment into arena (permanents zone)
-    from engine.card_effects.keywords import effect_shuffle
+    from engine.card_effects.card_keywords import effect_shuffle
     effect_shuffle(state, player.player_id)
 
 # Fix 14: Prism, Awakener of Sol — Awaken activation
@@ -2663,12 +2663,12 @@ def _prism_awaken_pay_cost(player, state):
     """Pay Prism Awaken cost: banish a card from soul."""
     if not player.soul.cards:
         return False
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     options = [c.slug for c in player.soul.cards]
     pick = _ask_player(state, player.player_id, options,
                        context="Prism Awaken: choose a card from soul to banish")
     card = next((c for c in player.soul.cards if c.slug == pick), player.soul.cards[0])
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.soul.remove(card)
     banish_card(state, player, card)
     return True
@@ -2676,7 +2676,7 @@ def _prism_awaken_pay_cost(player, state):
 
 def _prism_awaken_effect(action, player, state):
     """Prism Awaken effect: Awaken target figment you control."""
-    from engine.card_effects.keywords import _ask_player, effect_awaken, FIGMENT_TO_ANGEL
+    from engine.card_effects.card_keywords import _ask_player, effect_awaken, FIGMENT_TO_ANGEL
     figments = [c for c in player.permanents.cards
                 if "figment" in [t.lower() for t in (c.types or [])] and c.slug in FIGMENT_TO_ANGEL]
     if not figments:
@@ -2746,7 +2746,7 @@ def _uzuri_attack_trigger(player, event, state):
         return
     if not player.hand.cards:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     # Player can always banish ANY card from hand (not just AAs)
     choice = _ask_player(state, player.player_id, [True, False],
                          context="Uzuri: banish a card from hand face-down? (may swap into combat)")
@@ -2760,7 +2760,7 @@ def _uzuri_attack_trigger(player, event, state):
     player.current_turn_effects.append("uzuri_switchblade_used")
 
     # Banish face-down (opponent gets response window here in full rules)
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     card.face_down = True
     banish_card(state, player, card, face_up=False)
 
@@ -2794,7 +2794,7 @@ def _zyggy_pay_cost(player, state):
 
 def _zyggy_effect(action, player, state):
     """Zyggy: banish a Lightning aura without holo counters, return it with one."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     lightning_auras = [c for c in player.auras.cards
                        if "lightning" in [t.lower() for t in (c.types or [])]
                        and player.counters.get((c.slug, 'auras', 'holo'), 0) == 0]
@@ -2808,7 +2808,7 @@ def _zyggy_effect(action, player, state):
                            context="Zyggy: choose a Lightning aura to banish and return with holo counter")
         target = next((c for c in lightning_auras if c.slug == pick), lightning_auras[0])
     # Banish and return with holo counter (transient — card returns to auras immediately)
-    from engine.card_effects.keywords import banish_card
+    from engine.card_effects.card_keywords import banish_card
     player.auras.remove(target)
     banish_card(state, player, target)
     player.banished.remove(target)
@@ -2876,7 +2876,7 @@ def _arakni_huntsman_play_trigger(player, event, state):
     opp = state.players[opp_id]
     if not opp.deck.cards:
         return
-    from engine.card_effects.keywords import _ask_player, effect_look_top
+    from engine.card_effects.card_keywords import _ask_player, effect_look_top
     effect_look_top(state, opp_id, 1)
     # Offer to put it on the bottom
     top_card = opp.deck.cards[0] if opp.deck.cards else None
@@ -2905,7 +2905,7 @@ def _fang_hit_trigger(player, event, state):
     opp = state.players[3 - player.player_id]
     if opp.class_counters.get("marked", 0) <= 0:
         return
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     create_token(state, player.player_id, "fealty", 1)
     # Recheck Fealty count after creating the new token
     fealty_count = _fang_count_fealty(player)

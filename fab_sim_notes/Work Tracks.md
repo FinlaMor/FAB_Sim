@@ -11,16 +11,30 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 
 ### CR 8.5 Effect Keywords (`effect_keywords.py`)
 - [ ] Audit all primitives against current CR 8.5 — confirm each matches the rules text
-- [ ] need to confirm that event.x variables are used after replacement effects
+	- [ ] need to confirm that event.x variables are used after replacement effects
+	- [ ] make sure 'target', 'card', and 'type' are always defined in Event objects (if applicable)
+		- [ ] should be str type for the type and target for the create_emit_event() helper
+		- [ ] change event in emit to a create_emit_event()
+		- [ ] check function tests as you go
+		- [ ] status: on banish
 - [ ] shuffle needs to update player pitch histories. they wouldn't know the order anymore
 - [ ] `gets` / `gets_property` — verify continuous effect duration and cleanup
 - [ ] `search` — confirm full zone search pattern (deck shuffle after)
 - [ ] `opt` — confirm N look / choose any to top or bottom
 
+### Legal Actions Update (`play.py` then `action.py` )
+- [ ] implement effect keywords into action checks
+	- [ ] `attack` keyword should lead to combat steps. (might need to be implemented in `engine.py`)
 ### Continuous Effects (`continuous_effects.py` / `effects.py`)
 - [ ] Clarify which `ContinuousEffect` class is authoritative (two exist)
-- [ ] Verify stage 1-8 ordering is actually enforced in `ContinuousEffectManager`
+	- [ ] Remove ContinuousEffectManager
 - [ ] Replacement effects (CR 6.4) — are they wired into the damage pipeline?
+
+### Engine Updates (`engine.py`)
+- [ ] implement effect keyword changes
+- [ ] implement legal action changes (might be the attack changes referenced above)
+- [ ] implement effectmanager changes
+	- [ ] verify no ContinuousEffectManager references
 
 ### Other Engine Gaps
 - [ ] Pitch ordering at end of turn — player chooses top-to-bottom order (CR 4.4.3)

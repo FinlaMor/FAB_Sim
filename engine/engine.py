@@ -12,7 +12,9 @@ from engine.actions import legal_actions, Action, ActionType, get_defendable_car
 from engine.effects import EffectManager
 from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
 from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
-from engine.play import available_actions, apply_action
+from engine.play import (available_actions, apply_action,
+                         _pitch_for_cost, evaluate_play_cost,
+                         _apply_play_card, _calculate_resource_cost)
 
 def new_game(
         p1_deck_path: Optional[str],
@@ -195,7 +197,7 @@ def check_state_based_actions(state: GameState) -> bool:
     CR 1.10.2b: Living objects (heroes and allies) with 0 or less life are
     destroyed simultaneously, then triggers from those deaths are ordered.
     """
-    from engine.card_effects.keywords import _move_to_graveyard
+    from engine.card_effects.card_keywords import _move_to_graveyard
 
     # Hero death — check both players first (simultaneous)
     dead_heroes = [pid for pid in state.players if state.players[pid].health <= 0]
@@ -999,7 +1001,7 @@ def _resolve_wagers(state: GameState, combat) -> None:
     If the attack hit, the controller (attacker) wins. Otherwise the
     opponent (defender) wins. The winner creates the prize token.
     """
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.card_keywords import create_token
     if not combat.wagers:
         return
 
@@ -1028,7 +1030,7 @@ def _apply_watery_grave(card, state: GameState) -> None:
     has_wg = any("watery grave" in re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw).lower() for kw in card.keywords)
     if not has_wg:
         return
-    from engine.card_effects.keywords import ARENA_ZONE_NAMES
+    from engine.card_effects.card_keywords import ARENA_ZONE_NAMES
     if card.prev_zone in ARENA_ZONE_NAMES:
         card.face_down = True
         card.is_public = False
@@ -1560,7 +1562,7 @@ def player_decision_raw(state: GameState, player_id: int, options, context=None)
 #     if "banish a card from under" in text.lower():
 #         underneath = getattr(weapon_card, 'cards_underneath', [])
 #         if underneath:
-#             from engine.card_effects.keywords import banish_card
+#             from engine.card_effects.card_keywords import banish_card
 #             banished = underneath.pop(0)
 #             banish_card(state, player, banished, face_up=True)
 

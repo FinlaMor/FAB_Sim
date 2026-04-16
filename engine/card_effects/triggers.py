@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from engine.state import GameState, Event, Player
     from engine.card import Card, CardDB
 
-from engine.card_effects.keywords import (
+from engine.card_effects.card_keywords import (
     battleworn, blade_break, temper, guardwell,
     go_again, dominate_check, overpower_check, piercing,
     phantasm_check, phantasm_destroy, spectra_destroy,
@@ -346,7 +346,7 @@ def on_hit_banish_top(count: int = 1) -> TriggerDef:
     def _effect(c, e, s):
         target_id = 3 - _controller_id(c)
         target = s.players[target_id]
-        from engine.card_effects.keywords import banish_card
+        from engine.card_effects.card_keywords import banish_card
         for _ in range(count):
             if target.deck.cards:
                 top = target.deck.pop_top()
@@ -490,7 +490,7 @@ def on_play_banish_top(count: int = 1) -> TriggerDef:
     def _effect(c, e, s):
         cid = _controller_id(c)
         player = s.players[cid]
-        from engine.card_effects.keywords import banish_card
+        from engine.card_effects.card_keywords import banish_card
         for _ in range(count):
             if player.deck.cards:
                 top = player.deck.pop_top()
@@ -579,7 +579,7 @@ CARD_TRIGGERS: dict[str, list[TriggerDef]] = {}
 
 def _crowd_boos_on_attack(card, event, state):
     """When this attacks a hero, if controller has more health, the crowd boos."""
-    from engine.card_effects.keywords import effect_crowd_boos
+    from engine.card_effects.card_keywords import effect_crowd_boos
     cid = _controller_id(card)
     if state.players[cid].health > state.players[3 - cid].health:
         effect_crowd_boos(state, cid)
@@ -606,7 +606,7 @@ CARD_TRIGGERS["kayo_underhanded_cheat"] = [
 # "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it."
 # Activated instant: "Remove 3 energy counters: Gain {r}." (handled in actions)
 def _fst_start_of_turn(card, event, state):
-    from engine.card_effects.keywords import _ask_player, effect_put_counter
+    from engine.card_effects.card_keywords import _ask_player, effect_put_counter
     cid = _controller_id(card)
     if cid != state.active_player:
         return
@@ -661,7 +661,7 @@ CARD_TRIGGERS["apex_bonebreaker"] = [
 # Continuous: "If you've been booed this turn, this card's base power is doubled."
 def _big_bully_attacking(card, event, state):
     _crowd_boos_on_attack(card, event, state)
-    from engine.card_effects.keywords import has_been_booed
+    from engine.card_effects.card_keywords import has_been_booed
     cid = _controller_id(card)
     if has_been_booed(state, cid):
         state.combat.attack_card.effects.append(
@@ -723,7 +723,7 @@ CARD_TRIGGERS["command_and_conquer"] = [
 # "As an additional cost, you may banish a card with 1 power from your graveyard.
 #  When you do, this gains +1 power and go again."
 def _looking_scrap_on_play(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     controller = state.players[cid]
     eligible = [c for c in controller.graveyard.cards
@@ -755,7 +755,7 @@ CARD_TRIGGERS["looking_for_a_scrap"] = [
 # Continuous: "If you've been booed this turn, this gets +N power."
 def _mocking_blow_attacking(card, event, state, bonus):
     _crowd_boos_on_attack(card, event, state)
-    from engine.card_effects.keywords import has_been_booed
+    from engine.card_effects.card_keywords import has_been_booed
     cid = _controller_id(card)
     if has_been_booed(state, cid):
         state.combat.attack_card.effects.append(
@@ -781,7 +781,7 @@ CARD_TRIGGERS["mocking_blow_blue"] = [
 #   - Target club or hammer weapon attack gains +4 power.
 #   - Target attack action with cost 2+ gains +4 power and on-hit discard."
 def _pummel_effect(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     if not state.combat:
         return
     cid = _controller_id(card)
@@ -849,7 +849,7 @@ CARD_TRIGGERS["sigil_of_solace_blue"] = [
 # Defense reaction: "You may put a card from your hand on the bottom of your deck.
 #  If you do, draw a card."
 def _sink_below_effect(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     controller = state.players[cid]
     if not controller.hand.cards:
@@ -911,11 +911,11 @@ CARD_TRIGGERS["swing_big"] = [
 # "When this leaves the arena, the crowd boos you." — trigger on leaves_arena (any reason)
 # "At the start of your turn, destroy this." — separate trigger
 def _booze_enters_arena(card, event, state):
-    from engine.card_effects.keywords import effect_crowd_boos
+    from engine.card_effects.card_keywords import effect_crowd_boos
     effect_crowd_boos(state, _controller_id(card))
 
 def _booze_leaves_arena(card, event, state):
-    from engine.card_effects.keywords import effect_crowd_boos
+    from engine.card_effects.card_keywords import effect_crowd_boos
     effect_crowd_boos(state, _controller_id(card))
 
 def _booze_start_of_turn(card, event, state):
@@ -983,7 +983,7 @@ CARD_TRIGGERS["nimblism_blue"] = [
 def _nimby_effect(card, event, state):
     if not state.combat or state.combat.attack_card.slug != card.slug:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     controller = state.players[cid]
     # Ask if player wants to search
@@ -1073,7 +1073,7 @@ CARD_TRIGGERS["overcrowded"] = [
 def _reckless_arithmetic_effect(card, event, state):
     if not state.combat or state.combat.attack_card.slug != card.slug:
         return
-    from engine.card_effects.keywords import roll_die
+    from engine.card_effects.card_keywords import roll_die
     cid = _controller_id(card)
     result = roll_die(state, cid)
     state.combat.attack_power += result
@@ -1088,7 +1088,7 @@ CARD_TRIGGERS["reckless_arithmetic"] = [
 def _steal_victory_effect(card, event, state):
     if not state.combat or card not in state.combat.defending_cards:
         return
-    from engine.card_effects.keywords import effect_steal_token
+    from engine.card_effects.card_keywords import effect_steal_token
     defender_id = _controller_id(card)
     attacker_id = state.combat.attacker_id
     effect_steal_token(state, defender_id, attacker_id)
@@ -1205,7 +1205,7 @@ def _mark_black_widow_hit(card, event, state):
     cid = _controller_id(card)
     target = state.players[target_id]
     if target.hand.cards:
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         pick = _ask_player(state, target_id, [c.slug for c in target.hand.cards],
                            context="Mark of the Black Widow: choose a card from your hand to be banished")
         chosen = next((c for c in target.hand.cards if c.slug == pick), target.hand.cards[0])
@@ -1229,7 +1229,7 @@ def _pain_in_backside_hit(card, event, state):
     daggers = _find_controlled_daggers(player, state, exclude_card=card)
     if not daggers:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     if len(daggers) == 1:
         dagger = daggers[0]
     else:
@@ -1257,7 +1257,7 @@ def _flick_knives_on_play(card, event, state):
     daggers = _find_controlled_daggers(player, state, exclude_card=current_attack)
     if not daggers:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     if len(daggers) == 1:
         dagger = daggers[0]
     else:
@@ -1318,7 +1318,7 @@ def _leave_no_witnesses_hit(card, event, state):
         effect_banish(state, top, face_up=True, banisher_id=cid)
     # Banish up to 1 card in arsenal
     if hasattr(target, 'arsenal') and target.arsenal.cards:
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         options = [c.slug for c in target.arsenal.cards] + ["decline"]
         pick = _ask_player(state, cid, options,
                            context="Leave No Witnesses: choose an opponent's arsenal card to banish")
@@ -1444,7 +1444,7 @@ CARD_TRIGGERS["cut_from_the_same_cloth_blue"] = [
 # Each hero puts an attack action from graveyard face-down into arsenal.
 # Each hero that does, discards a card. Create Ponder + Frailty tokens.
 def _codex_of_frailty_on_play(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     for pid in state.players:
         player = state.players[pid]
@@ -1559,7 +1559,7 @@ def _shred_on_play(card, event, state, penalty):
         return
     if not state.combat.defending_cards:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     options = [c.slug for c in state.combat.defending_cards]
     pick = _ask_player(state, cid, options,
@@ -1685,7 +1685,7 @@ CARD_TRIGGERS["stains_of_the_redback_blue"] = [
 def _tarantula_toxin_on_play(card, event, state):
     if not state.combat:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     attack = state.combat.attack_card
     modes = []
@@ -1734,7 +1734,7 @@ def _take_up_mantle_on_play(card, event, state):
         return
     if is_marked(state, target_id):
         attack.effects.append(("base_power", lambda base: base + 3))
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         player = state.players[cid]
         stealth_attacks = [
             c for c in player.graveyard.cards
@@ -1772,7 +1772,7 @@ CARD_TRIGGERS["take_up_the_mantle"] = [
 def _death_touch_hit(card, event, state):
     if not state.combat or state.combat.attack_card.slug != card.slug:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     target_id = 3 - cid
     pick = _ask_player(state, cid, ["frailty", "inertia", "bloodrot_pox"],
@@ -1959,7 +1959,7 @@ def _go_fish_hit(card, event, state, check_fn):
     target = state.players[target_id]
     if not target.hand.cards:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cannon_activated = "activated_cannon" in state.players[cid].current_turn_effects
     if cannon_activated:
         pick = _ask_player(state, cid, [c.slug for c in target.hand.cards],
@@ -2077,7 +2077,7 @@ def _golden_tipple_attack(card, event, state):
     yellows = [c for c in player.hand.cards if c.pitch == 2]
     if not yellows:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     options = [c.slug for c in yellows] + ["decline"]
     pick = _ask_player(state, cid, options,
                        context="Golden Tipple: discard a yellow card to draw a card and create a Gold token?")
@@ -2117,7 +2117,7 @@ CARD_TRIGGERS["murderous_rabble"] = [
 # -- portside_exchange --
 # "Discard a card, draw a card. If yellow card discarded, create Gold."
 def _portside_exchange_on_play(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     player = state.players[cid]
     if not player.hand.cards:
@@ -2141,7 +2141,7 @@ CARD_TRIGGERS["portside_exchange"] = [
 # -- sea_floor_salvage --
 # "Turn a card in a graveyard face-down. If yellow, create Gold."
 def _sea_floor_salvage_on_play(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     targets = []
     for pid in state.players:
@@ -2184,7 +2184,7 @@ def _shallow_water_hit(card, event, state):
     target_id = 3 - cid
     target = state.players[target_id]
     if hasattr(target, 'arsenal') and target.arsenal.cards:
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         options = [c.slug for c in target.arsenal.cards]
         pick = _ask_player(state, cid, options,
                            context="Shallow Water Shark Harpoon: choose an opponent's arsenal card to destroy and create Gold")
@@ -2232,7 +2232,7 @@ CARD_TRIGGERS["shifting_tides"] = [
 # -- sift --
 # "Put up to 4 cards from hand on bottom of deck, then draw that many."
 def _sift_on_play(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     player = state.players[cid]
     count = 0
@@ -2262,7 +2262,7 @@ CARD_TRIGGERS["sift"] = [
 def _sunken_treasure_defend(card, event, state):
     if not state.combat or card not in state.combat.defending_cards:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     targets = []
     for pid in state.players:
@@ -2513,7 +2513,7 @@ def _etchings_surge(card, event, state):
         return
     cid = _controller_id(card)
     player = state.players[cid]
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     sigils = [c for c in player.graveyard.cards if "sigil" in c.slug.lower()]
     if not sigils:
         return
@@ -2567,7 +2567,7 @@ CARD_TRIGGERS["mind_warp"] = [
 def _flash_brilliance_defend(card, event, state):
     if not state.combat or card not in state.combat.defending_cards:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     player = state.players[cid]
     lightning_cards = [c for c in player.hand.cards if "Lightning" in (c.types or [])]
@@ -2624,7 +2624,7 @@ def _temporal_wobble_on_play(card, event, state):
                 and "Attack" not in (e.card.types or [])
                 and (e.card.cost or 0) < sigil_count]
     if eligible:
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         options = [e.card.slug for e in eligible]
         pick = _ask_player(state, cid, options,
                            context="Temporal Wobble: choose a non-attack action to negate")
@@ -2643,7 +2643,7 @@ CARD_TRIGGERS["temporal_wobble"] = [
 def _em_somersault_on_play(card, event, state):
     """Selection window: player chooses which cards to return.
     Actual movement is deferred to chain link close."""
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     if not state.combat:
         return
@@ -2783,7 +2783,7 @@ CARD_TRIGGERS["aether_wildfire_red"] = [
 # TOP  (Consign): "Banish X instant/aura cards from any graveyard, X = arcane damage dealt this turn."
 # BOTTOM (Shock): "Deal 1 arcane damage to any target."
 def _consign_top_effect(card, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     arcane_amount = state.players[cid].current_turn_effects.count("dealt_arcane")
     for _ in range(arcane_amount):
@@ -2970,7 +2970,7 @@ def _oscilio_track_lightning(card, event, state):
         # Blast to Oblivion: return aura permanent (cost ≤1) OR any aura token to owner's hand
         if "blast_oblivion_next_instant_bounce" in player.current_turn_effects:
             player.current_turn_effects.remove("blast_oblivion_next_instant_bounce")
-            from engine.card_effects.keywords import _ask_player
+            from engine.card_effects.card_keywords import _ask_player
             auras = [c for c in player.auras.cards
                      if "Token" in (c.types or []) or (c.cost or 0) <= 1]
             if auras:
@@ -3076,7 +3076,7 @@ AGENT_OF_CHAOS_SLUGS = [
 def _become_agent_of_chaos(state, player_id, choose=False):
     """Transform hero into a random (or chosen) Agent of Chaos demi-hero."""
     import random as rng
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     player = state.players[player_id]
     if choose:
         pick = _ask_player(state, player_id, AGENT_OF_CHAOS_SLUGS,
@@ -3157,7 +3157,7 @@ def _blacktek_whisperers_start_turn(card, event, state):
     silvers = [c for c in player.items.cards if "silver" in c.slug.lower() and "Token" in c.types]
     if len(silvers) < 2:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     choice = _ask_player(state, cid, [True, False],
                          context="Destroy 2 Silver tokens to re-equip Blacktek Whisperers from graveyard?")
     if not choice:
@@ -3365,7 +3365,7 @@ CARD_TRIGGERS.update(EFFECT_MAP)
 def _under_the_trap_door_on_play(card, event, state):
     cid = _controller_id(card)
     player = state.players[cid]
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     traps = [c for c in player.graveyard.cards if "Trap" in (c.types or [])]
     if not traps:
         return

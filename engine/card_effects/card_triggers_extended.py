@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from engine.card import Card
 
 from engine.card_effects.triggers import CARD_TRIGGERS, TriggerDef
-from engine.card_effects.keywords import (
+from engine.card_effects.card_keywords import (
     _controller_id, _get_controller, _get_opponent_of, _ask_player,
     _move_to_graveyard, _draw_cards, _remove_from_current_zone,
     effect_draw, effect_discard, effect_banish, effect_banish_top_deck,
@@ -846,7 +846,7 @@ _register("beseech_the_demigon", [
 def _bet_big_attacking(card, event, state):
     if not _is_this_attacking(card, event, state):
         return
-    from engine.card_effects.keywords import add_wager
+    from engine.card_effects.card_keywords import add_wager
     cid = _controller_id(card)
     add_wager(state, cid, "gold")
     add_wager(state, cid, "might")
@@ -969,7 +969,7 @@ _register("boneyard_marauder", [
 # -- boulder_drop_red --
 # Crush: 4+ dmg, they put card from hand on top of deck (defender chooses).
 def _boulder_drop_crush(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     target_id = 3 - _controller_id(card)
     player = state.players[target_id]
     if player.hand.cards:
@@ -1221,7 +1221,7 @@ _register("cut_through", [
 # Destroy an aura you control (player chooses). Create 3 Runechant tokens. Go again.
 # CR 5.1.4a: unplayable without an aura (enforced by PLAY_TARGET_CONDITIONS in registry.py)
 def _deadwood_dirge_play(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     cid = _controller_id(card)
     player = state.players[cid]
     if not player.auras.cards:
@@ -1402,7 +1402,7 @@ _register("drill_shot", [
 def _drink_em_attacking(card, event, state):
     if not _is_this_attacking(card, event, state):
         return
-    from engine.card_effects.keywords import add_wager
+    from engine.card_effects.card_keywords import add_wager
     cid = _controller_id(card)
     # Wager with no prize token — winner draws determined at resolution
     add_wager(state, cid, None)
@@ -1954,7 +1954,7 @@ _register("hit_the_gas", [
 # "Next Warrior attack +Np and 'wager a Vigor token with them.'"
 if "next_attack_wager_vigor" not in TURN_ATTACK_EFFECTS:
     def _apply_wager_vigor(attack_card, player, state):
-        from engine.card_effects.keywords import add_wager
+        from engine.card_effects.card_keywords import add_wager
         add_wager(state, player.player_id, "vigor")
     TURN_ATTACK_EFFECTS["next_attack_wager_vigor"] = {"apply_fn": _apply_wager_vigor}
 
@@ -2257,7 +2257,7 @@ def _money_where_play(card, event, state, bonus):
 # Register a TURN_ATTACK_EFFECTS entry for the wager
 if "next_attack_wager_gold" not in TURN_ATTACK_EFFECTS:
     def _apply_wager_gold(attack_card, player, state):
-        from engine.card_effects.keywords import add_wager
+        from engine.card_effects.card_keywords import add_wager
         add_wager(state, player.player_id, "gold")
     TURN_ATTACK_EFFECTS["next_attack_wager_gold"] = {"apply_fn": _apply_wager_gold}
 
@@ -3299,7 +3299,7 @@ _register("wind_up_the_crowd", [
 # -- winters_bite_blue --
 # "Target hero discards a card unless they pay {r}." Go again.
 def _winters_bite_play(card, event, state):
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     target_id = 3 - _controller_id(card)
     target = state.players[target_id]
     if target.resources >= 1:
@@ -3567,7 +3567,7 @@ def _crown_prov_defend(card, event, state):
         return
     cid = _controller_id(card)
     player = state.players[cid]
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     # Collect candidates from hand and arsenal
     candidates = [(c, "hand") for c in player.hand.cards] + \
                  [(c, "arsenal") for c in player.arsenal.cards]
@@ -3760,7 +3760,7 @@ def _graven_gloves_start_of_turn(card, event, state):
     silvers = [c for c in player.items.cards if "silver" in c.slug]
     if len(silvers) < 2:
         return
-    from engine.card_effects.keywords import _ask_player
+    from engine.card_effects.card_keywords import _ask_player
     choice = _ask_player(state, cid, [True, False],
                          context="Graven Gloves: destroy 2 Silver to equip from graveyard?")
     if not choice:
@@ -5043,7 +5043,7 @@ _register("tarpit_trap", [
 # "Once per Turn Action - {r}{r}: Deal 1 arcane damage to any opposing target.
 #  Create a Runechant token for each damage dealt this way."
 def _scepter_of_pain_activate(card, event, state):
-    from engine.card_effects.keywords import effect_deal_damage, create_token
+    from engine.card_effects.card_keywords import effect_deal_damage, create_token
     cid = _controller_id(card)
     target_id = 3 - cid
     dmg = effect_deal_damage(state, target_id, 1, card, "arcane")
@@ -5166,7 +5166,7 @@ def _ironhide_helm_defend(card, event, state):
     cid = _controller_id(card)
     player = state.players[cid]
     if player.resources >= 1:
-        from engine.card_effects.keywords import _ask_player
+        from engine.card_effects.card_keywords import _ask_player
         choice = _ask_player(state, cid, [True, False],
                              context="Ironhide Helm: pay {r} for +2{d}? (destroyed when chain closes)")
         if choice:
@@ -5301,7 +5301,7 @@ _register("a_good_clean_fight_red", [
 # resource is made at pitch time in _pitch_for_cost (for_chi=True path).
 
 def _a_drop_in_the_ocean_play(card, event, state):
-    from engine.card_effects.keywords import _ask_player, _remove_from_current_zone, effect_transcend
+    from engine.card_effects.card_keywords import _ask_player, _remove_from_current_zone, effect_transcend
     cid = _controller_id(card)
 
     # Build target list: all attack cards currently on the combat chain

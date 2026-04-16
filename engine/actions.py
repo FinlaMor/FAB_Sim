@@ -99,6 +99,20 @@ class Action:
 # Pitch helpers — work with Zone objects directly (Card objects, no card_db needed)
 # ---------------------------------------------------------------------------
 
+def get_pitchable_cards(hand_cards: list[Card], exclude_card: Card | None = None) -> list[Card]:
+    """Return hand cards that can be pitched (pitch > 0), excluding *exclude_card*."""
+    return [
+        c for c in hand_cards
+        if c is not exclude_card and _card_pitch(c) > 0
+    ]
+
+
+def _card_pitch(card: Card) -> int:
+    """Return effective pitch value, falling back to base_pitch when pitch is None."""
+    v = card.pitch if card.pitch is not None else (card.base_pitch or 0)
+    return v or 0
+
+
 def can_pay_cost(hand_cards: list[Card], target_cost: int, current_resources: int = 0, exclude_card: Card | None = None) -> bool:
     """Return True if total pitchable value in hand can cover the cost.
 
@@ -111,9 +125,9 @@ def can_pay_cost(hand_cards: list[Card], target_cost: int, current_resources: in
     if needed <= 0:
         return True
     total_pitch = sum(
-        (c.pitch or 0)
+        _card_pitch(c)
         for c in hand_cards
-        if c is not exclude_card and c.pitch is not None and c.pitch > 0
+        if c is not exclude_card and _card_pitch(c) > 0
     )
     return total_pitch >= needed
 
@@ -500,14 +514,14 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 # MELDED     — action-speed, costs 2× base cost plus modifiers, AP required, dual resolution
                 null_targets = _stack_instant_target_entries(state) if _is_null_meld_card(card) else None
                 if player.action_points > 0:
-                    _top_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, meld_side='top')
+                    _top_action = Action(type=ActionType.PLAY_CARD, choose_index=i, card=card, meld_side='top')
                     _top_action.player_id = pp
                     if _can_afford_action(state, _top_action):
                         if null_targets is not None:
                             for target_entry in null_targets:
                                 actions.append(Action(
                                     type=ActionType.PLAY_CARD,
-                                    card_idx=i,
+                                    choose_index=i,
                                     card=card,
                                     meld_side='top',
                                     target=target_entry.card,
@@ -516,18 +530,18 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                         else:
                             actions.append(_top_action)
                 # Bottom side is always playable at instant speed (no AP needed, cost 0)
-                actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                actions.append(Action(type=ActionType.PLAY_CARD, choose_index=i, card=card,
                                       meld_side='bottom'))
                 # Melded requires an action point
                 if player.action_points > 0:
-                    _both_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, meld_side='both')
+                    _both_action = Action(type=ActionType.PLAY_CARD, choose_index=i, card=card, meld_side='both')
                     _both_action.player_id = pp
                     if _can_afford_action(state, _both_action):
                         if null_targets is not None:
                             for target_entry in null_targets:
                                 actions.append(Action(
                                     type=ActionType.PLAY_CARD,
-                                    card_idx=i,
+                                    choose_index=i,
                                     card=card,
                                     meld_side='both',
                                     target=target_entry.card,
@@ -550,7 +564,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                         and state.combat is None):
                     continue
                 for _t in _legal_targets_for_card(state, pp, card):
-                    _play_action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, target=_t)
+                    _play_action = Action(type=ActionType.PLAY_CARD, choose_index=i, card=card, target=_t)
                     _play_action.player_id = pp
                     if _can_afford_action(state, _play_action):
                         actions.append(_play_action)
@@ -558,7 +572,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 if card.is_attack:
                     _def_id = 3 - pp
                     for _target in _attackable_permanents(state, _def_id):
-                        _pa = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+                        _pa = Action(type=ActionType.PLAY_CARD, choose_index=i, card=card,
                                      target=_target, targets=[_target.slug])
                         _pa.player_id = pp
                         if _can_afford_action(state, _pa):
@@ -566,7 +580,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 else:
                     # capture non-attack actions
                     if card.is_action and not card.is_attack and player.action_points > 0:
-                        action = Action(type=ActionType.PLAY_CARD, card_idx=i, card=card)
+                        action = Action(type=ActionType.PLAY_CARD, choose_index=i, card=card)
                         can_pay, how_afford = _can_afford_action(state, action)
                         if how_afford.get('life', None) is False:
                             continue  # Can't afford life cost, skip this action
@@ -632,7 +646,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             text = card.functional_text or ""
             if "**Instant**" in text or ("**Action**" in text and player.action_points > 0):
                 for _t in _legal_targets_for_card(state, pp, card):
-                    _item_action = Action(type=ActionType.ACTIVATE_ITEM, card_idx=i, card=card, target=_t)
+                    _item_action = Action(type=ActionType.ACTIVATE_ITEM, choose_index=i, card=card, target=_t)
                     _item_action.player_id = pp
                     if _can_afford_action(state, _item_action):
                         actions.append(_item_action)
@@ -727,7 +741,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 # Default target: opponent's hero (target=None)
                 actions.append(Action(
                     type=ActionType.ATTACK_ALLY,
-                    card_idx=i,
+                    choose_index=i,
                     card=ally_card,
                     player_id=pp,
                     is_attack_proxy=False,
@@ -738,7 +752,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 for _target in _attackable_permanents(state, defender_id):
                     actions.append(Action(
                         type=ActionType.ATTACK_ALLY,
-                        card_idx=i,
+                        choose_index=i,
                         card=ally_card,
                         player_id=pp,
                         is_attack_proxy=False,
@@ -867,15 +881,15 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
                     for target_entry in null_targets:
                         actions.append(Action(
                             type=ActionType.PLAY_CARD,
-                            card_idx=i,
+                            choose_index=i,
                             card=card,
                             target=target_entry.card,
                             targets=[f"oid:{target_entry.card.object_id}"],
                         ))
                 else:
-                    actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card))
+                    actions.append(Action(type=ActionType.PLAY_CARD, choose_index=i, card=card))
             # Bottom side at instant speed: always cost 0
-            actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card,
+            actions.append(Action(type=ActionType.PLAY_CARD, choose_index=i, card=card,
                                   meld_side='bottom'))
         else:
             # CR 5.1.4a: check required target exists
@@ -886,7 +900,7 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             effective_cost = card.cost
             if can_pay_cost(player.hand.cards, effective_cost, player.resources, exclude_card=card):
                 for _t in _legal_targets_for_card(state, pp, card):
-                    actions.append(Action(type=ActionType.PLAY_CARD, card_idx=i, card=card, target=_t))
+                    actions.append(Action(type=ActionType.PLAY_CARD, choose_index=i, card=card, target=_t))
 
     # Instants from arsenal
     for i, card in enumerate(player.arsenal.cards):
@@ -902,14 +916,14 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
             for target_entry in null_targets:
                 actions.append(Action(
                     type=ActionType.PLAY_ARSENAL,
-                    card_idx=i,
+                    choose_index=i,
                     card=card,
                     target=target_entry.card,
                     targets=[f"oid:{target_entry.card.object_id}"],
                 ))
         else:
             for _t in _legal_targets_for_card(state, pp, card):
-                actions.append(Action(type=ActionType.PLAY_ARSENAL, card_idx=i, card=card, target=_t))
+                actions.append(Action(type=ActionType.PLAY_ARSENAL, choose_index=i, card=card, target=_t))
 
     # ACTIVATE_EQUIPMENT (non-weapon) in reaction step
     # Only attacker can activate attack reaction equipment; only defender can activate defense reaction equipment
@@ -1081,6 +1095,6 @@ def _legal_end_turn_step(state: GameState, card_db: CardDB) -> list[Action]:
 
     if len(player.arsenal.cards) == 0:
         for i in range(len(player.hand)):
-            actions.append(Action(type=ActionType.STORE_ARSENAL, card_idx=i))
+            actions.append(Action(type=ActionType.STORE_ARSENAL, choose_index=i))
 
     return actions

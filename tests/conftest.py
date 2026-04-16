@@ -48,12 +48,21 @@ def _make_state() -> GameState:
 
 
 def _make_card(slug: str = "test_card", name: str = "Test Card",
-               types: list[str] | None = None) -> Card:
+               types: list[str] | None = None, **kwargs) -> Card:
     """Create a Card with sensible defaults, overridable via kwargs.
     Defaults to type 'Action' so cards can legally enter hand/deck zones.
+    Extra kwargs (e.g. base_defense, base_power) are set as attributes on the card.
     """
     raw_types = types if types is not None else ["Action"]
-    return Card(slug=slug, raw_name=name, raw_types=raw_types)
+    card = Card(slug=slug, raw_name=name, raw_types=raw_types)
+    for attr, val in kwargs.items():
+        setattr(card, attr, val)
+        # Propagate base_X → X so the current field reflects the new base value
+        if attr.startswith('base_'):
+            current = attr[5:]
+            if hasattr(card, current) and getattr(card, current) is None:
+                setattr(card, current, val)
+    return card
 
 
 def _make_combat(attacker_id: int = 1, attack_card: Card | None = None) -> CombatState:

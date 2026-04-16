@@ -751,6 +751,8 @@ class Player:
         # CR 3.0.2: "Each player has two weapon zones"
         self.weapon1 = Zone("weapon1", player_id)
         self.weapon2 = Zone("weapon2", player_id)
+        # Convenience alias — engine code uses player.weapon to mean the primary slot
+        self.weapon = self.weapon1
         # CR: single permanents zone with sub-zone views
         self.permanents = Zone("permanents", player_id)
         self.items = SubZoneView(self.permanents, "Item")
@@ -776,7 +778,8 @@ class Player:
         self.next_turn_effects: list[str] = []
         self.class_counters: dict[str, int] = {}
         self.allies_exhausted: list[bool] = []
-        self.current_turn_effect: list[str] = []
+        self.current_turn_effects: list[str] = []
+        self.weapon_exhausted: bool = False
 
         # CR 5.1.6a: cost modifiers are now stored in GameState.continuous_effect_manager
         # as ContinuousEffect objects with prop='cost'. See ContinuousEffectManager.add_cost_modifier().
@@ -898,7 +901,7 @@ class Player:
         return {
             "player_id": self.player_id,
             "hero": self.hero.to_dict() if hasattr(self.hero, 'to_dict') else str(self.hero),
-            "health": self.health,
+            "life": self.life,
             "intellect": self.intellect,
             "resources": self.resources,
             "action_points": self.action_points,

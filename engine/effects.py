@@ -423,7 +423,7 @@ def _make_ward(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import _move_to_graveyard
+        from engine.card_effects.card_keywords import _move_to_graveyard
         _move_to_graveyard(source_card, state)  # Cost always paid (destroy this)
         if not event.get("unpreventable", False):
             prevented = min(amount, event.get("amount", 0))
@@ -457,7 +457,7 @@ def _make_arcane_barrier(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import arcane_barrier
+        from engine.card_effects.card_keywords import arcane_barrier
         # arcane_barrier handles the player decision and pitching
 
         prevented = arcane_barrier(source_card, amount, state)
@@ -490,7 +490,7 @@ def _make_spellvoid(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import spellvoid
+        from engine.card_effects.card_keywords import spellvoid
 
         prevented = spellvoid(source_card, amount, state)
         event["amount"] = event.get("amount", 0) - prevented
@@ -522,7 +522,7 @@ def _make_quell(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import quell
+        from engine.card_effects.card_keywords import quell
 
         prevented = quell(source_card, amount, state)
         event["amount"] = event.get("amount", 0) - prevented
@@ -553,7 +553,7 @@ def _make_arcane_shelter(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import _move_to_graveyard
+        from engine.card_effects.card_keywords import _move_to_graveyard
         prevented = min(amount, event.get("amount", 0))
         _move_to_graveyard(source_card, state)
         event["amount"] = event.get("amount", 0) - prevented

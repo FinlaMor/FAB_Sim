@@ -17,9 +17,9 @@ from __future__ import annotations
 
 import dataclasses
 import random
-from typing import TYPE_CHECKING, Optional, Callable
+from typing import TYPE_CHECKING, Optional, Callable, Literal
 from dataclasses import dataclass, field
-
+from enum import Enum
 
 from engine.state import GameState, Event, StackEntry
 from engine.context import effect_context
@@ -36,6 +36,19 @@ def coo(card: Card, return_owner: bool=False) -> int|None:
     """Takes in card object. Returns Int of card's controller and falls back to card owner."""
     return card.controller if card.controller is not None else card.owner
 
+def create_emit_event(event) -> Event:
+    return Event(
+        type=event.type,
+        card=event.card.slug if event.card is not None else None,
+        target=event.target if event.target is not None else None,
+        data={k: v for k, v in vars(event).items() if k not in ('type', 'card', 'target')}
+    )
+
+class EventType(str, Enum):
+    BANISH = "banish"
+    DISCARD = "discard"
+    EOT = "end_of_turn"
+
 @dataclass
 class BanishEvent:
     """CR 8.5.1 — move an object to the banished zone.
@@ -44,7 +57,7 @@ class BanishEvent:
         destination  — e.g. redirect to graveyard instead (card still considered banished, CR 8.5.1b)
         cancelled    — prevent the banish entirely
     """
-    type: str = "banish"
+    type: str = EventType.BANISH
     card: Card = None
     source_player_id: int = None      # who is causing the banishing
     target_player_id: int = None      # who owns the card being banished
@@ -80,11 +93,12 @@ def banish(state: GameState, card: Card, source_player_id: int,
 
     # execute the move
     player = state.players[event.target_player_id]
+    card = event.card
     getattr(player, event.origin_zone).remove(card)
     getattr(player, event.destination).add(card)
 
     # trigger: "when a card is banished" listeners fire after (CR 8.5.1)
-    state.event_manager.emit(event, state)
+    state.event_manager.emit(event=create_emit_event(event=event), game_state=state)
 
     # CR 8.5.1c: register delayed return effect if temporary
     if event.until_condition:
@@ -1773,6 +1787,7 @@ def repeat(state: GameState, process: Callable[[], bool],
 class RerollEvent:
     type: str = "reroll"
     original_results: tuple = field(default_factory=tuple)
+    new_results: tuple = field(default_factory=tuple)
     faces: int = 6
     source_player_id: int | None = None
     canceled: bool = False
@@ -1804,11 +1819,11 @@ def reroll(state: GameState, dice_results: list[int], faces: int = 6,
         return event
     
     _rng = rng if rng is not None else random
-    new_results = tuple(_rng.randint(1, event.faces) for _ in event.original_results)
+    event.new_results = tuple(_rng.randint(1, event.faces) for _ in event.original_results)
 
     state.event_manager.emit(Event(type="reroll", data={
         "original_results": list(event.original_results),
-        "new_results": list(new_results),
+        "new_results": list(event.new_results),
         "faces": faces,
         "source_player_id": event.source_player_id,
     }), state)

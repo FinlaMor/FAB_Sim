@@ -1,6 +1,6 @@
 """Tests for centralized effect keyword functions (engine/effect_keywords.py).
 
-Each test targets a specific CR 8.5 rule to verify the banish function
+Each test targets a specific CR 8.5 rule to verify the function
 routes correctly through replacement effects and triggers.
 """
 from __future__ import annotations
@@ -11,8 +11,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 from tests.conftest import _make_state, _make_card
-from engine.effect_keywords import banish, BanishEvent, create_token, CreateTokenEvent, deal_damage, DamageEvent, DamageType, discard, DiscardEvent, destroy, DestroyEvent, draw, DrawEvent, gain, GainEvent, AssetType, gets, GetsEvent, GetsKind, gets_property, GetsPropertyEvent, intimidate, IntimidateEvent, look, LookEvent, lose, LoseEvent
+from engine.effect_keywords import EventType, banish, BanishEvent, create_token, CreateTokenEvent, deal_damage, DamageEvent, DamageType, discard, DiscardEvent, destroy, DestroyEvent, draw, DrawEvent, gain, GainEvent, AssetType, gets, GetsEvent, GetsKind, gets_property, GetsPropertyEvent, intimidate, IntimidateEvent, look, LookEvent, lose, LoseEvent
 from engine.state import Event
+from copy import deepcopy
 
 
 # ---------------------------------------------------------------------------
@@ -48,7 +49,7 @@ def test_banish_emits_trigger():
     card = _add_to_hand(state, 1, _make_card("test_card"))
 
     fired = []
-    state.event_manager.register("banish", lambda e, s: fired.append(e))
+    state.event_manager.register(EventType.BANISH, lambda e, s: fired.append(e))
 
     banish(state, card, source_player_id=1, origin_zone="hand")
 
@@ -59,16 +60,15 @@ def test_banish_emits_trigger():
 def test_banish_replacement_effect_redirects_destination():
     """CR 8.5.1b — replacement effect can redirect destination; card still considered banished."""
     from engine.effects import ReplacementEffect, ReplacementType
-    from tests.conftest import _make_card as _mc
     state = _make_state()
     card = _add_to_hand(state, 1, _make_card("test_card"))
 
-    source = _mc("effect_source")
+    source = _make_card("effect_source")
     state.effect_manager.replacement_effects.append(
         ReplacementEffect(
             source_card=source,
             replacement_type=ReplacementType.STANDARD,
-            condition_fn=lambda e, s: e.get("type") == "banish",
+            condition_fn=lambda e, s: e.get("type") == EventType.BANISH,
             replace_fn=lambda e, s: {**e, "destination": "graveyard"},
         )
     )
@@ -94,7 +94,7 @@ def test_banish_cancellation():
         ReplacementEffect(
             source_card=source,
             replacement_type=ReplacementType.STANDARD,
-            condition_fn=lambda e, s: e.get("type") == "banish",
+            condition_fn=lambda e, s: e.get("type") == EventType.BANISH,
             replace_fn=lambda e, s: {**e, "cancelled": True},
         )
     )
@@ -112,11 +112,11 @@ def test_banish_until_end_of_turn_registers_return():
     card = _add_to_hand(state, 1, _make_card("test_card"))
 
     banish(state, card, source_player_id=1, origin_zone="hand",
-           until_condition="end_of_turn")
+           until_condition=EventType.EOT)
 
     assert card in state.players[1].banished.cards
     # Handler registered — fire end_of_turn to trigger return
-    state.event_manager.emit(Event(type="end_of_turn"), state)
+    state.event_manager.emit(Event(type=EventType.EOT), state)
 
     assert card not in state.players[1].banished.cards
     assert card in state.players[1].hand.cards
@@ -127,36 +127,48 @@ def test_banish_return_fails_if_card_ceased_to_exist():
     state = _make_state()
     card = _add_to_hand(state, 1, _make_card("test_card"))
 
-    banish(state, card, source_player_id=1, origin_zone="hand",
-           until_condition="end_of_turn")
+    orig_card = deepcopy(card)
 
+    assert card in state.players[1].hand.cards # precondition check
+
+    banish(state, card, source_player_id=1, origin_zone="hand",
+           until_condition=EventType.EOT)
+    
     # Card moves to graveyard while banished (ceased to exist per CR 3.0.9)
     state.players[1].banished.remove(card)
     state.players[1].graveyard.add(card)
 
-    state.event_manager.emit(Event(type="end_of_turn"), state)
+    state.event_manager.emit(Event(type=EventType.EOT), state)
 
     # Card should stay in graveyard — return failed
     assert card not in state.players[1].hand.cards
+    assert card not in state.players[1].banished.cards
     assert card in state.players[1].graveyard.cards
+
+    # Orig_card would not share same zones as card. precondition for next checks
+    orig_card.zone = card.zone
+    orig_card.prev_zone = card.prev_zone
+
+    assert orig_card is not card # check if card in graveyard is a new instance of the card (3.0.9)
+    assert orig_card == card
 
 
 def test_banish_return_succeeds_if_card_in_arena():
     """CR 3.0.9b — return succeeds if card moved to arena (remained public)."""
-    from engine.card_effects.keywords import ARENA_ZONE_NAMES
+    from engine.card_effects.card_keywords import ARENA_ZONE_NAMES
     state = _make_state()
     # Card needs a permanent subtype to legally enter the permanents zone (CR 3.13.2)
     card = _add_to_hand(state, 1, _make_card("test_card", types=["Action"]))
     card.raw_subtypes = ["Aura"]
 
     banish(state, card, source_player_id=1, origin_zone="hand",
-           until_condition="end_of_turn")
+           until_condition=EventType.EOT)
 
     # Card moves to permanents zone (arena) while banished
     state.players[1].banished.remove(card)
     state.players[1].permanents.add(card)
 
-    state.event_manager.emit(Event(type="end_of_turn"), state)
+    state.event_manager.emit(Event(type=EventType.EOT), state)
 
     # Card should be returned to hand
     assert card in state.players[1].hand.cards
@@ -252,8 +264,8 @@ def test_create_token_target_player_controls_token():
 # CR 8.5.3 — deal_damage
 # ---------------------------------------------------------------------------
 
-def test_deal_damage_reduces_hero_health():
-    """Physical damage reduces the target hero's health."""
+def test_deal_damage_reduces_hero_life():
+    """Physical damage reduces the target hero's life."""
     state = _make_state()
     target_hero = state.players[2].hero
     initial_life = state.players[2].life
@@ -281,7 +293,7 @@ def test_deal_damage_emits_trigger():
 
 
 def test_deal_damage_zero_does_nothing():
-    """CR 8.5.3: zero damage — health unchanged, no trigger."""
+    """CR 8.5.3: zero damage — life unchanged, no trigger."""
     state = _make_state()
     target_hero = state.players[2].hero
     initial_life = state.players[2].life
@@ -344,8 +356,8 @@ def test_deal_damage_non_living_target_fails():
     state = _make_state()
     non_living = _make_card("item_card")  # no Hero/Ally type — not living
 
-    initial_p1_health = state.players[1].life
-    initial_p2_health = state.players[2].life
+    initial_p1_life = state.players[1].life
+    initial_p2_life = state.players[2].life
 
     # Should not raise, just return cancelled event
     event = deal_damage(state, amount=5, damage_type=DamageType.PHYSICAL,
@@ -353,8 +365,8 @@ def test_deal_damage_non_living_target_fails():
                         damage_source="test_attack")
 
     assert event.canceled
-    assert state.players[1].life == initial_p1_health
-    assert state.players[2].life == initial_p2_health
+    assert state.players[1].life == initial_p1_life
+    assert state.players[2].life == initial_p2_life
 
 
 # ---------------------------------------------------------------------------
