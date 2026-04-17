@@ -190,59 +190,76 @@ class DamageEvent:
     All living cards in slug_index have in their types or subtypes either 'ally' or
     'hero' (including the 'demi-hero' subtype)
     """
+    target: Card
+    target_type: str
     type: str = "damage"
     amount: int = 0
-    damage_type: str = DamageType.PHYSICAL
-    source_player_id: int = None
-    damage_source: str = None
+    damage_type: str = DamageType.GENERIC
+    source_player_id: int | None = None
+    target_player_id: int | None = None
+    damage_source: str | None = None
     damage_source_card: Card | None = None
-    damage_target: Card = None
+    unpreventable: bool = False
     canceled: bool = False
 
 
 def deal_damage(state: GameState, amount: int, damage_type: str, source_player_id: int, damage_target: Card, damage_source: str,
-                damage_source_card: Card=None, canceled: bool=False):
+                damage_source_card: Card|None, canceled: bool):
+    """deals damage of 'amount' amount and 'damage_type' type to 'damage_target'.
+    If dealing damage to a player, damage_target should be set to player.hero Card object"""
+
+    is_hero = any('hero' in t.lower() for t in [t.lower() for t in (damage_target.types or []) + (damage_target.subtypes or [])])
+    target_type = 'hero' if is_hero else 'ally'
 
     event = DamageEvent(
+        target=damage_target,
         amount=amount,
         damage_type=damage_type,
+        target_type = target_type
         source_player_id=source_player_id,
         damage_source=damage_source,
         damage_source_card=damage_source_card,
-        damage_target=damage_target,
+        canceled=canceled
     )
 
     # CR 8.5.3c: non-living targets cannot be damaged
-    all_types = [t.lower() for t in (damage_target.types or []) + (damage_target.subtypes or [])]
-    is_living = any(t in ('hero', 'demi-hero', 'demihero', 'ally') for t in all_types)
+    is_living = hasattr(damage_target, 'life') and (getattr(damage_target, 'life')|0) > 0
     if not is_living:
         event.canceled = True
         return event
 
+
+    if is_hero:
+        event.target_player_id = coo(damage_target)
+
     event_dict = vars(event).copy()
-    event_dict["target_player_id"] = damage_target.controller
-    event_dict["unpreventable"] = False
     event_dict = state.effect_manager.apply_replacements(event_dict, state)
     event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
 
     if event.amount == 0 or event.canceled:
         return event
 
+    # reinitialize variables after replacement effects fire
+    damage_target = event.target
+
+    is_hero = any('hero' in t.lower() for t in [t.lower() for t in (damage_target.types or []) + (damage_target.subtypes or [])])
+    target_type = 'hero' if is_hero else 'ally'
+
     # execute the damage
-    if any(t in ('hero', 'demi-hero', 'demihero') for t in all_types):
-        target_player = state.players[damage_target.controller]
+    if is_hero:
+        target_player = state.players[coo(damage_target)]
         target_player.life -= event.amount
-        state.event_manager.emit(Event(type="damage", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug}), state)
-        if damage_type == DamageType.PHYSICAL and event.amount > 0:
-            state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': 'hero'}), state)
+        state.event_manager.emit(create_emit_event(event), state)
+        if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == 'combat_damage': # 'Hits' occur during the damage step of combat and only if the damage is physical type
+            state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
     else:
         # ally damage
         damage_target.life = max(0, (damage_target.life or 0) - event.amount)
-        state.event_manager.emit(Event(type="damage", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug}), state)
-        if damage_type == DamageType.PHYSICAL and event.amount > 0:
-            state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': 'ally'}), state)
+        state.event_manager.emit(create_emit_event(event), state)
+        if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == 'combat_damage':
+            state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
         if damage_target.life == 0:
-            controller = state.players[damage_target.controller]
+            controller = state.players[coo(damage_target)]
             controller.allies.remove(damage_target)
             controller.graveyard.add(damage_target)
             state.event_manager.emit(Event(type="ally_died", data={"ally": damage_target.slug}), state)
