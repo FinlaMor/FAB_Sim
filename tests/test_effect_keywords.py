@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pytest
 from tests.conftest import _make_state, _make_card
 from engine.effect_keywords import EventType, banish, BanishEvent, create_token, CreateTokenEvent, deal_damage, DamageEvent, DamageType, discard, DiscardEvent, destroy, DestroyEvent, draw, DrawEvent, gain, GainEvent, AssetType, gets, GetsEvent, GetsKind, gets_property, GetsPropertyEvent, intimidate, IntimidateEvent, look, LookEvent, lose, LoseEvent
-from engine.state import Event
+from engine.state import Event, Step
 from engine.card import CardDB
 from copy import deepcopy
 
@@ -409,6 +409,153 @@ def test_deal_damage_non_living_target_fails():
     assert event.canceled
     assert state.players[1].life == initial_p1_life
     assert state.players[2].life == initial_p2_life
+
+
+def test_deal_damage_reduces_ally_life():
+    """Ally damage reduces life by the correct amount."""
+    state = _make_state()
+    ally = _make_card("test_ally", types=["Ally"])
+    ally.life = 5
+    ally.owner = 2
+    ally.controller = 2
+
+    deal_damage(state, amount=3, damage_type=DamageType.PHYSICAL,
+                source_player_id=1, damage_target=ally,
+                damage_source="test_attack")
+
+    assert ally.life == 2
+
+
+def test_deal_damage_ally_emits_damage_event():
+    """Ally damage emits a damage event."""
+    state = _make_state()
+    ally = _make_card("test_ally", types=["Ally"])
+    ally.life = 5
+    ally.owner = 2
+    ally.controller = 2
+
+    fired = []
+    state.event_manager.register("damage", lambda e, s: fired.append(e))
+
+    deal_damage(state, amount=2, damage_type=DamageType.PHYSICAL,
+                source_player_id=1, damage_target=ally,
+                damage_source="test_attack")
+
+    assert len(fired) == 1
+
+
+def test_deal_damage_kills_ally():
+    """An ally reduced to 0 life is removed from allies and placed in graveyard."""
+    state = _make_state()
+    ally = _make_card("test_ally", types=["Ally"])
+    ally.life = 3
+    ally.owner = 2
+    ally.controller = 2
+    state.players[2].allies.add(ally)
+
+    deal_damage(state, amount=3, damage_type=DamageType.PHYSICAL,
+                source_player_id=1, damage_target=ally,
+                damage_source="test_attack")
+
+    assert ally not in state.players[2].allies.cards
+    assert ally in state.players[2].graveyard.cards
+
+
+def test_deal_damage_ally_death_emits_ally_died_event():
+    """When an ally is killed, an ally_died event is emitted."""
+    state = _make_state()
+    ally = _make_card("test_ally", types=["Ally"])
+    ally.life = 3
+    ally.owner = 2
+    ally.controller = 2
+    state.players[2].allies.add(ally)
+
+    fired = []
+    state.event_manager.register("ally_died", lambda e, s: fired.append(e))
+
+    deal_damage(state, amount=3, damage_type=DamageType.PHYSICAL,
+                source_player_id=1, damage_target=ally,
+                damage_source="test_attack")
+
+    assert len(fired) == 1
+    assert fired[0].data["ally"] == "test_ally"
+
+
+def test_deal_damage_hit_event_physical_in_combat_step():
+    """Physical damage in the combat_damage step emits a hit event."""
+    state = _make_state()
+    state.step = Step.COMBAT_DAMAGE
+    target_hero = state.players[2].hero
+
+    fired = []
+    state.event_manager.register("hit", lambda e, s: fired.append(e))
+
+    deal_damage(state, amount=3, damage_type=DamageType.PHYSICAL,
+                source_player_id=1, damage_target=target_hero,
+                damage_source="test_attack")
+
+    assert len(fired) == 1
+
+
+def test_deal_damage_no_hit_event_for_arcane_damage():
+    """Arcane damage in the combat_damage step does NOT emit a hit event."""
+    state = _make_state()
+    state.step = Step.COMBAT_DAMAGE
+    target_hero = state.players[2].hero
+
+    fired = []
+    state.event_manager.register("hit", lambda e, s: fired.append(e))
+
+    deal_damage(state, amount=3, damage_type=DamageType.ARCANE,
+                source_player_id=1, damage_target=target_hero,
+                damage_source="test_spell")
+
+    assert len(fired) == 0
+
+
+def test_deal_damage_no_hit_event_outside_combat_step():
+    """Physical damage outside the combat_damage step does NOT emit a hit event."""
+    state = _make_state()  # step=Step.ACTION
+    target_hero = state.players[2].hero
+
+    fired = []
+    state.event_manager.register("hit", lambda e, s: fired.append(e))
+
+    deal_damage(state, amount=3, damage_type=DamageType.PHYSICAL,
+                source_player_id=1, damage_target=target_hero,
+                damage_source="test_attack")
+
+    assert len(fired) == 0
+
+
+def test_deal_damage_canceled_by_replacement_effect():
+    """A replacement effect setting canceled=True prevents life loss and events."""
+    from engine.effects import ReplacementEffect, ReplacementType
+    state = _make_state()
+    target_hero = state.players[2].hero
+    initial_life = state.players[2].life
+    source = _make_card("effect_source")
+
+    state.effect_manager.replacement_effects.append(
+        ReplacementEffect(
+            source_card=source,
+            replacement_type=ReplacementType.PREVENTION,
+            condition_fn=lambda e, s: e.get("type") == "damage",
+            replace_fn=lambda e, s: {**e, "canceled": True},
+            prevention_amount=0,
+        )
+    )
+
+    fired = []
+    state.event_manager.register("damage", lambda e, s: fired.append(e))
+
+    event = deal_damage(state, amount=5, damage_type=DamageType.PHYSICAL,
+                        source_player_id=1, damage_target=target_hero,
+                        damage_source="test_attack")
+
+    assert event.canceled
+    assert state.players[2].life == initial_life
+    assert len(fired) == 0
 
 
 # ---------------------------------------------------------------------------

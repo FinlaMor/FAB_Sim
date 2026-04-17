@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING, Optional, Callable, Literal
 from dataclasses import dataclass, field
 from enum import Enum
 
-from engine.state import GameState, Event, StackEntry
+from engine.state import GameState, Event, StackEntry, Step
 from engine.context import effect_context
 from engine.card import Card
 from engine.continuous_effects import ContinuousEffect, next_timestamp
@@ -251,13 +251,13 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
         target_player = state.players[coo(damage_target)]
         target_player.life -= event.amount
         state.event_manager.emit(create_emit_event(event), state)
-        if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == 'combat_damage': # 'Hits' occur during the damage step of combat and only if the damage is physical type
+        if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == Step.COMBAT_DAMAGE: # 'Hits' occur during the damage step of combat and only if the damage is physical type
             state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
     else:
         # ally damage
         damage_target.life = max(0, (damage_target.life or 0) - event.amount)
         state.event_manager.emit(create_emit_event(event), state)
-        if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == 'combat_damage':
+        if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == Step.COMBAT_DAMAGE:
             state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
         if damage_target.life == 0:
             controller = state.players[coo(damage_target)]
