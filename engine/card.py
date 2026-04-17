@@ -530,7 +530,9 @@ class CardDB:
         if resolved is None:
             return None
         if resolved in self._card_cache:
-            return copy(self._card_cache[resolved])
+            c = copy(self._card_cache[resolved])
+            c.object_id = next(_CARD_OBJECT_ID_COUNTER)  # CR 3.0.9: each retrieval is a new game object
+            return c
         raw = self._by_slug[resolved]
         slug = resolved  # use canonical slug
 

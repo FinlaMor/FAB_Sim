@@ -40,7 +40,7 @@ def create_emit_event(event) -> Event:
     return Event(
         type=event.type,
         card=event.card.slug if hasattr(event, 'card') and event.card is not None else getattr(event, 'target'),
-        target=event.target if event.target is not None else None,
+        target=event.target if hasattr(event, 'target') and getattr(event, 'target') is not None else None,
         data={k: v for k, v in vars(event).items() if k not in ('type', 'card', 'target')}
     )
 
@@ -167,8 +167,9 @@ def create_token(state: GameState, token: str, source_player_id: int, target_pla
 
     # execute the creation — each token is a distinct Card object (CR 8.5.2)
     controller = state.players[event.target_player_id]
+
     for _ in range(event.number):
-        token_card = state.card_db.get(event.card)
+        token_card = state.card_db.get(event.card.slug)  # fresh object + unique object_id per CR 3.0.9
         token_card.owner = event.target_player_id
         token_card.controller = event.target_player_id
         getattr(controller, event.destination).add(token_card)
@@ -204,7 +205,7 @@ class DamageEvent:
 
 
 def deal_damage(state: GameState, amount: int, damage_type: str, source_player_id: int, damage_target: Card, damage_source: str,
-                damage_source_card: Card|None, canceled: bool):
+                damage_source_card=None, canceled=False):
     """deals damage of 'amount' amount and 'damage_type' type to 'damage_target'.
     If dealing damage to a player, damage_target should be set to player.hero Card object"""
 
@@ -215,7 +216,7 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
         target=damage_target,
         amount=amount,
         damage_type=damage_type,
-        target_type = target_type
+        target_type = target_type,
         source_player_id=source_player_id,
         damage_source=damage_source,
         damage_source_card=damage_source_card,
@@ -223,7 +224,7 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
     )
 
     # CR 8.5.3c: non-living targets cannot be damaged
-    is_living = hasattr(damage_target, 'life') and (getattr(damage_target, 'life')|0) > 0
+    is_living = hasattr(damage_target, 'life') and (getattr(damage_target, 'life') or 0) > 0
     if not is_living:
         event.canceled = True
         return event

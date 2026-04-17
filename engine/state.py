@@ -244,7 +244,7 @@ class Zone:
         if (was_in_arena or was_on_stack) and not card.is_in_arena:
             card.reset_to_base_state()
         card.is_public = next_is_public
-        if card not in self.cards:
+        if not any(c is card for c in self.cards):
             self.cards.append(card)
         return ZoneEntryResult.ALLOW
 

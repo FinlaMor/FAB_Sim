@@ -13,6 +13,7 @@ import pytest
 from tests.conftest import _make_state, _make_card
 from engine.effect_keywords import EventType, banish, BanishEvent, create_token, CreateTokenEvent, deal_damage, DamageEvent, DamageType, discard, DiscardEvent, destroy, DestroyEvent, draw, DrawEvent, gain, GainEvent, AssetType, gets, GetsEvent, GetsKind, gets_property, GetsPropertyEvent, intimidate, IntimidateEvent, look, LookEvent, lose, LoseEvent
 from engine.state import Event
+from engine.card import CardDB
 from copy import deepcopy
 
 
@@ -190,7 +191,7 @@ class _MockCardDB:
 
 def _state_with_db():
     state = _make_state()
-    state.card_db = _MockCardDB()
+    state.card_db = CardDB()
     return state
 
 
@@ -258,7 +259,7 @@ def test_create_token_target_player_controls_token():
     """CR 8.5.2c — token enters under control of the instructed player."""
     state = _state_with_db()
 
-    create_token(state, token="fraility", source_player_id=1, target_player_id=2)
+    create_token(state, token="frailty", source_player_id=1, target_player_id=2)
 
     assert len(state.players[2].tokens.cards) == 1
     assert len(state.players[1].tokens.cards) == 0
@@ -267,7 +268,7 @@ def test_create_token_target_player_controls_token():
 
     assert len(state.players[2].tokens.cards) == 1
     assert len(state.players[1].tokens.cards) == 1
-    assert state.players[2].tokens.cards[0].slug == "fraility"
+    assert state.players[2].tokens.cards[0].slug == "frailty"
     assert state.players[1].tokens.cards[0].slug == "ponder"
 
 def test_create_token_weapon_in_weapon_zone():
@@ -280,8 +281,12 @@ def test_create_token_weapon_in_weapon_zone():
     assert len(player.weapon1.cards) == 0
     assert len(player.weapon2.cards) == 0
 
-    create_token(state, token="graphene_chelicera", source_player_id=1, target_player_id=1, destination="weapon1")
+    event = create_token(state, token="graphene_chelicera", source_player_id=1, target_player_id=1, destination="weapon1")
 
+    assert event.canceled == False
+    assert event.destination == 'weapon1'
+    assert hasattr(player, event.destination)
+    assert event.target_player_id == 1
 
     assert len(player.tokens.cards) == 0
     assert len(player.weapon1.cards) == 1
