@@ -202,6 +202,8 @@ def test_create_token_adds_to_tokens_zone():
     """Basic case: token appears in controlling player's tokens zone."""
     state = _state_with_db()
 
+    assert len(state.players[1].tokens.cards) == 0 # baseline
+
     event = create_token(state, token="vigor", source_player_id=1, target_player_id=1)
 
     assert not event.canceled
@@ -225,9 +227,10 @@ def test_create_token_number_creates_multiple():
     """number=3 creates 3 tokens. CR 8.5.2c."""
     state = _state_with_db()
 
-    create_token(state, token="vigor", source_player_id=1, target_player_id=1, number=3)
+    create_token(state, token="might", source_player_id=1, target_player_id=1, number=3)
 
     assert len(state.players[1].tokens.cards) == 3
+    assert state.players[1].tokens.cards[0].slug == "might"
 
 
 def test_create_token_canceled_creates_nothing():
@@ -255,10 +258,43 @@ def test_create_token_target_player_controls_token():
     """CR 8.5.2c — token enters under control of the instructed player."""
     state = _state_with_db()
 
-    create_token(state, token="agility", source_player_id=1, target_player_id=2)
+    create_token(state, token="fraility", source_player_id=1, target_player_id=2)
 
     assert len(state.players[2].tokens.cards) == 1
     assert len(state.players[1].tokens.cards) == 0
+
+    create_token(state, "ponder", 1, 1)
+
+    assert len(state.players[2].tokens.cards) == 1
+    assert len(state.players[1].tokens.cards) == 1
+    assert state.players[2].tokens.cards[0].slug == "fraility"
+    assert state.players[1].tokens.cards[0].slug == "ponder"
+
+def test_create_token_weapon_in_weapon_zone():
+    """Test creating token in zone other than tokens (weapon zone)"""
+
+    state = _state_with_db()
+    player = state.players[1]
+
+    assert len(player.tokens.cards) == 0
+    assert len(player.weapon1.cards) == 0
+    assert len(player.weapon2.cards) == 0
+
+    create_token(state, token="graphene_chelicera", source_player_id=1, target_player_id=1, destination="weapon1")
+
+
+    assert len(player.tokens.cards) == 0
+    assert len(player.weapon1.cards) == 1
+    assert len(player.weapon2.cards) == 0
+    assert player.weapon1.cards[0].slug == "graphene_chelicera"
+
+    create_token(state, token="graphene_chelicera", source_player_id=1, target_player_id=1, destination="weapon2")
+
+    assert len(player.tokens.cards) == 0
+    assert len(player.weapon1.cards) == 1
+    assert len(player.weapon2.cards) == 1
+    assert player.weapon1.cards[0].slug == "graphene_chelicera"
+    assert player.weapon2.cards[0].slug == "graphene_chelicera"
 
 
 # ---------------------------------------------------------------------------

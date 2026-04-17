@@ -46,6 +46,7 @@ def create_emit_event(event) -> Event:
 
 class EventType(str, Enum):
     BANISH = "banish"
+    CREATETOKEN = "create_token"
     DISCARD = "discard"
     EOT = "end_of_turn"
 
@@ -134,7 +135,7 @@ class CreateTokenEvent:
     Replacement effects can modify:
         number of tokens created - increase or decrease (mordred tide, ripple away)
     """
-    token: Card                              # token to be created (required)
+    card: Card                              # token to be created (required)
     source_player_id: int = None             # who is causing the tokens to be created
     target_player_id: int = None             # who controls the token. Per 8.5.2c
     type: str = "create_token"
@@ -151,7 +152,7 @@ def create_token(state: GameState, token: str, source_player_id: int, target_pla
     card = state.card_db.get(token)
 
     event = CreateTokenEvent(
-                            token=card, 
+                            card=card, 
                              target_player_id=target_player_id, 
                              number=number, 
                              source_player_id=source_player_id,
@@ -165,15 +166,15 @@ def create_token(state: GameState, token: str, source_player_id: int, target_pla
         return event
 
     # execute the creation — each token is a distinct Card object (CR 8.5.2)
-    controller = state.players[target_player_id]
+    controller = state.players[event.target_player_id]
     for _ in range(event.number):
-        token_card = state.card_db.get(token)
-        token_card.owner = target_player_id
-        token_card.controller = target_player_id
+        token_card = state.card_db.get(event.card)
+        token_card.owner = event.target_player_id
+        token_card.controller = event.target_player_id
         getattr(controller, event.destination).add(token_card)
 
     # trigger: "when {token} enters the arena" listeners fire after (CR 8.5.2b)
-    state.event_manager.emit(Event(type="create_token", data={"token": card.slug, "player_id": target_player_id}), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 

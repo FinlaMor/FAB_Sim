@@ -758,8 +758,6 @@ class Player:
         # CR 3.0.2: "Each player has two weapon zones"
         self.weapon1 = Zone("weapon1", player_id)
         self.weapon2 = Zone("weapon2", player_id)
-        # Convenience alias — engine code uses player.weapon to mean the primary slot
-        self.weapon = self.weapon1
         # CR: single permanents zone with sub-zone views
         self.permanents = Zone("permanents", player_id)
         self.items = SubZoneView(self.permanents, "Item")

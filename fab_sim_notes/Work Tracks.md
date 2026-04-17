@@ -16,7 +16,7 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 		- [ ] should be str type for the type and target for the create_emit_event() helper
 		- [ ] change event in emit to a create_emit_event()
 		- [ ] check function tests as you go
-		- [ ] status: on banish
+		- [ ] status: on CreateToken
 - [ ] shuffle needs to update player pitch histories. they wouldn't know the order anymore
 - [ ] `gets` / `gets_property` — verify continuous effect duration and cleanup
 - [ ] `search` — confirm full zone search pattern (deck shuffle after)
