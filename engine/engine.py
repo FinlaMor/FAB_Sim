@@ -159,8 +159,10 @@ def _end_game_on_turn_cap(state: GameState) -> None:
     state.ended_on_turn_cap = True
     state.step = Step.END_GAME
     state._next_phase = "end_game"
-    for event_name in state._static_listeners:
-        state.event_manager.unregister(event_name, _meta_dispatcher)
+    meta_dispatcher = getattr(state, "_meta_dispatcher", None)
+    if meta_dispatcher is not None:
+        for event_name in getattr(state, "_static_listeners", []):
+            state.event_manager.unregister(event_name, meta_dispatcher)
 
 
 def _game_loop(state: GameState) -> None:
@@ -854,6 +856,7 @@ def _setup_static_ability_listeners(state: GameState) -> None:
         state.event_manager.register(event_name, _meta_dispatcher)
 
     state._static_listeners = list(STATIC_ABILITY_ZONES.keys())  # Track registered events
+    state._meta_dispatcher = _meta_dispatcher
 
 def destroy_aura(state: GameState, player_id: int, card) -> None:
     """Remove an aura from a player's zone and emit 'aura_destroyed' for static listeners.

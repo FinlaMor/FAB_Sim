@@ -801,6 +801,15 @@ class Player:
 
         # Cards played from hand/arsenal this turn (Card objects)
         self.cards_played_this_turn: list = []
+
+    @property
+    def health(self) -> int:
+        """Back-compat alias for legacy engine/agent code paths."""
+        return self.life
+
+    @health.setter
+    def health(self, value: int) -> None:
+        self.life = value
     
     @property
     def arena_cards(self) -> list[Card]:

@@ -243,6 +243,8 @@ class TestCardTriggerImplementations:
         fearless.controller = 1
         _fearless_confrontation_on_play(fearless, _event_with_card("on_play", fearless), state)
 
+        from engine.engine import _recalculate_attack_power
+        _recalculate_attack_power(state)
         assert state.combat.attack_power == 5
         assert "Dominate" not in state.combat.keywords
 

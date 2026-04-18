@@ -407,7 +407,10 @@ def _figment_of_judgment_enters_arena(card, event, state):
         context="Figment of Judgment: choose a banished card to turn face-down",
     )
     chosen = next((c for c in candidates if c.slug == choice), candidates[0])
-    turn(state, chosen, face_up=False, source_player_id=cid)
+    # CR 8.5.24 effect intent here is state change from public to private.
+    # Some engine paths key off face_down directly in addition to is_public.
+    chosen.face_down = True
+    chosen.is_public = False
 
 
 def _figment_of_rebirth_enters_arena(card, event, state):

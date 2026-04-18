@@ -177,6 +177,8 @@ class Card:
     # Activated abilities (CR 5.2)
     has_activated_ability: bool = False
     has_once_per_turn_limit: bool = False
+    has_twice_per_turn_limit: bool = False
+    has_thrice_per_turn_limit: bool = False
     has_action_activation: bool = False
     has_instant_activation: bool = False
     has_attack_reaction_activation: bool = False
@@ -235,6 +237,9 @@ class Card:
             self.base_subtypes = list(self.raw_subtypes or []) if self.raw_subtypes else None
         if self.base_keywords is None:
             self.base_keywords = list(self.raw_card_keywords or []) if self.raw_card_keywords else None
+        # Back-compat alias used by parts of the effects engine.
+        if not hasattr(self, "base_card_keywords"):
+            self.base_card_keywords = list(self.base_keywords or [])
         if self.base_functional_text is None:
             self.base_functional_text = self.raw_functional_text
         if self.base_type_text is None:
@@ -277,6 +282,12 @@ class Card:
             self.type_text = self.base_type_text
         if self.classes is None:
             self.classes = list(self.base_classes or []) if self.base_classes else None
+
+        # Back-compat aliases used by legacy playability recalculation paths.
+        if not hasattr(self, "base_playable"):
+            self.base_playable = bool(self.raw_playable)
+        if not hasattr(self, "base_activatable"):
+            self.base_activatable = bool(self.raw_activatable)
 
 # ===============================================================================
 # Computed Methods

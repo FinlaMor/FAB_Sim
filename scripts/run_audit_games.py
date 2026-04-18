@@ -110,8 +110,8 @@ def _snapshot_state(state: GameState, player_id: int) -> dict:
         "phase": state.step.value if hasattr(state.step, 'value') else str(state.step),
         "active_player": state.active_player,
         "priority_player": state.priority_player,
-        "p1_hp": p1.health,
-        "p2_hp": p2.health,
+        "p1_hp": p1.life,
+        "p2_hp": p2.life,
         "p1_hand_size": len(p1.hand.cards),
         "p2_hand_size": len(p2.hand.cards),
         "p1_resources": getattr(p1, 'resources', 0),
@@ -145,7 +145,7 @@ class AuditRecorderAgent:
 
         # Guardrail
         if self.step_counter[0] >= self.max_per_game:
-            state.winner = 1 if state.players[1].health >= state.players[2].health else 2
+            state.winner = 1 if state.players[1].life >= state.players[2].life else 2
             state.done = True
             if isinstance(options[0], Action):
                 pass_act = next((a for a in options if a.type == ActionType.PASS), None)
