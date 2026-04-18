@@ -17,7 +17,7 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 	- [x] `ContinuousEffectManager` references removed; `effect_manager` is the sole authority
 	- [x] Rules fixes applied: `clash` (CR 8.5.10 both players look), `amp` (damage type tag), `retrieve` (equip from discard not hand)
 	- [x] All 262 tests in `test_effect_keywords.py` pass
-- [ ] shuffle needs to update player pitch histories. they wouldn't know the order anymore
+- [x] shuffle needs to update player pitch histories. they wouldn't know the order anymore
 - [ ] `gets` / `gets_property` — verify continuous effect duration and cleanup
 - [ ] `search` — confirm full zone search pattern (deck shuffle after)
 - [ ] `opt` — confirm N look / choose any to top or bottom

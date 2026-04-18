@@ -168,7 +168,7 @@ def banish(state: GameState, card: Card, source_player_id: int,
 
     # CR 8.5.1c: register delayed return effect if temporary
     if event.until_condition:
-        _register_return_from_banish(state, card=card, target_player_id=target_player_id, origin_zone=origin_zone, until_condition=until_condition)
+        _register_return_from_banish(state, card=event.target, target_player_id=event.target_player_id, origin_zone=event.origin_zone, until_condition=event.until_condition)
 
     return event
 
@@ -324,13 +324,13 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
         target_player = state.players[coo(damage_target)]
         target_player.life -= event.amount
         state.event_manager.emit(create_emit_event(event), state)
-        if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == Step.COMBAT_DAMAGE: # 'Hits' occur during the damage step of combat and only if the damage is physical type
+        if event.damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == Step.COMBAT_DAMAGE: # 'Hits' occur during the damage step of combat and only if the damage is physical type
             state.event_manager.emit(Event(type=EventType.HIT, data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
     else:
         # ally damage
         damage_target.life = max(0, (damage_target.life or 0) - event.amount)
         state.event_manager.emit(create_emit_event(event), state)
-        if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == Step.COMBAT_DAMAGE:
+        if event.damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == Step.COMBAT_DAMAGE:
             state.event_manager.emit(Event(type=EventType.HIT, data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
         if damage_target.life == 0:
             controller = state.players[coo(damage_target)]
@@ -484,9 +484,9 @@ def draw(state: GameState, draw_player: int, source: Optional[Card] = None,
         getattr(player, event.destination).add(card)
         drawn += 1
         state.event_manager.emit(Event(type=EventType.DRAW, data={
-            "draw_player": draw_player,
-            "source": source.slug if source is not None else None,
-            "source_player": source_player,
+            "draw_player": event.draw_player,
+            "source": event.source.slug if event.source is not None else None,
+            "source_player": event.source_player,
             "destination": event.destination,
             "origin": event.origin,
         }), state)
@@ -494,9 +494,9 @@ def draw(state: GameState, draw_player: int, source: Optional[Card] = None,
     # CR 8.5.6b: total_draw only fires if at least one card was actually drawn
     if drawn > 0:
         state.event_manager.emit(Event(type=EventType.TOTAL_DRAW, data={
-            "draw_player": draw_player,
-            "source": source.slug if source is not None else None,
-            "source_player": source_player,
+            "draw_player": event.draw_player,
+            "source": event.source.slug if event.source is not None else None,
+            "source_player": event.source_player,
             "destination": event.destination,
             "origin": event.origin,
             "number": drawn,
@@ -1001,13 +1001,13 @@ def look(state: GameState, target_card: Card, looker_ids: tuple | list,
 
     # Grant visibility (CR 8.5.11b: card does not become public)
     for pid in event.looker_ids:
-        target_card.known_by.add(pid)
+        event.target_card.known_by.add(pid)
 
     if event.until_condition:
         def _remove_handler(ev, s: GameState) -> None:
             s.event_manager.unregister(event.until_condition, _remove_handler)
             for pid in event.looker_ids:
-                target_card.known_by.discard(pid)
+                event.target_card.known_by.discard(pid)
         state.event_manager.register(event.until_condition, _remove_handler)
 
     state.event_manager.emit(create_emit_event(event), state)
@@ -1456,6 +1456,9 @@ def shuffle(state: GameState,
     # shuffle in place (CR 8.5.20a: even empty zones are "shuffled")
     _rng = rng if rng is not None else random
     _rng.shuffle(zone.cards)
+    state.players[event.target_player_id].pitch_history = [] # pitch history is erased after shuffle. this is the players known order of cards.
+    state.pitch_history[event.target_player_id] = {} # pitch history is erased after shuffle. this is the opponents knowledge of the shuffler's pitch stack.
+
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -1612,17 +1615,17 @@ def reload(state: GameState, card: Card, player_id: int,
         return event
 
     # CR 8.5.23a: arsenal must be empty
-    arsenal = state.get_zone("arsenal", player_id)
+    arsenal = state.get_zone("arsenal", event.player_id)
     if arsenal is None or len(arsenal.cards) > 0:
         event.canceled = True
         return event
 
     # Move card from hand to arsenal face-down
-    hand = state.get_zone("hand", player_id)
-    if hand is not None and card in hand.cards:
-        hand.remove(card)
-    card.is_public = False
-    arsenal.add(card, is_public=False)
+    hand = state.get_zone("hand", event.player_id)
+    if hand is not None and event.card in hand.cards:
+        hand.remove(event.card)
+    event.card.is_public = False
+    arsenal.add(event.card, is_public=False)
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -1669,7 +1672,7 @@ def turn(state: GameState, card: Card, face_up: bool,
     if event.canceled:
         return event
 
-    card.is_public = face_up
+    event.card.is_public = event.face_up
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -1853,9 +1856,9 @@ def charge(state: GameState, card: Card, player_id: int,
     if event.canceled:
         return event
     
-    origin = state.get_zone(event.origin, player_id)
-    if origin is not None and card in origin.cards:
-        origin.remove(card)
+    origin = state.get_zone(event.origin, event.player_id)
+    if origin is not None and event.card in origin.cards:
+        origin.remove(event.card)
 
     # Soul is a SubZoneView over hero_zone. Direct add via SubZoneView
     # sets permanent_subtype and delegates to parent. Use effect_context
@@ -1914,7 +1917,7 @@ def distribute(state: GameState, counter_type: str, distribution: list,
         if amount > 0:
             put_counter(state, counter_type=event.counter_type,
                         target_card=target_card, amount=amount,
-                        source_player_id=source_player_id)
+                        source_player_id=event.source_player_id)
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -1963,7 +1966,7 @@ def pay(state: GameState, asset_type: str, amount: int, player_id: int,
         # Player declined to pay
         return event
 
-    player = state.players[player_id]
+    player = state.players[event.player_id]
     if event.asset_type == AssetType.LIFE:
         player.life -= event.amount
     elif event.asset_type == AssetType.RESOURCES:
@@ -2009,19 +2012,20 @@ def freeze(state: GameState, target_card: Card,
     if event.canceled:
         return event
 
-    target_card.counters["__frozen__"] = target_card.counters.get("__frozen__", 0) + 1
+    event.target_card.counters["__frozen__"] = event.target_card.counters.get("__frozen__", 0) + 1
 
     # CR 8.5.34b: if no duration is specified, freeze until start of controller's next turn
     effective_condition = event.until_condition
     if effective_condition is None:
         effective_condition = EventType.START_OF_TURN
-        controller_id = coo(target_card)
+        controller_id = coo(event.target_card)
+        _frozen_card = event.target_card
 
         def _unfreeze_on_turn_start(ev, s: GameState) -> None:
             # Only unfreeze if it's the frozen card's controller's turn
             if s.active_player == controller_id:
                 s.event_manager.unregister(EventType.START_OF_TURN, _unfreeze_on_turn_start)
-                target_card.counters["__frozen__"] = max(0, target_card.counters.get("__frozen__", 0) - 1)
+                _frozen_card.counters["__frozen__"] = max(0, _frozen_card.counters.get("__frozen__", 0) - 1)
 
         state.event_manager.register(EventType.START_OF_TURN, _unfreeze_on_turn_start)
 
@@ -2065,7 +2069,7 @@ def unfreeze(state: GameState, target_card: Card,
     if event.canceled:
         return event
 
-    target_card.counters.pop("__frozen__", None)
+    event.target_card.counters.pop("__frozen__", None)
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2106,10 +2110,10 @@ def equip(state: GameState, card: Card, zone_name: str, player_id: int,
     if event.canceled:
         return event
 
-    result = put_object(state, target_card=card,
+    result = put_object(state, target_card=event.card,
                         destination_zone=event.zone_name,
-                        destination_player_id=player_id,
-                        source_player_id=source_player_id)
+                        destination_player_id=event.player_id,
+                        source_player_id=event.source_player_id)
 
     if result.canceled:
         event.canceled = True
@@ -2162,13 +2166,13 @@ def move_counter(state: GameState, counter_type: str, from_card: Card,
         return event
 
     rem = remove_counter(state, counter_type=event.counter_type,
-                         target_card=from_card, amount=1,
-                         source_player_id=source_player_id)
+                         target_card=event.from_card, amount=1,
+                         source_player_id=event.source_player_id)
 
     if rem.actual_removed > 0:
         put_counter(state, counter_type=event.counter_type,
-                    target_card=to_card, amount=1,
-                    source_player_id=source_player_id)
+                    target_card=event.to_card, amount=1,
+                    source_player_id=event.source_player_id)
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2211,13 +2215,13 @@ def pitch(state: GameState, card: Card, player_id: int,
     if event.canceled:
         return event
 
-    put_object(state, target_card=card, destination_zone="pitch",
-               destination_player_id=player_id,
-               source_player_id=source_player_id)
+    put_object(state, target_card=event.card, destination_zone="pitch",
+               destination_player_id=event.player_id,
+               source_player_id=event.source_player_id)
 
     if event.pitch_value > 0:
         gain(state, asset_type=AssetType.RESOURCES, amount=event.pitch_value,
-             source_player_id=source_player_id or player_id, target_player_id=player_id)
+             source_player_id=event.source_player_id or event.player_id, target_player_id=event.player_id)
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2262,8 +2266,8 @@ def clash(state: GameState, player1_id: int, player2_id: int,
     if event.canceled:
         return event
 
-    deck1 = state.get_zone("deck", player1_id)
-    deck2 = state.get_zone("deck", player2_id)
+    deck1 = state.get_zone("deck", event.player1_id)
+    deck2 = state.get_zone("deck", event.player2_id)
 
     card1 = deck1.cards[0] if deck1 and len(deck1.cards) > 0 else None
     card2 = deck2.cards[0] if deck2 and len(deck2.cards) > 0 else None
@@ -2278,15 +2282,15 @@ def clash(state: GameState, player1_id: int, player2_id: int,
 
     # CR 8.5.45b: no deck card = lose
     if card1 is None and card2 is not None:
-        winner = player2_id
+        winner = event.player2_id
     elif card2 is None and card1 is not None:
-        winner = player1_id
+        winner = event.player1_id
     elif card1 is None and card2 is None:
         winner = None
     elif power1 > power2:
-        winner = player1_id
+        winner = event.player1_id
     elif power2 > power1:
-        winner = player2_id
+        winner = event.player2_id
     else:
         # CR 8.5.45c: tie — no winner
         winner = None
@@ -2334,7 +2338,7 @@ def amp(state: GameState, amount: int, player_id: int,
     if event.canceled:
         return event
 
-    player = state.players[player_id]
+    player = state.players[event.player_id]
     player.class_counters["amp"] = player.class_counters.get("amp", 0) + event.amount
 
     state.event_manager.emit(create_emit_event(event), state)
@@ -2375,14 +2379,14 @@ def exchange(state: GameState, card_a: Card, card_b: Card,
         return event
 
     # Record original locations
-    zone_a_name = card_a.zone
-    owner_a = card_a.owner
-    controller_a = coo(card_a)
-    public_a = card_a.is_public
-    zone_b_name = card_b.zone
-    owner_b = card_b.owner
-    controller_b = coo(card_b)
-    public_b = card_b.is_public
+    zone_a_name = event.card_a.zone
+    owner_a = event.card_a.owner
+    controller_a = coo(event.card_a)
+    public_a = event.card_a.is_public
+    zone_b_name = event.card_b.zone
+    owner_b = event.card_b.owner
+    controller_b = coo(event.card_b)
+    public_b = event.card_b.is_public
 
     # Remove both from their zones
     zone_a = state.get_zone(zone_a_name, controller_a)
@@ -2392,16 +2396,16 @@ def exchange(state: GameState, card_a: Card, card_b: Card,
         event.canceled = True
         return event
 
-    zone_a.remove(card_a)
-    zone_b.remove(card_b)
+    zone_a.remove(event.card_a)
+    zone_b.remove(event.card_b)
 
     # CR 8.5.49: swap zone, visibility, AND control
-    card_a.controller = controller_b
-    card_b.controller = controller_a
+    event.card_a.controller = controller_b
+    event.card_b.controller = controller_a
 
     # Swap: put card_a in card_b's zone and vice versa
-    zone_b.add(card_a, public_b)
-    zone_a.add(card_b, public_a)
+    zone_b.add(event.card_a, public_b)
+    zone_a.add(event.card_b, public_a)
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2438,7 +2442,7 @@ def mark(state: GameState, target_player_id: int,
     if event.canceled:
         return event
 
-    state.players[target_player_id].class_counters["marked"] = 1
+    state.players[event.target_player_id].class_counters["marked"] = 1
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2480,7 +2484,7 @@ def tap(state: GameState, card: Card,
     if event.canceled:
         return event
 
-    card.tapped = True
+    event.card.tapped = True
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2522,7 +2526,7 @@ def untap(state: GameState, card: Card,
     if event.canceled:
         return event
 
-    card.tapped = False
+    event.card.tapped = False
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2559,7 +2563,7 @@ def cheer(state: GameState, target_player_id: int,
     if event.canceled:
         return event
 
-    state.players[target_player_id].class_counters["cheered_this_turn"] = 1
+    state.players[event.target_player_id].class_counters["cheered_this_turn"] = 1
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2592,7 +2596,7 @@ def boo(state: GameState, target_player_id: int,
     if event.canceled:
         return event
 
-    state.players[target_player_id].class_counters["booed_this_turn"] = 1
+    state.players[event.target_player_id].class_counters["booed_this_turn"] = 1
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -2995,7 +2999,7 @@ def contract(state: GameState, player_id: int, condition: str, reward: str,
         return event
 
     # Record contract as a class_counter flag; card effect side handles progress
-    player.class_counters[f"contract_{source_card_slug}"] = 1
+    player.class_counters[f"contract_{event.source_card_slug}"] = 1
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -3279,7 +3283,7 @@ def retrieve(state: GameState, card: Card, player_id: int,
         return event
 
     # Determine equipment zone from card subtypes
-    subtypes = getattr(card, 'raw_subtypes', []) or getattr(card, 'subtypes', [])
+    subtypes = getattr(event.card, 'raw_subtypes', []) or getattr(event.card, 'subtypes', [])
     zone_map = {
         "Head": "head", "Chest": "chest", "Arms": "arms", "Legs": "legs",
         "1H": "weapon", "2H": "weapon", "Off-Hand": "weapon",
@@ -3295,18 +3299,18 @@ def retrieve(state: GameState, card: Card, player_id: int,
         return event
 
     # Remove from source zone
-    src_zone = state.get_zone(card.zone, event.player_id)
+    src_zone = state.get_zone(event.card.zone, event.player_id)
     if src_zone is not None:
-        src_zone.remove(card)
+        src_zone.remove(event.card)
 
     from engine.state import ZoneEntryResult
     with effect_context():
-        result = equip_zone.add(card)
+        result = equip_zone.add(event.card)
 
     if result == ZoneEntryResult.FAIL:
         # Can't equip — restore and fail
         if src_zone is not None:
-            src_zone.add(card)
+            src_zone.add(event.card)
         event.canceled = True
         return event
 
