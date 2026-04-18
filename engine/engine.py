@@ -402,6 +402,7 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
         base_attack_power=attack_card.base_power or 0,
         from_weapon=attack_card.is_weapon,
         attack_card=attack_card,
+        attack_source=entry.attack_source if entry else None,
         keywords=list(attack_card.keywords),
     )
 

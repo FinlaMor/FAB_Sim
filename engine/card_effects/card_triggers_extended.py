@@ -35,6 +35,7 @@ from engine.card_effects.card_keywords import (
     fusion, _pitch_for_cost,
 )
 from engine.card_effects.registry import TURN_ATTACK_EFFECTS
+from engine.effect_keywords import gets, gets_property, turn, GetsKind, EventType
 
 # ============================================================
 # Register additional TURN_ATTACK_EFFECTS sizes
@@ -279,6 +280,154 @@ def _factory_on_play_mark():
         target_id = 3 - _controller_id(card)
         effect_mark(state, target_id)
     return effect
+
+
+def _fabricate_on_play(card, event, state):
+    """Fabricate: choose 2 modes, resolving in printed order."""
+    cid = _controller_id(card)
+    player = state.players[cid]
+
+    mode_labels = [
+        "equip_proto_from_inventory",
+        "evo_permanents_get_+1d",
+        "put_this_under_evo_permanent",
+        "banish_evo_from_hand_draw_1",
+    ]
+    selected = _ask_player(
+        state,
+        cid,
+        mode_labels,
+        context="Fabricate: choose 2 modes",
+    )
+    if not isinstance(selected, list):
+        selected = [selected] if selected in mode_labels else []
+    selected = [m for m in selected if m in mode_labels]
+    # CR 1.7.5b: cannot choose same mode more than once unless specified.
+    selected = list(dict.fromkeys(selected))[:2]
+    if not selected:
+        selected = mode_labels[:2]
+
+    # Mode 1: Equip a base equipment with Proto in its name from inventory.
+    if "equip_proto_from_inventory" in selected:
+        proto_cards = [
+            c for c in player.inventory.cards
+            if ("Equipment" in (c.types or []))
+            and ("proto" in (c.slug or "").lower() or "proto" in ((c.raw_name or c.name or "").lower()))
+        ]
+        if proto_cards:
+            equip = proto_cards[0]
+            destination = None
+            for slot in ("head", "chest", "arms", "legs"):
+                z = player.zone_by_name(slot)
+                if z is not None and not z.cards:
+                    destination = z
+                    break
+            if destination is not None:
+                player.inventory.remove(equip)
+                destination.add(equip)
+
+    # Mode 2: Evo permanents you control get +1{d} this turn.
+    if "evo_permanents_get_+1d" in selected:
+        for perm in list(player.permanents.cards):
+            if "evo" in (perm.slug or "").lower() or "evo" in ((perm.raw_name or perm.name or "").lower()):
+                gets(
+                    state,
+                    prop="defense",
+                    kind=GetsKind.ADD,
+                    amount=1,
+                    source_card=card,
+                    target_card=perm,
+                    until_condition=EventType.EOT,
+                )
+
+    # Mode 3: Put this under an Evo permanent you control.
+    if "put_this_under_evo_permanent" in selected:
+        evo_perms = [
+            p for p in player.permanents.cards
+            if "evo" in (p.slug or "").lower() or "evo" in ((p.raw_name or p.name or "").lower())
+        ]
+        if evo_perms:
+            host = evo_perms[0]
+            if card not in host.cards_underneath:
+                host.cards_underneath.append(card)
+                card.is_sub_card = True
+                card.zone = host.zone
+
+    # Mode 4: You may banish an Evo from hand. If you do, draw a card.
+    if "banish_evo_from_hand_draw_1" in selected:
+        evo_hand = [
+            c for c in player.hand.cards
+            if "evo" in (c.slug or "").lower() or "evo" in ((c.raw_name or c.name or "").lower())
+        ]
+        if evo_hand:
+            banished = evo_hand[0]
+            effect_banish(state, banished, face_up=True, banisher_id=cid)
+            effect_draw(state, cid, 1)
+
+
+def _fearless_confrontation_on_play(card, event, state):
+    """Target attack gets -1 power and loses dominate this turn."""
+    if state.combat is None:
+        return
+    attack = state.combat.attack_card
+    if attack is None:
+        return
+    gets(
+        state,
+        prop="power",
+        kind=GetsKind.SUBTRACT,
+        amount=1,
+        source_card=card,
+        target_card=attack,
+        until_condition=EventType.EOT,
+    )
+    gets_property(
+        state,
+        prop="keywords",
+        value="Dominate",
+        source_card=card,
+        target_card=attack,
+        remove=True,
+        until_condition=EventType.EOT,
+    )
+
+
+def _figment_of_judgment_enters_arena(card, event, state):
+    """Turn a card in any banished zone face-down."""
+    cid = _controller_id(card)
+    candidates = []
+    for player in state.players.values():
+        candidates.extend([c for c in player.banished.cards if c.is_public])
+    if not candidates:
+        return
+    choice = _ask_player(
+        state,
+        cid,
+        [c.slug for c in candidates],
+        context="Figment of Judgment: choose a banished card to turn face-down",
+    )
+    chosen = next((c for c in candidates if c.slug == choice), candidates[0])
+    turn(state, chosen, face_up=False, source_player_id=cid)
+
+
+def _figment_of_rebirth_enters_arena(card, event, state):
+    """Put a yellow action card from graveyard on top of deck."""
+    cid = _controller_id(card)
+    player = state.players[cid]
+    yellow_actions = [
+        c for c in player.graveyard.cards
+        if ("Action" in (c.types or [])) and int(getattr(c, "pitch", 0) or 0) == 2
+    ]
+    if not yellow_actions:
+        return
+    choice = _ask_player(
+        state,
+        cid,
+        [c.slug for c in yellow_actions],
+        context="Figment of Rebirth: choose a yellow action card in your graveyard",
+    )
+    target = next((c for c in yellow_actions if c.slug == choice), yellow_actions[0])
+    effect_put_top_deck(state, target, cid)
 
 
 def _factory_on_play_action_point():
@@ -1561,9 +1710,9 @@ _register("eye_of_ophidia", [
 ])
 
 # -- fabricate_red --
-# Choose 2 modes. Simplified: noop.
+# Choose 2 modes.
 _register("fabricate", [
-    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="on_play", effect_fn=_fabricate_on_play),
 ])
 
 # -- fast_and_furious_red --
@@ -1573,9 +1722,9 @@ _register("fast_and_furious", [
 ])
 
 # -- fearless_confrontation_blue --
-# Instant discard: target attack -1p, loses dominate. Simplified: noop.
+# Instant discard: target attack -1p, loses dominate.
 _register("fearless_confrontation", [
-    TriggerDef(event_type="on_play", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="on_play", effect_fn=_fearless_confrontation_on_play),
 ])
 
 # -- felling_of_the_crown_red --
@@ -1598,9 +1747,9 @@ _register("figment_of_erudition", [
 ])
 
 # -- figment_of_judgment_yellow --
-# When enters arena, turn a card in banish face-down. Simplified: noop.
+# When enters arena, turn a card in banish face-down.
 _register("figment_of_judgment", [
-    TriggerDef(event_type="enters_arena", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="enters_arena", effect_fn=_figment_of_judgment_enters_arena),
 ])
 
 # -- figment_of_protection_yellow --
@@ -1618,9 +1767,9 @@ _register("figment_of_ravages", [
 ])
 
 # -- figment_of_rebirth_yellow --
-# When enters arena, put yellow action from GY on top of deck. Simplified: noop.
+# When enters arena, put yellow action from GY on top of deck.
 _register("figment_of_rebirth", [
-    TriggerDef(event_type="enters_arena", effect_fn=lambda c, e, s: None),
+    TriggerDef(event_type="enters_arena", effect_fn=_figment_of_rebirth_enters_arena),
 ])
 
 # -- figment_of_triumph_yellow --

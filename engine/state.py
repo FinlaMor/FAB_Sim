@@ -979,6 +979,8 @@ class StackEntry:
     declared_modes: list[str] = field(default_factory=list)  # e.g., ['first_mode', 'second_mode']
     declared_targets: list[str] = field(default_factory=list)  # card slugs or 'hero'
     declared_x: Optional[int] = None  # X-cost declaration
+    # Attack metadata (CR 1.4.3 / 1.4.4): for proxy/layer attacks, preserve source object.
+    attack_source: Optional[Card] = None
     
     # Triggered metadata (CR 5.4.6)
     is_triggered: bool = False  # Legacy compatibility
@@ -1020,6 +1022,7 @@ class StackEntry:
             'declared_modes': self.declared_modes.copy() if self.declared_modes else [],
             'declared_targets': self.declared_targets.copy() if self.declared_targets else [],
             'declared_x': self.declared_x,
+            'attack_source': self.attack_source.to_dict() if self.attack_source else None,
             'is_triggered': self.is_triggered,
             'trigger_event': self.trigger_event,
             'effect_fn': self.effect_fn if self.effect_fn else None,

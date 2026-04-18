@@ -96,7 +96,12 @@ from engine.state import (
 from tests.conftest import _make_card, _make_player, _make_state, _mock_agent
 from engine.engine import _pitch_for_cost, evaluate_play_cost, _apply_play_card, _calculate_resource_cost
 from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
-
+from engine.card_effects.card_triggers_extended import (
+    _fabricate_on_play,
+    _fearless_confrontation_on_play,
+    _figment_of_judgment_enters_arena,
+    _figment_of_rebirth_enters_arena,
+)
 # ---------------------------------------------------------------------------
 # Shared helpers
 # ---------------------------------------------------------------------------
@@ -164,6 +169,115 @@ def _add_chain_link(state: GameState, slug: str, attacker_id: int = 1) -> None:
         from_weapon=False,
     )
     state.chain_links.append(link)
+
+
+def _event_with_card(event_type: str, card: Card, player_id: int = 1) -> Event:
+    return Event(type=event_type, card=card.slug, data={"card": card, "player_id": player_id})
+
+
+class TestCardTriggerImplementations:
+    """Focused tests for newly implemented non-trivial trigger abilities."""
+
+    def test_figment_of_rebirth_puts_yellow_action_from_graveyard_on_top(self):
+        state = _make_state()
+        controller = state.players[1]
+
+        figment = _make_card("figment_of_rebirth_yellow", types=["Illusionist", "Ally"])
+        figment.owner = 1
+        figment.controller = 1
+        controller.permanents.add(figment)
+
+        yellow_action = _make_card("yellow_action", types=["Action"])
+        yellow_action.pitch = 2
+        yellow_action.base_pitch = 2
+        yellow_action.owner = 1
+        yellow_action.controller = 1
+        controller.graveyard.add(yellow_action)
+
+        state.player_agents[1] = _scripted_agent("yellow_action")
+        _figment_of_rebirth_enters_arena(figment, _event_with_card("enters_arena", figment), state)
+
+        assert controller.deck.cards[0] is yellow_action
+        assert yellow_action not in controller.graveyard.cards
+
+    def test_figment_of_judgment_turns_chosen_banished_card_face_down(self):
+        state = _make_state()
+        p1 = state.players[1]
+        p2 = state.players[2]
+
+        figment = _make_card("figment_of_judgment_yellow", types=["Illusionist", "Ally"])
+        figment.owner = 1
+        figment.controller = 1
+        p1.permanents.add(figment)
+
+        target = _make_card("banished_target", types=["Action"])
+        target.owner = 2
+        target.controller = 2
+        target.face_down = False
+        target.is_public = True
+        p2.banished.add(target)
+
+        state.player_agents[1] = _scripted_agent("banished_target")
+        _figment_of_judgment_enters_arena(figment, _event_with_card("enters_arena", figment), state)
+
+        assert target.face_down is True
+        assert target.is_public is False
+
+    def test_fearless_confrontation_reduces_attack_and_removes_dominate(self):
+        state = _make_state()
+        attack = _make_card("attacking_card", types=["Action", "Attack"], base_power=6)
+        attack.owner = 2
+        attack.controller = 2
+
+        state.combat = CombatState(
+            attacker_id=2,
+            link_id=1,
+            attack_power=6,
+            base_attack_power=6,
+            attack_card=attack,
+            keywords=["Dominate"],
+        )
+
+        fearless = _make_card("fearless_confrontation_blue", types=["Instant"])
+        fearless.owner = 1
+        fearless.controller = 1
+        _fearless_confrontation_on_play(fearless, _event_with_card("on_play", fearless), state)
+
+        assert state.combat.attack_power == 5
+        assert "Dominate" not in state.combat.keywords
+
+    def test_fabricate_evo_modes_apply_expected_effects(self):
+        state = _make_state()
+        player = state.players[1]
+
+        fabricate = _make_card("fabricate_red", types=["Action"])
+        fabricate.owner = 1
+        fabricate.controller = 1
+
+        evo_perm = _make_card("existing_evo", types=["Item"])
+        evo_perm.raw_name = "Existing Evo"
+        evo_perm.owner = 1
+        evo_perm.controller = 1
+        player.permanents.add(evo_perm)
+
+        evo_hand = _make_card("evo_in_hand", types=["Action"])
+        evo_hand.raw_name = "Evo in Hand"
+        evo_hand.owner = 1
+        evo_hand.controller = 1
+        player.hand.add(evo_hand)
+
+        expected_draw = _make_card("drawn_from_deck", types=["Action"])
+        expected_draw.owner = 1
+        expected_draw.controller = 1
+        player.deck.add(expected_draw)
+
+        state.player_agents[1] = _scripted_agent(
+            ["evo_permanents_get_+1d", "banish_evo_from_hand_draw_1"],
+        )
+        _fabricate_on_play(fabricate, _event_with_card("on_play", fabricate), state)
+
+        assert evo_hand in player.banished.cards
+        assert expected_draw in player.hand.cards
 
 
 # ===========================================================================

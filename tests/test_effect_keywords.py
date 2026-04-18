@@ -2415,6 +2415,18 @@ def test_shuffle_replacement_can_cancel():
     assert event.canceled
 
 
+def test_shuffle_invalidates_pitch_history():
+    """CR 8.5.20: shuffling makes previous pitch-order information unknown."""
+    state = _make_state()
+    _fill_deck_slugs(state, 1, ["card_a", "card_b"])
+    state.record_pitch(1, ["blue_pitch"])
+    assert state.pitch_history[1]
+
+    shuffle(state, target_player_id=1)
+
+    assert state.pitch_history[1] == {}
+
+
 # ---------------------------------------------------------------------------
 # CR 8.5.21 — name
 # ---------------------------------------------------------------------------

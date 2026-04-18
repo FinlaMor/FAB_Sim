@@ -380,6 +380,7 @@ def _apply_activate(state: GameState, action: Action) -> None:
             declared_modes=declared_modes,
             declared_targets=declared_targets,
             declared_x=declared_x,
+            attack_source=action.attack_source if action.attack_source is not None else card,
         )
         state.stack_entries.append(entry)
         return

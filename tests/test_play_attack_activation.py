@@ -127,6 +127,19 @@ def test_weapon_attack_stack_entry_is_attack_true():
     assert state.stack_entries[0].is_attack is True
 
 
+def test_weapon_attack_preserves_attack_source_on_stack_entry():
+    """Weapon attack StackEntry should carry action.attack_source metadata."""
+    state = _make_state()
+    weapon = _make_weapon()
+    state.players[1].weapon1.add(weapon)
+    state.players[1].action_points = 1
+
+    apply_action(state, _weapon_attack_action(weapon))
+
+    entry = state.stack_entries[0]
+    assert entry.attack_source is weapon
+
+
 def test_weapon_attack_exhausts_weapon():
     """_pay_costs must set player.weapon_exhausted=True as part of cost."""
     state = _make_state()
@@ -214,6 +227,20 @@ def test_ally_attack_stack_entry_is_attack_true():
     apply_action(state, _ally_attack_action(ally, choose_index=0))
 
     assert state.stack_entries[0].is_attack is True
+
+
+def test_ally_attack_preserves_attack_source_on_stack_entry():
+    """Ally attack StackEntry should carry action.attack_source metadata."""
+    state = _make_state()
+    ally = _make_ally()
+    state.players[1].allies.add(ally)
+    state.players[1].allies_exhausted.append(False)
+    state.players[1].action_points = 1
+
+    apply_action(state, _ally_attack_action(ally, choose_index=0))
+
+    entry = state.stack_entries[0]
+    assert entry.attack_source is ally
 
 
 def test_ally_attack_marks_correct_index_exhausted():

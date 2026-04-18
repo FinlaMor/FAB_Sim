@@ -1456,6 +1456,10 @@ def shuffle(state: GameState,
     # shuffle in place (CR 8.5.20a: even empty zones are "shuffled")
     _rng = rng if rng is not None else random
     _rng.shuffle(zone.cards)
+    # CR 8.5.20 and CR 4.4.3c interaction: deck shuffles invalidate remembered
+    # pitch ordering because future draw order is no longer known.
+    if event.zone_name == "deck":
+        state.invalidate_pitch_history(event.target_player_id)
 
     state.event_manager.emit(create_emit_event(event), state)
 
