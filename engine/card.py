@@ -136,8 +136,11 @@ class Card:
 
     # Characteristics that are calculated or parsed from the 'raw' fields
     category: Optional[str] = None
-    raw_playable: bool = False # Immutable. True if card isinherently playable from hand/arsenal without continuous effects.
+    raw_playable: bool = False # Immutable. True if card is inherently playable from hand/arsenal without continuous effects.
     raw_activatable: bool = False # Immutable. True if card inherently has activated abilities without continuous effects.
+    # Back-compat aliases used by play/effects logic.
+    base_playable: bool = False
+    base_activatable: bool = False
     activation_cost: Optional[int] = None  
     abilities_and_effects: list[str] = field(default_factory=list)  # From slug_index
     effects: list[tuple] = field(default_factory=list)
@@ -177,6 +180,8 @@ class Card:
     # Activated abilities (CR 5.2)
     has_activated_ability: bool = False
     has_once_per_turn_limit: bool = False
+    has_twice_per_turn_limit: bool = False
+    has_thrice_per_turn_limit: bool = False
     has_action_activation: bool = False
     has_instant_activation: bool = False
     has_attack_reaction_activation: bool = False
@@ -608,12 +613,15 @@ class CardDB:
         card.base_types       = list(card.raw_types or [])
         card.base_subtypes    = list(card.raw_subtypes or [])
         card.base_keywords    = list(card.raw_card_keywords or [])
+        # Back-compat alias used by parts of the effect system.
+        card.base_card_keywords = list(card.raw_card_keywords or [])
         card.base_classes     = list(card.raw_classes or [])
         card.base_functional_text = card.raw_functional_text
         card.base_type_text   = card.raw_type_text
 
         # Parse activation cost from abilities (e.g., "Once per Turn Action - {r}{r}" -> cost=2)
-        abilities_list = getattr(card, 'raw_functional_text', '').split(r"\n\n")
+        functional_text = getattr(card, "raw_functional_text", "") or ""
+        abilities_list = functional_text.split(r"\n\n")
         if abilities_list != '':
             import re
             for ability in abilities_list:

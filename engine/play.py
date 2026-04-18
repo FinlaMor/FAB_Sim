@@ -208,11 +208,12 @@ def recalculate_activatable(state, player_id):
     player = state.players[player_id]
     mgr = state.continuous_effect_manager
 
-    for card in player.arena.cards:
+    arena_cards = player.arena_cards
+    for card in arena_cards:
         card.activatable = card.base_activatable
 
     for card in player.all_cards:
-        if card not in player.arena.cards:
+        if card not in arena_cards:
             card.activatable = False
         mgr.recalculate(state, card, 'activatable', card.activatable)
     state.event_manager.emit('recalculate_activatable', state)

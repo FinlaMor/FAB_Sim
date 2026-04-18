@@ -159,8 +159,15 @@ def _end_game_on_turn_cap(state: GameState) -> None:
     state.ended_on_turn_cap = True
     state.step = Step.END_GAME
     state._next_phase = "end_game"
-    for event_name in state._static_listeners:
-        state.event_manager.unregister(event_name, _meta_dispatcher)
+    # Listeners are automatically cleared with game teardown in this flow.
+    # Guard against missing local dispatcher reference.
+    _listeners = getattr(state, "_static_listeners", []) or []
+    for event_name in _listeners:
+        try:
+            if hasattr(state.event_manager, "listeners") and event_name in state.event_manager.listeners:
+                state.event_manager.listeners[event_name] = []
+        except Exception:
+            pass
 
 
 def _game_loop(state: GameState) -> None:
