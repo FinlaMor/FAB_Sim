@@ -9,37 +9,38 @@ Two parallel tracks. Work both simultaneously — engine gaps block card impleme
 ## Track 1 — Engine Rules Completeness
 Goal: any legal FAB play is correctly modelled, regardless of which cards are in play.
 
-### CR 8.5 Effect Keywords (`effect_keywords.py`)
-- [ ] Audit all primitives against current CR 8.5 — confirm each matches the rules text
-	- [ ] need to confirm that event.x variables are used after replacement effects
-	- [ ] make sure 'target', 'card', and 'type' are always defined in Event objects (if applicable)
-		- [ ] should be str type for the type and target for the create_emit_event() helper
-		- [ ] change event in emit to a create_emit_event()
-		- [ ] check function tests as you go
-		- [ ] status: working on `deal_damage`
+### CR 8.5 Effect Keywords (`effect_keywords.py`) ✅ Complete
+- [x] Audit all primitives against current CR 8.5 — confirm each matches the rules text
+	- [x] All emit calls updated to use `create_emit_event()` helper
+	- [x] Every Event object has `type: str` — no bare dict emits remain
+	- [x] `EVENTTYPES` set expanded with all event strings for variable consistency
+	- [x] `ContinuousEffectManager` references removed; `effect_manager` is the sole authority
+	- [x] Rules fixes applied: `clash` (CR 8.5.10 both players look), `amp` (damage type tag), `retrieve` (equip from discard not hand)
+	- [x] All 262 tests in `test_effect_keywords.py` pass
 - [ ] shuffle needs to update player pitch histories. they wouldn't know the order anymore
 - [ ] `gets` / `gets_property` — verify continuous effect duration and cleanup
 - [ ] `search` — confirm full zone search pattern (deck shuffle after)
 - [ ] `opt` — confirm N look / choose any to top or bottom
 
-### Legal Actions Update (`play.py` then `action.py` )
-- [ ] implement effect keywords into action checks
-	- [ ] `attack` keyword should lead to combat steps. (might need to be implemented in `engine.py`)
-### Continuous Effects (`continuous_effects.py` / `effects.py`)
-- [ ] Clarify which `ContinuousEffect` class is authoritative (two exist)
-	- [ ] Remove ContinuousEffectManager
-- [ ] Replacement effects (CR 6.4) — are they wired into the damage pipeline?
+### Attack Activation Refactor (`play.py` / `actions.py` / `engine.py`) ✅ Complete
+- [x] `ATTACK_WEAPON` and `ATTACK_ALLY` action types removed from `ActionType` enum (subsumed)
+- [x] `legal_actions()` now emits `ActionType.ACTIVATE_CARD` with `is_attack_proxy=True` for both weapon and ally attacks (CR 1.6.2b, CR 11.0)
+- [x] `_apply_activate()` in `play.py`: if `is_attack_proxy`, creates `layer_type='activated'` StackEntry and returns — engine resolves via existing `_combat_phase_iter` / `_attack_step` logic
+- [x] `_pay_costs()` is the single authoritative cost site: AP, resources (with pitching), weapon exhaustion, ally exhaustion — no cost logic in `_apply_activate` or `_apply_play_card`
+- [x] `_pay_costs` returns `True` (critical fix — `None` return caused early exit before `_apply_activate` was called)
+- [x] `_ally_attack_resource_cost()` added to `play.py`; `_get_base_resource_cost()` routes weapon → `_weapon_cost()`, ally → `_ally_attack_resource_cost()`
+- [x] ~300 lines of dead commented-out code removed from `engine.py` tail
+- [x] 15 new tests in `tests/test_play_attack_activation.py`; all 277 tests pass
+- [x] Committed (`68f3280`) and pushed to `origin/effect-redesign-with-hooks`
 
-### Engine Updates (`engine.py`)
-- [ ] implement effect keyword changes
-- [ ] implement legal action changes (might be the attack changes referenced above)
-- [ ] implement effectmanager changes
-	- [ ] verify no ContinuousEffectManager references
+### Continuous Effects (`continuous_effects.py` / `effects.py`)
+- [x] `ContinuousEffectManager` removed from `effect_keywords.py` (done in effect_keywords audit above)
+- [x] Clarify which `ContinuousEffect` class is authoritative (two exist in codebase)
+- [x] Replacement effects (CR 6.4) — are they wired into the damage pipeline?
 
 ### Other Engine Gaps
 - [ ] Pitch ordering at end of turn — player chooses top-to-bottom order (CR 4.4.3)
 - [ ] Landmark rules (CR 3.x) — verify add/remove/trigger coverage
-- [ ] Ally attacks — `ATTACK_ALLY` exists, verify legality conditions
 - [ ] Stack resolution — does the engine handle multiple stack entries correctly?
 
 ---
