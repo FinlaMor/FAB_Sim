@@ -1,4 +1,9 @@
-from rl_agents.human_agent import HumanAgent
+try:
+    from rl_agents.human_agent import HumanAgent
+except AttributeError:
+    # HumanAgent may reference legacy ActionType members not present in
+    # the current engine enum. Keep package importable for non-human agents.
+    HumanAgent = None
 from rl_agents.random_agent import RandomAgent, UserInputAgent
 
 # IQL imports are deferred because iql.py -> dataset_adapter.py -> data_collection.replay_db
