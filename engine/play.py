@@ -4,6 +4,7 @@ Program for
 2. Applying actions to a Gamestate object
 """
 
+import re
 from typing import Optional
 
 from engine.actions import Action, ActionType
@@ -292,8 +293,7 @@ def apply_action(state: GameState, action: Action) -> None:
     """Apply a player action to the game state."""
     # Sequential pitch: ask model which cards to pitch before dispatching
     _no_pitch_types = (ActionType.PASS, ActionType.DEFEND_CARDS,
-                       ActionType.STORE_ARSENAL, ActionType.ATTACK_ALLY,
-                       ActionType.CHOOSE)
+                       ActionType.STORE_ARSENAL, ActionType.CHOOSE)
     if action.type not in _no_pitch_types:
         # CR 5.1.5: Verify legality BEFORE any cost payment (declare → check → pay).
         if not _legality_check(state, action.card, action.player_id):
@@ -324,18 +324,8 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # Resource cost already deducted by evaluate_play_cost in apply_action.
     player.hand.remove(card)
 
-    # Meld-side-aware action point deduction.
-    # 'top' / 'both' are explicit action-speed plays → spend 1 AP.
-    # 'bottom' is instant-speed → no AP.
-    # None = regular card or meld card played at instant-speed → use Instant-type check.
-    if _meld_side in ('top', 'both'):
-        player.action_points -= 1
-    elif "Instant" not in (card.types or []):
-        player.action_points -= 1
-    elif not action.played_as_instant:
-        player.action_points -= 1
-
     # Tag the card so on_play triggers know which side is resolving
+    # (AP deduction is handled in _pay_costs — not here)
     card.meld_side = _meld_side
 
     # CR 3.0.1 / CR 5.3.4c: card enters stack zone (Zone.add keeps card.zone in sync)
@@ -363,30 +353,43 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'meld_side': _meld_side, 'target': action.target}), state)
 
 def _apply_activate(state: GameState, action: Action) -> None:
-    """Activate an equipment/item/weapon/ally/hero/card ability: pay cost, exhaust, apply effect."""
-    from engine.card_effects.registry import EQUIPMENT_ACTIVATION_EFFECTS
+    """Activate an equipment/item/weapon/ally/hero/card ability: pay cost, exhaust, apply effect.
+
+    All costs (AP, resources, exhaustion) are paid by _pay_costs() before this function is called.
+    This function handles only effects: once-per-turn tracking, additional cost side-effects, and
+    dispatching to the effect registry.
+
+    Attack activations (is_attack_proxy=True) create an activated-layer StackEntry so the engine's
+    stack resolution loop (_combat_phase_iter → _attack_step) can handle combat.
+    """
+    from engine.card_effects.registry import EQUIPMENT_ACTIVATION_EFFECTS, EQUIPMENT_PAY_COSTS
+    if action.player_id is None or action.card is None:
+        return
     player = state.players[action.player_id]
     card = action.card
 
-    # Use EQUIPMENT_ACTIVATION_COST override when available (handles tokens/items with resource
-    # cost embedded in functional text and a cost field that doesn't reflect activation cost).
-    activation_cost = card.activation_cost or 0
-    player.resources -= activation_cost
+    # CR 1.6.2b / CR 11.0: weapon and ally attacks go onto the chain as activated-layer entries.
+    # All costs already paid by _pay_costs(). Just create the StackEntry.
+    if getattr(action, 'is_attack_proxy', False):
+        declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
+        entry = StackEntry(
+            player_id=action.player_id,
+            card=card,
+            layer_type='activated',
+            layer_position=len(state.stack_entries) + 1,
+            declared_modes=declared_modes,
+            declared_targets=declared_targets,
+            declared_x=declared_x,
+        )
+        state.stack_entries.append(entry)
+        return
 
-    # CR 4.4.3d / 8.x: Mark exhausted for "once per turn" abilities.
-    # {t} (tap symbol as activation cost) → tapped=True, not exhausted.
-    # Tapped permanents untap at end of turn (4.4.3d), so effects can re-enable
-    # them mid-turn. exhausted=True is a harder "once per turn" gate.
+    # CR 4.4.3d: Mark exhausted for "once per turn" abilities.
     if card.has_once_per_turn_limit:
         card.activations -= 1
         assert card.activations >= 0
 
-    # Use action point if it's an Action-speed ability (not Instant)
-    if re.search(r'\*\*(?:\w+ per turn )?Action\*\*', text) and not (action.played_as_instant or 0):
-        player.action_points -= 1
-
-    # Pay additional costs (destroy, tap, etc. — everything before the colon)
-    from engine.card_effects.registry import EQUIPMENT_PAY_COSTS
+    # Pay additional costs (destroy, tap, etc. — everything before the colon in card text)
     pay_cost_fn = EQUIPMENT_PAY_COSTS.get(card.slug)
     if callable(pay_cost_fn):
         pay_cost_fn(action, player, state, check=False)
@@ -394,7 +397,7 @@ def _apply_activate(state: GameState, action: Action) -> None:
     # Dispatch to registry callback (effect after the colon)
     effect_fn = EQUIPMENT_ACTIVATION_EFFECTS.get(card.slug)
     if callable(effect_fn):
-        effect_fn(action, player, state,)
+        effect_fn(action, player, state)
 
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""
@@ -480,8 +483,14 @@ def _get_base_resource_cost(state: GameState, action: Action) -> int:
             return card.meld_cost or 0
         else:
             return card.cost or 0
-    elif action.type == ActionType.ACTIVATE_CARD or action.type == ActionType.ATTACK_ALLY:
-        return card.activation_cost or 0
+    elif action.type == ActionType.ACTIVATE_CARD:
+        if getattr(action, 'is_attack_proxy', False) and card is not None:
+            if card.is_weapon:
+                from engine.actions import _weapon_cost
+                return _weapon_cost(card)
+            else:  # ally attack
+                return _ally_attack_resource_cost(card)
+        return (card.activation_cost or 0) if card else 0
 
     return 0
 
@@ -577,6 +586,19 @@ def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
         action.resource_cost = resource_cost
         player.resources = max(0, player.resources - resource_cost)
         return True
+def _ally_attack_resource_cost(ally_card) -> int:
+    """Parse the resource cost of an ally's attack ability from functional text.
+    Falls back to card.cost if set. Returns 0 if no cost found."""
+    if ally_card.cost is not None:
+        return int(ally_card.cost)
+    text = ally_card.functional_text or ""
+    # Match "Action - {r}{r}:" or "Once per Turn Action - {r}:" patterns
+    match = re.search(r'\*\*(?:[\w\s]+ )?[Aa]ction\*\*\s*[-\u2014]\s*((?:\{[rR]\})*)', text)
+    if match and match.group(1):
+        return match.group(1).lower().count('{r}')
+    return 0
+
+
 def _pay_costs(state, player_id, action):
 
     player = state.players[player_id]
@@ -586,13 +608,42 @@ def _pay_costs(state, player_id, action):
     # Deduct final resource cost using the pre-calculated modified value
     action.resource_cost = resource_cost
     player.resources -= resource_cost
-    
+
     life_cost: int = 0
     if hasattr(action, "life_cost") and (action.life_cost or 0) > 0 and player.hero is not None:
         life_cost = action.life_cost
         player.health -= life_cost
-    
+
+    # CR 4.4.3: action-speed plays/activations consume 1 AP
+    _meld_side = getattr(action, 'meld_side', None)
+    if action.type == ActionType.PLAY_CARD:
+        if _meld_side in ('top', 'both'):
+            player.action_points -= 1
+        elif "Instant" not in (action.card.types or []):
+            player.action_points -= 1
+        elif not getattr(action, 'played_as_instant', False):
+            player.action_points -= 1
+    elif action.type == ActionType.ACTIVATE_CARD:
+        if getattr(action, 'is_attack_proxy', False):
+            # Weapon and ally attacks always cost 1 AP (CR 1.6.2b, CR 11.0)
+            player.action_points -= 1
+        else:
+            _text = (action.card.functional_text or '') if action.card else ''
+            if re.search(r'\*\*(?:[\w ]+ per \w+ )?[Aa]ction\*\*', _text) and not getattr(action, 'played_as_instant', False):
+                player.action_points -= 1
+
+    # CR 1.6.2b / CR 11.0: exhaust weapon or ally as part of the attack activation cost
+    if action.type == ActionType.ACTIVATE_CARD and getattr(action, 'is_attack_proxy', False):
+        card = action.card
+        if card is not None and card.is_weapon:
+            player.weapon_exhausted = True
+        else:
+            idx = getattr(action, 'choose_index', None)
+            if idx is not None and idx < len(player.allies_exhausted):
+                player.allies_exhausted[idx] = True
+
     _pay_effect_costs(state, action)
+    return True
 
 def _pay_effect_costs(state: GameState, action: Action) -> bool:
     """CR 5.1.8-5.1.9: Calculate and pay effect-costs before the card enters the stack.

@@ -39,16 +39,81 @@ def coo(card: Card, return_owner: bool=False) -> int|None:
 def create_emit_event(event) -> Event:
     return Event(
         type=event.type,
-        card=event.card.slug if hasattr(event, 'card') and event.card is not None else getattr(event, 'target'),
+        card=event.card.slug if hasattr(event, 'card') and event.card is not None else getattr(event, 'target', None),
         target=event.target if hasattr(event, 'target') and getattr(event, 'target') is not None else None,
         data={k: v for k, v in vars(event).items() if k not in ('type', 'card', 'target')}
     )
 
 class EventType(str, Enum):
+    # Core keywords (CR 8.5 order)
     BANISH = "banish"
-    CREATETOKEN = "create_token"
+    CREATE_TOKEN = "create_token"
+    DAMAGE = "damage"
+    DESTROY = "destroy"
     DISCARD = "discard"
+    DRAW = "draw"
+    TOTAL_DRAW = "total_draw"
+    DECK_EMPTY = "deck_empty"
+    GAIN = "gain"
+    GETS = "gets"
+    GETS_PROPERTY = "gets_property"
+    INTIMIDATE = "intimidate"
+    INTIMIDATE_RETURN = "intimidate_return"
+    LOOK = "look"
+    LOSE = "lose"
+    PUT_COUNTER = "put_counter"
+    REMOVE_COUNTER = "remove_counter"
+    REVEAL = "reveal"
+    PUT_OBJECT = "put_object"
+    ROLL = "roll"
+    SEARCH = "search"
+    SHUFFLE = "shuffle"
+    NAME = "name"
+    OPT = "opt"
+    RELOAD = "reload"
+    TURN = "turn"
+    BECOME_COPY = "become_copy"
+    NEGATE = "negate"
+    REPEAT = "repeat"
+    REROLL = "reroll"
+    CHARGE = "charge"
+    DISTRIBUTE = "distribute"
+    PAY = "pay"
+    ADD_DEFEND = "add_defend"
+    IGNORE = "ignore"
+    FREEZE = "freeze"
+    UNFREEZE = "unfreeze"
+    GAIN_CONTROL = "gain_control"
+    TRANSFORM = "transform"
+    ATTACK = "attack"
+    CONTRACT = "contract"
+    CREATE_CARD = "create_card"
+    EQUIP = "equip"
+    MOVE_COUNTER = "move_counter"
+    AWAKEN = "awaken"
+    PITCH = "pitch"
+    CLASH = "clash"
+    WAGER = "wager"
+    AMP = "amp"
+    TRANSCEND = "transcend"
+    EXCHANGE = "exchange"
+    MARK = "mark"
+    RETRIEVE = "retrieve"
+    RETURN_TO_THE_BROOD = "return_to_the_brood"
+    GIVE = "give"
+    STEAL = "steal"
+    TAP = "tap"
+    UNTAP = "untap"
+    CHEER = "cheer"
+    BOO = "boo"
+    # Secondary events emitted inline
+    HIT = "hit"
+    ALLY_DIED = "ally_died"
+    RETURN_FROM_BANISH = "return_from_banish"
+    # System events (used as until_condition strings)
     EOT = "end_of_turn"
+    START_OF_TURN = "start_of_turn"
+    END_PHASE_BEGINNING = "end_phase_beginning"
 
 @dataclass
 class BanishEvent:
@@ -124,7 +189,7 @@ def _register_return_from_banish(state, card, target_player_id, origin_zone, unt
             return
 
         getattr(player, origin_zone).add(card)
-        s.event_manager.emit(Event(type="return_from_banish", card=card.slug), s)
+        s.event_manager.emit(Event(type=EventType.RETURN_FROM_BANISH, card=card.slug), s)
 
     state.event_manager.register(until_condition, handler)
 
@@ -138,7 +203,7 @@ class CreateTokenEvent:
     card: Card                              # token to be created (required)
     source_player_id: int = None             # who is causing the tokens to be created
     target_player_id: int = None             # who controls the token. Per 8.5.2c
-    type: str = "create_token"
+    type: str = EventType.CREATE_TOKEN
     destination: str = "tokens"              # replacement effects can change this
     number: int = 1                          # number to create; can be modified
     canceled: bool = False
@@ -193,7 +258,7 @@ class DamageEvent:
     """
     target: Card
     target_type: str
-    type: str = "damage"
+    type: str = EventType.DAMAGE
     amount: int = 0
     damage_type: str = DamageType.GENERIC
     source_player_id: int | None = None
@@ -240,6 +305,14 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
     if event.amount == 0 or event.canceled:
         return event
 
+    # CR 8.5.47: consume amp counter for arcane damage (next arcane damage this turn +N)
+    if event.damage_type == DamageType.ARCANE and event.source_player_id is not None:
+        src_player = state.players.get(event.source_player_id)
+        if src_player is not None:
+            amp_bonus = src_player.class_counters.pop('amp', 0)
+            if amp_bonus:
+                event = dataclasses.replace(event, amount=event.amount + amp_bonus)
+
     # reinitialize variables after replacement effects fire
     damage_target = event.target
 
@@ -252,18 +325,18 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
         target_player.life -= event.amount
         state.event_manager.emit(create_emit_event(event), state)
         if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == Step.COMBAT_DAMAGE: # 'Hits' occur during the damage step of combat and only if the damage is physical type
-            state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
+            state.event_manager.emit(Event(type=EventType.HIT, data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
     else:
         # ally damage
         damage_target.life = max(0, (damage_target.life or 0) - event.amount)
         state.event_manager.emit(create_emit_event(event), state)
         if damage_type == DamageType.PHYSICAL and event.amount > 0 and state.step == Step.COMBAT_DAMAGE:
-            state.event_manager.emit(Event(type="hit", data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
+            state.event_manager.emit(Event(type=EventType.HIT, data={"amount": event.amount, "damage_type": event.damage_type, "target": damage_target.slug, 'target_type': target_type}), state)
         if damage_target.life == 0:
             controller = state.players[coo(damage_target)]
             controller.allies.remove(damage_target)
             controller.graveyard.add(damage_target)
-            state.event_manager.emit(Event(type="ally_died", data={"ally": damage_target.slug}), state)
+            state.event_manager.emit(Event(type=EventType.ALLY_DIED, data={"ally": damage_target.slug}), state)
 
     return event
 
@@ -274,7 +347,7 @@ class DestroyEvent:
     target: Card
     destroy_source: Card
     source_player_id: int|None
-    type: str='destroy'
+    type: str = EventType.DESTROY
     canceled: bool=False
 
 def destroy(state: GameState, destroy_target: Card, destroy_source: Card):
@@ -299,6 +372,7 @@ def destroy(state: GameState, destroy_target: Card, destroy_source: Card):
     # execute the destroy
     target_player_id = coo(event.target)
     zone = event.target.zone
+
     destroy_player = state.players[target_player_id]
     destroy_target = event.target
     destroy_source = event.destroy_source
@@ -308,20 +382,14 @@ def destroy(state: GameState, destroy_target: Card, destroy_source: Card):
         zone_obj.remove(destroy_target)
     state.players[destroy_target.owner].graveyard.add(destroy_target)
 
-    state.event_manager.emit(Event(type="destroy", data={
-        "target": destroy_target.slug,
-        "target_type": destroy_target.types,
-        "target_subtypes": destroy_target.subtypes,
-        "source": destroy_source.slug,
-        "source_player": destroy_source.controller if destroy_source.controller else destroy_source.owner,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
 @dataclass
 class DiscardEvent:
-    type: str = "discard"
-    discard_target: Optional[Card] = None
+    type: str = EventType.DISCARD
+    target: Optional[Card] = None
     discard_player: int | None = None
     discard_source: Optional[Card] = None
     discard_source_player: int | None = None
@@ -336,7 +404,7 @@ def discard(state: GameState, discard_target: Card, discard_source: Card | None,
     source_player = coo(discard_source) if discard_source is not None else None
 
     event = DiscardEvent(
-        discard_target=discard_target,
+        target=discard_target,
         discard_source=discard_source,
         discard_source_player=source_player,
         discard_player=discard_player_id,
@@ -358,26 +426,20 @@ def discard(state: GameState, discard_target: Card, discard_source: Card | None,
         return event
 
     # execute the discard
-    assert event.discard_target is not None and event.discard_player is not None
-    target = event.discard_target
+    assert event.target is not None and event.discard_player is not None
+    target = event.target
     player = state.players[event.discard_player]
     source = event.discard_source
 
     getattr(player, event.origin).remove(target)
     getattr(player, event.destination).add(target)
-    state.event_manager.emit(Event(type="discard", data={
-        "target": target.slug,
-        "target_type": target.types,
-        "target_subtypes": target.subtypes,
-        "source": source.slug if source is not None else None,
-        "source_player": coo(source) if source is not None else None,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
 @dataclass
 class DrawEvent:
-    type: str = "draw"
+    type: str = EventType.DRAW
     draw_player: int | None = None
     source: Optional[Card] = None
     source_player: int | None = None
@@ -417,11 +479,11 @@ def draw(state: GameState, draw_player: int, source: Optional[Card] = None,
         card = getattr(player, event.origin).pop_top()
         if card is None:
             # CR 8.5.6b: deck empty — draw fails, emit loss condition signal
-            state.event_manager.emit(Event(type="deck_empty", data={"player_id": event.draw_player}), state)
+            state.event_manager.emit(Event(type=EventType.DECK_EMPTY, data={"player_id": event.draw_player}), state)
             break
         getattr(player, event.destination).add(card)
         drawn += 1
-        state.event_manager.emit(Event(type="draw", data={
+        state.event_manager.emit(Event(type=EventType.DRAW, data={
             "draw_player": draw_player,
             "source": source.slug if source is not None else None,
             "source_player": source_player,
@@ -431,7 +493,7 @@ def draw(state: GameState, draw_player: int, source: Optional[Card] = None,
 
     # CR 8.5.6b: total_draw only fires if at least one card was actually drawn
     if drawn > 0:
-        state.event_manager.emit(Event(type="total_draw", data={
+        state.event_manager.emit(Event(type=EventType.TOTAL_DRAW, data={
             "draw_player": draw_player,
             "source": source.slug if source is not None else None,
             "source_player": source_player,
@@ -456,7 +518,7 @@ class AssetType:
 
 @dataclass
 class GainEvent:
-    type: str = "gain"
+    type: str = EventType.GAIN
     asset_type: str = AssetType.LIFE
     amount: int = 0
     source_player_id: int | None = None
@@ -514,13 +576,7 @@ def gain(state: GameState, asset_type: str, amount: int, source_player_id: int,
     elif event.asset_type == AssetType.CHI:
         state.players[event.target_player_id].chi += event.amount
 
-    state.event_manager.emit(Event(type="gain", data={
-        "asset_type": event.asset_type,
-        "amount": event.amount,
-        "source_player_id": event.source_player_id,
-        "target_player_id": event.target_player_id,
-        "target_card": event.target_card.slug if event.target_card is not None else None,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -547,7 +603,7 @@ _GETS_VALID_PROPS = frozenset({"power", "defense", "cost", "life"})
 
 @dataclass
 class GetsEvent:
-    type: str = "gets"
+    type: str = EventType.GETS
     prop: str = ""                          # "power", "defense", "cost", "life"
     kind: str = GetsKind.ADD               # GetsKind constant
     amount: int = 0
@@ -634,14 +690,7 @@ def gets(state: GameState, prop: str, kind: str, amount: int,
             s.event_manager.unregister(event.until_condition, _remove_handler)
         state.event_manager.register(event.until_condition, _remove_handler)
 
-    state.event_manager.emit(Event(type="gets", data={
-        "prop": event.prop,
-        "kind": event.kind,
-        "amount": event.amount,
-        "source": slug,
-        "target": target_card.slug,
-        "effect_id": eid,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -662,7 +711,7 @@ _PROP_STAGE = {
 @dataclass
 class GetsPropertyEvent:
     """CR 8.5.9 / 8.5.13 — add or remove a non-numerical property on a card."""
-    type: str = "is_property"
+    type: str = EventType.GETS_PROPERTY
     prop: str = ""                          # "keywords", "types", "subtypes"
     value: str = ""                         # the property value to add/remove
     remove: bool = False                    # True = loses (CR 8.5.13), False = gets (CR 8.5.9)
@@ -753,14 +802,7 @@ def gets_property(state: GameState, prop: str, value: str,
             s.event_manager.unregister(event.until_condition, _remove_handler)
         state.event_manager.register(event.until_condition, _remove_handler)
 
-    state.event_manager.emit(Event(type="gets_property", data={
-        "prop": event.prop,
-        "value": event.value,
-        "remove": event.remove,
-        "source": slug,
-        "target": target_card.slug,
-        "effect_id": eid,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -776,7 +818,7 @@ class IntimidateEvent:
     Player is considered intimidated even if hand was empty (CR 8.5.10a).
     Each intimidate instance tracks only its own banished card (CR 8.5.10c).
     """
-    type: str = "intimidate"
+    type: str = EventType.INTIMIDATE
     source_player_id: int | None = None
     target_player_id: int | None = None
     banished_card: Optional[Card] = None   # None if hand was empty (still intimidated)
@@ -817,21 +859,21 @@ def intimidate(state: GameState, source_player_id: int,
     # CR 8.5.10c: register delayed return — each instance tracks its own card
     if banished_card is not None:
         def _return_handler(ev, s: GameState) -> None:
-            s.event_manager.unregister("end_phase_beginning", _return_handler)
+            s.event_manager.unregister(EventType.END_PHASE_BEGINNING, _return_handler)
             p = s.players[event.target_player_id]
             # Only return if still in banished zone (CR 8.5.10c)
             if banished_card in p.banished.cards:
                 p.banished.remove(banished_card)
                 p.hand.add(banished_card)
-                s.event_manager.emit(Event(type="intimidate_return", data={
+                s.event_manager.emit(Event(type=EventType.INTIMIDATE_RETURN, data={
                     "target_player_id": event.target_player_id,
                     "card": banished_card.slug,
                 }), s)
 
-        state.event_manager.register("end_phase_beginning", _return_handler)
+        state.event_manager.register(EventType.END_PHASE_BEGINNING, _return_handler)
 
     # CR 8.5.10a: emit intimidated event regardless of whether a card was banished
-    state.event_manager.emit(Event(type="intimidate", data={
+    state.event_manager.emit(Event(type=EventType.INTIMIDATE, data={
         "source_player_id": event.source_player_id,
         "target_player_id": event.target_player_id,
         #"banished_card": banished_card.slug if banished_card is not None else None, # I'm concerened that including the slug in the banish event will make tht info public
@@ -846,7 +888,7 @@ def intimidate(state: GameState, source_player_id: int,
 
 @dataclass
 class LoseEvent:
-    type: str = "lose"
+    type: str = EventType.LOSE
     asset_type: str = AssetType.LIFE
     amount: int = 0
     source_player_id: int | None = None
@@ -902,13 +944,7 @@ def lose(state: GameState, asset_type: str, amount: int,
     elif event.asset_type == AssetType.CHI and pid is not None:
         state.players[pid].chi = max(0, state.players[pid].chi - event.amount)
 
-    state.event_manager.emit(Event(type="lose", data={
-        "asset_type": event.asset_type,
-        "amount": event.amount,
-        "source_player_id": event.source_player_id,
-        "target_player_id": event.target_player_id,
-        "target_card": event.target_card.slug if event.target_card is not None else None,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -928,7 +964,7 @@ class LookEvent:
     CR 8.5.11b: card does not become public — is_public stays False.
     CR 8.5.11c: if card is already public, look fails.
     """
-    type: str = "look"
+    type: str = EventType.LOOK
     looker_ids: tuple = ()
     target_card: Optional[Card] = None
     source_player_id: int | None = None
@@ -974,11 +1010,7 @@ def look(state: GameState, target_card: Card, looker_ids: tuple | list,
                 target_card.known_by.discard(pid)
         state.event_manager.register(event.until_condition, _remove_handler)
 
-    state.event_manager.emit(Event(type="look", data={
-        "looker_ids": list(event.looker_ids),
-        "target": target_card.slug,
-        "until_condition": event.until_condition,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -989,7 +1021,7 @@ def look(state: GameState, target_card: Card, looker_ids: tuple | list,
 
 @dataclass
 class PutCounterEvent:
-    type: str = "put_counter"
+    type: str = EventType.PUT_COUNTER
     counter_type: str = ""
     amount: int = 1
     target_card: Optional[Card] = None
@@ -1023,12 +1055,7 @@ def put_counter(state: GameState, counter_type: str, target_card: Card,
     card: Card = event.target_card
     card.counters[event.counter_type] = card.counters.get(event.counter_type, 0) + event.amount
 
-    state.event_manager.emit(Event(type="put_counter", data={
-        "counter_type": event.counter_type,
-        "amount": event.amount,
-        "target": card.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1039,7 +1066,7 @@ def put_counter(state: GameState, counter_type: str, target_card: Card,
 
 @dataclass
 class RemoveCounterEvent:
-    type: str = "remove_counter"
+    type: str = EventType.REMOVE_COUNTER
     counter_type: str = ""
     amount: int = 1
     target_card: Optional[Card] = None
@@ -1086,13 +1113,7 @@ def remove_counter(state: GameState, counter_type: str, target_card: Card,
         else:
             card.counters[event.counter_type] = new_count
 
-    state.event_manager.emit(Event(type="remove_counter", data={
-        "counter_type": event.counter_type,
-        "amount": event.amount,
-        "actual_removed": removed,
-        "target": card.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1103,7 +1124,7 @@ def remove_counter(state: GameState, counter_type: str, target_card: Card,
 
 @dataclass
 class RevealEvent:
-    type: str = "reveal"
+    type: str = EventType.REVEAL
     target_cards: tuple = field(default_factory=tuple)   # cards revealed (CR 8.5.17e: may be N)
     source_player_id: int | None = None
     until_condition: str | None = None   # None = discrete; set = continuous
@@ -1148,11 +1169,7 @@ def reveal(state: GameState, target_cards: list | tuple,
     for card in cards:
         card.is_public = True
 
-    state.event_manager.emit(Event(type="reveal", data={
-        "targets": [c.slug for c in cards],
-        "source_player_id": event.source_player_id,
-        "until_condition": event.until_condition,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     if event.until_condition:
         # continuous: restore privacy when condition fires
@@ -1176,7 +1193,7 @@ def reveal(state: GameState, target_cards: list | tuple,
 
 @dataclass
 class PutObjectEvent:
-    type: str = "put_object"
+    type: str = EventType.PUT_OBJECT
     target_card: Optional[Card] = None
     destination_zone: str = ""
     destination_player_id: int | None = None
@@ -1238,12 +1255,7 @@ def put_object(state: GameState, target_card: Card, destination_zone: str,
         event.canceled = True
         return event
 
-    state.event_manager.emit(Event(type="put_object", data={
-        "target": card.slug,
-        "destination_zone": event.destination_zone,
-        "destination_player_id": event.destination_player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1254,7 +1266,7 @@ def put_object(state: GameState, target_card: Card, destination_zone: str,
 
 @dataclass
 class RollEvent:
-    type: str = "roll"
+    type: str = EventType.ROLL
     num_dice: int = 1
     faces: int = 6
     results: tuple = field(default_factory=tuple)   # one int per die (CR 8.5.18a: simultaneous)
@@ -1291,13 +1303,7 @@ def roll(state: GameState, num_dice: int = 1, faces: int = 6,
     event.results = results
     event.total = sum(results)
 
-    state.event_manager.emit(Event(type="roll", data={
-        "num_dice": event.num_dice,
-        "faces": event.faces,
-        "results": list(results),
-        "total": event.total,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1308,7 +1314,7 @@ def roll(state: GameState, num_dice: int = 1, faces: int = 6,
 
 @dataclass
 class SearchEvent:
-    type: str = "search"
+    type: str = EventType.SEARCH
     search_player_id: int | None = None
     source_player_id: int | None = None
     zones: tuple = field(default_factory=tuple)        # zone names searched
@@ -1389,12 +1395,7 @@ def search(state: GameState,
     else:
         event.chosen_card = chosen
 
-    state.event_manager.emit(Event(type="search", data={
-        "search_player_id": event.search_player_id,
-        "zones": list(event.zones),
-        "chosen": chosen.slug if chosen is not None else None,
-        "failed": event.failed,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1405,7 +1406,7 @@ def search(state: GameState,
 
 @dataclass
 class ShuffleEvent:
-    type: str = "shuffle"
+    type: str = EventType.SHUFFLE
     zone_name: str = "deck"
     target_player_id: int | None = None
     cards_added: tuple = field(default_factory=tuple)  # CR 8.5.20b: cards shuffled in
@@ -1456,12 +1457,7 @@ def shuffle(state: GameState,
     _rng = rng if rng is not None else random
     _rng.shuffle(zone.cards)
 
-    state.event_manager.emit(Event(type="shuffle", data={
-        "zone_name": event.zone_name,
-        "target_player_id": event.target_player_id,
-        "cards_added": [c.slug for c in event.cards_added],
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1472,7 +1468,7 @@ def shuffle(state: GameState,
 
 @dataclass
 class NameEvent:
-    type: str = "name"
+    type: str = EventType.NAME
     named_value: str = ""
     source_player_id: int | None = None
     canceled: bool = False
@@ -1496,10 +1492,7 @@ def name(state: GameState, named_value: str,
     if event.canceled:
         return event
 
-    state.event_manager.emit(Event(type="name", data={
-        "named_value": event.named_value,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1510,7 +1503,7 @@ def name(state: GameState, named_value: str,
 
 @dataclass
 class OptEvent:
-    type: str = "opt"
+    type: str = EventType.OPT
     n: int = 1
     top_cards: tuple = field(default_factory=tuple)
     bottom_cards: tuple = field(default_factory=tuple)
@@ -1573,13 +1566,7 @@ def opt(state: GameState, n: int, target_player_id: int,
         bottom_cards=tuple(bottom_cards),
     )
 
-    state.event_manager.emit(Event(type="opt", data={
-        "n": event.n,
-        "target_player_id": event.target_player_id,
-        "source_player_id": event.source_player_id,
-        "top_count": len(top_cards),
-        "bottom_count": len(bottom_cards),
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1590,7 +1577,7 @@ def opt(state: GameState, n: int, target_player_id: int,
 
 @dataclass
 class ReloadEvent:
-    type: str = "reload"
+    type: str = EventType.RELOAD
     card: Optional[Card] = None
     player_id: int | None = None
     chose_to_reload: bool = False
@@ -1637,11 +1624,7 @@ def reload(state: GameState, card: Card, player_id: int,
     card.is_public = False
     arsenal.add(card, is_public=False)
 
-    state.event_manager.emit(Event(type="reload", data={
-        "card": card.slug,
-        "player_id": player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1652,7 +1635,7 @@ def reload(state: GameState, card: Card, player_id: int,
 
 @dataclass
 class TurnEvent:
-    type: str = "turn"
+    type: str = EventType.TURN
     card: Optional[Card] = None
     face_up: bool = True
     source_player_id: int | None = None
@@ -1688,11 +1671,7 @@ def turn(state: GameState, card: Card, face_up: bool,
 
     card.is_public = face_up
 
-    state.event_manager.emit(Event(type="turn", data={
-        "card": card.slug,
-        "face_up": face_up,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1703,7 +1682,7 @@ def turn(state: GameState, card: Card, face_up: bool,
 
 @dataclass
 class NegateEvent:
-    type: str = "negate"
+    type: str = EventType.NEGATE
     layer: object = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -1742,10 +1721,7 @@ def negate(state: GameState, layer, source_player_id: int | None = None) -> Nega
     setattr(layer, 'negated', True)
 
     state.stack.remove(layer)
-    state.event_manager.emit(Event(type="negate", data={
-        "layer": getattr(layer, 'slug', str(layer)),
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1756,7 +1732,7 @@ def negate(state: GameState, layer, source_player_id: int | None = None) -> Nega
 
 @dataclass
 class RepeatEvent:
-    type: str = "repeat"
+    type: str = EventType.REPEAT
     source_player_id: int | None = None
     canceled: bool = False
 
@@ -1791,9 +1767,7 @@ def repeat(state: GameState, process: Callable[[], bool],
         if not result:
             break
 
-    state.event_manager.emit(Event(type="repeat", data={
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1804,7 +1778,7 @@ def repeat(state: GameState, process: Callable[[], bool],
 
 @dataclass
 class RerollEvent:
-    type: str = "reroll"
+    type: str = EventType.REROLL
     original_results: tuple = field(default_factory=tuple)
     new_results: tuple = field(default_factory=tuple)
     faces: int = 6
@@ -1840,12 +1814,7 @@ def reroll(state: GameState, dice_results: list[int], faces: int = 6,
     _rng = rng if rng is not None else random
     event.new_results = tuple(_rng.randint(1, event.faces) for _ in event.original_results)
 
-    state.event_manager.emit(Event(type="reroll", data={
-        "original_results": list(event.original_results),
-        "new_results": list(event.new_results),
-        "faces": faces,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1858,7 +1827,7 @@ def reroll(state: GameState, dice_results: list[int], faces: int = 6,
 class ChargeEvent:
     player_id: int
     card: Card
-    type: str = "charge"
+    type: str = EventType.CHARGE
     source_player_id: int | None = None
     origin: str='hand'
     destination: str='soul'
@@ -1903,11 +1872,7 @@ def charge(state: GameState, card: Card, player_id: int,
         card.top_card = player.hero
         player.hero.cards_underneath.append(card)
 
-    state.event_manager.emit(Event(type="charge", data={
-        "card": card.slug,
-        "player_id": player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1918,7 +1883,7 @@ def charge(state: GameState, card: Card, player_id: int,
 
 @dataclass
 class DistributeEvent:
-    type: str = "distribute"
+    type: str = EventType.DISTRIBUTE
     counter_type: str = ""
     distribution: list = field(default_factory=list)  # list of (Card, int) tuples
     source_player_id: int | None = None
@@ -1951,12 +1916,7 @@ def distribute(state: GameState, counter_type: str, distribution: list,
                         target_card=target_card, amount=amount,
                         source_player_id=source_player_id)
 
-    state.event_manager.emit(Event(type="distribute", data={
-        "counter_type": event.counter_type,
-        "total": sum(amt for _, amt in event.distribution),
-        "targets": len(event.distribution),
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -1967,7 +1927,7 @@ def distribute(state: GameState, counter_type: str, distribution: list,
 
 @dataclass
 class PayEvent:
-    type: str = "pay"
+    type: str = EventType.PAY
     asset_type: str = AssetType.RESOURCES
     amount: int = 0
     player_id: int | None = None
@@ -2011,12 +1971,7 @@ def pay(state: GameState, asset_type: str, amount: int, player_id: int,
     elif event.asset_type == AssetType.ACTION_POINTS:
         player.action_points = max(0, player.action_points - event.amount)
 
-    state.event_manager.emit(Event(type="pay", data={
-        "asset_type": event.asset_type,
-        "amount": event.amount,
-        "player_id": player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2027,7 +1982,7 @@ def pay(state: GameState, asset_type: str, amount: int, player_id: int,
 
 @dataclass
 class FreezeEvent:
-    type: str = "freeze"
+    type: str = EventType.FREEZE
     target_card: Optional[Card] = None
     until_condition: str | None = None
     source_player_id: int | None = None
@@ -2059,22 +2014,18 @@ def freeze(state: GameState, target_card: Card,
     # CR 8.5.34b: if no duration is specified, freeze until start of controller's next turn
     effective_condition = event.until_condition
     if effective_condition is None:
-        effective_condition = "start_of_turn"
+        effective_condition = EventType.START_OF_TURN
         controller_id = coo(target_card)
 
         def _unfreeze_on_turn_start(ev, s: GameState) -> None:
             # Only unfreeze if it's the frozen card's controller's turn
             if s.active_player == controller_id:
-                s.event_manager.unregister("start_of_turn", _unfreeze_on_turn_start)
+                s.event_manager.unregister(EventType.START_OF_TURN, _unfreeze_on_turn_start)
                 target_card.counters["__frozen__"] = max(0, target_card.counters.get("__frozen__", 0) - 1)
 
-        state.event_manager.register("start_of_turn", _unfreeze_on_turn_start)
+        state.event_manager.register(EventType.START_OF_TURN, _unfreeze_on_turn_start)
 
-    state.event_manager.emit(Event(type="freeze", data={
-        "target": target_card.slug,
-        "until_condition": effective_condition,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2085,7 +2036,7 @@ def freeze(state: GameState, target_card: Card,
 
 @dataclass
 class UnfreezeEvent:
-    type: str = "unfreeze"
+    type: str = EventType.UNFREEZE
     target_card: Optional[Card] = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -2116,10 +2067,7 @@ def unfreeze(state: GameState, target_card: Card,
 
     target_card.counters.pop("__frozen__", None)
 
-    state.event_manager.emit(Event(type="unfreeze", data={
-        "target": target_card.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2130,7 +2078,7 @@ def unfreeze(state: GameState, target_card: Card,
 
 @dataclass
 class EquipEvent:
-    type: str = "equip"
+    type: str = EventType.EQUIP
     card: Optional[Card] = None
     zone_name: str = ""
     player_id: int | None = None
@@ -2167,12 +2115,7 @@ def equip(state: GameState, card: Card, zone_name: str, player_id: int,
         event.canceled = True
         return event
 
-    state.event_manager.emit(Event(type="equip", data={
-        "card": card.slug,
-        "zone_name": event.zone_name,
-        "player_id": player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2183,7 +2126,7 @@ def equip(state: GameState, card: Card, zone_name: str, player_id: int,
 
 @dataclass
 class MoveCounterEvent:
-    type: str = "move_counter"
+    type: str = EventType.MOVE_COUNTER
     counter_type: str = ""
     from_card: Optional[Card] = None
     to_card: Optional[Card] = None
@@ -2227,12 +2170,7 @@ def move_counter(state: GameState, counter_type: str, from_card: Card,
                     target_card=to_card, amount=1,
                     source_player_id=source_player_id)
 
-    state.event_manager.emit(Event(type="move_counter", data={
-        "counter_type": event.counter_type,
-        "from": from_card.slug,
-        "to": to_card.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2243,7 +2181,7 @@ def move_counter(state: GameState, counter_type: str, from_card: Card,
 
 @dataclass
 class PitchEvent:
-    type: str = "pitch"
+    type: str = EventType.PITCH
     card: Optional[Card] = None
     player_id: int | None = None
     pitch_value: int = 0
@@ -2281,12 +2219,7 @@ def pitch(state: GameState, card: Card, player_id: int,
         gain(state, asset_type=AssetType.RESOURCES, amount=event.pitch_value,
              source_player_id=source_player_id or player_id, target_player_id=player_id)
 
-    state.event_manager.emit(Event(type="pitch", data={
-        "card": card.slug,
-        "player_id": player_id,
-        "pitch_value": event.pitch_value,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2297,7 +2230,7 @@ def pitch(state: GameState, card: Card, player_id: int,
 
 @dataclass
 class ClashEvent:
-    type: str = "clash"
+    type: str = EventType.CLASH
     player1_id: int | None = None
     player2_id: int | None = None
     card1: Optional[Card] = None
@@ -2332,8 +2265,8 @@ def clash(state: GameState, player1_id: int, player2_id: int,
     deck1 = state.get_zone("deck", player1_id)
     deck2 = state.get_zone("deck", player2_id)
 
-    card1 = deck1.cards[-1] if deck1 and len(deck1.cards) > 0 else None
-    card2 = deck2.cards[-1] if deck2 and len(deck2.cards) > 0 else None
+    card1 = deck1.cards[0] if deck1 and len(deck1.cards) > 0 else None
+    card2 = deck2.cards[0] if deck2 and len(deck2.cards) > 0 else None
 
     # Reveal the cards via reveal() so replacement effects on reveal can fire
     cards_to_reveal = [c for c in (card1, card2) if c is not None]
@@ -2364,16 +2297,7 @@ def clash(state: GameState, player1_id: int, player2_id: int,
         winner_id=winner,
     )
 
-    state.event_manager.emit(Event(type="clash", data={
-        "player1_id": player1_id,
-        "player2_id": player2_id,
-        "card1": card1.slug if card1 else None,
-        "card2": card2.slug if card2 else None,
-        "power1": power1,
-        "power2": power2,
-        "winner_id": winner,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2384,7 +2308,7 @@ def clash(state: GameState, player1_id: int, player2_id: int,
 
 @dataclass
 class AmpEvent:
-    type: str = "amp"
+    type: str = EventType.AMP
     amount: int = 0
     player_id: int | None = None
     source_player_id: int | None = None
@@ -2413,11 +2337,7 @@ def amp(state: GameState, amount: int, player_id: int,
     player = state.players[player_id]
     player.class_counters["amp"] = player.class_counters.get("amp", 0) + event.amount
 
-    state.event_manager.emit(Event(type="amp", data={
-        "amount": event.amount,
-        "player_id": player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2428,7 +2348,7 @@ def amp(state: GameState, amount: int, player_id: int,
 
 @dataclass
 class ExchangeEvent:
-    type: str = "exchange"
+    type: str = EventType.EXCHANGE
     card_a: Optional[Card] = None
     card_b: Optional[Card] = None
     source_player_id: int | None = None
@@ -2483,11 +2403,7 @@ def exchange(state: GameState, card_a: Card, card_b: Card,
     zone_b.add(card_a, public_b)
     zone_a.add(card_b, public_a)
 
-    state.event_manager.emit(Event(type="exchange", data={
-        "card_a": card_a.slug,
-        "card_b": card_b.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2498,7 +2414,7 @@ def exchange(state: GameState, card_a: Card, card_b: Card,
 
 @dataclass
 class MarkEvent:
-    type: str = "mark"
+    type: str = EventType.MARK
     target_player_id: int | None = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -2524,10 +2440,7 @@ def mark(state: GameState, target_player_id: int,
 
     state.players[target_player_id].class_counters["marked"] = 1
 
-    state.event_manager.emit(Event(type="mark", data={
-        "target_player_id": target_player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2538,7 +2451,7 @@ def mark(state: GameState, target_player_id: int,
 
 @dataclass
 class TapEvent:
-    type: str = "tap"
+    type: str = EventType.TAP
     card: Optional[Card] = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -2569,10 +2482,7 @@ def tap(state: GameState, card: Card,
 
     card.tapped = True
 
-    state.event_manager.emit(Event(type="tap", data={
-        "card": card.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2583,7 +2493,7 @@ def tap(state: GameState, card: Card,
 
 @dataclass
 class UntapEvent:
-    type: str = "untap"
+    type: str = EventType.UNTAP
     card: Optional[Card] = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -2614,10 +2524,7 @@ def untap(state: GameState, card: Card,
 
     card.tapped = False
 
-    state.event_manager.emit(Event(type="untap", data={
-        "card": card.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2628,7 +2535,7 @@ def untap(state: GameState, card: Card,
 
 @dataclass
 class CheerEvent:
-    type: str = "cheer"
+    type: str = EventType.CHEER
     target_player_id: int | None = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -2654,17 +2561,14 @@ def cheer(state: GameState, target_player_id: int,
 
     state.players[target_player_id].class_counters["cheered_this_turn"] = 1
 
-    state.event_manager.emit(Event(type="cheer", data={
-        "target_player_id": target_player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
 
 @dataclass
 class BooEvent:
-    type: str = "boo"
+    type: str = EventType.BOO
     target_player_id: int | None = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -2690,10 +2594,7 @@ def boo(state: GameState, target_player_id: int,
 
     state.players[target_player_id].class_counters["booed_this_turn"] = 1
 
-    state.event_manager.emit(Event(type="boo", data={
-        "target_player_id": target_player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2723,7 +2624,7 @@ _COPYABLE_FIELDS: tuple[str, ...] = (
 
 @dataclass
 class BecomeCopyEvent:
-    type: str = "become_copy"
+    type: str = EventType.BECOME_COPY
     subject_card: Optional[Card] = None    # card that becomes the copy
     reference_card: Optional[Card] = None  # card being copied
     source_player_id: int | None = None
@@ -2772,11 +2673,7 @@ def become_copy(state: GameState, subject_card: Card, reference_card: Card,
                 val = _copy.deepcopy(val)
             setattr(subj, field_name, val)
 
-    state.event_manager.emit(Event(type="become_copy", data={
-        "subject": subj.slug,
-        "reference": ref.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2787,7 +2684,7 @@ def become_copy(state: GameState, subject_card: Card, reference_card: Card,
 
 @dataclass
 class IgnoreEvent:
-    type: str = "ignore"
+    type: str = EventType.IGNORE
     source_player_id: int | None = None
     description: str = ""   # human-readable note on what is being ignored
     canceled: bool = False
@@ -2845,11 +2742,7 @@ def ignore(state: GameState, description: str = "",
         )
         state.effect_manager.replacement_effects.append(_rep)
 
-    state.event_manager.emit(Event(type="ignore", data={
-        "description": event.description,
-        "ignored_event_type": ignored_event_type,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2864,7 +2757,7 @@ _EQUIPMENT_ZONES = {"head", "chest", "arms", "legs", "weapon", "weapon1", "weapo
 
 @dataclass
 class GainControlEvent:
-    type: str = "gain_control"
+    type: str = EventType.GAIN_CONTROL
     target_card: Optional[Card] = None
     new_controller_id: int | None = None
     previous_controller_id: int | None = None
@@ -2940,12 +2833,7 @@ def gain_control(state: GameState, target_card: Card, new_controller_id: int,
         event.canceled = True
         return event
 
-    state.event_manager.emit(Event(type="gain_control", data={
-        "target": card.slug,
-        "new_controller_id": event.new_controller_id,
-        "previous_controller_id": event.previous_controller_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -2956,7 +2844,7 @@ def gain_control(state: GameState, target_card: Card, new_controller_id: int,
 
 @dataclass
 class TransformEvent:
-    type: str = "transform"
+    type: str = EventType.TRANSFORM
     objects: list = field(default_factory=list)   # card(s) transforming
     permanent: Optional[Card] = None              # the permanent they transform into
     source_player_id: int | None = None
@@ -3022,11 +2910,7 @@ def transform(state: GameState, objects: list[Card], permanent: Card,
             event.canceled = True
             return event
 
-    state.event_manager.emit(Event(type="transform", data={
-        "objects": [o.slug for o in event.objects],
-        "permanent": perm.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3037,7 +2921,7 @@ def transform(state: GameState, objects: list[Card], permanent: Card,
 
 @dataclass
 class AttackEvent:
-    type: str = "attack"
+    type: str = EventType.ATTACK
     attacking_card: Optional[Card] = None
     target_id: int | None = None   # player or permanent being attacked
     source_player_id: int | None = None
@@ -3065,11 +2949,7 @@ def attack(state: GameState, attacking_card: Card, target_id: int,
     if event.canceled:
         return event
 
-    state.event_manager.emit(Event(type="attack", data={
-        "attacking_card": attacking_card.slug,
-        "target_id": event.target_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3080,7 +2960,7 @@ def attack(state: GameState, attacking_card: Card, target_id: int,
 
 @dataclass
 class ContractEvent:
-    type: str = "contract"
+    type: str = EventType.CONTRACT
     player_id: int | None = None
     condition: str = ""    # human-readable contract condition text
     reward: str = ""       # human-readable reward text
@@ -3117,12 +2997,7 @@ def contract(state: GameState, player_id: int, condition: str, reward: str,
     # Record contract as a class_counter flag; card effect side handles progress
     player.class_counters[f"contract_{source_card_slug}"] = 1
 
-    state.event_manager.emit(Event(type="contract", data={
-        "player_id": event.player_id,
-        "condition": event.condition,
-        "reward": event.reward,
-        "source_card_slug": event.source_card_slug,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3133,7 +3008,7 @@ def contract(state: GameState, player_id: int, condition: str, reward: str,
 
 @dataclass
 class CreateCardEvent:
-    type: str = "create_card"
+    type: str = EventType.CREATE_CARD
     slug: str = ""
     pitch: int | None = None          # optional pitch specifier
     dest_zone: str = "hand"           # zone the created card enters
@@ -3187,12 +3062,7 @@ def create_card(state: GameState, slug: str, dest_player_id: int,
         with effect_context():
             zone.add(new_card)
 
-    state.event_manager.emit(Event(type="create_card", data={
-        "slug": event.slug,
-        "dest_zone": event.dest_zone,
-        "dest_player_id": event.dest_player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3203,7 +3073,7 @@ def create_card(state: GameState, slug: str, dest_player_id: int,
 
 @dataclass
 class AwakenEvent:
-    type: str = "awaken"
+    type: str = EventType.AWAKEN
     target_card: Optional[Card] = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -3244,10 +3114,7 @@ def awaken(state: GameState, target_card: Card,
 
     card.counters['__back_face_active__'] = 1
 
-    state.event_manager.emit(Event(type="awaken", data={
-        "target": card.slug,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3258,7 +3125,7 @@ def awaken(state: GameState, target_card: Card,
 
 @dataclass
 class WagerEvent:
-    type: str = "wager"
+    type: str = EventType.WAGER
     attack_card: Optional[Card] = None
     prize: str = ""            # token keyword or description of prize
     controller_id: int | None = None
@@ -3303,12 +3170,7 @@ def wager(state: GameState, attack_card: Card, prize: str,
     card.wager_data['controller_id'] = event.controller_id
     card.wager_data['opponent_id'] = event.opponent_id
 
-    state.event_manager.emit(Event(type="wager", data={
-        "attack_card": card.slug,
-        "prize": event.prize,
-        "controller_id": event.controller_id,
-        "opponent_id": event.opponent_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3319,7 +3181,7 @@ def wager(state: GameState, attack_card: Card, prize: str,
 
 @dataclass
 class TranscendEvent:
-    type: str = "transcend"
+    type: str = EventType.TRANSCEND
     source_card: Optional[Card] = None
     player_id: int | None = None
     canceled: bool = False
@@ -3362,10 +3224,7 @@ def transcend(state: GameState, source_card: Card,
     # Activate back-face AFTER zone entry so counters aren't cleared
     card.counters['__back_face_active__'] = 1
 
-    state.event_manager.emit(Event(type="transcend", data={
-        "source_card": card.slug,
-        "player_id": event.player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3376,22 +3235,26 @@ def transcend(state: GameState, source_card: Card,
 
 @dataclass
 class RetrieveEvent:
-    type: str = "retrieve"
+    type: str = EventType.RETRIEVE
     card: Optional[Card] = None
     player_id: int | None = None
+    chose_to_pay: bool = True
     cost_paid: bool = False
     canceled: bool = False
 
 
-def retrieve(state: GameState, card: Card, player_id: int) -> RetrieveEvent:
+def retrieve(state: GameState, card: Card, player_id: int,
+             chose_to_pay: bool = True) -> RetrieveEvent:
     """CR 8.5.51 — pay {r} to equip a card from discard/banished.
 
     CR 8.5.51a: card must exist and be equippable; if not, effect fails.
+    CR 8.5.51a: optional — player may decline (chose_to_pay=False), no equip occurs.
     The 1r cost is deducted from the player's resources.
     """
     event = RetrieveEvent(
         card=card,
         player_id=player_id,
+        chose_to_pay=chose_to_pay,
     )
 
     event_dict = vars(event).copy()
@@ -3399,6 +3262,10 @@ def retrieve(state: GameState, card: Card, player_id: int) -> RetrieveEvent:
     event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
 
     if event.canceled:
+        return event
+
+    if not event.chose_to_pay:
+        # Player declined; effect succeeds but no equip occurs (CR 8.5.51a: "may pay")
         return event
 
     player = state.players.get(event.player_id)
@@ -3446,11 +3313,7 @@ def retrieve(state: GameState, card: Card, player_id: int) -> RetrieveEvent:
     player.resources -= 1
     event.cost_paid = True
 
-    state.event_manager.emit(Event(type="retrieve", data={
-        "card": card.slug,
-        "player_id": event.player_id,
-        "equip_zone": equip_zone_name,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3461,7 +3324,7 @@ def retrieve(state: GameState, card: Card, player_id: int) -> RetrieveEvent:
 
 @dataclass
 class ReturnToTheBroodEvent:
-    type: str = "return_to_the_brood"
+    type: str = EventType.RETURN_TO_THE_BROOD
     player_id: int | None = None
     source_player_id: int | None = None
     canceled: bool = False
@@ -3499,10 +3362,7 @@ def return_to_the_brood(state: GameState, player_id: int,
                     and getattr(e, 'target_player_id', None) == event.player_id)
         ]
 
-    state.event_manager.emit(Event(type="return_to_the_brood", data={
-        "player_id": event.player_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3513,7 +3373,7 @@ def return_to_the_brood(state: GameState, player_id: int,
 
 @dataclass
 class GiveEvent:
-    type: str = "give"
+    type: str = EventType.GIVE
     target_card: Optional[Card] = None
     new_controller_id: int | None = None
     previous_controller_id: int | None = None
@@ -3550,12 +3410,7 @@ def give(state: GameState, target_card: Card, new_controller_id: int,
         event.canceled = True
         return event
 
-    state.event_manager.emit(Event(type="give", data={
-        "target": target_card.slug,
-        "new_controller_id": event.new_controller_id,
-        "previous_controller_id": event.previous_controller_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3566,7 +3421,7 @@ def give(state: GameState, target_card: Card, new_controller_id: int,
 
 @dataclass
 class StealEvent:
-    type: str = "steal"
+    type: str = EventType.STEAL
     target_card: Optional[Card] = None
     new_controller_id: int | None = None
     previous_controller_id: int | None = None
@@ -3603,12 +3458,7 @@ def steal(state: GameState, target_card: Card, new_controller_id: int,
         event.canceled = True
         return event
 
-    state.event_manager.emit(Event(type="steal", data={
-        "target": target_card.slug,
-        "new_controller_id": event.new_controller_id,
-        "previous_controller_id": event.previous_controller_id,
-        "source_player_id": event.source_player_id,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event
 
@@ -3619,7 +3469,7 @@ def steal(state: GameState, target_card: Card, new_controller_id: int,
 
 @dataclass
 class AddDefendEvent:
-    type: str = "add_defend"
+    type: str = EventType.ADD_DEFEND
     card: Optional[Card] = None
     chain_link: int | None = None       # which chain link (None = current)
     source_player_id: int | None = None
@@ -3682,11 +3532,6 @@ def add_defend(state: GameState, card: Card,
     if c.is_equipment:
         combat.defending_equipment_defense += defense_val
 
-    state.event_manager.emit(Event(type="add_defend", data={
-        "card": c.slug,
-        "chain_link": event.chain_link,
-        "source_player_id": event.source_player_id,
-        "defense_value": defense_val,
-    }), state)
+    state.event_manager.emit(create_emit_event(event), state)
 
     return event

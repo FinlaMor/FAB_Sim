@@ -591,7 +591,7 @@ def test_discard_emits_trigger():
     discard(state, card, discard_source=None)
 
     assert len(fired) == 1
-    assert fired[0].data["target"] == card.slug
+    assert fired[0].target == card
 
 
 def test_discard_empty_hand_returns_cancelled():
@@ -661,24 +661,21 @@ def test_discard_cancellation():
     assert card not in state.players[1].graveyard.cards
 
 
-def test_discard_from_arsenal():
-    """origin='arsenal' discards from arsenal instead of hand."""
+def test_discard_token_ceases_to_exist():
+    """CR 3.0.12a — a discarded token ceases to exist rather than entering the graveyard."""
     state = _make_state()
-    card = _make_card("test_card")
-    card.owner = 1
-    card.controller = 1
-    state.players[1].arsenal.add(card)
-    # Put a card in hand so the empty-hand guard doesn't fire
-    filler = _make_card("filler")
-    filler.owner = 1
-    filler.controller = 1
-    state.players[1].hand.add(filler)
+    token = _make_card("test_token", types=["Token"])
+    token.owner = 1
+    token.controller = 1
+    # Tokens can't enter hand via Zone.add (not deck cards), so place directly
+    state.players[1].hand.cards.append(token)
+    token.zone = "hand"
 
-    event = discard(state, card, discard_source=None, origin="arsenal")
+    event = discard(state, token, discard_source=None)
 
     assert not event.canceled
-    assert card not in state.players[1].arsenal.cards
-    assert card in state.players[1].graveyard.cards
+    assert token not in state.players[1].hand.cards
+    assert token not in state.players[1].graveyard.cards
 
 
 # ---------------------------------------------------------------------------
@@ -724,7 +721,7 @@ def test_destroy_emits_trigger():
     destroy(state, card, destroy_source=source)
 
     assert len(fired) == 1
-    assert fired[0].data["target"] == card.slug
+    assert fired[0].target == card
 
 
 def test_destroy_returns_event():
@@ -763,6 +760,71 @@ def test_destroy_cancellation():
     assert event.canceled
     assert card in state.players[1].permanents.cards
     assert card not in state.players[1].graveyard.cards
+
+
+def test_destroy_token_ceases_to_exist():
+    """CR 3.0.12a — a destroyed token ceases to exist rather than entering the graveyard."""
+    state = _make_state()
+    token = _make_card("test_token", types=["Token"])
+    token.owner = 1
+    token.controller = 1
+    state.players[1].tokens.add(token)
+    source = _make_card("destroy_source")
+    source.owner = source.controller = 1
+
+    event = destroy(state, token, destroy_source=source)
+
+    assert not event.canceled
+    assert token not in state.players[1].permanents.cards
+    assert token not in state.players[1].graveyard.cards
+
+
+def test_destroy_sends_card_to_owners_graveyard():
+    """CR 8.5.4 — a destroyed card goes to its *owner's* graveyard, not the controller's."""
+    state = _make_state()
+    # card owned by player 2 but controlled by player 1
+    card = _make_card("stolen_card", types=["Action"])
+    card.raw_subtypes = ["Aura"]
+    card.owner = 2
+    card.controller = 1
+    state.players[1].permanents.add(card)
+    source = _make_card("destroy_source")
+    source.owner = source.controller = 1
+
+    destroy(state, card, destroy_source=source)
+
+    assert card not in state.players[1].permanents.cards
+    assert card not in state.players[1].graveyard.cards
+    assert card in state.players[2].graveyard.cards
+
+
+def test_destroy_replacement_can_redirect_target():
+    """A replacement effect can swap the destroy target for a different card."""
+    from engine.effects import ReplacementEffect, ReplacementType
+    state = _make_state()
+    card_a = _card_in_permanents(state, 1, slug="card_a")
+    card_b = _card_in_permanents(state, 1, slug="card_b")
+    source = _make_card("destroy_source")
+    source.owner = source.controller = 1
+    repl_source = _make_card("repl_source")
+
+    # redirect: whenever card_a would be destroyed, destroy card_b instead
+    state.effect_manager.replacement_effects.append(
+        ReplacementEffect(
+            source_card=repl_source,
+            replacement_type=ReplacementType.STANDARD,
+            condition_fn=lambda e, s: (e.get("type") == "destroy"
+                                       and getattr(e.get("target"), "slug", None) == "card_a"),
+            replace_fn=lambda e, s: {**e, "target": card_b},
+        )
+    )
+
+    event = destroy(state, card_a, destroy_source=source)
+
+    assert not event.canceled
+    assert card_a in state.players[1].permanents.cards   # untouched
+    assert card_b not in state.players[1].permanents.cards  # destroyed instead
+    assert card_b in state.players[1].graveyard.cards
 
 
 # ---------------------------------------------------------------------------
@@ -2251,7 +2313,7 @@ def test_search_emits_event():
            selector=lambda eligible, can_fail: eligible[0])
 
     assert len(received) == 1
-    assert received[0].data["chosen"] == "card_a"
+    assert received[0].data["chosen_card"].slug == "card_a"
 
 
 def test_search_no_eligible_after_filter_fails():
@@ -2711,7 +2773,7 @@ def test_charge_emits_event():
     state.event_manager.register("charge", lambda ev, s: received.append(ev))
     charge(state, card=card, player_id=1)
     assert len(received) == 1
-    assert received[0].data["card"] == "soul_card"
+    assert received[0].card == "soul_card"
 
 
 # ---------------------------------------------------------------------------
@@ -2742,7 +2804,7 @@ def test_distribute_emits_event():
     state.event_manager.register("distribute", lambda ev, s: received.append(ev))
     distribute(state, counter_type="damage", distribution=[(c1, 1)])
     assert len(received) == 1
-    assert received[0].data["total"] == 1
+    assert sum(amt for _, amt in received[0].data["distribution"]) == 1
 
 
 # ---------------------------------------------------------------------------
@@ -3416,8 +3478,8 @@ def test_become_copy_emits_event():
     become_copy(state, subject, reference, source_player_id=1)
 
     assert len(received) == 1
-    assert received[0].data["subject"] == "subject_card"
-    assert received[0].data["reference"] == "reference_card"
+    assert received[0].data["subject_card"].slug == "subject_card"
+    assert received[0].data["reference_card"].slug == "reference_card"
 
 
 # ---------------------------------------------------------------------------
@@ -3567,7 +3629,7 @@ def test_transform_emits_event():
     transform(state, [obj], perm, source_player_id=1)
 
     assert len(received) == 1
-    assert "obj_card" in received[0].data["objects"]
+    assert any(o.slug == "obj_card" for o in received[0].data["objects"])
 
 
 # ---------------------------------------------------------------------------
@@ -4059,7 +4121,7 @@ def test_add_defend_emits_event():
     add_defend(state, card)
 
     assert len(received) == 1
-    assert received[0].data["card"] == "block_card"
+    assert received[0].card == "block_card"
 
 
 # ---------------------------------------------------------------------------
@@ -4179,3 +4241,92 @@ def test_lose_chi_subtracts_from_chi_pool():
     lose(state, asset_type=AssetType.CHI, amount=2, target_player_id=1)
 
     assert state.players[1].chi == 3
+
+
+# ---------------------------------------------------------------------------
+# Rules accuracy regression guards (for fixes applied in this audit)
+# ---------------------------------------------------------------------------
+
+def test_amp_applied_to_arcane_damage():
+    """CR 8.5.47: amp bonus is consumed and added to the next arcane damage event."""
+    from engine.effect_keywords import amp
+    state = _make_state()
+    target_hero = state.players[2].hero
+    amp(state, amount=3, player_id=1)
+    initial_life = state.players[2].life
+
+    deal_damage(state, amount=2, damage_type=DamageType.ARCANE,
+                source_player_id=1, damage_target=target_hero,
+                damage_source="test_spell")
+
+    assert state.players[2].life == initial_life - 5  # 2 base + 3 amp
+
+
+def test_amp_consumed_after_arcane_damage():
+    """CR 8.5.47: amp counter is cleared after the first arcane damage (next-time rule)."""
+    from engine.effect_keywords import amp
+    state = _make_state()
+    target_hero = state.players[2].hero
+    amp(state, amount=3, player_id=1)
+
+    deal_damage(state, amount=1, damage_type=DamageType.ARCANE,
+                source_player_id=1, damage_target=target_hero,
+                damage_source="test_spell")
+
+    assert state.players[1].class_counters.get('amp', 0) == 0
+
+
+def test_amp_not_applied_to_physical_damage():
+    """CR 8.5.47: amp only affects arcane damage, not physical."""
+    from engine.effect_keywords import amp
+    state = _make_state()
+    target_hero = state.players[2].hero
+    amp(state, amount=3, player_id=1)
+    initial_life = state.players[2].life
+
+    deal_damage(state, amount=2, damage_type=DamageType.PHYSICAL,
+                source_player_id=1, damage_target=target_hero,
+                damage_source="test_attack")
+
+    assert state.players[2].life == initial_life - 2   # no amp bonus
+    assert state.players[1].class_counters.get('amp', 0) == 3  # counter unchanged
+
+
+def test_clash_reads_top_card_index_zero():
+    """CR 8.5.45: clash reveals top card (deck.cards[0]), not the bottom (deck.cards[-1])."""
+    from engine.effect_keywords import clash
+    state = _make_state()
+
+    top = _make_card("top_card"); top.owner = 1; top.power = 10
+    bottom = _make_card("bot_card"); bottom.owner = 1; bottom.power = 1
+    state.players[1].deck.cards.clear()
+    state.players[1].deck.cards.insert(0, top)      # index 0 = top
+    state.players[1].deck.cards.append(bottom)       # index 1 = below top
+
+    filler = _make_card("filler"); filler.owner = 2; filler.power = 5
+    state.players[2].deck.cards.clear()
+    state.players[2].deck.cards.append(filler)
+
+    event = clash(state, player1_id=1, player2_id=2)
+
+    # Top card (power=10) should win, not bottom card (power=1)
+    assert event.power1 == 10
+    assert event.winner_id == 1
+
+
+def test_retrieve_decline_does_not_equip():
+    """CR 8.5.51a: chose_to_pay=False — no equip, no cost, event not canceled."""
+    from engine.effect_keywords import retrieve
+    state = _make_state()
+    card = _make_card("test_dagger")
+    card.raw_subtypes = ["1H"]
+    card.owner = 1
+    state.players[1].graveyard.add(card)
+    state.players[1].resources = 5
+
+    event = retrieve(state, card, player_id=1, chose_to_pay=False)
+
+    assert not event.canceled
+    assert not event.cost_paid
+    assert card in state.players[1].graveyard.cards   # still in graveyard
+    assert state.players[1].resources == 5            # no cost deducted

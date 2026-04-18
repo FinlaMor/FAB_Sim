@@ -29,7 +29,7 @@ class ActionType(Enum):
     ACTIVATE_CARD = "activate_card"
     # ACTIVATE_ITEM = "activate_item"
     # ACTIVATE_ALLY = "activate_ally"
-    ATTACK_ALLY = "attack_ally"
+    # ATTACK_ALLY = "attack_ally"   # subsumed by ACTIVATE_CARD with is_attack_proxy=True
     # ACTIVATE_EQUIPMENT = "activate_equipment"
     # ACTIVATE_WEAPON = "activate_weapon"
     # ACTIVATE_HERO = "activate_hero"
@@ -477,7 +477,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 if can_pay_cost(player.hand.cards, weapon_cost_val, player.resources):
                     # Default target: opponent's hero (target=None)
                     actions.append(Action(
-                        type=ActionType.ATTACK_WEAPON,
+                        type=ActionType.ACTIVATE_CARD,
                         card=weapon_card,
                         attack_source=weapon_card,
                         is_attack_proxy=True,
@@ -486,7 +486,7 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                     defender_id = 3 - pp
                     for _target in _attackable_permanents(state, defender_id):
                         actions.append(Action(
-                            type=ActionType.ATTACK_WEAPON,
+                            type=ActionType.ACTIVATE_CARD,
                             card=weapon_card,
                             attack_source=weapon_card,
                             is_attack_proxy=True,
@@ -730,32 +730,29 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                 if not _has_attack_activation and _granted_key not in player.current_turn_effects:
                     continue
                 # Check resource affordability (cost may be in card.cost or functional text)
-                try:
-                    from engine.engine import _ally_attack_resource_cost
-                    ally_cost = _ally_attack_resource_cost(ally_card)
-                except ImportError:
-                    ally_cost = ally_card.cost or 0
+                from engine.play import _ally_attack_resource_cost
+                ally_cost = _ally_attack_resource_cost(ally_card)
                 if player.resources < ally_cost and not can_pay_cost(
                         player.hand.cards, ally_cost, player.resources):
                     continue
                 # Default target: opponent's hero (target=None)
                 actions.append(Action(
-                    type=ActionType.ATTACK_ALLY,
+                    type=ActionType.ACTIVATE_CARD,
                     choose_index=i,
                     card=ally_card,
                     player_id=pp,
-                    is_attack_proxy=False,
+                    is_attack_proxy=True,
                     attack_source=ally_card,
                 ))
                 # CR 1.4.5a: also offer attacks targeting each attackable permanent
                 defender_id = 3 - pp
                 for _target in _attackable_permanents(state, defender_id):
                     actions.append(Action(
-                        type=ActionType.ATTACK_ALLY,
+                        type=ActionType.ACTIVATE_CARD,
                         choose_index=i,
                         card=ally_card,
                         player_id=pp,
-                        is_attack_proxy=False,
+                        is_attack_proxy=True,
                         attack_source=ally_card,
                         target=_target,
                         targets=[_target.slug],
