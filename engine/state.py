@@ -12,7 +12,6 @@ from enum import Enum
 from typing import Callable, Optional
 from engine.card import Card, CardDB
 from engine.context import is_effect_context
-from engine.continuous_effects import ContinuousEffectManager
 from engine.effects import EffectManager
 
 # ---------------------------------------------------------------------------
@@ -1153,7 +1152,6 @@ class GameState:
     max_turns: int = 200
     card_db: Optional[object] = None  # CardDB instance for effect/trigger access
     event_manager: EventManager = field(default_factory=EventManager)
-    continuous_effect_manager: ContinuousEffectManager = field(default_factory=ContinuousEffectManager)
     effect_manager: EffectManager = field(default_factory=EffectManager) # EffectManager from engine.effects
     priority_player: int = 1
     consecutive_passes: int = 0
@@ -1176,6 +1174,11 @@ class GameState:
         for player in self.players.values():
             for zone in _get_player_zones(player):
                 zone.players = self.players
+
+    @property
+    def continuous_effect_manager(self):
+        """Back-compat: continuous effect staging lives inside effect_manager."""
+        return self.effect_manager.staging
 
     def active(self) -> Player:
         return self.players[self.active_player]

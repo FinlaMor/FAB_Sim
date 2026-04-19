@@ -17,8 +17,9 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 	- [x] `ContinuousEffectManager` references removed; `effect_manager` is the sole authority
 	- [x] Rules fixes applied: `clash` (CR 8.5.10 both players look), `amp` (damage type tag), `retrieve` (equip from discard not hand)
 	- [x] All 262 tests in `test_effect_keywords.py` pass
+- [x] Post-replacement variable audit: 24 bugs fixed across 22 functions — every function now reads `event.x` fields after `dataclasses.replace()`, never pre-replacement params
 - [x] shuffle needs to update player pitch histories. they wouldn't know the order anymore
-- [ ] `gets` / `gets_property` — verify continuous effect duration and cleanup
+- [x] `gets` / `gets_property` — continuous effect cleanup: persistent effects with no `until_condition` now auto-register a one-shot `leaves_arena` listener that calls `remove_by_id` when the target card exits the arena; prevents leaked `ContinuousEffect` entries accumulating across the game
 - [ ] `search` — confirm full zone search pattern (deck shuffle after)
 - [ ] `opt` — confirm N look / choose any to top or bottom
 
@@ -33,10 +34,13 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 - [x] 15 new tests in `tests/test_play_attack_activation.py`; all 277 tests pass
 - [x] Committed (`68f3280`) and pushed to `origin/effect-redesign-with-hooks`
 
-### Continuous Effects (`continuous_effects.py` / `effects.py`)
+### Continuous Effects (`continuous_effects.py` / `effects.py`) ✅ Complete
 - [x] `ContinuousEffectManager` removed from `effect_keywords.py` (done in effect_keywords audit above)
 - [x] Clarify which `ContinuousEffect` class is authoritative (two exist in codebase)
 - [x] Replacement effects (CR 6.4) — are they wired into the damage pipeline?
+- [x] `ContinuousEffectManager` folded into `EffectManager`: `EffectManager.staging` owns the instance; `state.continuous_effect_manager` is now a `@property` returning `state.effect_manager.staging` — all 12+ call sites unchanged
+- [x] `state.py` field removed; top-level `ContinuousEffectManager` import removed from `state.py`
+- [x] 8 new tests in `tests/test_continuous_effects.py` (arena-exit cleanup, staging identity, add/remove round-trip); 270 tests pass
 
 ### Other Engine Gaps
 - [ ] Pitch ordering at end of turn — player chooses top-to-bottom order (CR 4.4.3)

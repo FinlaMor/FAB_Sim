@@ -689,6 +689,15 @@ def gets(state: GameState, prop: str, kind: str, amount: int,
             s.continuous_effect_manager.remove_by_id(eid)
             s.event_manager.unregister(event.until_condition, _remove_handler)
         state.event_manager.register(event.until_condition, _remove_handler)
+    else:
+        # No duration: clean up when the target card leaves the arena (prevents leak)
+        _eid = eid
+        _target = target
+        def _cleanup_on_arena_exit(ev, s: GameState) -> None:
+            if ev.data is not None and ev.data.get('card') is _target:
+                s.continuous_effect_manager.remove_by_id(_eid)
+                s.event_manager.unregister('leaves_arena', _cleanup_on_arena_exit)
+        state.event_manager.register('leaves_arena', _cleanup_on_arena_exit)
 
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -801,6 +810,15 @@ def gets_property(state: GameState, prop: str, value: str,
             s.continuous_effect_manager.remove_by_id(eid)
             s.event_manager.unregister(event.until_condition, _remove_handler)
         state.event_manager.register(event.until_condition, _remove_handler)
+    else:
+        # No duration: clean up when the target card leaves the arena (prevents leak)
+        _eid = eid
+        _target = target
+        def _cleanup_on_arena_exit(ev, s: GameState) -> None:
+            if ev.data is not None and ev.data.get('card') is _target:
+                s.continuous_effect_manager.remove_by_id(_eid)
+                s.event_manager.unregister('leaves_arena', _cleanup_on_arena_exit)
+        state.event_manager.register('leaves_arena', _cleanup_on_arena_exit)
 
     state.event_manager.emit(create_emit_event(event), state)
 

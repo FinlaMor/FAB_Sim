@@ -159,6 +159,8 @@ class EffectManager:
     """
 
     def __init__(self):
+        from engine.continuous_effects import ContinuousEffectManager
+        self.staging: ContinuousEffectManager = ContinuousEffectManager()
         self.continuous_effects: list[ContinuousEffect] = []
         self.replacement_effects: list[ReplacementEffect] = []
         self._timestamp: int = 0
