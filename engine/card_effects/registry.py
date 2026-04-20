@@ -3039,9 +3039,11 @@ HERO_TRIGGERS: dict = {
     "ira": [{"event": "attacking", "condition_fn": lambda p, e, s: True, "effect_fn": _ira_second_attack_trigger}],
     # 3. Bravo, Showstopper — passive component: none (activation only)
     "bravo_showstopper": [],
-    # 4. Kayo, Underhanded Cheat — passive: when booed, create Vigor
-    "kayo_underhanded_cheat": [{"event": "crowd_boos", "condition_fn": lambda p, e, s: True, "effect_fn": _kayo_underhanded_boo_trigger}],
-    "kayo": [{"event": "crowd_boos", "condition_fn": lambda p, e, s: True, "effect_fn": _kayo_underhanded_boo_trigger}],
+    # 4. Kayo, Underhanded Cheat — passive handled by CARD_TRIGGERS["kayo_underhanded_cheat"]
+    # in triggers.py (crowd_boos → Vigor). Do not duplicate here: hero card is in public_cards
+    # so both CARD_TRIGGERS and HERO_TRIGGERS would fire, creating 2 Vigor per boo.
+    "kayo_underhanded_cheat": [],
+    "kayo": [],
     # 5. Dash, I/O — once per turn, play Mech item from top of deck
     "dash_io": [{"event": "start_of_turn", "condition_fn": lambda p, e, s: s.active_player == p.player_id, "effect_fn": _dash_io_start_of_turn_trigger}],
     "dash": [{"event": "start_of_turn", "condition_fn": lambda p, e, s: s.active_player == p.player_id, "effect_fn": _dash_io_start_of_turn_trigger}],
@@ -3093,12 +3095,11 @@ HERO_TRIGGERS: dict = {
     "cindra": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _cindra_hit_marked_trigger}],
     # 3. Puffin, Hightail — passive crank trigger
     "puffin_hightail": [{"event": "cranked", "condition_fn": lambda p, e, s: True, "effect_fn": _puffin_crank_trigger}],
-    # 5. Arakni, Marionette — stealth+mark attack buff + on-hit + end phase Agent of Chaos (Fix 11)
-    "arakni_marionette": [
-        {"event": "attack_declared", "condition_fn": lambda p, e, s: True, "effect_fn": _arakni_marionette_attack_trigger},
-        {"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _arakni_marionette_hit_trigger},
-        {"event": "end_phase", "condition_fn": lambda p, e, s: True, "effect_fn": _arakni_marionette_end_phase_trigger},
-    ],
+    # 5. Arakni, Marionette — handled entirely by CARD_TRIGGERS["arakni_marionette"] in triggers.py.
+    # Events used here ("attack_declared", "end_phase") are never emitted by the engine;
+    # the correct names are "attacking" and "start_of_end_phase". Keeping HERO_TRIGGERS empty
+    # to avoid dead listeners that could fire with wrong event names in future.
+    "arakni_marionette": [],
     # 6. Gravy Bones — blue graveyard tracking (enables watery grave plays)
     "gravy_bones_shipwrecked_looter": [
         {"event": "card_enters_graveyard", "condition_fn": lambda p, e, s: True, "effect_fn": _gravy_graveyard_trigger},
