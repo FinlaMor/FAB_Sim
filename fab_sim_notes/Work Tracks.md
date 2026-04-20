@@ -42,10 +42,10 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 - [x] `state.py` field removed; top-level `ContinuousEffectManager` import removed from `state.py`
 - [x] 8 new tests in `tests/test_continuous_effects.py` (arena-exit cleanup, staging identity, add/remove round-trip); 270 tests pass
 
-### Other Engine Gaps
+### Other Engine Gaps ✅ Complete
 - [x] Pitch ordering at end of turn — player chooses top-to-bottom order (CR 4.4.3)
-- [ ] Landmark rules (CR 3.x) — verify add/remove/trigger coverage
-- [ ] Stack resolution — does the engine handle multiple stack entries correctly?
+- [x] Landmark rules (CR 8.2.9) — `player.landmarks` SubZoneView added; `resolve_stack()` now detects `_is_landmark`, enters card into permanents (sets `permanent_subtype`); CR 8.2.9b clears all other landmark permanents to graveyard on entry; legacy `GameState.landmarks` list stub removed; 7 tests in `test_landmarks.py`
+- [x] Stack resolution — LIFO + attack-entry-at-front + meld two-pass all correct; fixed `_resolve_all_triggers` bug: `order_stack` was called after every resolution, now only fires when new triggers arrive during resolution; 3 tests in `test_stack_resolution.py`
 
 ---
 
