@@ -21,7 +21,7 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 - [x] shuffle needs to update player pitch histories. they wouldn't know the order anymore
 - [x] `gets` / `gets_property` — continuous effect cleanup: persistent effects with no `until_condition` now auto-register a one-shot `leaves_arena` listener that calls `remove_by_id` when the target card exits the arena; prevents leaked `ContinuousEffect` entries accumulating across the game
 - [x] `search` — CR 8.5.19 compliant: post-search deck shuffle added; can_fail now reads post-replacement `event.eligible_cards`
-- [ ] `opt` — confirm N look / choose any to top or bottom
+- [x] `opt` — confirm N look / choose any to top or bottom
 
 ### Attack Activation Refactor (`play.py` / `actions.py` / `engine.py`) ✅ Complete
 - [x] `ATTACK_WEAPON` and `ATTACK_ALLY` action types removed from `ActionType` enum (subsumed)
@@ -43,7 +43,7 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 - [x] 8 new tests in `tests/test_continuous_effects.py` (arena-exit cleanup, staging identity, add/remove round-trip); 270 tests pass
 
 ### Other Engine Gaps
-- [ ] Pitch ordering at end of turn — player chooses top-to-bottom order (CR 4.4.3)
+- [x] Pitch ordering at end of turn — player chooses top-to-bottom order (CR 4.4.3)
 - [ ] Landmark rules (CR 3.x) — verify add/remove/trigger coverage
 - [ ] Stack resolution — does the engine handle multiple stack entries correctly?
 
