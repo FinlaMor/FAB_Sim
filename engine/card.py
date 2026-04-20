@@ -328,31 +328,32 @@ class Card:
 
     @property
     def is_attack(self) -> bool:
-        return "Attack" in (self.base_types or [])
+        return "Attack" in (self.subtypes or [])
 
     @property
     def is_action(self) -> bool:
-        return "Action" in (self.base_types or [])
+        return "Action" in (self.types or [])
 
     @property
     def is_instant(self) -> bool:
-        return "Instant" in (self.base_types or [])
+        return "Instant" in (self.types or [])
 
     @property
     def is_weapon(self) -> bool:
-        return "Weapon" in (self.base_types or [])
+        return "Weapon" in (self.subtypes or [])
 
     @property
     def is_equipment(self) -> bool:
-        return "Equipment" in (self.base_types or [])
+        return "Equipment" in (self.types or [])
 
     @property
     def is_hero(self) -> bool:
-        return "Hero" in (self.base_types or [])
+        types = [t.lower() for t in self.types or []]
+        return "hero" in types or "demihero" in types or "demi-hero" in types
 
     @property
     def is_defense_reaction(self) -> bool:
-        return "Defense Reaction" in (self.base_types or [])
+        return "Defense Reaction" in (self.types or [])
 
     @property
     def has_go_again(self) -> bool:
@@ -372,7 +373,7 @@ class Card:
     
     @property
     def is_living(self) -> bool:
-        return True if hasattr(self, 'base_life') else False
+        return True if hasattr(self, 'life') else False
     
     def get_keyword_value(self, keyword_name: str) -> Optional[int]:
         """Extract numeric value from a keyword (e.g., 'Ward 10' -> 10).
