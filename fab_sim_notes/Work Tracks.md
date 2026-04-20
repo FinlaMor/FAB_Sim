@@ -20,7 +20,7 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 - [x] Post-replacement variable audit: 24 bugs fixed across 22 functions — every function now reads `event.x` fields after `dataclasses.replace()`, never pre-replacement params
 - [x] shuffle needs to update player pitch histories. they wouldn't know the order anymore
 - [x] `gets` / `gets_property` — continuous effect cleanup: persistent effects with no `until_condition` now auto-register a one-shot `leaves_arena` listener that calls `remove_by_id` when the target card exits the arena; prevents leaked `ContinuousEffect` entries accumulating across the game
-- [ ] `search` — confirm full zone search pattern (deck shuffle after)
+- [x] `search` — CR 8.5.19 compliant: post-search deck shuffle added; can_fail now reads post-replacement `event.eligible_cards`
 - [ ] `opt` — confirm N look / choose any to top or bottom
 
 ### Attack Activation Refactor (`play.py` / `actions.py` / `engine.py`) ✅ Complete
