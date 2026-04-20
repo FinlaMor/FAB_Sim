@@ -795,10 +795,13 @@ def _resolve_all_triggers(state: GameState) -> None:
             )
             state.stack_entries.clear()
             return
+        count_before = len(state.stack_entries)
         resolve_stack(state)
         if check_state_based_actions(state):
             return
-        if state.stack_entries:
+        # Only re-order if new triggers arrived during resolution.
+        # After one pop, count_before - 1 entries remain; more means new entries were added.
+        if len(state.stack_entries) > count_before - 1:
             order_stack(state)
 
 def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
@@ -1145,20 +1148,24 @@ def resolve_stack(game_state: GameState) -> None:
     _card_subtypes = card.subtypes or [] if card else []
     _is_ally = (entry.layer_type == 'card' and card is not None
                 and ("Ally" in _card_types or "Ally" in _card_subtypes))
+    # CR 8.2.9a: Landmark cards enter the arena as permanents instead of ceasing to exist.
+    _is_landmark = (entry.layer_type == 'card' and card is not None
+                    and ("Landmark" in _card_types or "Landmark" in _card_subtypes))
 
-    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura and not _is_ally:
+    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura \
+            and not _is_ally and not _is_landmark:
         game_state.stack.remove(card)  # CR 3.0.1: card leaves stack zone on resolution
         game_state.process_cease_to_exist(card)
 
     if entry.effect_fn:
         result = entry.effect_fn(card, game_state)  # call once — not twice
 
-        if environ['debug'] == 'True':
+        if environ.get('debug') == 'True':
             with open(environ['debug_file'], 'a') as f:
                 f.write(f'stack {entry} resolves: {result}\n')
 
-    # Figments, Auras, and Allies enter the arena as permanents instead of ceasing to exist.
-    if _is_figment or _is_aura or _is_ally:
+    # Figments, Auras, Allies, and Landmarks enter the arena as permanents instead of ceasing to exist.
+    if _is_figment or _is_aura or _is_ally or _is_landmark:
         player_id = entry.player_id
         player = game_state.players[player_id]
         # Remove from stack zone tracking (triggered layers add here; card layers may not)
@@ -1174,6 +1181,15 @@ def resolve_stack(game_state: GameState) -> None:
                 card.current_health = card.raw_health
             elif hasattr(card, 'life') and card.life is not None:
                 card.base_health = card.health
+        elif _is_landmark:
+            # Use SubZoneView.add so permanent_subtype="Landmark" is set (needed for filter)
+            player.landmarks.add(card, is_public=True)
+            # CR 8.2.9b: clear all OTHER landmark permanents across all players
+            for pid, p in game_state.players.items():
+                for lm in list(p.landmarks.cards):
+                    if lm is not card:
+                        p.permanents.remove(lm)
+                        p.graveyard.add(lm, is_public=True)
         else:
             if "Ally" in _card_types or "Ally" in _card_subtypes:
                 card.permanent_subtype = "Ally"

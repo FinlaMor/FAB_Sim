@@ -763,6 +763,7 @@ class Player:
         self.auras = SubZoneView(self.permanents, "Aura")
         self.allies = SubZoneView(self.permanents, "Ally")
         self.tokens = SubZoneView(self.permanents, "Token")
+        self.landmarks = SubZoneView(self.permanents, "Landmark")
         self.hero_zone = Zone("hero_zone", player_id)
         self.soul = Zone("soul", player_id) # Not a real zone but useful for the engine.
         self.pitch = Zone("pitch", player_id)  # cards pitched this turn (public; go to deck bottom at end of turn)
@@ -1165,7 +1166,6 @@ class GameState:
     stack_entries: list[StackEntry] = field(default_factory=list)
     # Combat chain zone: holds the active attack card during combat.
     combat_chain: Zone = field(default_factory=lambda: Zone("combat chain"))
-    landmarks: list[tuple[int, str]] = field(default_factory=list)
     last_acted_player: Optional[int] = None
     last_known_cache: dict[int, dict] = field(default_factory=dict)
 

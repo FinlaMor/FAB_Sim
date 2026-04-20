@@ -284,7 +284,7 @@ def temper(card: Card, event: Event, state: GameState) -> None:
     """8.3.10: When combat chain closes, if this defended, put a -1{d} counter on it,
     then destroy it if it has zero {d}."""
     _apply_defense_counter(card, state, 1)
-    if card.defense is not None and card.defense <= 0:
+    if card.defense is not None and max(card.defense, 0) == 0:
         _move_to_graveyard(card, state)
 
 
@@ -311,7 +311,7 @@ def overpower_check(card: Card, state: GameState) -> bool:
     """8.3.22: Can't be defended by more than one action card."""
     if not state.combat:
         return False
-    return sum(1 for c in state.combat.defending_cards if "Action" in c.types) >= 1
+    return sum(1 for c in state.combat.defending_cards if "Action" in c.types or "action" in c.types) >= 1
 
 
 def go_again(card: Card, state: GameState) -> None:
@@ -337,7 +337,7 @@ def phantasm_check(card: Card, event: Event, state: GameState) -> bool:
         return False
     for d in state.combat.defending_cards:
         if (d.is_attack and d.is_action and
-            "Illusionist" not in d.types and
+            "Illusionist" not in [c for c in d.classes or []] and
             d.power is not None and d.power >= 6):
             return True
     return False
@@ -362,8 +362,8 @@ def spectra_destroy(card: Card, event: Event, state: GameState) -> None:
 def blood_debt(card: Card, event: Event, state: GameState) -> None:
     """8.3.11: While in banished zone (public), at beginning of end phase, lose 1 life."""
     if card.zone == "banished" and card.is_public:
-        owner = _get_owner(state, card)
-        owner.life -= 1
+        controller = _get_controller(state, card)
+        controller.life -= 1
 
 
 def suspense_remove_counter(card: Card, event: Event, state: GameState) -> None:
