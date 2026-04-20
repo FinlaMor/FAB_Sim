@@ -1579,6 +1579,73 @@ def _victor_gold_creation_trigger(player, event, state):
     player.current_turn_effects.append("victor_gold_draw_used")
 
 
+def _get_destroyable_golds(player):
+    """Gold tokens in items zone + aurum_aegis equipment (counts as a Gold per card text)."""
+    golds = [c for c in player.items.cards
+             if "gold" in [t.lower() for t in (c.types or [])]
+             and "token" in [t.lower() for t in (c.types or [])]]
+    for zone_attr in ('arms', 'head', 'chest', 'legs'):
+        zone = getattr(player, zone_attr, None)
+        if zone:
+            for c in list(getattr(zone, 'cards', [])):
+                if c.slug == 'aurum_aegis':
+                    golds.append(c)
+    return golds
+
+
+def _victor_clash_fail_passive(player, event, state):
+    """Victor passive 2: first time per turn you'd fail a clash, destroy a Gold to re-clash."""
+    if "victor_clash_retry_used" in player.current_turn_effects:
+        return
+    data = event.data if isinstance(event.data, dict) else {}
+    p1 = data.get('player1_id')
+    p2 = data.get('player2_id')
+    if player.player_id not in (p1, p2):
+        return
+    winner_id = data.get('winner_id')
+    if winner_id == player.player_id:
+        return  # Victor won — passive doesn't apply
+    golds = _get_destroyable_golds(player)
+    if not golds:
+        return
+    from engine.card_effects.card_keywords import _ask_player
+    choice = _ask_player(state, player.player_id, ["use_passive", "pass"],
+                         context="Victor: destroy a Gold to re-clash?")
+    if choice != "use_passive":
+        return
+    player.current_turn_effects.append("victor_clash_retry_used")
+    # Destroy one Gold
+    gold = golds[0]
+    for zone_attr in ('items', 'arms', 'head', 'chest', 'legs'):
+        zone = getattr(player, zone_attr, None)
+        if zone and gold in getattr(zone, 'cards', []):
+            zone.remove(gold)
+            break
+    player.graveyard.add(gold, is_public=True)
+    # Put one revealed card on the bottom of its owner's deck
+    card1 = data.get('card1')
+    card2 = data.get('card2')
+    revealed = [c for c in (card1, card2) if c is not None]
+    if len(revealed) >= 2:
+        bottom_choice = _ask_player(state, player.player_id,
+                                    [c.slug for c in revealed],
+                                    context="Victor: choose a revealed card to put on bottom of deck")
+        bottom_card = next((c for c in revealed if c.slug == bottom_choice), revealed[0])
+    elif revealed:
+        bottom_card = revealed[0]
+    else:
+        bottom_card = None
+    if bottom_card is not None:
+        owner_pid = bottom_card.owner if bottom_card.owner is not None else player.player_id
+        owner_deck = state.get_zone('deck', owner_pid)
+        if owner_deck and bottom_card in owner_deck.cards:
+            owner_deck.cards.remove(bottom_card)
+            owner_deck.cards.append(bottom_card)
+    # Re-clash
+    from engine.effect_keywords import clash as do_clash
+    do_clash(state, p1, p2, source_player_id=player.player_id)
+
+
 def _valda_opponent_draw_trigger(player, event, state):
     from engine.state import Step
     if state.step not in (Step.ACTION, Step.START_PHASE):
@@ -2943,9 +3010,18 @@ HERO_TRIGGERS: dict = {
     "katsu_the_wanderer": [{"event": "hit", "condition_fn": lambda p, e, s: True, "effect_fn": _katsu_on_hit_trigger}],
     "olympia": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _olympia_wager_win_trigger}],
     "olympia_prized_fighter": [{"event": "wager_resolved", "condition_fn": lambda p, e, s: True, "effect_fn": _olympia_wager_win_trigger}],
-    "victor_goldmane": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
-    "victor_goldmane_high_and_mighty": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
-    "victor_goldmane_match_fixer": [{"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger}],
+    "victor_goldmane": [
+        {"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger},
+        {"event": "clash", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_clash_fail_passive},
+    ],
+    "victor_goldmane_high_and_mighty": [
+        {"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger},
+        {"event": "clash", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_clash_fail_passive},
+    ],
+    "victor_goldmane_match_fixer": [
+        {"event": "gold_created", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_gold_creation_trigger},
+        {"event": "clash", "condition_fn": lambda p, e, s: True, "effect_fn": _victor_clash_fail_passive},
+    ],
     "valda_brightaxe": [{"event": "card_draw", "condition_fn": lambda p, e, s: True, "effect_fn": _valda_opponent_draw_trigger}],
     "valda_seismic_impact": [{"event": "card_draw", "condition_fn": lambda p, e, s: True, "effect_fn": _valda_opponent_draw_trigger}],
     "betsy": [{"event": "wagered", "condition_fn": lambda p, e, s: True, "effect_fn": _betsy_wager_trigger}],
