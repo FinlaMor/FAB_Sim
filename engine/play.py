@@ -195,8 +195,7 @@ def recalculate_playable(state, player_id):
     mgr = state.continuous_effect_manager
 
     for card in player.hand.cards + player.arsenal.cards:
-        if card.base_playable:
-            card.playable = True
+        card.playable = True  # base: hand/arsenal cards are playable; legality/cost checks below filter
 
     for card in player.all_cards:
         if card not in player.hand.cards + player.arsenal.cards:
@@ -220,29 +219,28 @@ def recalculate_activatable(state, player_id):
 
 def _action_legal_check(state, card, player_id) -> bool:
     # CR 8.1.1: Requirements for playing/activating a card with the "action" keyword
-    # 8.1.1a: Stack must be empty
-    can_play_or_activate = True
-    if len(state.stack.slugs) > 0:
-        can_play_or_activate = False
-    
-    # 8.1.1b: Actions can't be played/activated during combat except during resolution phase
-    if 'combat' in state.step:
-        if not state.step.endswith('resolution'):
-            can_play_or_activate = False
-        # 7.6.3a: During resolution, the attacking hero may play/activate an attack action
-        if 'attack' in card.base_text_box or 'attack' in card.base_functional_text:
-            if player_id != state.combat.attacker_id:
-                can_play_or_activate = False
-    
-    # 8.1.1c: Actions have an additional asset cost of one action-point
-    if state.players[player_id].action_points < 1:
-        can_play_or_activate = False
-    
-    # 8.1.1d: Actions that can be 'played as an instant' only require priority.
-    if 'play_as_instant' not in state.effect_manager.continuous_effects:
-        can_play_or_activate = False
+    step_val = state.step.value if hasattr(state.step, 'value') else str(state.step)
 
-    return can_play_or_activate
+    # 8.1.1a: Stack must be empty
+    if len(state.stack.slugs) > 0:
+        return False
+
+    # 8.1.1b: Actions can't be played/activated during combat (except resolution with play_as_instant)
+    if 'combat' in step_val:
+        if 'play_as_instant' not in state.effect_manager.continuous_effects:
+            return False
+        if not step_val.endswith('resolution'):
+            return False
+        # 7.6.3a: During resolution, only attacker may play attack actions
+        if 'attack' in card.base_text_box or 'attack' in card.base_functional_text:
+            if state.combat and player_id != state.combat.attacker_id:
+                return False
+
+    # 8.1.1c: Actions require one action-point
+    if state.players[player_id].action_points < 1:
+        return False
+
+    return True
 
 def _attack_reaction_legal_check(state, card, player_id) -> bool:
     # CR 8.1.2: Requirements for playing/activating a card with the "attack reaction" keyword
