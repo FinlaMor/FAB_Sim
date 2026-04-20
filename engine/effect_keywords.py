@@ -1400,7 +1400,7 @@ def search(state: GameState,
 
     # determine if the player can decline (CR 8.5.19a)
     if filter_fn is not None:
-        has_public_match = any(c.is_public for c in eligible)
+        has_public_match = any(c.is_public for c in event.eligible_cards)
         can_fail = not has_public_match   # 8.5.19a: may fail if no public match
     else:
         can_fail = False   # CR 8.5.19c: must choose when no filter
@@ -1414,6 +1414,10 @@ def search(state: GameState,
         event.chosen_card = chosen
 
     state.event_manager.emit(create_emit_event(event), state)
+
+    # CR 8.5.19: shuffle the deck after any search that included it
+    if 'deck' in event.zones and not event.canceled:
+        shuffle(state, search_player_id, zone_name='deck')
 
     return event
 
