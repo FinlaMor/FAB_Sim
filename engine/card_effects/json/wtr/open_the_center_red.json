@@ -1,0 +1,27 @@
+{
+  "slug": "open_the_center_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "COMBO_CONTAINS",
+          "substring": "head_jab"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        },
+        {
+          "type": "DOMINATE"
+        }
+      ]
+    }
+  ]
+}

@@ -872,6 +872,62 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                 state.combat.injected_triggers = []
             state.combat.injected_triggers.append(td)
 
+    # One-shot: "next_weapon_attack_+N" — apply +N to next weapon attack only.
+    is_weapon_atk = getattr(attack_card, 'is_weapon', False) or (
+        state.combat and getattr(state.combat, 'from_weapon', False))
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_weapon_attack_\+(\d+)$', k)]:
+        if is_weapon_atk:
+            n = int(_re.match(r'^next_weapon_attack_\+(\d+)$', key).group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+        player.current_turn_effects.remove(key)
+
+    # One-shot: "next_weapon_attack_go_again" — grant go again on next weapon attack.
+    if "next_weapon_attack_go_again" in player.current_turn_effects:
+        if is_weapon_atk and state.combat:
+            state.combat.grant_keyword("go_again")
+        player.current_turn_effects.remove("next_weapon_attack_go_again")
+
+    # One-shot: "next_weapon_attack_hit_go_again" — inject ON_HIT go_again for next weapon attack.
+    if "next_weapon_attack_hit_go_again" in player.current_turn_effects:
+        if is_weapon_atk and state.combat:
+            from engine.card_effects.triggers import TriggerDef
+            def _weapon_hit_ga(c, ev, st):
+                if st.combat:
+                    st.combat.grant_keyword("go_again")
+            td = TriggerDef(event_type="ON_HIT", condition_fn=None,
+                            effect_fn=_weapon_hit_ga, is_optional=False)
+            if not hasattr(state.combat, 'injected_triggers'):
+                state.combat.injected_triggers = []
+            state.combat.injected_triggers.append(td)
+        player.current_turn_effects.remove("next_weapon_attack_hit_go_again")
+
+    # One-shot: "next_low_cost_attack_+N" — apply +N to next cost≤1 attack only.
+    atk_cost = getattr(attack_card, 'cost', None) or getattr(attack_card, 'raw_cost', None) or 0
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_low_cost_attack_\+(\d+)$', k)]:
+        if atk_cost <= 1:
+            n = int(_re.match(r'^next_low_cost_attack_\+(\d+)$', key).group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+        player.current_turn_effects.remove(key)
+
+    # One-shot: "next_high_cost_attack_+N" — apply +N to next cost≥2 attack only.
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_high_cost_attack_\+(\d+)$', k)]:
+        if atk_cost >= 2:
+            n = int(_re.match(r'^next_high_cost_attack_\+(\d+)$', key).group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+        player.current_turn_effects.remove(key)
+
 
 def _setup_dsl_listeners(state: GameState) -> None:
     """Load DSL card definitions and register event listeners that call dispatch().

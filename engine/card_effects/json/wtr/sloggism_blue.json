@@ -1,0 +1,14 @@
+{
+  "slug": "sloggism_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "NEXT_HIGH_COST_ATTACK_BONUS",
+          "amount": 4
+        }
+      ]
+    }
+  ]
+}

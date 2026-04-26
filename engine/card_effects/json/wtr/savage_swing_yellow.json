@@ -1,0 +1,15 @@
+{
+  "slug": "savage_swing_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DISCARD",
+          "amount": 1,
+          "random": true
+        }
+      ]
+    }
+  ]
+}

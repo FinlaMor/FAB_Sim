@@ -1,0 +1,21 @@
+{
+  "slug": "blackout_kick_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "COMBO_CONTAINS",
+          "substring": "rising_knee_thrust"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

@@ -104,6 +104,24 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return s.players[pid].life > s.players[3 - pid].life
         return _hgo
 
+    if ctype == "HEALTH_LT_OPP":
+        def _hlo(c, e, s):
+            from engine.card_effects.ability_keywords import _controller_id
+            pid = _controller_id(c)
+            return s.players[pid].life < s.players[3 - pid].life
+        return _hlo
+
+    if ctype == "DECK_EMPTY":
+        def _de(c, e, s):
+            from engine.card_effects.ability_keywords import _controller_id
+            pid = _controller_id(c)
+            return len(s.players[pid].deck.cards) == 0
+        return _de
+
+    if ctype == "PLAYED_FROM_ARSENAL":
+        # card.prev_zone is 'arsenal' when played from arsenal (set by Zone tracking)
+        return lambda c, e, s: getattr(c, 'prev_zone', '').lower() == 'arsenal'
+
     if ctype == "IS_ACTIVE_PLAYER":
         def _iap(c, e, s):
             from engine.card_effects.ability_keywords import _controller_id

@@ -1,0 +1,13 @@
+{
+  "slug": "sink_below_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "PUT_BOTTOM_DRAW"
+        }
+      ]
+    }
+  ]
+}

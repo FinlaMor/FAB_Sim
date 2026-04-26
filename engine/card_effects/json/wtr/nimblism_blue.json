@@ -1,0 +1,14 @@
+{
+  "slug": "nimblism_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "NEXT_LOW_COST_ATTACK_BONUS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

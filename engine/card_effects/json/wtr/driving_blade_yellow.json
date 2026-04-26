@@ -1,0 +1,15 @@
+{
+  "slug": "driving_blade_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "NEXT_WEAPON_ATTACK_BONUS",
+          "amount": 2,
+          "go_again": true
+        }
+      ]
+    }
+  ]
+}

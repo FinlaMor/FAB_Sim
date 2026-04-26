@@ -1,0 +1,15 @@
+{
+  "slug": "wrecker_romp_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DISCARD",
+          "amount": 1,
+          "random": true
+        }
+      ]
+    }
+  ]
+}

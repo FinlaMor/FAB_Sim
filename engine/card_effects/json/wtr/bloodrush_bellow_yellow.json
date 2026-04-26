@@ -1,0 +1,21 @@
+{
+  "slug": "bloodrush_bellow_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "ALL_ATTACKS_BONUS",
+          "amount": 2
+        },
+        {
+          "type": "DISCARD_RANDOM_CONDITIONAL",
+          "amount": 1,
+          "power_gte": 6,
+          "draw": 2,
+          "go_again": true
+        }
+      ]
+    }
+  ]
+}

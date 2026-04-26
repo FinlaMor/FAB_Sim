@@ -1,0 +1,20 @@
+{
+  "slug": "steelblade_shunt_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "ATTACK_IS_WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_DAMAGE",
+          "target": "ATTACKER",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

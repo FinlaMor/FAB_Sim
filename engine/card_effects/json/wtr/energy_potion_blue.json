@@ -1,0 +1,14 @@
+{
+  "slug": "energy_potion_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "GAIN_RESOURCES",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

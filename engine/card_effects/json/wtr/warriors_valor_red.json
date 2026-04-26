@@ -1,0 +1,15 @@
+{
+  "slug": "warriors_valor_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "NEXT_WEAPON_ATTACK_BONUS",
+          "amount": 3,
+          "hit_go_again": true
+        }
+      ]
+    }
+  ]
+}

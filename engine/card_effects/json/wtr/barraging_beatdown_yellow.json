@@ -1,0 +1,17 @@
+{
+  "slug": "barraging_beatdown_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "NEXT_ATTACK_BONUS",
+          "amount": 3
+        },
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

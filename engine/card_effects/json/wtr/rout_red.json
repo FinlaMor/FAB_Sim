@@ -1,0 +1,14 @@
+{
+  "slug": "rout_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

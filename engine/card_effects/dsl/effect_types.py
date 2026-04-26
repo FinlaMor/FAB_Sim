@@ -27,7 +27,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         def _fn(card, event, state, _a=amt, _t=tgt):
             from engine.card_effects.ability_keywords import effect_deal_damage, _controller_id
             cid = _controller_id(card)
-            tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            _t_upper = _t.upper()
+            tid = (3 - cid) if _t_upper in ("OPPONENT", "DEFENDING", "DEFENDER", "ATTACKER") else cid
             effect_deal_damage(state, tid, _a, card, damage_type="physical")
         return _fn
 
@@ -171,6 +172,77 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             state.active().current_turn_effects.append(_key)
         return _fn
 
+    if etype == "NEXT_WEAPON_ATTACK_BONUS":
+        # Next weapon attack gets +N power. Optionally also gets go again or hit: go again.
+        # Stored as "next_weapon_attack_+N" (and related flags) in current_turn_effects.
+        # Consumed by _apply_turn_attack_effects in engine.py (weapon-only gate).
+        amt = params.get("amount", 0)
+        go_again = params.get("go_again", False)
+        hit_go_again = params.get("hit_go_again", False)
+        def _fn(card, event, state, _a=amt, _ga=go_again, _hga=hit_go_again):
+            player = state.active()
+            if _a:
+                player.current_turn_effects.append(f"next_weapon_attack_+{_a}")
+            if _ga:
+                player.current_turn_effects.append("next_weapon_attack_go_again")
+            if _hga:
+                player.current_turn_effects.append("next_weapon_attack_hit_go_again")
+        return _fn
+
+    if etype == "NEXT_LOW_COST_ATTACK_BONUS":
+        # Next attack action card with cost ≤1 gets +N power.
+        # Stored as "next_low_cost_attack_+N" in current_turn_effects.
+        amt = params.get("amount", 0)
+        def _fn(card, event, state, _a=amt):
+            state.active().current_turn_effects.append(f"next_low_cost_attack_+{_a}")
+        return _fn
+
+    if etype == "NEXT_HIGH_COST_ATTACK_BONUS":
+        # Next attack action card with cost ≥2 gets +N power.
+        # Stored as "next_high_cost_attack_+N" in current_turn_effects.
+        amt = params.get("amount", 0)
+        def _fn(card, event, state, _a=amt):
+            state.active().current_turn_effects.append(f"next_high_cost_attack_+{_a}")
+        return _fn
+
+    if etype == "RETURN_TO_HAND":
+        # Return this card to the controller's hand.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.context import effect_context
+            cid = _controller_id(card)
+            player = state.players[cid]
+            # Remove from current zone
+            current_zone = card.zone if card.zone else None
+            if current_zone:
+                zone_obj = player.zone_by_name(current_zone) if hasattr(player, 'zone_by_name') else None
+                if zone_obj and card in zone_obj.cards:
+                    zone_obj.remove(card)
+            with effect_context():
+                player.hand.add(card)
+        return _fn
+
+    if etype == "PUT_BOTTOM_DRAW":
+        # Player chooses a card from hand to put on the bottom of their deck, then draws.
+        # If no hand cards or player declines, nothing happens.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id, effect_draw
+            cid = _controller_id(card)
+            player = state.players[cid]
+            if not player.hand.cards:
+                return
+            options = [c.slug for c in player.hand.cards] + ["decline"]
+            choice = _ask_player(state, cid, options,
+                                 context="Choose a card to put on the bottom of your deck, then draw")
+            if choice == "decline":
+                return
+            target = player.hand.find(choice)
+            if target:
+                player.hand.remove(target)
+                player.deck.add_bottom(target)
+                effect_draw(state, cid, 1)
+        return _fn
+
     if etype == "SEARCH_DECK":
         # Search your deck for any card, put it in hand, then shuffle.
         # Player may "fail to find" (CR 8.5.19). Follows the nimby pattern.
@@ -208,18 +280,28 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "DISCARD_RANDOM_CONDITIONAL":
-        # Discard N cards at random. If a discarded card has power >= power_gte,
-        # gain ap_gain action points.
+        # Discard N cards at random. If a discarded card has power >= power_gte:
+        #   - gain ap_gain action points (if ap_gain > 0)
+        #   - draw draw_count cards (if draw_count > 0)
+        #   - grant go again (if go_again is True)
         amt = params.get("amount", 1)
         power_gte = params.get("power_gte", 6)
         ap_gain = params.get("ap_gain", 0)
-        def _fn(card, event, state, _a=amt, _pg=power_gte, _ap=ap_gain):
+        draw_count = params.get("draw", 0)
+        go_again = params.get("go_again", False)
+        def _fn(card, event, state, _a=amt, _pg=power_gte, _ap=ap_gain,
+                _dr=draw_count, _ga=go_again):
             from engine.card_effects.ability_keywords import effect_discard, _controller_id
             cid = _controller_id(card)
             discarded = effect_discard(state, cid, _a, random_discard=True)
-            if _ap and discarded:
-                if any((getattr(c, 'power', None) or 0) >= _pg for c in discarded):
+            if discarded and any((getattr(c, 'power', None) or 0) >= _pg for c in discarded):
+                if _ap:
                     state.players[cid].action_points += _ap
+                if _dr:
+                    from engine.card_effects.ability_keywords import effect_draw
+                    effect_draw(state, cid, _dr)
+                if _ga and state.combat:
+                    state.combat.grant_keyword("go_again")
         return _fn
 
     if etype == "AMP":

@@ -1,0 +1,14 @@
+{
+  "slug": "biting_blade_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

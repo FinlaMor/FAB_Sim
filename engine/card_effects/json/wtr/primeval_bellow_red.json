@@ -1,0 +1,19 @@
+{
+  "slug": "primeval_bellow_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DISCARD",
+          "amount": 1,
+          "random": true
+        },
+        {
+          "type": "NEXT_ATTACK_BONUS",
+          "amount": 5
+        }
+      ]
+    }
+  ]
+}
