@@ -1,0 +1,15 @@
+{
+  "slug": "descendent_gustwave_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 2,
+          "conditions": [{"type": "COMBO", "names": ["surging_strike"]}]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "slug": "whelming_gustwave_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "conditions": [{"type": "COMBO", "names": ["surging_strike"]}]
+        },
+        {
+          "type": "GO_AGAIN",
+          "conditions": [{"type": "COMBO", "names": ["surging_strike"]}]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [{"type": "COMBO", "names": ["surging_strike"]}],
+      "effects": [{"type": "DRAW", "amount": 1}]
+    }
+  ]
+}

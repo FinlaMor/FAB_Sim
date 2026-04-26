@@ -1,0 +1,16 @@
+{
+  "slug": "overpower_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {"type": "MODIFY_ATTACK_POWER", "amount": 3},
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 2,
+          "conditions": [{"type": "REPRISE"}]
+        }
+      ]
+    }
+  ]
+}

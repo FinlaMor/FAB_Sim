@@ -11,10 +11,12 @@ from engine.deck import load_deck, create_player
 from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, can_pay_cost
 from engine.effects import EffectManager
 from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
-from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
+from engine.card_effects.costs.effect_costs import KEYWORD_COSTS
+from engine.card_effects.costs.alt_costs import ALTERNATE_COSTS
 from engine.play import (available_actions, apply_action,
                          _pitch_for_cost, evaluate_play_cost,
-                         _apply_play_card, _calculate_resource_cost)
+                         _apply_play_card, _calculate_resource_cost,
+                         _apply_defend)
 
 def new_game(
         p1_deck_path: Optional[str],
@@ -82,6 +84,9 @@ def new_game(
     # Register a single dispatcher for keyword static abilities (e.g. Piercing).
     # One permanent listener is cheaper than registering/deregistering per combat.
     _setup_static_ability_listeners(state)
+
+    # Load DSL-defined card effects and register event listeners.
+    _setup_dsl_listeners(state)
 
     # Player that won coin flip decides who goes first (once at game start)
     if state.step == Step.BEGIN_GAME:
@@ -204,7 +209,7 @@ def check_state_based_actions(state: GameState) -> bool:
     CR 1.10.2b: Living objects (heroes and allies) with 0 or less life are
     destroyed simultaneously, then triggers from those deaths are ordered.
     """
-    from engine.card_effects.card_keywords import _move_to_graveyard
+    from engine.effect_keywords import destroy as _ek_destroy
 
     # Hero death — check both players first (simultaneous)
     dead_heroes = [pid for pid in state.players if state.players[pid].health <= 0]
@@ -225,7 +230,7 @@ def check_state_based_actions(state: GameState) -> bool:
                 dead_allies.append((pid, ally))
 
     for pid, ally in dead_allies:
-        _move_to_graveyard(ally, state)
+        _ek_destroy(state, ally, None)
 
     if dead_allies:
         _resolve_all_triggers(state)
@@ -240,13 +245,9 @@ def start_of_turn_refresh_player(state: GameState, playerid: int):
     player = state.players[playerid]
 
     for card in player.arena_cards:
-        if getattr(card, 'has_once_per_turn_limit'):
-            setattr(card, 'activations', 1)
-        if getattr(card, 'has_twice_per_turn_limit'):
-            setattr(card, 'activations', 2)
-        if getattr(card, 'has_thrice_per_turn_limit'):
-            setattr(card, 'activations', 3)
-            
+        if getattr(card, 'has_per_turn_limit'):
+            setattr(card, 'activations', card.base_activations)
+
     setattr(player, 'resources', 0)
     setattr(player, 'chi', 0)
     setattr(player, 'action_points', 0)
@@ -826,6 +827,115 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
     for key in consumed:
         player.current_turn_effects.remove(key)
 
+    # DSL: handle next/all attack bonus flags from effect_types.py.
+    import re as _re
+    pid = state.active_player
+
+    # One-shot: "next_attack_hit_draw_N" — inject ON_HIT draw, then consume.
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_attack_hit_draw_(\d+)$', k)]:
+        n = int(_re.match(r'^next_attack_hit_draw_(\d+)$', key).group(1))
+        from engine.card_effects.triggers import TriggerDef
+        def _hit_draw_once(c, ev, st, _n=n, _pid=pid):
+            from engine.card_effects.ability_keywords import effect_draw
+            effect_draw(st, _pid, _n)
+        td = TriggerDef(event_type="ON_HIT", condition_fn=None,
+                        effect_fn=_hit_draw_once, is_optional=False)
+        if not hasattr(state.combat, 'injected_triggers'):
+            state.combat.injected_triggers = []
+        state.combat.injected_triggers.append(td)
+        player.current_turn_effects.remove(key)
+
+    # Persistent: "all_attacks_+N" — apply power bonus every attack, keep flag.
+    from engine.card_effects.registry import CardEffect
+    for key in player.current_turn_effects:
+        m = _re.match(r'^all_attacks_\+(\d+)$', key)
+        if m:
+            n = int(m.group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+
+    # Persistent: "all_attacks_hit_draw_N" — inject ON_HIT draw every attack, keep flag.
+    for key in player.current_turn_effects:
+        m = _re.match(r'^all_attacks_hit_draw_(\d+)$', key)
+        if m:
+            n = int(m.group(1))
+            from engine.card_effects.triggers import TriggerDef
+            def _all_hit_draw(c, ev, st, _n=n, _pid=pid):
+                from engine.card_effects.ability_keywords import effect_draw
+                effect_draw(st, _pid, _n)
+            td = TriggerDef(event_type="ON_HIT", condition_fn=None,
+                            effect_fn=_all_hit_draw, is_optional=False)
+            if not hasattr(state.combat, 'injected_triggers'):
+                state.combat.injected_triggers = []
+            state.combat.injected_triggers.append(td)
+
+
+def _setup_dsl_listeners(state: GameState) -> None:
+    """Load DSL card definitions and register event listeners that call dispatch().
+
+    This is additive — existing Python CARD_TRIGGERS still fire for cards not
+    yet migrated to JSON.  Once a card has a JSON file, both systems run; the
+    Python triggers should be removed as part of Step 4/5.
+    """
+    from engine.card_effects.dsl import load_all_cards, dispatch
+
+    load_all_cards()
+
+    def _dsl_hit_listener(event, game_state: GameState) -> None:
+        combat = game_state.combat
+        if not combat or not combat.attack_card:
+            return
+        slug = combat.attack_card.slug
+        # Fire DSL ON_HIT abilities for the attack card
+        dispatch(game_state, "ON_HIT", slug,
+                 card=combat.attack_card, event=event)
+        # Fire and consume injected_triggers (e.g. created by INJECT_TRIGGER / Pummel)
+        remaining = []
+        for td in combat.injected_triggers:
+            if td.event_type != "ON_HIT":
+                remaining.append(td)
+                continue
+            cond_ok = td.condition_fn is None or td.condition_fn(
+                combat.attack_card, event, game_state)
+            if cond_ok:
+                td.effect_fn(combat.attack_card, event, game_state)
+            # consumed=True: drop after firing; keep if condition failed? Drop anyway.
+        combat.injected_triggers = remaining
+
+    def _dsl_start_of_turn_listener(event, game_state: GameState) -> None:
+        # Fire START_OF_TURN DSL abilities for all permanents in play
+        for player in game_state.players.values():
+            for zone in (player.permanents, player.items, player.auras, player.allies):
+                for card in list(zone.cards):
+                    dispatch(game_state, "START_OF_TURN", card.slug, card=card)
+
+    def _dsl_end_of_turn_listener(event, game_state: GameState) -> None:
+        for player in game_state.players.values():
+            for zone in (player.permanents, player.items, player.auras, player.allies):
+                for card in list(zone.cards):
+                    dispatch(game_state, "END_OF_TURN", card.slug, card=card)
+
+    def _dsl_on_play_listener(event, game_state: GameState) -> None:
+        slug = event.card
+        card_obj = event.data.get('card') if isinstance(event.data, dict) else None
+        dispatch(game_state, "ON_PLAY", slug, card=card_obj, event=event)
+
+    def _dsl_attacking_listener(event, game_state: GameState) -> None:
+        combat = game_state.combat
+        if not combat or not combat.attack_card:
+            return
+        slug = event.card
+        dispatch(game_state, "ON_ATTACK", slug, card=combat.attack_card, event=event)
+
+    state.event_manager.register('hit', _dsl_hit_listener)
+    state.event_manager.register('on_play', _dsl_on_play_listener)
+    state.event_manager.register('attacking', _dsl_attacking_listener)
+    state.event_manager.register('start_of_turn', _dsl_start_of_turn_listener)
+    state.event_manager.register('end_of_turn', _dsl_end_of_turn_listener)
+
 
 def _setup_static_ability_listeners(state: GameState) -> None:
     """Register the static ability meta-dispatcher for every event in STATIC_ABILITY_ZONES.
@@ -884,43 +994,32 @@ def _validate_combat_state(state: GameState) -> None:
 def _register_card_continuous_effects(state: GameState, card: Card) -> None:
     """Register card.effects list as ContinuousEffects for the current attack.
 
-    Clears existing per-attack power/keyword effects first so prior chain links
+    Clears existing per-attack staged effects first so prior chain links
     don't bleed into new ones.  Called from _attack_step after
     _apply_turn_attack_effects so any effects that function appends to
     card.effects are also captured here.
     """
     from engine.continuous_effects import ContinuousEffect, next_timestamp
+    from engine.card import CardEffect
     mgr = state.continuous_effect_manager
     # Purge leftover per-attack staged effects from any previous chain link
     mgr.remove_by_prop('power')
+    mgr.remove_by_prop('defense')
     mgr.remove_by_prop('keywords')
-    for effect_type, fn in getattr(card, 'effects', []):
-        if effect_type == "base_power":
-            # Stage 7 substage 2 (set-like transform — fn takes current and returns new)
-            eid = f"card_effect_{card.slug}_{effect_type}_{id(fn)}"
-            mgr.add(ContinuousEffect(
-                stage=7,
-                substage=2,
-                timestamp=next_timestamp(),
-                prop='power',
-                source_slug=card.slug,
-                effect_id=eid,
-                apply_fn=lambda val, _s, _c, _fn=fn: _fn(val),
-                persistent=False,
-            ))
-        elif effect_type == "base_power_multiply":
-            # Stage 7 substage 3 (multiply)
-            eid = f"card_effect_{card.slug}_{effect_type}_{id(fn)}"
-            mgr.add(ContinuousEffect(
-                stage=7,
-                substage=3,
-                timestamp=next_timestamp(),
-                prop='power',
-                source_slug=card.slug,
-                effect_id=eid,
-                apply_fn=lambda val, _s, _c, _fn=fn: _fn(val),
-                persistent=False,
-            ))
+    for effect in getattr(card, 'effects', []):
+        if not isinstance(effect, CardEffect):
+            continue
+        eid = f"card_effect_{card.slug}_{effect.prop}_{effect.stage}_{effect.substage}_{id(effect.fn)}"
+        mgr.add(ContinuousEffect(
+            stage=effect.stage,
+            substage=effect.substage,
+            timestamp=next_timestamp(),
+            prop=effect.prop,
+            source_slug=card.slug,
+            effect_id=eid,
+            apply_fn=lambda val, _s, _c, _fn=effect.fn: _fn(val),
+            persistent=False,
+        ))
 
 
 def _recalculate_attack_power(state: GameState) -> None:
@@ -1011,7 +1110,7 @@ def _resolve_wagers(state: GameState, combat) -> None:
     If the attack hit, the controller (attacker) wins. Otherwise the
     opponent (defender) wins. The winner creates the prize token.
     """
-    from engine.card_effects.card_keywords import create_token
+    from engine.card_effects.ability_keywords import create_token
     if not combat.wagers:
         return
 
@@ -1040,7 +1139,7 @@ def _apply_watery_grave(card, state: GameState) -> None:
     has_wg = any("watery grave" in re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw).lower() for kw in card.keywords)
     if not has_wg:
         return
-    from engine.card_effects.card_keywords import ARENA_ZONE_NAMES
+    from engine.card_effects.ability_keywords import ARENA_ZONE_NAMES
     if card.prev_zone in ARENA_ZONE_NAMES:
         card.face_down = True
         card.is_public = False

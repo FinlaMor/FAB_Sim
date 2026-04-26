@@ -1,0 +1,24 @@
+{
+  "slug": "singing_steelblade_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {"type": "MODIFY_ATTACK_POWER", "amount": 1},
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "conditions": [{"type": "REPRISE"}]
+        },
+        {
+          "type": "GO_AGAIN",
+          "conditions": [{"type": "REPRISE"}]
+        },
+        {
+          "type": "SEARCH_DECK",
+          "conditions": [{"type": "REPRISE"}]
+        }
+      ]
+    }
+  ]
+}

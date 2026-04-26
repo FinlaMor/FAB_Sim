@@ -1,0 +1,10 @@
+{
+  "slug": "snatch_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [{"type": "DRAW", "amount": 1}]
+    }
+  ]
+}

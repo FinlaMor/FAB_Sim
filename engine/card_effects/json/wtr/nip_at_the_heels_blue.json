@@ -1,0 +1,9 @@
+{
+  "slug": "nip_at_the_heels_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [{"type": "MODIFY_ATTACK_POWER", "amount": 1}]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "slug": "steelblade_supremacy_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "ALL_ATTACKS_BONUS", "amount": 2},
+        {"type": "ALL_ATTACKS_HIT_DRAW", "amount": 1}
+      ]
+    }
+  ]
+}

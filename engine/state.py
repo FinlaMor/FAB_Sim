@@ -103,7 +103,7 @@ def _check_zone_entry(zone: "Zone", card: Card, source: str) -> str:
             return ZoneEntryResult.FAIL if source == "effect" else ZoneEntryResult.CLEAR
 
     # --- hero zone (CR 3.11.2) ---
-    if name == "hero":
+    if name in ("hero", "hero_zone"):
         card_types = set(card.raw_types or card.types or [])
         if "Hero" not in card_types:
             return ZoneEntryResult.FAIL if source == "effect" else ZoneEntryResult.CLEAR
@@ -1075,12 +1075,16 @@ class CombatState:
     defending_declared: bool = False
     defending_equipment_zones: list[str] = field(default_factory=list)
     attack_target: Optional["Card"] = None  # Set when attack targets a specific card (e.g. Spectra aura, ally) instead of hero
+    attack_target_card: Optional["Card"] = None  # The resolved Card object for the attack target
     # Wager system (CR 8.5.46): list of (controller_id, prize_token_slug_or_None)
     wagers: list[tuple[int, str | None]] = field(default_factory=list)
     # Stage-6 keyword effects added directly during this combat chain link
     # (e.g. Go Again from triggered abilities). Unioned into combat.keywords by
     # _recalculate_attack_power so all "X in combat.keywords" checks still work.
     keyword_effects: set = field(default_factory=set)
+    # One-shot triggers created by INJECT_TRIGGER DSL effects (e.g. Pummel).
+    # Iterated and consumed by the DSL hit listener after 'hit' fires.
+    injected_triggers: list = field(default_factory=list)
 
     def grant_keyword(self, keyword: str) -> None:
         """Add a keyword effect and immediately update combat.keywords for read consistency."""

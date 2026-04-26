@@ -1,0 +1,9 @@
+{
+  "slug": "sigil_of_solace_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [{"type": "GAIN_LIFE", "amount": 3}]
+    }
+  ]
+}
