@@ -34,6 +34,8 @@ if TYPE_CHECKING:
 #helpers
 def coo(card: Card, return_owner: bool=False) -> int|None:
     """Takes in card object. Returns Int of card's controller and falls back to card owner."""
+    if card is None:
+        return None
     return card.controller if card.controller is not None else card.owner
 
 def create_emit_event(event) -> Event:
@@ -134,7 +136,7 @@ class BanishEvent:
 
 
 def banish(state: GameState, card: Card, source_player_id: int,
-           origin_zone: str, until_condition: str = None) -> BanishEvent:
+           origin_zone: Optional[str] = None, until_condition: str = None) -> BanishEvent:
     """CR 8.5.1 — banish a card.
     
     Returns the event so callers can inspect what actually happened
@@ -160,7 +162,10 @@ def banish(state: GameState, card: Card, source_player_id: int,
     # execute the move
     player = state.players[event.target_player_id]
     card = event.target
-    getattr(player, event.origin_zone).remove(card)
+    if event.origin_zone is not None:
+        z = getattr(player, event.origin_zone, None)
+        if z is not None:
+            z.remove(card)
     getattr(player, event.destination).add(card)
 
     # trigger: "when a card is banished" listeners fire after (CR 8.5.1)
@@ -340,18 +345,32 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
 
     return event
 
+_ARENA_ZONES = frozenset({
+    "head", "chest", "arms", "legs", "weapon", "hero",
+    "permanents", "allies", "combat chain",
+})
+
+
 @dataclass
 class DestroyEvent:
     """ CR 8.5.4 Destroy is a discrete effect. To destroy an object, put it into its owner's graveyard.
     """
     target: Card
-    destroy_source: Card
-    source_player_id: int|None
+    destroy_source: Optional[Card] = None
+    source_player_id: Optional[int] = None
     type: str = EventType.DESTROY
-    canceled: bool=False
+    canceled: bool = False
 
-def destroy(state: GameState, destroy_target: Card, destroy_source: Card):
-    """ CR 8.5.4 Destroy is a discrete effect. To destroy an object, put it into its owner's graveyard.
+
+def destroy(state: GameState, destroy_target: Card, destroy_source: Optional[Card] = None):
+    """CR 8.5.4 Destroy is a discrete effect. To destroy an object, put it into its owner's graveyard.
+
+    Handles:
+    - Replacement effects (e.g. indestructible)
+    - Ephemeral (CR 8.3.21): ceases to exist instead of going to graveyard
+    - leaves_arena event if card was in an arena zone
+    - process_cease_to_exist (LKI snapshot)
+    - Multi-zone search: works even when card is controlled by a different player
     """
     source_player_id = coo(destroy_source)
 
@@ -368,20 +387,51 @@ def destroy(state: GameState, destroy_target: Card, destroy_source: Card):
 
     if event.canceled:
         return event
-    
-    # execute the destroy
-    target_player_id = coo(event.target)
-    zone = event.target.zone
 
-    destroy_player = state.players[target_player_id]
     destroy_target = event.target
-    destroy_source = event.destroy_source
+    zone = destroy_target.zone
+    was_arena = zone in _ARENA_ZONES or getattr(destroy_target, 'prev_zone', None) in _ARENA_ZONES
 
-    zone_obj = destroy_player.zone_by_name(zone)
-    if zone_obj is not None:
-        zone_obj.remove(destroy_target)
+    # Snapshot LKI before any zone change (CR 1.2.3c)
+    state.process_cease_to_exist(destroy_target)
+
+    # Remove from current zone — search controller first, then all players, then shared zones
+    removed = False
+    controller_id = coo(destroy_target)
+    if controller_id is not None and controller_id in state.players:
+        z = state.players[controller_id].zone_by_name(zone)
+        if z is not None:
+            removed = z.remove(destroy_target)
+    if not removed:
+        for player in state.players.values():
+            z = player.zone_by_name(zone)
+            if z is not None and z.remove(destroy_target):
+                removed = True
+                break
+    if not removed:
+        for shared in (getattr(state, 'combat_chain', None), getattr(state, 'stack', None)):
+            if shared is not None and hasattr(shared, 'remove') and shared.remove(destroy_target):
+                break
+
+    # CR 8.3.21 Ephemeral: ceases to exist instead of entering the graveyard
+    is_ephemeral = any(
+        kw.lower() == 'ephemeral'
+        for kw in (getattr(destroy_target, 'keywords', None) or [])
+    )
+    if is_ephemeral:
+        if was_arena:
+            state.event_manager.emit(
+                Event(type='leaves_arena', data={'card': destroy_target}), state)
+        state.event_manager.emit(
+            Event(type='card_ceased_to_exist', data={'card': destroy_target}), state)
+        return event
+
+    # Move to owner's graveyard
     state.players[destroy_target.owner].graveyard.add(destroy_target)
 
+    if was_arena:
+        state.event_manager.emit(
+            Event(type='leaves_arena', data={'card': destroy_target}), state)
     state.event_manager.emit(create_emit_event(event), state)
 
     return event

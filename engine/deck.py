@@ -289,7 +289,7 @@ def create_player(
     # Place weapon
     # CR 3.0.2 / 8.2.10b: 2H weapons occupy both weapon zones simultaneously,
     # which prevents equipping a second weapon.
-    weapon_slugs = deck_data.get("weapon")
+    weapon_slugs = deck_data.get("weapons") or []
     if weapon_slugs:
         for weapon_slug in weapon_slugs:
             wc = get_card_info(weapon_slug, card_db)

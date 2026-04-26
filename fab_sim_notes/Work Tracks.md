@@ -46,7 +46,15 @@ Goal: any legal FAB play is correctly modelled, regardless of which cards are in
 - [x] Pitch ordering at end of turn — player chooses top-to-bottom order (CR 4.4.3)
 - [x] Landmark rules (CR 8.2.9) — `player.landmarks` SubZoneView added; `resolve_stack()` now detects `_is_landmark`, enters card into permanents (sets `permanent_subtype`); CR 8.2.9b clears all other landmark permanents to graveyard on entry; legacy `GameState.landmarks` list stub removed; 7 tests in `test_landmarks.py`
 - [x] Stack resolution — LIFO + attack-entry-at-front + meld two-pass all correct; fixed `_resolve_all_triggers` bug: `order_stack` was called after every resolution, now only fires when new triggers arrive during resolution; 3 tests in `test_stack_resolution.py`
-
+### CR 8.6 Token Keywords Audit
+- [ ] token keywords are included with the create_token function of effect_keywords. confirm that all token keywords are present and have their triggers processed
+### CR 8.1 Type Keywords and CR 8.2 Subtype Keywords Independence 
+- [ ] these should be included in the deck constructor but there are a few functions that reference types when they really mean subtypes or vice versa. I found a few in card.py but these references could be anywhere.
+## Engine.Card CardDB class update for Activation cost
+- [ ] The "get" method of CardDB stops looking for activation costs as soon as it finds an instance of "{r}". This does not account for cards without an activation cost ("scabskin_leathers") or cards with multiple activations ("cutty_shark_yellow")
+## Update Card/CardDB classes to set an activation/play cost for 'X' cost cards
+- [ ] i assumed "X" cost cards would appear in the cost field of the slug_index, however, for cards like imposing visage the "cost" field is None and they have a "specialCost" field that is a string.
+- [ ] Engine needs to be updated to look for "{x}" in the functional text to represent a variable cost for activations (like beckoning_haunt) or look at "specialCost" for cards like imposing visage.
 ---
 
 ## Track 2 — Card Implementations
@@ -69,7 +77,9 @@ See [[Card Set Status]] for per-set tracking.
 - [ ] Confirm `text_trigger_parser.py` patterns cover: "When this hits, draw N", "At start of turn, do X", "When you play X, do Y"
 
 ---
-
+## Track 2.5 - Talishar Front End
+- Use the talishar front-end design to track games in a human-readable way
+- [ ] Only use it for tracking card movements. Don't need to adapt the actor decision inputs if we only use it to update card locations
 ## Track 3 — ML / Training (lower priority until card coverage improves)
 - IQL v3 trained, needs fresh H2H eval after turn_penalty retraining
 - [ ] Run v3 vs v2 H2H to confirm improvement

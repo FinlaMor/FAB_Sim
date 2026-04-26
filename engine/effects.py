@@ -296,7 +296,7 @@ class EffectManager:
         """Register prevention replacement effects from a card's keywords.
         Called when a card enters the arena or becomes public."""
         import re
-        keywords = card.base_card_keywords or []
+        keywords = card.base_ability_keywords or []
         for kw in keywords:
             # Normalize CamelCase keywords from card DB (e.g. "ArcaneBarrier" -> "arcane barrier")
             kw_spaced = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw.strip())
@@ -425,8 +425,8 @@ def _make_ward(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.card_keywords import _move_to_graveyard
-        _move_to_graveyard(source_card, state)  # Cost always paid (destroy this)
+        from engine.effect_keywords import destroy as _ek_destroy
+        _ek_destroy(state, source_card, None)  # Cost always paid (destroy this)
         if not event.get("unpreventable", False):
             prevented = min(amount, event.get("amount", 0))
             event["amount"] = event.get("amount", 0) - prevented
@@ -459,7 +459,7 @@ def _make_arcane_barrier(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.card_keywords import arcane_barrier
+        from engine.card_effects.ability_keywords import arcane_barrier
         # arcane_barrier handles the player decision and pitching
 
         prevented = arcane_barrier(source_card, amount, state)
@@ -492,7 +492,7 @@ def _make_spellvoid(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.card_keywords import spellvoid
+        from engine.card_effects.ability_keywords import spellvoid
 
         prevented = spellvoid(source_card, amount, state)
         event["amount"] = event.get("amount", 0) - prevented
@@ -524,7 +524,7 @@ def _make_quell(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.card_keywords import quell
+        from engine.card_effects.ability_keywords import quell
 
         prevented = quell(source_card, amount, state)
         event["amount"] = event.get("amount", 0) - prevented
@@ -555,9 +555,9 @@ def _make_arcane_shelter(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.card_keywords import _move_to_graveyard
+        from engine.effect_keywords import destroy as _ek_destroy
         prevented = min(amount, event.get("amount", 0))
-        _move_to_graveyard(source_card, state)
+        _ek_destroy(state, source_card, None)
         event["amount"] = event.get("amount", 0) - prevented
         return event
 

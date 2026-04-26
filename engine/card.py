@@ -8,7 +8,7 @@ import re
 from copy import copy
 from dataclasses import dataclass, field
 from itertools import count
-from typing import Optional
+from typing import Callable, Optional
 import os, sys
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,6 +18,24 @@ from config import SLUG_INDEX_PATH
 
 
 _CARD_OBJECT_ID_COUNTER = count(1)
+
+
+@dataclass
+class CardEffect:
+    """CR 6.3 staged continuous effect attached to a card object.
+
+    stage: CR 6.3 layer (7 = base numeric properties, 8 = transient/timestamp)
+    substage: CR 6.3.3 ordering within stage:
+        1 = add/remove property  2 = set (independent)  3 = multiply (independent)
+        4 = divide (independent)  5 = add (independent)  6 = subtract (independent)
+        7 = dependent effects
+    prop: card property being modified e.g. "power", "defense", "life"
+    fn: (current_value) -> new_value
+    """
+    prop: str
+    stage: int
+    substage: int
+    fn: Callable
 
 
 def _int_or_none(val) -> Optional[int]:
@@ -60,7 +78,7 @@ class Card:
     raw_types: Optional[list[str]] = None
     raw_text_box: str = ""
     raw_subtypes: Optional[list[str]] = None
-    raw_card_keywords: Optional[list[str]] = None
+    raw_ability_keywords: Optional[list[str]] = None
     raw_functional_text: Optional[str] = None
     raw_type_text: Optional[str] = None
     raw_classes: Optional[list[str]] = None
@@ -84,6 +102,7 @@ class Card:
     base_text_box: str = ""
     base_subtypes: Optional[list[str]] = None
     base_keywords: Optional[list[str]] = None
+    base_ability_keywords: Optional[list[str]] = None
     base_functional_text: Optional[str] = None
     base_type_text: Optional[str] = None
     base_classes: Optional[list[str]] = None
@@ -152,8 +171,8 @@ class Card:
     activation_conditions: Optional[bool] = None
     play_conditions: Optional[bool] = None
     alternate_cost: Optional[bool] = None
-    mandatory_additional_costs: Optional[bool] = None
-    optional_additional_costs: Optional[bool] = None
+    mandatory_additional_costs: Optional[dict[str,dict]] = field(default_factory=dict) # format is {'play':(additional mandatory play costs), 'activate':(additional mandatory activation costs)}
+    optional_additional_costs: Optional[dict[str,dict]] = field(default_factory=dict) # format is {'play':(additional optional play costs), 'activate':(additional optional activation costs)}
 
     # Zone tracking
     zone: str = "inventory"
@@ -179,9 +198,7 @@ class Card:
     # Ability structure flags
     # Activated abilities (CR 5.2)
     has_activated_ability: bool = False
-    has_once_per_turn_limit: bool = False
-    has_twice_per_turn_limit: bool = False
-    has_thrice_per_turn_limit: bool = False
+    has_per_turn_limit: bool = False
     has_action_activation: bool = False
     has_instant_activation: bool = False
     has_attack_reaction_activation: bool = False
@@ -239,7 +256,7 @@ class Card:
         if self.base_subtypes is None:
             self.base_subtypes = list(self.raw_subtypes or []) if self.raw_subtypes else None
         if self.base_keywords is None:
-            self.base_keywords = list(self.raw_card_keywords or []) if self.raw_card_keywords else None
+            self.base_keywords = list(self.raw_ability_keywords or []) if self.raw_ability_keywords else None
         if self.base_functional_text is None:
             self.base_functional_text = self.raw_functional_text
         if self.base_type_text is None:
@@ -568,7 +585,7 @@ class CardDB:
         card.raw_types        = raw.get("types") or []
         card.raw_subtypes     = raw.get("subtypes") or []
         card.raw_classes      = raw.get("classes") or []
-        card.raw_card_keywords = raw.get("keywords") or raw.get("card_keywords") or []
+        card.raw_ability_keywords = raw.get("keywords") or raw.get("ability_keywords") or []
         card.raw_legal_heroes = raw.get("legalHeroes") or raw.get("legal_heroes") or []
         card.raw_legal_formats = raw.get("legalFormats") or raw.get("legal_formats") or []
 
@@ -612,11 +629,15 @@ class CardDB:
         card.base_arcane      = card.raw_arcane
         card.base_color       = card.raw_color
         card.base_types       = list(card.raw_types or [])
+        card.types            = list(card.base_types)          # sync: __post_init__ ran before raw_ fields were set
         card.base_subtypes    = list(card.raw_subtypes or [])
-        card.base_keywords    = list(card.raw_card_keywords or [])
+        card.subtypes         = list(card.base_subtypes)       # sync
+        card.base_keywords    = list(card.raw_ability_keywords or [])
+        card.keywords         = list(card.base_keywords)              # sync
         # Back-compat alias used by parts of the effect system.
-        card.base_card_keywords = list(card.raw_card_keywords or [])
+        card.base_ability_keywords = list(card.raw_ability_keywords or [])
         card.base_classes     = list(card.raw_classes or [])
+        card.classes          = list(card.base_classes)               # sync
         card.base_functional_text = card.raw_functional_text
         card.base_type_text   = card.raw_type_text
 
@@ -636,7 +657,7 @@ class CardDB:
         import re
         ability_flags = {
             'has_activated_ability': False,
-            'has_once_per_turn_limit': False,
+            'has_per_turn_limit': False,
             'has_action_activation': False,
             'has_instant_activation': False,
             'has_attack_reaction_activation': False,
@@ -672,7 +693,7 @@ class CardDB:
                         num = 3 if 'thrice per turn' in ability_type.lower() else num
                         card.base_activations = num
                         card.activations = num
-                        card.has_once_per_turn_limit = True
+                        card.has_per_turn_limit = True
                     else:
                         if text in ability_type.lower():
                             setattr(card, f'has_{text.replace(' ', '_')}_activation', True)

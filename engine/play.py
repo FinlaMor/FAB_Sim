@@ -8,9 +8,10 @@ import re
 from typing import Optional
 
 from engine.actions import Action, ActionType
-from engine.card_effects.additional_conditions import ADDITIONAL_CONDITIONS
-from engine.card_effects.additional_costs import ADDITIONAL_COSTS
-from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
+from engine.card_effects.costs.activation_conditions import ADDITIONAL_CONDITIONS
+from engine.card_effects.costs.mandatory_play_costs import ADDITIONAL_COSTS
+from engine.card_effects.costs.effect_costs import KEYWORD_COSTS
+from engine.card_effects.costs.alt_costs import ALTERNATE_COSTS
 from engine.card import Card
 from engine.state import GameState, Player, Event, StackEntry
 
@@ -47,6 +48,8 @@ def available_actions(state, player_id) -> list[Action]:
         if can_play:
             affordable_actions.append(action)
     for card in activatable_cards:
+        if not _legality_check(state, card, player_id):
+            continue
         can_activate, action = _cost_check(state, card, player_id, action, playable=False)
         if can_activate:
             affordable_actions.append(action)
@@ -56,16 +59,36 @@ def available_actions(state, player_id) -> list[Action]:
     return affordable_actions
 
 def _legality_check(state, card, player_id) -> bool:
-        
-    legal_flag = True
+    types = card.types or []
 
-    if 'action' in card.base_text_box or 'action' in card.base_functional_text:
+    # Use card.types as authoritative source; fall back to text scanning for
+    # cards where the type string lives inside functional text only.
+    _types_lower = {t.lower().replace(" ", "_") for t in types}
+    is_ar  = "attackreaction" in _types_lower or "attack_reaction" in _types_lower
+    is_dr  = "defensereaction" in _types_lower or "defense_reaction" in _types_lower
+    is_act = "action" in _types_lower
+    is_ins = "instant" in _types_lower
+
+    # Supplement with text scan for hybrid/multi-type cards
+    tb  = card.base_text_box or ""
+    ft  = card.base_functional_text or ""
+    if not is_act and ('action' in tb or 'action' in ft):
+        is_act = True
+    if not is_ar and ('attack_reaction' in tb or 'attack_reaction' in ft):
+        is_ar = True
+    if not is_dr and ('defense_reaction' in tb or 'defense_reaction' in ft):
+        is_dr = True
+    if not is_ins and ('instant' in tb or 'instant' in ft):
+        is_ins = True
+
+    legal_flag = True
+    if is_act:
         legal_flag &= _action_legal_check(state, card, player_id)
-    if 'attack_reaction' in card.base_text_box or 'attack_reaction' in card.base_functional_text:
+    if is_ar:
         legal_flag &= _attack_reaction_legal_check(state, card, player_id)
-    if 'defense_reaction' in card.base_text_box or 'defense_reaction' in card.base_functional_text:
+    if is_dr:
         legal_flag &= _defense_reaction_legal_check(state, card, player_id)
-    if 'instant' in card.base_text_box or 'instant' in card.base_functional_text:
+    if is_ins:
         legal_flag &= _instant_legal_check(state, card, player_id)
 
     return legal_flag
@@ -105,19 +128,21 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
         """    # Turn card into action
     player = state.players[player_id]
     can_afford = True
-
-    resource_cost = _calculate_resource_cost(state, action)
-
     exclude = card if card is not None else None
+
+    if playable: # play cards are evaluated with the properties cost and special_cost
+        if card.raw_cost is not None:
+            resource_cost = _calculate_resource_cost(state, action)
+        elif card.special_cost is not None:
+                cost_with_x = card.special_cost
+                min_cost = int(str(cost_with_x).strip(r'Xx\s')) #ie '3X' cost on imposing visage means 'pay at least 3
+                if min_cost >= 0:
+                    resource_cost = min_cost
+        else:
+            return False, action # cards without costs are not playable
+
     
     effective_resources = player.resources
-
-    x_in_cost = 'X' in str(resource_cost) or 'x' in str(resource_cost)
-    if x_in_cost:
-        cost_with_x = resource_cost
-        base_cost = int(str(resource_cost).strip(r'Xx\s')) #ie '3X' cost on imposing visage means 'pay at least 3
-        if base_cost > 0:
-            resource_cost = base_cost
 
     # --- 1. Resource cost ---
     if not can_pay_resource_cost(player.hand.cards, resource_cost, effective_resources, exclude_card=exclude):
@@ -152,7 +177,7 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
     # --- 3. effect-costs ---
     if getattr(card, 'mandatory_additional_costs', None) is not None:
         if card is not None:
-            from engine.card_effects.additional_costs import ADDITIONAL_COSTS
+            from engine.card_effects.costs.mandatory_play_costs import ADDITIONAL_COSTS
             if card in ADDITIONAL_COSTS.keys():
                 cost_func = ADDITIONAL_COSTS[card.slug]
                 can_afford &= cost_func(state, player_id, check=True)
@@ -195,7 +220,9 @@ def recalculate_playable(state, player_id):
     mgr = state.continuous_effect_manager
 
     for card in player.hand.cards + player.arsenal.cards:
-        card.playable = True  # base: hand/arsenal cards are playable; legality/cost checks below filter
+        # Block cards have no play cost (raw_cost is None) — they can only be used for blocking.
+        if card.raw_cost is not None:
+            card.playable = True
 
     for card in player.all_cards:
         if card not in player.hand.cards + player.arsenal.cards:
@@ -247,7 +274,7 @@ def _attack_reaction_legal_check(state, card, player_id) -> bool:
     can_play_or_activate = True
     # 8.1.2a An attack reaction card/activated ability can only be played/activated by a player who controls the attack during the Reaction Step of combat
     if not hasattr(state, 'combat') or state.combat is None:
-        can_play_or_activate = False
+        return False
     if state.step != 'combat_reaction':
         can_play_or_activate = False
     if player_id != state.combat.attacker_id:
@@ -265,10 +292,11 @@ def _defense_reaction_legal_check(state, card, player_id) -> bool:
 
     # 8.1.3a A defense reaction card/activated ability can only be played/activated by a player who controls a hero as an attack-target during the Reaction Step of combat.
     if not hasattr(state, 'combat') or state.combat is None:
-        can_play_or_activate = False
+        return False
     if state.step != 'combat_reaction':
         can_play_or_activate = False
-    if state.players[player_id].hero.slug != state.combat.attack_target.slug:
+    attack_target = getattr(state.combat, 'attack_target', None)
+    if attack_target is None or state.players[player_id].hero.slug != attack_target.slug:
         can_play_or_activate = False
     
     # 8.1.3b When a defense reaction card resolves as a layer on the stack, it becomes a defending card on the active chain link.
@@ -281,7 +309,7 @@ def _instant_legal_check(state, card, player_id) -> bool:
     can_play_or_activate = True
 
     # 8.1.6a A card/activated ability with the type instant can be played/activated any time the player has priority.
-    if state.priority_player_id != player_id:
+    if state.priority_player != player_id:
         can_play_or_activate = False
 
     return can_play_or_activate
@@ -383,8 +411,8 @@ def _apply_activate(state: GameState, action: Action) -> None:
         state.stack_entries.append(entry)
         return
 
-    # CR 4.4.3d: Mark exhausted for "once per turn" abilities.
-    if card.has_once_per_turn_limit:
+    # CR 4.4.3d: Mark exhausted for "X per turn" abilities.
+    if card.has_per_turn_limit:
         card.activations -= 1
         assert card.activations >= 0
 
@@ -541,7 +569,7 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
             player.chi += pitch_val
         elif getattr(card, 'pitch_gives_chi', False) and action.player_id is not None:
             # Cards like inner_chi can fill either pool — ask the player
-            from engine.card_effects.card_keywords import _ask_player as _apk
+            from engine.card_effects.ability_keywords import _ask_player as _apk
             chi_choice = _apk(state, action.player_id, ['chi', 'resources'],
                               context=f"Pitch {card.slug} for {pitch_val} chi or {pitch_val} resources?")
             if str(chi_choice) == 'chi':

@@ -257,7 +257,7 @@ def test_reload():
     state = _make_state()
     card = _make_card(owner=1)
     # Put a card in hand and cards in deck for draw
-    hand_card = Card(slug="hand1", name="Hand 1")
+    hand_card = Card(slug="hand1", name="Hand 1", types=["Action"])
     hand_card.owner = 1
     hand_card.controller = 1
     state.players[1].hand.add(hand_card)
@@ -292,7 +292,7 @@ def test_opt():
 def test_charge():
     state = _make_state()
     card = _make_card(owner=1)
-    hand_card = Card(slug="charge_target", name="Charge Target")
+    hand_card = Card(slug="charge_target", name="Charge Target", types=["Action"])
     hand_card.owner = 1
     hand_card.controller = 1
     state.players[1].hand.add(hand_card)

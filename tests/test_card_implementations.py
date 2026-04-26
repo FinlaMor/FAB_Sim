@@ -34,7 +34,7 @@ from __future__ import annotations
 import pytest
 
 from engine.card import Card, CardDB
-from engine.card_effects.card_keywords import (
+from engine.card_effects.ability_keywords import (
     arcane_barrier,
     arcane_shelter,
     battleworn,
@@ -44,9 +44,6 @@ from engine.card_effects.card_keywords import (
     combo_check,
     crush_check,
     dominate_check,
-    effect_deal_arcane,
-    effect_deal_damage,
-    effect_gain_life,
     effect_transcend,
     fusion,
     go_again,
@@ -61,6 +58,11 @@ from engine.card_effects.card_keywords import (
     temper,
     ward,
     watery_grave,
+)
+from engine.card_effects.triggers import (
+    effect_deal_arcane,
+    effect_deal_damage,
+    effect_gain_life,
 )
 from engine.actions import (
     Action, 
@@ -1447,7 +1449,7 @@ class TestEffectDealArcane:
         state.player_agents[2] = _scripted_agent(True)   # activate barrier
         start = state.players[2].life
         # 3 arcane dealt, barrier blocks 2 → only 1 gets through
-        from engine.card_effects.card_keywords import arcane_barrier as _ab
+        from engine.card_effects.ability_keywords import arcane_barrier as _ab
         prevented = _ab(barrier, 2, state)
         assert prevented == 2
         effect_deal_arcane(state, 2, 3 - prevented)

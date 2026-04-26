@@ -104,10 +104,10 @@ def test_hero_life_and_intellect_mapped(db):
 
 
 def test_keywords_populated(db):
-    """'keywords' from index.ts maps to raw_card_keywords."""
+    """'keywords' from index.ts maps to raw_ability_keywords."""
     card = db.get("10000_year_reunion_red")
     assert card is not None
-    assert "Ward" in card.raw_card_keywords
+    assert "Ward" in card.raw_ability_keywords
 
 
 def test_talents_populated(db):

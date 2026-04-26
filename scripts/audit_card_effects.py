@@ -168,7 +168,7 @@ def load_handled_keywords(trig_content):
 
 def is_keyword_handled(card, handled_keywords):
     """Check if a card is fully handled by keyword triggers."""
-    for kw in (card.get("card_keywords") or []):
+    for kw in (card.get("ability_keywords") or []):
         kw_base = re.sub(r"\s+\d+$", "", kw.strip()).lower()
         if kw_base in handled_keywords or (
             kw_base.endswith("fusion") and "fusion" in handled_keywords
@@ -180,7 +180,7 @@ def is_keyword_handled(card, handled_keywords):
 def is_vanilla(card):
     """Check if a card has no functional text beyond keywords."""
     ft = (card.get("functional_text_plain") or "").strip()
-    kws = card.get("card_keywords") or []
+    kws = card.get("ability_keywords") or []
     if not ft:
         return True
     remaining = ft

@@ -219,11 +219,11 @@ class TestCardFunctionality:
     # ── 2. Keyword flags ──────────────────────────────────────────────
 
     def test_keyword_flags(self, slug: str, slug_index, card_db):
-        """has_go_again, has_dominate, has_on_hit match card_keywords in slug_index."""
+        """has_go_again, has_dominate, has_on_hit match ability_keywords in slug_index."""
         data = slug_index["by_slug"][slug]
         card = card_db.get(slug)
 
-        kws = [k.lower() for k in (data.get("card_keywords") or [])]
+        kws = [k.lower() for k in (data.get("ability_keywords") or [])]
 
         if "go again" in kws:
             assert card.has_go_again, f"{slug}: expected has_go_again=True"

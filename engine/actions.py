@@ -13,7 +13,8 @@ sys.path.insert(0, r"C:\Users\Joseph\Desktop\FAB_Sim")
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, Zone
 from engine.card_effects.registry import EQUIPMENT_ACTIVATION_CONDITIONS, EQUIPMENT_ACTIVATION_COST, ATTACK_REACTION_CONDITIONS, DEFENSE_REACTION_CONDITIONS, HERO_ACTIVATION_CONDITIONS, DISCARD_ACTIVATE_EFFECTS, PLAY_TARGET_CONDITIONS, WEAPON_ATTACK_CONDITIONS
-from engine.card_effects.effect_cost import KEYWORD_COSTS, ALTERNATE_COSTS
+from engine.card_effects.costs.effect_costs import KEYWORD_COSTS
+from engine.card_effects.costs.alt_costs import ALTERNATE_COSTS
 
 class ActionType(Enum):
     PASS = "pass"
@@ -247,7 +248,7 @@ def _can_afford_action(state: GameState, action: Action) -> tuple[bool, dict[str
     if getattr(action, 'additional_costs', None) is not None:
         card = getattr(action, 'card', None)
         if card is not None:
-            from engine.card_effects.effect_cost import KEYWORD_COSTS
+            from engine.card_effects.costs.effect_costs import KEYWORD_COSTS
             for keyword, cost_fn in KEYWORD_COSTS.items():
                 if keyword in ([kw.lower() for kw in (card.keywords or [])]):
                     if not cost_fn(state, action.player_id, action, check=True):

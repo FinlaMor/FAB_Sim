@@ -294,7 +294,7 @@ categories = {
 
 for slug, card_data in sorted(slug_index.items()):
     func_text = card_data.get("functional_text") or card_data.get("functionalText") or ""
-    keywords = card_data.get("keywords") or card_data.get("card_keywords") or []
+    keywords = card_data.get("keywords") or card_data.get("ability_keywords") or []
     card_types = card_data.get("types") or card_data.get("card_type") or []
     if isinstance(card_types, str):
         card_types = [card_types]

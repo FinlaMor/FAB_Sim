@@ -17,7 +17,7 @@
 ---
 
 ### `play.py` (594 lines)
-**Does:** Higher-level action interface used by agents and engine.
+**Does:** Action interface used by agents and engine. Handles legal action generation for agent choices.
 **Key functions:**
 - `available_actions(state, player_id)` — combines playability + affordability checks; always includes PASS
 - `apply_action(state, action)` — applies a chosen action to state
@@ -48,9 +48,9 @@
 ## Action Generation
 
 ### `actions.py` (1086 lines)
-**Does:** Generate the list of legal `Action` objects for the current game state and step.
+**Does:** Holds the Action object. Held legal action generation in the past. Any legal action generation should be moved to play.py and removed from action.py moving forward
 **Key exports:**
-- `ActionType` (Enum) — PASS, PLAY_CARD, DEFEND_CARDS, STORE_ARSENAL, ACTIVATE_CARD, ATTACK_ALLY, CHOOSE, PITCH_CARD, PITCH_TO_DECK (several more commented out, pending implementation)
+- `ActionType` (Enum) — PASS, PLAY_CARD, DEFEND_CARDS, STORE_ARSENAL, ACTIVATE_CARD, CHOOSE, PITCH_CARD, PITCH_TO_DECK (several more commented out due to deprecation)
 - `Action` (dataclass) — type, player_id, card, pitch_cards, from_arsenal, slot, target, targets, has_go_again, played_as_instant, etc.
 - `legal_actions(state, player_id)` — main entry point; dispatches by `state.step`
 - `can_pay_cost(state, player_id, cost)` — resource check
@@ -80,9 +80,9 @@
 - `ReplacementEffect` — intercepts and redirects an event before it fires
 
 ### `continuous_effects.py` (212 lines) — CR 6.3
-**Does:** Lower-level staging system + cost modifier pipeline (CR 5.1.6a).
+**Does:** Lower-level staging system + cost modifier pipeline (CR 5.1.6a). Should be rolled into effect_manager's ContinuousEffect class for clarity.
 **Key class:** `ContinuousEffectManager` — applies effects in stage/substage/timestamp order
-**Note:** There are two `ContinuousEffect` definitions (effects.py and continuous_effects.py). The one in `continuous_effects.py` is the active staging implementation; `effects.py` version is the older model.
+**Note:** There are two `ContinuousEffect` definitions (effects.py and continuous_effects.py). The one in `continuous_effects.py` is older version that should not be used in future designs.
 
 ---
 

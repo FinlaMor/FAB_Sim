@@ -157,7 +157,7 @@ def test_banish_return_fails_if_card_ceased_to_exist():
 
 def test_banish_return_succeeds_if_card_in_arena():
     """CR 3.0.9b — return succeeds if card moved to arena (remained public)."""
-    from engine.card_effects.card_keywords import ARENA_ZONE_NAMES
+    from engine.card_effects.ability_keywords import ARENA_ZONE_NAMES
     state = _make_state()
     # Card needs a permanent subtype to legally enter the permanents zone (CR 3.13.2)
     card = _add_to_hand(state, 1, _make_card("test_card", types=["Action"]))
