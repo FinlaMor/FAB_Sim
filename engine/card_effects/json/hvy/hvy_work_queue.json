@@ -1,0 +1,5140 @@
+[
+  {
+    "slug": "aether_arc_blue",
+    "name": "Aether Arc",
+    "type_text": "Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to each opposing hero.\n\nCreate a Ponder token for each hero dealt damage this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "agile_engagement_blue",
+    "name": "Agile Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +1{p}. If it's defended by an attack action card, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "agile_engagement_red",
+    "name": "Agile Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +3{p}. If it's defended by an attack action card, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "agile_engagement_yellow",
+    "name": "Agile Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +2{p}. If it's defended by an attack action card, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "agile_windup_blue",
+    "name": "Agile Windup",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "agile_windup_red",
+    "name": "Agile Windup",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "agile_windup_yellow",
+    "name": "Agile Windup",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "ancestral_harmony_blue",
+    "name": "Ancestral Harmony",
+    "type_text": "Ninja Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your attacks with **combo** get +1{p} this turn.\n\nBanish the top card of your deck. If it has **combo**, you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "apex_bonebreaker",
+    "name": "Apex Bonebreaker",
+    "type_text": "Brute Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends together with a card with 6 or more {p}, create a Might token.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "assault_and_battery_blue",
+    "name": "Assault and Battery",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "assault_and_battery_red",
+    "name": "Assault and Battery",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "assault_and_battery_yellow",
+    "name": "Assault and Battery",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "aurum_aegis",
+    "name": "Aurum Aegis",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Specialization",
+      "Temper"
+    ],
+    "specializations": [
+      "Victor"
+    ],
+    "functional_text": "**Victor Specialization**\n\nThis counts as a Gold.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "balance_of_justice",
+    "name": "Balance of Justice",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Draw a card. Activate this only if an opponent has drawn 2 or more cards this turn.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "ball_breaker",
+    "name": "Ball Breaker",
+    "type_text": "Brute Weapon - Flail (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Flail"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nIf you've discarded a card with 6 or more {p} this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "battered_not_broken_red",
+    "name": "Battered Not Broken",
+    "type_text": "Brute / Guardian Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 2 of that damage. If you do, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "beast_mode_blue",
+    "name": "Beast Mode",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **intimidated** this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "beast_mode_red",
+    "name": "Beast Mode",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **intimidated** this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "beast_mode_yellow",
+    "name": "Beast Mode",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **intimidated** this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "beckon_applause",
+    "name": "Beckon Applause",
+    "type_text": "Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "If you control an Agility token, this gets +1{d}.\n\nIf you control a Vigor token, this gets +1{d}.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "bet_big_red",
+    "name": "Bet Big",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Specialization",
+      "Wager"
+    ],
+    "specializations": [
+      "Betsy"
+    ],
+    "functional_text": "**Betsy Specialization**\n\nWhen this attacks a hero, you may **wager** a Gold, Might, and Vigor token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "betsy",
+    "name": "Betsy",
+    "type_text": "Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an attack you control **wagers**, you may pay {r}{r}. If you do, the attack gets +1{p} and **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "betsy_skin_in_the_game",
+    "name": "Betsy, Skin in the Game",
+    "type_text": "Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an attack you control **wagers**, you may pay {r}{r}. If you do, the attack gets +1{p} and **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_bop_blue",
+    "name": "Big Bop",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next Guardian attack this turn gets +3{p} and \"When this attacks a hero, you may **wager** a Vigor token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "big_bop_red",
+    "name": "Big Bop",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next Guardian attack this turn gets +5{p} and \"When this attacks a hero, you may **wager** a Vigor token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "big_bop_yellow",
+    "name": "Big Bop",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next Guardian attack this turn gets +4{p} and \"When this attacks a hero, you may **wager** a Vigor token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bigger_than_big_blue",
+    "name": "Bigger Than Big",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next Guardian attack this turn gets +3{p} and \"When this attacks a hero, you may **wager** a Might token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bigger_than_big_red",
+    "name": "Bigger Than Big",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next Guardian attack this turn gets +5{p} and \"When this attacks a hero, you may **wager** a Might token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bigger_than_big_yellow",
+    "name": "Bigger Than Big",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next Guardian attack this turn gets +4{p} and \"When this attacks a hero, you may **wager** a Might token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "blade_flurry_red",
+    "name": "Blade Flurry",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +2{p}.\n\nYour next weapon attack this turn gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bloodied_oval",
+    "name": "Bloodied Oval",
+    "type_text": "Generic Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": "*",
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "Bloodied Oval's {d} is equal to the number of opposing heroes with greater {h} than you.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "boast_blue",
+    "name": "Boast",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This gets +X{d} while defending, where X is twice the number of **clashes** you've won this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonebreaker_bellow_blue",
+    "name": "Bonebreaker Bellow",
+    "type_text": "Brute Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nYour next Brute attack this turn gains +1{p}. If you've **beaten chest** this turn, instead it gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bonebreaker_bellow_red",
+    "name": "Bonebreaker Bellow",
+    "type_text": "Brute Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nYour next Brute attack this turn gains +3{p}. If you've **beaten chest** this turn, instead it gains +5{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bonebreaker_bellow_yellow",
+    "name": "Bonebreaker Bellow",
+    "type_text": "Brute Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nYour next Brute attack this turn gains +2{p}. If you've **beaten chest** this turn, instead it gains +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cast_bones_red",
+    "name": "Cast Bones",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Reveal the top 6 cards of your deck. Create a Might token for each card with 6 or more {p} revealed this way. Put the revealed cards on top of your deck in a random order.\n\nIf you control 6 or more Might tokens, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_agility_blue",
+    "name": "Clash of Agility",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_agility_red",
+    "name": "Clash of Agility",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_agility_yellow",
+    "name": "Clash of Agility",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_might_blue",
+    "name": "Clash of Might",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_might_red",
+    "name": "Clash of Might",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_might_yellow",
+    "name": "Clash of Might",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_vigor_blue",
+    "name": "Clash of Vigor",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_vigor_red",
+    "name": "Clash of Vigor",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_vigor_yellow",
+    "name": "Clash of Vigor",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "coercive_tendency_blue",
+    "name": "Coercive Tendency",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Arakni"
+    ],
+    "functional_text": "**Arakni Specialization**\n\nLook at the top 3 cards of the defending hero's deck. Put them back in any order, then banish the top card of their deck.\n\nIf you complete a **contract** this way, your Assassin attacks get **go again** this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "colossal_bearing_red",
+    "name": "Colossal Bearing",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, destroy an equipment they control with 1 or less {d}.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "command_respect_blue",
+    "name": "Command Respect",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if this has {p} greater than its base, destroy a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "command_respect_red",
+    "name": "Command Respect",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if this has {p} greater than its base, destroy a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "command_respect_yellow",
+    "name": "Command Respect",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if this has {p} greater than its base, destroy a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "commanding_performance_red",
+    "name": "Commanding Performance",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +3{p}. \n\nUntil end of turn, your Warrior attacks get \"When this is defended by 1 or more attack action cards, destroy a card in the defending hero's arsenal.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "concuss_blue",
+    "name": "Concuss",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if this has {p} greater than its base, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "concuss_red",
+    "name": "Concuss",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if this has {p} greater than its base, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "concuss_yellow",
+    "name": "Concuss",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if this has {p} greater than its base, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "confront_adversity",
+    "name": "Confront Adversity",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "This may only defend an attack if the attack's controller has destroyed a Vigor token this turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_the_deck_blue",
+    "name": "Cut the Deck",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +1{p}. If it's defended by an attack action card, draw a card, then put a card from your hand or arsenal on the bottom of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_the_deck_red",
+    "name": "Cut the Deck",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +3{p}. If it's defended by an attack action card, draw a card, then put a card from your hand or arsenal on the bottom of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_the_deck_yellow",
+    "name": "Cut the Deck",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +2{p}. If it's defended by an attack action card, draw a card, then put a card from your hand or arsenal on the bottom of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "deathmatch_arena",
+    "name": "Deathmatch Arena",
+    "type_text": "Generic Action - Landmark",
+    "cost": 0,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Landmark",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\n**Go again**\n\nHeroes can attack any opposing hero.\n\nWhen a hero deals lethal damage to another hero, they create Gold tokens equal to the number of heroes who started this game.",
+    "status": "pending"
+  },
+  {
+    "slug": "dissolve_reality_yellow",
+    "name": "Dissolve Reality",
+    "type_text": "Illusionist Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero puts all cards in their arsenal on the bottom of their deck and creates a Ponder token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "double_down_red",
+    "name": "Double Down",
+    "type_text": "Guardian / Warrior Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "You may destroy a Gold you control rather than pay Double Down's {r} cost.\n\nThe next attack that **wagers** this turn gets +3{p} and **overpower**.\n\nIf a hero would create 1 or more tokens from a **wager** this turn, instead they create that many plus 1 of each of those tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "down_but_not_out_blue",
+    "name": "Down But Not Out",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} and control fewer equipment and tokens than them, this gets +3{p}, **overpower**, and \"When this hits, create an Agility, Might, and Vigor token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "down_but_not_out_red",
+    "name": "Down But Not Out",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} and control fewer equipment and tokens than them, this gets +3{p}, **overpower**, and \"When this hits, create an Agility, Might, and Vigor token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "down_but_not_out_yellow",
+    "name": "Down But Not Out",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} and control fewer equipment and tokens than them, this gets +3{p}, **overpower**, and \"When this hits, create an Agility, Might, and Vigor token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "draw_swords_blue",
+    "name": "Draw Swords",
+    "type_text": "Warrior Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +1{p}.\n\nDraw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "draw_swords_red",
+    "name": "Draw Swords",
+    "type_text": "Warrior Action",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +3{p}.\n\nDraw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "draw_swords_yellow",
+    "name": "Draw Swords",
+    "type_text": "Warrior Action",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +2{p}.\n\nDraw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_ahead_blue",
+    "name": "Edge Ahead",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +1{p} and \"When this attacks a hero, you may **wager** an Agility token with them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_ahead_red",
+    "name": "Edge Ahead",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +3{p} and \"When this attacks a hero, you may **wager** an Agility token with them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_ahead_yellow",
+    "name": "Edge Ahead",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +2{p} and \"When this attacks a hero, you may **wager** an Agility token with them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "embrace_adversity",
+    "name": "Embrace Adversity",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "This may only defend an attack if the attack's controller has destroyed a Might token this turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "engaged_swiftblade_blue",
+    "name": "Engaged Swiftblade",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +1{p} and \"If this is defended by an attack action card, this gets **Go again**.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "engaged_swiftblade_red",
+    "name": "Engaged Swiftblade",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +3{p} and \"If this is defended by an attack action card, this gets **Go again**.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "engaged_swiftblade_yellow",
+    "name": "Engaged Swiftblade",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +2{p} and \"If this is defended by an attack action card, this gets **Go again**.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_magneto_blue",
+    "name": "Evo Magneto",
+    "type_text": "Mechanologist Action Equipment - Evo Arms",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base arms equipped, transform it into this, then equip this.\n\nWhen this defends, you may destroy a card under it. If you do, gain control of target item with cost 0 or 1 controlled by the attacking hero.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "face_adversity",
+    "name": "Face Adversity",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "This may only defend an attack if the attack's controller has drawn a card this turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "fatal_engagement_blue",
+    "name": "Fatal Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if an attack action card is defending this chain link.\n\nTarget attack gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fatal_engagement_red",
+    "name": "Fatal Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if an attack action card is defending this chain link.\n\nTarget attack gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fatal_engagement_yellow",
+    "name": "Fatal Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if an attack action card is defending this chain link.\n\nTarget attack gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flat_trackers",
+    "name": "Flat Trackers",
+    "type_text": "Brute / Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Action - Destroy this: Create an Agility token. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "gauntlet_of_might",
+    "name": "Gauntlet of Might",
+    "type_text": "Brute / Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Action - Destroy this: Create a Might token. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "gauntlets_of_iron_will",
+    "name": "Gauntlets of Iron Will",
+    "type_text": "Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, the next time an attack would gain {p} this chain link, instead it gains that much minus 1.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "glory_seeker",
+    "name": "Glory Seeker",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}{r}, destroy this: Draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "goblet_of_bloodrun_wine_blue",
+    "name": "Goblet of Bloodrun Wine",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create an Agility and a Vigor token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "golden_glare",
+    "name": "Golden Glare",
+    "type_text": "Guardian Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Specialization"
+    ],
+    "specializations": [
+      "Victor"
+    ],
+    "functional_text": "**Victor Specialization**\n\nWhen this defends together with 2 or more yellow cards, create a Gold token.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "good_time_chapeau",
+    "name": "Good Time Chapeau",
+    "type_text": "Guardian Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization",
+      "Temper",
+      "Wager"
+    ],
+    "specializations": [
+      "Betsy"
+    ],
+    "functional_text": "**Betsy Specialization**\n\n**Action** - Destroy a Gold you control: Your next attack this turn gets \"When this attacks a hero, **wager** a Might and a Vigor token with them.\" **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "grains_of_bloodspill",
+    "name": "Grains of Bloodspill",
+    "type_text": "Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a weapon attack you control hits, you may pay {r}. If you do, create a Vigor token. \n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "grandstand_legplates",
+    "name": "Grandstand Legplates",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": "*",
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "Grandstand Legplates' {d} is equal to the number of opposing heroes with greater {h} than you.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "graven_call",
+    "name": "Graven Call",
+    "type_text": "Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Piercing"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\n**Piercing 1**\n\n**Instant** - Destroy 2 Silver you control: Equip this with a +1{p} counter. Activate this ability only while this is in your graveyard.",
+    "status": "pending"
+  },
+  {
+    "slug": "headliner_helm",
+    "name": "Headliner Helm",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": "*",
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "Headliner Helm's {d} is equal to the number of opposing heroes with greater {h} than you.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "hearty_block_red",
+    "name": "Hearty Block",
+    "type_text": "Guardian / Warrior Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, if you control a Vigor token, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "high_riser",
+    "name": "High Riser",
+    "type_text": "Guardian Weapon - Hammer (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf you've drawn a card this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "hold_em_blue",
+    "name": "Hold 'em",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +1{p} and \"When this attacks a hero, you may **wager** a Vigor token with them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hold_em_red",
+    "name": "Hold 'em",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +3{p} and \"When this attacks a hero, you may **wager** a Vigor token with them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hold_em_yellow",
+    "name": "Hold 'em",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Warrior attack this turn gets +2{p} and \"When this attacks a hero, you may **wager** a Vigor token with them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hood_of_red_sand",
+    "name": "Hood of Red Sand",
+    "type_text": "Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Specialization"
+    ],
+    "specializations": [
+      "Kassai"
+    ],
+    "functional_text": "**Kassai Specialization**\n\n**Attack Reaction** - {r}, banish a red and yellow card from your graveyard, destroy this: Target sword attack gets \"When this hits, draw a card.\"\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "hot_streak",
+    "name": "Hot Streak",
+    "type_text": "Warrior Weapon - Sword (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nWhen this is defended by 1 or more attack action cards, Hot Streak's attacks get **go again** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "judge_jury_executioner_red",
+    "name": "Judge, Jury, Executioner",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Azalea"
+    ],
+    "functional_text": "**Legendary Azalea Specialization**\n\nIf this has an aim counter, it gets \"When this hits a hero, they discard all but 1 card from their hand.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "kassai",
+    "name": "Kassai",
+    "type_text": "Warrior Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, your sword attacks cost {r} less to activate.\n\n**Once per Turn Action** - Banish 2 red and 2 yellow cards from your graveyard: The next time a weapon you control hits a hero this turn, create a Gold token. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "kassai_of_the_golden_sand",
+    "name": "Kassai of the Golden Sand",
+    "type_text": "Warrior Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, your sword attacks cost {r} less to activate.\n\n**Once per Turn Action** - Banish 2 red and 2 yellow cards from your graveyard: The next time a weapon you control hits a hero this turn, create a Gold token. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "kayo",
+    "name": "Kayo",
+    "type_text": "Brute Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You have 1 weapon zone.\n\nAttack action cards you own get +1{p} while they are in any zone other than the combat chain.\n\nThe first time you discard a card with 6 or more {p} during each of your action phases, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "kayo_armed_and_dangerous",
+    "name": "Kayo, Armed and Dangerous",
+    "type_text": "Brute Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You have 1 weapon zone.\n\nAttack action cards you own get +1{p} while they are in any zone other than the combat chain.\n\nThe first time you discard a card with 6 or more {p} during each of your action phases, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "knucklehead",
+    "name": "Knucklehead",
+    "type_text": "Brute Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Specialization",
+      "Temper"
+    ],
+    "specializations": [
+      "Kayo"
+    ],
+    "functional_text": "**Kayo Specialization** \n\nAction - Destroy this: Roll a 6-sided die. Until end of turn, your base {i} is the number rolled.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "lay_down_the_law_red",
+    "name": "Lay Down the Law",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "**Tower** - If this has 13 or more {p}, non-equipment cards get -1{d} while defending this.",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_heart_blue",
+    "name": "Lead with Heart",
+    "type_text": "Guardian / Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Guardian or Warrior attack this turn gets +1{p}.\n\nCreate a Vigor token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_heart_red",
+    "name": "Lead with Heart",
+    "type_text": "Guardian / Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Guardian or Warrior attack this turn gets +3{p}.\n\nCreate a Vigor token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_heart_yellow",
+    "name": "Lead with Heart",
+    "type_text": "Guardian / Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Guardian or Warrior attack this turn gets +2{p}.\n\nCreate a Vigor token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_power_blue",
+    "name": "Lead with Power",
+    "type_text": "Brute / Guardian Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Brute or Guardian attack this turn gets +1{p}.\n\nCreate a Might token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_power_red",
+    "name": "Lead with Power",
+    "type_text": "Brute / Guardian Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Brute or Guardian attack this turn gets +3{p}.\n\nCreate a Might token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_power_yellow",
+    "name": "Lead with Power",
+    "type_text": "Brute / Guardian Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Brute or Guardian attack this turn gets +2{p}.\n\nCreate a Might token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_speed_blue",
+    "name": "Lead with Speed",
+    "type_text": "Brute / Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Brute or Warrior attack this turn gets +1{p}.\n\nCreate an Agility token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_speed_red",
+    "name": "Lead with Speed",
+    "type_text": "Brute / Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Brute or Warrior attack this turn gets +3{p}.\n\nCreate an Agility token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lead_with_speed_yellow",
+    "name": "Lead with Speed",
+    "type_text": "Brute / Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Brute or Warrior attack this turn gets +2{p}.\n\nCreate an Agility token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "luminaris_angels_glow",
+    "name": "Luminaris, Angel's Glow",
+    "type_text": "Light Illusionist Weapon - Scepter (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Scepter"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If there is a yellow card in your pitch zone, the first attack action card with Herald in its name you play each turn and your first angel attack each turn get **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "mighty_windup_blue",
+    "name": "Mighty Windup",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "mighty_windup_red",
+    "name": "Mighty Windup",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "mighty_windup_yellow",
+    "name": "Mighty Windup",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "millers_grindstone",
+    "name": "Miller's Grindstone",
+    "type_text": "Guardian Weapon - Hammer (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nWhen this hits a hero, **clash** with them. If you win, destroy the top card of their deck. If they win, put a -1{p} counter on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "mini_meataxe",
+    "name": "Mini Meataxe",
+    "type_text": "Brute Weapon - Axe (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Axe"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nWhen this attacks, draw a card then discard a random card.",
+    "status": "pending"
+  },
+  {
+    "slug": "money_where_ya_mouth_is_blue",
+    "name": "Money Where Ya Mouth Is",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +1{p} and \"When this attacks a hero, you may **wager** a Gold token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "money_where_ya_mouth_is_red",
+    "name": "Money Where Ya Mouth Is",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +3{p} and \"When this attacks a hero, you may **wager** a Gold token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "money_where_ya_mouth_is_yellow",
+    "name": "Money Where Ya Mouth Is",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +2{p} and \"When this attacks a hero, you may **wager** a Gold token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "monstrous_veil",
+    "name": "Monstrous Veil",
+    "type_text": "Brute Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Rhinar"
+    ],
+    "functional_text": "**Rhinar Specialization**\n\n**Action** - Destroy this: Draw a card then discard a random card. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "nasty_surprise_blue",
+    "name": "Nasty Surprise",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When an opponent's effect puts this into your graveyard from anywhere, create an Agility, Might, and Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "no_fear_red",
+    "name": "No Fear",
+    "type_text": "Brute Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play this, banish any number of cards with 6 or more {p} from your hand. At the beginning of the end phase, return them to your hand.\n\nThe next time you would be dealt damage this turn, prevent X of that damage, where X is 2 plus the number of cards banished to play this.",
+    "status": "pending"
+  },
+  {
+    "slug": "olympia",
+    "name": "Olympia",
+    "type_text": "Warrior Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The first time each of your attacks wins a **wager**, create a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "olympia_prized_fighter",
+    "name": "Olympia, Prized Fighter",
+    "type_text": "Warrior Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The first time each of your attacks wins a **wager**, create a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "over_the_top_blue",
+    "name": "Over the Top",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "over_the_top_red",
+    "name": "Over the Top",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "over_the_top_yellow",
+    "name": "Over the Top",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "overcome_adversity",
+    "name": "Overcome Adversity",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "This may only defend an attack if the attack's controller has destroyed an Agility token this turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "pack_call_blue",
+    "name": "Pack Call",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it has 6 or more {p}, put it on top. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "pack_call_red",
+    "name": "Pack Call",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it has 6 or more {p}, put it on top. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "pack_call_yellow",
+    "name": "Pack Call",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it has 6 or more {p}, put it on top. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "parry_blade",
+    "name": "Parry Blade",
+    "type_text": "Warror Weapon Equipment - Sword (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nThis gets +2{d} while defending a weapon attack.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "pay_up_red",
+    "name": "Pay Up",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If defending hero controls a Gold, this gets **overpower**.\n\nWhen this hits a hero, gain control of a Gold token they control. If you don't, deal 1 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "performance_bonus_blue",
+    "name": "Performance Bonus",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Gold token.\nIf this was played from arsenal, it gets **Go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "performance_bonus_red",
+    "name": "Performance Bonus",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Gold token.\nIf this was played from arsenal, it gets **Go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "performance_bonus_yellow",
+    "name": "Performance Bonus",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Gold token.\n\nIf this was played from arsenal, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pint_of_strong_and_stout_blue",
+    "name": "Pint of Strong and Stout",
+    "type_text": "Guardian Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create a Might and a Vigor token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_town_blue",
+    "name": "Pound Town",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_town_red",
+    "name": "Pound Town",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_town_yellow",
+    "name": "Pound Town",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "primed_to_fight_red",
+    "name": "Primed to Fight",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 1,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've controlled a Vigor token this turn, this costs {r} less to play.\n\nIf you've controlled a Might token this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "prized_galea",
+    "name": "Prized Galea",
+    "type_text": "Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Specialization",
+      "Temper"
+    ],
+    "specializations": [
+      "Olympia"
+    ],
+    "functional_text": "**Olympia Specialization**\n\n**Attack Reaction** - {r}, destroy this: Target weapon attack you control **wagers** a Gold token with the defending hero.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "raise_an_army_yellow",
+    "name": "Raise an Army",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Kassai"
+    ],
+    "functional_text": "**Kassai Specialization**\n\nAs an additional cost to play this, destroy X Gold you control.\n\nCreate X Cintari Sellsword tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "raw_meat",
+    "name": "Raw Meat",
+    "type_text": "Brute Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "If you control an Agility token, this gets +1{d}.\n\nIf you control a Might token, this gets +1{d}.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "rawhide_rumble_blue",
+    "name": "Rawhide Rumble",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks a hero, if you've **beaten chest** this turn, **intimidate** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "rawhide_rumble_red",
+    "name": "Rawhide Rumble",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks a hero, if you've **beaten chest** this turn, **intimidate** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "rawhide_rumble_yellow",
+    "name": "Rawhide Rumble",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks a hero, if you've **beaten chest** this turn, **intimidate** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "reckless_charge_blue",
+    "name": "Reckless Charge",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Kayo"
+    ],
+    "functional_text": "**Kayo Specialization**\n\nRoll a 6 sided die. Gain action points equal to half the number rolled, rounded down.\n\nIf you've rolled a 6 on a die this turn, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "reel_in_blue",
+    "name": "Reel In",
+    "type_text": "Ranger Instant",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "Look at the top X+1 cards of your deck. Choose up to 4 traps, reveal them, put them into your hand, then shuffle.\n\n**Reload**",
+    "status": "pending"
+  },
+  {
+    "slug": "ripple_away_blue",
+    "name": "Ripple Away",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: If an action card effect would create 1 or more tokens this turn, instead it creates that many minus 1 of each of those tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_energy_blue",
+    "name": "Rising Energy",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_energy_red",
+    "name": "Rising Energy",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_energy_yellow",
+    "name": "Rising Energy",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_power_blue",
+    "name": "Rising Power",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_power_red",
+    "name": "Rising Power",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_power_yellow",
+    "name": "Rising Power",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_speed_blue",
+    "name": "Rising Speed",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_speed_red",
+    "name": "Rising Speed",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_speed_yellow",
+    "name": "Rising Speed",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've drawn a card this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "run_into_trouble_red",
+    "name": "Run into Trouble",
+    "type_text": "Brute / Warrior Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, if you control an Agility token, deal damage to the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "runner_runner_red",
+    "name": "Runner Runner",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if it has **go again**, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "seduce_secrets_yellow",
+    "name": "Seduce Secrets",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Look at target hero's hand and the top card of their deck.\n\nIf this was played from arsenal, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "send_packing_yellow",
+    "name": "Send Packing",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, banish a card from their arsenal. When the chain link resolves, if this didn't hit, return the banished card to its owner's hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "sheltered_cove",
+    "name": "Sheltered Cove",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}{r}, destroy this: The next time you would be dealt damage this turn, prevent 2 of that damage",
+    "status": "pending"
+  },
+  {
+    "slug": "shift_the_tide_of_battle_yellow",
+    "name": "Shift the Tide of Battle",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target Warrior attack with {p} greater than its base gets **go again**.\n\nThe next time an opposing hero is dealt damage this turn, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "show_no_mercy_red",
+    "name": "Show No Mercy",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate",
+      "Specialization"
+    ],
+    "specializations": [
+      "Rhinar"
+    ],
+    "functional_text": "**Rhinar Specialization**\n\nWhen this attacks a hero, **intimidate** them.\n\nIf the defending hero has no cards in hand, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "slap_happy_red",
+    "name": "Slap-Happy",
+    "type_text": "Guardian / Warrior Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 2 of that damage. If you do, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "smack_of_reality_red",
+    "name": "Smack of Reality",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 1,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, destroy all aura tokens they control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "smashback_alehorn_blue",
+    "name": "Smashback Alehorn",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create an Agility and a Might token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sonata_galaxia_red",
+    "name": "Sonata Galaxia",
+    "type_text": "Runeblade Action",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Runechant you control.\n\nSearch your deck for a Runeblade aura with cost X or less, put it into the arena, then shuffle.\n\nIf X is 2 or more, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "stacked_in_your_favor_blue",
+    "name": "Stacked in Your Favor",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nYour attack action cards get +1{d} while defending.\n\nAt the start of your turn, destroy this, draw a card, then put a card from your hand on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "stacked_in_your_favor_red",
+    "name": "Stacked in Your Favor",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nYour attack action cards get +3{d} while defending.\n\nAt the start of your turn, destroy this, draw a card, then put a card from your hand on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "stacked_in_your_favor_yellow",
+    "name": "Stacked in Your Favor",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nYour attack action cards get +2{d} while defending.\n\nAt the start of your turn, destroy this, draw a card, then put a card from your hand on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "stadium_centerpiece",
+    "name": "Stadium Centerpiece",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": "*",
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "Stadium Centerpiece's {d} is equal to the number of opposing heroes with greater {h} than you.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "stand_ground",
+    "name": "Stand Ground",
+    "type_text": "Guardian Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Might token, this gets +1{d}.\n\nIf you control a Vigor token, this gets +1{d}.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "standing_order_red",
+    "name": "Standing Order",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, you may put a card from your arsenal on the bottom of your deck. If you do, this gets +2{p} and +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "starting_stake_yellow",
+    "name": "Starting Stake",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control no Gold tokens, create a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "stonewall_impasse",
+    "name": "Stonewall Impasse",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. If you win, this gets +1{d} until end of turn.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "take_it_on_the_chin_red",
+    "name": "Take it on the Chin",
+    "type_text": "Brute / Warrior Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 2 of that damage. If you do, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_upper_hand_blue",
+    "name": "Take the Upper Hand",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've **wagered** this chain link.\n\nTarget attack gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_upper_hand_red",
+    "name": "Take the Upper Hand",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've **wagered** this chain link.\n\nTarget attack gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_upper_hand_yellow",
+    "name": "Take the Upper Hand",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've **wagered** this chain link.\n\nTarget attack gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "talk_a_big_game_blue",
+    "name": "Talk a Big Game",
+    "type_text": "Brute / Guardian Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose a number. The next time you deal that much or more {p} damage to a hero this turn, create that many Might tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tenacity_yellow",
+    "name": "Tenacity",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, it gets +X{p}, where X is the number of defending cards on the combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "test_of_agility_red",
+    "name": "Test of Agility",
+    "type_text": "Brute / Warrior Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "test_of_might_red",
+    "name": "Test of Might",
+    "type_text": "Brute / Guardian Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "test_of_strength_red",
+    "name": "Test of Strength",
+    "type_text": "Generic Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "test_of_vigor_red",
+    "name": "Test of Vigor",
+    "type_text": "Guardian / Warrior Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "the_golden_son_yellow",
+    "name": "The Golden Son",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Overpower",
+      "Specialization"
+    ],
+    "specializations": [
+      "Victor"
+    ],
+    "functional_text": "**Victor Specialization**\n\nAs an additional cost to play this, you may destroy a Gold you control. If you do, this gets +3{p} and **overpower**.\n\nWhen you win a **clash** revealing this, create a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "thunk_blue",
+    "name": "Thunk",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a **clash** revealing this, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "thunk_red",
+    "name": "Thunk",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a **clash** revealing this, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "thunk_yellow",
+    "name": "Thunk",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a **clash** revealing this, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "ticket_puncher",
+    "name": "Ticket Puncher",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": "*",
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "Ticket Puncher's {d} is equal to the number of opposing heroes with greater {h} than you.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "trounce_red",
+    "name": "Trounce",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. Put the revealed cards on the bottom of their owner's deck, then **clash** again.\n\nIf a hero wins both **clashes**, they create a Gold, Might, and Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "up_the_ante_blue",
+    "name": "Up the Ante",
+    "type_text": "Warrior Attack Reaction",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Specialization",
+      "Wager"
+    ],
+    "specializations": [
+      "Olympia"
+    ],
+    "functional_text": "**Olympia Specialization**\n\nChoose X+1;\n- Target attack **wagers** an Agility token with the defending hero.\n- Target attack **wagers** a Gold token with the defending hero.\n- Target attack **wagers** a Vigor token with the defending hero.\n- Target attack gets +Y{p}, where Y is the number of times it has **wagered**.",
+    "status": "pending"
+  },
+  {
+    "slug": "victor_goldmane",
+    "name": "Victor Goldmane",
+    "type_text": "Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "The first time each turn you create a Gold token from an effect you control, draw a card.\n\nThe first time each turn you would fail to win a **clash**, instead you may destroy a Gold you control. If you do, put 1 of the revealed cards on the bottom of its owner's deck, then **clash** again.",
+    "status": "pending"
+  },
+  {
+    "slug": "victor_goldmane_high_and_mighty",
+    "name": "Victor Goldmane, High and Mighty",
+    "type_text": "Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "The first time each turn you create a Gold token from an effect you control, draw a card.\n\nThe first time each turn you would fail to win a **clash**, instead you may destroy a Gold you control. If you do, put 1 of the revealed cards on the bottom of its owner's deck, then **clash** again.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigor_girth",
+    "name": "Vigor Girth",
+    "type_text": "Guardian / Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Action - Destroy this: Create a Vigor token. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_engagement_blue",
+    "name": "Vigorous Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +1{p}. If it's defended by an attack action card, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_engagement_red",
+    "name": "Vigorous Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +3{p}. If it's defended by an attack action card, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_engagement_yellow",
+    "name": "Vigorous Engagement",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Warrior attack gets +2{p}. If it's defended by an attack action card, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_windup_blue",
+    "name": "Vigorous Windup",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_windup_red",
+    "name": "Vigorous Windup",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_windup_yellow",
+    "name": "Vigorous Windup",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_agility_blue",
+    "name": "Wage Agility",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** an Agility token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_agility_red",
+    "name": "Wage Agility",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** an Agility token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_agility_yellow",
+    "name": "Wage Agility",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** an Agility token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_gold_blue",
+    "name": "Wage Gold",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Universal",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "**Universal**\n\nWhen this attacks a hero, you may **wager** a Gold token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_gold_red",
+    "name": "Wage Gold",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Universal",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "**Universal**\n\nWhen this attacks a hero, you may **wager** a Gold token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_gold_yellow",
+    "name": "Wage Gold",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Universal",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "**Universal**\n\nWhen this attacks a hero, you may **wager** a Gold token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_might_blue",
+    "name": "Wage Might",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** a Might token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_might_red",
+    "name": "Wage Might",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** a Might token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_might_yellow",
+    "name": "Wage Might",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** a Might token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_vigor_blue",
+    "name": "Wage Vigor",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** a Vigor token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_vigor_red",
+    "name": "Wage Vigor",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** a Vigor token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wage_vigor_yellow",
+    "name": "Wage Vigor",
+    "type_text": "Guardian / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may **wager** a Vigor token with them.",
+    "status": "pending"
+  },
+  {
+    "slug": "wall_of_meat_and_muscle_red",
+    "name": "Wall of Meat and Muscle",
+    "type_text": "Brute / Guardian Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, if you control a Might token, you may put an attack action card from your graveyard on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "wallop_blue",
+    "name": "Wallop",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a **clash** revealing this, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "wallop_red",
+    "name": "Wallop",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a **clash** revealing this, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "wallop_yellow",
+    "name": "Wallop",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a **clash** revealing this, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "agility",
+    "name": "Agility",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "cintari_sellsword",
+    "name": "Cintari Sellsword",
+    "type_text": "Warrior Token - Mercenary Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": 2,
+    "intellect": null,
+    "subtypes": [
+      "Ally"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**. **Go again**\n\nCintari Sellsword can only attack if you've attacked with a weapon this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "might",
+    "name": "Might",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigor",
+    "name": "Vigor",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then gain {r}.",
+    "status": "pending"
+  }
+]

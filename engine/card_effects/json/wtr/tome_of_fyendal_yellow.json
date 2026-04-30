@@ -1,0 +1,38 @@
+{
+  "slug": "tome_of_fyendal_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 2
+        },
+        {
+          "type": "GAIN_LIFE",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "PLAYED_FROM_ARSENAL"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "PLAYED_FROM_ARSENAL"
+            },
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "katsu",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "ATTACK_IS_NOT_WEAPON"
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Ninja"
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DISCARD",
+          "amount": 1,
+          "random": true
+        },
+        {
+          "type": "SEARCH_DECK",
+          "filter_types": [
+            "combo"
+          ]
+        },
+        {
+          "type": "BANISH",
+          "amount": 1,
+          "from_zone": "TOP_DECK"
+        },
+        {
+          "type": "PUT_BOTTOM_DRAW"
+        }
+      ]
+    }
+  ]
+}

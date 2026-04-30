@@ -1,0 +1,27 @@
+{
+  "slug": "pounding_gale_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_HIT",
+          "conditions": [
+            {
+              "type": "COMBO_CONTAINS",
+              "substring": "open_the_center"
+            }
+          ],
+          "effects": [
+            {
+              "type": "DEAL_DAMAGE",
+              "amount": 2,
+              "target": "OPPONENT"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

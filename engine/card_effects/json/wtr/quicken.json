@@ -1,0 +1,32 @@
+{
+  "slug": "quicken",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ACTIVATE",
+      "conditions": [
+        {
+          "type": "OR",
+          "any": [
+            {
+              "type": "ATTACK_IS_NOT_WEAPON"
+            },
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": 1,
+          "from_zone": "TOP_DECK"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

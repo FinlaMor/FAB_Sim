@@ -1,0 +1,29 @@
+{
+  "slug": "mask_of_momentum",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "ATTACK_IS_NOT_WEAPON"
+            },
+            {
+              "type": "FLAG_SET",
+              "flag": "chain_link_3_or_higher"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

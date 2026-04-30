@@ -1,0 +1,5297 @@
+[
+  {
+    "slug": "aether_dart_blue",
+    "name": "Aether Dart",
+    "type_text": "Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_dart_red",
+    "name": "Aether Dart",
+    "type_text": "Wizard Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_dart_yellow",
+    "name": "Aether Dart",
+    "type_text": "Wizard Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_hail_blue",
+    "name": "Aether Hail",
+    "type_text": "Ice Wizard Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_hail_red",
+    "name": "Aether Hail",
+    "type_text": "Ice Wizard Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 4 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_hail_yellow",
+    "name": "Aether Hail",
+    "type_text": "Ice Wizard Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_icevein_blue",
+    "name": "Aether Icevein",
+    "type_text": "Elemental Wizard Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 3 arcane damage to any target. If Aether Icevein was **fused** and deals damage to a hero, they discard a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_icevein_red",
+    "name": "Aether Icevein",
+    "type_text": "Elemental Wizard Action",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 5 arcane damage to any target. If Aether Icevein was **fused** and deals damage to a hero, they discard a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_icevein_yellow",
+    "name": "Aether Icevein",
+    "type_text": "Elemental Wizard Action",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 4 arcane damage to any target. If Aether Icevein was **fused** and deals damage to a hero, they discard a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "alluvion_constellas",
+    "name": "Alluvion Constellas",
+    "type_text": "Wizard Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "The first time Alluvion Constellas prevents arcane damage each turn, if it has less than 4 energy counters, you may put an energy counter on it.\n\n**Instant** - Remove 2 energy counters from Alluvion Constellas: The next staff ability you activate this turn costs {r}{r}{r} less.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "arctic_incarceration_blue",
+    "name": "Arctic Incarceration",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Frostbite token under target hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "arctic_incarceration_red",
+    "name": "Arctic Incarceration",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create 3 Frostbite tokens under target hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "arctic_incarceration_yellow",
+    "name": "Arctic Incarceration",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create 2 Frostbite tokens under target hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "billowing_mirage_blue",
+    "name": "Billowing Mirage",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Billowing Mirage, **transform** up to 1 ash you control into an Aether Ashwing.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "billowing_mirage_red",
+    "name": "Billowing Mirage",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Billowing Mirage, **transform** up to 1 ash you control into an Aether Ashwing.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "billowing_mirage_yellow",
+    "name": "Billowing Mirage",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Billowing Mirage, **transform** up to 1 ash you control into an Aether Ashwing.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blaze_headlong_red",
+    "name": "Blaze Headlong",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've played another red card this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_of_the_dracai_red",
+    "name": "Blood of the Dracai",
+    "type_text": "Draconic Resource - Gem",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Gem"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nWhen you pitch Blood of the Dracai, the next 3 Draconic cards you play this turn cost {r} less.",
+    "status": "pending"
+  },
+  {
+    "slug": "brain_freeze_blue",
+    "name": "Brain Freeze",
+    "type_text": "Elemental Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nTarget opponent reveals their hand. If Brain Freeze was **fused**, put an action card with cost 0 from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "brain_freeze_red",
+    "name": "Brain Freeze",
+    "type_text": "Elemental Wizard Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nTarget opponent reveals their hand. If Brain Freeze was **fused**, put an action card with cost 2 or less from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "brain_freeze_yellow",
+    "name": "Brain Freeze",
+    "type_text": "Elemental Wizard Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nTarget opponent reveals their hand. If Brain Freeze was **fused**, put an action card with cost 1 or less from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "brand_with_cinderclaw_blue",
+    "name": "Brand with Cinderclaw",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this combat chain is Draconic in addition to its other card types.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "brand_with_cinderclaw_red",
+    "name": "Brand with Cinderclaw",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this combat chain is Draconic in addition to its other card types.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "brand_with_cinderclaw_yellow",
+    "name": "Brand with Cinderclaw",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this combat chain is Draconic in addition to its other card types.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "breaking_point_red",
+    "name": "Breaking Point",
+    "type_text": "Draconic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Rupture"
+    ],
+    "specializations": [],
+    "functional_text": "**Rupture** - If Breaking Point is played as chain link 4 or higher, it has \"When this hits a hero, destroy all cards in their arsenal.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "brothers_in_arms_blue",
+    "name": "Brothers in Arms",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay {r}. If you do, it gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "brothers_in_arms_red",
+    "name": "Brothers in Arms",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay {r}. If you do, it gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "brothers_in_arms_yellow",
+    "name": "Brothers in Arms",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay {r}. If you do, it gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "burn_away_red",
+    "name": "Burn Away",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Burn Away, you may banish a Phoenix Flame from your graveyard. When you do, Burn Away gains +2{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "burn_them_all_red",
+    "name": "Burn Them All",
+    "type_text": "Draconic Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nOnce per turn, when a dragon you control attacks, it deals 1 arcane damage to each opposing hero.\n\nAt the beginning of your end phase, put a raze counter on Burn Them All then destroy it unless you banish red card from your graveyard for each raze counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "channel_the_bleak_expanse_blue",
+    "name": "Channel the Bleak Expanse",
+    "type_text": "Ice Action - Aura",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Channel",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nHeroes can't reveal cards, search decks, or draw cards from effects.\n\n**Channel Ice** - At the beginning of your end phase, put a flow counter on Channel the Bleak Expanse then destroy it unless you put an Ice card from your pitch zone on the bottom of your deck for each flow counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "cinderskin_devotion_blue",
+    "name": "Cinderskin Devotion",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "cinderskin_devotion_red",
+    "name": "Cinderskin Devotion",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "cinderskin_devotion_yellow",
+    "name": "Cinderskin Devotion",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "cold_snap_blue",
+    "name": "Cold Snap",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Freeze",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target hero may pay {r}. If they don't, **freeze** a card in their arsenal or an ally they control until the start of your next turn.\n\nIf Cold Snap is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cold_snap_red",
+    "name": "Cold Snap",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Freeze",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target hero may pay {r}{r}{r}. If they don't, **freeze** a card in their arsenal or an ally they control until the start of your next turn.\n\nIf Cold Snap is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cold_snap_yellow",
+    "name": "Cold Snap",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Freeze",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target hero may pay {r}{r}. If they don't, **freeze** a card in their arsenal or an ally they control until the start of your next turn.\n\nIf Cold Snap is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "combustion_point_red",
+    "name": "Combustion Point",
+    "type_text": "Draconic Ninja Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Draconic or Ninja attack action card gains +1{p}.\n\nYou may banish a non-equipment defending card with {d} less than the number of Draconic chain links you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "conduit_of_frostburn",
+    "name": "Conduit of Frostburn",
+    "type_text": "Ice Wizard Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Quell"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Conduit of Frostburn: The next card you play this turn with an effect that deals arcane damage gains \"When this deals arcane damage to a hero, destroy a **frozen** card in their arsenal.\"\n\n**Quell 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "coronet_peak",
+    "name": "Coronet Peak",
+    "type_text": "Ice Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}: Target hero discards a card unless they pay {r}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "critical_strike_blue",
+    "name": "Critical Strike",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "critical_strike_red",
+    "name": "Critical Strike",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "critical_strike_yellow",
+    "name": "Critical Strike",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "crown_of_providence",
+    "name": "Crown of Providence",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When you defend with Crown of Providence, you may put a card from your hand or arsenal on the bottom of your deck. If you do, draw a card.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "dampen_blue",
+    "name": "Dampen",
+    "type_text": "Wizard Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to any target.\n\nPrevent the next X arcane damage that would be dealt to your hero this turn, where X is the damage dealt by Dampen.",
+    "status": "pending"
+  },
+  {
+    "slug": "dampen_red",
+    "name": "Dampen",
+    "type_text": "Wizard Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 4 arcane damage to any target.\n\nPrevent the next X arcane damage that would be dealt to your hero this turn, where X is the damage dealt by Dampen.",
+    "status": "pending"
+  },
+  {
+    "slug": "dampen_yellow",
+    "name": "Dampen",
+    "type_text": "Wizard Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to any target.\n\nPrevent the next X arcane damage that would be dealt to your hero this turn, where X is the damage dealt by Dampen.",
+    "status": "pending"
+  },
+  {
+    "slug": "double_strike_red",
+    "name": "Double Strike",
+    "type_text": "Nina Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Double Strike's chain link resolves, banish it. You may play it this combat chain. If you do, it loses this ability.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dromai",
+    "name": "Dromai",
+    "type_text": "Draconic Illusionist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you pitch a red card, create an Ash Token.\n\nIf you've played a red card this turn, dragons you control have **go again** while attacking.",
+    "status": "pending"
+  },
+  {
+    "slug": "dromai_ash_artist",
+    "name": "Dromai, Ash Artist",
+    "type_text": "Draconic Illusionist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you pitch a red card, create an Ash Token.\n\nIf you've played a red card this turn, dragons you control have **go again** while attacking.",
+    "status": "pending"
+  },
+  {
+    "slug": "dunebreaker_cenipai_blue",
+    "name": "Dunebreaker Cenipai",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\nWhen Dunebreaker Cenipai is destroyed, create an Ash token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dunebreaker_cenipai_red",
+    "name": "Dunebreaker Cenipai",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\nWhen Dunebreaker Cenipai is destroyed, create an Ash token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dunebreaker_cenipai_yellow",
+    "name": "Dunebreaker Cenipai",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\nWhen Dunebreaker Cenipai is destroyed, create an Ash token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dust_runner_outlaw_blue",
+    "name": "Dust Runner Outlaw",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dust_runner_outlaw_red",
+    "name": "Dust Runner Outlaw",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dust_runner_outlaw_yellow",
+    "name": "Dust Runner Outlaw",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dustup_blue",
+    "name": "Dustup",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "When Dustup hits, create an Ash token, then **transform** up to 1 ash you control into an Aether Ashwing.",
+    "status": "pending"
+  },
+  {
+    "slug": "dustup_red",
+    "name": "Dustup",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "When Dustup hits, create an Ash token, then **transform** up to 1 ash you control into an Aether Ashwing.",
+    "status": "pending"
+  },
+  {
+    "slug": "dustup_yellow",
+    "name": "Dustup",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "When Dustup hits, create an Ash token, then **transform** up to 1 ash you control into an Aether Ashwing.",
+    "status": "pending"
+  },
+  {
+    "slug": "embermaw_cenipai_blue",
+    "name": "Embermaw Cenipai",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\nWhen Embermaw Cenipai is destroyed, create an Ash token.",
+    "status": "pending"
+  },
+  {
+    "slug": "embermaw_cenipai_red",
+    "name": "Embermaw Cenipai",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\nWhen Embermaw Cenipai is destroyed, create an Ash token.",
+    "status": "pending"
+  },
+  {
+    "slug": "embermaw_cenipai_yellow",
+    "name": "Embermaw Cenipai",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\nWhen Embermaw Cenipai is destroyed, create an Ash token.",
+    "status": "pending"
+  },
+  {
+    "slug": "encase_red",
+    "name": "Encase",
+    "type_text": "Elemental Wizard Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Freeze",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 3 arcane damage to any target. If Encase was **fused** and deals damage to a hero, **freeze** that hero and all equipment they control until the start of your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "engulfing_flamewave_blue",
+    "name": "Engulfing Flamewave",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Engulfing Flamewave hits, reveal the top card of your deck. If it's an attack action card with cost less than number of Draconic chain links you control, banish it. You may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "engulfing_flamewave_red",
+    "name": "Engulfing Flamewave",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Engulfing Flamewave hits, reveal the top card of your deck. If it's an attack action card with cost less than number of Draconic chain links you control, banish it. You may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "engulfing_flamewave_yellow",
+    "name": "Engulfing Flamewave",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Engulfing Flamewave hits, reveal the top card of your deck. If it's an attack action card with cost less than number of Draconic chain links you control, banish it. You may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "erase_face_red",
+    "name": "Erase Face",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, cards they own lose all class and talent types until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "fai",
+    "name": "Fai",
+    "type_text": "Draconic Ninja Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may start the game with a Phoenix Flame in your graveyard.\n\n**Once per Turn Instant** - {r}{r}{r}: Return a Phoenix Flame from your graveyard to your hand. This ability costs {r} less for each Draconic chain link you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "fai_rising_rebellion",
+    "name": "Fai, Rising Rebellion",
+    "type_text": "Draconic Ninja Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may start the game with a Phoenix Flame in your graveyard.\n\n**Once per Turn Instant** - {r}{r}{r}: Return a Phoenix Flame from your graveyard to your hand. This ability costs {r} less for each Draconic chain link you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "flameborn_retribution_red",
+    "name": "Flameborn Retribution",
+    "type_text": "Draconic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you defend with Flameborn Retribution, if you've been dealt damage this turn, you may return a Phoenix Flame from your graveyard to your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flamecall_awakening_red",
+    "name": "Flamecall Awakening",
+    "type_text": "Draconic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Flamecall Awakening, if you've played another red card this turn, you may search your deck for a Phoenix Flame, reveal it, put it into your hand, then shuffle.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flamescale_furnace",
+    "name": "Flamescale Furnace",
+    "type_text": "Draconic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}: Gain {r} for each red card in your pitch zone. Activate this ability only if you've played a red card this turn.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_blue",
+    "name": "Flex",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack or defend with Flex, you may pay {r}{r}. If you do, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_red",
+    "name": "Flex",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack or defend with Flex, you may pay {r}{r}. If you do, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_yellow",
+    "name": "Flex",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack or defend with Flex, you may pay {r}{r}. If you do, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fog_down_yellow",
+    "name": "Fog Down",
+    "type_text": "Generic Action - Aura",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "'Non-attack' action cards lose and can't gain **go again**.\n\nAt the beginning of your action phase, destroy Fog Down.",
+    "status": "pending"
+  },
+  {
+    "slug": "freezing_point_red",
+    "name": "Freezing Point",
+    "type_text": "Elemental Wizard Action",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 5 arcane damage to a target hero. If Freezing Point was fused, instead deal X arcane damage, where X is 5 plus the number of Frostbites, Ice afflictions, and frozen cards they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "frightmare_red",
+    "name": "Frightmare",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 13,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "Play Frightmare only if an Illusionist attack action card you control has been destroyed by **phantasm** this turn.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "frost_hex_blue",
+    "name": "Frost Hex",
+    "type_text": "Ice Wizard Action - Affliction Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Affliction",
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Iyslander"
+    ],
+    "functional_text": "**Iyslander Specialization**\n\nFrostbites you control have \"At the beginning of your end phase, this deals 1 arcane damage to you.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "frosting_blue",
+    "name": "Frosting",
+    "type_text": "Ice Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "frosting_red",
+    "name": "Frosting",
+    "type_text": "Ice Wizard Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "frosting_yellow",
+    "name": "Frosting",
+    "type_text": "Ice Wizard Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "fyendals_fighting_spirit_blue",
+    "name": "Fyendal's Fighting Spirit",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fyendals_fighting_spirit_red",
+    "name": "Fyendal's Fighting Spirit",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fyendals_fighting_spirit_yellow",
+    "name": "Fyendal's Fighting Spirit",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "ghostly_touch",
+    "name": "Ghostly Touch",
+    "type_text": "Illusionist Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an Illusionist attack you control is destroyed by **phantasm**, put a haunt counter on Ghostly Touch.\n\n**Once per Turn Action** - Remove a haunt counter from Ghostly Touch: Until end of turn, this becomes an Illusionist ally with **phantasm**, base {p} and {h} equal to the number of haunt counters on it, and \"**Once per Turn Action** - {r}{r}{r}: **Attack**\". **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "glacial_horns",
+    "name": "Glacial Horns",
+    "type_text": "Ice Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Freeze",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy Glacial Horns: Choose a hero. **Freeze** up to 1 card in their arsenal and 1 ally they control until the start of your next turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "healing_balm_blue",
+    "name": "Healing Balm",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 1{h}",
+    "status": "pending"
+  },
+  {
+    "slug": "healing_balm_red",
+    "name": "Healing Balm",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 3{h}",
+    "status": "pending"
+  },
+  {
+    "slug": "healing_balm_yellow",
+    "name": "Healing Balm",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 2{h}",
+    "status": "pending"
+  },
+  {
+    "slug": "heat_wave",
+    "name": "Heat Wave",
+    "type_text": "Draconic Ninja Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Quell"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Heat Wave: Phoenix Flames you control gain +1{p} until end of turn.\n\n**Quell 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "helios_mitre",
+    "name": "Helio's Mitre",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add a Helio's Mitre to their card pool in an Uprising limited format.)*\n\n**Instant** - {r}{r}: Prevent the next 1 damage that would be dealt to your hero this turn by a source of your choice. Destroy Helio's Mitre at the beginning of the end phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "hypothermia_blue",
+    "name": "Hypothermia",
+    "type_text": "Ice Action - Affliction Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Affliction",
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Attacks you control can't gain **go again**.\n\nAt the beginning of your end phase, destroy Hypothermia.",
+    "status": "pending"
+  },
+  {
+    "slug": "ice_bolt_blue",
+    "name": "Ice Bolt",
+    "type_text": "Ice Wizard Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "ice_bolt_red",
+    "name": "Ice Bolt",
+    "type_text": "Ice Wizard Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 5 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "ice_bolt_yellow",
+    "name": "Ice Bolt",
+    "type_text": "Ice Wizard Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 4 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "ice_eternal_blue",
+    "name": "Ice Eternal",
+    "type_text": "Elemental Wizard Action",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion",
+      "Specialization"
+    ],
+    "specializations": [
+      "Iyslander"
+    ],
+    "functional_text": "**Iyslander Specialization**\n\n**Ice Fusion**\n\nCreate X Frostbite tokens under target hero's control. Then, if Ice Eternal was **fused**, deal arcane damage to that hero equal to the number of Frostbites they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "icebind_blue",
+    "name": "Icebind",
+    "type_text": "Elemental Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Freeze",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 1 arcane damage to any target. If Icebind was **fused** and deals damage to a hero, **freeze** a card in their arsenal until the start of your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "icebind_red",
+    "name": "Icebind",
+    "type_text": "Elemental Wizard Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Freeze",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 3 arcane damage to any target. If Icebind was **fused** and deals damage to a hero, **freeze** a card in their arsenal until the start of your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "icebind_yellow",
+    "name": "Icebind",
+    "type_text": "Elemental Wizard Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Freeze",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 2 arcane damage to any target. If Icebind was **fused** and deals damage to a hero, **freeze** a card in their arsenal until the start of your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "inflame_red",
+    "name": "Inflame",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Inflame, if you've played another red card this turn, you may return a Phoenix Flame from your graveyard to your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "insidious_chill_blue",
+    "name": "Insidious Chill",
+    "type_text": "Ice Action - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Insidious Chill enters the arena with 3 frost counters on it. When it has no frost counters on it, destroy it.\n\nWhenever you **Ice Fuse**, remove a frost counter from Insidious Chill. If you do, target hero discards a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_azvolai_red",
+    "name": "Invoke Azvolai",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Azvolai. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_cromai_red",
+    "name": "Invoke Cromai",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Cromai. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_dominia_red",
+    "name": "Invoke Dominia",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 4,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\n**Transform** target ash you control into Dominia. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_dracona_optimai_red",
+    "name": "Invoke Dracona Optimai",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 6,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\n**Transform** target ash you control into Dracona Optimai. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_kyloria_red",
+    "name": "Invoke Kyloria",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Kyloria. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_miragai_red",
+    "name": "Invoke Miragai",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Miragai. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_nekria_red",
+    "name": "Invoke Nekria",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Nekria. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_ouvia_red",
+    "name": "Invoke Ouvia",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Ouvia. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_themai_red",
+    "name": "Invoke Themai",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Themai. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_tomeltai_red",
+    "name": "Invoke Tomeltai",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 5,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\n**Transform** target ash you control into Tomeltai. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_vynserakai_red",
+    "name": "Invoke Vynserakai",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Vynserakai. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invoke_yendurai_red",
+    "name": "Invoke Yendurai",
+    "type_text": "Draconic Illusionist Action - Invocation",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Invocation",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into Yendurai. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "isenhowl_weathervane_blue",
+    "name": "Isenhowl Weathervane",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time you **Ice fuse** this turn, create 2 Frostbite tokens under target hero's control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "isenhowl_weathervane_red",
+    "name": "Isenhowl Weathervane",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time you **Ice fuse** this turn, create 4 Frostbite tokens under target hero's control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "isenhowl_weathervane_yellow",
+    "name": "Isenhowl Weathervane",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time you **Ice fuse** this turn, create 3 Frostbite tokens under target hero's control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "iyslander_stormbind",
+    "name": "Iyslander, Stormbind",
+    "type_text": "Elemental Wizard Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 36,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Ice**\n\nIf it's not your turn, you may play blue 'non-attack' action cards from your arsenal as though they were an instant.\n\nWhenever you play an Ice card during an opponents turn, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "lava_burst_red",
+    "name": "Lava Burst",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Rupture"
+    ],
+    "specializations": [],
+    "functional_text": "**Rupture** - If Lava Burst is played as chain link 4 or higher, it has +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lava_vein_loyalty_blue",
+    "name": "Lava Vein Loyalty",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "lava_vein_loyalty_red",
+    "name": "Lava Vein Loyalty",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "lava_vein_loyalty_yellow",
+    "name": "Lava Vein Loyalty",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "liquefy_red",
+    "name": "Liquefy",
+    "type_text": "Draconic Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Rupture"
+    ],
+    "specializations": [],
+    "functional_text": "**Rupture** - If Liquefy is played at chain link 4 or higher, target attack action card gains \"When this hits a hero, put a -1{d} counter on an equipment they control. Then if it has 0{d}, destroy it.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "mounting_anger_blue",
+    "name": "Mounting Anger",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Mounting Anger hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains +1{p} and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "mounting_anger_red",
+    "name": "Mounting Anger",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Mounting Anger hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains +1{p} and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "mounting_anger_yellow",
+    "name": "Mounting Anger",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Mounting Anger hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains +1{p} and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "oasis_respite_blue",
+    "name": "Oasis Respite",
+    "type_text": "Generic Instant",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Prevent the next 2 damage that would be dealt to target hero this turn by a source of your choice. If they have less life than each other hero, they may gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "oasis_respite_red",
+    "name": "Oasis Respite",
+    "type_text": "Generic Instant",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Prevent the next 4 damage that would be dealt to target hero this turn by a source of your choice. If they have less life than each other hero, they may gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "oasis_respite_yellow",
+    "name": "Oasis Respite",
+    "type_text": "Generic Instant",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Prevent the next 3 damage that would be dealt to target hero this turn by a source of your choice. If they have less life than each other hero, they may gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "phoenix_flame_red",
+    "name": "Phoenix Flame",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "phoenix_form_red",
+    "name": "Phoenix Form",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 1 or more Phoenix Flames, Phoenix Form has **go again**. If you control 2 or more, it has +2{p}. If you control 3 or more, it has \"When this hits a hero, draw 3 cards.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "polar_cap_blue",
+    "name": "Polar Cap",
+    "type_text": "Elemental Wizard Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 2 arcane damage to any target. If Polar Cap was **fused** and deals damage to a hero, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "polar_cap_red",
+    "name": "Polar Cap",
+    "type_text": "Elemental Wizard Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 4 arcane damage to any target. If Polar Cap was **fused** and deals damage to a hero, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "polar_cap_yellow",
+    "name": "Polar Cap",
+    "type_text": "Elemental Wizard Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 3 arcane damage to any target. If Polar Cap was **fused** and deals damage to a hero, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "quelling_robe",
+    "name": "Quelling Robe",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Quell"
+    ],
+    "specializations": [],
+    "functional_text": "**Quell 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "quelling_sleeves",
+    "name": "Quelling Sleeves",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Quell"
+    ],
+    "specializations": [],
+    "functional_text": "**Quell 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "quelling_slippers",
+    "name": "Quelling Slippers",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Quell"
+    ],
+    "specializations": [],
+    "functional_text": "**Quell 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "rake_the_embers_blue",
+    "name": "Rake the Embers",
+    "type_text": "Draconic Illusionist Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "Create an Ash token, then **transform** up to 1 ash you control into an Aether Ashwing.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rake_the_embers_red",
+    "name": "Rake the Embers",
+    "type_text": "Draconic Illusionist Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "Create an Ash token, then **transform** up to 3 ash you control into Aether Ashwings.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rake_the_embers_yellow",
+    "name": "Rake the Embers",
+    "type_text": "Draconic Illusionist Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "Create an Ash token, then **transform** up to 2 ash you control into Aether Ashwings.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rapid_reflex_blue",
+    "name": "Rapid Reflex",
+    "type_text": "Ninja Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with cost 0 gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rapid_reflex_red",
+    "name": "Rapid Reflex",
+    "type_text": "Ninja Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with cost 0 gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rapid_reflex_yellow",
+    "name": "Rapid Reflex",
+    "type_text": "Ninja Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with cost 0 gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "read_the_ripples_blue",
+    "name": "Read the Ripples",
+    "type_text": "Wizard Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Read the Ripples then **opt 1** and draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "read_the_ripples_red",
+    "name": "Read the Ripples",
+    "type_text": "Wizard Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Read the Ripples then **opt 1**, **opt 1**, **opt 1**, and draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "read_the_ripples_yellow",
+    "name": "Read the Ripples",
+    "type_text": "Wizard Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Read the Ripples then **opt 1**, **opt 1**, and draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "rebellious_rush_blue",
+    "name": "Rebellious Rush",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rebellious_rush_red",
+    "name": "Rebellious Rush",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rebellious_rush_yellow",
+    "name": "Rebellious Rush",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "red_hot_red",
+    "name": "Red Hot",
+    "type_text": "Draconic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Rupture",
+      "Specialization"
+    ],
+    "specializations": [
+      "Dromai",
+      "Fai"
+    ],
+    "functional_text": "**Dromai or Fai Specialization**\n\n**Rupture** - If Red Hot is played as chain link 4 or higher, it has \"When you attack with this, reveal the top X cards of your deck, where X is the number of Draconic chain links you control. Deal damage equal to the number of red cards revealed this way to any target, then shuffle.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "rewind_blue",
+    "name": "Rewind",
+    "type_text": "Wizard Instant",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Negate"
+    ],
+    "specializations": [],
+    "functional_text": "**Negate** target 'non-attack' action card and return it to its owner's hand. Then that hero gains 1 action point.",
+    "status": "pending"
+  },
+  {
+    "slug": "rise_from_the_ashes_blue",
+    "name": "Rise from the Ashes",
+    "type_text": "Draconic Ninja Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Draconic or Ninja attack action card you play this turn gains +1{p}.\n\nYou may return a Phoenix Flame from your graveyard to your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rise_from_the_ashes_red",
+    "name": "Rise from the Ashes",
+    "type_text": "Draconic Ninja Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Draconic or Ninja attack action card you play this turn gains +3{p}.\n\nYou may return a Phoenix Flame from your graveyard to your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rise_from_the_ashes_yellow",
+    "name": "Rise from the Ashes",
+    "type_text": "Draconic Ninja Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Draconic or Ninja attack action card you play this turn gains +2{p}.\n\nYou may return a Phoenix Flame from your graveyard to your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rise_up_red",
+    "name": "Rise Up",
+    "type_text": "Draconic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "Rupture",
+      "Specialization"
+    ],
+    "specializations": [
+      "Dromai",
+      "Fai"
+    ],
+    "functional_text": "**Dromai or Fai Specialization**\n\n**Rupture** - If Rise Up is played as chain link 4 or higher, it has **dominate** and +X{p}, where X is twice the number of Phoenix Flames you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_resentment_blue",
+    "name": "Rising Resentment",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Rising Resentment hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it costs {r} less to play and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_resentment_red",
+    "name": "Rising Resentment",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Rising Resentment hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it costs {r} less to play and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_resentment_yellow",
+    "name": "Rising Resentment",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Rising Resentment hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it costs {r} less to play and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ronin_renegade_blue",
+    "name": "Ronin Renegade",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ronin_renegade_red",
+    "name": "Ronin Renegade",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ronin_renegade_yellow",
+    "name": "Ronin Renegade",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sand_cover_blue",
+    "name": "Sand Cover",
+    "type_text": "Draconic Illusionist Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "Target ash you control gains **ward 2** until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "sand_cover_red",
+    "name": "Sand Cover",
+    "type_text": "Draconic Illusionist Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "Target ash you control gains **ward 4** until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "sand_cover_yellow",
+    "name": "Sand Cover",
+    "type_text": "Draconic Illusionist Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "Target ash you control gains **ward 3** until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "sash_of_sandikai",
+    "name": "Sash of Sandikai",
+    "type_text": "Draconic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Sash of Sandikai: Gain {r}. Activate this ability only if you've played a red card this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "scar_for_a_scar_blue",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "scar_for_a_scar_red",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "scar_for_a_scar_yellow",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "searing_emberblade",
+    "name": "Searing Emberblade",
+    "type_text": "Draconic Ninja Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nIf you control 2 or more Draconic chain links, this card's attacks get **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "searing_touch_red",
+    "name": "Searing Touch",
+    "type_text": "Draconic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Rupture"
+    ],
+    "specializations": [],
+    "functional_text": "**Rupture** - If Searing Touch is played as chain link 4 or higher, it has \"When you attack with this, deal 2 damage to any target.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "semblance_blue",
+    "name": "Semblance",
+    "type_text": "Illusionist Instant",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Negate all **phantasm** triggered effects of target Illusionist attack you control. The attack loses and can't gain **phantasm**.",
+    "status": "pending"
+  },
+  {
+    "slug": "sift_blue",
+    "name": "Sift",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put up to 2 cards from your hand on the bottom of your deck, then draw that many cards.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sift_red",
+    "name": "Sift",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put up to 4 cards from your hand on the bottom of your deck, then draw that many cards.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sift_yellow",
+    "name": "Sift",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put up to 3 cards from your hand on the bottom of your deck, then draw that many cards.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_permafrost_blue",
+    "name": "Sigil of Permafrost",
+    "type_text": "Elemental Wizard Defense Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Sigil of Permafrost was **fused**, the next time you deal arcane damage to a hero this turn, create that many Frostbite tokens under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_permafrost_red",
+    "name": "Sigil of Permafrost",
+    "type_text": "Elemental Wizard Defense Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Sigil of Permafrost was **fused**, the next time you deal arcane damage to a hero this turn, create that many Frostbite tokens under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_permafrost_yellow",
+    "name": "Sigil of Permafrost",
+    "type_text": "Elemental Wizard Defense Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Sigil of Permafrost was **fused**, the next time you deal arcane damage to a hero this turn, create that many Frostbite tokens under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_protection_blue",
+    "name": "Sigil of Protection",
+    "type_text": "Generic Action - Aura",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward 2**\n\nAt the beginning of your action phase, destroy Sigil of Protection.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_protection_red",
+    "name": "Sigil of Protection",
+    "type_text": "Generic Action - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward 4**\n\nAt the beginning of your action phase, destroy Sigil of Protection.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_protection_yellow",
+    "name": "Sigil of Protection",
+    "type_text": "Generic Action - Aura",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward 3**\n\nAt the beginning of your action phase, destroy Sigil of Protection.",
+    "status": "pending"
+  },
+  {
+    "slug": "silent_stilettos",
+    "name": "Silent Stilettos",
+    "type_text": "Illusionist Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an attacking ally you control dies or an attack action card you control is destroyed by **phantasm**, you may pay {r}{r}{r}. If you do, destroy Silent Stilettos and gain 1 action point.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "silken_form",
+    "name": "Silken Form",
+    "type_text": "Draconic Illusionist Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Quell",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Silken Form: **Transform** target ash you control into an Aether Ashwing.\n\n**Quell 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "singe_blue",
+    "name": "Singe",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero and up to 1 target ally they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "singe_red",
+    "name": "Singe",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero and up to 3 target allies they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "singe_yellow",
+    "name": "Singe",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero and up to 2 target allies they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "skittering_sands_blue",
+    "name": "Skittering Sands",
+    "type_text": "Draconic Illusionist Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into an Aether Ashwing. It gains +1{p} until end of turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "skittering_sands_red",
+    "name": "Skittering Sands",
+    "type_text": "Draconic Illusionist Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into an Aether Ashwing. It gains +3{p} until end of turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "skittering_sands_yellow",
+    "name": "Skittering Sands",
+    "type_text": "Draconic Illusionist Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "**Transform** target ash you control into an Aether Ashwing. It gains +2{p} until end of turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "soaring_strike_blue",
+    "name": "Soaring Strike",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Soaring Strike hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains **go again** and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "soaring_strike_red",
+    "name": "Soaring Strike",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Soaring Strike hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains **go again** and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "soaring_strike_yellow",
+    "name": "Soaring Strike",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Soaring Strike hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains **go again** and you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spellfire_cloak",
+    "name": "Spellfire Cloak",
+    "type_text": "Wizard Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Spellfire Cloak: Gain {r}. Activate this ability only during an opponent's turn.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "spreading_flames_red",
+    "name": "Spreading Flames",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Draconic attacks you control have +1{p} while their base {p} is less than the number of Draconic chain links you control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "stoke_the_flames_red",
+    "name": "Stoke the Flames",
+    "type_text": "Draconic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When Stoke the Flames hits, you may return a Phoenix Flame from your graveyard to your hand. If you do, Stoke the Flames gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "storm_of_sandikai",
+    "name": "Storm of Sandikai",
+    "type_text": "Draconic Illusionist Weapon - Scepter (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Scepter"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Dragon allies you control have \"**Once per Turn Action** - 0: **Attack**\".",
+    "status": "pending"
+  },
+  {
+    "slug": "strategic_planning_blue",
+    "name": "Strategic Planning",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put an action card with cost 0 from a graveyard on the bottom of its owner's deck. At the beginning of the end phase, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "strategic_planning_red",
+    "name": "Strategic Planning",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put an action card with cost 2 or less from a graveyard on the bottom of its owner's deck. At the beginning of the end phase, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "strategic_planning_yellow",
+    "name": "Strategic Planning",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put an action card with cost 1 or less from a graveyard on the bottom of its owner's deck. At the beginning of the end phase, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "succumb_to_winter_blue",
+    "name": "Succumb to Winter",
+    "type_text": "Elemental Wizard Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 3 arcane damage to any target. If Succumb to Winter was **fused** and targets a hero, destroy a **frozen** card in their arsenal. If it was **fused** and targets a **frozen** ally, destroy that ally.",
+    "status": "pending"
+  },
+  {
+    "slug": "succumb_to_winter_red",
+    "name": "Succumb to Winter",
+    "type_text": "Elemental Wizard Action",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 5 arcane damage to any target. If Succumb to Winter was **fused** and targets a hero, destroy a **frozen** card in their arsenal. If it was **fused** and targets a **frozen** ally, destroy that ally.",
+    "status": "pending"
+  },
+  {
+    "slug": "succumb_to_winter_yellow",
+    "name": "Succumb to Winter",
+    "type_text": "Elemental Wizard Action",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nDeal 4 arcane damage to any target. If Succumb to Winter was **fused** and targets a hero, destroy a **frozen** card in their arsenal. If it was **fused** and targets a **frozen** ally, destroy that ally.",
+    "status": "pending"
+  },
+  {
+    "slug": "sweeping_blow_blue",
+    "name": "Sweeping Blow",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Sweeping Blow, create an Ash token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sweeping_blow_red",
+    "name": "Sweeping Blow",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Sweeping Blow, create an Ash token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sweeping_blow_yellow",
+    "name": "Sweeping Blow",
+    "type_text": "Draconic Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Sweeping Blow, create an Ash token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_tempo_red",
+    "name": "Take the Tempo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When Take the Tempo hits, if you've hit 3 or more times this combat chain, banish the top card of your deck. If it's an attack action card, you may play it until the end of your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "that_all_you_got_yellow",
+    "name": "That All You Got?",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While this is defending an attack with 2 or less {p}, when the combat chain closes, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "thaw_red",
+    "name": "Thaw",
+    "type_text": "Draconic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Unfreeze"
+    ],
+    "specializations": [],
+    "functional_text": "While thaw is in your graveyard, at the start of your turn, you may banish it and choose 1:\n\n- Destroy target Frostbite.\n- Destroy target Ice affliction.\n- **Unfreeze** target **frozen** card.",
+    "status": "pending"
+  },
+  {
+    "slug": "tide_flippers",
+    "name": "Tide Flippers",
+    "type_text": "Ninja Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy Tide Flippers: Target attack action card with 2 or less base {p} gains **go again**.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "tiger_stripe_shuko",
+    "name": "Tiger Stripe Shuko",
+    "type_text": "Ninja Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "The second attack action card with 2 or less base {p} you play each turn has +1{p} and \"Damage that would be dealt by this can't be prevented.\"\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "tome_of_duplicity_blue",
+    "name": "Tome of Duplicity",
+    "type_text": "Wizard Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Look at the top 2 cards of your deck, then banish one. If it's a 'non-attack' action card, you may play it this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "tome_of_firebrand_red",
+    "name": "Tome of Firebrand",
+    "type_text": "Draconic Instant",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play Tome of Firebrand only if you control 4 or more Draconic chain links.\n\nDraw 2 cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "trade_in_blue",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "trade_in_red",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "trade_in_yellow",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "transmogrify_blue",
+    "name": "Transmogrify",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn is Illusionist, has 6 base {p}, and gains **phantasm**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "transmogrify_red",
+    "name": "Transmogrify",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn is Illusionist, has 8 base {p}, and gains **phantasm**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "transmogrify_yellow",
+    "name": "Transmogrify",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn is Illusionist, has 7 base {p}, and gains **phantasm**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "uprising_red",
+    "name": "Uprising",
+    "type_text": "Draconic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next 4 Draconic attacks this turn gain +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "vipox_red",
+    "name": "Vipox",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When Vipox hits a hero, they lose {h} equal to the number of cards in their hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "waning_moon",
+    "name": "Waning Moon",
+    "type_text": "Wizard Weapon - Staff (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Staff"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}{r}: Deal 2 arcane damage to target hero. If it's not your turn, instead deal 3 arcane damage to them. Activate this ability only if you've played a 'non-attack' action card this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_ashwing",
+    "name": "Aether Ashwing",
+    "type_text": "Draconic Illusionist Token - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": 1,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "ash",
+    "name": "Ash",
+    "type_text": "Draconic Illusionist Token - Ash",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Ash"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Material",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Material** - While Ash is under an object, that object has **phantasm**.",
+    "status": "pending"
+  },
+  {
+    "slug": "azvolai",
+    "name": "Azvolai",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": 3,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever Azvolai attacks, you may have him deal 1 arcane damage to up to any 2 targets.",
+    "status": "pending"
+  },
+  {
+    "slug": "cromai",
+    "name": "Cromai",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": 2,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Once per turn, when Cromai attacks or leaves the arena, gain 1 action point.",
+    "status": "pending"
+  },
+  {
+    "slug": "dominia",
+    "name": "Dominia",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": 4,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever Dominia attacks a hero, reveal the top card of your deck. If it's a red card, look at their hand and banish a card from it.",
+    "status": "pending"
+  },
+  {
+    "slug": "dracona_optimai",
+    "name": "Dracona Optimai",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 6,
+    "defense": null,
+    "life": 6,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever Dracona Optimai attacks a hero, reveal the top 3 cards of your deck. He deals arcane damage equal to twice the number of red cards revealed this way to them or an ally they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "kyloria",
+    "name": "Kyloria",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": 2,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever Kyloria hits a hero, gain control of an item they control. If you don't gain control of an item this way, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "miragai",
+    "name": "Miragai",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": 4,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your first dragon attack each turn loses and can't gain **phantasm**.",
+    "status": "pending"
+  },
+  {
+    "slug": "nekria",
+    "name": "Nekria",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": 7,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever Nekria deals or is dealt damage, put a -1{h} counter on her and create an Ash token.",
+    "status": "pending"
+  },
+  {
+    "slug": "ouvia",
+    "name": "Ouvia",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": 6,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn or when Ouvia enters the arena, **transform** up to 1 ash you control into an Aether Ashwing.",
+    "status": "pending"
+  },
+  {
+    "slug": "themai",
+    "name": "Themai",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": 4,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Opponents can't play cards or activate abilities during your turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "tomeltai",
+    "name": "Tomeltai",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 5,
+    "defense": null,
+    "life": 5,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever Tomeltai attacks a hero, reveal the top 2 cards of your deck. If 1 or more red cards are revealed this way, put that many -1{d} counters on an equipment they control, then if it has 0{d}, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "vynserakai",
+    "name": "Vynserakai",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 6,
+    "defense": null,
+    "life": 1,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever Vynserakai hits a hero, he deals 3 arcane damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "yendurai",
+    "name": "Yendurai",
+    "type_text": "Draconic Illusionist - Dragon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": 3,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Dragon"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Yendurai enters the arena with an endurance counter on him.\n\nIf Yendurai would be dealt damage, remove an endurance counter from him to prevent 3 of that damage.",
+    "status": "pending"
+  }
+]

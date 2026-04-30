@@ -1,0 +1,23 @@
+[
+  {
+    "slug": "the_hand_that_pulls_the_strings",
+    "name": "The Hand that Pulls the Strings",
+    "type_text": "Arakni Mentor",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - 0: Turn this face-up. Activate this only while this is face-down in your arsenal.\n\nWhile this is face-up in arsenal, your first attack with **contract** each turn gets **go again**. If it's attacking a Royal hero, it gets +1{p}.\n\nAt the beginning of your end phase, destroy a Silver you control. If you don't, put this on the bottom of your deck and draw a card.",
+    "status": "pending"
+  }
+]

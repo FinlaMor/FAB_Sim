@@ -1,0 +1,4862 @@
+[
+  {
+    "slug": "10000_year_reunion_red",
+    "name": "10,000 Year Reunion",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 8,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion's {r} cost.\n\n**Ward 10**",
+    "status": "pending"
+  },
+  {
+    "slug": "a_drop_in_the_ocean_blue",
+    "name": "A Drop in the Ocean",
+    "type_text": "Mystic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nTarget attack gets -1{p}.\n\nIf you've played another blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "aqua_laps",
+    "name": "Aqua Laps",
+    "type_text": "Mystic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Cloaked",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Attack Reaction** - {r}, turn this face up: Target attack gets **go again**.\n\nAt the start of your turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "aqua_seeing_shell",
+    "name": "Aqua Seeing Shell",
+    "type_text": "Mystic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Instant** - {r}{r}{r}, turn this face-up: Draw a card.\n\nAt the start of your turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "arousing_wave",
+    "name": "Arousing Wave",
+    "type_text": "Mystic Assassin Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - {r}, destroy this: Create a Fang Strike in your hand.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "art_of_desire_body_red",
+    "name": "Art of Desire: Body",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a red card, draw a card and gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "art_of_desire_mind_blue",
+    "name": "Art of Desire: Mind",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a blue card, draw a card and gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "art_of_desire_soul_yellow",
+    "name": "Art of Desire: Soul",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a yellow card, draw a card and gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "aspect_of_tiger_body_red",
+    "name": "Aspect of Tiger: Body",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - When this attacks, if a red attack action card was the last attack this combat chain, this gets **go again** and create a Crouching Tiger in your banished zone. You may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "aspect_of_tiger_mind_blue",
+    "name": "Aspect of Tiger: Mind",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - When this attacks, if a blue attack action card was the last attack this combat chain, this gets **go again** and create a Crouching Tiger in your banished zone. You may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "aspect_of_tiger_soul_yellow",
+    "name": "Aspect of Tiger: Soul",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - When this attacks, if a yellow attack action card was the last attack this combat chain, this gets **go again** and create a Crouching Tiger in your banished zone. You may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "astral_etchings_blue",
+    "name": "Astral Etchings",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put a +1{p} counter on target aura with **ward** you control.\n\nIf you control a Spectral Shield, you may play this as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "astral_etchings_red",
+    "name": "Astral Etchings",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put three +1{p} counters on target aura with **ward** you control.\n\nIf you control a Spectral Shield, you may play this as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "astral_etchings_yellow",
+    "name": "Astral Etchings",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put two +1{p} counters on target aura with **ward** you control.\n\nIf you control a Spectral Shield, you may play this as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "attune_with_cosmic_vibrations_blue",
+    "name": "Attune with Cosmic Vibrations",
+    "type_text": "Mystic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero or defends a hero's attack, reveal the top card of their deck. If the revealed card is blue, this gets +3{p} and +3{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "battlefront_bastion_blue",
+    "name": "Battlefront Bastion",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends alone, prevent the next 1 damage that would be dealt to you this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "battlefront_bastion_red",
+    "name": "Battlefront Bastion",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends alone, prevent the next 1 damage that would be dealt to you this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "battlefront_bastion_yellow",
+    "name": "Battlefront Bastion",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends alone, prevent the next 1 damage that would be dealt to you this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "beckoning_mistblade",
+    "name": "Beckoning Mistblade",
+    "type_text": "Mystic Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this hits, your next blue attack this turn gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_blue_sky_blue",
+    "name": "Big Blue Sky",
+    "type_text": "Mystic Defense Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This gets +1{d} for each blue card you've pitched this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "biting_breeze_blue",
+    "name": "Biting Breeze",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "biting_breeze_red",
+    "name": "Biting Breeze",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "biting_breeze_yellow",
+    "name": "Biting Breeze",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blanch_blue",
+    "name": "Blanch",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, cards they own lose all colors until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "blanch_red",
+    "name": "Blanch",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, cards they own lose all colors until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "blanch_yellow",
+    "name": "Blanch",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, cards they own lose all colors until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_agony_blue",
+    "name": "Bonds of Agony",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf you've played or activated 3 or more attack reactions this chain link, this gets +3{p} and \"When this hits a hero, look at their hand and choose a card. Search their hand, deck, and graveyard and banish up to 3 cards with the same name as the chosen card. They shuffle.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_attraction_blue",
+    "name": "Bonds of Attraction",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same color, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_attraction_red",
+    "name": "Bonds of Attraction",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same color, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_attraction_yellow",
+    "name": "Bonds of Attraction",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same color, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_memory_blue",
+    "name": "Bonds of Memory",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same name, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_memory_red",
+    "name": "Bonds of Memory",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same name, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_memory_yellow",
+    "name": "Bonds of Memory",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same name, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "breed_anger_blue",
+    "name": "Breed Anger",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - When this attacks, if Crouching Tiger was the last attack this combat chain, this gets **go again** and create a Crouching Tiger in your banished zone. You may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "breed_anger_red",
+    "name": "Breed Anger",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - When this attacks, if Crouching Tiger was the last attack this combat chain, this gets **go again** and create a Crouching Tiger in your banished zone. You may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "breed_anger_yellow",
+    "name": "Breed Anger",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - When this attacks, if Crouching Tiger was the last attack this combat chain, this gets **go again** and create a Crouching Tiger in your banished zone. You may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "chase_the_tail_red",
+    "name": "Chase the Tail",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - When this attacks, if Crouching Tiger was the last attack this combat chain, this gets go again and the next Crouching Tiger you play this combat chain gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "companion_of_the_claw_blue",
+    "name": "Companion of the Claw",
+    "type_text": "Mystic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "companion_of_the_claw_red",
+    "name": "Companion of the Claw",
+    "type_text": "Mystic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "companion_of_the_claw_yellow",
+    "name": "Companion of the Claw",
+    "type_text": "Mystic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmic_awakening_blue",
+    "name": "Cosmic Awakening",
+    "type_text": "Mystic Action - Attack",
+    "cost": 9,
+    "pitch": 3,
+    "power": "*",
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If 1 Chi was pitched to play this, Cosmic Awakening's {p} is 10.\n\nIf 2 Chi were pitched to play this, Cosmic Awakening's {p} is 15.\n\nIf 3 or more Chi were pitched to play this, Cosmic Awakening's {p} is 20.",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmo_scroll_of_ancestral_tapestry",
+    "name": "Cosmo, Scroll of Ancestral Tapestry",
+    "type_text": "Illusionist Weapon - Scroll (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Scroll"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "During your turn, auras you control with **ward** are weapons with base {p} equal to their **ward** and **Once per Turn Action - {r}: Attack**\n\nYour aura attacks with one or more +1{p} counters get **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "deep_blue_sea_blue",
+    "name": "Deep Blue Sea",
+    "type_text": "Mystic Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This gets +1{p} for each blue card you've pitched this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "dense_blue_mist_blue",
+    "name": "Dense Blue Mist",
+    "type_text": "Mystic Instant",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Attacks that target you this turn get -1{p}.\n\nIf a Chi was pitched to play this, effects don't trigger if an attack hits you this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "desires_of_flesh_blue",
+    "name": "Desires of Flesh",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes an attack action card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "desires_of_flesh_red",
+    "name": "Desires of Flesh",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes an attack action card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "desires_of_flesh_yellow",
+    "name": "Desires of Flesh",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes an attack action card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "double_trouble_blue",
+    "name": "Double Trouble",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf you've played or activated 2 or more attack reactions this chain link, this gets +2{p} and \"When this hits a hero, banish the top 2 cards of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "double_trouble_red",
+    "name": "Double Trouble",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf you've played or activated 2 or more attack reactions this chain link, this gets +2{p} and \"When this hits a hero, banish the top 2 cards of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "double_trouble_yellow",
+    "name": "Double Trouble",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf you've played or activated 2 or more attack reactions this chain link, this gets +2{p} and \"When this hits a hero, banish the top 2 cards of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "droplet_blue",
+    "name": "Droplet",
+    "type_text": "Mystic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played another blue card this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "dust_from_stillwater_shrine_red",
+    "name": "Dust from Stillwater Shrine",
+    "type_text": "Draconic Illusionist Action - Ash",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Ash",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Material",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Material** - While this is under a permanent other than Miragai, that permanent has **phantasm**.",
+    "status": "pending"
+  },
+  {
+    "slug": "eloquent_eulogy_red",
+    "name": "Eloquent Eulogy",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "RuneGate"
+    ],
+    "specializations": [],
+    "functional_text": "**Rune Gate**\n\nWhen the combat chain closes, if a hero has lost {h} this turn, create an Eloquence token.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "emissary_of_moon_red",
+    "name": "Emissary of Moon",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may put a card from your hand on the bottom of your deck. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "emissary_of_tides_red",
+    "name": "Emissary of Tides",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may put a card from your hand on the bottom of your deck. If you do, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "emissary_of_wind_red",
+    "name": "Emissary of Wind",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may put a card from your hand on the bottom of your deck. If you do, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "enigma",
+    "name": "Enigma",
+    "type_text": "Mystic Illusionist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your first Spectral Shield attack each turn costs {r} less to activate.\n\n**Once per Turn Instant** - {c}{c}{c}: Create a Spectral Shield token with a +1{p} counter.",
+    "status": "pending"
+  },
+  {
+    "slug": "enigma_ledger_of_ancestry",
+    "name": "Enigma, Ledger of Ancestry",
+    "type_text": "Mystic Illusionist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your first Spectral Shield attack each turn costs {r} less to activate.\n\n**Once per Turn Instant** - {c}{c}{c}: Create a Spectral Shield token with a +1{p} counter.",
+    "status": "pending"
+  },
+  {
+    "slug": "enigma_new_moon",
+    "name": "Enigma, New Moon",
+    "type_text": "Mystic Illusionist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "Equipment you own gets **cloaked**\n\n**Instant** - {c}{c}{c}: Turn target face-down equipment you have equipped face-up. If it has **ward**, create 3 Spectral Shield tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "essence_of_ancestry_body_red",
+    "name": "Essence of Ancestry: Body",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you control no Illusionist auras, the next time you would be dealt damage by a red source this turn, prevent it.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "essence_of_ancestry_mind_blue",
+    "name": "Essence of Ancestry: Mind",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you control no Illusionist auras, the next time you would be dealt damage by a blue source this turn, prevent it.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "essence_of_ancestry_soul_yellow",
+    "name": "Essence of Ancestry: Soul",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you control no Illusionist auras, the next time you would be dealt damage by a yellow source this turn, prevent it.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "evasive_leap_blue",
+    "name": "Evasive Leap",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "evasive_leap_red",
+    "name": "Evasive Leap",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "evasive_leap_yellow",
+    "name": "Evasive Leap",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_heartdrive_blue",
+    "name": "Evo Heartdrive",
+    "type_text": "Mechanologist Instant Equipment - Evo Chest",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest",
+      "Evo"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, transform it into this, then equip this.\n\nWhen this is equipped, the next attack action card you play this turn costs {r} less to play.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_recall_blue",
+    "name": "Evo Recall",
+    "type_text": "Mechanologist Instant Equipment - Evo Head",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, transform it into this, then equip this.\n\nWhen this is equipped, put up to 1 Mechanologist action card from your banished zone on top of your deck.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_shortcircuit_blue",
+    "name": "Evo Shortcircuit",
+    "type_text": "Mechanologist Instant Equipment - Evo Arms",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Evo"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base arms equipped, transform it into this, then equip this.\n\nWhen this is equipped, deal 1 damage to any target.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_speedslip_blue",
+    "name": "Evo Speedslip",
+    "type_text": "Mechanologist Instant Equipment - Evo Legs",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\nWhen this is equipped, the next attack action card you play this turn gets **boost**.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "fact_finding_mission_blue",
+    "name": "Fact-Finding Mission",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, you may look at a face-down card in their arsenal or equipment zones.",
+    "status": "pending"
+  },
+  {
+    "slug": "fact_finding_mission_red",
+    "name": "Fact-Finding Mission",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, you may look at a face-down card in their arsenal or equipment zones.",
+    "status": "pending"
+  },
+  {
+    "slug": "fact_finding_mission_yellow",
+    "name": "Fact-Finding Mission",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, you may look at a face-down card in their arsenal or equipment zones.",
+    "status": "pending"
+  },
+  {
+    "slug": "fang_strike",
+    "name": "Fang Strike",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Ephemeral"
+    ],
+    "specializations": [],
+    "functional_text": "**Ephemeral**\n\nTarget attack action card gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "first_tenet_of_chi_moon_blue",
+    "name": "First Tenet of Chi: Moon",
+    "type_text": "Mystic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next blue attack this turn gets \"When this attacks, draw a card.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "first_tenet_of_chi_tide_blue",
+    "name": "First Tenet of Chi: Tide",
+    "type_text": "Mystic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next blue attack this turn gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "first_tenet_of_chi_wind_blue",
+    "name": "First Tenet of Chi: Wind",
+    "type_text": "Mystic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next blue action card you play this turn gets **go again**.\n\nGo again",
+    "status": "pending"
+  },
+  {
+    "slug": "gorgons_gaze_yellow",
+    "name": "Gorgon's Gaze",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Slither in your hand.\n\nBanish all defending attack action cards on the combat chain. If a Chi was pitched to play this, you may play the banished cards this combat chain without paying their {r} cost.",
+    "status": "pending"
+  },
+  {
+    "slug": "gravekeeping_blue",
+    "name": "Gravekeeping",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may banish a card from their graveyard.",
+    "status": "pending"
+  },
+  {
+    "slug": "gravekeeping_red",
+    "name": "Gravekeeping",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may banish a card from their graveyard.",
+    "status": "pending"
+  },
+  {
+    "slug": "gravekeeping_yellow",
+    "name": "Gravekeeping",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may banish a card from their graveyard.",
+    "status": "pending"
+  },
+  {
+    "slug": "harmony_of_the_hunt_blue",
+    "name": "Harmony of the Hunt",
+    "type_text": "Mystic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "harmony_of_the_hunt_red",
+    "name": "Harmony of the Hunt",
+    "type_text": "Mystic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "harmony_of_the_hunt_yellow",
+    "name": "Harmony of the Hunt",
+    "type_text": "Mystic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "haunting_specter_blue",
+    "name": "Haunting Specter",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "haunting_specter_red",
+    "name": "Haunting Specter",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.\n\n**Ward 4**",
+    "status": "pending"
+  },
+  {
+    "slug": "haunting_specter_yellow",
+    "name": "Haunting Specter",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.\n\n**Ward 3**",
+    "status": "pending"
+  },
+  {
+    "slug": "haze_shelter_blue",
+    "name": "Haze Shelter",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward X**, where X is 2 if you've pitched a blue card this turn, otherwise X is 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "haze_shelter_red",
+    "name": "Haze Shelter",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward X**, where X is 4 if you've pitched a blue card this turn, otherwise X is 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "haze_shelter_yellow",
+    "name": "Haze Shelter",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward X**, where X is 3 if you've pitched a blue card this turn, otherwise X is 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "heirloom_of_rabbit_hide",
+    "name": "Heirloom of Rabbit Hide",
+    "type_text": "Mystic Illusionist Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Cloaked",
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\nWhile this is equipped face-down, at the start of your turn, if you have exactly 1{h}, you may turn this face-up.\n\n**Ward 4**",
+    "status": "pending"
+  },
+  {
+    "slug": "heirloom_of_snake_hide",
+    "name": "Heirloom of Snake Hide",
+    "type_text": "Mystic Assassin Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\nWhile this is equipped face-down, at the start of your turn, if you have exactly 1{h}, you may turn this face-up.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "heirloom_of_tiger_hide",
+    "name": "Heirloom of Tiger Hide",
+    "type_text": "Mystic Ninja Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\nWhile this is equipped face-down, at the start of your turn, if you have exactly 1{h}, you may turn this face-up.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "hiss_blue",
+    "name": "Hiss",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +1{p}.\n\nIf you've pitched a blue card this turn, create a Slither in your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "hiss_red",
+    "name": "Hiss",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +3{p}.\n\nIf you've pitched a blue card this turn, create a Slither in your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "hiss_yellow",
+    "name": "Hiss",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +2{p}.\n\nIf you've pitched a blue card this turn, create a Slither in your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "homage_to_ancestors_blue",
+    "name": "Homage to Ancestors",
+    "type_text": "Mystic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nGain 1{h}\n\nIf you've played another blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "impulsive_desire_blue",
+    "name": "Impulsive Desire",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a reaction or instant card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "impulsive_desire_red",
+    "name": "Impulsive Desire",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a reaction or instant card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "impulsive_desire_yellow",
+    "name": "Impulsive Desire",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a reaction or instant card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "intimate_inducement_blue",
+    "name": "Intimate Inducement",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +1{p}.\n\nLook at the top 2 cards of the defending hero's deck and choose a card. If it's blue, it has 0 base {d}. Put the chosen card onto the active chain link as a defending card and the rest on top in any order.",
+    "status": "pending"
+  },
+  {
+    "slug": "intimate_inducement_red",
+    "name": "Intimate Inducement",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +1{p}.\n\nLook at the top 4 cards of the defending hero's deck and choose a card. If it's blue, it has 0 base {d}. Put the chosen card onto the active chain link as a defending card and the rest on top in any order.",
+    "status": "pending"
+  },
+  {
+    "slug": "intimate_inducement_yellow",
+    "name": "Intimate Inducement",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +1{p}.\n\nLook at the top 3 cards of the defending hero's deck and choose a card. If it's blue, it has 0 base {d}. Put the chosen card onto the active chain link as a defending card and the rest on top in any order.",
+    "status": "pending"
+  },
+  {
+    "slug": "just_a_nick_red",
+    "name": "Just a Nick",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose 1 or both;\n- Target attack action card with 1 or less base {p} gets +5{p}.\n- Target attack with **stealth** gets \"When this hits a hero, banish the top card of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "kindle_red",
+    "name": "Kindle",
+    "type_text": "Wizard Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Amp"
+    ],
+    "specializations": [],
+    "functional_text": "**Amp 1**\n\nIf you have no cards in hand, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "koi_blessed_kimono",
+    "name": "Koi Blessed Kimono",
+    "type_text": "Mystic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\nWhile this is equipped face-down, at the start of your turn, if you have exactly 1{h}, you may turn this face-up.\n\nWhen this is turned face-up, destroy it. Search your deck for an Inner Chi, reveal it, put it into your hand, then shuffle.",
+    "status": "pending"
+  },
+  {
+    "slug": "levels_of_enlightenment_blue",
+    "name": "Levels of Enlightenment",
+    "type_text": "Mystic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, choose 1 for each blue card you've pitched this turn;\n- Draw a card.\n- This gets +2{p}.\n- This gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "longdraw_half_glove",
+    "name": "Longdraw Half-glove",
+    "type_text": "Ranger Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this, put 2 cards from your hand and/or arsenal on the bottom of your deck: Your next arrow attack this turn gets +4{p}.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "manifestation_of_miragai_blue",
+    "name": "Manifestation of Miragai",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "This enters the arena with two +1{p} counters. If a Chi was pitched to play this, instead this enters the arena with four +1{p} counters.\n\n**Ward X**, where X is the number of +1{p} counters on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "mask_of_recurring_nightmares",
+    "name": "Mask of Recurring Nightmares",
+    "type_text": "Mystic Assassin Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - {c}{c}{c}: Target defending hero banishes a card from their hand.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "mask_of_wizened_whiskers",
+    "name": "Mask of Wizened Whiskers",
+    "type_text": "Ninja Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, put a card with **combo** from your graveyard on the bottom of your deck.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "maul_yellow",
+    "name": "Maul",
+    "type_text": "Ninja Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose 1 or both;\n- Target attack action card with 1 or less base {p} gets +3{p}.\n- Target Crouching Tiger gets \"When this hits, create 2 Crouching Tigers in your banished zone. You may play them this turn.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "meridian_pathway",
+    "name": "Meridian Pathway",
+    "type_text": "Mystic Illusionist Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {c}{c}{c}: You may play auras this turn as though they were instants.\n\nWhenever you pitch a Chi, you may have this get **ward 3** until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "minds_desire_blue",
+    "name": "Mind's Desire",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a non-attack action card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "minds_desire_red",
+    "name": "Mind's Desire",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a non-attack action card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "minds_desire_yellow",
+    "name": "Mind's Desire",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a non-attack action card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "mistcloak_gully",
+    "name": "Mistcloak Gully",
+    "type_text": "Mystic Instant - Landmark",
+    "cost": 1,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Landmark"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nThe first attack that targets you each turn gets -1{p}.\n\nAt the beginning of each end phase, destroy this unless you've pitched, played, or defended with a blue card this turn. If you've pitched, played, and defended with a blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "moon_chakra_blue",
+    "name": "Moon Chakra",
+    "type_text": "Mystic Illusionist Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 1 of that damage. If you've **transcended** this turn, instead prevent 3.",
+    "status": "pending"
+  },
+  {
+    "slug": "moon_chakra_red",
+    "name": "Moon Chakra",
+    "type_text": "Mystic Illusionist Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 3 of that damage. If you've **transcended** this turn, instead prevent 5.",
+    "status": "pending"
+  },
+  {
+    "slug": "moon_chakra_yellow",
+    "name": "Moon Chakra",
+    "type_text": "Mystic Illusionist Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 2 of that damage. If you've **transcended** this turn, instead prevent 4.",
+    "status": "pending"
+  },
+  {
+    "slug": "murky_water_red",
+    "name": "Murky Water",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Dominate",
+      "Specialization"
+    ],
+    "specializations": [
+      "Riptide"
+    ],
+    "functional_text": "**Riptide Specialization**\n\nIf this has an aim counter, it gets +1{p} and **dominate**.\n\nWhen this hits, you may banish face-down 3 traps from your graveyard. If you do, choose one at random and put it into your arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "nimblism_blue",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "nimblism_red",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "nimblism_yellow",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "nuu",
+    "name": "Nuu",
+    "type_text": "Mystic Assassin Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your attacks with **stealth** get \"When this chain link resolves, banish all action cards defending this.\"\n\n**Instant** - {c}{c}{c}: Look at the top card of an opposing hero's deck. If it's blue, you may banish it. Until end of turn, you may play blue cards from that hero's banished zone without paying their {r} cost.",
+    "status": "pending"
+  },
+  {
+    "slug": "nuu_alluring_desire",
+    "name": "Nuu, Alluring Desire",
+    "type_text": "Mystic Assassin Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your attacks with **stealth** get \"When this chain link resolves, banish all action cards defending this.\"\n\n**Instant** - {c}{c}{c}: Look at the top card of an opposing hero's deck. If it's blue, you may banish it. Until end of turn, you may play blue cards from that hero's banished zone without paying their {r} cost.",
+    "status": "pending"
+  },
+  {
+    "slug": "orihon_of_mystic_tenets_blue",
+    "name": "Orihon of Mystic Tenets",
+    "type_text": "Mystic Instant",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nDraw 2 cards. If a Chi was pitched to play this, instead draw 3 cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "pass_over_blue",
+    "name": "Pass Over",
+    "type_text": "Mystic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nBanish target card from an opposing hero's graveyard.\n\nIf you've played another blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "path_well_traveled_blue",
+    "name": "Path Well Traveled",
+    "type_text": "Mystic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nTarget attack gets **go again**.\n\nIf you've played another blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "persuasive_prognosis_blue",
+    "name": "Persuasive Prognosis",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck. Then look at their hand and banish a card with the same color as the banished card.\n\nWhenever this banishes an action card, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "pick_to_pieces_blue",
+    "name": "Pick to Pieces",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf you've played or activated an attack reaction this chain link, this gets +1{p} and \"Damage that would be dealt by this can't be prevented.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "pick_to_pieces_red",
+    "name": "Pick to Pieces",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf you've played or activated an attack reaction this chain link, this gets +1{p} and \"Damage that would be dealt by this can't be prevented.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "pick_to_pieces_yellow",
+    "name": "Pick to Pieces",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf you've played or activated an attack reaction this chain link, this gets +1{p} and \"Damage that would be dealt by this can't be prevented.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "preserve_tradition_blue",
+    "name": "Preserve Tradition",
+    "type_text": "Mystic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nPut target action card from your graveyard on the bottom of your deck.\n\nIf you've played another blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "prismatic_leyline_yellow",
+    "name": "Prismatic Leyline",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next red attack this turn gets +1{p}, your next yellow gets +2{p}, and your next blue gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rage_specter_blue",
+    "name": "Rage Specter",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, if you control no other Illusionist auras, gain 1 action point.\n\nDuring your turn, this has **ward 6**. Otherwise, this has **ward 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "restless_coalescence_yellow",
+    "name": "Restless Coalescence",
+    "type_text": "Illusionist Instant - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, move any number of +1{p} counters from auras you control onto this.\n\n**Once per Turn Instant** - Remove a +1{p} counter from this: Create a Spectral Shield token.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_sun_setting_moon_blue",
+    "name": "Rising Sun, Setting Moon",
+    "type_text": "Mystic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nDraw a card, then put a card from your hand on the bottom of your deck.\n\nIf you've played another blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_tide_blue",
+    "name": "Rising Tide",
+    "type_text": "Mystic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played another blue card this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rowdy_locals_blue",
+    "name": "Rowdy Locals",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by an action card, this gets +2{p}.\n\nWhen this hits a hero, discard a card. If you do, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "sacred_art_immortal_lunar_shrine_blue",
+    "name": "Sacred Art: Immortal Lunar Shrine",
+    "type_text": "Mystic Illusionist Instant",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nIf you've played another blue card this turn, choose 3. Otherwise, choose 1;\n- Create 2 Spectral Shield tokens.\n- Put a +1{p} counter on each aura with **ward** you control.\n- **Transcend**",
+    "status": "pending"
+  },
+  {
+    "slug": "sacred_art_jade_tiger_domain_blue",
+    "name": "Sacred Art: Jade Tiger Domain",
+    "type_text": "Mystic Ninja Instant",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nIf you've played another blue card this turn, choose 3. Otherwise, choose 1;\n- Create 2 Crouching Tigers in your hand.\n- Your Crouching Tigers get +1{p} this turn.\n- **Transcend**",
+    "status": "pending"
+  },
+  {
+    "slug": "sacred_art_undercurrent_desires_blue",
+    "name": "Sacred Art: Undercurrent Desires",
+    "type_text": "Mystic Assassin Instant",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nIf you've played another blue card this turn, choose 3. Otherwise, choose 1;\n- Create a Fang Strike and Slither in your hand.\n- Banish up to 2 cards in an opposing hero's graveyard.\n- **Transcend**",
+    "status": "pending"
+  },
+  {
+    "slug": "second_tenet_of_chi_moon_blue",
+    "name": "Second Tenet of Chi: Moon",
+    "type_text": "Mystic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **transcended** this turn, this gets \"When this chain link resolves, draw a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "second_tenet_of_chi_tide_blue",
+    "name": "Second Tenet of Chi: Tide",
+    "type_text": "Mystic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **transcended** this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "second_tenet_of_chi_wind_blue",
+    "name": "Second Tenet of Chi: Wind",
+    "type_text": "Mystic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've **transcended** this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "shadowrealm_horror_red",
+    "name": "Shadowrealm Horror",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play this, banish 3 random cards in your graveyard.\n\nIf 1 or more cards with 6 or more {p} are banished this way, this gets +1{p}. 2 or more, this gets **go again**. 3 or more, you may play a card banished this way this turn.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "shifting_winds_of_the_mystic_beast_blue",
+    "name": "Shifting Winds of the Mystic Beast",
+    "type_text": "Mystic Ninja Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you play a Crouching Tiger this turn, name a card. It gets that name.\n\nIf a Chi was pitched to play this, create 2 Crouching Tigers in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_solitude_blue",
+    "name": "Sigil of Solitude",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, if you control another Illusionist aura, destroy this.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_solitude_red",
+    "name": "Sigil of Solitude",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, if you control another Illusionist aura, destroy this.\n\n**Ward 4**",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_solitude_yellow",
+    "name": "Sigil of Solitude",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, if you control another Illusionist aura, destroy this.\n\n**Ward 3**",
+    "status": "pending"
+  },
+  {
+    "slug": "single_minded_determination_blue",
+    "name": "Single Minded Determination",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, if you control no other Illusionist auras, put a +1{p} counter on this.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "single_minded_determination_red",
+    "name": "Single Minded Determination",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, if you control no other Illusionist auras, put three +1{p} counters on this.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "single_minded_determination_yellow",
+    "name": "Single Minded Determination",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, if you control no other Illusionist auras, put two +1{p} counters on this.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "sirens_call_red",
+    "name": "Siren's Call",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Look at the defending hero's hand and choose a blue card. Add it to this chain link as a defending card. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "skybody_keikoi",
+    "name": "Skybody Keikoi",
+    "type_text": "Mystic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Instant** - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this ability only while this is face-down.",
+    "status": "pending"
+  },
+  {
+    "slug": "skycrest_keikoi",
+    "name": "Skycrest Keikoi",
+    "type_text": "Mystic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Instant** - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this ability only while this is face-down.",
+    "status": "pending"
+  },
+  {
+    "slug": "skyhold_keikoi",
+    "name": "Skyhold Keikoi",
+    "type_text": "Mystic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Instant** - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this ability only while this is face-down.",
+    "status": "pending"
+  },
+  {
+    "slug": "skywalker_keikoi",
+    "name": "Skywalker Keikoi",
+    "type_text": "Mystic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Instant** - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this ability only while this is face-down.",
+    "status": "pending"
+  },
+  {
+    "slug": "slither",
+    "name": "Slither",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Ephemeral"
+    ],
+    "specializations": [],
+    "functional_text": "**Ephemeral**\n\nTarget attack action card gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "solitary_companion_blue",
+    "name": "Solitary Companion",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, if you control no other Illusionist auras, create a Spectral Shield token.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "solitary_companion_red",
+    "name": "Solitary Companion",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, if you control no other Illusionist auras, create a Spectral Shield token.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "solitary_companion_yellow",
+    "name": "Solitary Companion",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, if you control no other Illusionist auras, create a Spectral Shield token.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "spectral_manifestations_blue",
+    "name": "Spectral Manifestations",
+    "type_text": "Illusionist Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spectral_manifestations_red",
+    "name": "Spectral Manifestations",
+    "type_text": "Illusionist Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create a Spectral Shield token, then if you control no other Illusionist auras, put three +1{p} counters on it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spectral_manifestations_yellow",
+    "name": "Spectral Manifestations",
+    "type_text": "Illusionist Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create a Spectral Shield token, then if you control no other Illusionist auras, put two +1{p} counters on it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spillover_blue",
+    "name": "Spillover",
+    "type_text": "Mystic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played another blue card this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stir_the_pot_blue",
+    "name": "Stir the Pot",
+    "type_text": "Mystic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nShuffle.\n\nIf you've played another blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "stonewall_gauntlet",
+    "name": "Stonewall Gauntlet",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends an attack with {p} greater than its base, opposing attacks get -1{p} this combat chain.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "stride_of_reprisal",
+    "name": "Stride of Reprisal",
+    "type_text": "Mystic Ninja Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, create a Crouching Tiger in your hand.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "supercell_blue",
+    "name": "Supercell",
+    "type_text": "Mechanologist Action",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put X steam counters on X target Hyper Drivers you control.\n\nCreate a Hyper Driver token with X steam counters.\n\nIf X is 3 or greater, you may shuffle a Construct Nitro Mechanoid from your banished zone into your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "territorial_domain_blue",
+    "name": "Territorial Domain",
+    "type_text": "Ninja Defense Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While this is defending, if you've created a Crouching Tiger this turn, this gets +3{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "the_grain_that_tips_the_scale_blue",
+    "name": "The Grain that Tips the Scale",
+    "type_text": "Mystic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Transcend"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nTarget attack gets +1{p}.\n\nIf you've played another blue card this turn, **transcend**.",
+    "status": "pending"
+  },
+  {
+    "slug": "the_weakest_link_red",
+    "name": "The Weakest Link",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, look at their hand and choose a card without base {d}. If you do, they discard it and you draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "three_visits_red",
+    "name": "Three Visits",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward X**, where X is three times the number of blue cards you've pitched this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "tidal_surge_blue",
+    "name": "Tidal Surge",
+    "type_text": "Mystic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played another blue card this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tide_chakra_blue",
+    "name": "Tide Chakra",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +1{p}. If you've **transcended** this turn, instead it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tide_chakra_red",
+    "name": "Tide Chakra",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +3{p}. If you've **transcended** this turn, instead it gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tide_chakra_yellow",
+    "name": "Tide Chakra",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +2{p}. If you've **transcended** this turn, instead it gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tiger_form_incantation_blue",
+    "name": "Tiger Form Incantation",
+    "type_text": "Mystic Ninja Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Crouching Tiger you play this turn gets +1{p}.\n\nIf you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tiger_form_incantation_red",
+    "name": "Tiger Form Incantation",
+    "type_text": "Mystic Ninja Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Crouching Tiger you play this turn gets +3{p}.\n\nIf you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tiger_form_incantation_yellow",
+    "name": "Tiger Form Incantation",
+    "type_text": "Mystic Ninja Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Crouching Tiger you play this turn gets +2{p}.\n\nIf you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tiger_taming_khakkara",
+    "name": "Tiger Taming Khakkara",
+    "type_text": "Ninja Weapon - Staff (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Staff"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tooth_and_claw_red",
+    "name": "Tooth and Claw",
+    "type_text": "Mystic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may reveal any number of Crouching Tigers from your hand. If you reveal 1 or more, this gets **go again**. 2 or more, this gets +1{p}. 3 or more, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "traverse_the_universe",
+    "name": "Traverse the Universe",
+    "type_text": "Mystic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, search your deck for an Inner Chi, reveal it, put it into your hand, then shuffle.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "truths_retold",
+    "name": "Truths Retold",
+    "type_text": "Mystic Illusionist Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Cloaked",
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Instant** - {r}, turn this face-up: Put an aura from your graveyard on the bottom of your deck.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "twelve_petal_kasaya",
+    "name": "Twelve Petal Kāṣāya",
+    "type_text": "Mystic Ninja Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you **transcend**, you may gain {r}.\n\n**Instant** - {c}{c}{c}, destroy this: Create a Zen State token.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "undertow_stilettos",
+    "name": "Undertow Stilettos",
+    "type_text": "Mystic Assassin Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - {r}, destroy this: Create a Slither in your hand.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "unravel_aggression_blue",
+    "name": "Unravel Aggression",
+    "type_text": "Mystic Defense Reaction",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 5,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If a Chi was pitched to play this, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "untamed_blue",
+    "name": "Untamed",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "untamed_red",
+    "name": "Untamed",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "untamed_yellow",
+    "name": "Untamed",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "uphold_tradition",
+    "name": "Uphold Tradition",
+    "type_text": "Mystic Illusionist Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Cloaked",
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Instant** - {r}, turn this face-up: Put a +1{p} counter on an aura you control with **ward**.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "vengeful_apparition_blue",
+    "name": "Vengeful Apparition",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you control no Illusionist auras, you may play your next aura with cost 0 this turn as though it were an instant. If you do, it enters the arena with a +1{p} counter.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "vengeful_apparition_red",
+    "name": "Vengeful Apparition",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you control no Illusionist auras, you may play your next aura with cost 2 or less this turn as though it were an instant. If you do, it enters the arena with a +1{p} counter.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "vengeful_apparition_yellow",
+    "name": "Vengeful Apparition",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you control no Illusionist auras, you may play your next aura with cost 1 or less this turn as though it were an instant. If you do, it enters the arena with a +1{p} counter.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "venomous_bite_blue",
+    "name": "Venomous Bite",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +1{p}.\n\nIf you've pitched a blue card this turn, create a Fang Strike in your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "venomous_bite_red",
+    "name": "Venomous Bite",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +3{p}.\n\nIf you've pitched a blue card this turn, create a Fang Strike in your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "venomous_bite_yellow",
+    "name": "Venomous Bite",
+    "type_text": "Mystic Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Mystic attack action card gets +2{p}.\n\nIf you've pitched a blue card this turn, create a Fang Strike in your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_goldmane_estate_blue",
+    "name": "Visit Goldmane Estate",
+    "type_text": "Guardian Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Victor"
+    ],
+    "functional_text": "**Victor Specialization**\n\nCreate a Gold token. Then if you control 3 or more Gold, create that many Might tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_the_golden_anvil_blue",
+    "name": "Visit the Golden Anvil",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Olympia"
+    ],
+    "functional_text": "**Olympia Specialization**\n\nAs an additional cost to play this, destroy X Gold you control.\n\nEquip X weapons and/or equipment from your inventory.",
+    "status": "pending"
+  },
+  {
+    "slug": "waning_vengeance_blue",
+    "name": "Waning Vengeance",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you've pitched a blue card this turn, create a Spectral Shield token.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "waning_vengeance_red",
+    "name": "Waning Vengeance",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you've pitched a blue card this turn, create a Spectral Shield token.\n\n**Ward 3**",
+    "status": "pending"
+  },
+  {
+    "slug": "waning_vengeance_yellow",
+    "name": "Waning Vengeance",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, if you've pitched a blue card this turn, create a Spectral Shield token.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "wash_away_blue",
+    "name": "Wash Away",
+    "type_text": "Mystic Defense Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played another blue card this turn, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "water_the_seeds_blue",
+    "name": "Water the Seeds",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, your next attack this combat chain with 1 or less base {p} gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "water_the_seeds_red",
+    "name": "Water the Seeds",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, your next attack this combat chain with 1 or less base {p} gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "water_the_seeds_yellow",
+    "name": "Water the Seeds",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, your next attack this combat chain with 1 or less base {p} gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "waves_of_aqua_marine",
+    "name": "Waves of Aqua Marine",
+    "type_text": "Mystic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Cloaked"
+    ],
+    "specializations": [],
+    "functional_text": "**Cloaked**\n\n**Attack Reaction** - {r}, turn this face-up: Target attack gets +1{p}.\n\nAt the start of your turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "waxing_specter_blue",
+    "name": "Waxing Specter",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "If you've pitched a blue card this turn, this enters the arena with a +1{p} counter.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "waxing_specter_red",
+    "name": "Waxing Specter",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "If you've pitched a blue card this turn, this enters the arena with a +1{p} counter.\n\n**Ward 3**",
+    "status": "pending"
+  },
+  {
+    "slug": "waxing_specter_yellow",
+    "name": "Waxing Specter",
+    "type_text": "Mystic Illusionist Instant - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "If you've pitched a blue card this turn, this enters the arena with a +1{p} counter.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "wide_blue_yonder_blue",
+    "name": "Wide Blue Yonder",
+    "type_text": "Mystic Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack gets +1{p} for each blue card you've pitched this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "wind_chakra_blue",
+    "name": "Wind Chakra",
+    "type_text": "Mystic Ninja Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Crouching Tiger you play this turn gets +2{p}. If you've **transcended** this turn, instead it gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "wind_chakra_red",
+    "name": "Wind Chakra",
+    "type_text": "Mystic Ninja Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Crouching Tiger you play this turn gets +3{p}. If you've **transcended** this turn, instead it gets +5{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "wind_chakra_yellow",
+    "name": "Wind Chakra",
+    "type_text": "Mystic Ninja Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Crouching Tiger you play this turn gets +2{p}. If you've **transcended** this turn, instead it gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "zen",
+    "name": "Zen",
+    "type_text": "Mystic Ninja Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {c}{c}{c}: Create a Crouching Tiger in your hand. Search your deck for a card with **combo**, banish it, then shuffle. You may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "zen_tamer_of_purpose",
+    "name": "Zen, Tamer of Purpose",
+    "type_text": "Mystic Ninja Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {c}{c}{c}: Create a Crouching Tiger in your hand. Search your deck for a card with **combo**, banish it, then shuffle. You may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "inner_chi_blue",
+    "name": "Inner Chi",
+    "type_text": "Mystic Resource - Chi",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chi"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  }
+]

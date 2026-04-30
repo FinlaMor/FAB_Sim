@@ -1,0 +1,46 @@
+{
+  "slug": "show_time_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "filter_types": [
+            "Action"
+          ],
+          "filter_classes": [
+            "Guardian"
+          ],
+          "filter_attack": true,
+          "reveal": true,
+          "put_in_hand": true
+        },
+        {
+          "type": "PUT_BOTTOM_DRAW"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": 1,
+          "from_zone": "TOP_DECK"
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

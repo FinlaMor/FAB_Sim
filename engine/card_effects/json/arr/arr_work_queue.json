@@ -1,0 +1,240 @@
+[
+  {
+    "slug": "alpha_instinct_blue",
+    "name": "Alpha Instinct",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Rhinar"
+    ],
+    "functional_text": "**Rhinar Specialization**\n\nWhen this is discard to beat chest, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "bare_destruction_red",
+    "name": "Bare Destruction",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've beaten chest this turn and you don't control a chest equipment, this gets **go again** and the next Brute attack action card you play this turn gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bare_swing_red",
+    "name": "Bare Swing",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've beaten chest this turn and you don't control a chest equipment, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bare_swing_yellow",
+    "name": "Bare Swing",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've beaten chest this turn and you don't control a chest equipment, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "clearing_bellow_blue",
+    "name": "Clearing Bellow",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "**Intimidate**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "echo_casque",
+    "name": "Echo Casque",
+    "type_text": "Brute Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you beat chest, you may {r} and destroy this. If you do, draw a card.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "smell_fear_blue",
+    "name": "Smell Fear",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "GoAgain",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nIf you've beaten chest this turn, **intimidate**.\n\nYour next Brute attack this turn gets \"If you've intimidated 2 or more times this turn, this gets +2{p}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "smell_fear_yellow",
+    "name": "Smell Fear",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "GoAgain",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nIf you've beaten chest this turn, **intimidate**.\n\nYour next Brute attack this turn gets \"If you've intimidated 2 or more times this turn, this gets +3{p}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "torc_of_vim",
+    "name": "Torc of Vim",
+    "type_text": "Brute Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you beat chest, you may destroy this. If you do, the next Brute attack action card you play this turn costs {r}{r} less to play.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "trampling_trackers",
+    "name": "Trampling Trackers",
+    "type_text": "Brute Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you beat chest, you may destroy this. If you do, create an Agility token.\n\n**Temper**",
+    "status": "pending"
+  }
+]

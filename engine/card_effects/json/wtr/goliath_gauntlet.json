@@ -1,0 +1,28 @@
+{
+  "slug": "goliath_gauntlet",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "DESTROY_PERMANENT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "NEXT_ATTACK_BONUS",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "ATTACK_COST_GTE",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

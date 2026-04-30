@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "superstar_blue",
+    "name": "Superstar",
+    "type_text": "Revered Guardian Instant - Aura",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this enters or leaves the arena, **the crowd cheers** you.",
+    "status": "pending"
+  }
+]

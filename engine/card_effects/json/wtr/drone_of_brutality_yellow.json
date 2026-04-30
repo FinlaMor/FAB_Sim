@@ -1,0 +1,20 @@
+{
+  "slug": "drone_of_brutality_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "anywhere"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_BOTTOM_DRAW"
+        }
+      ]
+    }
+  ]
+}

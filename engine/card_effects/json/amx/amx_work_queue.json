@@ -1,0 +1,168 @@
+[
+  {
+    "slug": "breaker_helm_protos",
+    "name": "Breaker Helm Protos",
+    "type_text": "Mechanologist Equipment - Base Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may discard a Hyper Driver. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "construct_bank_breaker_yellow",
+    "name": "Construct Bank Breaker",
+    "type_text": "Mechanologist Action - Construct",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Construct",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a wrench weapon equipped, **transform** it and 3 Hyper Drivers you control into Bank Breaker, then equip Bank Breaker.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "drive_brake",
+    "name": "Drive Brake",
+    "type_text": "Mechanologist Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you banish a Hyper Driver from boosting, remove a -1{d} counter from this.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "fist_pump",
+    "name": "Fist Pump",
+    "type_text": "Mechanologist Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you banish a Hyper Driver from boosting, target wrench you control gets +1{p} this turn.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "puffer_jacket",
+    "name": "Puffer Jacket",
+    "type_text": "Mechanologist Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "Non-token Hyper Drivers you control enter the arena with an additional steam counter.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "twintek_charging_station_red",
+    "name": "Twintek Charging Station",
+    "type_text": "Mechanologist Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack you boost this turn gets +3{p}.\n\nYou may shuffle a Hyper Driver from your graveyard into your deck. If you do, gain {r}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bank_breaker",
+    "name": "Bank Breaker",
+    "type_text": "Mechanologist Weapon - Wrench (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Wrench"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "**Twice per Turn Action** - {r}: **Attack**. Activate this only if you've cranked this turn.\n\nWhen this attacks, you may banish a card from under it. If you do, the attack gets **overpower** and **go again**.",
+    "status": "pending"
+  }
+]

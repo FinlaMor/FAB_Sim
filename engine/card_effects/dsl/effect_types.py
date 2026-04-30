@@ -102,6 +102,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             effect_gain_resources(state, _controller_id(card), _a)
         return _fn
 
+    if etype == "GAIN_RESOURCES_FROM_ROLL":
+        # Roll a die, optionally scale the result, gain that many resources.
+        # "gain {r} equal to half the number rolled, rounded down" ->
+        #   {"type": "GAIN_RESOURCES_FROM_ROLL", "faces": 6, "divisor": 2}
+        faces = params.get("faces", 6)
+        divisor = params.get("divisor", 1)
+        def _fn(card, event, state, _f=faces, _d=divisor):
+            from engine.card_effects.ability_keywords import roll_die, effect_gain_resources, _controller_id
+            pid = _controller_id(card)
+            result = roll_die(state, pid, faces=_f)
+            amount = result // _d
+            if amount > 0:
+                effect_gain_resources(state, pid, amount)
+        return _fn
+
     # ── attack / combat ────────────────────────────────────────────────────
     if etype == "MODIFY_ATTACK_POWER":
         amt = params.get("amount", 0)

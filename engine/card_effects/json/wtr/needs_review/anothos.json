@@ -1,0 +1,27 @@
+{
+  "slug": "anothos",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "PITCH",
+              "cost_gte": 3,
+              "amount": 2
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

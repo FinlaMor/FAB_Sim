@@ -1,0 +1,19 @@
+{
+  "slug": "demolition_crew_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "REVEAL_CARD_COST_GTE",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "DOMINATE"
+        }
+      ]
+    }
+  ]
+}

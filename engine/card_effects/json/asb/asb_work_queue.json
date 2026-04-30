@@ -1,0 +1,116 @@
+[
+  {
+    "slug": "bracers_of_bellonas_grace",
+    "name": "Bracers of Bellona's Grace",
+    "type_text": "Light Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may **charge** your hero's soul. If a yellow card is **charged** this way, create a Courage token.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "helm_of_halos_grace",
+    "name": "Helm of Halo's Grace",
+    "type_text": "Light Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may **charge** your hero's soul. If a yellow card is **charged** this way, draw a card.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "saving_grace_yellow",
+    "name": "Saving Grace",
+    "type_text": "Light Warrior Defense Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play this, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, target attack gets -2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "solar_plexus",
+    "name": "Solar Plexus",
+    "type_text": "Light Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this, banish a card from your soul: Yellow cards cost you {r} less to play this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "warpath_of_winged_grace",
+    "name": "Warpath of Winged Grace",
+    "type_text": "Light Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may **charge** your hero's soul. If a yellow card is **charged** this way, create a Quicken token.\n\n**Blade Break**",
+    "status": "pending"
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "slug": "regurgitating_slog_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "BANISH_NAMED_GRAVEYARD_OPTIONAL",
+          "slug_contains": "sloggism",
+          "flag": "banished_sloggism"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GRANT_KEYWORD",
+          "keyword": "Dominate",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "banished_sloggism"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

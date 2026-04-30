@@ -1,0 +1,26 @@
+{
+  "slug": "staunch_response_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "paid_ruby_cost"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

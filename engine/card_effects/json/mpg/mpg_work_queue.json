@@ -1,0 +1,1645 @@
+[
+  {
+    "slug": "aftershock_blue",
+    "name": "Aftershock",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "aftershock_red",
+    "name": "Aftershock",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "aftershock_yellow",
+    "name": "Aftershock",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "annexation_of_all_things_known_yellow",
+    "name": "Annexation of All Things Known",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 2,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a Guardian hero, until the end of your next turn, they can't play face-up cards from arsenal, and you may play face-up cards from their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "annexation_of_grandeur_yellow",
+    "name": "Annexation of Grandeur",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 2,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a Guardian hero, gain control of an aura they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "annexation_of_the_forge_yellow",
+    "name": "Annexation of the Forge",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 2,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a Guardian hero, equip an equipment they have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "base_of_the_mountain",
+    "name": "Base of the Mountain",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": "*",
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, banish any number of action cards from your hand, then add them to the chain link as defending cards.\n\nThis card's {d} is equal to the number of action cards defending on the active chain link.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "blinding_of_the_old_ones_red",
+    "name": "Blinding of the Old Ones",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush",
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a Guardian hero, cards they own lose all abilities during their next turn.\n\n**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "break_stature_yellow",
+    "name": "Break Stature",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 2,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy an aura token they control. They can't create auras with that token's name until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "call_for_backup_red",
+    "name": "Call for Backup",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, choose 2 attack action cards with different names in your graveyard. An opponent chooses 1 of them. Banish that card and put the other on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "captain_of_the_guard_blue",
+    "name": "Captain of the Guard",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While this is defending, cards with {p} greater than the attack they are defending get +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_arms_yellow",
+    "name": "Clash of Arms",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. If there is a winner, the other hero puts a -1{d} counter on an arms they have equipped. If they don't, they lose 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_bravado_yellow",
+    "name": "Clash of Bravado",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner destroys an aura the other hero controls.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_chests_yellow",
+    "name": "Clash of Chests",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. If there is a winner, the other hero puts a -1{d} counter on a chest they have equipped. If they don't, they lose 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_heads_yellow",
+    "name": "Clash of Heads",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. If there is a winner, the other hero puts a -1{d} counter on a head they have equipped. If they don't, they lose 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_legs_yellow",
+    "name": "Clash of Legs",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. If there is a winner, the other hero puts a -1{d} counter on a legs they have equipped. If they don't, they lose 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_mountains_blue",
+    "name": "Clash of Mountains",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. The winner creates a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_mountains_red",
+    "name": "Clash of Mountains",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. The winner creates a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_mountains_yellow",
+    "name": "Clash of Mountains",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. The winner creates a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_shields_yellow",
+    "name": "Clash of Shields",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. If there is a winner, the other hero puts a -1{d} counter on an off-hand they have equipped. If they don't, they lose 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "crash_and_bash_blue",
+    "name": "Crash and Bash",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may reveal a card with **crush** from your hand. If you do, create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "crash_and_bash_red",
+    "name": "Crash and Bash",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may reveal a card with **crush** from your hand. If you do, create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "crash_and_bash_yellow",
+    "name": "Crash and Bash",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may reveal a card with **crush** from your hand. If you do, create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "craterhoof",
+    "name": "Craterhoof",
+    "type_text": "Guardian Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy this: The next Guardian attack action card you play from arsenal this turn gets **dominate**. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "daily_grind_blue",
+    "name": "Daily Grind",
+    "type_text": "Guardian Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "Attack action cards you control get \"When this defends, **clash** with the attacking hero. The winner destroys the top card of the other hero's deck.\"\n\nAt the start of your turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "disenchantment_of_the_old_ones_red",
+    "name": "Disenchantment of the Old Ones",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush",
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a Guardian hero, destroy all auras they control.\n\n**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "draw_a_crowd_blue",
+    "name": "Draw a Crowd",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters the arena, each hero draws a card.\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fault_line_red",
+    "name": "Fault Line",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a card in your arsenal, this gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, put all cards in all arsenals on bottom of their owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "fearless_confrontation_blue",
+    "name": "Fearless Confrontation",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Target attack gets -1{p} and loses and can't gain **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flatten_the_field_blue",
+    "name": "Flatten the Field",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy a Seismic Surge token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "flatten_the_field_red",
+    "name": "Flatten the Field",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy a Seismic Surge token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "flatten_the_field_yellow",
+    "name": "Flatten the Field",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy a Seismic Surge token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "gauntlet_of_boulderhold",
+    "name": "Gauntlet of Boulderhold",
+    "type_text": "Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy this: The next Guardian attack action card you play from arsenal this turn gets +2{p}. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "geyser_of_seismic_stirrings_blue",
+    "name": "Geyser of Seismic Stirrings",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nThis enters the arena with an energy counter. When it has none, destroy it.\n\nAt the beginning of your end phase, remove an energy counter from this and create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "geyser_of_seismic_stirrings_red",
+    "name": "Geyser of Seismic Stirrings",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nThis enters the arena with 3 energy counters. When it has none, destroy it.\n\nAt the beginning of your end phase, remove an energy counter from this and create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "geyser_of_seismic_stirrings_yellow",
+    "name": "Geyser of Seismic Stirrings",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nThis enters the arena with 2 energy counters. When it has none, destroy it.\n\nAt the beginning of your end phase, remove an energy counter from this and create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "grind_them_down_blue",
+    "name": "Grind Them Down",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy the top card of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "grind_them_down_red",
+    "name": "Grind Them Down",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy the top card of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "grind_them_down_yellow",
+    "name": "Grind Them Down",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy the top card of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "headbutt_blue",
+    "name": "Headbutt",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "This can't be defended by non-head equipment.\n\nIf you have a head equipped and the defending hero doesn't, this gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on a head they have equipped, then if it has 0{d}, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "hoarding_of_denial",
+    "name": "Hoarding of Denial",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "This gets +X{d} while defending, where X is the number of cards with cost 3 or more defending this combat chain.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "hostile_encroachment_red",
+    "name": "Hostile Encroachment",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, they draw a card.\n\n**Crush** - When this deals 4 or more damage to a hero, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "jarl_vetreidi",
+    "name": "Jarl Vetreiði",
+    "type_text": "Elemental Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you play an Ice card, create a Frostbite token in an opponent's exposed head, chest, arms, or legs zone.\n\n**Essence of Earth and Ice**",
+    "status": "pending"
+  },
+  {
+    "slug": "leave_a_dent_blue",
+    "name": "Leave a Dent",
+    "type_text": "Guardian Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Guardian attack this turn gets \"**Crush** - When this deals 4 or more damage to a hero, destroy the top 4 cards of their deck.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ley_line_of_the_old_ones_blue",
+    "name": "Ley Line of the Old Ones",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nWhen this enters the arena and whenever you deal damage, create a Seismic Surge token. At the beginning of your end phase, if you control no Seismic Surge tokens, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "little_big_foot_blue",
+    "name": "Little Big Foot",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If there are two or more cards with cost 3 or more in your pitch zone, this gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "little_big_foot_red",
+    "name": "Little Big Foot",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If there are two or more cards with cost 3 or more in your pitch zone, this gets +6{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "little_big_foot_yellow",
+    "name": "Little Big Foot",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If there are two or more cards with cost 3 or more in your pitch zone, this gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "overswing_blue",
+    "name": "Overswing",
+    "type_text": "Guardian Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "The next Guardian attack action card you play this turn gets +1{p}.\n\n**Go again**\n\n**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "overswing_red",
+    "name": "Overswing",
+    "type_text": "Guardian Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "The next Guardian attack action card you play this turn gets +3{p}.\n\n**Go again**\n\n**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "overswing_yellow",
+    "name": "Overswing",
+    "type_text": "Guardian Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "The next Guardian attack action card you play this turn gets +2{p}.\n\n**Go again**\n\n**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "pec_perfect_red",
+    "name": "Pec Perfect",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 1,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a card defends this, **clash** with the defending hero. The winner destroys the top card of the other hero's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "promising_terrain_blue",
+    "name": "Promising Terrain",
+    "type_text": "Guardian Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nIf you would create 1 or more Seismic Surge tokens, instead create that many plus 1.\n\nAt the beginning of your action phase, destroy this, then if you control 3 or more Seismic Surge tokens, draw a card and gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "put_em_in_their_place_red",
+    "name": "Put 'Em In Their Place",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush",
+      "Specialization"
+    ],
+    "specializations": [
+      "Valda"
+    ],
+    "functional_text": "**Valda Specialization**\n\n**Crush** - When this deals 4 or more damage to a hero, they discard their hand, then they draw that many cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "renounce_grandeur_red",
+    "name": "Renounce Grandeur",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "If the defending hero controls an aura token, this gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, they can't create aura tokens during their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "richter_scale",
+    "name": "Richter Scale",
+    "type_text": "Guardian Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Create 2 Seismic Surge tokens.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "rubble_raiser_blue",
+    "name": "Rubble Raiser",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "rubble_raiser_red",
+    "name": "Rubble Raiser",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "rubble_raiser_yellow",
+    "name": "Rubble Raiser",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "seismic_eruption_yellow",
+    "name": "Seismic Eruption",
+    "type_text": "Guardian Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create 3 Seismic Surge tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "seismic_shelter_blue",
+    "name": "Seismic Shelter",
+    "type_text": "Guardian Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAttack action cards you control get +X{d} while defending, where X is the number of Seismic Surge tokens you control.\n\nAt the start of your turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "smelting_of_the_old_ones_red",
+    "name": "Smelting of the Old Ones",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush",
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a Guardian hero, destroy all equipment they control with -1{d} counters.\n\n**Heave 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "solid_ground_blue",
+    "name": "Solid Ground",
+    "type_text": "Guardian Defense Reaction",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 5,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Seismic Surge you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sunkwater_exoshell",
+    "name": "Sunkwater Exoshell",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, put a face-up card from your arsenal on the bottom of your deck. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "sunkwater_lookout",
+    "name": "Sunkwater Lookout",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, put a face-up card from your arsenal on the bottom of your deck. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "sunkwater_pincers",
+    "name": "Sunkwater Pincers",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, put a face-up card from your arsenal on the bottom of your deck. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "sunkwater_scalers",
+    "name": "Sunkwater Scalers",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, put a face-up card from your arsenal on the bottom of your deck. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "tectonic_instability_blue",
+    "name": "Tectonic Instability",
+    "type_text": "Guardian Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero puts a card from their arsenal on the bottom of their deck. If they do, they draw a card.\n\nCreate Seismic Surge tokens equal to the number of cards drawn this way.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "test_of_iron_grip_red",
+    "name": "Test of Iron Grip",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. If there is a winner, the other hero discards a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "testament_of_valahai",
+    "name": "Testament of Valahai",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "If you control three or more Seismic Surge tokens, this gets +2{d}. If you control six or more, instead this gets +4{d}.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "tremor_of_resistance",
+    "name": "Tremor of Resistance",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Seismic Surge token, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "valda_seismic_impact",
+    "name": "Valda, Seismic Impact",
+    "type_text": "Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an opponent draws 1 or more cards during an action phase, create that many Seismic Surge tokens.\n\nAt the start of your turn, if you control 3 or more Siesmic Surge tokens, cards you own with **crush** get **dominate** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_anvilheim_blue",
+    "name": "Visit Anvilheim",
+    "type_text": "Guardian Action",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Remove X -1{d} counters from a Guardian off-hand you have equipped.",
+    "status": "pending"
+  }
+]

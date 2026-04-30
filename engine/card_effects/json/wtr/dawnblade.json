@@ -1,0 +1,76 @@
+{
+  "slug": "dawnblade",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "dawnblade_hit"
+        },
+        {
+          "type": "FLAG_SET",
+          "flag": "dawnblade_second_hit"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "+1p",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "NOT",
+          "inner_type": "FLAG_SET",
+          "flag": "dawnblade_hit"
+        }
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTER",
+          "counter_type": "+1p",
+          "amount": 999
+        }
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "NOT",
+          "inner_type": "FLAG_SET",
+          "flag": "dawnblade_hit"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "dawnblade_hit"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_ATTACK",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "dawnblade_hit"
+            }
+          ],
+          "effects": [
+            {
+              "type": "SET_FLAG",
+              "flag": "dawnblade_second_hit"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

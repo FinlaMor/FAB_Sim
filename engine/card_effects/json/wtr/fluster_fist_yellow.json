@@ -1,0 +1,20 @@
+{
+  "slug": "fluster_fist_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "COMBO_CONTAINS",
+              "substring": "open_the_center"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

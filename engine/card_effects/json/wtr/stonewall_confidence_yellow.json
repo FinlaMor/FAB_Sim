@@ -1,0 +1,21 @@
+{
+  "slug": "stonewall_confidence_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": 1,
+          "from_zone": "TOP_DECK"
+        }
+      ]
+    }
+  ]
+}

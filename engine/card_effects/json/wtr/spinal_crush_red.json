@@ -1,0 +1,22 @@
+{
+  "slug": "spinal_crush_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "CRUSH",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "spinal_crush_disable_go_again",
+          "scope": "NEXT"
+        }
+      ]
+    }
+  ]
+}

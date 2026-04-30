@@ -1,0 +1,380 @@
+[
+  {
+    "slug": "bracken_rap_red",
+    "name": "Bracken Rap",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Bond"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Bond** - When this attacks, if an Earth card was pitched to play this, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "bracken_rap_yellow",
+    "name": "Bracken Rap",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Bond"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Bond** - When this attacks, if an Earth card was pitched to play this, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "canopy_shelter_blue",
+    "name": "Canopy Shelter",
+    "type_text": "Earth Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "flourish_blue",
+    "name": "Flourish",
+    "type_text": "Earth Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack would gain {p} this turn, instead it gains that much plus 2.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flourish_yellow",
+    "name": "Flourish",
+    "type_text": "Earth Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack would gain {p} this turn, instead it gains that much plus 3.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hard_knuckle",
+    "name": "Hard Knuckle",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play an attack action card, you may destroy this. If you do, the attack gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "log_fall_red",
+    "name": "Log Fall",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Bond",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Bond** - If an Earth card was pitched to play this, this gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "log_fall_yellow",
+    "name": "Log Fall",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Bond",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Bond** - If an Earth card was pitched to play this, this gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "redwood_hammer",
+    "name": "Redwood Hammer",
+    "type_text": "Earth Guardian Weapon - Hammer (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf an Earth card was pitched to attack with this, the attack gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "seeds_of_strength_blue",
+    "name": "Seeds of Strength",
+    "type_text": "Elemental Guardian Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Bond"
+    ],
+    "specializations": [],
+    "functional_text": "Create a Might token.\n\n**Earth Bond** - If an Earth card was pitched to play this, instead create 2 Might tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "seeds_of_strength_yellow",
+    "name": "Seeds of Strength",
+    "type_text": "Elemental Guardian Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Bond"
+    ],
+    "specializations": [],
+    "functional_text": "Create 2 Might tokens.\n\n**Earth Bond** - If an Earth card was pitched to play this, instead create 3 Might tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_shelter_blue",
+    "name": "Sigil of Shelter",
+    "type_text": "Guardian Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 1 of that damage.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_shelter_yellow",
+    "name": "Sigil of Shelter",
+    "type_text": "Guardian Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 2 of that damage.",
+    "status": "pending"
+  },
+  {
+    "slug": "strong_wood_red",
+    "name": "Strong Wood",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Bond"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Bond** - If an Earth card was pitched to play this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "strong_wood_yellow",
+    "name": "Strong Wood",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Bond"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Bond** - If an Earth card was pitched to play this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "terra",
+    "name": "Terra",
+    "type_text": "Elemental Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of each end phase, if there is an Earth card in your pitch zone, you may pay {r}. If you do, create a Might token.\n\n**Essence of Earth**",
+    "status": "pending"
+  },
+  {
+    "slug": "thrive_yellow",
+    "name": "Thrive",
+    "type_text": "Earth Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If an attack would gain {p} this turn, instead it gains that much plus 1.\n\n**Go again**",
+    "status": "pending"
+  }
+]

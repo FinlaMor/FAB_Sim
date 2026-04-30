@@ -1,0 +1,24 @@
+{
+  "slug": "snapdragon_scalers",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "additional_cost": [
+        {
+          "type": "DESTROY_PERMANENT"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_COST_GTE",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

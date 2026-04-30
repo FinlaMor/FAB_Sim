@@ -1,0 +1,40 @@
+{
+  "slug": "seismic_surge",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": 1,
+          "from_zone": "TOP_DECK"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_PLAY",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
+            }
+          ],
+          "effects": [
+            {
+              "type": "SET_FLAG",
+              "flag": "guardian_attack_discount",
+              "scope": "NEXT"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

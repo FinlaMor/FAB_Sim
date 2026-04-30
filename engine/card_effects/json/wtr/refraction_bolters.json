@@ -1,0 +1,35 @@
+{
+  "slug": "refraction_bolters",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_IS_WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "REFRACTION_BOLTERS_DESTROYED"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "REFRACTION_BOLTERS_DESTROYED"
+            }
+          ]
+        }
+      ],
+      "optional": true
+    }
+  ]
+}

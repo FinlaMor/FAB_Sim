@@ -1,0 +1,19 @@
+{
+  "slug": "unmovable_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

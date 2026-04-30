@@ -1,0 +1,18 @@
+{
+  "slug": "dorinthea_ironsong",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "ATTACK_IS_WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

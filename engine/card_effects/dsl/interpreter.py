@@ -3,7 +3,14 @@ from __future__ import annotations
 
 
 def run_ability(ability, card, event, state) -> None:
-    """Execute a single AbilityDef. Checks ability-level conditions, then runs effects."""
+    """Execute a single AbilityDef. Checks additional costs, conditions, then runs effects."""
+    # Check and pay additional costs (mandatory extra costs — abort if unpayable)
+    for cost in getattr(ability, 'additional_costs', []):
+        if cost.check_fn is not None and not cost.check_fn(card, event, state):
+            return  # cost not satisfiable — abort (play.py should have blocked this)
+        if cost.pay_fn is not None:
+            cost.pay_fn(card, event, state)
+
     # Check ability-level conditions (all must pass — AND logic)
     for cond in ability.conditions:
         fn = cond.fn

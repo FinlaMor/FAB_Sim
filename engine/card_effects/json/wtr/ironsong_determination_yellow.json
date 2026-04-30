@@ -1,0 +1,19 @@
+{
+  "slug": "ironsong_determination_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "NEXT_WEAPON_ATTACK_BONUS",
+          "amount": 1,
+          "go_again": true
+        },
+        {
+          "type": "GRANT_KEYWORD",
+          "keyword": "Dominate"
+        }
+      ]
+    }
+  ]
+}

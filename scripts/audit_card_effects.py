@@ -15,8 +15,10 @@ import json
 import os
 import re
 import sys
+from pathlib import Path
 
-SLUG_PATH = r"C:\Users\Joseph\Desktop\FAB_Sim\card_data\slug_index.json"
+_ROOT = Path(__file__).resolve().parent.parent
+SLUG_PATH = os.environ.get("FAB_SLUG_PATH", str(_ROOT / "card_data" / "slug_index.json"))
 OUTPUT_PATH = "docs/reports/card_classification.json"
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,36 @@
+{
+  "slug": "nimble_strike_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "BANISH_NAMED_GRAVEYARD_OPTIONAL",
+          "slug_contains": "nimblism",
+          "flag": "banished_nimblism"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "banished_nimblism"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "banished_nimblism"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

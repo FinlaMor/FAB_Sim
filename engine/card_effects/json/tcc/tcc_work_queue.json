@@ -1,0 +1,1056 @@
+[
+  {
+    "slug": "apocalypse_automaton_red",
+    "name": "Apocalypse Automaton",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "Play this only if you have 1 or more Evos equipped.\n\n**Evo Upgrade** - This attacks up to X target opposing heroes, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "bastion_of_duty",
+    "name": "Bastion of Duty",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Protect",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Protect**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "bittering_thorns_red",
+    "name": "Bittering Thorns",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, your next attack this turn gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_scent",
+    "name": "Blood Scent",
+    "type_text": "Ninja Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Gain {r}. Activate this only if you've attacked with a Crouching Tiger this turn.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "boulder_drop_blue",
+    "name": "Boulder Drop",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "boulder_drop_yellow",
+    "name": "Boulder Drop",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "brevant_civic_protector",
+    "name": "Brevant, Civic Protector",
+    "type_text": "Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may have any number of Chivalry in your deck.\n\nWhenever you **protect** another hero, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "chivalry_blue",
+    "name": "Chivalry",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Protect"
+    ],
+    "specializations": [],
+    "functional_text": "**Protect**",
+    "status": "pending"
+  },
+  {
+    "slug": "civic_duty",
+    "name": "Civic Duty",
+    "type_text": "Guardian Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this defends, create a Vigor token under another hero's control.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "civic_guide",
+    "name": "Civic Guide",
+    "type_text": "Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this defends, create a Might token under another hero's control.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "civic_peak",
+    "name": "Civic Peak",
+    "type_text": "Guardian Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this defends, another target hero draws a card.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "civic_steps",
+    "name": "Civic Steps",
+    "type_text": "Guardian Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this defends, create a Quicken token under another hero's control.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "crash_down_red",
+    "name": "Crash Down",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then the next Guardian attack action card you play this turn gets +6{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "crash_down_yellow",
+    "name": "Crash Down",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then the next Guardian attack action card you play this turn gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "crowd_control_blue",
+    "name": "Crowd Control",
+    "type_text": "Bard Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay {r}{r}{r}. If you do, it gets +1{d} for each opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "crowd_control_red",
+    "name": "Crowd Control",
+    "type_text": "Bard Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay {r}{r}{r}. If you do, it gets +1{d} for each opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "crowd_control_yellow",
+    "name": "Crowd Control",
+    "type_text": "Bard Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay {r}{r}{r}. If you do, it gets +1{d} for each opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "earthlore_empowerment_red",
+    "name": "Earthlore Empowerment",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play and gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "earthlore_empowerment_yellow",
+    "name": "Earthlore Empowerment",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play and gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "encore_yellow",
+    "name": "Encore",
+    "type_text": "Bard Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Return a Bard attack action card from your graveyard to your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "energy_potion_blue",
+    "name": "Energy Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Gain {r}{r}",
+    "status": "pending"
+  },
+  {
+    "slug": "fiddle_dee",
+    "name": "Fiddle-dee",
+    "type_text": "Bard Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Each hero creates a Might token.  **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "final_act_red",
+    "name": "Final Act",
+    "type_text": "Bard Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, it gets +X{p}, where X is twice the number of cards in all pitch zones.",
+    "status": "pending"
+  },
+  {
+    "slug": "growl_red",
+    "name": "Growl",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "growl_yellow",
+    "name": "Growl",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hammer_of_havenhold",
+    "name": "Hammer of Havenhold",
+    "type_text": "Guardian Weapon - Hammer (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf you have a Chivalry in your pitch zone, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "heart_throb",
+    "name": "Heart-throb",
+    "type_text": "Bard Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Each hero creates a Vigor token.  **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "interlude_blue",
+    "name": "Interlude",
+    "type_text": "Bard Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose a hero. The next time they would be dealt damage this turn, prevent 1 of that damage. If you prevent damage to another hero this way, create a Copper token.",
+    "status": "pending"
+  },
+  {
+    "slug": "interlude_red",
+    "name": "Interlude",
+    "type_text": "Bard Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose a hero. The next time they would be dealt damage this turn, prevent 3 of that damage. If you prevent damage to another hero this way, create a Copper token.",
+    "status": "pending"
+  },
+  {
+    "slug": "interlude_yellow",
+    "name": "Interlude",
+    "type_text": "Bard Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose a hero. The next time they would be dealt damage this turn, prevent 2 of that damage. If you prevent damage to another hero this way, create a Copper token.",
+    "status": "pending"
+  },
+  {
+    "slug": "jinglewood_smash_hit",
+    "name": "Jinglewood, Smash Hit",
+    "type_text": "Bard Weapon - Fiddle (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Fiddle"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: Target opposing hero chooses and creates a Might, Quicken, or Vigor token. You create a Copper token. **Go again**\n\n**Action** - 0: **Attack**. When this hits, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "mask_of_three_tails",
+    "name": "Mask of Three Tails",
+    "type_text": "Ninja Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Draw a card. Activate this ability only if you've hit 3 or more times this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "mauling_qi_red",
+    "name": "Mauling Qi",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - When this hits, if Crouching Tiger was the last attack this combat chain, deal 1 damage to each opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "melody_sing_along",
+    "name": "Melody, Sing-along",
+    "type_text": "Bard Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you play a song, create Copper tokens equal to the number of other heroes in the game.",
+    "status": "pending"
+  },
+  {
+    "slug": "nom_de_plume",
+    "name": "Nom de Plume",
+    "type_text": "Bard Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Each hero draws a card.  **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pouncing_paws",
+    "name": "Pouncing Paws",
+    "type_text": "Ninja Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "professor_teklovossen",
+    "name": "Professor Teklovossen",
+    "type_text": "Mechanologist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Evos cost {r} less to play for each opposing hero.\n\nYou may play Evos from your banished zone.",
+    "status": "pending"
+  },
+  {
+    "slug": "quickstep",
+    "name": "Quickstep",
+    "type_text": "Bard Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Each hero creates a Quicken token.  **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "song_of_jack_be_quick_blue",
+    "name": "Song of Jack-be-Quick",
+    "type_text": "Bard Action - Song",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack",
+      "Song"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Quicken token under each other hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "song_of_sweet_nectar_blue",
+    "name": "Song of Sweet Nectar",
+    "type_text": "Bard Action - Song",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack",
+      "Song"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Each other hero gains 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "song_of_the_rosen_matador_blue",
+    "name": "Song of the Rosen Matador",
+    "type_text": "Bard Action - Song",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack",
+      "Song"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Vigor token under each other hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "song_of_the_shining_knight_blue",
+    "name": "Song of the Shining Knight",
+    "type_text": "Bard Action - Song",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack",
+      "Song"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Might token under each other hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "song_of_the_wandering_mind_blue",
+    "name": "Song of the Wandering Mind",
+    "type_text": "Bard Action - Song",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack",
+      "Song"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Each other hero draws a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "song_of_yesteryears_blue",
+    "name": "Song of Yesteryears",
+    "type_text": "Bard Action - Song",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack",
+      "Song"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Each other hero puts an attack action card from their graveyard on the bottom of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklo_blaster",
+    "name": "Teklo Blaster",
+    "type_text": "Mechanologist Weapon - Gun (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Gun"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**",
+    "status": "pending"
+  },
+  {
+    "slug": "tiger_eye_reflex_blue",
+    "name": "Tiger Eye Reflex",
+    "type_text": "Ninja Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Ambush"
+    ],
+    "specializations": [],
+    "functional_text": "**Ambush**\n\nWhen this defends, create a Crouching Tiger in your banished zone. You may play it during your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "tiger_eye_reflex_yellow",
+    "name": "Tiger Eye Reflex",
+    "type_text": "Ninja Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Ambush"
+    ],
+    "specializations": [],
+    "functional_text": "**Ambush**\n\nWhen this defends, create a Crouching Tiger in your banished zone. You may play it during your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "timesnap_potion_blue",
+    "name": "Timesnap Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain 2 action points.",
+    "status": "pending"
+  }
+]

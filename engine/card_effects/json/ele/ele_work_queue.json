@@ -1,0 +1,5385 @@
+[
+  {
+    "slug": "amulet_of_earth_blue",
+    "name": "Amulet of Earth",
+    "type_text": "Earth Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\n**Instant** - Destroy Amulet of Earth: Attack action cards you control gain +1{p} and +1{d} this turn. Activate this ability only if you have Earth **fused** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "amulet_of_ice_blue",
+    "name": "Amulet of Ice",
+    "type_text": "Ice Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\n**Instant** - Destroy Amulet of Ice: Target hero discards a card unless they pay {r}{r}. Activate this ability only if you have **Ice fused** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "amulet_of_lightning_blue",
+    "name": "Amulet of Lightning",
+    "type_text": "Lightning Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\n**Instant** - Destroy Amulet of Lightning: Target action card gains **go again**. Activate this ability only if you have Lightning **fused** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_shockwave_blue",
+    "name": "Arcanic Shockwave",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nWhen you attack with Arcanic Shockwave, if it was **fused**, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_shockwave_red",
+    "name": "Arcanic Shockwave",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nWhen you attack with Arcanic Shockwave, if it was **fused**, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_shockwave_yellow",
+    "name": "Arcanic Shockwave",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nWhen you attack with Arcanic Shockwave, if it was **fused**, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "autumns_touch_blue",
+    "name": "Autumn's Touch",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "autumns_touch_red",
+    "name": "Autumn's Touch",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "autumns_touch_yellow",
+    "name": "Autumn's Touch",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "awakening_blue",
+    "name": "Awakening",
+    "type_text": "Elemental Guardian Instant",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf you have less {h} than an opposing hero, create Seismic Surge tokens equal to the difference. If Awakening was **fused**, instead create twice that many Seismic Surge tokens.\n\nSearch your deck for a Guardian attack action card with cost less than or equal to the number of Seismic Surge tokens you control, reveal it, put it into your hand, then shuffle your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "ball_lightning_blue",
+    "name": "Ball Lightning",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a Lightning or Elemental action card would deal damage this combat chain, instead it deals that much damage plus 1.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ball_lightning_red",
+    "name": "Ball Lightning",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a Lightning or Elemental action card would deal damage this combat chain, instead it deals that much damage plus 1.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ball_lightning_yellow",
+    "name": "Ball Lightning",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a Lightning or Elemental action card would deal damage this combat chain, instead it deals that much damage plus 1.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "biting_gale_blue",
+    "name": "Biting Gale",
+    "type_text": "Elemental Guardian Defense Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Biting Gale was **fused**, the attacking hero discards a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "biting_gale_red",
+    "name": "Biting Gale",
+    "type_text": "Elemental Guardian Defense Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Biting Gale was **fused**, the attacking hero discards a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "biting_gale_yellow",
+    "name": "Biting Gale",
+    "type_text": "Elemental Guardian Defense Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Biting Gale was **fused**, the attacking hero discards a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "blink_blue",
+    "name": "Blink",
+    "type_text": "Lightning Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 1 action point.",
+    "status": "pending"
+  },
+  {
+    "slug": "blizzard_blue",
+    "name": "Blizzard",
+    "type_text": "Ice Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack loses and can't gain **go again** unless its controller pays {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "blizzard_bolt_blue",
+    "name": "Blizzard Bolt",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Blizzard Bolt was **fused**, whenever an attack deals damage to a hero this turn, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "blizzard_bolt_red",
+    "name": "Blizzard Bolt",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Blizzard Bolt was **fused**, whenever an attack deals damage to a hero this turn, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "blizzard_bolt_yellow",
+    "name": "Blizzard Bolt",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Blizzard Bolt was **fused**, whenever an attack deals damage to a hero this turn, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "blossoming_spellblade_red",
+    "name": "Blossoming Spellblade",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth and Lightning Fusion**\n\nIf Blossoming Spellblade was fused, it gains \"Whenever this deals damage to an opposing hero, you may banish a 'non-attack' action card from your graveyard. If you do, you may play it this turn as though it were an instant and if it would be put into your graveyard this turn, instead banish it.\"\n\nWhen you attack with Blossoming Spellblade, if it was **fused**, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "boltn_shot_blue",
+    "name": "Bolt'n' Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "If Bolt'n' Shot's {p} is greater than its base {p}, it has **go again** and \"If this hits, **reload.**\"",
+    "status": "pending"
+  },
+  {
+    "slug": "boltn_shot_red",
+    "name": "Bolt'n' Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "If Bolt'n' Shot's {p} is greater than its base {p}, it has **go again** and \"If this hits, **reload.**\"",
+    "status": "pending"
+  },
+  {
+    "slug": "boltn_shot_yellow",
+    "name": "Bolt'n' Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "If Bolt'n' Shot's {p} is greater than its base {p}, it has **go again** and \"If this hits, **reload.**\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bramble_spark_blue",
+    "name": "Bramble Spark",
+    "type_text": "Elemental Runeblade Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nThe next attack action card you play this turn gains \"When you attack with this, deal 1 arcane damage to target hero.\"\n\nIf Bramble Spark was **fused**, the next attack action card you play this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bramble_spark_red",
+    "name": "Bramble Spark",
+    "type_text": "Elemental Runeblade Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nThe next attack action card you play this turn gains \"When you attack with this, deal 1 arcane damage to target hero.\"\n\nIf Bramble Spark was **fused**, the next attack action card you play this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bramble_spark_yellow",
+    "name": "Bramble Spark",
+    "type_text": "Elemental Runeblade Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nThe next attack action card you play this turn gains \"When you attack with this, deal 1 arcane damage to target hero.\"\n\nIf Bramble Spark was **fused**, the next attack action card you play this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "break_ground_blue",
+    "name": "Break Ground",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack with Break Ground, you may put a card from your arsenal on the bottom of your deck. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "break_ground_red",
+    "name": "Break Ground",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack with Break Ground, you may put a card from your arsenal on the bottom of your deck. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "break_ground_yellow",
+    "name": "Break Ground",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack with Break Ground, you may put a card from your arsenal on the bottom of your deck. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "briar",
+    "name": "Briar",
+    "type_text": "Elemental Runeblade Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Earth and Lightning**\n\nThe first time an attack action card you control deals damage to an opposing hero, create an Embodiment of Earth token.\n\nWhenever you play your second 'non-attack' action card each turn, create an Embodiment of Lightning token.",
+    "status": "pending"
+  },
+  {
+    "slug": "briar_warden_of_thorns",
+    "name": "Briar, Warden of Thorns",
+    "type_text": "Elemental Runeblade Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Earth and Lightning**\n\nThe first time an attack action card you control deals damage to an opposing hero, create an Embodiment of Earth token.\n\nWhenever you play your second 'non-attack' action card each turn, create an Embodiment of Lightning token.",
+    "status": "pending"
+  },
+  {
+    "slug": "burgeoning_blue",
+    "name": "Burgeoning",
+    "type_text": "Earth Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "burgeoning_red",
+    "name": "Burgeoning",
+    "type_text": "Earth Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "burgeoning_yellow",
+    "name": "Burgeoning",
+    "type_text": "Earth Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "buzz_bolt_blue",
+    "name": "Buzz Bolt",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Buzz Bolt was **fused**, whenever an attack hits a hero this turn, it deals 1 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "buzz_bolt_red",
+    "name": "Buzz Bolt",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Buzz Bolt was **fused**, whenever an attack hits a hero this turn, it deals 1 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "buzz_bolt_yellow",
+    "name": "Buzz Bolt",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Buzz Bolt was **fused**, whenever an attack hits a hero this turn, it deals 1 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "channel_lake_frigid_blue",
+    "name": "Channel Lake Frigid",
+    "type_text": "Ice Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Channel",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nCards and activated abilities cost opposing heroes an additional {r}.\n\n**Channel Ice** - At the beginning of your end phase, put a flow counter on Channel Lake Frigid then destroy it unless you put an Ice card from your pitch zone on the bottom of your deck for each flow counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "channel_mount_heroic_red",
+    "name": "Channel Mount Heroic",
+    "type_text": "Earth Action - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Channel",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAttack action cards you control have +3{p}.\n\n**Channel Earth** - At the beginning of your end phase, put an flow counter on Channel Mount Heroic then destroy it unless you put an Earth card from your pitch zone on the bottom of your deck for each flow counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "channel_thunder_steppe_yellow",
+    "name": "Channel Thunder Steppe",
+    "type_text": "Lightning Action - Aura",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Channel",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhenever you play an action card, you may pay {r}. If you do, it gains **go again**.\n\n**Channel Lightning** - At the beginning of your end phase, put a flow counter on Channel Thunder Steppe then destroy it unless you put a Lightning card from your pitch zone on the bottom of your deck for each flow counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "chill_to_the_bone_blue",
+    "name": "Chill to the Bone",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an Ice or Elemental attack hits a hero this turn, create a Frostbite token under their control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "chill_to_the_bone_red",
+    "name": "Chill to the Bone",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an Ice or Elemental attack hits a hero this turn, create 3 Frostbite tokens under their control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "chill_to_the_bone_yellow",
+    "name": "Chill to the Bone",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an Ice or Elemental attack hits a hero this turn, create 2 Frostbite tokens under their control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "chilling_icevein_blue",
+    "name": "Chilling Icevein",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Chilling Icevein was **fused**, whenever an attack deals damage to a hero this turn, they discard a card unless they pay {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "chilling_icevein_red",
+    "name": "Chilling Icevein",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Chilling Icevein was **fused**, whenever an attack deals damage to a hero this turn, they discard a card unless they pay {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "chilling_icevein_yellow",
+    "name": "Chilling Icevein",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Chilling Icevein was **fused**, whenever an attack deals damage to a hero this turn, they discard a card unless they pay {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "coat_of_frost",
+    "name": "Coat of Frost",
+    "type_text": "Ice Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy Coat of Frost: Create a Frostbite token under target hero's control. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cold_wave_blue",
+    "name": "Cold Wave",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Cold Wave was **fused**, cards and activated abilities cost opposing heroes an additional {r} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "cold_wave_red",
+    "name": "Cold Wave",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Cold Wave was **fused**, cards and activated abilities cost opposing heroes an additional {r} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "cold_wave_yellow",
+    "name": "Cold Wave",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Cold Wave was **fused**, cards and activated abilities cost opposing heroes an additional {r} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "cracker_jax",
+    "name": "Cracker Jax",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: The next attack action card you play this turn gets +1{p}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "crown_of_seeds",
+    "name": "Crown of Seeds",
+    "type_text": "Earth Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}, put a face down card from your arsenal on the bottom of your deck: Draw a card and prevent the next 1 damage that would be dealt to your hero this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "dazzling_crescendo_blue",
+    "name": "Dazzling Crescendo",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Dazzling Crescendo was **fused**, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "dazzling_crescendo_red",
+    "name": "Dazzling Crescendo",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Dazzling Crescendo was **fused**, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "dazzling_crescendo_yellow",
+    "name": "Dazzling Crescendo",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Dazzling Crescendo was **fused**, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "deep_blue",
+    "name": "Deep Blue",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Put a card from your hand on the bottom of your deck, destroy Deep Blue: Gain {r}{r}{r}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "duskblade",
+    "name": "Duskblade",
+    "type_text": "Runeblade Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nWhenever you attack with Duskblade, if you've played an attack action card and a 'non-attack' action card this turn, put a +1{p} counter on Duskblade.\n\nAt the beginning of your end phase, if you haven't played an attack action card and a 'non-attack' action card this turn, remove all +1{p} counters from Duskblade.",
+    "status": "pending"
+  },
+  {
+    "slug": "earthlore_surge_blue",
+    "name": "Earthlore Surge",
+    "type_text": "Earth Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "earthlore_surge_red",
+    "name": "Earthlore Surge",
+    "type_text": "Earth Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +5{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "earthlore_surge_yellow",
+    "name": "Earthlore Surge",
+    "type_text": "Earth Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "electrify_blue",
+    "name": "Electrify",
+    "type_text": "Lightning Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack action card hits a hero this turn, it deals 1 damage to them.\n\nIf Electrify is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "electrify_red",
+    "name": "Electrify",
+    "type_text": "Lightning Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack action card hits a hero this turn, it deals 3 damage to them.\n\nIf Electrify is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "electrify_yellow",
+    "name": "Electrify",
+    "type_text": "Lightning Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack action card hits a hero this turn, it deals 2 damage to them.\n\nIf Electrify is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "embolden_blue",
+    "name": "Embolden",
+    "type_text": "Guardian Action - Aura",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters the arena, if you control another non-token aura, draw a card.\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "embolden_red",
+    "name": "Embolden",
+    "type_text": "Guardian Action - Aura",
+    "cost": 4,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters the arena, if you control another non-token aura, draw a card.\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "embolden_yellow",
+    "name": "Embolden",
+    "type_text": "Guardian Action - Aura",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters the arena, if you control another non-token aura, draw a card.\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_avalanche_blue",
+    "name": "Emerging Avalanche",
+    "type_text": "Elemental Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\n**Go again**\n\nWhen Emerging Avalanche enters the arena, if it was **fused**, create a Frostbite token under target hero control.\n\nAt the beginning of your action phase, destroy Emerging Avalanche then the next attack action card you play this turn gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_avalanche_red",
+    "name": "Emerging Avalanche",
+    "type_text": "Elemental Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\n**Go again**\n\nWhen Emerging Avalanche enters the arena, if it was **fused**, create a Frostbite token under target hero control.\n\nAt the beginning of your action phase, destroy Emerging Avalanche then the next attack action card you play this turn gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_avalanche_yellow",
+    "name": "Emerging Avalanche",
+    "type_text": "Elemental Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\n**Go again**\n\nWhen Emerging Avalanche enters the arena, if it was **fused**, create a Frostbite token under target hero control.\n\nAt the beginning of your action phase, destroy Emerging Avalanche then the next attack action card you play this turn gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "endless_winter_red",
+    "name": "Endless Winter",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "Specialization"
+    ],
+    "specializations": [
+      "Oldhim"
+    ],
+    "functional_text": "**Oldhim Specialization**\n\n**Ice Fusion**\n\nIf Endless Winter was **fused**, whenever the defending hero adds a defending card to this chain link, create a Frostbite token under their control.\n\nIf Endless Winter hits a hero, until the end of their next turn, whenever they activate an ability, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "entangle_blue",
+    "name": "Entangle",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Entangle was **fused**, it gains \"If this hits a hero, their first attack during their next turn has -2{p}.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "entangle_red",
+    "name": "Entangle",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Entangle was **fused**, it gains \"If this hits a hero, their first attack during their next turn has -2{p}.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "entangle_yellow",
+    "name": "Entangle",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Entangle was **fused**, it gains \"If this hits a hero, their first attack during their next turn has -2{p}.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_earth_blue",
+    "name": "Entwine Earth",
+    "type_text": "Elemental Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Entwine Earth was **fused**, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_earth_red",
+    "name": "Entwine Earth",
+    "type_text": "Elemental Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Entwine Earth was **fused**, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_earth_yellow",
+    "name": "Entwine Earth",
+    "type_text": "Elemental Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Entwine Earth was **fused**, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_ice_blue",
+    "name": "Entwine Ice",
+    "type_text": "Elemental Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Entwine Ice was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_ice_red",
+    "name": "Entwine Ice",
+    "type_text": "Elemental Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Entwine Ice was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_ice_yellow",
+    "name": "Entwine Ice",
+    "type_text": "Elemental Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Entwine Ice was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_lightning_blue",
+    "name": "Entwine Lightning",
+    "type_text": "Elemental Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Entwine Lightning was **fused**, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_lightning_red",
+    "name": "Entwine Lightning",
+    "type_text": "Elemental Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Entwine Lightning was **fused**, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_lightning_yellow",
+    "name": "Entwine Lightning",
+    "type_text": "Elemental Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Entwine Lightning was **fused**, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "evergreen_blue",
+    "name": "Evergreen",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Evergreen is played from arsenal, put it on the bottom of its owner's deck when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "evergreen_red",
+    "name": "Evergreen",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Evergreen is played from arsenal, put it on the bottom of its owner's deck when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "evergreen_yellow",
+    "name": "Evergreen",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Evergreen is played from arsenal, put it on the bottom of its owner's deck when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "explosive_growth_blue",
+    "name": "Explosive Growth",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Explosive Growth was **fused**, whenever it deals damage, attacks gain +1{p} this combat chain.\n\nWhen you attack with Explosive Growth, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "explosive_growth_red",
+    "name": "Explosive Growth",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Explosive Growth was **fused**, whenever it deals damage, attacks gain +1{p} this combat chain.\n\nWhen you attack with Explosive Growth, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "explosive_growth_yellow",
+    "name": "Explosive Growth",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Explosive Growth was **fused**, whenever it deals damage, attacks gain +1{p} this combat chain.\n\nWhen you attack with Explosive Growth, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "exposed_to_the_elements_blue",
+    "name": "Exposed to the Elements",
+    "type_text": "Elemental Instant",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth and/or Ice Fusion**\n\nIf Exposed to the Elements was **fused** with an Earth card, put a -1{d} counter on target equipment.\n\nIf Exposed to the Elements was **fused** with an Ice card, destroy an equipment with 0{d} controlled by target hero unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flake_out_blue",
+    "name": "Flake Out",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Flake Out was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flake_out_red",
+    "name": "Flake Out",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Flake Out was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flake_out_yellow",
+    "name": "Flake Out",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Flake Out was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flash_blue",
+    "name": "Flash",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next action card you play this turn with cost 2 or greater gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flash_red",
+    "name": "Flash",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next action card you play this turn with cost 0 or greater gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flash_yellow",
+    "name": "Flash",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next action card you play this turn with cost 1 or greater gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flashfreeze_red",
+    "name": "Flashfreeze",
+    "type_text": "Elemental Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice and/or Lightning Fusion**\n\nIf Flashfreeze was **fused** with an Ice card, attacks you control this turn gain \"When you attack with this, it gains **dominate**, unless the defending hero pays {r}{r}.\"\n\nIf Flashfreeze was **fused** with a Lightning card, attacks you control this turn gain \"If this hits a hero, deal 3 damage to them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flicker_wisp_yellow",
+    "name": "Flicker Wisp",
+    "type_text": "Elemental Runeblade Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Flicker Wisp was **fused**, until end of turn, action card effects you control that deal arcane damage, instead deal that much arcane damage plus 1.\n\nDeal 1 arcane damage to target hero.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "force_of_nature_blue",
+    "name": "Force of Nature",
+    "type_text": "Elemental Runeblade Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Briar"
+    ],
+    "functional_text": "**Briar Specialization**\n\n**Earth Fusion**\n\nWhenever an attack action card you control hits this turn, if its {p} is greater than its base {p}, draw a card.\n\nIf Force of Nature was fused, your next attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "frazzle_blue",
+    "name": "Frazzle",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Frazzle was **fused**, whenever an attack would deal damage this turn, instead it deals that much damage plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "frazzle_red",
+    "name": "Frazzle",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Frazzle was **fused**, whenever an attack would deal damage this turn, instead it deals that much damage plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "frazzle_yellow",
+    "name": "Frazzle",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Frazzle was **fused**, whenever an attack would deal damage this turn, instead it deals that much damage plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "frost_fang_blue",
+    "name": "Frost Fang",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Frost Fang hits a hero, they discard a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "frost_fang_red",
+    "name": "Frost Fang",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Frost Fang hits a hero, they discard a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "frost_fang_yellow",
+    "name": "Frost Fang",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Frost Fang hits a hero, they discard a card unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "frost_lock_blue",
+    "name": "Frost Lock",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nCards and activated abilities cost opposing heroes an additional {r} this turn.\n\nIf Frost Lock was **fused**, it gains +1{p} and \"If this hits a hero, until the end of their next turn they can't pitch or play cards with base cost 0.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "fulminate_yellow",
+    "name": "Fulminate",
+    "type_text": "Elemental Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth and/or Lightning Fusion**\n\nIf Fulminate was **fused** with an Earth card, attack action cards you control gain +3{p} this turn.\n\nIf Fulminate was **fused** with a Lightning card, attack action cards you control gain **go again** this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "glacial_footsteps_blue",
+    "name": "Glacial Footsteps",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Glacial Footsteps was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "glacial_footsteps_red",
+    "name": "Glacial Footsteps",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Glacial Footsteps was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "glacial_footsteps_yellow",
+    "name": "Glacial Footsteps",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 2,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Glacial Footsteps was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "heart_of_ice",
+    "name": "Heart of Ice",
+    "type_text": "Ice Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: Cards and activated abilities cost opposing heroes additional {r} this turn. **Go again**\n\n**Arcane Barrier 1**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "heavens_claws_blue",
+    "name": "Heaven's Claws",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "heavens_claws_red",
+    "name": "Heaven's Claws",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "heavens_claws_yellow",
+    "name": "Heaven's Claws",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "honing_hood",
+    "name": "Honing Hood",
+    "type_text": "Ranger Equipment - Head",
+    "cost": 0,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Honing Hood: Return all cards in your arsenal to your hand, then put a card from your hand face down into your arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "ice_quake_blue",
+    "name": "Ice Quake",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gains +1{p}.\n\nWhenever an attack hits a hero this turn, create a Frostbite token under their control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ice_quake_red",
+    "name": "Ice Quake",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gains +3{p}.\n\nWhenever an attack hits a hero this turn, create a Frostbite token under their control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ice_quake_yellow",
+    "name": "Ice Quake",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gains +2{p}.\n\nWhenever an attack hits a hero this turn, create a Frostbite token under their control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ice_storm_red",
+    "name": "Ice Storm",
+    "type_text": "Elemental Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice and Lightning Fusion**\n\nYour next arrow attack this turn gains +3{p}.\n\nIf Ice Storm was **fused**, your next arrow attack this turn gains \"If this hits a hero, deal 1 damage to them\" and \"Whenever this attack deals damage to a hero, create that many Frostbite tokens under their control.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "icy_encounter_blue",
+    "name": "Icy Encounter",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Icy Encounter hits a hero, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "icy_encounter_red",
+    "name": "Icy Encounter",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Icy Encounter hits a hero, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "icy_encounter_yellow",
+    "name": "Icy Encounter",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Icy Encounter hits a hero, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "inspire_lightning_blue",
+    "name": "Inspire Lightning",
+    "type_text": "Elemental Runeblade Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Inspire Lightning was **fused**, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "inspire_lightning_red",
+    "name": "Inspire Lightning",
+    "type_text": "Elemental Runeblade Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Inspire Lightning was **fused**, deal 3 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "inspire_lightning_yellow",
+    "name": "Inspire Lightning",
+    "type_text": "Elemental Runeblade Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Inspire Lightning was **fused**, deal 2 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "invigorate_blue",
+    "name": "Invigorate",
+    "type_text": "Elemental Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack you **fuse** this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invigorate_red",
+    "name": "Invigorate",
+    "type_text": "Elemental Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack you **fuse** this turn gains +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "invigorate_yellow",
+    "name": "Invigorate",
+    "type_text": "Elemental Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack you **fuse** this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "korshem_crossroad_of_elements",
+    "name": "Korshem, Crossroad of Elements",
+    "type_text": "Elemental Action - Landmark",
+    "cost": 1,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Landmark",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\n**Go again**\n\nWhenever a hero reveals 1 or more cards, they choose 1; Gain {r}, or gain 1{h}, or their next attack this turn gains +1{p}, or the next action card they defend with this turn gains +1{d}.\n\nAt the beginning of the end phase, if no hero has gained {r} or {h} from a card effect and no card or token controlled by a hero has had {p} or {d} increased this turn, destroy Korshem, Crossroads of the Elements.",
+    "status": "pending"
+  },
+  {
+    "slug": "lexi",
+    "name": "Lexi",
+    "type_text": "Elemental Ranger Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Essence",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Ice and Lightning**\n\n**Once per Turn Action** - Turn a face down card in your arsenal face up: If it's a Lightning card, your next attack this turn gains **go again**. If it's an Ice card, create a Frostbite token under target hero's control. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lexi_livewire",
+    "name": "Lexi, Livewire",
+    "type_text": "Elemental Ranger Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Essence",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Ice and Lightning**\n\n**Once per Turn Action** - Turn a face down card in your arsenal face up: If it's a Lightning card, your next attack this turn gains **go again**. If it's an Ice card, create a Frostbite token under target hero's control. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "light_it_up_yellow",
+    "name": "Light it Up",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion",
+      "Specialization"
+    ],
+    "specializations": [
+      "Lexi"
+    ],
+    "functional_text": "**Lexi Specialization**\n\n**Lightning Fusion**\n\nIf Light it Up was **fused**, it gains \"If this hits a hero, deal 1 damage to them for each equipment they control.\"\n\nIf Light it Up deals damage to a hero equal to or greater than the number of equipment they control, equipment they control lose and can't gain activated abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_press_blue",
+    "name": "Lightning Press",
+    "type_text": "Lightning Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with cost 1 or less gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_press_red",
+    "name": "Lightning Press",
+    "type_text": "Lightning Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with cost 1 or less gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_press_yellow",
+    "name": "Lightning Press",
+    "type_text": "Lightning Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with cost 1 or less gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_surge_blue",
+    "name": "Lightning Surge",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_surge_red",
+    "name": "Lightning Surge",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_surge_yellow",
+    "name": "Lightning Surge",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_lightning",
+    "name": "Mark of Lightning",
+    "type_text": "Lightning Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever a Lightning or Elemental attack you control is defended by a card from hand, you may destroy Mark of Lightning. If you do, the attack deals 1 damage to the defending hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "mulch_blue",
+    "name": "Mulch",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Mulch was **fused**, it gains \"If this hits a hero, put a card from their arsenal on the bottom of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "mulch_red",
+    "name": "Mulch",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Mulch was **fused**, it gains \"If this hits a hero, put a card from their arsenal on the bottom of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "mulch_yellow",
+    "name": "Mulch",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Mulch was **fused**, it gains \"If this hits a hero, put a card from their arsenal on the bottom of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "new_horizon",
+    "name": "New Horizon",
+    "type_text": "Ranger Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a face up card in your arsenal, you have an additional arsenal zone.\n\nWhen this is destroyed, destroy all cards in your arsenal.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "oaken_old_red",
+    "name": "Oaken Old",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth and Ice Fusion**\n\nIf Oaken Old was **fused**, it gains +2{p}, **dominate**, and \"If this hits a hero, they put 2 random cards from their hand on the bottom of their deck in any order.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "oldhim",
+    "name": "Oldhim",
+    "type_text": "Elemental Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Earth and Ice**\n\n**Once per Turn Defense Reaction** - {r}{r}{r}: If an Earth card is pitched this way, prevent the next 2 damage that would be dealt to Oldhim this turn. If an Ice card is pitched this way, the attacking hero puts a card from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "oldhim_grandfather_of_eternity",
+    "name": "Oldhim, Grandfather of Eternity",
+    "type_text": "Elemental Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Earth and Ice**\n\n**Once per Turn Defense Reaction** - {r}{r}{r}: If an Earth card is pitched this way, prevent the next 2 damage that would be dealt to Oldhim this turn. If an Ice card is pitched this way, the attacking hero puts a card from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "over_flex_blue",
+    "name": "Over Flex",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +2{p}.\n\n**Reload**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "over_flex_red",
+    "name": "Over Flex",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +4{p}.\n\n**Reload**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "over_flex_yellow",
+    "name": "Over Flex",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p}.\n\n**Reload**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "plume_of_evergrowth",
+    "name": "Plume of Evergrowth",
+    "type_text": "Earth Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}{r}, destroy Plume of Evergrowth: Return target Earth action card or Earth instant card from your graveyard to your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "polar_blast_blue",
+    "name": "Polar Blast",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target opposing hero may pay {r}. If they don't your next attack this turn gains **dominate**.\n\nIf Polar Blast is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "polar_blast_red",
+    "name": "Polar Blast",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target opposing hero may pay {r}{r}{r}. If they don't your next attack this turn gains **dominate**.\n\nIf Polar Blast is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "polar_blast_yellow",
+    "name": "Polar Blast",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target opposing hero may pay {r}{r}. If they don't your next attack this turn gains **dominate**.\n\nIf Polar Blast is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pulse_of_candlehold_yellow",
+    "name": "Pulse of Candlehold",
+    "type_text": "Earth Lightning Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nPut up to 2 target Earth, Lightning and/or Elemental action cards from your graveyard on top of your deck. Banish Pulse of Candlehold.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pulse_of_isenloft_blue",
+    "name": "Pulse of Isenloft",
+    "type_text": "Ice Earth Defense Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 6,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nEarth, Ice, and Elemental action cards have +1{d} while defending this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "pulse_of_volthaven_red",
+    "name": "Pulse of Volthaven",
+    "type_text": "Lightning Ice Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nYour next Ice, Lightning, or Elemental attack this turn gains +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "ragamuffins_hat",
+    "name": "Ragamuffin's Hat",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Ragamuffin's Hat: Draw a card then put a card from your hand on the top or bottom of your deck. Activate this ability only if you have 1 card in hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "rampart_of_the_rams_head",
+    "name": "Rampart of the Ram's Head",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you defend with Rampart of the Ram's Head, you may pay {r}. If you do, it gains +1{d} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "rejuvenate_blue",
+    "name": "Rejuvenate",
+    "type_text": "Elemental Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 1{h}\n\nIf you've **fused** this turn, you may play Rejuvenate as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "rejuvenate_red",
+    "name": "Rejuvenate",
+    "type_text": "Elemental Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 3{h}\n\nIf you've **fused** this turn, you may play Rejuvenate as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "rejuvenate_yellow",
+    "name": "Rejuvenate",
+    "type_text": "Elemental Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 2{h}\n\nIf you've **fused** this turn, you may play Rejuvenate as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "rites_of_lightning_blue",
+    "name": "Rites of Lightning",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nWhen you attack with Rites of Lightning, if it was **fused**, deal 1 arcane damage to target hero.\n\nIf you have dealt arcane damage this turn, Rites of Lightning gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rites_of_lightning_red",
+    "name": "Rites of Lightning",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nWhen you attack with Rites of Lightning, if it was **fused**, deal 1 arcane damage to target hero.\n\nIf you have dealt arcane damage this turn, Rites of Lightning gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rites_of_lightning_yellow",
+    "name": "Rites of Lightning",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nWhen you attack with Rites of Lightning, if it was **fused**, deal 1 arcane damage to target hero.\n\nIf you have dealt arcane damage this turn, Rites of Lightning gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rites_of_replenishment_blue",
+    "name": "Rites of Replenishment",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nWhen you attack with Rites of Replenishment, if you have dealt arcane damage this turn, you may put a 'non-attack' action card from your graveyard on the bottom of your deck.\n\nWhen you attack with Rites of Replenishment, if it was **fused**, you may put an attack action card from your graveyard on the bottom of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "rites_of_replenishment_red",
+    "name": "Rites of Replenishment",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nWhen you attack with Rites of Replenishment, if you have dealt arcane damage this turn, you may put a 'non-attack' action card from your graveyard on the bottom of your deck.\n\nWhen you attack with Rites of Replenishment, if it was **fused**, you may put an attack action card from your graveyard on the bottom of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "rites_of_replenishment_yellow",
+    "name": "Rites of Replenishment",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nWhen you attack with Rites of Replenishment, if you have dealt arcane damage this turn, you may put a 'non-attack' action card from your graveyard on the bottom of your deck.\n\nWhen you attack with Rites of Replenishment, if it was **fused**, you may put an attack action card from your graveyard on the bottom of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "rosetta_thorn",
+    "name": "Rosetta Thorn",
+    "type_text": "Runeblade Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nWhenever you attack with Rosetta Thorn, if you've played an attack action card and a 'non-attack' action card this turn, deal 2 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "rotten_old_buckler",
+    "name": "Rotten Old Buckler",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "runaways",
+    "name": "Runaways",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Runaways: Prevent the next 1 damage that would be dealt to your hero this turn. Activate this ability only if your hero has been dealt damage this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "seek_and_destroy_red",
+    "name": "Seek and Destroy",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p} and \"If this hits a hero, at the beginning of their next end phase, they discard all cards in their hand and destroy all cards in their arsenal.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "shiver",
+    "name": "Shiver",
+    "type_text": "Elemental Ranger Weapon - Bow (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Bow"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}: You may put an arrow card from your hand face up into an empty arsenal zone you control. If you do, choose 1;\n\n- It gains +1{p} until end of turn.\n- It gains **dominate** until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "shock_charmers",
+    "name": "Shock Charmers",
+    "type_text": "Lightning Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Spellvoid"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}: The next time an attack action card you control hits a hero this turn, it deals 1 damage to them.\n\n**Spellvoid 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "shock_striker_blue",
+    "name": "Shock Striker",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}{r}: Shock Striker gains \"If Shock Striker hits a hero, deal 1 damage to them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "shock_striker_red",
+    "name": "Shock Striker",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}{r}: Shock Striker gains \"If Shock Striker hits a hero, deal 1 damage to them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "shock_striker_yellow",
+    "name": "Shock Striker",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}{r}: Shock Striker gains \"If Shock Striker hits a hero, deal 1 damage to them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_suffering_blue",
+    "name": "Sigil of Suffering",
+    "type_text": "Runeblade Defense Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to the attacking hero.\n\nIf you have dealt arcane damage this turn, Sigil of Suffering gains +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_suffering_red",
+    "name": "Sigil of Suffering",
+    "type_text": "Runeblade Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to the attacking hero.\n\nIf you have dealt arcane damage this turn, Sigil of Suffering gains +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_suffering_yellow",
+    "name": "Sigil of Suffering",
+    "type_text": "Runeblade Defense Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to the attacking hero.\n\nIf you have dealt arcane damage this turn, Sigil of Suffering gains +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "singeing_steelblade_blue",
+    "name": "Singeing Steelblade",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack with Singeing Steelblade, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "singeing_steelblade_red",
+    "name": "Singeing Steelblade",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack with Singeing Steelblade, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "singeing_steelblade_yellow",
+    "name": "Singeing Steelblade",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack with Singeing Steelblade, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "snap_shot_blue",
+    "name": "Snap Shot",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Snap Shot was **fused**, you may activate abilities of bows you control an additional time this turn and as though they were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "snap_shot_red",
+    "name": "Snap Shot",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Snap Shot was **fused**, you may activate abilities of bows you control an additional time this turn and as though they were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "snap_shot_yellow",
+    "name": "Snap Shot",
+    "type_text": "Elemental Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Snap Shot was **fused**, you may activate abilities of bows you control an additional time this turn and as though they were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "snow_under_blue",
+    "name": "Snow Under",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Snow Under was **fused**, it gains \"If this hits a hero, create a Frostbite token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "snow_under_red",
+    "name": "Snow Under",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Snow Under was **fused**, it gains \"If this hits a hero, create a Frostbite token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "snow_under_yellow",
+    "name": "Snow Under",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Snow Under was **fused**, it gains \"If this hits a hero, create a Frostbite token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "sow_tomorrow_blue",
+    "name": "Sow Tomorrow",
+    "type_text": "Earth Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put target Earth or Elemental action card with cost 2 or greater from your graveyard on the bottom of your deck. Banish Sow Tomorrow.\n\nIf Sow Tomorrow is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sow_tomorrow_red",
+    "name": "Sow Tomorrow",
+    "type_text": "Earth Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put target Earth or Elemental action card with cost 0 or greater from your graveyard on the bottom of your deck. Banish Sow Tomorrow.\n\nIf Sow Tomorrow is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sow_tomorrow_yellow",
+    "name": "Sow Tomorrow",
+    "type_text": "Earth Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put target Earth or Elemental action card with cost 1 or greater from your graveyard on the bottom of your deck. Banish Sow Tomorrow.\n\nIf Sow Tomorrow is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spellbound_creepers",
+    "name": "Spellbound Creepers",
+    "type_text": "Runeblade Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}, put a bind counter on Spellbound Creepers: You may play your next 'non-attack' action card this turn as though it were an instant. Activate this ability only if you have attacked or defended with an attack action card this turn.\n\nAt the beginning of your end phase, destroy Spellbound Creepers unless you have dealt arcane damage equal to or greater than the number of bind counters on Spellbound Creepers.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "sting_of_sorcery_blue",
+    "name": "Sting of Sorcery",
+    "type_text": "Runeblade Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAttack action cards you control gain \"When you attack with this, deal 1 arcane damage to target hero.\"\n\nAt the beginning of your end phase, destroy Sting of Sorcery.",
+    "status": "pending"
+  },
+  {
+    "slug": "stir_the_wildwood_blue",
+    "name": "Stir the Wildwood",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf you have dealt arcane damage to an opposing hero this turn, Stir the Wildwood gains +2{p}.\n\nIf Stir the Wildwood was **fused**, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stir_the_wildwood_red",
+    "name": "Stir the Wildwood",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf you have dealt arcane damage to an opposing hero this turn, Stir the Wildwood gains +2{p}.\n\nIf Stir the Wildwood was **fused**, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stir_the_wildwood_yellow",
+    "name": "Stir the Wildwood",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf you have dealt arcane damage to an opposing hero this turn, Stir the Wildwood gains +2{p}.\n\nIf Stir the Wildwood was **fused**, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "strength_of_sequoia_blue",
+    "name": "Strength of Sequoia",
+    "type_text": "Elemental Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\n**Go again**\n\nWhen Strength of Sequoia enters the arena, if it was **fused**, create a Seismic Surge token.\n\nAt the beginning of your action phase, destroy Strength of Sequoia then the next attack action card you play this turn gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "strength_of_sequoia_red",
+    "name": "Strength of Sequoia",
+    "type_text": "Elemental Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\n**Go again**\n\nWhen Strength of Sequoia enters the arena, if it was **fused**, create a Seismic Surge token.\n\nAt the beginning of your action phase, destroy Strength of Sequoia then the next attack action card you play this turn gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "strength_of_sequoia_yellow",
+    "name": "Strength of Sequoia",
+    "type_text": "Elemental Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\n**Go again**\n\nWhen Strength of Sequoia enters the arena, if it was **fused**, create a Seismic Surge token.\n\nAt the beginning of your action phase, destroy Strength of Sequoia then the next attack action card you play this turn gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "summerwood_shelter_blue",
+    "name": "Summerwood Shelter",
+    "type_text": "Earth Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending Earth or Elemental action card gains +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "summerwood_shelter_red",
+    "name": "Summerwood Shelter",
+    "type_text": "Earth Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending Earth or Elemental action card gains +4{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "summerwood_shelter_yellow",
+    "name": "Summerwood Shelter",
+    "type_text": "Earth Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending Earth or Elemental action card gains +3{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sutcliffes_suede_hides",
+    "name": "Sutcliffe's Suede Hides",
+    "type_text": "Runeblade Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - {r}, destroy this: Target attack action card gets **go again**. Activate this only if you've played a non-attack action card this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "tear_asunder_blue",
+    "name": "Tear Asunder",
+    "type_text": "Guardian Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Guardian attack this turn gains +1{p}, **dominate**, and \"When this hits a hero, they discard 2 cards.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "thump_blue",
+    "name": "Thump",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "While Thump's {p} is greater than its base {p}, it gains **dominate** and \"If this hits a hero, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "thump_red",
+    "name": "Thump",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "While Thump's {p} is greater than its base {p}, it gains **dominate** and \"If this hits a hero, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "thump_yellow",
+    "name": "Thump",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "While Thump's {p} is greater than its base {p}, it gains **dominate** and \"If this hits a hero, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "titans_fist",
+    "name": "Titan's Fist",
+    "type_text": "Guardian Weapon - Hammer (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf there is a card with cost 3 or greater in your pitch zone, Titan's Fist has +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tome_of_harvests_blue",
+    "name": "Tome of Harvests",
+    "type_text": "Earth Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Tome of Harvests, put a card from your arsenal on the bottom of your deck.\n\nDraw 3 cards.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_timber_blue",
+    "name": "Turn Timber",
+    "type_text": "Elemental Guardian Defense Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Turn Timber was **fused**, it gains +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_timber_red",
+    "name": "Turn Timber",
+    "type_text": "Elemental Guardian Defense Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 6,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Turn Timber was **fused**, it gains +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_timber_yellow",
+    "name": "Turn Timber",
+    "type_text": "Elemental Guardian Defense Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 5,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\nIf Turn Timber was **fused**, it gains +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "vela_flash_blue",
+    "name": "Vela Flash",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Vela Flash was **fused**, you may play your next 'non-attack' action card this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "vela_flash_red",
+    "name": "Vela Flash",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Vela Flash was **fused**, you may play your next 'non-attack' action card this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "vela_flash_yellow",
+    "name": "Vela Flash",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Vela Flash was **fused**, you may play your next 'non-attack' action card this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "voltaire_strike_twice",
+    "name": "Voltaire, Strike Twice",
+    "type_text": "Elemental Ranger Weapon - Bow (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Bow"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Twice per Turn Instant** - {r}: You may put an arrow card from your hand face up into an empty arsenal zone you control. If you do, choose 1;\n\n- It gains +1{p} until end of turn.\n- It gains **go again** until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_earth_blue",
+    "name": "Weave Earth",
+    "type_text": "Earth Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Earth or Elemental attack action card you play this turn gains +1{p}.\n\nIf it's **fused**, instead it gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_earth_red",
+    "name": "Weave Earth",
+    "type_text": "Earth Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Earth or Elemental attack action card you play this turn gains +3{p}.\n\nIf it's **fused**, instead it gains +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_earth_yellow",
+    "name": "Weave Earth",
+    "type_text": "Earth Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Earth or Elemental attack action card you play this turn gains +2{p}.\n\nIf it's **fused**, instead it gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_ice_blue",
+    "name": "Weave Ice",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Ice or Elemental attack action card you play this turn gains +1{p}.\n\nIf it's **fused**, it gains **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_ice_red",
+    "name": "Weave Ice",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Ice or Elemental attack action card you play this turn gains +3{p}.\n\nIf it's **fused**, it gains **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_ice_yellow",
+    "name": "Weave Ice",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Ice or Elemental attack action card you play this turn gains +2{p}.\n\nIf it's **fused**, it gains **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_lightning_blue",
+    "name": "Weave Lightning",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Lightning or Elemental attack action card you play this turn gains +1{p}. If it's **fused**, it gains **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_lightning_red",
+    "name": "Weave Lightning",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Lightning or Elemental attack action card you play this turn gains +3{p}. If it's **fused**, it gains **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "weave_lightning_yellow",
+    "name": "Weave Lightning",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Lightning or Elemental attack action card you play this turn gains +2{p}. If it's **fused**, it gains **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_bite_blue",
+    "name": "Winter's Bite",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target hero discards a card unless they pay {r}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_bite_red",
+    "name": "Winter's Bite",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target hero discards a card unless they pay {r}{r}{r}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_bite_yellow",
+    "name": "Winter's Bite",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target hero discards a card unless they pay {r}{r}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_grasp_blue",
+    "name": "Winter's Grasp",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_grasp_red",
+    "name": "Winter's Grasp",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_grasp_yellow",
+    "name": "Winter's Grasp",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_wail",
+    "name": "Winter's Wail",
+    "type_text": "Elemental Guardian Weapon - Hammer (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf an Ice card is pitched this way, Winter's Wail gains \"If this hits a hero, create a Frostbite token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "embodiment_of_earth",
+    "name": "Embodiment of Earth",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "'Non-attack' action cards you control have +1{d} while defending.\n\nAt the beginning of your action phase, destroy Embodiment of Earth.",
+    "status": "pending"
+  },
+  {
+    "slug": "embodiment_of_lightning",
+    "name": "Embodiment of Lightning",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you play an attack action card, destroy this, then the attack gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "frostbite",
+    "name": "Frostbite",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Cards and abilities cost you an additional {r} to play or activate.\n\nAt the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.",
+    "status": "pending"
+  }
+]

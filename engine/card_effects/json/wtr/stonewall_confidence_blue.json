@@ -1,0 +1,43 @@
+{
+  "slug": "stonewall_confidence_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "PLAY",
+          "filter_cost_gte": 3,
+          "controller": "SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "ON_DEFEND"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": 1,
+          "from_zone": "TOP_DECK"
+        }
+      ]
+    }
+  ]
+}

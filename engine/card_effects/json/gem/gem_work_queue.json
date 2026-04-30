@@ -1,0 +1,333 @@
+[
+  {
+    "slug": "boulder_drop_red",
+    "name": "Boulder Drop",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "bravo_flattering_showman",
+    "name": "Bravo, Flattering Showman",
+    "type_text": "Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, {t}: Turn a face-down card in your arsenal face-up. If it has crush, it gets +2{p} and **dominate** this turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "clamp_press_blue",
+    "name": "Clamp Press",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWrenches you control get +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "enact_vengeance_red",
+    "name": "Enact Vengeance",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Edge of Autumn or a card with Vengeance in its name was the last attack this combat chain, this gets \"When this hits a hero, destroy all cards in their arsenal.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "fast_and_furious_red",
+    "name": "Fast and Furious",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nIf you've **cranked** this turn, this gets +1{p}.\n\nWhen this is banished from **boosting**, put a steam counter on an item you control with **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "glistening_steelblade_yellow",
+    "name": "Glistening Steelblade",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Dorinthea"
+    ],
+    "functional_text": "**Dorinthea Specialization**\n\nYour next Dawnblade attack this turn has **go again**.\n\nWhenever Dawnblade hits a hero this turn, put a +1{p} counter on it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "halo_of_lumina_light",
+    "name": "Halo of Lumina Light",
+    "type_text": "Light Illusionist Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Spellvoid"
+    ],
+    "specializations": [],
+    "functional_text": "When this is destroyed, you may put a yellow aura from your banished zone into the arena.\n\n**Spellvoid 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "helm_of_the_arknight",
+    "name": "Helm of the Arknight",
+    "type_text": "Runeblade Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "loot_the_arsenal_blue",
+    "name": "Loot the Arsenal",
+    "type_text": "Pirate Necromancer Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Pirate ally attack this turn gets \"When this hits a hero, destroy a card in their arsenal. If you do, create a Gold token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "loot_the_hold_blue",
+    "name": "Loot the Hold",
+    "type_text": "Pirate Necromancer Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Pirate ally attack this turn gets \"When this hits a hero, they discard a card. If they do, create a Gold token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "moment_maker",
+    "name": "Moment Maker",
+    "type_text": "Revered Guardian Weapon - Hammer Axe (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Axe",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf you control 3 or more auras of suspense, this gets +2{p} and \"When this hits a hero, **the crowd cheers** you.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "savage_sash",
+    "name": "Savage Sash",
+    "type_text": "Brute Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Attack action cards with 6 or more {p} cost you {r} less to play this turn. **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "standing_ovation_blue",
+    "name": "Standing Ovation",
+    "type_text": "Revered Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If 3 or more auras of suspense have left the arena this turn, this gets \"When this hits a hero, take an extra turn after this one. At the beginning of the next end phase, they draw up to their {i}.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "summit_the_unforgiving",
+    "name": "Summit, the Unforgiving",
+    "type_text": "Earth Ice Guardian Weapon - Polearm (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Polearm"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heavy"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r} {r}{r}{r}: **Attack**\n\nWhen this hits a hero, create a Frostbite token in their exposed head, chest, arms, or legs zone.\n\n**Heavy** - If this is the only card equipped to your weapon zones, it gets +2{p}.",
+    "status": "pending"
+  }
+]

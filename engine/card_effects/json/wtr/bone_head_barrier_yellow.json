@@ -1,0 +1,35 @@
+{
+  "slug": "bone_head_barrier_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN_ACTION_POINTS",
+          "amount": 1
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_DEFEND",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "bone_head_barrier_active"
+            }
+          ],
+          "effects": [
+            {
+              "type": "WARD",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "bone_head_barrier_active",
+          "scope": "NEXT"
+        }
+      ]
+    }
+  ]
+}

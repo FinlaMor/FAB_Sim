@@ -1,0 +1,24 @@
+{
+  "slug": "tectonic_plating",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "seismic_surge_aura",
+          "count": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

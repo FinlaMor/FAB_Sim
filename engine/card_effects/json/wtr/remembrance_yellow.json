@@ -1,0 +1,22 @@
+{
+  "slug": "remembrance_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "amount": 3,
+          "filter_types": [
+            "action"
+          ],
+          "from_zone": "GRAVEYARD"
+        },
+        {
+          "type": "BANISH",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

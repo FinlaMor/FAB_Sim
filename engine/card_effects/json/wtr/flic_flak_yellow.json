@@ -1,0 +1,19 @@
+{
+  "slug": "flic_flak_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "COMBO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

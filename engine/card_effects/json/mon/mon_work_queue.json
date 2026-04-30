@@ -1,0 +1,6877 @@
+[
+  {
+    "slug": "adrenaline_rush_blue",
+    "name": "Adrenaline Rush",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play this, if you have less {h} than an opposing hero, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "adrenaline_rush_red",
+    "name": "Adrenaline Rush",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play this, if you have less {h} than an opposing hero, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "adrenaline_rush_yellow",
+    "name": "Adrenaline Rush",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play this, if you have less {h} than an opposing hero, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_ironweave",
+    "name": "Aether Ironweave",
+    "type_text": "Runeblade Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy Aether Ironweave: Gain {r}{r}. Activate this ability only if you have played an attack action card and a 'non-attack' action card this turn. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "arc_light_sentinel_yellow",
+    "name": "Arc Light Sentinel",
+    "type_text": "Light Illusionist Instant - Aura",
+    "cost": 6,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Specialization",
+      "Spectra"
+    ],
+    "specializations": [
+      "Prism"
+    ],
+    "functional_text": "**Prism Specialization**\n\nOpponents must choose this as the target of attacks if able.\n\n**Spectra**",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_crackle_blue",
+    "name": "Arcanic Crackle",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_crackle_red",
+    "name": "Arcanic Crackle",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_crackle_yellow",
+    "name": "Arcanic Crackle",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "battlefield_blitz_blue",
+    "name": "Battlefield Blitz",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, Battlefield Blitz gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "battlefield_blitz_red",
+    "name": "Battlefield Blitz",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, Battlefield Blitz gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "battlefield_blitz_yellow",
+    "name": "Battlefield Blitz",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, Battlefield Blitz gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "beacon_of_victory_yellow",
+    "name": "Beacon of Victory",
+    "type_text": "Light Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Beacon of Victory, banish X cards from your hero's soul. X can't be 0.\n\nTarget attack gains +X{p}.\n\nIf you've **charged** this turn, search your deck for an action card with cost X or less, reveal it, put it into your hand, then shuffle your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "belittle_blue",
+    "name": "Belittle",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Belittle, you may reveal an attack action card with 3 or less base {p} from your hand. If you do, search your deck for a card named Minnowism, reveal it, put it into your hand, then shuffle your deck.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "belittle_red",
+    "name": "Belittle",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Belittle, you may reveal an attack action card with 3 or less base {p} from your hand. If you do, search your deck for a card named Minnowism, reveal it, put it into your hand, then shuffle your deck.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "belittle_yellow",
+    "name": "Belittle",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Belittle, you may reveal an attack action card with 3 or less base {p} from your hand. If you do, search your deck for a card named Minnowism, reveal it, put it into your hand, then shuffle your deck.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blinding_beam_blue",
+    "name": "Blinding Beam",
+    "type_text": "Light Instant",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Blinding Beam cost {r} less to play if it targets a Shadow Card.\n\nTarget attacking or defending attack action card gets -1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "blinding_beam_red",
+    "name": "Blinding Beam",
+    "type_text": "Light Instant",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Blinding Beam cost {r} less to play if it targets a Shadow Card.\n\nTarget attacking or defending attack action card gets -3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "blinding_beam_yellow",
+    "name": "Blinding Beam",
+    "type_text": "Light Instant",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Blinding Beam cost {r} less to play if it targets a Shadow Card.\n\nTarget attacking or defending attack action card gets -2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_drop_brocade",
+    "name": "Blood Drop Brocade",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Blood Drop Brocade: Gain {r}. Activate this ability only if you have dealt or been dealt {p} damage this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_tribute_blue",
+    "name": "Blood Tribute",
+    "type_text": "Shadow Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt 1**, then banish the top card of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_tribute_red",
+    "name": "Blood Tribute",
+    "type_text": "Shadow Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt 3**, then banish the top card of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_tribute_yellow",
+    "name": "Blood Tribute",
+    "type_text": "Shadow Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt 2**, then banish the top card of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "bolt_of_courage_blue",
+    "name": "Bolt of Courage",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Bolt of Courage, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Bolt of Courage gains \"If this hits, draw a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bolt_of_courage_red",
+    "name": "Bolt of Courage",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Bolt of Courage, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Bolt of Courage gains \"If this hits, draw a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bolt_of_courage_yellow",
+    "name": "Bolt of Courage",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Bolt of Courage, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Bolt of Courage gains \"If this hits, draw a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bolting_blade_yellow",
+    "name": "Bolting Blade",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Bolting Blade costs {r}{r} less to play for each time you've **charged** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "boltyn",
+    "name": "Boltyn",
+    "type_text": "Light Warrior Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, your attacks get +1{p} while defended by an attack action card.\n\n**Attack Reaction** - Banish a card from Boltyn's soul: Target attack with {p} greater than its base {p} gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "boneyard_marauder_blue",
+    "name": "Boneyard Marauder",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Boneyard Marauder, banish 3 random cards from your graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "boneyard_marauder_red",
+    "name": "Boneyard Marauder",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Boneyard Marauder, banish 3 random cards from your graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "boneyard_marauder_yellow",
+    "name": "Boneyard Marauder",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Boneyard Marauder, banish 3 random cards from your graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "bounding_demigon_blue",
+    "name": "Bounding Demigon",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If you have played a 'non-attack' action card this turn, you may play Bounding Demigon from your banished zone. If you do, it gains +1{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "bounding_demigon_red",
+    "name": "Bounding Demigon",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If you have played a 'non-attack' action card this turn, you may play Bounding Demigon from your banished zone. If you do, it gains +1{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "bounding_demigon_yellow",
+    "name": "Bounding Demigon",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If you have played a 'non-attack' action card this turn, you may play Bounding Demigon from your banished zone. If you do, it gains +1{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "brandish_blue",
+    "name": "Brandish",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Brandish hits, your next weapon attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "brandish_red",
+    "name": "Brandish",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Brandish hits, your next weapon attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "brandish_yellow",
+    "name": "Brandish",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Brandish hits, your next weapon attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "captains_call_blue",
+    "name": "Captain's Call",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose 1;\n\nThe next attack action card with cost 0 you play this turn gains +2{p}.\n\nThe next attack action card with cost 0 you play this turn gains **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "captains_call_red",
+    "name": "Captain's Call",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose 1;\n\nThe next attack action card with cost 2 or less you play this turn gains +2{p}.\n\nThe next attack action card with cost 2 or less you play this turn gains **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "captains_call_yellow",
+    "name": "Captain's Call",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose 1;\n\nThe next attack action card with cost 1 or less you play this turn gains +2{p}.\n\nThe next attack action card with cost 1 or less you play this turn gains **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "carrion_husk",
+    "name": "Carrion Husk",
+    "type_text": "Shadow Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 6,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If you defend with Carrion Husk, banish it when the combat chain closes.\n\nAt the start of your turn, if you have 13 or less {h}, banish Carrion Husk.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "celestial_cataclysm_yellow",
+    "name": "Celestial Cataclysm",
+    "type_text": "Light Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play this, banish 3 cards from your soul.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "chane",
+    "name": "Chane",
+    "type_text": "Shadow Runeblade Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - Create a Soul Shackle token: Your next Runeblade or Shadow action this turn gains **go again. Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "chane_bound_by_shadow",
+    "name": "Chane, Bound by Shadow",
+    "type_text": "Shadow Runeblade Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - Create a Soul Shackle token: Your next Runeblade or Shadow action this turn gains **go again. Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "consuming_aftermath_blue",
+    "name": "Consuming Aftermath",
+    "type_text": "Shadow Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Consuming Aftermath, you may banish a card from your hand. If a Shadow card is banished this way, Consuming Aftermath gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "consuming_aftermath_red",
+    "name": "Consuming Aftermath",
+    "type_text": "Shadow Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Consuming Aftermath, you may banish a card from your hand. If a Shadow card is banished this way, Consuming Aftermath gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "consuming_aftermath_yellow",
+    "name": "Consuming Aftermath",
+    "type_text": "Shadow Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Consuming Aftermath, you may banish a card from your hand. If a Shadow card is banished this way, Consuming Aftermath gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "convulsions_from_the_bellows_of_hell_blue",
+    "name": "Convulsions from the Bellows of Hell",
+    "type_text": "Shadow Brute Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Convulsions from the Bellows of Hell, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, the next attack action card you play this turn gains +1{p} and **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "convulsions_from_the_bellows_of_hell_red",
+    "name": "Convulsions from the Bellows of Hell",
+    "type_text": "Shadow Brute Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Convulsions from the Bellows of Hell, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, the next attack action card you play this turn gains +3{p} and **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "convulsions_from_the_bellows_of_hell_yellow",
+    "name": "Convulsions from the Bellows of Hell",
+    "type_text": "Shadow Brute Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Convulsions from the Bellows of Hell, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, the next attack action card you play this turn gains +2{p} and **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "courageous_steelhand_blue",
+    "name": "Courageous Steelhand",
+    "type_text": "Light Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, target attack gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "courageous_steelhand_red",
+    "name": "Courageous Steelhand",
+    "type_text": "Light Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, target attack gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "courageous_steelhand_yellow",
+    "name": "Courageous Steelhand",
+    "type_text": "Light Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, target attack gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "cross_the_line_blue",
+    "name": "Cross the Line",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Cross the Line, you may **charge** your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "cross_the_line_red",
+    "name": "Cross the Line",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Cross the Line, you may **charge** your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "cross_the_line_yellow",
+    "name": "Cross the Line",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Cross the Line, you may **charge** your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "deadwood_rumbler_blue",
+    "name": "Deadwood Rumbler",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, banish a card from a graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "deadwood_rumbler_red",
+    "name": "Deadwood Rumbler",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 8,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, banish a card from a graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "deadwood_rumbler_yellow",
+    "name": "Deadwood Rumbler",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 7,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, banish a card from a graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "deep_rooted_evil_yellow",
+    "name": "Deep Rooted Evil",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If a card with 6 or more {p} has been put into your banished zone this turn, you may play Deep Rooted Evil from your banished zone.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "dimenxxional_crossroads_yellow",
+    "name": "Dimenxxional Crossroads",
+    "type_text": "Shadow Runeblade Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhenever you play an attack action card or a 'non-attack' action card from the banished zone, if you haven't played another card of that type this turn, deal 1 arcane damage to target hero.\n\nIf you lose {h} during your turn, destroy Dimenxxional Crossroads.",
+    "status": "pending"
+  },
+  {
+    "slug": "dimenxxional_gateway_blue",
+    "name": "Dimenxxional Gateway",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt 1**\n\nReveal the top card of your deck. If it's a Runeblade card, deal 1 arcane damage to each opposing hero. If it's a Shadow card, you may banish it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dimenxxional_gateway_red",
+    "name": "Dimenxxional Gateway",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt 3**\n\nReveal the top card of your deck. If it's a Runeblade card, deal 1 arcane damage to each opposing hero. If it's a Shadow card, you may banish it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dimenxxional_gateway_yellow",
+    "name": "Dimenxxional Gateway",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt 2**\n\nReveal the top card of your deck. If it's a Runeblade card, deal 1 arcane damage to each opposing hero. If it's a Shadow card, you may banish it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "doomsday_blue",
+    "name": "Doomsday",
+    "type_text": "Shadow Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Levia"
+    ],
+    "functional_text": "**Legendary Levia Specialization**\n\nPlay Doomsday only if there are 6 or more cards with blood debt in your banished zone.\n\nCreate a Blasmophet, the Soul Harvester token.",
+    "status": "pending"
+  },
+  {
+    "slug": "dread_screamer_blue",
+    "name": "Dread Screamer",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Dread Screamer, banish 3 random cards from your graveyard\n\nIf a card with 6 or more {p} is banished this way, Dread Screamer gains **go again**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "dread_screamer_red",
+    "name": "Dread Screamer",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Dread Screamer, banish 3 random cards from your graveyard\n\nIf a card with 6 or more {p} is banished this way, Dread Screamer gains **go again**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "dread_screamer_yellow",
+    "name": "Dread Screamer",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Dread Screamer, banish 3 random cards from your graveyard\n\nIf a card with 6 or more {p} is banished this way, Dread Screamer gains **go again**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "dread_scythe",
+    "name": "Dread Scythe",
+    "type_text": "Runeblade Weapon - Scythe (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Scythe"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nWhenever you attack with Dread Scythe, deal 1 arcane damage to the defending hero.\n\nA hero dealt damage by Dread Scythe can't gain {h} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "dream_weavers",
+    "name": "Dream Weavers",
+    "type_text": "Illusionist Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Spellvoid"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy Dream Weavers: The next Illusionist attack action card you play this turn loses and can't gain **phantasm**. **Go again**\n\n**Spellvoid 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "dusk_path_pilgrimage_blue",
+    "name": "Dusk Path Pilgrimage",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +1{p} and \"If this hits, you may attack an additional time with this weapon this turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dusk_path_pilgrimage_red",
+    "name": "Dusk Path Pilgrimage",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p} and \"If this hits, you may attack an additional time with this weapon this turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dusk_path_pilgrimage_yellow",
+    "name": "Dusk Path Pilgrimage",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +2{p} and \"If this hits, you may attack an additional time with this weapon this turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ebon_fold",
+    "name": "Ebon Fold",
+    "type_text": "Shadow Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Spellvoid"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy Ebon Fold: Banish a card from your hand. If it's a Shadow card, draw a card.\n\n**Spellvoid 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "eclipse_blue",
+    "name": "Eclipse",
+    "type_text": "Shadow Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Chane"
+    ],
+    "functional_text": "**Legendary Chane Specialization**\n\nPlay Eclipse only if you have played 6 or more cards with **blood debt** this turn. If you have, you may play Eclipse from your banished zone.\n\nCreate an Ursur, the Soul Reaper token.",
+    "status": "pending"
+  },
+  {
+    "slug": "eclipse_existence_blue",
+    "name": "Eclipse Existence",
+    "type_text": "Shadow Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Until end of turn, whenever an attack hits a Light hero, you may banish a card from their soul. If they do, they lose 1{h}.\n\nIf you have more {h} than an opposing Light hero, you may banish an action card from your graveyard.",
+    "status": "pending"
+  },
+  {
+    "slug": "endless_maw_blue",
+    "name": "Endless Maw",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Endless Maw, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Endless maw gains +3{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "endless_maw_red",
+    "name": "Endless Maw",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Endless Maw, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Endless maw gains +3{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "endless_maw_yellow",
+    "name": "Endless Maw",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Endless Maw, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Endless maw gains +3{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "engulfing_light_blue",
+    "name": "Engulfing Light",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Engulfing Light, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Engulfing Light gains \"If this hits, put it into your hero's soul.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "engulfing_light_red",
+    "name": "Engulfing Light",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Engulfing Light, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Engulfing Light gains \"If this hits, put it into your hero's soul.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "engulfing_light_yellow",
+    "name": "Engulfing Light",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Engulfing Light, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Engulfing Light gains \"If this hits, put it into your hero's soul.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "enigma_chimera_blue",
+    "name": "Enigma Chimera",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "enigma_chimera_red",
+    "name": "Enigma Chimera",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "enigma_chimera_yellow",
+    "name": "Enigma Chimera",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "express_lightning_blue",
+    "name": "Express Lightning",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Express Lightning, you may **charge** your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "express_lightning_red",
+    "name": "Express Lightning",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Express Lightning, you may **charge** your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "express_lightning_yellow",
+    "name": "Express Lightning",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Express Lightning, you may **charge** your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "exude_confidence_red",
+    "name": "Exude Confidence",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Exude Confidence isn't defended by a card with equal or greater {p}, the defending hero can't play or activate instants or defense reactions this combat chain.\n\n**Instant** - {r}{r}{r}: Exude Confidence gains +2{p}. Activate this ability only while Exude Confidence is attacking.",
+    "status": "pending"
+  },
+  {
+    "slug": "frontline_scout_blue",
+    "name": "Frontline Scout",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may look at the defending hero's hand.\n\nIf Frontline Scout is played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "frontline_scout_red",
+    "name": "Frontline Scout",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may look at the defending hero's hand.\n\nIf Frontline Scout is played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "frontline_scout_yellow",
+    "name": "Frontline Scout",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may look at the defending hero's hand.\n\nIf Frontline Scout is played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "galaxxi_black",
+    "name": "Galaxxi Black",
+    "type_text": "Shadow Runeblade Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nIf you have played a card from your banished zone this turn, Galaxxi Black gains +2{p} until end of turn.\n\nIf Galaxxi Black hits a hero, deal 1 arcane damage to that hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "gallantry_gold",
+    "name": "Gallantry Gold",
+    "type_text": "Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, destroy Gallantry Gold: Your weapon attacks gain +1{p} this turn. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "genesis_yellow",
+    "name": "Genesis",
+    "type_text": "Light Illusionist Instant - Aura",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Spectra"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, you may put a card from your hand into your soul. If it's an Illusionist card, create a Spectral Shield token. If it's a Light card, draw a card.\n\n**Spectra**",
+    "status": "pending"
+  },
+  {
+    "slug": "ghostly_visit_blue",
+    "name": "Ghostly Visit",
+    "type_text": "Shadow Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Ghostly Visit from your banished zone.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "ghostly_visit_red",
+    "name": "Ghostly Visit",
+    "type_text": "Shadow Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Ghostly Visit from your banished zone.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "ghostly_visit_yellow",
+    "name": "Ghostly Visit",
+    "type_text": "Shadow Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Ghostly Visit from your banished zone.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "glisten_blue",
+    "name": "Glisten",
+    "type_text": "Light Instant",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Distribute up to two +1{p} counters among any number of weapons you control.\n\nAt the beginning of your end phase, remove all +1{p} counters from weapons you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "glisten_red",
+    "name": "Glisten",
+    "type_text": "Light Instant",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Distribute up to four +1{p} counters among any number of weapons you control.\n\nAt the beginning of your end phase, remove all +1{p} counters from weapons you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "glisten_yellow",
+    "name": "Glisten",
+    "type_text": "Light Instant",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Distribute up to three +1{p} counters among any number of weapons you control.\n\nAt the beginning of your end phase, remove all +1{p} counters from weapons you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "graveling_growl_blue",
+    "name": "Graveling Growl",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "Play Graveling Growl only if a card with 6 or more {p} has been put into your banished zone this turn.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "graveling_growl_red",
+    "name": "Graveling Growl",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "Play Graveling Growl only if a card with 6 or more {p} has been put into your banished zone this turn.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "graveling_growl_yellow",
+    "name": "Graveling Growl",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "Play Graveling Growl only if a card with 6 or more {p} has been put into your banished zone this turn.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "great_library_of_solana",
+    "name": "Great Library of Solana",
+    "type_text": "Light Action - Landmark",
+    "cost": 2,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Landmark",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nAt the beginning of each end phase, if a hero has 2 or more cards with yellow color strips in their pitch zone, they gain +1{i} until end of turn.\n\n**Action** - Discard 2 cards with yellow color strips: Destroy Great Library of Solana. Any hero may activate this ability. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "guardian_of_the_shadowrealm_red",
+    "name": "Guardian of the Shadowrealm",
+    "type_text": "Shadow Defense Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 6,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}: Return Guardian of the Shadowrealm from your banished zone into your hand. Activate this ability only while Guardian of the Shadowrealm is in your banished zone.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "halo_of_illumination",
+    "name": "Halo of Illumination",
+    "type_text": "Light Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Spellvoid"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy Halo of Illumination: Put a card from your hand into your hero's soul. If it's a Light card, draw a card.\n\n**Spellvoid 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "hatchet_of_body",
+    "name": "Hatchet of Body",
+    "type_text": "Warrior Weapon - Axe (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Axe"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nWhenever you attack with Hatchet of Body, if Hatchet of Mind was the last attack this turn, Hatchet of Body gains +1{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "hatchet_of_mind",
+    "name": "Hatchet of Mind",
+    "type_text": "Warrior Weapon - Axe (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Axe"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nWhenever you attack with Hatchet of Mind, if Hatchet of Body was the last attack this turn, Hatchet of Mind gains +1{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_erudition_yellow",
+    "name": "Herald of Erudition",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Dominate",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your soul and draw 2 cards.\n\n**Dominate**\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_judgment_yellow",
+    "name": "Herald of Judgment",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm",
+      "Specialization"
+    ],
+    "specializations": [
+      "Prism"
+    ],
+    "functional_text": "**Prism Specialization**\n\nWhen this hits, put it into your hero's soul and the defending hero can't play cards from their banished zone during their next action phase.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_protection_blue",
+    "name": "Herald of Protection",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your soul and create a Spectral Shield token.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_protection_red",
+    "name": "Herald of Protection",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your soul and create a Spectral Shield token.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_protection_yellow",
+    "name": "Herald of Protection",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your soul and create a Spectral Shield token.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_ravages_blue",
+    "name": "Herald of Ravages",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your hero's soul and deal 1 arcane damage to target hero.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_ravages_red",
+    "name": "Herald of Ravages",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your hero's soul and deal 1 arcane damage to target hero.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_ravages_yellow",
+    "name": "Herald of Ravages",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your hero's soul and deal 1 arcane damage to target hero.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_rebirth_blue",
+    "name": "Herald of Rebirth",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your hero's soul and put up to 1 card with **phantasm** from your graveyard on top of your deck.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_rebirth_red",
+    "name": "Herald of Rebirth",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your hero's soul and put up to 1 card with **phantasm** from your graveyard on top of your deck.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_rebirth_yellow",
+    "name": "Herald of Rebirth",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your hero's soul and put up to 1 card with **phantasm** from your graveyard on top of your deck.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_tenacity_blue",
+    "name": "Herald of Tenacity",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Dominate",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**\n\nWhen this hits, put it into your hero's soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_tenacity_red",
+    "name": "Herald of Tenacity",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Dominate",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**\n\nWhen this hits, put it into your hero's soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_tenacity_yellow",
+    "name": "Herald of Tenacity",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Dominate",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**\n\nWhen this hits, put it into your hero's soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_triumph_blue",
+    "name": "Herald of Triumph",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "Attack action cards get -1{p} while defending this.\n\nWhen this hits, put it into your soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_triumph_red",
+    "name": "Herald of Triumph",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "Attack action cards have -1{p} while defending this.\n\nWhen this hits, put it into your hero's soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "herald_of_triumph_yellow",
+    "name": "Herald of Triumph",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "Attack action cards get -1{p} while defending this.\n\nWhen this hits, put it into your soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "hexagore_the_death_hydra",
+    "name": "Hexagore, the Death Hydra",
+    "type_text": "Shadow Brute Weapon - Flail (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Flail"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nWhenever you attack with Hexagore, it deals damage to you equal to 6 minus the number of cards with **blood debt** in your banished zone.",
+    "status": "pending"
+  },
+  {
+    "slug": "hooves_of_the_shadowbeast",
+    "name": "Hooves of the Shadowbeast",
+    "type_text": "Shadow Brute Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a card with 6 or more {p} is put into your banished zone, you may destroy Hooves of the Shadowbeast. If you do, gain 1 action point.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "howl_from_beyond_blue",
+    "name": "Howl from Beyond",
+    "type_text": "Shadow Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Howl from Beyond from your banished zone.\n\nThe next attack action card you play this turn gains +1{p}.\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "howl_from_beyond_red",
+    "name": "Howl from Beyond",
+    "type_text": "Shadow Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Howl from Beyond from your banished zone.\n\nThe next attack action card you play this turn gains +3{p}.\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "howl_from_beyond_yellow",
+    "name": "Howl from Beyond",
+    "type_text": "Shadow Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Howl from Beyond from your banished zone.\n\nThe next attack action card you play this turn gains +2{p}.\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "hungering_slaughterbeast_blue",
+    "name": "Hungering Slaughterbeast",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Hungering Slaughterbeast, banish 3 random cards from your graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "hungering_slaughterbeast_red",
+    "name": "Hungering Slaughterbeast",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Hungering Slaughterbeast, banish 3 random cards from your graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "hungering_slaughterbeast_yellow",
+    "name": "Hungering Slaughterbeast",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Hungering Slaughterbeast, banish 3 random cards from your graveyard.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "illuminate_blue",
+    "name": "Illuminate",
+    "type_text": "Light Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Illuminate hits, put it into your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "illuminate_red",
+    "name": "Illuminate",
+    "type_text": "Light Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Illuminate hits, put it into your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "illuminate_yellow",
+    "name": "Illuminate",
+    "type_text": "Light Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Illuminate hits, put it into your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "impenetrable_belief_blue",
+    "name": "Impenetrable Belief",
+    "type_text": "Light Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If 3 or more cards have been put into an opposing hero's banished zone this turn, Impenetrable Belief gains +2{d} while defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "impenetrable_belief_red",
+    "name": "Impenetrable Belief",
+    "type_text": "Light Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If 3 or more cards have been put into an opposing hero's banished zone this turn, Impenetrable Belief gains +2{d} while defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "impenetrable_belief_yellow",
+    "name": "Impenetrable Belief",
+    "type_text": "Light Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If 3 or more cards have been put into an opposing hero's banished zone this turn, Impenetrable Belief gains +2{d} while defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "invert_existence_blue",
+    "name": "Invert Existence",
+    "type_text": "Shadow Runeblade Instant",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Invert Existence from your banished zone.\n\nBanish up to 2 cards in an opposing hero's graveyard. If an attack action card and a 'non-attack' action card are banished this way, deal 2 arcane damage to that hero.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "invigorating_light_blue",
+    "name": "Invigorating Light",
+    "type_text": "Light Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play Invigorating Light, if there are no cards in your hero's soul, put it into your hero's soul when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "invigorating_light_red",
+    "name": "Invigorating Light",
+    "type_text": "Light Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play Invigorating Light, if there are no cards in your hero's soul, put it into your hero's soul when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "invigorating_light_yellow",
+    "name": "Invigorating Light",
+    "type_text": "Light Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play Invigorating Light, if there are no cards in your hero's soul, put it into your hero's soul when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "iris_of_reality",
+    "name": "Iris of Reality",
+    "type_text": "Illusionist Weapon - Orb (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Orb"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "During your action phase, Illusionist auras you control are weapons with 4{p} and **Once per Turn Action** - {r}{r}{r}: **Attack. Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ironhide_gauntlet",
+    "name": "Ironhide Gauntlet",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you defend with Ironhide Gauntlet, you may pay {r}. If you do, it gains +2{d} and \"When the combat chain closes, destroy Ironhide Gauntlet.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "ironhide_helm",
+    "name": "Ironhide Helm",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you defend with Ironhide Helm, you may pay {r}. If you do, it gains +2{d} and \"When the combat chain closes, destroy Ironhide Helm.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "ironhide_legs",
+    "name": "Ironhide Legs",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you defend with Ironhide Legs, you may pay {r}. If you do, it gains +2{d} and \"When the combat chain closes, destroy Ironhide Legs.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "ironhide_plate",
+    "name": "Ironhide Plate",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you defend with Ironhide Plate, you may pay {r}. If you do, it gains +2{d} and destroy it when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "levia",
+    "name": "Levia",
+    "type_text": "Shadow Brute Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If a card with 6 or more {p} has been put into your banished zone this turn, cards you own lose **blood debt** during the end phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "levia_shadowborn_abomination",
+    "name": "Levia, Shadowborn Abomination",
+    "type_text": "Shadow Brute Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If a card with 6 or more {p} has been put into your banished zone this turn, cards you own lose **blood debt** during the end phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "lumina_ascension_yellow",
+    "name": "Lumina Ascension",
+    "type_text": "Light Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Boltyn"
+    ],
+    "functional_text": "**Boltyn Specialization**\n\nUntil end of turn, weapons you control gain +1{p} and \"If this hits, reveal the top card of your deck. If it's a Light card, put it into your hero's soul and gain 1{h}, otherwise put it on the bottom of your deck.\"\n\nIf you've **charged** this turn, you may attack an additional time with each weapon you control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "luminaris",
+    "name": "Luminaris",
+    "type_text": "Light Illusionist Weapon - Scepter (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Scepter"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "During your action phase, Illusionist auras you control are weapons with 1 base {p} and \"**Once per Turn Action** - 0: **Attack**\"\n\nIf there is a yellow card in your pitch zone, your Illusionist attacks get **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "lunartide_plunderer_blue",
+    "name": "Lunartide Plunderer",
+    "type_text": "Shadow Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Lunartide Plunderer hits a hero, banish it and a card from their soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "lunartide_plunderer_red",
+    "name": "Lunartide Plunderer",
+    "type_text": "Shadow Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Lunartide Plunderer hits a hero, banish it and a card from their soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "lunartide_plunderer_yellow",
+    "name": "Lunartide Plunderer",
+    "type_text": "Shadow Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Lunartide Plunderer hits a hero, banish it and a card from their soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_beast_yellow",
+    "name": "Mark of the Beast",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If Mark of the Beast would be put into your graveyard from anywhere, instead banish it.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "memorial_ground_blue",
+    "name": "Memorial Ground",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put target attack action card with cost 0 from your graveyard on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "memorial_ground_red",
+    "name": "Memorial Ground",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put target attack action card with cost 2 or less from your graveyard on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "memorial_ground_yellow",
+    "name": "Memorial Ground",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put target attack action card with cost 1 or less from your graveyard on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "merciful_retribution_yellow",
+    "name": "Merciful Retribution",
+    "type_text": "Light Illusionist Instant - Aura",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Spectra"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an aura or attack action card you control is destroyed, deal 1 arcane damage to target hero. If it's a non-token Light card, put it into your soul.\n\n**Spectra**",
+    "status": "pending"
+  },
+  {
+    "slug": "minnowism_blue",
+    "name": "Minnowism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with 3 or less base {p} you play this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "minnowism_red",
+    "name": "Minnowism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with 3 or less base {p} you play this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "minnowism_yellow",
+    "name": "Minnowism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with 3 or less base {p} you play this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "mutated_mass_blue",
+    "name": "Mutated Mass",
+    "type_text": "Shadow Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": "*",
+    "defense": "*",
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Mutated Mass from your banished zone.\n\nMutated Mass's {p} and {d} is equal to twice the number of cards in your pitch zone with different costs.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "nourishing_emptiness_red",
+    "name": "Nourishing Emptiness",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "While there are no attack action cards in your graveyard, Nourishing Emptiness has **dominate** and \"If this hits, your hero gains +1{i} until end of turn.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "ode_to_wrath_yellow",
+    "name": "Ode to Wrath",
+    "type_text": "Light Illusionist Instant - Aura",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Spectra"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a source you control deals damage to an opponent, they lose 1 {h}.\n\nIllusionist attack action cards you control get **go again**.\n\n**Spectra**",
+    "status": "pending"
+  },
+  {
+    "slug": "out_muscle_blue",
+    "name": "Out Muscle",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "While Out Muscle isn't defended by a card with equal or greater {p}, it has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "out_muscle_red",
+    "name": "Out Muscle",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "While Out Muscle isn't defended by a card with equal or greater {p}, it has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "out_muscle_yellow",
+    "name": "Out Muscle",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "While Out Muscle isn't defended by a card with equal or greater {p}, it has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "overload_blue",
+    "name": "Overload",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**\n\nIf Overload hits, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "overload_red",
+    "name": "Overload",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**\n\nIf Overload hits, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "overload_yellow",
+    "name": "Overload",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**\n\nIf Overload hits, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "parable_of_humility_yellow",
+    "name": "Parable of Humility",
+    "type_text": "Light Illusionist Instant - Aura",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Spectra"
+    ],
+    "specializations": [],
+    "functional_text": "Attack action cards your opponents control get -1{p} while attacking and defending.\n\n**Spectra**",
+    "status": "pending"
+  },
+  {
+    "slug": "phantasmaclasm_red",
+    "name": "Phantasmaclasm",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "Look at the defending hero's hand and choose a card. They put it on the bottom of their deck then draw a card.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "phantasmal_footsteps",
+    "name": "Phantasmal Footsteps",
+    "type_text": "Illusionist Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Once per turn, when an Illusionist attack action card you control is destroyed, you may pay {r}. If you do, gain 1 action point.\n\nWhenever this defends, you may pay {r}. If you do, its {d} becomes 1 until end of turn.\n\nWhen Phantasmal Footsteps is defending a non-Illusionist attack with 6 or more {p}, destroy it when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "phantasmify_blue",
+    "name": "Phantasmify",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn is Illusionist in addition to its other class types, and gains +3{p} and **phantasm**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "phantasmify_red",
+    "name": "Phantasmify",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn is Illusionist in addition to its other class types, and gains +5{p} and **phantasm**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "phantasmify_yellow",
+    "name": "Phantasmify",
+    "type_text": "Illusionist Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn is Illusionist in addition to its other class types, and gains +4{p} and **phantasm**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "piercing_shadow_vise_blue",
+    "name": "Piercing Shadow Vise",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Piercing Shadow Vise from your banished zone.\n\nIf you have dealt arcane damage to an opposing hero this turn, Piercing Shadow Vise gains +2{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "piercing_shadow_vise_red",
+    "name": "Piercing Shadow Vise",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Piercing Shadow Vise from your banished zone.\n\nIf you have dealt arcane damage to an opposing hero this turn, Piercing Shadow Vise gains +2{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "piercing_shadow_vise_yellow",
+    "name": "Piercing Shadow Vise",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Piercing Shadow Vise from your banished zone.\n\nIf you have dealt arcane damage to an opposing hero this turn, Piercing Shadow Vise gains +2{p}.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "plow_through_blue",
+    "name": "Plow Through",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +1{p} and \"If this weapon is defended by an attack action card, it gains +1{p} until end of turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "plow_through_red",
+    "name": "Plow Through",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p} and \"If this weapon is defended by an attack action card, it gains +1{p} until end of turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "plow_through_yellow",
+    "name": "Plow Through",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +2{p} and \"If this weapon is defended by an attack action card, it gains +1{p} until end of turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_for_pound_blue",
+    "name": "Pound for Pound",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "When you play Pound for Pound, if you have less {h} than an opposing hero, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_for_pound_red",
+    "name": "Pound for Pound",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "When you play Pound for Pound, if you have less {h} than an opposing hero, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_for_pound_yellow",
+    "name": "Pound for Pound",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "When you play Pound for Pound, if you have less {h} than an opposing hero, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "prism",
+    "name": "Prism",
+    "type_text": "Light Illusionist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}{r}, banish a card from Prism's soul: Create a Spectral Shield token.",
+    "status": "pending"
+  },
+  {
+    "slug": "prism_sculptor_of_arc_light",
+    "name": "Prism, Sculptor of Arc Light",
+    "type_text": "Light Illusionist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}{r}, banish a card from Prism's soul: Create a Spectral Shield token.",
+    "status": "pending"
+  },
+  {
+    "slug": "prismatic_shield_blue",
+    "name": "Prismatic Shield",
+    "type_text": "Illusionist Instant",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Spectral Shield token.",
+    "status": "pending"
+  },
+  {
+    "slug": "prismatic_shield_red",
+    "name": "Prismatic Shield",
+    "type_text": "Illusionist Instant",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create 3 Spectral Shield tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "prismatic_shield_yellow",
+    "name": "Prismatic Shield",
+    "type_text": "Illusionist Instant",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create 2 Spectral Shield tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "pulping_blue",
+    "name": "Pulping",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **dominate**.\n\nIf this is defended by fewer than 2 non-equipment cards, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pulping_red",
+    "name": "Pulping",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **dominate**.\n\nIf this is defended by fewer than 2 non-equipment cards, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pulping_yellow",
+    "name": "Pulping",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **dominate**.\n\nIf this is defended by fewer than 2 non-equipment cards, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rally_the_rearguard_blue",
+    "name": "Rally the Rearguard",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - Discard a card: This gets +3{d}. Activate this ability only while this is defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "rally_the_rearguard_red",
+    "name": "Rally the Rearguard",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - Discard a card: This gets +3{d}. Activate this ability only while this is defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "rally_the_rearguard_yellow",
+    "name": "Rally the Rearguard",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - Discard a card: This gets +3{d}. Activate this ability only while this is defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "ravenous_meataxe",
+    "name": "Ravenous Meataxe",
+    "type_text": "Brute Weapon - Axe (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Axe"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nWhenever you attack with Ravenous Meataxe, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Ravenous Meataxe gains +2{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "ray_of_hope_yellow",
+    "name": "Ray of Hope",
+    "type_text": "Light Instant",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Attacks you control have +1{p} while attacking a Shadow hero this turn.\n\nIf you have less {h} than an opposing Shadow hero, put Ray of Hope into your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "raydn_duskbane",
+    "name": "Raydn, Duskbane",
+    "type_text": "Light Warrior Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - 0: **Attack**\n\nIf you've **charged** this turn, Raydn gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rift_bind_blue",
+    "name": "Rift Bind",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rift Bind from your banished zone. If you do, it gains +X{p}, where X is the number of 'non-attack' action cards you have played this turn.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rift_bind_red",
+    "name": "Rift Bind",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rift Bind from your banished zone. If you do, it gains +X{p}, where X is the number of 'non-attack' action cards you have played this turn.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rift_bind_yellow",
+    "name": "Rift Bind",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rift Bind from your banished zone. If you do, it gains +X{p}, where X is the number of 'non-attack' action cards you have played this turn.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rifted_torment_blue",
+    "name": "Rifted Torment",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rifted Torment from your banished zone. If you do, deal 1 arcane damage to target hero.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rifted_torment_red",
+    "name": "Rifted Torment",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rifted Torment from your banished zone. If you do, deal 1 arcane damage to target hero.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rifted_torment_yellow",
+    "name": "Rifted Torment",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rifted Torment from your banished zone. If you do, deal 1 arcane damage to target hero.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rip_through_reality_blue",
+    "name": "Rip Through Reality",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rip Through Reality from your banished zone.\n\nIf you have dealt arcane damage to an opposing hero this turn, Rip Through Reality gains **go again**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rip_through_reality_red",
+    "name": "Rip Through Reality",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rip Through Reality from your banished zone.\n\nIf you have dealt arcane damage to an opposing hero this turn, Rip Through Reality gains **go again**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rip_through_reality_yellow",
+    "name": "Rip Through Reality",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Rip Through Reality from your banished zone.\n\nIf you have dealt arcane damage to an opposing hero this turn, Rip Through Reality gains **go again**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "rise_above_blue",
+    "name": "Rise Above",
+    "type_text": "Generic Defense Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may put a card from your hand on top of your deck rather than pay Rise Above's {r} cost.",
+    "status": "pending"
+  },
+  {
+    "slug": "rise_above_red",
+    "name": "Rise Above",
+    "type_text": "Generic Defense Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may put a card from your hand on top of your deck rather than pay Rise Above's {r} cost.",
+    "status": "pending"
+  },
+  {
+    "slug": "rise_above_yellow",
+    "name": "Rise Above",
+    "type_text": "Generic Defense Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may put a card from your hand on top of your deck rather than pay Rise Above's {r} cost.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_solartide_blue",
+    "name": "Rising Solartide",
+    "type_text": "Light Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Rising Solartide hits, put it into your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_solartide_red",
+    "name": "Rising Solartide",
+    "type_text": "Light Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Rising Solartide hits, put it into your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "rising_solartide_yellow",
+    "name": "Rising Solartide",
+    "type_text": "Light Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Rising Solartide hits, put it into your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "rouse_the_ancients_blue",
+    "name": "Rouse the Ancients",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Rouse the Ancients, you may reveal any number of attack action cards from your hand with 13 or more total {p}. If you do, Rouse the Ancients gains +7{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "second_swing_blue",
+    "name": "Second Swing",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you have attacked with a weapon this turn, your next attack this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "second_swing_red",
+    "name": "Second Swing",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you have attacked with a weapon this turn, your next attack this turn gains +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "second_swing_yellow",
+    "name": "Second Swing",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you have attacked with a weapon this turn, your next attack this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "seeds_of_agony_blue",
+    "name": "Seeds of Agony",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Seeds of Agony from your banished zone.\n\nThe next attack action card with cost 0 or less you play this turn gains \"When you attack with this, deal 1 arcane damage to target hero.\"\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "seeds_of_agony_red",
+    "name": "Seeds of Agony",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Seeds of Agony from your banished zone.\n\nThe next attack action card with cost 2 or less you play this turn gains \"When you attack with this, deal 1 arcane damage to target hero.\"\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "seeds_of_agony_yellow",
+    "name": "Seeds of Agony",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Seeds of Agony from your banished zone.\n\nThe next attack action card with cost 1 or less you play this turn gains \"When you attack with this, deal 1 arcane damage to target hero.\"\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "seek_enlightenment_blue",
+    "name": "Seek Enlightenment",
+    "type_text": "Light Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +1{p} and \"If this hits, put it into your hero's soul.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "seek_enlightenment_red",
+    "name": "Seek Enlightenment",
+    "type_text": "Light Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +3{p} and \"If this hits, put it into your hero's soul.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "seek_enlightenment_yellow",
+    "name": "Seek Enlightenment",
+    "type_text": "Light Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +2{p} and \"If this hits, put it into your hero's soul.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "seek_horizon_blue",
+    "name": "Seek Horizon",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Seek Horizon, you may put a card from your hand on top of your deck. If you do, Seek Horizon gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "seek_horizon_red",
+    "name": "Seek Horizon",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Seek Horizon, you may put a card from your hand on top of your deck. If you do, Seek Horizon gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "seek_horizon_yellow",
+    "name": "Seek Horizon",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Seek Horizon, you may put a card from your hand on top of your deck. If you do, Seek Horizon gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "seeping_shadows_blue",
+    "name": "Seeping Shadows",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Seeping Shadows from your banished zone.\n\nThe next attack action card with cost 0 you play this turns gains +1{p} and **go again**.\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "seeping_shadows_red",
+    "name": "Seeping Shadows",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Seeping Shadows from your banished zone.\n\nThe next attack action card with cost 2 or less you play this turns gains +1{p} and **go again**.\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "seeping_shadows_yellow",
+    "name": "Seeping Shadows",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Seeping Shadows from your banished zone.\n\nThe next attack action card with cost 1 or less you play this turns gains +1{p} and **go again**.\n\n**Go again**\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "ser_boltyn_breaker_of_dawn",
+    "name": "Ser Boltyn, Breaker of Dawn",
+    "type_text": "Light Warrior Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, your attacks get +1{p} while defended by an attack action card.\n\n**Attack Reaction** - Banish a card from Boltyn's soul: Target attack with {p} greater than its base {p} gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "shadow_of_blasmophet_red",
+    "name": "Shadow of Blasmophet",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, search your deck for a card with **blood debt**, banish it, then shuffle your deck.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "shadow_of_ursur_blue",
+    "name": "Shadow of Ursur",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Shadow of Ursur from your banished zone.\n\nAs an additional cost to play Shadow of Ursur, you may banish a card with blood debt from your hand. If you do, Shadow of Ursur gains **go again**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "shadow_puppetry_red",
+    "name": "Shadow Puppetry",
+    "type_text": "Shadow Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +1 {p}, **go again** and \"If this attack hits, look at the top card of your deck. You may banish it.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "smash_with_big_tree_blue",
+    "name": "Smash with Big Tree",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "smash_with_big_tree_red",
+    "name": "Smash with Big Tree",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "smash_with_big_tree_yellow",
+    "name": "Smash with Big Tree",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "sonata_arcanix_red",
+    "name": "Sonata Arcanix",
+    "type_text": "Runeblade Action",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Reveal the top X+3 cards of your deck.\n\nFor each non-attack action card revealed this way, put an attack action card revealed this way into your hand. Then deal arcane damage to target hero equal to the number of cards put into your hand this way. Shuffle, then banish this.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "soul_food_yellow",
+    "name": "Soul Food",
+    "type_text": "Light Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put Soul Food and all cards in your hand into your hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "soul_harvest_blue",
+    "name": "Soul Harvest",
+    "type_text": "Shadow Action - Attack",
+    "cost": 6,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Levia"
+    ],
+    "functional_text": "**Legendary Levia Specialization**\n\nAs an additional cost to play Soul Harvest, banish 6 cards from your graveyard. It gains +1{p} for each card with **blood debt** banished this way.\n\nIf Soul Harvest hits a hero, they banish all cards in their soul and lose {h} equal to the number of cards banished this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "soul_reaping_red",
+    "name": "Soul Reaping",
+    "type_text": "Shadow Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Chane"
+    ],
+    "functional_text": "**Legendary Chane Specialization**\n\nYou may banish 1 or more cards from your hand rather than pay Soul Reaping's {r} cost. If you do, gain {r} for each card with **blood debt** banished this way.\n\nWhile Soul Reaping is attacking a hero with 1 or more cards in their soul, it has go again.",
+    "status": "pending"
+  },
+  {
+    "slug": "soul_shield_yellow",
+    "name": "Soul Shield",
+    "type_text": "Light Defense Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 6,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put this into your soul when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "spears_of_surreality_blue",
+    "name": "Spears of Surreality",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spears_of_surreality_red",
+    "name": "Spears of Surreality",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spears_of_surreality_yellow",
+    "name": "Spears of Surreality",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spew_shadow_blue",
+    "name": "Spew Shadow",
+    "type_text": "Shadow Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose an attack action card with cost 0 or less in your banished zone. You may play it this turn. If it attacks a Light hero, it gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spew_shadow_red",
+    "name": "Spew Shadow",
+    "type_text": "Shadow Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose an attack action card with cost 2 or less in your banished zone. You may play it this turn. If it attacks a Light hero, it gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spew_shadow_yellow",
+    "name": "Spew Shadow",
+    "type_text": "Shadow Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose an attack action card with cost 1 or less in your banished zone. You may play it this turn. If it attacks a Light hero, it gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spill_blood_red",
+    "name": "Spill Blood",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Axes you control gain +2{p} and **dominate** until end of turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "stony_woottonhog_blue",
+    "name": "Stony Woottonhog",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Stony Woottonhog is defended by less than 2 non-equipment cards, it has +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stony_woottonhog_red",
+    "name": "Stony Woottonhog",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Stony Woottonhog is defended by less than 2 non-equipment cards, it has +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stony_woottonhog_yellow",
+    "name": "Stony Woottonhog",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Stony Woottonhog is defended by less than 2 non-equipment cards, it has +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stubby_hammerers",
+    "name": "Stubby Hammerers",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy Stubby Hammerers: Attack action cards with 3 or less base power gain +1{p} while attacking this turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "surging_militia_blue",
+    "name": "Surging Militia",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Surging Militia has +1{p} for each non-equipment card defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "surging_militia_red",
+    "name": "Surging Militia",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Surging Militia has +1{p} for each non-equipment card defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "surging_militia_yellow",
+    "name": "Surging Militia",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Surging Militia has +1{p} for each non-equipment card defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_flight_blue",
+    "name": "Take Flight",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Take Flight, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Take Flight gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_flight_red",
+    "name": "Take Flight",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Take Flight, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Take Flight gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_flight_yellow",
+    "name": "Take Flight",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Take Flight, you may **charge** your hero's soul.\n\nIf you've **charged** this turn, Take Flight gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "talisman_of_dousing_yellow",
+    "name": "Talisman of Dousing",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Spellvoid"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\n**Spellvoid 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "tear_limb_from_limb_blue",
+    "name": "Tear Limb from Limb",
+    "type_text": "Brute Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, the next Brute attack action card you play this turn gains +X{p}, where X is its base {p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "time_skippers",
+    "name": "Time Skippers",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy this: Gain 2 action points.",
+    "status": "pending"
+  },
+  {
+    "slug": "tome_of_divinity_yellow",
+    "name": "Tome of Divinity",
+    "type_text": "Light Instant",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Draw 2 cards.\n\nIf a card has been put into your hero's soul this turn, instead draw 3 cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "tome_of_torment_red",
+    "name": "Tome of Torment",
+    "type_text": "Shadow Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Tome of Torment from your banished zone.\n\nDraw a card.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "tremor_of_iarathael_blue",
+    "name": "Tremor of íArathael",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If a card has been put into your banished zone this turn, Tremor of íArathael gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tremor_of_iarathael_red",
+    "name": "Tremor of íArathael",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If a card has been put into your banished zone this turn, Tremor of íArathael gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tremor_of_iarathael_yellow",
+    "name": "Tremor of íArathael",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If a card has been put into your banished zone this turn, Tremor of íArathael gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "unhallowed_rites_blue",
+    "name": "Unhallowed Rites",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If you have played a 'non-attack' action card this turn, you may play Unhallowed Rites from your banished zone.\n\nYou may put a 'non-attack' action card with blood debt from your graveyard on the bottom of your deck.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "unhallowed_rites_red",
+    "name": "Unhallowed Rites",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If you have played a 'non-attack' action card this turn, you may play Unhallowed Rites from your banished zone.\n\nYou may put a 'non-attack' action card with blood debt from your graveyard on the bottom of your deck.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "unhallowed_rites_yellow",
+    "name": "Unhallowed Rites",
+    "type_text": "Shadow Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "If you have played a 'non-attack' action card this turn, you may play Unhallowed Rites from your banished zone.\n\nYou may put a 'non-attack' action card with blood debt from your graveyard on the bottom of your deck.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "unworldly_bellow_blue",
+    "name": "Unworldly Bellow",
+    "type_text": "Shadow Brute Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Unworldly Bellow, banish 3 random cards from your graveyard.\n\nThe next Brute or Shadow attack action card you play this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "unworldly_bellow_red",
+    "name": "Unworldly Bellow",
+    "type_text": "Shadow Brute Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Unworldly Bellow, banish 3 random cards from your graveyard.\n\nThe next Brute or Shadow attack action card you play this turn gains +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "unworldly_bellow_yellow",
+    "name": "Unworldly Bellow",
+    "type_text": "Shadow Brute Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Unworldly Bellow, banish 3 random cards from your graveyard.\n\nThe next Brute or Shadow attack action card you play this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "v_of_the_vanguard_yellow",
+    "name": "V of the Vanguard",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge",
+      "Specialization"
+    ],
+    "specializations": [
+      "Boltyn"
+    ],
+    "functional_text": "**Boltyn Specialization**\n\nAs an additional cost to play V of the Vanguard, you may **charge** your hero's soul any number of times.\n\nAttacks on this combat chain gain +1{p} for each Light card charged this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "valiant_dynamo",
+    "name": "Valiant Dynamo",
+    "type_text": "Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, if you've attacked 2 or more times with weapons this turn, you may remove a -1{d} counter from this.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "valiant_thrust_blue",
+    "name": "Valiant Thrust",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, Valiant Thrust gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "valiant_thrust_red",
+    "name": "Valiant Thrust",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, Valiant Thrust gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "valiant_thrust_yellow",
+    "name": "Valiant Thrust",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **charged** this turn, Valiant Thrust gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "vestige_of_sol",
+    "name": "Vestige of Sol",
+    "type_text": "Light Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If a card has been put into your hero's soul this turn, whenever you pitch a Light card, instead gain that many {r} plus 1.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "vexing_malice_blue",
+    "name": "Vexing Malice",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "vexing_malice_red",
+    "name": "Vexing Malice",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "vexing_malice_yellow",
+    "name": "Vexing Malice",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "void_wraith_blue",
+    "name": "Void Wraith",
+    "type_text": "Shadow Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Void Wraith from your banished zone.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "void_wraith_red",
+    "name": "Void Wraith",
+    "type_text": "Shadow Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Void Wraith from your banished zone.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "void_wraith_yellow",
+    "name": "Void Wraith",
+    "type_text": "Shadow Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play Void Wraith from your banished zone.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "warmongers_recital_blue",
+    "name": "Warmonger's Recital",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +1{p} and \"When this hits, put it on the bottom of its owner's deck.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "warmongers_recital_red",
+    "name": "Warmonger's Recital",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +3{p} and \"When this hits, put it on the bottom of its owner's deck.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "warmongers_recital_yellow",
+    "name": "Warmonger's Recital",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gains +2{p} and \"When this hits, put it on the bottom of its owner's deck.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "wartune_herald_blue",
+    "name": "Wartune Herald",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "wartune_herald_red",
+    "name": "Wartune Herald",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "wartune_herald_yellow",
+    "name": "Wartune Herald",
+    "type_text": "Light Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, put it into your soul.\n\n**Phantasm**",
+    "status": "pending"
+  },
+  {
+    "slug": "writhing_beast_hulk_blue",
+    "name": "Writhing Beast Hulk",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Writhing Beast Hulk, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Writhing Beast Hulk gains **dominate**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "writhing_beast_hulk_red",
+    "name": "Writhing Beast Hulk",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Writhing Beast Hulk, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Writhing Beast Hulk gains **dominate**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "writhing_beast_hulk_yellow",
+    "name": "Writhing Beast Hulk",
+    "type_text": "Shadow Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BloodDebt",
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Writhing Beast Hulk, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Writhing Beast Hulk gains **dominate**.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "yinti_yanti_blue",
+    "name": "Yinti Yanti",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Yinti Yanti is attacking and you control an aura, it has +1{p}.\n\nWhile Yinti Yanti is defending and you control an aura, it has +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "yinti_yanti_red",
+    "name": "Yinti Yanti",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Yinti Yanti is attacking and you control an aura, it has +1{p}.\n\nWhile Yinti Yanti is defending and you control an aura, it has +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "yinti_yanti_yellow",
+    "name": "Yinti Yanti",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Yinti Yanti is attacking and you control an aura, it has +1{p}.\n\nWhile Yinti Yanti is defending and you control an aura, it has +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "zealous_belting_blue",
+    "name": "Zealous Belting",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "While there is a card in your pitch zone with {p} greater than Zealous Belting's base {p}, Zealous Belting has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "zealous_belting_red",
+    "name": "Zealous Belting",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "While there is a card in your pitch zone with {p} greater than Zealous Belting's base {p}, Zealous Belting has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "zealous_belting_yellow",
+    "name": "Zealous Belting",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "While there is a card in your pitch zone with {p} greater than Zealous Belting's base {p}, Zealous Belting has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "blasmophet_the_soul_harvester",
+    "name": "Blasmophet, the Soul Harvester",
+    "type_text": "Shadow Token - Demon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 6,
+    "defense": null,
+    "life": 6,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Demon"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - 0: **Attack**\n\nWhenever Blasmophet attacks, you may banish a Shadow card from your hand. If you do, you may banish a card from the defending hero's soul.",
+    "status": "pending"
+  },
+  {
+    "slug": "soul_shackle",
+    "name": "Soul Shackle",
+    "type_text": "Shadow Runeblade Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, banish the top card of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "spectral_shield",
+    "name": "Spectral Shield",
+    "type_text": "Illusionist Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "ursur_the_soul_reaper",
+    "name": "Ursur, the Soul Reaper",
+    "type_text": "Shadow Token - Demon Ally",
+    "cost": null,
+    "pitch": null,
+    "power": 6,
+    "defense": null,
+    "life": 6,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "Demon"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - 0: **Attack**\n\nWhile Ursur is attacking a hero with 1 or more cards in their soul, the attack has **go again**.",
+    "status": "pending"
+  }
+]

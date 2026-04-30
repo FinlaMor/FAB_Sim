@@ -1,0 +1,20 @@
+{
+  "slug": "scabskin_leathers",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 0
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN_ACTION_POINTS",
+          "amount": 0
+        }
+      ]
+    }
+  ]
+}

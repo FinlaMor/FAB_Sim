@@ -1,0 +1,29 @@
+{
+  "slug": "rhinar_reckless_rampage",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "filter_power_gte": 6
+            },
+            {
+              "type": "IS_ACTIVE_PLAYER"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

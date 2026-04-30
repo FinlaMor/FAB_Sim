@@ -1,0 +1,570 @@
+[
+  {
+    "slug": "anticipating_gaze",
+    "name": "Anticipating Gaze",
+    "type_text": "Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When a sword attack you control hits, you may remove a +1{p} counter from the sword. If you do, destroy this and draw a card.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "backside_of_the_blade_blue",
+    "name": "Backside of the Blade",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +1{p}. If it has go again, you may attack an additional time with the weapon this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "brimming_blade_red",
+    "name": "Brimming Blade",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control twice.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "deadly_display_blue",
+    "name": "Deadly Display",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +1{p}. If the weapon has been sharpened this turn, the attack gets \"When this hits a hero, create a Flurry token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "deadly_display_red",
+    "name": "Deadly Display",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +3{p}. If the weapon has been sharpened this turn, the attack gets \"When this hits a hero, create a Flurry token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "edict_of_steel_blue",
+    "name": "Edict of Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 3 or more +1{p} counters, create a Flurry token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "edict_of_steel_red",
+    "name": "Edict of Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 1 or more +1{p} counters, create a Flurry token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "edict_of_steel_yellow",
+    "name": "Edict of Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 2 or more +1{p} counters, create a Flurry token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flurry_foot_dance_yellow",
+    "name": "Flurry Foot Dance",
+    "type_text": "Warrior Defense Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While this is defending, if you control a Flurry token this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "gleam_of_the_blade_red",
+    "name": "Gleam of the Blade",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +3{p}.\n\n**Instant** - Discard this: Create a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "hala_bladesaint_of_the_vow",
+    "name": "Hala, Bladesaint of the Vow",
+    "type_text": "Warrior Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, {t}: **Sharpen** target sword you control. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "indefensibly_honed_blue",
+    "name": "Indefensibly Honed",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 3 or more +1{p} counters, your next attack with it this turn gets \"When this is defended by 1 or more cards, deal 1 damage to the defending hero.\" **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ole_blue",
+    "name": "Olé",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Remove a +1{p} counter from target attacking weapon. If you do, create a Flurry token and draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "paragon_plate",
+    "name": "Paragon Plate",
+    "type_text": "Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - {t}, remove a +1{p} counter from an attacking sword you control: Gain {r}\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "polished_blade_red",
+    "name": "Polished Blade",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play this, remove 1 or more +1{p} counters from an attacking sword on the active chain link. Choose that many modes plus 1:\n- The sword's attack gets **go again**.\n- You may attack an additional time with the sword this turn.\n- Your next attack with the sword this turn costs {r} less to activate.",
+    "status": "pending"
+  },
+  {
+    "slug": "reverent_rerebrace",
+    "name": "Reverent Rerebrace",
+    "type_text": "Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Sharpen",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "If you would sharpen a Zenith Blade, instead you may pay {r} and destroy this. If you do, **sharpen** it an additional time.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "sharp_incline_red",
+    "name": "Sharp Incline",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 1 or more +1{p} counters, your next attack with it this turn costs {r} less to activate.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sharp_incline_yellow",
+    "name": "Sharp Incline",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 2 or more +1{p} counters, your next attack with it this turn costs {r} less to activate.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "shuck_blue",
+    "name": "Shuck",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "silverdrop_downpour_red",
+    "name": "Silverdrop Downpour",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +4{p}.\n\nIf the weapon has been sharpened this turn, this costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "silverstride_dodgers",
+    "name": "Silverstride Dodgers",
+    "type_text": "Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Flurry token, this gets +1{d}.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "swordmasters_path_blue",
+    "name": "Swordmaster's Path",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +1{p}.\n\nThe next time you would sharpen a sword this turn, instead **sharpen** it an additional time.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "swordmasters_path_red",
+    "name": "Swordmaster's Path",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p}.\n\nThe next time you would sharpen a sword this turn, instead **sharpen** it an additional time.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "toe_the_line_red",
+    "name": "Toe the Line",
+    "type_text": "Warrior Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 2 of that damage. If you prevent damage this way, create a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_the_dawnsmith_blue",
+    "name": "Visit the Dawnsmith",
+    "type_text": "Warrior Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this and **sharpen** all swords you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "flurry",
+    "name": "Flurry",
+    "type_text": "Warrior Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you activate a weapon attack, destroy this and you may attack with the weapon twice this turn.",
+    "status": "pending"
+  }
+]

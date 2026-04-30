@@ -1,0 +1,14 @@
+{
+  "slug": "ironrot_helm",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GRANT_KEYWORD",
+          "keyword": "BladeBreak"
+        }
+      ]
+    }
+  ]
+}

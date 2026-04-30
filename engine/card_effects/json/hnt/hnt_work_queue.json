@@ -1,0 +1,5631 @@
+[
+  {
+    "slug": "affirm_loyalty_red",
+    "name": "Affirm Loyalty",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, create a Fealty token.",
+    "status": "pending"
+  },
+  {
+    "slug": "agility_stance_yellow",
+    "name": "Agility Stance",
+    "type_text": "Warrior Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the start of your turn, destroy this, then your dagger attacks get **go again** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "anaphylactic_shock_blue",
+    "name": "Anaphylactic Shock",
+    "type_text": "Assassin Instant - Trap",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Each opposing hero and ally that has dealt damage to you this turn loses 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_5lp3d_7hru_7h3_cr4x",
+    "name": "Arakni, 5L!p3d 7hRu 7h3 cR4X",
+    "type_text": "Chaos Assassin Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 38,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The first attack with **stealth** each turn gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_black_widow",
+    "name": "Arakni, Black Widow",
+    "type_text": "Chaos Assassin Demi-Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": "*",
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets \"When this hits a hero, they banish a card from their hand.\"\n\nAt the beginning of your end phase, **return to the brood**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_funnel_web",
+    "name": "Arakni, Funnel Web",
+    "type_text": "Chaos Assassin Demi-Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": "*",
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets \"When this hits a hero, banish a card in their arsenal.\"\n\nAt the beginning of your end phase, **return to the brood**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_marionette",
+    "name": "Arakni, Marionette",
+    "type_text": "Chaos Assassin Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your attacks with **stealth** that are attacking a **marked** hero get +1{p} and \"When this hits, this gets **go again**.\"\n\nAt the beginning of your end phase, if an opponent is **marked**, you become a random Agent of Chaos.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_orb_weaver",
+    "name": "Arakni, Orb-Weaver",
+    "type_text": "Chaos Assassin Demi-Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": "*",
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Graphene Chelicerae cost you {r} less to activate.\n\n**Once per Turn Instant** - Discard an Assassin card: Equip a Graphene Chelicera token. Your next attack with **stealth** this turn gets +3{p}.\n\nAt the beginning of your end phase, **return to the brood**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_redback",
+    "name": "Arakni, Redback",
+    "type_text": "Chaos Assassin Demi-Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": "*",
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets **go again**.\n\nAt the beginning of your end phase, **return to the brood**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_tarantula",
+    "name": "Arakni, Tarantula",
+    "type_text": "Chaos Assassin Demi-Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": "*",
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever a dagger you own hits a hero, they lose 1{h}.\n\n**Once per Turn Attack Reaction** - Discard an Assassin card: Target dagger attack gets +3{p}.\n\nAt the beginning of your end phase, **return to the brood**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_trap_door",
+    "name": "Arakni, Trap-Door",
+    "type_text": "Chaos Assassin Demi-Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": "*",
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you become this, you may search your deck for a card, banish it face-down, then shuffle. If it's a trap, you may play it until the start of your next turn.\n\nAt the beginning of your end phase, **return to the brood**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_web_of_deceit",
+    "name": "Arakni, Web of Deceit",
+    "type_text": "Chaos Assassin Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your attacks with **stealth** that are attacking a **marked** hero get +1{p} and \"When this hits, this gets **go again**.\"\n\nAt the beginning of your end phase, if an opponent is **marked**, you become a random Agent of Chaos.",
+    "status": "pending"
+  },
+  {
+    "slug": "art_of_the_dragon_blood_red",
+    "name": "Art of the Dragon: Blood",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, if it is Draconic, it gets **go again** and the next 3 Draconic cards you play this turn cost {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "art_of_the_dragon_claw_red",
+    "name": "Art of the Dragon: Claw",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if it is Draconic, it gets \"When this hits a hero, destroy all cards in their arsenal.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "art_of_the_dragon_fire_red",
+    "name": "Art of the Dragon: Fire",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if it is Draconic, deal 2 damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "art_of_the_dragon_scale_red",
+    "name": "Art of the Dragon: Scale",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if it is Draconic, it gets \"When this hits a hero, put a -1{d} counter on an equipment they control. Then if it has 0{d}, destroy it.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bite_blue",
+    "name": "Bite",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
+    "status": "pending"
+  },
+  {
+    "slug": "bite_red",
+    "name": "Bite",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
+    "status": "pending"
+  },
+  {
+    "slug": "bite_yellow",
+    "name": "Bite",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
+    "status": "pending"
+  },
+  {
+    "slug": "blade_beckoner_boots",
+    "name": "Blade Beckoner Boots",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "This gets +1{d} while defending a weapon attack.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "blade_beckoner_gauntlets",
+    "name": "Blade Beckoner Gauntlets",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "This gets +1{d} while defending a weapon attack.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "blade_beckoner_helm",
+    "name": "Blade Beckoner Helm",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "This gets +1{d} while defending a weapon attack.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "blade_beckoner_plating",
+    "name": "Blade Beckoner Plating",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "This gets +1{d} while defending a weapon attack.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "blessing_of_vynserakai_red",
+    "name": "Blessing of Vynserakai",
+    "type_text": "Draconic Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next attack this turn is Draconic and gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "blistering_blade_red",
+    "name": "Blistering Blade",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, instead it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_drop_red",
+    "name": "Blood Drop",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Draconic chain link you control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_line_red",
+    "name": "Blood Line",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Draconic chain link you control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_runs_deep_red",
+    "name": "Blood Runs Deep",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Draconic chain link you control.\n\nWhen this attacks a hero, each dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the daggers.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_splattered_vest",
+    "name": "Blood Splattered Vest",
+    "type_text": "Assassin / Ninja Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a dagger you control hits, you may gain {r} and put a stain counter on this. Then if there are 3 or more stain counters on this, destroy it.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "brothers_of_flame_red",
+    "name": "Brothers of Flame",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you control 2 or more Draconic chain links.\n\nTarget dagger attack gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bubble_to_the_surface_red",
+    "name": "Bubble to the Surface",
+    "type_text": "Draconic Instant",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Draconic chain link you control.\n\nReveal cards from the top of your deck until you've revealed a red card. Banish it. You may play it this turn. Shuffle.",
+    "status": "pending"
+  },
+  {
+    "slug": "bunker_beard",
+    "name": "Bunker Beard",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Defense Reaction** - Destroy this: You may add an action card from your arsenal to the active chain link as a defending card.",
+    "status": "pending"
+  },
+  {
+    "slug": "burning_blade_dance_red",
+    "name": "Burning Blade Dance",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again** and \"When this hits a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "calming_breeze_red",
+    "name": "Calming Breeze",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next 3 times you would be dealt damage this turn, prevent 1 of that damage.",
+    "status": "pending"
+  },
+  {
+    "slug": "chain_reaction_yellow",
+    "name": "Chain Reaction",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends an attack with **go again**, you may turn a non-attack action card in your arsenal face-up. If you do, you may play it this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "cindra",
+    "name": "Cindra",
+    "type_text": "Royal Draconic Ninja Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you hit a **marked** hero, create a Fealty token.\n\n**Once per Turn Instant** - {r}{r}{r}: Equip up to 2 Draconic daggers from your graveyard. This costs {r} less to activate for each Draconic chain link you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "cindra_dracai_of_retribution",
+    "name": "Cindra, Dracai of Retribution",
+    "type_text": "Royal Draconic Ninja Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you hit a **marked** hero, create a Fealty token.\n\n**Once per Turn Instant** - {r}{r}{r}: Equip up to 2 Draconic daggers from your graveyard. This costs {r} less to activate for each Draconic chain link you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "coat_of_allegiance",
+    "name": "Coat of Allegiance",
+    "type_text": "Draconic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain {r}. Until end of turn, you may only play cards that are Draconic. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "compounding_anger_red",
+    "name": "Compounding Anger",
+    "type_text": "Draconic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Draconic chain link you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "cull_red",
+    "name": "Cull",
+    "type_text": "Shadow, Runeblade, Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BloodDebt"
+    ],
+    "specializations": [],
+    "functional_text": "You may play this from your banished zone.\n\nIf a hero has lost {h} this turn, you may play this as thought it were an instant.\n\nEach hero banishes a card from their hand.\n\n**Blood Debt**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_deep_blue",
+    "name": "Cut Deep",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_deep_red",
+    "name": "Cut Deep",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_deep_yellow",
+    "name": "Cut Deep",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_from_the_same_cloth_blue",
+    "name": "Cut from the Same Cloth",
+    "type_text": "Assassin / Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Target opposing hero reveals their hand. If an attack reaction card is revealed this way, **mark** them.\n\nYour next dagger attack this turn gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_from_the_same_cloth_red",
+    "name": "Cut from the Same Cloth",
+    "type_text": "Assassin / Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Target opposing hero reveals their hand. If an attack reaction card is revealed this way, **mark** them.\n\nYour next dagger attack this turn gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_from_the_same_cloth_yellow",
+    "name": "Cut from the Same Cloth",
+    "type_text": "Assassin / Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Target opposing hero reveals their hand. If an attack reaction card is revealed this way, **mark** them.\n\nYour next dagger attack this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_through_blue",
+    "name": "Cut Through",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've hit with a dagger this combat chain, this gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_through_red",
+    "name": "Cut Through",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've hit with a dagger this combat chain, this gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_through_yellow",
+    "name": "Cut Through",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've hit with a dagger this combat chain, this gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "danger_digits",
+    "name": "Danger Digits",
+    "type_text": "Assassin / Ninja Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target dagger you control that isn't on the active chain link deals 1 damage to the defending hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
+    "status": "pending"
+  },
+  {
+    "slug": "defang_the_dragon_red",
+    "name": "Defang the Dragon",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Contract",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Contract** - You are contracted to hit a **marked** hero named Fang. Whenever you complete this contract, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "demonstrate_devotion_red",
+    "name": "Demonstrate Devotion",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again** and \"When this attacks a hero, create a Fealty token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "den_of_the_spider_red",
+    "name": "Den of the Spider",
+    "type_text": "Assassin / Warrior Action Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends an attack with {p} greater than its base, **mark** the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "devotion_never_dies_red",
+    "name": "Devotion Never Dies",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, if a Draconic attack was the last attack this combat chain, banish this. If you do, you may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "diced_blue",
+    "name": "Diced",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +1{p}.\n\nYour next dagger attack this turn gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "diced_red",
+    "name": "Diced",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +1{p}.\n\nYour next dagger attack this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "diced_yellow",
+    "name": "Diced",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +1{p}.\n\nYour next dagger attack this turn gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "display_loyalty_red",
+    "name": "Display Loyalty",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again** and \"When this attacks a hero, create a Fealty token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "douse_in_runeblood_red",
+    "name": "Douse in Runeblood",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, create Runechant tokens equal to the number of non-attack action cards you've played this turn. If 3 or more Runechants are created this way, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "dragon_power_blue",
+    "name": "Dragon Power",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if it is Draconic, it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "dragon_power_red",
+    "name": "Dragon Power",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if it is Draconic, it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "dragon_power_yellow",
+    "name": "Dragon Power",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if it is Draconic, it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "dragonscaler_flight_path",
+    "name": "Dragonscaler Flight Path",
+    "type_text": "Draconic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}{r}, destroy this: Target Draconic attack gets **go again**. If it's a weapon or ally attack, you may attack with it an additional time this turn. This ability costs {r} less to activate for each Draconic chain link you control.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "drop_of_dragon_blood_red",
+    "name": "Drop of Dragon Blood",
+    "type_text": "Draconic Instant",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nThis costs {r} less to play for each Draconic chain link you control.\n\nGain {r}. Draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "dual_threat_yellow",
+    "name": "Dual Threat",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've attacked with a weapon this turn, the next attack action card you play this turn gets +3{p}.\n\nIf you've attacked with an attack action card this turn, your next weapon attack this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dynastic_dedication_red",
+    "name": "Dynastic Dedication",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Draconic chain link you control.\n\nTarget dagger attack gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "enchanted_quiver",
+    "name": "Enchanted Quiver",
+    "type_text": "Ranger Equipment - Quiver",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Quiver"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn. If there is a face-up arrow in your arsenal, instead prevent the next 2.",
+    "status": "pending"
+  },
+  {
+    "slug": "endear_devotion_red",
+    "name": "Endear Devotion",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +3{p}. If you control 2 or more Draconic chain links, create a Fealty token.",
+    "status": "pending"
+  },
+  {
+    "slug": "exposed_blue",
+    "name": "Exposed",
+    "type_text": "Generic Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "If you are **marked**, you can't play this.\n\nTarget attack gets +1{p}.\n\n**Mark** the defending hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "extinguish_the_flames_red",
+    "name": "Extinguish the Flames",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Contract",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Contract** - You are contracted to hit a **marked** hero named Cindra. Whenever you complete this contract, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "fang",
+    "name": "Fang",
+    "type_text": "Royal Draconic Warrior Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you hit a **marked** hero, create a Fealty token.\n\nIf you control 3 or more Fealty tokens, dagger attacks cost you {r} less to activate.",
+    "status": "pending"
+  },
+  {
+    "slug": "fang_dracai_of_blades",
+    "name": "Fang, Dracai of Blades",
+    "type_text": "Royal Draconic Warrior Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you hit a **marked** hero, create a Fealty token.\n\nIf you control 3 or more Fealty tokens, dagger attacks cost you {r} less to activate.",
+    "status": "pending"
+  },
+  {
+    "slug": "fire_and_brimstone_red",
+    "name": "Fire and Brimstone",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nThis costs {r} less to play for each Draconic chain link you control.\n\nDaggers you control get +1{p} and you may attack with each of them an additional time this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "fire_tenet_strike_first_blue",
+    "name": "Fire Tenet: Strike First",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, your next Draconic attack this combat chain gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "fire_tenet_strike_first_red",
+    "name": "Fire Tenet: Strike First",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, your next Draconic attack this combat chain gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "fire_tenet_strike_first_yellow",
+    "name": "Fire Tenet: Strike First",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, your next Draconic attack this combat chain gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flurry_stance_red",
+    "name": "Flurry Stance",
+    "type_text": "Warrior Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the start of your turn, destroy this, then you may attack with each dagger you control an additional time this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "for_the_dracai_red",
+    "name": "For the Dracai",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a **marked** hero, create a Fealty token.",
+    "status": "pending"
+  },
+  {
+    "slug": "for_the_emperor_red",
+    "name": "For the Emperor",
+    "type_text": "Draconic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a **marked** hero, create a Fealty token.",
+    "status": "pending"
+  },
+  {
+    "slug": "for_the_realm_red",
+    "name": "For the Realm",
+    "type_text": "Draconic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a **marked** hero, create a Fealty token.",
+    "status": "pending"
+  },
+  {
+    "slug": "grow_claws_blue",
+    "name": "Grow Claws",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If a Draconic attack was the last attack this combat chain, this gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "grow_claws_red",
+    "name": "Grow Claws",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If a Draconic attack was the last attack this combat chain, this gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "grow_claws_yellow",
+    "name": "Grow Claws",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If a Draconic attack was the last attack this combat chain, this gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "grow_wings_blue",
+    "name": "Grow Wings",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If a Draconic attack was the last attack this combat chain, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "grow_wings_red",
+    "name": "Grow Wings",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If a Draconic attack was the last attack this combat chain, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "grow_wings_yellow",
+    "name": "Grow Wings",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If a Draconic attack was the last attack this combat chain, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "hand_of_vengeance",
+    "name": "Hand of Vengeance",
+    "type_text": "Draconic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target attack that is attacking Arakni gets +1{p}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "heart_of_vengeance",
+    "name": "Heart of Vengeance",
+    "type_text": "Draconic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Your next attack this turn that targets Arakni costs {r} less to play or activate.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "hot_on_their_heels_red",
+    "name": "Hot on Their Heels",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again** and \"When this hits a hero, **mark** them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "hunt_a_killer_blue",
+    "name": "Hunt a Killer",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +2{p} and \"When this hits a hero, **mark** them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hunt_a_killer_red",
+    "name": "Hunt a Killer",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +4{p} and \"When this hits a hero, **mark** them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hunt_a_killer_yellow",
+    "name": "Hunt a Killer",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +3{p} and \"When this hits a hero, **mark** them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hunt_the_hunter_red",
+    "name": "Hunt the Hunter",
+    "type_text": "Draconic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you've played another red card this turn, **mark** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "hunt_to_the_ends_of_rathe_red",
+    "name": "Hunt to the Ends of Rathe",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks Arakni, **mark** them.\n\nIf this is attacking a **marked** hero, this gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hunted_or_hunter_red",
+    "name": "Hunted or Hunter",
+    "type_text": "Assassin Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends and the attacking hero has played or activated an attack reaction this chain link, they lose 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "hunters_klaive",
+    "name": "Hunter's Klaive",
+    "type_text": "Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark",
+      "Piercing"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this hits a hero, **mark** them.\n\n**Piercing 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "hunts_end_red",
+    "name": "Hunt's End",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you control 3 or more Fealty tokens.\n\nTarget dagger attack gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "ignite_red",
+    "name": "Ignite",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, the next Draconic card you play or activate this combat chain costs {r} less to play or activate.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "imperial_intent_red",
+    "name": "Imperial Intent",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Draconic chain link you control.\n\nTarget dagger attack gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "imperial_seal_of_command_red",
+    "name": "Imperial Seal of Command",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\n**Action** - Destroy this: Defense reaction cards can't be played this turn. If you are Royal, the next time you hit a hero this turn, destroy all cards in their arsenal. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "incision_blue",
+    "name": "Incision",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "incision_red",
+    "name": "Incision",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "incision_yellow",
+    "name": "Incision",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "jagged_edge_red",
+    "name": "Jagged Edge",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +3{p} and \"Damage this would deal can't be prevented.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "kabuto_of_imperial_authority",
+    "name": "Kabuto of Imperial Authority",
+    "type_text": "Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, until end of turn, opponents can't attack with weapons.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "kiss_of_death_red",
+    "name": "Kiss of Death",
+    "type_text": "Assassin Action - Dagger Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, they lose 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "knife_through_butter_blue",
+    "name": "Knife Through Butter",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +2{p}.\n\nWhenever you attack a **marked** hero this turn, the attack gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "knife_through_butter_red",
+    "name": "Knife Through Butter",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +4{p}.\n\nWhenever you attack a **marked** hero this turn, the attack gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "knife_through_butter_yellow",
+    "name": "Knife Through Butter",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +3{p}.\n\nWhenever you attack a **marked** hero this turn, the attack gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "kunai_of_retribution",
+    "name": "Kunai of Retribution",
+    "type_text": "Draconic Ninja Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}, destroy this when the combat chain closes: **Attack**. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lair_of_the_spider_red",
+    "name": "Lair of the Spider",
+    "type_text": "Assassin / Ninja Action Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends an attack with **go again**, **mark** the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "lay_low_yellow",
+    "name": "Lay Low",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you are **marked**, you can't play this.\n\nIf the defending hero is **marked**, their next attack this turn gets -1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "leap_frog_gloves",
+    "name": "Leap Frog Gloves",
+    "type_text": "Assassin / Ninja Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "leap_frog_leggings",
+    "name": "Leap Frog Leggings",
+    "type_text": "Assassin / Ninja Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "leap_frog_slime_skin",
+    "name": "Leap Frog Slime Skin",
+    "type_text": "Assassin / Ninja Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "leap_frog_vocal_sac",
+    "name": "Leap Frog Vocal Sac",
+    "type_text": "Assassin / Ninja Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "long_whisker_loyalty_red",
+    "name": "Long Whisker Loyalty",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "For each Draconic chain link you control, choose 1;\n\n* Target dagger attack gains +2{p}.\n* You may attack with target dagger an additional time this turn.\n* The next time target dagger hits a hero this turn, **mark** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "loyalty_beyond_the_grave_red",
+    "name": "Loyalty Beyond the Grave",
+    "type_text": "Draconic, Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While this is in your graveyard, at the start of your turn, you may banish 2 cards named Loyalty Beyond the Grave from your graveyard. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "march_of_loyalty_red",
+    "name": "March of Loyalty",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've created a Fealty token this turn, this gets **go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_black_widow_blue",
+    "name": "Mark of the Black Widow",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_black_widow_red",
+    "name": "Mark of the Black Widow",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_black_widow_yellow",
+    "name": "Mark of the Black Widow",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_funnel_web_blue",
+    "name": "Mark of the Funnel Web",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, banish a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_funnel_web_red",
+    "name": "Mark of the Funnel Web",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, banish a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_funnel_web_yellow",
+    "name": "Mark of the Funnel Web",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, banish a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_huntsman",
+    "name": "Mark of the Huntsman",
+    "type_text": "Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this hits a hero, you may choose to destroy this and **mark** them.\n\nIf this is attacking a **marked** hero, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_the_prey_blue",
+    "name": "Mark the Prey",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Mark",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, **mark** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_the_prey_red",
+    "name": "Mark the Prey",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Mark",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, **mark** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_the_prey_yellow",
+    "name": "Mark the Prey",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Mark",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, **mark** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_with_magma_red",
+    "name": "Mark with Magma",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again** and \"When this hits a hero, **mark** them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "mask_of_deceit",
+    "name": "Mask of Deceit",
+    "type_text": "Assassin Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Specialization"
+    ],
+    "specializations": [
+      "Arakni"
+    ],
+    "functional_text": "**Arakni Specialization**\n\nWhen this defends, become a random Agent of Chaos. If the attacking hero is **marked**, instead choose the Agent of Chaos.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "misfire_dampener",
+    "name": "Misfire Dampener",
+    "type_text": "Mechanologist Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn. If you've **boosted** this turn, instead prevent the next 2.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "nip_at_the_heels_blue",
+    "name": "Nip at the Heels",
+    "type_text": "Generic Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack with 3 or less base {p} gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "null_time_zone_blue",
+    "name": "Null Time Zone",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen this enters the arena, name a card. The named card can't be pitched or played from hand while this is in the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "oath_of_loyalty_red",
+    "name": "Oath of Loyalty",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "This may only be played if it's the first action of your turn.\n\nWhen this is played, until end of turn, you may only play cards that are Draconic.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "obsidian_fire_vein",
+    "name": "Obsidian Fire Vein",
+    "type_text": "Draconic Warrior Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**. If you've played a Draconic card this chain link, this attack gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "orb_weaver_spinneret_blue",
+    "name": "Orb-Weaver Spinneret",
+    "type_text": "Assassin Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Equip a Graphene Chelicera token.\n\nYour next attack with **stealth** this turn gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "orb_weaver_spinneret_red",
+    "name": "Orb-Weaver Spinneret",
+    "type_text": "Assassin Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Equip a Graphene Chelicera token.\n\nYour next attack with **stealth** this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "orb_weaver_spinneret_yellow",
+    "name": "Orb-Weaver Spinneret",
+    "type_text": "Assassin Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Equip a Graphene Chelicera token.\n\nYour next attack with **stealth** this turn gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "outed_red",
+    "name": "Outed",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you are **marked**, you can't play this.\n\nIf the defending hero is **marked**, this gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pain_in_the_backside_red",
+    "name": "Pain in the Backside",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "path_of_vengeance",
+    "name": "Path of Vengeance",
+    "type_text": "Draconic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target attack that is attacking Arakni gets **go again**.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "perforate_yellow",
+    "name": "Perforate",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may attack with target dagger an additional time and its attacks cost you {r} less to activate this turn.\n\nDraw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "pick_up_the_point_blue",
+    "name": "Pick Up the Point",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Retrieve"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may **retrieve** a dagger from your graveyard.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pick_up_the_point_red",
+    "name": "Pick Up the Point",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Retrieve"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may **retrieve** a dagger from your graveyard.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pick_up_the_point_yellow",
+    "name": "Pick Up the Point",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Retrieve"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may **retrieve** a dagger from your graveyard.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pledge_fealty_red",
+    "name": "Pledge Fealty",
+    "type_text": "Draconic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Fealty token.",
+    "status": "pending"
+  },
+  {
+    "slug": "plunge_the_prospect_blue",
+    "name": "Plunge the Prospect",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf this is attacking a **marked** hero, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "plunge_the_prospect_red",
+    "name": "Plunge the Prospect",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf this is attacking a **marked** hero, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "plunge_the_prospect_yellow",
+    "name": "Plunge the Prospect",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf this is attacking a **marked** hero, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "point_of_engagement_blue",
+    "name": "Point of Engagement",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +1{p}.\n\nUntil end of turn, your attacks get +1{p} while attacking a **marked** hero.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "point_of_engagement_red",
+    "name": "Point of Engagement",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +3{p}.\n\nUntil end of turn, your attacks get +1{p} while attacking a **marked** hero.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "point_of_engagement_yellow",
+    "name": "Point of Engagement",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +2{p}.\n\nUntil end of turn, your attacks get +1{p} while attacking a **marked** hero.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "poisoned_blade_blue",
+    "name": "Poisoned Blade",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a dagger you own hits a hero this combat chain, they lose 1{h}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "poisoned_blade_red",
+    "name": "Poisoned Blade",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a dagger you own hits a hero this combat chain, they lose 1{h}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "poisoned_blade_yellow",
+    "name": "Poisoned Blade",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a dagger you own hits a hero this combat chain, they lose 1{h}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "power_stance_blue",
+    "name": "Power Stance",
+    "type_text": "Warrior Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the start of your turn, destroy this, then your dagger attacks get +1{p} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "proclaim_vengeance_red",
+    "name": "Proclaim Vengeance",
+    "type_text": "Draconic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Mark** target opposing hero. If that hero is Arakni, gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "provoke_blue",
+    "name": "Provoke",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you're attacking with a weapon this chain link, the defending hero reveals a card from their hand. If it's an action card, add it to this chain link as a defending card, otherwise they discard it.",
+    "status": "pending"
+  },
+  {
+    "slug": "prowess_of_agility_blue",
+    "name": "Prowess of Agility",
+    "type_text": "Ninja Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack for the fourth time during a turn, you may destroy this. If you do, draw a card.\n\nAt the beginning of your end phase, if you've attacked less than 3 times this turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "public_bounty_blue",
+    "name": "Public Bounty",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Mark** target opposing hero.\n\nThe next time you attack a **marked** hero this turn, the attack gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "public_bounty_red",
+    "name": "Public Bounty",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Mark** target opposing hero.\n\nThe next time you attack a **marked** hero this turn, the attack gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "public_bounty_yellow",
+    "name": "Public Bounty",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Mark** target opposing hero.\n\nThe next time you attack a **marked** hero this turn, the attack gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pursue_to_the_edge_of_oblivion_red",
+    "name": "Pursue to the Edge of Oblivion",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, **mark** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "pursue_to_the_pits_of_despair_red",
+    "name": "Pursue to the Pits of Despair",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, **mark** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "put_in_context_blue",
+    "name": "Put in Context",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This can only defend an attack with 3 or less base {p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "quickdodge_flexors",
+    "name": "Quickdodge Flexors",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Defense Reaction** - {r}: Add this to the active chain link as a defending card. It has 2 base {d} this chain link.\n\nAt the beginning of the end phase, if this defendend this turn, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "rake_over_the_coals_red",
+    "name": "Rake Over the Coals",
+    "type_text": "Draconic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Draconic attacks get +1{p} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "reapers_call_blue",
+    "name": "Reaper's Call",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Mark",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Instant** - Discard this: **Mark** target opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "reapers_call_red",
+    "name": "Reaper's Call",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Mark",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Instant** - Discard this: **Mark** target opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "reapers_call_yellow",
+    "name": "Reaper's Call",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Mark",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Instant** - Discard this: **Mark** target opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "red_alert_boots",
+    "name": "Red Alert Boots",
+    "type_text": "Assassin / Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If an attack reaction has been played or activated this chain link, this gets +1{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "red_alert_gloves",
+    "name": "Red Alert Gloves",
+    "type_text": "Assassin / Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If an attack reaction has been played or activated this chain link, this gets +1{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "red_alert_vest",
+    "name": "Red Alert Vest",
+    "type_text": "Assassin / Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If an attack reaction has been played or activated this chain link, this gets +1{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "red_alert_visor",
+    "name": "Red Alert Visor",
+    "type_text": "Assassin / Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If an attack reaction has been played or activated this chain link, this gets +1{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "relentless_pursuit_blue",
+    "name": "Relentless Pursuit",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Mark** target opposing hero.\n\nIf you've attacked them this turn, put this on the bottom of its owner's deck.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "retrace_the_past_blue",
+    "name": "Retrace the Past",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "Specialization"
+    ],
+    "specializations": [
+      "Katsu"
+    ],
+    "functional_text": "**Katsu Specialization**\n\n**Combo** - When this attacks, if a card with Gustwave in its name was the last attack this combat chain, name a card, then this gets that name, +2{p}, and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "ring_of_roses_yellow",
+    "name": "Ring of Roses",
+    "type_text": "Earth Wizard Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Verdance"
+    ],
+    "functional_text": "**Legendary Verdance Specialization**\n\nThe first time you deal arcane damage each turn, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "roiling_fissure_blue",
+    "name": "Roiling Fissure",
+    "type_text": "Guardian Action",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Destroy an aura with cost X or less, then you may destroy a Seismic Surge you control. If you do, repeat this process.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rotten_remains_blue",
+    "name": "Rotten Remains",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may banish a card with 1{p} from each hero's graveyard. If you do, this gets +1{p}, then repeat this process.",
+    "status": "pending"
+  },
+  {
+    "slug": "savor_bloodshed_red",
+    "name": "Savor Bloodshed",
+    "type_text": "Assassin / Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +4{p}.\n\nThe next time you hit a **marked** hero with a dagger this turn, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "scalding_iron_red",
+    "name": "Scalding Iron",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +X{p}, where X is the number of Draconic chain links you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "scar_tissue_blue",
+    "name": "Scar Tissue",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +1{p} and \"When this hits a hero, **mark** them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "scar_tissue_red",
+    "name": "Scar Tissue",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +3{p} and \"When this hits a hero, **mark** them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "scar_tissue_yellow",
+    "name": "Scar Tissue",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +2{p} and \"When this hits a hero, **mark** them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "schism_of_chaos_blue",
+    "name": "Schism of Chaos",
+    "type_text": "Chaos Resource - Gem",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Gem"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nWhen this is pitched, each hero shuffles, then puts the top card of their deck facedown into their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "scuttle_the_canal_blue",
+    "name": "Scuttle the Canal",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a **marked** hero, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "scuttle_the_canal_red",
+    "name": "Scuttle the Canal",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a **marked** hero, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "scuttle_the_canal_yellow",
+    "name": "Scuttle the Canal",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a **marked** hero, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "searing_gaze_red",
+    "name": "Searing Gaze",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, it gets \"When this hits a hero, **mark** them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "sharpened_senses_yellow",
+    "name": "Sharpened Senses",
+    "type_text": "Warior Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nYour weapon attacks get +1{p}. If their {p} is greater than twice their base, they get **go again**.\n\nAt the beginning of your end phase, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "shelter_from_the_storm_red",
+    "name": "Shelter from the Storm",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: The next 3 times you would be dealt damage this turn, prevent 1 of that damage.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_solace_red",
+    "name": "Sigil of Solace",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 3{h}",
+    "status": "pending"
+  },
+  {
+    "slug": "silver_talons_blue",
+    "name": "Silver Talons",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if it is Draconic, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
+    "status": "pending"
+  },
+  {
+    "slug": "silver_talons_red",
+    "name": "Silver Talons",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if it is Draconic, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
+    "status": "pending"
+  },
+  {
+    "slug": "silver_talons_yellow",
+    "name": "Silver Talons",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if it is Draconic, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
+    "status": "pending"
+  },
+  {
+    "slug": "sisters_of_fire_red",
+    "name": "Sisters of Fire",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you control 2 or more Draconic chain links.\n\nTarget dagger attack gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sizzling_steel_red",
+    "name": "Sizzling Steel",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +3{p}. If you control 2 or more Draconic chain links, instead it gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "smoke_out_red",
+    "name": "Smoke Out",
+    "type_text": "Draconic Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a red card, **mark** the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "sound_the_alarm_red",
+    "name": "Sound the Alarm",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, they reveal their hand. If an attack reaction card is revealed this way, you may search your deck for a defense reaction card, reveal it, then shuffle and put it on top.",
+    "status": "pending"
+  },
+  {
+    "slug": "spur_locked_blue",
+    "name": "Spur Locked",
+    "type_text": "Chaos Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero secretly chooses a number between 1 and 6, then those numbers are revealed. The hero that chose the highest number loses that much {h}, searches their deck for a card with cost less than or equal to the chosen number, reveales it, puts it in their hand, then shuffles.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "stabbing_pain_red",
+    "name": "Stabbing Pain",
+    "type_text": "Draconic Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +3{p}. If you control 2 or more Draconic chain links, it gets \"When this hits a hero, **mark** them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "stains_of_the_redback_blue",
+    "name": "Stains of the Redback",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "stains_of_the_redback_red",
+    "name": "Stains of the Redback",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +3{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "stains_of_the_redback_yellow",
+    "name": "Stains of the Redback",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +2{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "starting_point",
+    "name": "Starting Point",
+    "type_text": "Assassin / Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target attack gets **go again**. Activate this only if you've played a card or activated an ability this reaction step.",
+    "status": "pending"
+  },
+  {
+    "slug": "sworn_vengeance_blue",
+    "name": "Sworn Vengeance",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +1{p} and \"When this hits a hero, **mark** them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sworn_vengeance_red",
+    "name": "Sworn Vengeance",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +3{p} and \"When this hits a hero, **mark** them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sworn_vengeance_yellow",
+    "name": "Sworn Vengeance",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +2{p} and \"When this hits a hero, **mark** them.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tag_the_target_blue",
+    "name": "Tag the Target",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, **mark** them.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tag_the_target_red",
+    "name": "Tag the Target",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, **mark** them.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tag_the_target_yellow",
+    "name": "Tag the Target",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, **mark** them.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "take_a_stab_blue",
+    "name": "Take a Stab",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +1{p} and \"When this hits a **marked** hero, you may attack with it an additional time this turn.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "take_a_stab_red",
+    "name": "Take a Stab",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +3{p} and \"When this hits a **marked** hero, you may attack with it an additional time this turn.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "take_a_stab_yellow",
+    "name": "Take a Stab",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +2{p} and \"When this hits a **marked** hero, you may attack with it an additional time this turn.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "take_up_the_mantle_yellow",
+    "name": "Take Up the Mantle",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gets +2{p}. If it's attacking a **marked** hero, instead it gets +3{p} and you may banish an attack action card with **stealth** from your graveyard. If you do, the target becomes a copy of the banished card.",
+    "status": "pending"
+  },
+  {
+    "slug": "tarantula_toxin_red",
+    "name": "Tarantula Toxin",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose 1 or both;\n\n* Target dagger attack gets +3{p}.\n* Target card defending an attack with stealth gets -3{d} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "thick_hide_hunter_yellow",
+    "name": "Thick Hide Hunter",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 6,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, discard a random card.",
+    "status": "pending"
+  },
+  {
+    "slug": "throw_dagger_blue",
+    "name": "Throw Dagger",
+    "type_text": "Assassin / Ninja Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger you control that isn't on the active chain link deals 1 damage to the defending hero. If damage is dealt this way, the dagger has hit and you draw a card. Destroy the dagger.",
+    "status": "pending"
+  },
+  {
+    "slug": "throw_yourself_at_them_blue",
+    "name": "Throw Yourself at Them",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "throw_yourself_at_them_red",
+    "name": "Throw Yourself at Them",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "throw_yourself_at_them_yellow",
+    "name": "Throw Yourself at Them",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tip_off_blue",
+    "name": "Tip-Off",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: **Mark** target opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "tip_off_red",
+    "name": "Tip-Off",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: **Mark** target opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "tip_off_yellow",
+    "name": "Tip-Off",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: **Mark** target opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "to_the_point_blue",
+    "name": "To the Point",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +1{p}. If the defending hero is **marked**, instead it gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "to_the_point_red",
+    "name": "To the Point",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +3{p}. If the defending hero is **marked**, instead it gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "to_the_point_yellow",
+    "name": "To the Point",
+    "type_text": "Assassin / Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target dagger attack gets +2{p}. If the defending hero is **marked**, instead it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tooth_of_the_dragon_red",
+    "name": "Tooth of the Dragon",
+    "type_text": "Draconic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your next Draconic attack this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "trap_and_release_blue",
+    "name": "Trap and Release",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, **mark** them.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "trap_and_release_red",
+    "name": "Trap and Release",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, **mark** them.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "trap_and_release_yellow",
+    "name": "Trap and Release",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, **mark** them.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tremorshield_sabatons",
+    "name": "Tremorshield Sabatons",
+    "type_text": "Guardian Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn. If you've controlled a Seismic Surge token this turn, instead prevent the next 2.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "trot_along_blue",
+    "name": "Trot Along",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack with 3 or less base {p} this turn gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "twist_and_turn_blue",
+    "name": "Twist and Turn",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +2{p} and \"When this hits, you may attack with it an additional time this turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "twist_and_turn_red",
+    "name": "Twist and Turn",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +4{p} and \"When this hits, you may attack with it an additional time this turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "twist_and_turn_yellow",
+    "name": "Twist and Turn",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next dagger attack this turn gets +3{p} and \"When this hits, you may attack with it an additional time this turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "two_sides_to_the_blade_red",
+    "name": "Two Sides to the Blade",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "Choose 1;\n- Target dagger attack gets +3{p}.\n- Target attack action card with **stealth** gets +3{p} and \"When this hits a hero, **mark** them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "under_the_trap_door_blue",
+    "name": "Under the Trap-Door",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Instant** - Discard this: Banish target trap from your graveyard. If you do, you may play it this turn and if it would be put into the graveyard this turn, instead banish it.",
+    "status": "pending"
+  },
+  {
+    "slug": "up_sticks_and_run_blue",
+    "name": "Up Sticks and Run",
+    "type_text": "Assassin / Ninja Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Retrieve"
+    ],
+    "specializations": [],
+    "functional_text": "You may **retrieve** a dagger from your graveyard.\n\nYour next dagger attack this turn gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "up_sticks_and_run_red",
+    "name": "Up Sticks and Run",
+    "type_text": "Assassin / Ninja Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Retrieve"
+    ],
+    "specializations": [],
+    "functional_text": "You may **retrieve** a dagger from your graveyard.\n\nYour next dagger attack this turn gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "up_sticks_and_run_yellow",
+    "name": "Up Sticks and Run",
+    "type_text": "Assassin / Ninja Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Retrieve"
+    ],
+    "specializations": [],
+    "functional_text": "You may **retrieve** a dagger from your graveyard.\n\nYour next dagger attack this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "vow_of_vengeance",
+    "name": "Vow of Vengeance",
+    "type_text": "Draconic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: **Mark** target Arakni.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "war_cry_of_bellona_yellow",
+    "name": "War Cry of Bellona",
+    "type_text": "Light Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Raydn gets +2{p} this turn.\n\n**Instant** - Discard this, banish X cards from your soul: The next time target weapon deals X or less damage to you this turn, deal that much damage to its controller and that damage can't be prevented.",
+    "status": "pending"
+  },
+  {
+    "slug": "war_cry_of_themis_yellow",
+    "name": "War Cry of Themis",
+    "type_text": "Light Illusionist Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next angel attack this turn gets +4{p}.\n\n**Go again**\n\n**Instant** - Discard this, banish X cards from your soul: Turn X target cards in a banished zone face-down.",
+    "status": "pending"
+  },
+  {
+    "slug": "whittle_from_bone_blue",
+    "name": "Whittle from Bone",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a **marked** hero, equip a Graphene Chelicera token.",
+    "status": "pending"
+  },
+  {
+    "slug": "whittle_from_bone_red",
+    "name": "Whittle from Bone",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a **marked** hero, equip a Graphene Chelicera token.",
+    "status": "pending"
+  },
+  {
+    "slug": "whittle_from_bone_yellow",
+    "name": "Whittle from Bone",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a **marked** hero, equip a Graphene Chelicera token.",
+    "status": "pending"
+  },
+  {
+    "slug": "wrath_of_retribution_red",
+    "name": "Wrath of Retribution",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nThis costs {r} less to play for each Draconic chain link you control.\n\nWhen this attacks, daggers you control get +1{p} and cost {r} less to activate this combat chain.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "fealty",
+    "name": "Fealty",
+    "type_text": "Draconic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: The next card you play this turn is Draconic. At the beginning of your end phase, if you haven't created a Fealty token or played a Dragonic card this turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "graphene_chelicera",
+    "name": "Graphene Chelicera",
+    "type_text": "Assassin Token Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Once per Turn Action** - {r}: **Attack**\n\nWhen this attacks a **marked** hero, the attack gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "marked",
+    "name": "Marked",
+    "type_text": "Token",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "You are **marked** until an opponent hits you",
+    "status": "pending"
+  }
+]

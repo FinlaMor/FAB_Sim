@@ -1,0 +1,52 @@
+{
+  "slug": "crazy_brew_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_ACTIVATE",
+          "conditions": [],
+          "effects": [
+            {
+              "type": "GAIN_ACTION_POINTS",
+              "amount": 2,
+              "conditions": [
+                {
+                  "type": "OR",
+                  "any": [
+                    {
+                      "type": "REVEAL_CARD_COST_LTE",
+                      "amount": 4
+                    },
+                    {
+                      "type": "REVEAL_CARD_COST_GTE",
+                      "amount": 5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "NEXT_ATTACK_BONUS",
+              "amount": 2,
+              "conditions": [
+                {
+                  "type": "REVEAL_CARD_COST_GTE",
+                  "amount": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

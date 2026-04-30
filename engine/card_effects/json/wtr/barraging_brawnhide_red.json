@@ -1,0 +1,33 @@
+{
+  "slug": "barraging_brawnhide_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "FLAG_SET",
+              "flag": "defended_by_less_than_2_non_equipment"
+            },
+            {
+              "type": "NOT",
+              "inner_type": "CARD_IN_ZONE",
+              "zone": "defense",
+              "filter_types": [
+                "Equipment"
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

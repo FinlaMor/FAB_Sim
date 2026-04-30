@@ -3,15 +3,10 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
+      "conditions": [{"type": "ATTACK_CLASS_IN", "classes": ["Ninja"]}],
       "effects": [
-        {
-          "type": "MODIFY_ATTACK_POWER",
-          "amount": 1
-        },
-        {
-          "type": "DRAW",
-          "amount": 1
-        }
+        {"type": "MODIFY_ATTACK_POWER", "amount": 1},
+        {"type": "DRAW", "amount": 1}
       ]
     }
   ]

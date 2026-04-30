@@ -1,0 +1,179 @@
+[
+  {
+    "slug": "cap_of_quick_thinking",
+    "name": "Cap of Quick Thinking",
+    "type_text": "Lightning Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: If you would be dealt damage by a source an opponent controls this turn, you may discard an instant card to prevent 1 of that damage and draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "shock_frock",
+    "name": "Shock Frock",
+    "type_text": "Lightning Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain {r}. Activate this only if you've played a Lightning card this turn. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "skyward_serenade_yellow",
+    "name": "Skyward Serenade",
+    "type_text": "Lightning Runeblade Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose 2;\n- Create an Embodiment of Lightning token.\n- Search your deck for a Skyzyk, banish it, then shuffle. You may play it this turn.\n- Your next attack this turn gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "skyzyk_red",
+    "name": "Skyzyk",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this has go again, it gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "spark_spray_red",
+    "name": "Spark Spray",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is defended by 1 or more cards, you may pay {r}. If you do, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "starlight_striders",
+    "name": "Starlight Striders",
+    "type_text": "Lightning Runeblade Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may reveal an instant card from your hand. If you do, create an Embodiment of Lightning token.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "written_in_the_stars_blue",
+    "name": "Written in the Stars",
+    "type_text": "Lightning Runeblade Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create an Embodiment of Lightning token.\n\nIf you've dealt arcane damage this turn, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "zap_clappers",
+    "name": "Zap Clappers",
+    "type_text": "Lightning Runeblade Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may reveal an instant card from your hand. If you do, deal 1 arcane damage to the attacking hero.\n\n**Blade Break**",
+    "status": "pending"
+  }
+]

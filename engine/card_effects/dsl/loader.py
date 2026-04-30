@@ -55,6 +55,8 @@ def _compile_ability(raw: dict[str, Any]) -> AbilityDef:
     conditions = [_compile_condition(c) for c in raw.get("conditions", [])]
     effects = [_compile_effect(e) for e in raw.get("effects", [])]
     costs = [_compile_cost(c) for c in raw.get("costs", [])]
+    additional_costs = [_compile_cost(c) for c in raw.get("additional_cost", [])]
+    alternative_costs = [_compile_cost(c) for c in raw.get("alternative_cost", [])]
 
     return AbilityDef(
         ability_type=atype,
@@ -62,6 +64,8 @@ def _compile_ability(raw: dict[str, Any]) -> AbilityDef:
         effects=effects,
         conditions=conditions,
         costs=costs,
+        additional_costs=additional_costs,
+        alternative_costs=alternative_costs,
         is_optional=is_optional,
     )
 

@@ -1,0 +1,29 @@
+{
+  "slug": "barraging_brawnhide_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "DEFENSE",
+              "filter_types": [
+                "non-equipment"
+              ],
+              "amount": 2
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

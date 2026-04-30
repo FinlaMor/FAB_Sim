@@ -1,0 +1,73 @@
+{
+  "slug": "enlightened_strike_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "PUT_HAND_CARD_BOTTOM"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "OR",
+          "any": [
+            {
+              "type": "FLAG_SET",
+              "flag": "draw_card"
+            },
+            {
+              "type": "FLAG_SET",
+              "flag": "go_again"
+            },
+            {
+              "type": "FLAG_SET",
+              "flag": "power_bonus"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 2
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "power_bonus"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "go_again"
+        }
+      ]
+    }
+  ]
+}

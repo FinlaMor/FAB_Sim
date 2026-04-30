@@ -1,0 +1,29 @@
+{
+  "slug": "breaking_scales",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "COMBO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": []
+    }
+  ]
+}

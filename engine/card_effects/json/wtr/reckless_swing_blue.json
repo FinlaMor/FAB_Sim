@@ -1,0 +1,37 @@
+{
+  "slug": "reckless_swing_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "DISCARD_RANDOM",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "filter_cost_gte": 6
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_DAMAGE",
+          "amount": 2,
+          "target": "ATTACKING_HERO"
+        }
+      ]
+    }
+  ]
+}

@@ -19,6 +19,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
     if ctype == "ATTACK_IS_NOT_WEAPON":
         return lambda c, e, s: s.combat is not None and not getattr(s.combat, 'from_weapon', False)
 
+    if ctype == "ATTACK_CLASS_IN":
+        classes = [v.lower() for v in params.get("classes", [])]
+        def _aci(c, e, s, _cls=classes):
+            if not s.combat or not getattr(s.combat, 'attack_card', None):
+                return False
+            card_classes = [x.lower() for x in (getattr(s.combat.attack_card, 'classes', None) or [])]
+            return any(cl in card_classes for cl in _cls)
+        return _aci
+
     if ctype == "WEAPON_SUBTYPE_IN":
         values = [v.upper() for v in params.get("values", [])]
         def _wsi(c, e, s, _vals=values):
@@ -134,8 +143,41 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return lambda c, e, s, _kw=kw: bool(getattr(c, 'keywords', None)) and _kw in c.keywords
 
     if ctype == "CARD_IN_ZONE":
-        zone = params.get("zone", "")
-        return lambda c, e, s, _z=zone: c.zone == _z
+        zone = params.get("zone", "").lower()
+        cost_gte = params.get("cost_gte")
+        cost_lte = params.get("cost_lte")
+        filter_types = [t.lower() for t in params.get("filter_types", [])]
+        # count_gte: >= N cards match; "amount" is a legacy alias for count_gte
+        count_gte = params.get("count_gte", params.get("amount"))
+        count_eq  = params.get("count_eq")
+
+        def _ciz(c, e, s, _z=zone, _cge=cost_gte, _cle=cost_lte, _ft=filter_types,
+                 _nge=count_gte, _neq=count_eq):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = s.players[_controller_id(c)]
+            zone_obj = getattr(player, _z, None)
+            if zone_obj is None:
+                return False
+            count = 0
+            for card in zone_obj.cards:
+                cost = getattr(card, 'cost', None) or 0
+                if _cge is not None and cost < _cge:
+                    continue
+                if _cle is not None and cost > _cle:
+                    continue
+                if _ft:
+                    card_types = [t.lower() for t in (getattr(card, 'subtypes', None) or [])]
+                    card_types += [t.lower() for t in (getattr(card, 'types', None) or [])]
+                    if not any(t in card_types for t in _ft):
+                        continue
+                count += 1
+            if _neq is not None:
+                return count == _neq
+            if _nge is not None:
+                return count >= _nge
+            return count >= 1  # default: at least one matching card
+
+        return _ciz
 
     if ctype == "COUNTER_GTE":
         ctype2 = params.get("counter_type", params.get("type", ""))

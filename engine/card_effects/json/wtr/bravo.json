@@ -1,0 +1,30 @@
+{
+  "slug": "bravo",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "GRANT_KEYWORD",
+          "keyword": "DOMINATE",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "hand",
+              "filter_cost_gte": 3
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -37,6 +37,8 @@ class AbilityDef:
     effects: list[EffectDef] = field(default_factory=list)
     conditions: list[ConditionDef] = field(default_factory=list)
     costs: list[CostDef] = field(default_factory=list)
+    additional_costs: list[CostDef] = field(default_factory=list)   # mandatory extra costs (block play if unpayable)
+    alternative_costs: list[CostDef] = field(default_factory=list)  # pay INSTEAD of normal resource cost
     is_optional: bool = False
 
 

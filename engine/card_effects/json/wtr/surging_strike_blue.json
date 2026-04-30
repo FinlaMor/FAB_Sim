@@ -1,0 +1,13 @@
+{
+  "slug": "surging_strike_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

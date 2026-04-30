@@ -1,0 +1,904 @@
+[
+  {
+    "slug": "aphrodias",
+    "name": "Aphrodias",
+    "type_text": "Lightning Illusionist Weapon - Orb (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Orb"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, {t}: Deal 2 arcane damage to target hero. Activate this only if an aura with a holo counter has entered the arena under your control this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "arc_ramp_blue",
+    "name": "Arc Ramp",
+    "type_text": "Lightning Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Amp",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Amp 1**\n\nYou may destroy a Lightning Flow you control. If you do, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arc_ramp_red",
+    "name": "Arc Ramp",
+    "type_text": "Lightning Wizard Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Amp",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Amp 3**\n\nYou may destroy a Lightning Flow you control. If you do, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "arc_ramp_yellow",
+    "name": "Arc Ramp",
+    "type_text": "Lightning Wizard Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Amp",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Amp 2**\n\nYou may destroy a Lightning Flow you control. If you do, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "astral_strike_red",
+    "name": "Astral Strike",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've destroyed a Lightning Flow this turn, choose 1;\n\n- Draw a card.\n- This gets +2{p}.\n- This gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "auric_shards_blue",
+    "name": "Auric Shards",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, up to 1 target attack with fragment gets +1{p}. If this has a holo counter, instead the attack gets +2{p}.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "auric_shards_red",
+    "name": "Auric Shards",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, up to 1 target attack with fragment gets +1{p}. If this has a holo counter, instead the attack gets +4{p}.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "auric_shards_yellow",
+    "name": "Auric Shards",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, up to 1 target attack with fragment gets +1{p}. If this has a holo counter, instead the attack gets +3{p}.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "aurora_emissary_of_lightning",
+    "name": "Aurora, Emissary of Lightning",
+    "type_text": "Lightning Runeblade Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}, {t}, destroy a Lightning Flow you control: Create an Embodiment of Lightning token.",
+    "status": "pending"
+  },
+  {
+    "slug": "aurora_legacy_of_tempest",
+    "name": "Aurora, Legacy of Tempest",
+    "type_text": "Lightning Runeblade Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}, {t}, destroy a Lightning Flow you control: Create an Embodiment of Lightning token.",
+    "status": "pending"
+  },
+  {
+    "slug": "circular_flowtide_yellow",
+    "name": "Circular Flowtide",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, create a Lightning Flow token.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmic_duality_blue",
+    "name": "Cosmic Duality",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmic_duality_red",
+    "name": "Cosmic Duality",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmic_duality_yellow",
+    "name": "Cosmic Duality",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmic_suture_blue",
+    "name": "Cosmic Suture",
+    "type_text": "Lightning Wizard Instant",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Starfall"
+    ],
+    "specializations": [],
+    "functional_text": "Prevent the next 2 damage that would be dealt to you this turn.\n\n**Starfall** - If an instant card has been put into your graveyard this turn, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmic_suture_red",
+    "name": "Cosmic Suture",
+    "type_text": "Lightning Wizard Instant",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Starfall"
+    ],
+    "specializations": [],
+    "functional_text": "Prevent the next 4 damage that would be dealt to you this turn.\n\n**Starfall** - If an instant card has been put into your graveyard this turn, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmic_suture_yellow",
+    "name": "Cosmic Suture",
+    "type_text": "Lightning Wizard Instant",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Starfall"
+    ],
+    "specializations": [],
+    "functional_text": "Prevent the next 3 damage that would be dealt to you this turn.\n\n**Starfall** - If an instant card has been put into your graveyard this turn, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "dashing_flashfoot_yellow",
+    "name": "Dashing Flashfoot",
+    "type_text": "Lightning Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Quickstrike"
+    ],
+    "specializations": [],
+    "functional_text": "**Quickstrike** - If this has go again, it gets +1{p} and \"When this attacks a hero, deal 1 arcane damage to them.\"\n\nThe first time this deals damage to a hero, create an Embodiment of Lightning token.",
+    "status": "pending"
+  },
+  {
+    "slug": "flowing_stormstrike_red",
+    "name": "Flowing Stormstrike",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Twice per Turn Instant** - {r}: This gets +1{p}.\n\nWhen this hits, create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "flowstate_embodiment_red",
+    "name": "Flowstate Embodiment",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you play an instant card this chain link, create an Embodiment of Lightning or Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "meteoric_rise_red",
+    "name": "Meteoric Rise",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Twice per Turn Instant** - {r}: This gets +1{p}.\n\nWhen this hits, create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "nebula_duality_blue",
+    "name": "Nebula Duality",
+    "type_text": "Lightning Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to any target.\n\n**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "nebula_duality_red",
+    "name": "Nebula Duality",
+    "type_text": "Lightning Wizard Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to any target.\n\n**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "nebula_duality_yellow",
+    "name": "Nebula Duality",
+    "type_text": "Lightning Wizard Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to any target.\n\n**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "oscilio_forked_continuum",
+    "name": "Oscilio, Forked Continuum",
+    "type_text": "Lightning Wizard Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 38,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, {t}, destroy a Lightning Flow you control: Discard a card and create a Ponder token. If an instant is discard this way, you may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "oscilio_scion_of_the_third_age",
+    "name": "Oscilio, Scion of the Third Age",
+    "type_text": "Lightning Wizard Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 19,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, {t}, destroy a Lightning Flow you control: Discard a card and create a Ponder token. If an instant is discard this way, you may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "pulsing_cardia_blue",
+    "name": "Pulsing Cardia",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, gain {r}.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "pulsing_cardia_red",
+    "name": "Pulsing Cardia",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, gain {r}.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "pulsing_cardia_yellow",
+    "name": "Pulsing Cardia",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, gain {r}.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "rift_breaker_blue",
+    "name": "Rift Breaker",
+    "type_text": "Lightning Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, destroy a Lightning Flow token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "rift_breaker_red",
+    "name": "Rift Breaker",
+    "type_text": "Lightning Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, destroy a Lightning Flow token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "rift_breaker_yellow",
+    "name": "Rift Breaker",
+    "type_text": "Lightning Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, destroy a Lightning Flow token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "scorpio_comet_tail",
+    "name": "Scorpio, Comet Tail",
+    "type_text": "Lightning Runeblade Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - {t}: **Attack**. Activate this only if you control a Lightning attack.\n\nWhen this hits a hero, deal 1 arcane damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "voltbound_duality_blue",
+    "name": "Voltbound Duality",
+    "type_text": "Lightning Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "voltbound_duality_red",
+    "name": "Voltbound Duality",
+    "type_text": "Lightning Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "voltbound_duality_yellow",
+    "name": "Voltbound Duality",
+    "type_text": "Lightning Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "voltic_impact_red",
+    "name": "Voltic Impact",
+    "type_text": "Lightning Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Twice per Turn Instant** - {r}: This gets +1{p}.\n\nWhen this hits, create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "volzar_meteor_storm",
+    "name": "Volzar, Meteor Storm",
+    "type_text": "Lightning Wizard Weapon - Staff (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Staff"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Amp"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}: **Amp 1**. Activate this only if an instant card has been put into your graveyard this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "zyggy",
+    "name": "Zyggy",
+    "type_text": "Lightning Illusionist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}, {t}, destroy a Lightning Flow you control, banish another Lightning aura permanent you control with no holo counters: Return the banished aura to the arena with a holo counter.",
+    "status": "pending"
+  },
+  {
+    "slug": "zyggy_starlight",
+    "name": "Zyggy Starlight",
+    "type_text": "Lightning Illusionist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}, {t}, destroy a Lightning Flow you control, banish another Lightning aura permanent you control with no holo counters: Return the banished aura to the arena with a holo counter.",
+    "status": "pending"
+  },
+  {
+    "slug": "omens_of_arcana",
+    "name": "Omens of Arcana",
+    "type_text": "Omens of the Third Age Macro",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Spellvoid"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero starts the game with a Lightning Flow token.\n\nLightning Flow tokens get **spellvoid 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_flow",
+    "name": "Lightning Flow",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  }
+]

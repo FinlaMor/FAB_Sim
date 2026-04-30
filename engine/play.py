@@ -1,8 +1,4 @@
-"""
-Program for 
-1. Finding card playability and available actions
-2. Applying actions to a Gamestate object
-"""
+"""Card playability checks and action application for the FAB game engine."""
 
 import re
 from typing import Optional
@@ -159,11 +155,27 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
                     else:
                         can_afford &= False
             else:
-                can_afford &= False
+                # Check DSL-defined alternative costs
+                _dsl_alt_ok = False
+                if card is not None:
+                    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+                    _dsl_cd = _dsl_get_card(card.slug)
+                    if _dsl_cd:
+                        for _ab in _dsl_cd.abilities:
+                            for _ac in getattr(_ab, 'alternative_costs', []):
+                                if _ac.check_fn is None or _ac.check_fn(card, None, state):
+                                    setattr(action, 'use_dsl_alt_cost', True)
+                                    setattr(action, 'resource_cost', 0)
+                                    _dsl_alt_ok = True
+                                    break
+                            if _dsl_alt_ok:
+                                break
+                if not _dsl_alt_ok:
+                    can_afford &= False
     else:
         can_afford &= True
         setattr(action, 'resource_cost', cost_with_x if x_in_cost else resource_cost)
-    
+
 
     # --- 2. Life cost ---
     if hasattr(card, 'life_cost')and (card.life_cost or 0) > 0 and player.hero is not None:
@@ -182,6 +194,16 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
                 cost_func = ADDITIONAL_COSTS[card.slug]
                 can_afford &= cost_func(state, player_id, check=True)
                 setattr(action, 'additional_costs', True)
+
+    # Check DSL-defined additional costs (mandatory; block play if unpayable)
+    if card is not None:
+        from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+        _dsl_cd = _dsl_get_card(card.slug)
+        if _dsl_cd:
+            for _ab in _dsl_cd.abilities:
+                for _ac in getattr(_ab, 'additional_costs', []):
+                    if _ac.check_fn is not None and not _ac.check_fn(card, None, state):
+                        can_afford &= False
 
     # --- 4. additional conditions ---
     if playable:

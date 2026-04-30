@@ -1,0 +1,22 @@
+{
+  "slug": "debilitate_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "CRUSH",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": -2,
+          "target": "NEXT_ATTACK"
+        }
+      ]
+    }
+  ]
+}

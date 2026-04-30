@@ -1,0 +1,30 @@
+{
+  "slug": "bravo_showstopper",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "GRANT_KEYWORD",
+          "keyword": "DOMINATE",
+          "conditions": [
+            {
+              "type": "ATTACK_COST_GTE",
+              "amount": 3
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ],
+      "duration": "END_OF_TURN"
+    }
+  ]
+}

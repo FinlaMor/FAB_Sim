@@ -1,0 +1,20 @@
+{
+  "slug": "heart_of_fyendal_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN_LIFE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}
