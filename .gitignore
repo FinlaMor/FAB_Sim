@@ -54,7 +54,6 @@ build/
 # --- Generated output ---
 random_game_output.txt
 card_data/ability_analysis_output.txt
-ROADMAP.md
 debug.txt
 dml_warnings.txt
 complexity_assessment.json
