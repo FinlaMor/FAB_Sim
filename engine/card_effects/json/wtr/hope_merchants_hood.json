@@ -2,17 +2,17 @@
   "slug": "hope_merchants_hood",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "additional_cost": [
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
         {
           "type": "BANISH",
           "amount": 1,
           "from_zone": "HAND"
-        }
-      ],
-      "effects": [
+        },
         {
-          "type": "PUT_BOTTOM_DRAW"
+          "type": "DRAW",
+          "amount": 1
         }
       ]
     }

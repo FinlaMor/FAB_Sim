@@ -5,16 +5,16 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SEARCH_DECK",
-          "amount": 3,
-          "filter_types": [
-            "action"
-          ],
+          "type": "BANISH",
+          "amount": 1,
           "from_zone": "GRAVEYARD"
         },
         {
-          "type": "BANISH",
-          "amount": 1
+          "type": "SEARCH_DECK",
+          "filter_types": [
+            "Action"
+          ],
+          "slug_contains": "remembrance"
         }
       ]
     }

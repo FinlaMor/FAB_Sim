@@ -6,58 +6,33 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
-          "type": "AND",
-          "all": [
-            {
-              "type": "ATTACK_IS_NOT_WEAPON"
-            },
-            {
-              "type": "ATTACK_CLASS_IN",
-              "classes": [
-                "Ninja"
-              ]
-            }
-          ]
+          "type": "ATTACK_IS_NOT_WEAPON"
         }
       ],
       "effects": [
         {
           "type": "DISCARD",
           "amount": 1,
-          "random": true,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "katsu_first_hit_this_turn"
-            }
-          ]
+          "player": "SELF",
+          "random": false
         },
         {
           "type": "SEARCH_DECK",
           "filter_types": [
-            "action"
-          ],
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "katsu_first_hit_this_turn"
-            }
+            "combo"
           ]
         },
         {
           "type": "BANISH",
           "amount": 1,
-          "from_zone": "TOP_DECK",
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "katsu_first_hit_this_turn"
-            }
-          ]
+          "from_zone": "DECK"
+        },
+        {
+          "type": "PUT_BOTTOM_DRAW"
         },
         {
           "type": "SET_FLAG",
-          "flag": "katsu_first_hit_this_turn",
+          "flag": "katsu_combo_banished",
           "scope": "NEXT"
         }
       ]

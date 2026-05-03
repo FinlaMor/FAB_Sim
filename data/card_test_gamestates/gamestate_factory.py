@@ -22,7 +22,9 @@ CARD_TYPE_TO_ZONE: dict[str, tuple[str, Step]] = {
     "Equipment": ("equipment", Step.ACTION),  # resolved to head/chest/arms/legs
     "Attack": ("hand", Step.COMBAT_ATTACK),
     "Attack Reaction": ("hand", Step.COMBAT_REACTION),
+    "AttackReaction": ("hand", Step.COMBAT_REACTION),
     "Defense Reaction": ("hand", Step.COMBAT_REACTION),  # placed in defender (P2) hand; DRs legal in reaction step
+    "DefenseReaction": ("hand", Step.COMBAT_REACTION),
     "Block": ("hand", Step.COMBAT_DEFEND),               # placed in defender (P2) hand
     "Instant": ("hand", Step.ACTION),
     "Action": ("hand", Step.ACTION),
@@ -32,6 +34,9 @@ CARD_TYPE_TO_ZONE: dict[str, tuple[str, Step]] = {
     "Token": ("permanents", Step.ACTION),
     "Landmark": ("permanents", Step.ACTION),
     "Demi-Hero": ("hero", Step.ACTION),
+    "DemiHero": ("hero", Step.ACTION),
+    "Companion": ("permanents", Step.ACTION),
+    "Macro": ("hand", Step.ACTION),
     # Mentors live face-down in arsenal; the test state places them there so
     # start-of-turn flip triggers can be tested.
     "Mentor": ("arsenal", Step.ACTION),
@@ -45,6 +50,10 @@ _EQUIPMENT_SLOT_MAP = {
     "Chest": "chest",
     "Arms": "arms",
     "Legs": "legs",
+    "OffHand": "weapon",
+    "Off-Hand": "weapon",
+    "Quiver": "weapon",
+    "Base": "chest",
 }
 
 
@@ -88,17 +97,27 @@ class GameStateFactory:
         # Check types in priority order
         for type_key, (zone, step) in CARD_TYPE_TO_ZONE.items():
             if type_key in types:
+                if type_key == "Action" and "Attack" in subtypes:
+                    return "hand", Step.COMBAT_ATTACK
                 if type_key == "Equipment":
                     # Resolve to specific equipment slot
                     for subtype, slot in _EQUIPMENT_SLOT_MAP.items():
-                        if subtype in types:
+                        if subtype in subtypes:
                             return slot, step
-                    # Default to head if no subtype match
-                    return "head", step
+                    # Standard slot subtypes missing — fall back to chest for testing
+                    return "chest", step
                 return zone, step
+
+        # Check subtypes for Attack (type="Action", subtype="Attack" pattern)
+        if "Attack" in subtypes:
+            return "hand", Step.COMBAT_ATTACK
 
         # Check subtypes for Token
         if "Token" in subtypes:
+            return "permanents", Step.ACTION
+
+        # Ally subtype (e.g. miragai has types=[] but subtype Ally)
+        if "Ally" in subtypes:
             return "permanents", Step.ACTION
 
         # Default: hand + ACTION
@@ -132,7 +151,7 @@ class GameStateFactory:
         # by placing the card in P2's hand while P1 is the attacker.
         card_types = card.types or []
         is_defender_card = (
-            "Defense Reaction" in card_types or "Block" in card_types
+            "Defense Reaction" in card_types or "DefenseReaction" in card_types or "Block" in card_types
         )
 
         if is_defender_card:
@@ -185,7 +204,7 @@ class GameStateFactory:
                 link_id=1,
                 attack_power=attack_card.base_power or 0,
                 attack_card=attack_card,
-                keywords=list(attack_card.keywords),
+                keywords=list(attack_card.keywords or []),
                 base_attack_power=attack_card.base_power or 0,
                 defending_declared=defending_declared,
             )

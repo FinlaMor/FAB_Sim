@@ -9,11 +9,23 @@
           "amount": 0
         }
       ],
+      "conditions": [
+        {
+          "type": "COMBO",
+          "names": [
+            "mugenshi_release"
+          ]
+        }
+      ],
       "effects": [
         {
           "type": "BANISH",
           "amount": 0,
-          "from_zone": "TOP_DECK"
+          "from_zone": "GRAVEYARD"
+        },
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 0
         }
       ]
     }

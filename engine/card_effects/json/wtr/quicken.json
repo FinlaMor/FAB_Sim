@@ -3,25 +3,35 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_ACTIVATE",
+      "trigger": "ON_PLAY",
       "conditions": [
         {
-          "type": "OR",
-          "any": [
-            {
-              "type": "ATTACK_IS_NOT_WEAPON"
-            },
-            {
-              "type": "ATTACK_IS_WEAPON"
-            }
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Action"
           ]
         }
       ],
       "effects": [
         {
-          "type": "BANISH",
-          "amount": 1,
-          "from_zone": "TOP_DECK"
+          "type": "DESTROY_SELF"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ACTIVATE",
+      "conditions": [
+        {
+          "type": "ATTACK_IS_WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
         },
         {
           "type": "GO_AGAIN"

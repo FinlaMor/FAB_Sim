@@ -10,15 +10,7 @@
           "filter_types": [
             "Action"
           ],
-          "filter_classes": [
-            "Guardian"
-          ],
-          "filter_attack": true,
-          "reveal": true,
-          "put_in_hand": true
-        },
-        {
-          "type": "PUT_BOTTOM_DRAW"
+          "slug_contains": "guardian"
         }
       ]
     },
@@ -32,9 +24,7 @@
       ],
       "effects": [
         {
-          "type": "BANISH",
-          "amount": 1,
-          "from_zone": "TOP_DECK"
+          "type": "DESTROY_SELF"
         },
         {
           "type": "DRAW",

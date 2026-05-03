@@ -154,8 +154,9 @@ def effect_retrieve_dagger(state, player_id: int):
                 if "Dagger" in (c.types or []) and "Weapon" in (c.types or [])]
     if not daggers:
         return False
-    has_2h = any("2H" in (c.types or []) for c in player.weapon.cards)
-    if has_2h or len(player.weapon.cards) >= 2:
+    all_weapon_cards = player.weapon1.cards + player.weapon2.cards
+    has_2h = any("2H" in (c.types or []) for c in all_weapon_cards)
+    if has_2h or len(all_weapon_cards) >= 2:
         return False
     choice = _ask_player(state, player_id, [True, False],
                          context="Retrieve a dagger from graveyard? (costs {r})")
@@ -169,7 +170,10 @@ def effect_retrieve_dagger(state, player_id: int):
     dagger = next((d for d in daggers if d.slug == pick), daggers[0])
     player.graveyard.remove(dagger)
     dagger.controller = player_id
-    player.weapon.add(dagger)
+    if not player.weapon1.cards:
+        player.weapon1.add(dagger)
+    elif not player.weapon2.cards:
+        player.weapon2.add(dagger)
     return True
 
 
@@ -1245,7 +1249,7 @@ def _find_controlled_daggers(player, state, exclude_card=None):
     """Find all dagger cards controlled by a player.
     Includes weapon zone daggers AND dagger-type cards on the combat chain."""
     daggers = []
-    for c in player.weapon.cards:
+    for c in player.weapon1.cards + player.weapon2.cards:
         if "Dagger" in (c.types or []) and c != exclude_card:
             daggers.append(c)
     if state.combat:
@@ -1409,9 +1413,11 @@ def _flick_knives_on_play(card, event, state):
                                'data': {'card': dagger, 'damage': dmg}})(),
             state)
     # Destroy the dagger
-    if dagger in player.weapon.cards:
-        player.weapon.remove(dagger)
-        player.graveyard.add(dagger)
+    for _wz in [player.weapon1, player.weapon2]:
+        if dagger in _wz.cards:
+            _wz.remove(dagger)
+            player.graveyard.add(dagger)
+            break
 
 CARD_TRIGGERS["flick_knives"] = [
     TriggerDef(event_type="on_play", effect_fn=_flick_knives_on_play),
@@ -1533,7 +1539,10 @@ def _orb_weaver_on_play(card, event, state, bonus):
     cid = _controller_id(card)
     player = state.players[cid]
     chelicera = create_token_card("graphene_chelicera", cid)
-    player.weapon.add(chelicera)
+    if not player.weapon1.cards:
+        player.weapon1.add(chelicera)
+    elif not player.weapon2.cards:
+        player.weapon2.add(chelicera)
     state.players[cid].current_turn_effects.append(f"orb_weaver_stealth_+{bonus}")
 
 CARD_TRIGGERS["orbweaver_spinneret_red"] = [

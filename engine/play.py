@@ -55,6 +55,8 @@ def available_actions(state, player_id) -> list[Action]:
     return affordable_actions
 
 def _legality_check(state, card, player_id) -> bool:
+    if card is None:
+        return True
     types = card.types or []
 
     # Use card.types as authoritative source; fall back to text scanning for
@@ -649,7 +651,8 @@ def _ally_attack_resource_cost(ally_card) -> int:
 
 
 def _pay_costs(state, player_id, action):
-
+    if player_id is None:
+        return
     player = state.players[player_id]
     resource_cost = _calculate_resource_cost(state, action)
 

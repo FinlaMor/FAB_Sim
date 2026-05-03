@@ -115,7 +115,7 @@ CARD_STATIC_ABILITIES['merciful_retribution'] = [('aura_destroyed', _merciful_re
 # Return False to suppress ATTACK_WEAPON from legal actions for that weapon.
 WEAPON_ATTACK_CONDITIONS: dict = {
     # bank_breaker / banksy: "Activate this only if you've cranked this turn."
-    "bank_breaker": lambda state, player: bool(player.class_counters.get("cranked_this_turn")) and len(player.weapon.cards_underneath) != 0,
+    "bank_breaker": lambda state, player: bool(player.class_counters.get("cranked_this_turn")) and any(len(z.top.cards_underneath) != 0 for z in [player.weapon1, player.weapon2] if z.top),
     "banksy":       lambda state, player: bool(player.class_counters.get("cranked_this_turn")),
     # rok: "Activate Rok only if you have no cards in hand."
     "rok":          lambda state, player: len(player.hand.cards) == 0,
@@ -126,7 +126,7 @@ WEAPON_ATTACK_CONDITIONS: dict = {
         "cog" in [t.lower() for t in (c.types or [])] and not c.tapped
         for c in player.items.cards
     ),
-    "nitro_mechanoid": lambda state, player: len(player.weapon.cards_underneath) > 0,  # Nitro Mechanoid banishes a card from underneath to attack"
+    "nitro_mechanoid": lambda state, player: any(len(z.top.cards_underneath) > 0 for z in [player.weapon1, player.weapon2] if z.top),  # Nitro Mechanoid banishes a card from underneath to attack"
 }
 
 # At the top of actions.py or in a separate file
@@ -358,7 +358,10 @@ def _goldbaited_hook_pay_cost(action, player, state):
 
 def _quiver_pay_cost(action, player, state):
     """Cost: {r}{r}{r}, destroy — resources handled by engine, destroy here."""
-    player.weapon.remove(action.card)
+    for _wz in [player.weapon1, player.weapon2]:
+        if action.card in _wz.cards:
+            _wz.remove(action.card)
+            break
     player.graveyard.add(action.card)
 
 def _sealace_pay_cost(action, player, state):

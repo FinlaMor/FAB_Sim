@@ -3,23 +3,20 @@
   "abilities": [
     {
       "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "PLAY",
-          "filter_cost_gte": 3,
-          "controller": "SELF"
-        }
-      ],
       "effects": [
         {
           "type": "MODIFY_ATTACK_POWER",
           "amount": 4,
-          "conditions": [
-            {
-              "type": "ON_DEFEND"
-            }
-          ]
+          "target": "SELF"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_IS_NOT_WEAPON"
+        },
+        {
+          "type": "ATTACK_COST_GTE",
+          "amount": 3
         }
       ]
     },
@@ -33,9 +30,7 @@
       ],
       "effects": [
         {
-          "type": "BANISH",
-          "amount": 1,
-          "from_zone": "TOP_DECK"
+          "type": "DESTROY_SELF"
         }
       ]
     }

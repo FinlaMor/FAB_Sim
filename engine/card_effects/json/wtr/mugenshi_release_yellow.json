@@ -2,36 +2,8 @@
   "slug": "mugenshi_release_yellow",
   "abilities": [
     {
-      "ability_type": "PLAY",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK_POWER",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "COMBO",
-              "names": [
-                "whelming_gustwave"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "GO_AGAIN",
-          "conditions": [
-            {
-              "type": "COMBO",
-              "names": [
-                "whelming_gustwave"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
           "type": "COMBO",
@@ -42,18 +14,21 @@
       ],
       "effects": [
         {
-          "type": "SEARCH_DECK",
-          "filter_types": [
-            "Lord of Wind"
-          ],
-          "effects": [
-            {
-              "type": "RETURN_TO_HAND"
-            }
-          ]
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1
         },
         {
-          "type": "PUT_BOTTOM_DRAW"
+          "type": "GO_AGAIN"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_HIT",
+          "effects": [
+            {
+              "type": "SEARCH_DECK",
+              "slug_contains": "lord_of_wind"
+            }
+          ]
         }
       ]
     }

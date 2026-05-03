@@ -1,0 +1,33 @@
+{
+  "slug": "barraging_brawnhide_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "AND",
+          "all": [
+            {
+              "type": "DEFENDER_USED_HAND_CARD",
+              "amount": 2
+            },
+            {
+              "type": "NOT",
+              "inner_type": "CARD_IN_ZONE",
+              "zone": "defend",
+              "filter_types": [
+                "Equipment"
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

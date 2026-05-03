@@ -3,20 +3,14 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_DEATH",
+      "trigger": "ON_DISCARD",
       "conditions": [
         {
-          "type": "AND",
-          "all": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "HAND",
-              "filter_power_gte": 6
-            },
-            {
-              "type": "IS_ACTIVE_PLAYER"
-            }
-          ]
+          "type": "ATTACK_COST_GTE",
+          "amount": 6
+        },
+        {
+          "type": "IS_ACTIVE_PLAYER"
         }
       ],
       "effects": [

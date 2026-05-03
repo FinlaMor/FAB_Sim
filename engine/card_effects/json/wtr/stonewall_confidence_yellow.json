@@ -2,6 +2,25 @@
   "slug": "stonewall_confidence_yellow",
   "abilities": [
     {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 3,
+          "target": "SELF"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "IN_COMBAT"
+        },
+        {
+          "type": "ATTACK_COST_GTE",
+          "amount": 3
+        }
+      ]
+    },
+    {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
       "conditions": [
@@ -11,9 +30,7 @@
       ],
       "effects": [
         {
-          "type": "BANISH",
-          "amount": 1,
-          "from_zone": "TOP_DECK"
+          "type": "DESTROY_SELF"
         }
       ]
     }

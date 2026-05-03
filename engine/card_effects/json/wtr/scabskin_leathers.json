@@ -2,19 +2,15 @@
   "slug": "scabskin_leathers",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "cost": [
-        {
-          "type": "PAY_LIFE",
-          "amount": 0
-        }
-      ],
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN_ACTION_POINTS",
-          "amount": 0
+          "type": "GAIN_RESOURCES_FROM_ROLL",
+          "faces": 6,
+          "divisor": 2
         }
-      ]
+      ],
+      "optional": true
     }
   ]
 }

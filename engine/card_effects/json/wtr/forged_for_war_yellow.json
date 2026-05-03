@@ -2,6 +2,16 @@
   "slug": "forged_for_war_yellow",
   "abilities": [
     {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "target": "EQUIPMENT"
+        }
+      ]
+    },
+    {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
       "conditions": [
@@ -11,9 +21,7 @@
       ],
       "effects": [
         {
-          "type": "BANISH",
-          "amount": 1,
-          "from_zone": "TOP_DECK"
+          "type": "DESTROY_SELF"
         }
       ]
     }

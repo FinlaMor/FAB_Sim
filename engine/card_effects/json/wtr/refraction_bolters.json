@@ -11,25 +11,12 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_PERMANENT",
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "REFRACTION_BOLTERS_DESTROYED"
-            }
-          ]
+          "type": "DESTROY_SELF"
         },
         {
-          "type": "GO_AGAIN",
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "REFRACTION_BOLTERS_DESTROYED"
-            }
-          ]
+          "type": "GO_AGAIN"
         }
-      ],
-      "optional": true
+      ]
     }
   ]
 }

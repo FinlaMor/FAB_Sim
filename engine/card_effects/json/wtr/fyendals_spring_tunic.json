@@ -7,14 +7,14 @@
       "conditions": [
         {
           "type": "COUNTER_GTE",
-          "counter_type": "ENERGY",
+          "counter_type": "energy",
           "min": 3
         }
       ],
       "effects": [
         {
           "type": "PUT_COUNTER",
-          "counter_type": "ENERGY",
+          "counter_type": "energy",
           "amount": 1
         }
       ]
@@ -24,7 +24,7 @@
       "additional_cost": [
         {
           "type": "REMOVE_COUNTERS",
-          "counter_type": "ENERGY",
+          "counter_type": "energy",
           "amount": 3
         }
       ],

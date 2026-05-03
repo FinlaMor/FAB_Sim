@@ -357,7 +357,7 @@ class Card:
 
     @property
     def is_weapon(self) -> bool:
-        return "Weapon" in (self.subtypes or [])
+        return "Weapon" in (self.types or [])
 
     @property
     def is_equipment(self) -> bool:

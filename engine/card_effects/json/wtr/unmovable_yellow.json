@@ -2,16 +2,16 @@
   "slug": "unmovable_yellow",
   "abilities": [
     {
-      "ability_type": "PLAY",
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
       "effects": [
         {
           "type": "MODIFY_ATTACK_POWER",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "PLAYED_FROM_ARSENAL"
-            }
-          ]
+          "amount": 1
         }
       ]
     }

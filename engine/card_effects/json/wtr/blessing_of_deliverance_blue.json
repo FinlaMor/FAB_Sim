@@ -12,7 +12,7 @@
             {
               "type": "CARD_IN_ZONE",
               "zone": "pitch",
-              "filter_cost_gte": 3
+              "cost_gte": 3
             }
           ]
         }
@@ -50,7 +50,7 @@
                 {
                   "type": "CARD_IN_ZONE",
                   "zone": "hand",
-                  "filter_cost_gte": 3
+                  "cost_gte": 3
                 }
               ]
             }

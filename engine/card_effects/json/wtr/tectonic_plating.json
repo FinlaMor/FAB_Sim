@@ -5,7 +5,7 @@
       "ability_type": "ACTIVATE",
       "additional_cost": [
         {
-          "type": "PAY_LIFE",
+          "type": "PAY_RESOURCES",
           "amount": 1
         }
       ],

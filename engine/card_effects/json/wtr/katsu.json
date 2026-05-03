@@ -6,18 +6,10 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
-          "type": "AND",
-          "all": [
-            {
-              "type": "ATTACK_IS_NOT_WEAPON"
-            },
-            {
-              "type": "ATTACK_CLASS_IN",
-              "classes": [
-                "Ninja"
-              ]
-            }
-          ]
+          "type": "ATTACK_IS_NOT_WEAPON"
+        },
+        {
+          "type": "IS_ACTIVE_PLAYER"
         }
       ],
       "effects": [

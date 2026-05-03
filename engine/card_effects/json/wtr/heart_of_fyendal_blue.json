@@ -3,10 +3,11 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_LEAVE_PLAY",
+      "trigger": "ON_PLAY",
       "conditions": [
         {
-          "type": "HEALTH_LT_OPP"
+          "type": "HEALTH_LT_OPP",
+          "amount": 1
         }
       ],
       "effects": [

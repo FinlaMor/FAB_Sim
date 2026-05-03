@@ -33,7 +33,7 @@ _PERMANENT_SUBTYPES = frozenset({
 # Equipment slot subtypes per zone (CR 3.2.2a, 3.5.2a, 3.10.2a, 3.12.2a, 3.16.2a)
 _EQUIPMENT_ZONE_SUBTYPES: dict[str, frozenset[str]] = {
     "arms":    frozenset({"Arms"}),
-    "chest":   frozenset({"Chest"}),
+    "chest":   frozenset({"Chest", "Base"}),
     "head":    frozenset({"Head"}),
     "legs":    frozenset({"Legs"}),
     "weapon":  frozenset({"Weapon", "OffHand", "Off-Hand", "Quiver"}),
@@ -785,6 +785,7 @@ class Player:
         self.allies_exhausted: list[bool] = []
         self.current_turn_effects: list[str] = []
         self.weapon_exhausted: bool = False
+        self.hero_power_exhausted: bool = False
 
         # CR 5.1.6a: cost modifiers are now stored in GameState.continuous_effect_manager
         # as ContinuousEffect objects with prop='cost'. See ContinuousEffectManager.add_cost_modifier().
@@ -920,7 +921,6 @@ class Player:
             "resources": self.resources,
             "action_points": self.action_points,
             "weapon_exhausted": self.weapon_exhausted,
-            "weapon_power_bonus": self.weapon_power_bonus,
             "hero_power_exhausted": self.hero_power_exhausted,
             "counters": {str(key): value for key, value in self.counters.items()},
             

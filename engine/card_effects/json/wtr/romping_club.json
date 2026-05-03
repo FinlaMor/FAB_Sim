@@ -2,25 +2,33 @@
   "slug": "romping_club",
   "abilities": [
     {
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ],
+      "optional": true
+    },
+    {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_DEATH",
+      "trigger": "ON_DISCARD",
       "conditions": [
         {
-          "type": "CARD_IN_ZONE",
-          "zone": "DISCARD",
-          "filter_power_gte": 6
+          "type": "ATTACK_COST_GTE",
+          "amount": 6
         }
       ],
       "effects": [
         {
           "type": "MODIFY_ATTACK_POWER",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "romping_club_gained_power"
-            }
-          ]
+          "amount": 1
         }
       ]
     }

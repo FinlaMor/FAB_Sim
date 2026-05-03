@@ -428,6 +428,22 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             state.combat.injected_triggers.append(td)
         return _inject_fn
 
+    if etype == "DESTROY_SELF":
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            pid = _controller_id(card)
+            player = state.players[pid]
+            for zone_name in ('permanents', 'items', 'auras', 'allies'):
+                zone = getattr(player, zone_name, None)
+                if zone and hasattr(zone, 'cards') and card in zone.cards:
+                    try:
+                        from engine.effect_keywords import destroy as _ek_destroy
+                        _ek_destroy(state, card, None)
+                    except Exception:
+                        zone.cards.remove(card)
+                    return
+        return _fn
+
     # ── unknown → no-op ────────────────────────────────────────────────────
     def _noop(card, event, state, _et=etype):
         pass  # unknown effect type; silently skip

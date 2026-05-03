@@ -5,19 +5,14 @@
       "ability_type": "ACTIVATE",
       "additional_cost": [
         {
-          "type": "DESTROY_PERMANENT"
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
         }
       ],
       "effects": [
         {
-          "type": "NEXT_ATTACK_BONUS",
-          "amount": 2,
-          "conditions": [
-            {
-              "type": "ATTACK_COST_GTE",
-              "amount": 2
-            }
-          ]
+          "type": "NEXT_HIGH_COST_ATTACK_BONUS",
+          "amount": 2
         },
         {
           "type": "GO_AGAIN"

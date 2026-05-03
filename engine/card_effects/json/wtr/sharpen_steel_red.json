@@ -3,7 +3,12 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "effects": [{"type": "NEXT_ATTACK_BONUS", "amount": 3}]
+      "effects": [
+        {
+          "type": "NEXT_ATTACK_BONUS",
+          "amount": 3
+        }
+      ]
     }
   ]
 }

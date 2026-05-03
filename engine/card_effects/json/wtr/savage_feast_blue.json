@@ -5,26 +5,7 @@
       "ability_type": "PLAY",
       "additional_cost": [
         {
-          "type": "DISCARD_RANDOM",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
-      "effects": [
-        {
-          "type": "DRAW",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "GRAVEYARD",
-              "filter_power_gte": 6,
-              "amount": 1
-            }
-          ]
+          "type": "DISCARD_RANDOM"
         }
       ]
     }

@@ -2,7 +2,7 @@
   "slug": "harmonized_kodachi",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "PLAY",
       "additional_cost": [
         {
           "type": "PAY_RESOURCES",
@@ -11,8 +11,7 @@
       ],
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER",
-          "amount": 1
+          "type": "ATTACK"
         }
       ]
     },
@@ -23,13 +22,13 @@
           "type": "CARD_IN_ZONE",
           "zone": "PITCH",
           "cost_gte": 0,
-          "amount": 1
+          "cost_lte": 0
         }
       ],
       "effects": [
         {
           "type": "GRANT_KEYWORD",
-          "keyword": "GoAgain"
+          "keyword": "go_again"
         }
       ]
     }

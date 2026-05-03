@@ -3,15 +3,19 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "effects": [
+      "additional_cost": [
         {
-          "type": "DISCARD",
-          "amount": 1,
-          "random": true
-        },
+          "type": "DISCARD_RANDOM",
+          "amount": 1
+        }
+      ],
+      "effects": [
         {
           "type": "NEXT_ATTACK_BONUS",
           "amount": 5
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

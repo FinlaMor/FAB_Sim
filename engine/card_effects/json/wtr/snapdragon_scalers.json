@@ -5,13 +5,14 @@
       "ability_type": "ATTACK_REACTION",
       "additional_cost": [
         {
-          "type": "DESTROY_PERMANENT"
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
         }
       ],
       "conditions": [
         {
           "type": "ATTACK_COST_GTE",
-          "amount": 1
+          "amount": 2
         }
       ],
       "effects": [

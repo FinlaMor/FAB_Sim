@@ -24,7 +24,7 @@ class ActionType(Enum):
     STORE_ARSENAL = "store_arsenal"
     # PLAY_ATTACK_REACTION = "play_attack_reaction"
     # PLAY_DEFENSE_REACTION = "play_defense_reaction"
-    # REACTION_PASS = "reaction_pass"
+    REACTION_PASS = "reaction_pass"
     ACTIVATE_CARD = "activate_card"
     # ACTIVATE_ITEM = "activate_item"
     # ACTIVATE_ALLY = "activate_ally"
@@ -68,6 +68,10 @@ class Action:
     alternate_cost: Optional[bool] = None  # Alternate cost names declared by player (CR 5.1.3c)
     additional_costs: Optional[bool] = None           # CR 5.1.9: effect-costs have been paid
     life_cost: Optional[int] = None                      # Life cost (CR 1.14.2e)
+
+    action_points_available: Optional[int] = None
+    resources_available: Optional[int] = None
+    action_cost: Optional[int] = None
 
     def __repr__(self):
         parts = [self.type.value]
@@ -230,7 +234,7 @@ def _can_afford_action(state: GameState, action: Action) -> tuple[bool, dict[str
         can_afford = False
     else:
         can_afford = True
-    how_afford['resources'] = can_afford
+    how_afford['resource_cost'] = can_afford
 
 
     # --- 2. Life cost (hero activations) ---
@@ -266,7 +270,7 @@ def _can_afford_action(state: GameState, action: Action) -> tuple[bool, dict[str
                         can_afford = False
                     how_afford["alternate_cost"] = can_afford
 
-    can_afford = how_afford['resource_cost'] or how_afford['alternate_cost']
+    can_afford = how_afford.get('resource_cost', True) or how_afford.get('alternate_cost', False)
 
     return can_afford, how_afford
 
@@ -462,36 +466,37 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
     actions.append(Action(type=ActionType.PASS)) # Always legal to pass in action phase, always no pitch required.
 
     if pp == state.active_player and not state.stack_entries:
-        # ATTACK_WEAPON
-        weapon_card = player.weapon.top
-        if (weapon_card is not None
-                and player.action_points > 0
-                and not player.weapon_exhausted
-                and not weapon_card.tapped
-                and _weapon_can_attack(weapon_card)):
-            # Check slug-specific attack conditions (e.g. bank_breaker requires crank)
-            weapon_cond = WEAPON_ATTACK_CONDITIONS.get(weapon_card.slug)
-            if weapon_cond is None or weapon_cond(state, player):
-                weapon_cost_val = _weapon_cost(weapon_card)
-                if can_pay_cost(player.hand.cards, weapon_cost_val, player.resources):
-                    # Default target: opponent's hero (target=None)
-                    actions.append(Action(
-                        type=ActionType.ACTIVATE_CARD,
-                        card=weapon_card,
-                        attack_source=weapon_card,
-                        is_attack_proxy=True,
-                    ))
-                    # CR 1.4.5a: also offer attacks targeting each attackable permanent
-                    defender_id = 3 - pp
-                    for _target in _attackable_permanents(state, defender_id):
+        # ATTACK_WEAPON — check both weapon slots independently
+        for _wzone in [player.weapon1, player.weapon2]:
+            weapon_card = _wzone.top
+            if (weapon_card is not None
+                    and player.action_points > 0
+                    and not player.weapon_exhausted
+                    and not weapon_card.tapped
+                    and _weapon_can_attack(weapon_card)):
+                # Check slug-specific attack conditions (e.g. bank_breaker requires crank)
+                weapon_cond = WEAPON_ATTACK_CONDITIONS.get(weapon_card.slug)
+                if weapon_cond is None or weapon_cond(state, player):
+                    weapon_cost_val = _weapon_cost(weapon_card)
+                    if can_pay_cost(player.hand.cards, weapon_cost_val, player.resources):
+                        # Default target: opponent's hero (target=None)
                         actions.append(Action(
                             type=ActionType.ACTIVATE_CARD,
                             card=weapon_card,
                             attack_source=weapon_card,
                             is_attack_proxy=True,
-                            target=_target,
-                            targets=[_target.slug],
                         ))
+                        # CR 1.4.5a: also offer attacks targeting each attackable permanent
+                        defender_id = 3 - pp
+                        for _target in _attackable_permanents(state, defender_id):
+                            actions.append(Action(
+                                type=ActionType.ACTIVATE_CARD,
+                                card=weapon_card,
+                                attack_source=weapon_card,
+                                is_attack_proxy=True,
+                                target=_target,
+                                targets=[_target.slug],
+                            ))
 
         # Cards that can't be played from hand
         CANT_PLAY_FROM_HAND = {"death_touch"}
@@ -585,17 +590,17 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
                             continue  # Can't afford life cost, skip this action
                         if not can_pay:
                             continue
-                        if how_afford['resource_cost'] and how_afford['alternate_cost']:
+                        if how_afford.get('resource_cost', True) and how_afford.get('alternate_cost', False):
                             actions.append(action)
 
                             alt_action = action
                             setattr(alt_action, 'alternate_cost', {action.card.slug: 1})
                             actions.append(alt_action)
 
-                        elif how_afford['alternate_cost']:
+                        elif how_afford.get('alternate_cost', False):
                             setattr(action, 'alternate_cost', {action.card.slug: 1})
                             actions.append(action)
-                        
+
                         else:
                             actions.append(action)
 
