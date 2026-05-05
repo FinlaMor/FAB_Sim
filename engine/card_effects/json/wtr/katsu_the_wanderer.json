@@ -28,7 +28,10 @@
           "from_zone": "DECK"
         },
         {
-          "type": "PUT_BOTTOM_DRAW"
+          "type": "PUT_HAND_CARD_BOTTOM"
+        },
+        {
+          "type": "DRAW"
         },
         {
           "type": "SET_FLAG",

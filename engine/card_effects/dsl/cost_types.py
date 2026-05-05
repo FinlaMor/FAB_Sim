@@ -4,6 +4,7 @@ All callables use the signature (card, event, state) -> bool/None to match
 the convention used by condition_types and effect_types.
 """
 from __future__ import annotations
+import random
 from typing import Any, Callable
 
 
@@ -99,8 +100,13 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             hand = state.players[cid].hand.cards
             if not hand:
                 return
-            # Take the first card (random agent); real agent choice handled upstream
-            target = hand[0]
+            # Agent sets state.cost_choices["PUT_HAND_CARD_BOTTOM"] = int index before
+            # applying the action. Consumed here; absent → random fallback.
+            choice = state.cost_choices.pop("PUT_HAND_CARD_BOTTOM", None)
+            if choice is not None and isinstance(choice, int) and 0 <= choice < len(hand):
+                target = hand[choice]
+            else:
+                target = random.choice(hand)
             hand.remove(target)
             state.players[cid].deck.cards.append(target)
         return can_pay, pay
@@ -263,6 +269,16 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             for c in eligible[:_a]:
                 gy.remove(c)
                 state.players[cid].banished.add(c)
+        return can_pay, pay
+
+    if ctype == "PAY_RESOURCES":
+        amount = params.get("amount", 0)
+        def can_pay(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            return state.players[_controller_id(card)].resources >= _a
+        def pay(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            state.players[_controller_id(card)].resources -= _a
         return can_pay, pay
 
     # Unknown cost type — always payable, no-op payment

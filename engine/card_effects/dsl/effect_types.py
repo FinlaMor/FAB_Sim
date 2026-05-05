@@ -76,12 +76,36 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "BANISH":
         amt = params.get("amount", 1)
-        face_up = params.get("face_up", True)
         from_zone = params.get("from_zone", "TOP_DECK")
-        def _fn(card, event, state, _a=amt, _fu=face_up, _fz=from_zone):
-            from engine.card_effects.ability_keywords import effect_banish_top_deck, _controller_id
-            if _fz.upper() == "TOP_DECK":
-                effect_banish_top_deck(state, _controller_id(card), _a, face_up=_fu)
+        def _fn(card, event, state, _a=amt, _fz=from_zone):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import banish as _ek_banish
+            cid = _controller_id(card)
+            fz = _fz.upper()
+            if fz in ("TOP_DECK", "DECK"):
+                targets = state.players[cid].deck.cards[:_a]
+                for t in targets:
+                    _ek_banish(state, t, cid, origin_zone="deck")
+            elif fz == "HAND":
+                hand = state.players[cid].hand.cards
+                if not hand:
+                    return
+                for _ in range(min(_a, len(hand))):
+                    options = [c.slug for c in state.players[cid].hand.cards]
+                    pick = _ask_player(state, cid, options, context="Choose a card to banish from hand")
+                    target = next((c for c in state.players[cid].hand.cards if c.slug == pick), None)
+                    if target:
+                        _ek_banish(state, target, cid, origin_zone="hand")
+            elif fz == "GRAVEYARD":
+                gy = state.players[cid].graveyard.cards
+                if not gy:
+                    return
+                for _ in range(min(_a, len(gy))):
+                    options = [c.slug for c in state.players[cid].graveyard.cards]
+                    pick = _ask_player(state, cid, options, context="Choose a card to banish from graveyard")
+                    target = next((c for c in state.players[cid].graveyard.cards if c.slug == pick), None)
+                    if target:
+                        _ek_banish(state, target, cid, origin_zone="graveyard")
         return _fn
 
     if etype == "CHARGE":
@@ -188,20 +212,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "NEXT_WEAPON_ATTACK_BONUS":
-        # Next weapon attack gets +N power. Optionally also gets go again or hit: go again.
-        # Stored as "next_weapon_attack_+N" (and related flags) in current_turn_effects.
+        # Next weapon attack gets +N power.
         # Consumed by _apply_turn_attack_effects in engine.py (weapon-only gate).
         amt = params.get("amount", 0)
-        go_again = params.get("go_again", False)
-        hit_go_again = params.get("hit_go_again", False)
-        def _fn(card, event, state, _a=amt, _ga=go_again, _hga=hit_go_again):
-            player = state.active()
+        def _fn(card, event, state, _a=amt):
             if _a:
-                player.current_turn_effects.append(f"next_weapon_attack_+{_a}")
-            if _ga:
-                player.current_turn_effects.append("next_weapon_attack_go_again")
-            if _hga:
-                player.current_turn_effects.append("next_weapon_attack_hit_go_again")
+                state.active().current_turn_effects.append(f"next_weapon_attack_+{_a}")
+        return _fn
+
+    if etype == "NEXT_WEAPON_ATTACK_KEYWORD":
+        # Grant a keyword to the next weapon attack this turn.
+        # keyword: "go_again" | "hit_go_again" → sets "next_weapon_attack_<keyword>" turn flag.
+        kw = params.get("keyword", "go_again")
+        def _fn(card, event, state, _kw=kw):
+            state.active().current_turn_effects.append(f"next_weapon_attack_{_kw}")
         return _fn
 
     if etype == "NEXT_LOW_COST_ATTACK_BONUS":
@@ -237,25 +261,26 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 player.hand.add(card)
         return _fn
 
-    if etype == "PUT_BOTTOM_DRAW":
-        # Player chooses a card from hand to put on the bottom of their deck, then draws.
-        # If no hand cards or player declines, nothing happens.
-        def _fn(card, event, state):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id, effect_draw
+    if etype == "PUT_HAND_CARD_BOTTOM":
+        # Choose a card from hand and put it on the bottom of the deck (no draw).
+        # player: "SELF" (default) | "OPPONENT" — whose hand is affected.
+        player_target = params.get("player", "SELF")
+        def _fn(card, event, state, _pt=player_target):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
             cid = _controller_id(card)
-            player = state.players[cid]
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            player = state.players[tid]
             if not player.hand.cards:
                 return
             options = [c.slug for c in player.hand.cards] + ["decline"]
-            choice = _ask_player(state, cid, options,
-                                 context="Choose a card to put on the bottom of your deck, then draw")
+            choice = _ask_player(state, tid, options,
+                                 context="Choose a card to put on the bottom of your deck")
             if choice == "decline":
                 return
             target = player.hand.find(choice)
             if target:
                 player.hand.remove(target)
                 player.deck.add_bottom(target)
-                effect_draw(state, cid, 1)
         return _fn
 
     if etype == "SEARCH_DECK":

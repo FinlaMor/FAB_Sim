@@ -5,7 +5,10 @@
       "ability_type": "DEFENSE_REACTION",
       "effects": [
         {
-          "type": "PUT_BOTTOM_DRAW"
+          "type": "PUT_HAND_CARD_BOTTOM"
+        },
+        {
+          "type": "DRAW"
         }
       ]
     }

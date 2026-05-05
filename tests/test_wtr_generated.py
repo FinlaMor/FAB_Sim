@@ -321,6 +321,7 @@ def test_braveforge_bracers_loads():
 
 def test_braveforge_bracers_activate_with_flag_queues_bonus():
     state = _make_state()
+    state.players[1].resources = 1  # cover PAY_RESOURCES cost
     state.players[1].current_turn_effects.append("weapon_hit_this_turn")
     card = _make_card("braveforge_bracers", 1)
     dispatch(state, "ON_ACTIVATE", "braveforge_bracers", card=card)
@@ -345,6 +346,7 @@ def test_bravo_loads():
 
 def test_bravo_activate_grants_go_again_in_combat():
     state = _make_state()
+    state.players[1].resources = 2  # cover PAY_RESOURCES cost
     state.combat = _make_combat()
     card = _make_card("bravo", 1)
     dispatch(state, "ON_ACTIVATE", "bravo", card=card)
@@ -366,6 +368,7 @@ def test_bravo_showstopper_loads():
 
 def test_bravo_showstopper_activate_grants_go_again_in_combat():
     state = _make_state()
+    state.players[1].resources = 2  # cover PAY_RESOURCES cost
     state.combat = _make_combat()
     card = _make_card("bravo_showstopper", 1)
     dispatch(state, "ON_ACTIVATE", "bravo_showstopper", card=card)

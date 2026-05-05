@@ -30,7 +30,10 @@
           "from_zone": "TOP_DECK"
         },
         {
-          "type": "PUT_BOTTOM_DRAW"
+          "type": "PUT_HAND_CARD_BOTTOM"
+        },
+        {
+          "type": "DRAW"
         }
       ]
     }

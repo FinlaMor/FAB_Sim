@@ -6,8 +6,11 @@
       "effects": [
         {
           "type": "NEXT_WEAPON_ATTACK_BONUS",
-          "amount": 1,
-          "hit_go_again": true
+          "amount": 1
+        },
+        {
+          "type": "NEXT_WEAPON_ATTACK_KEYWORD",
+          "keyword": "hit_go_again"
         }
       ]
     }
