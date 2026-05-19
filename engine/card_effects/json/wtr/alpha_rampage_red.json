@@ -1,15 +1,11 @@
 {
   "slug": "alpha_rampage_red",
-  "abilities": [
-    {
-      "ability_type": "PLAY",
-      "additional_cost": [
-        {
-          "type": "DISCARD_RANDOM",
-          "amount": 1
-        }
-      ]
-    },
+  "play_cost": {
+      "optional":"FALSE",
+      "type": "DISCARD_RANDOM",
+      "amount": 1
+  },
+  "abilities": 
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
@@ -19,5 +15,4 @@
         }
       ]
     }
-  ]
 }

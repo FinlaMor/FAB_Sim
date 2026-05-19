@@ -8,12 +8,13 @@
           "type": "AND",
           "all": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "DEFENSE",
-              "filter_types": [
-                "non-equipment"
-              ],
-              "amount": 2
+              "type": "DEFENDER_USED_HAND_CARD"
+            },
+            {
+              "type": "NOT",
+              "inner_type": "CARD_IN_ZONE",
+              "zone": "defend",
+              "filter_types": ["Equipment"]
             }
           ]
         }

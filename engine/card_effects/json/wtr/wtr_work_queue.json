@@ -23,7 +23,7 @@
       "Rhinar"
     ],
     "functional_text": "**Rhinar Specialization**\n\nAs an additional cost to play Alpha Rampage, discard a random card.\n\nWhen you attack with Alpha Rampage, **intimidate**.",
-    "status": "approved"
+    "status": "done"
   },
   {
     "slug": "anothos",
@@ -89,7 +89,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Barraging Brawnhide is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "barraging_brawnhide_red",
@@ -110,7 +110,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Barraging Brawnhide is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "barraging_brawnhide_yellow",
@@ -131,7 +131,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Barraging Brawnhide is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "blessing_of_deliverance_blue",
@@ -155,7 +155,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen Blessing of Deliverance enters the arena, if you have a card with cost 3 or greater in your pitch zone, draw a card.\n\nAt the beginning of your action phase, destroy Blessing of Deliverance then reveal the top card of your deck. Gain 1{h} for each card with cost 3 or greater revealed this way.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "blessing_of_deliverance_red",
@@ -179,7 +179,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen Blessing of Deliverance enters the arena, if you have a card with cost 3 or greater in your pitch zone, draw a card.\n\nAt the beginning of your action phase, destroy Blessing of Deliverance then reveal the top 3 cards of your deck. Gain 1{h} for each card with cost 3 or greater revealed this way.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "blessing_of_deliverance_yellow",
@@ -203,7 +203,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen Blessing of Deliverance enters the arena, if you have a card with cost 3 or greater in your pitch zone, draw a card.\n\nAt the beginning of your action phase, destroy Blessing of Deliverance then reveal the top 2 cards of your deck. Gain 1{h} for each card with cost 3 or greater revealed this way.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "bone_head_barrier_yellow",
@@ -222,7 +222,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Roll a 6 sided die. Prevent the next X damage that would be dealt to your hero this turn, where X is the number rolled.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "braveforge_bracers",
@@ -245,7 +245,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per turn Action** - {r}: Your next weapon attack this turn gains +1{p}. Activate this ability only if a weapon you control has hit this turn. **Go again**\n\n**Battleworn**",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "bravo",
@@ -269,7 +269,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}: Until end of turn, your attack action cards with cost 3 or more get **dominate**. **Go again**",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "bravo_showstopper",
@@ -291,7 +291,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}: Until end of turn, your attack action cards with cost 3 or greater gains **dominate**. **Go again**",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "breaking_scales",
@@ -314,7 +314,7 @@
     ],
     "specializations": [],
     "functional_text": "**Attack Reaction** - Destroy Breaking Scales: Target attack action card with **combo** gains +1{p}.\n\n**Battleworn**",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "buckling_blow_blue",
@@ -337,7 +337,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "buckling_blow_red",
@@ -360,7 +360,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "buckling_blow_yellow",
@@ -383,7 +383,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "cartilage_crush_blue",
@@ -406,7 +406,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "cartilage_crush_red",
@@ -429,7 +429,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "cartilage_crush_yellow",
@@ -452,7 +452,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "cracked_bauble_yellow",
@@ -471,7 +471,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "cranial_crush_blue",
@@ -494,7 +494,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "crazy_brew_blue",
@@ -518,7 +518,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Roll a 6 sided die. On;\n\n- 1 or 2 - Lose 2{h}. **Go again**\n- 3 or 4 - Gain 2{h}. **Go again**\n- 5 or 6 - Gain {r}{r}, gain 2 action points, and your next attack this turn gains +2{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "crippling_crush_red",
@@ -544,7 +544,7 @@
       "Bravo"
     ],
     "functional_text": "**Bravo Specialization**\n\n**Crush** - If Crippling Crush deals 4 or more damage to a hero, they discard 2 random cards.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "crush_confidence_blue",
@@ -567,7 +567,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they lose all hero card abilities until the end of their next turn.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "crush_confidence_red",
@@ -590,7 +590,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they lose all hero card abilities until the end of their next turn.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "crush_confidence_yellow",
@@ -613,7 +613,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they lose all hero card abilities until the end of their next turn.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "dawnblade",
@@ -635,7 +635,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nIf Dawnblade hits, and it's the second time it has hit this turn, put a +1{p} counter on Dawnblade.\n\nAt the beginning of your end phase, if Dawnblade has not hit this turn, remove all +1{p} counters from Dawnblade.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "debilitate_blue",
@@ -658,7 +658,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "debilitate_red",
@@ -681,7 +681,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "debilitate_yellow",
@@ -704,7 +704,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "demolition_crew_blue",
@@ -727,7 +727,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Demolition Crew, reveal a card in your hand with cost 2 or greater.\n\n**Dominate**",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "demolition_crew_red",
@@ -750,7 +750,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Demolition Crew, reveal a card in your hand with cost 2 or greater.\n\n**Dominate**",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "demolition_crew_yellow",
@@ -773,7 +773,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Demolition Crew, reveal a card in your hand with cost 2 or greater.\n\n**Dominate**",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "disable_blue",
@@ -796,7 +796,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "disable_red",
@@ -819,7 +819,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "disable_yellow",
@@ -842,7 +842,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "dorinthea",
@@ -863,7 +863,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per turn Effect** - When a weapon you control hits, you may attack an additional time with that weapon this turn.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "dorinthea_ironsong",
@@ -882,7 +882,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per turn Effect** - When a weapon you control hits, you may attack an additional time with that weapon this turn.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "drone_of_brutality_blue",
@@ -903,7 +903,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Drone of Brutality would be put into your graveyard from anywhere, instead put it on the bottom of your deck.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "drone_of_brutality_red",
@@ -924,7 +924,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Drone of Brutality would be put into your graveyard from anywhere, instead put it on the bottom of your deck.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "drone_of_brutality_yellow",
@@ -945,7 +945,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Drone of Brutality would be put into your graveyard from anywhere, instead put it on the bottom of your deck.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "emerging_power_blue",
@@ -969,7 +969,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +1{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "emerging_power_red",
@@ -993,7 +993,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +3{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "emerging_power_yellow",
@@ -1017,7 +1017,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +2{p}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "enlightened_strike_red",
@@ -1040,7 +1040,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck.\n\nChoose 1;\n- When you attack with Enlightened Strike, draw a card.\n- Enlightened Strike gains +2{p}.\n- Enlightened Strike gains **go again**.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "flic_flak_blue",
@@ -1059,7 +1059,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the next card you defend with this turn is a card with combo, it gains +2{d}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "flic_flak_red",
@@ -1078,7 +1078,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the next card you defend with this turn is a card with combo, it gains +2{d}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "flic_flak_yellow",
@@ -1097,7 +1097,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the next card you defend with this turn is a card with combo, it gains +2{d}.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "flock_of_the_feather_walkers_blue",
@@ -1118,7 +1118,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Flock of the Feather Walkers, reveal a card in your hand with cost 1 or less.\n\nWhen you attack with Flock of the Feather Walkers, create a Quicken token.",
-    "status": "done"
+    "status": "needs_review"
   },
   {
     "slug": "flock_of_the_feather_walkers_red",
@@ -1139,7 +1139,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Flock of the Feather Walkers, reveal a card in your hand with cost 1 or less.\n\nWhen you attack with Flock of the Feather Walkers, create a Quicken token.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "flock_of_the_feather_walkers_yellow",
@@ -1160,7 +1160,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Flock of the Feather Walkers, reveal a card in your hand with cost 1 or less.\n\nWhen you attack with Flock of the Feather Walkers, create a Quicken token.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "fluster_fist_blue",
@@ -1183,7 +1183,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "fluster_fist_red",
@@ -1206,7 +1206,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "fluster_fist_yellow",
@@ -1229,7 +1229,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "forged_for_war_yellow",
@@ -1253,7 +1253,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nEquipment you control gain +1{d}.\n\nAt the beginning of your action phase, destroy Forged for War.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "fyendals_spring_tunic",
@@ -1276,7 +1276,7 @@
     ],
     "specializations": [],
     "functional_text": "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it.\n\n**Instant** - Remove 3 energy counters from this: Gain {r}\n\n**Blade Break**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "goliath_gauntlet",
@@ -1299,7 +1299,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: The next attack action card with cost 2 or more you play this turn gets +2{p}. **Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "harmonized_kodachi",
@@ -1323,7 +1323,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nIf you have a card in your pitch zone with cost 0, this card's attacks get **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "head_jab_blue",
@@ -1346,7 +1346,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "head_jab_red",
@@ -1369,7 +1369,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "head_jab_yellow",
@@ -1392,7 +1392,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "heart_of_fyendal_blue",
@@ -1415,7 +1415,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen you pitch Heart of Fyendal, if you have less {h} than an opposing hero, gain 1{h}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "heartened_cross_strap",
@@ -1438,7 +1438,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: The next attack action card you play this turn costs {r}{r} less to play. **Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "helm_of_isens_peak",
@@ -1461,7 +1461,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}, destroy this: Your hero gains +1{i} this turn.\n\n**Battleworn**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "hope_merchants_hood",
@@ -1482,7 +1482,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Shuffle any number of cards from your hand into your deck, then draw that many cards.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ironrot_gauntlet",
@@ -1505,7 +1505,7 @@
     ],
     "specializations": [],
     "functional_text": "**Blade Break**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ironrot_helm",
@@ -1528,7 +1528,7 @@
     ],
     "specializations": [],
     "functional_text": "**Blade Break**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ironrot_legs",
@@ -1551,7 +1551,7 @@
     ],
     "specializations": [],
     "functional_text": "**Blade Break**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ironrot_plate",
@@ -1574,7 +1574,7 @@
     ],
     "specializations": [],
     "functional_text": "**Blade Break**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ironsong_determination_yellow",
@@ -1598,7 +1598,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon's attacks get +1{p} and **dominate** until end of turn.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "katsu",
@@ -1619,7 +1619,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The first time an attack action card you control hits each turn, you may discard a card with cost 0. If you do, search your deck for a card with **combo**, banish it face up, then shuffle your deck. You may play it this turn.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "katsu_the_wanderer",
@@ -1638,7 +1638,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The first time an attack action card you control hits each turn, you may discard a card with cost 0. If you do, search your deck for a card with **combo**, banish it face up, then shuffle your deck. You may play it this turn.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "leg_tap_blue",
@@ -1661,7 +1661,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "leg_tap_red",
@@ -1684,7 +1684,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "leg_tap_yellow",
@@ -1707,7 +1707,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "lord_of_wind_blue",
@@ -1733,7 +1733,7 @@
       "Katsu"
     ],
     "functional_text": "**Katsu Specialization**\n\n**Combo** - If Mugenshi: RELEASE was the last attack this combat chain, as an additional cost to play Lord of Wind, you may pay any amount of {r}. If you do, shuffle that many target cards named Surging Strike, Whelming Gustwave and/or Mugenshi: RELEASE from your graveyard into your deck, then Lord of Wind gains that much {p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "mask_of_momentum",
@@ -1756,7 +1756,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Effect** - When an attack action card you control is the third or higher chain link in a row to hit, draw a card.\n\n**Blade Break**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "mugenshi_release_yellow",
@@ -1783,7 +1783,7 @@
       "Katsu"
     ],
     "functional_text": "**Katsu Specialization**\n\n**Combo** - If Whelming Gustwave was the last attack this combat chain, Mugenshi: RELEASE gains +1{p}, **go again**, and \"If this hits, search your deck for any number of cards named Lord of Wind, reveal them, put them into your hand, then shuffle your deck.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "nimble_strike_blue",
@@ -1804,7 +1804,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Nimble Strike, you may banish a card named Nimblism from your graveyard. If you do, Nimble Strike gain +1{p} and **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "nimble_strike_red",
@@ -1825,7 +1825,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Nimble Strike, you may banish a card named Nimblism from your graveyard. If you do, Nimble Strike gain +1{p} and **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "nimble_strike_yellow",
@@ -1846,7 +1846,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Nimble Strike, you may banish a card named Nimblism from your graveyard. If you do, Nimble Strike gain +1{p} and **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "pack_hunt_blue",
@@ -1869,7 +1869,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "pack_hunt_red",
@@ -1892,7 +1892,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "pack_hunt_yellow",
@@ -1915,7 +1915,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "potion_of_strength_blue",
@@ -1939,7 +1939,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Your next attack this turn gains +2{p}. **Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "pounding_gale_red",
@@ -1962,7 +1962,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Open the Center was the last attack this combat chain, Pounding Gale gains \"If Pounding Gale would deal damage to a hero, instead it deals double that much damage\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "quicken",
@@ -1985,7 +1985,7 @@
     ],
     "specializations": [],
     "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and the attack gains **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "raging_onslaught_blue",
@@ -2006,7 +2006,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "raging_onslaught_red",
@@ -2027,7 +2027,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "raging_onslaught_yellow",
@@ -2048,7 +2048,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "razor_reflex_blue",
@@ -2069,7 +2069,7 @@
     ],
     "specializations": [],
     "functional_text": "Choose 1;\n- Target dagger or sword weapon attack gets +1{p}.\n- Target attack action card with cost 1 or less gets +1{p} and \"When this hits, it gets **go again**.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "razor_reflex_red",
@@ -2090,7 +2090,7 @@
     ],
     "specializations": [],
     "functional_text": "Choose 1;\n- Target dagger or sword weapon attack gets +3{p}.\n- Target attack action card with cost 1 or less gets +3{p} and \"When this hits, it gets **go again**.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "razor_reflex_yellow",
@@ -2111,7 +2111,7 @@
     ],
     "specializations": [],
     "functional_text": "Choose 1;\n- Target dagger or sword weapon attack gets +2{p}.\n- Target attack action card with cost 1 or less gets +2{p} and \"When this hits, it gets **go again**.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "reckless_swing_blue",
@@ -2130,7 +2130,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Reckless Swing, discard a random card.\n\nIf the discarded card has 6 or more {p}, deal 2 damage to the attacking hero.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "refraction_bolters",
@@ -2154,7 +2154,7 @@
     ],
     "specializations": [],
     "functional_text": "When a weapon you control hits, you may destroy Refraction Bolters. If you do, the attack gains **go again**.\n\n**Battleworn**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "regurgitating_slog_blue",
@@ -2177,7 +2177,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Regurgitating Slog, you may banish a card named Sloggism from your graveyard. If you do, Regurgitating Slog gains **dominate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "regurgitating_slog_red",
@@ -2200,7 +2200,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Regurgitating Slog, you may banish a card named Sloggism from your graveyard. If you do, Regurgitating Slog gains **dominate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "regurgitating_slog_yellow",
@@ -2223,7 +2223,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Regurgitating Slog, you may banish a card named Sloggism from your graveyard. If you do, Regurgitating Slog gains **dominate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "remembrance_yellow",
@@ -2242,7 +2242,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Shuffle up to 3 action cards from your graveyard into your deck.\n\nBanish Remembrance.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "rhinar",
@@ -2265,7 +2265,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever you discard a card with 6 or more {p} during your action phase, **intimidate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "rhinar_reckless_rampage",
@@ -2286,7 +2286,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever you discard a card with 6 or more {p} during your action phase, **intimidate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "romping_club",
@@ -2308,7 +2308,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\n**Once per Turn Effect** - When you discard a card with 6 or more {p}, Romping Club gains +1{p} until end of turn.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "savage_feast_blue",
@@ -2329,7 +2329,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Savage Feast discard a random card.\n\nWhen you attack with Savage Feast, if a card with 6 or more {p} was discarded as an additional cost to play it, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "savage_feast_red",
@@ -2350,7 +2350,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Savage Feast discard a random card.\n\nWhen you attack with Savage Feast, if a card with 6 or more {p} was discarded as an additional cost to play it, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "savage_feast_yellow",
@@ -2371,7 +2371,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Savage Feast discard a random card.\n\nWhen you attack with Savage Feast, if a card with 6 or more {p} was discarded as an additional cost to play it, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "scabskin_leathers",
@@ -2394,7 +2394,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per turn Action** - 0: Roll a 6 sided die. Gain action points equal to half the number rolled, rounded down.\n\n**Battleworn**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "seismic_surge",
@@ -2415,7 +2415,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "show_time_blue",
@@ -2441,7 +2441,7 @@
       "Bravo"
     ],
     "functional_text": "**Bravo Specialization**\n\nWhen Show Time! enters the arena, search your deck for a Guardian attack action card, reveal it and put it into your hand, then shuffle your deck.\n\nAt the beginning of your action phase, destroy Show Time! then draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "smash_instinct_blue",
@@ -2464,7 +2464,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "smash_instinct_red",
@@ -2487,7 +2487,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "smash_instinct_yellow",
@@ -2510,7 +2510,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "snapdragon_scalers",
@@ -2533,7 +2533,7 @@
     ],
     "specializations": [],
     "functional_text": "**Attack Reaction** - Destroy this: Target attack action card with cost 1 or less gets **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "spinal_crush_red",
@@ -2556,7 +2556,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - If Spinal Crush deals 4 or more damage to a hero, action cards, activated abilities, and attacks they control lose and can't gain **go again** during their next action phase.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "staunch_response_blue",
@@ -2575,7 +2575,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Staunch Response you may pay {r}{r}{r}{r}. If you do, Staunch Response gains +3{d}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "staunch_response_red",
@@ -2594,7 +2594,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Staunch Response you may pay {r}{r}{r}{r}. If you do, Staunch Response gains +3{d}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "staunch_response_yellow",
@@ -2613,7 +2613,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Staunch Response you may pay {r}{r}{r}{r}. If you do, Staunch Response gains +3{d}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "stonewall_confidence_blue",
@@ -2637,7 +2637,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nCards you control with cost 3 or more get +2{d} while defending.\n\nAt the beginning of your action phase, destroy this.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "stonewall_confidence_red",
@@ -2661,7 +2661,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nCards you control with cost 3 or more get +4{d} while defending.\n\nAt the beginning of your action phase, destroy this.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "stonewall_confidence_yellow",
@@ -2685,7 +2685,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nCards you control with cost 3 or more get +3{d} while defending.\n\nAt the beginning of your action phase, destroy this.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "surging_strike_blue",
@@ -2708,7 +2708,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "surging_strike_red",
@@ -2731,7 +2731,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "surging_strike_yellow",
@@ -2754,7 +2754,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "tectonic_plating",
@@ -2777,7 +2777,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per turn Action** - {r}: Create a Seismic Surge aura token. **Go again**\n\n**Battleworn**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "tome_of_fyendal_yellow",
@@ -2798,7 +2798,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Draw 2 cards.\n\nIf Tome of Fyendal is played from arsenal, gain 1{h} for each card in your hand.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "unmovable_blue",
@@ -2817,7 +2817,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Unmovable is played from arsenal, it gains +1{d}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "unmovable_red",
@@ -2836,7 +2836,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this was played from arsenal, it gets +1{d}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "unmovable_yellow",
@@ -2855,7 +2855,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Unmovable is played from arsenal, it gains +1{d}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wounding_blow_blue",
@@ -2876,7 +2876,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wounding_blow_red",
@@ -2897,7 +2897,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wounding_blow_yellow",
@@ -2918,7 +2918,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ancestral_empowerment_red",
@@ -2937,7 +2937,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target Ninja attack action card gains +1{p}.\n\nDraw a card.",
-    "status": "approved"
+    "status": "done"
   },
   {
     "slug": "awakening_bellow_blue",
@@ -2961,7 +2961,7 @@
     ],
     "specializations": [],
     "functional_text": "The next Brute attack action card you play this turn gains +1{p}.\n\n**Intimidate**\n\n**Go again**",
-    "status": "approved"
+    "status": "done"
   },
   {
     "slug": "awakening_bellow_red",
@@ -2985,7 +2985,7 @@
     ],
     "specializations": [],
     "functional_text": "The next Brute attack action card you play this turn gains +3{p}.\n\n**Intimidate**\n\n**Go again**",
-    "status": "approved"
+    "status": "done"
   },
   {
     "slug": "awakening_bellow_yellow",
@@ -3009,7 +3009,7 @@
     ],
     "specializations": [],
     "functional_text": "The next Brute attack action card you play this turn gains +2{p}.\n\n**Intimidate**\n\n**Go again**",
-    "status": "approved"
+    "status": "done"
   },
   {
     "slug": "barraging_beatdown_blue",
@@ -3033,7 +3033,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Brute attack this turn gains \"While this attack is defended by less than 2 non-equipment cards, it has +2{p}.\"\n\n**Intimidate**\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "barraging_beatdown_red",
@@ -3057,7 +3057,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Brute attack this turn gains \"While this attack is defended by less than 2 non-equipment cards, it has +4{p}.\"\n\n**Intimidate**\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "barraging_beatdown_yellow",
@@ -3081,7 +3081,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Brute attack this turn gains \"While this attack is defended by less than 2 non-equipment cards, it has +3{p}.\"\n\n**Intimidate**\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "biting_blade_blue",
@@ -3102,7 +3102,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +1{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, weapons you control gain +1{p} until end of turn",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "biting_blade_red",
@@ -3123,7 +3123,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +3{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, weapons you control gain +1{p} until end of turn",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "biting_blade_yellow",
@@ -3144,7 +3144,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +2{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, weapons you control gain +1{p} until end of turn",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "blackout_kick_blue",
@@ -3167,7 +3167,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rising Knee Thrust was the last attack this combat chain, Blackout Kick gains +3{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "blackout_kick_red",
@@ -3190,7 +3190,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rising Knee Thrust was the last attack this combat chain, Blackout Kick gains +3{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "blackout_kick_yellow",
@@ -3213,7 +3213,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rising Knee Thrust was the last attack this combat chain, Blackout Kick gains +3{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "bloodrush_bellow_yellow",
@@ -3236,7 +3236,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Bloodrush Bellow, discard a random card.\n\nYour Brute attacks gain +2{p} this turn.\n\nIf the discarded card has 6 or more {p}, draw 2 cards and Bloodrush Bellow gains **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "breakneck_battery_blue",
@@ -3259,7 +3259,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Breakneck Battery, discard a random card.\n\nIf the discarded card has 6 or more {p}, Breakneck Battery gains **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "breakneck_battery_red",
@@ -3282,7 +3282,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Breakneck Battery, discard a random card.\n\nIf the discarded card has 6 or more {p}, Breakneck Battery gains **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "breakneck_battery_yellow",
@@ -3305,7 +3305,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Breakneck Battery, discard a random card.\n\nIf the discarded card has 6 or more {p}, Breakneck Battery gains **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "driving_blade_blue",
@@ -3328,7 +3328,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +1{p} and **go again**.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "driving_blade_red",
@@ -3351,7 +3351,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +3{p} and **go again**.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "driving_blade_yellow",
@@ -3374,7 +3374,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +2{p} and **go again**.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "glint_the_quicksilver_blue",
@@ -3396,7 +3396,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains **go again**.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "hurricane_technique_yellow",
@@ -3420,7 +3420,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rising Knee Thrust was the last attack this combat chain, Hurricane Technique gains +1{p}, **go again**, and \"If Hurricane Technique hits, put it into your hand.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ironsong_response_blue",
@@ -3441,7 +3441,7 @@
     ],
     "specializations": [],
     "functional_text": "**Reprise** - If the defending hero has defended with a card from their hand this chain link, target weapon attack gains +1{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ironsong_response_red",
@@ -3462,7 +3462,7 @@
     ],
     "specializations": [],
     "functional_text": "**Reprise** - If the defending hero has defended with a card from their hand this chain link, target weapon attack gains +3{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "ironsong_response_yellow",
@@ -3483,7 +3483,7 @@
     ],
     "specializations": [],
     "functional_text": "**Reprise** - If the defending hero has defended with a card from their hand this chain link, target weapon attack gains +2{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "last_ditch_effort_blue",
@@ -3506,7 +3506,7 @@
     ],
     "specializations": [],
     "functional_text": "When you play Last Ditch Effort, if you have no cards in your deck, it gains +4{p} and **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "natures_path_pilgrimage_blue",
@@ -3529,7 +3529,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +1{p} and \"If this hits and you have no cards in your arsenal, reveal the top card of your deck. If it's an action card, put it face down into your arsenal.\"\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "natures_path_pilgrimage_red",
@@ -3552,7 +3552,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +3{p} and \"If this hits and you have no cards in your arsenal, reveal the top card of your deck. If it's an action card, put it face down into your arsenal.\"\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "natures_path_pilgrimage_yellow",
@@ -3575,7 +3575,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +2{p} and \"If this hits and you have no cards in your arsenal, reveal the top card of your deck. If it's an action card, put it face down into your arsenal.\"\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "open_the_center_blue",
@@ -3600,7 +3600,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, Open the Center gains +1{p}, **go again**, and **dominate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "open_the_center_red",
@@ -3625,7 +3625,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, Open the Center gains +1{p}, **go again**, and **dominate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "open_the_center_yellow",
@@ -3650,7 +3650,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, Open the Center gains +1{p}, **go again**, and **dominate**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "overpower_blue",
@@ -3671,7 +3671,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +2{p}\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, instead it gains +4{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "overpower_red",
@@ -3692,7 +3692,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +4{p}\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, instead it gains +6{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "overpower_yellow",
@@ -3713,7 +3713,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +3{p}\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, instead it gains +5{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "primeval_bellow_blue",
@@ -3736,7 +3736,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Primeval Bellow, discard a random card.\n\nYour next Brute attack this turn gains +3{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "primeval_bellow_red",
@@ -3759,7 +3759,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Primeval Bellow, discard a random card.\n\nYour next Brute attack this turn gains +5{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "primeval_bellow_yellow",
@@ -3782,7 +3782,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Primeval Bellow, discard a random card.\n\nYour next Brute attack this turn gains +4{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "pummel_blue",
@@ -3801,7 +3801,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Choose 1;\n- Target club or hammer weapon attack gains +2{p}.\n- Target attack action with cost 2 or greater gains +2{p} and \"If this hits a hero, they discard a card.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "pummel_red",
@@ -3820,7 +3820,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Choose 1;\n- Target club or hammer weapon attack gains +4{p}.\n- Target attack action with cost 2 or greater gains +4{p} and \"If this hits a hero, they discard a card.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "pummel_yellow",
@@ -3839,7 +3839,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Choose 1;\n- Target club or hammer weapon attack gains +3{p}.\n- Target attack action with cost 2 or greater gains +3{p} and \"If this hits a hero, they discard a card.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "rising_knee_thrust_blue",
@@ -3863,7 +3863,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Leg Tap was the last attack this combat chain, Rising Knee Thrust gains +2{p} and **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "rising_knee_thrust_red",
@@ -3887,7 +3887,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Leg Tap was the last attack this combat chain, Rising Knee Thrust gains +2{p} and **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "rising_knee_thrust_yellow",
@@ -3911,7 +3911,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Leg Tap was the last attack this combat chain, Rising Knee Thrust gains +2{p} and **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "rout_red",
@@ -3932,7 +3932,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +3{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, you may return target non-equipment defending card to its owners hand.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sand_sketched_plan_blue",
@@ -3957,7 +3957,7 @@
       "Rhinar"
     ],
     "functional_text": "**Rhinar Specialization**\n\nSearch your deck for a card, put it into your hand, discard a random card, then shuffle your deck.\n\nIf the discarded card has 6 or more {p}, gain 2 action points.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "savage_swing_blue",
@@ -3978,7 +3978,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Savage Swing, discard a random card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "savage_swing_red",
@@ -3999,7 +3999,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Savage Swing, discard a random card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "savage_swing_yellow",
@@ -4020,7 +4020,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Savage Swing, discard a random card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "scour_the_battlescape_blue",
@@ -4043,7 +4043,7 @@
     ],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.\n\nIf Scour the Battlescape is played from arsenal, it gains **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "scour_the_battlescape_red",
@@ -4066,7 +4066,7 @@
     ],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.\n\nIf Scour the Battlescape is played from arsenal, it gains **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "scour_the_battlescape_yellow",
@@ -4089,7 +4089,7 @@
     ],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.\n\nIf Scour the Battlescape is played from arsenal, it gains **go again**.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sharpen_steel_blue",
@@ -4112,7 +4112,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +1{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sharpen_steel_red",
@@ -4135,7 +4135,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +3{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sharpen_steel_yellow",
@@ -4158,7 +4158,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +2{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sigil_of_solace_blue",
@@ -4177,7 +4177,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Gain 1{h}",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sigil_of_solace_yellow",
@@ -4196,7 +4196,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Gain 2{h}",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "singing_steelblade_yellow",
@@ -4220,7 +4220,7 @@
       "Dorinthea"
     ],
     "functional_text": "**Dorinthea Specialization**\n\nTarget weapon attack gains +1{p}.\n\n**Reprise** - If the defending hero has defended with a card from hand this chain link, search your deck for an attack reaction card, banish it face up, then shuffle your deck. You may play it this chain link.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sink_below_blue",
@@ -4239,7 +4239,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sink_below_red",
@@ -4258,7 +4258,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sink_below_yellow",
@@ -4277,7 +4277,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sloggism_blue",
@@ -4300,7 +4300,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card with cost 2 or greater you play this turn gains +4{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sloggism_red",
@@ -4323,7 +4323,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card with cost 2 or greater you play this turn gains +6{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "sloggism_yellow",
@@ -4346,7 +4346,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card with cost 2 or greater you play this turn gains +5{p}.\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "snatch_blue",
@@ -4367,7 +4367,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "snatch_red",
@@ -4388,7 +4388,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "snatch_yellow",
@@ -4409,7 +4409,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, draw a card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "steelblade_shunt_blue",
@@ -4428,7 +4428,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Steelblade Shunt defends a weapon attack, deal 1 damage to the attacking hero.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "steelblade_shunt_red",
@@ -4447,7 +4447,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Steelblade Shunt defends a weapon attack, deal 1 damage to the attacking hero.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "steelblade_shunt_yellow",
@@ -4466,7 +4466,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Steelblade Shunt defends a weapon attack, deal 1 damage to the attacking hero.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "steelblade_supremacy_red",
@@ -4492,7 +4492,7 @@
       "Dorinthea"
     ],
     "functional_text": "**Dorinthea Specialization**\n\nUntil end of turn, target weapon gains +2{p} and \"Whenever this weapon hits, draw a card.\"\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "stroke_of_foresight_blue",
@@ -4513,7 +4513,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +1{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, draw a card, then put a card from your hand on the top or bottom of your deck.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "stroke_of_foresight_red",
@@ -4534,7 +4534,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +3{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, draw a card, then put a card from your hand on the top or bottom of your deck.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "stroke_of_foresight_yellow",
@@ -4555,7 +4555,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +2{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, draw a card, then put a card from your hand on the top or bottom of your deck.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "warriors_valor_blue",
@@ -4578,7 +4578,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +1{p} and \"If this hits, the attack gains **go again**.\"\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "warriors_valor_yellow",
@@ -4601,7 +4601,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +2{p} and \"If this hits, the attack gains **go again**.\"\n\n**Go again**",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "whelming_gustwave_blue",
@@ -4625,7 +4625,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and \"If this hits, draw a card.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "whelming_gustwave_red",
@@ -4649,7 +4649,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and \"If this hits, draw a card.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "whelming_gustwave_yellow",
@@ -4673,7 +4673,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and \"If this hits, draw a card.\"",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wounded_bull_blue",
@@ -4694,7 +4694,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you play this, if you have less {h} than an opposing hero, this gains +1{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wounded_bull_red",
@@ -4715,7 +4715,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you play this, if you have less {h} than an opposing hero, this gains +1{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wounded_bull_yellow",
@@ -4736,7 +4736,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you play this, if you have less {h} than an opposing hero, this gains +1{p}.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wrecker_romp_blue",
@@ -4757,7 +4757,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play this, discard a random card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wrecker_romp_red",
@@ -4778,7 +4778,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play this, discard a random card.",
-    "status": "approved"
+    "status": "needs_review"
   },
   {
     "slug": "wrecker_romp_yellow",
@@ -4799,6 +4799,6 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play this, discard a random card.",
-    "status": "approved"
+    "status": "needs_review"
   }
 ]

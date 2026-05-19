@@ -3,29 +3,16 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "additional_cost": [
-        {
-          "type": "PAY_RESOURCES",
-          "amount": 0
-        }
-      ],
       "conditions": [
         {
           "type": "COMBO",
-          "names": [
-            "mugenshi_release"
-          ]
+          "names": ["mugenshi_release"]
         }
       ],
       "effects": [
         {
-          "type": "BANISH",
-          "amount": 0,
-          "from_zone": "GRAVEYARD"
-        },
-        {
           "type": "MODIFY_ATTACK_POWER",
-          "amount": 0
+          "amount": 1
         }
       ]
     }

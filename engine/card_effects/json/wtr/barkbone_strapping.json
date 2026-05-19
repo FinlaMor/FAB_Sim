@@ -1,19 +1,21 @@
 {
   "slug": "barkbone_strapping",
+  "activate_cost": {
+      "type": "DESTROY_PERMANENT",
+      "target": "self"
+  },
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "additional_cost": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        }
-      ],
+      "ability_type": "INSTANT",
       "effects": [
         {
-          "type": "GAIN_RESOURCES_FROM_ROLL",
-          "faces": 6,
-          "divisor": 2
+          "type": "ROLL",
+          "faces": 6
+        },
+        {
+          "type": "GAIN",
+          "asset": "RESOURCES",
+          "amount": "ROLL_NUMBER_HALF_ROUND_DOWN"
         }
       ]
     }
