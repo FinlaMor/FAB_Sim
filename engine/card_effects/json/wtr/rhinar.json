@@ -6,7 +6,7 @@
       "trigger": "ON_DISCARD",
       "conditions": [
         {
-          "type": "ATTACK_COST_GTE",
+          "type": "DISCARDED_CARD_POWER_GTE",
           "amount": 6
         },
         {

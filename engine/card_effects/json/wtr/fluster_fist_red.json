@@ -5,14 +5,8 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "COMBO_CONTAINS",
-              "substring": "open_the_center"
-            }
-          ]
+          "type": "MODIFY_POWER_PER_CHAIN_HIT",
+          "amount_per_hit": 1
         }
       ]
     }

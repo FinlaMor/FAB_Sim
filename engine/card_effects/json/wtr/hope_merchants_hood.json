@@ -3,16 +3,15 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_DEATH",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
         {
-          "type": "BANISH",
-          "amount": 1,
-          "from_zone": "HAND"
-        },
-        {
-          "type": "DRAW",
-          "amount": 1
+          "type": "SHUFFLE_HAND_TO_DECK_DRAW"
         }
       ]
     }

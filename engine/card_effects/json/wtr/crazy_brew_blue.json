@@ -11,36 +11,33 @@
       ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_ACTIVATE",
-          "conditions": [],
-          "effects": [
+          "type": "ROLL_DIE_BRANCHES",
+          "faces": 6,
+          "branches": [
             {
-              "type": "GAIN_ACTION_POINTS",
-              "amount": 2,
-              "conditions": [
+              "range": [1, 2],
+              "effects": [
                 {
-                  "type": "OR",
-                  "any": [
-                    {
-                      "type": "REVEAL_CARD_COST_LTE",
-                      "amount": 4
-                    },
-                    {
-                      "type": "REVEAL_CARD_COST_GTE",
-                      "amount": 5
-                    }
-                  ]
+                  "type": "GAIN_LIFE",
+                  "amount": 1
                 }
               ]
             },
             {
-              "type": "NEXT_ATTACK_BONUS",
-              "amount": 2,
-              "conditions": [
+              "range": [3, 4],
+              "effects": [
                 {
-                  "type": "REVEAL_CARD_COST_GTE",
-                  "amount": 5
+                  "type": "DRAW",
+                  "amount": 1
+                }
+              ]
+            },
+            {
+              "range": [5, 6],
+              "effects": [
+                {
+                  "type": "GAIN_RESOURCES",
+                  "amount": 1
                 }
               ]
             }

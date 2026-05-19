@@ -857,6 +857,7 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                 CardEffect(prop="power", stage=7, substage=5,
                            fn=lambda val, _n=n: val + _n))
 
+
     # Persistent: "all_attacks_hit_draw_N" — inject ON_HIT draw every attack, keep flag.
     for key in player.current_turn_effects:
         m = _re.match(r'^all_attacks_hit_draw_(\d+)$', key)
@@ -884,6 +885,16 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                 CardEffect(prop="power", stage=7, substage=5,
                            fn=lambda val, _n=n: val + _n))
         player.current_turn_effects.remove(key)
+
+    # Persistent: "all_weapon_attacks_+N" — weapon-only power bonus every attack, keep flag.
+    for key in player.current_turn_effects:
+        m = _re.match(r'^all_weapon_attacks_\+(\d+)$', key)
+        if m and is_weapon_atk:
+            n = int(m.group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
 
     # One-shot: "next_weapon_attack_go_again" — grant go again on next weapon attack.
     if "next_weapon_attack_go_again" in player.current_turn_effects:

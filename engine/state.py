@@ -13,6 +13,7 @@ from typing import Callable, Optional
 from engine.card import Card, CardDB
 from engine.context import is_effect_context
 from engine.effects import EffectManager
+from engine.continuous_effects import ContinuousEffectManager  # noqa: F401
 
 # ---------------------------------------------------------------------------
 # Zone entry rules (CR 3.0.11 / 3.0.12 / 3.0.12a)
@@ -1172,6 +1173,10 @@ class GameState:
     combat_chain: Zone = field(default_factory=lambda: Zone("combat chain"))
     last_acted_player: Optional[int] = None
     last_known_cache: dict[int, dict] = field(default_factory=dict)
+    # Transient slot for agent sub-decisions during cost payment (e.g. which
+    # card to bottom). Keyed by cost type string. Consumed and cleared by the
+    # pay_fn; absent keys fall back to a random choice.
+    cost_choices: dict = field(default_factory=dict)
 
     def __post_init__(self):
         # Wire players dict into every zone so CLEAR redirects can reach any player's graveyard.

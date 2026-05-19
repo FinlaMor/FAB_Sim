@@ -3,15 +3,28 @@
   "abilities": [
     {
       "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
       "effects": [
         {
           "type": "DRAW",
           "amount": 2
         }
-      ],
+      ]
+    },
+    {
+      "ability_type": "PLAY",
       "conditions": [
         {
           "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN_LIFE_PER_CARD_IN_HAND"
         }
       ]
     }

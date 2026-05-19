@@ -1407,6 +1407,41 @@ def effect_draw(state, player_id: int, n: int = 1):
     _ek_draw(state, player_id, number=n)
 
 
+def _fire_on_discard(state, player_id: int, discarded_card=None) -> None:
+    """Dispatch ON_DISCARD DSL event to all persistent cards controlled by player_id.
+
+    discarded_card is passed as the event parameter so DISCARDED_CARD_POWER_GTE
+    conditions can inspect it.
+    """
+    from engine.card_effects.dsl.loader import get_card as _get_dsl_card
+    from engine.card_effects.dsl.interpreter import dispatch_event as _dispatch
+    player = state.players[player_id]
+    pairs = []
+    for w_attr in ('weapon1', 'weapon2'):
+        w = getattr(player, w_attr, None)
+        if w:
+            cd = _get_dsl_card(w.slug)
+            if cd:
+                pairs.append((cd, w))
+    for zone_name in ('items', 'auras', 'allies', 'permanents'):
+        zone = getattr(player, zone_name, None)
+        if zone and hasattr(zone, 'cards'):
+            for c in list(zone.cards):
+                cd = _get_dsl_card(c.slug)
+                if cd:
+                    pairs.append((cd, c))
+    hero = getattr(player, 'hero', None)
+    if hero:
+        cd = _get_dsl_card(hero.slug)
+        if cd:
+            pairs.append((cd, hero))
+    for card_def, card_obj in pairs:
+        try:
+            _dispatch(card_def, "ON_DISCARD", card_obj, discarded_card, state)
+        except Exception:
+            pass
+
+
 def effect_discard(state, player_id: int, count: int = 1, random_discard: bool = False) -> list:
     import random as _random
     discarded = []
@@ -1416,6 +1451,7 @@ def effect_discard(state, player_id: int, count: int = 1, random_discard: bool =
             break
         card = _random.choice(player.hand.cards) if random_discard else player.hand.cards[0]
         _ek_discard(state, card, None, origin='hand')
+        _fire_on_discard(state, player_id, card)
         discarded.append(card)
     return discarded
 

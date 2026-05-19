@@ -4,14 +4,10 @@
     {
       "ability_type": "ATTACK_REACTION",
       "conditions": [
-        {
-          "type": "ATTACK_IS_WEAPON"
-        }
+        {"type": "ATTACK_IS_WEAPON"}
       ],
       "effects": [
-        {
-          "type": "GO_AGAIN"
-        }
+        {"type": "GO_AGAIN"}
       ]
     }
   ]

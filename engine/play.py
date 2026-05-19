@@ -517,6 +517,23 @@ def _calculate_resource_cost(state: GameState, action: Action) -> int:
 
     mgr = state.continuous_effect_manager
     cost = mgr.recalculate(state, card, 'cost', base_cost, action=action)
+
+    # DSL cost-reduction flags from current_turn_effects (seismic_surge, heartened_cross_strap, etc.)
+    player = state.players[action.player_id] if action.player_id is not None else None
+    if player is not None:
+        card_types = [t.lower() for t in (getattr(card, 'types', None) or [])]
+        card_classes = [c.lower() for c in (getattr(card, 'classes', None) or [])]
+        is_attack_action = 'attack' in card_types
+        for key in player.current_turn_effects:
+            m = re.match(r'^next_attack_action_cost_-(\d+)$', key)
+            if m and is_attack_action:
+                cost -= int(m.group(1))
+                break
+            m2 = re.match(r'^next_guardian_attack_action_cost_-(\d+)$', key)
+            if m2 and is_attack_action and 'guardian' in card_classes:
+                cost -= int(m2.group(1))
+                break
+
     return max(0, cost)  # CR 5.1.6a: floor at 0
 
 def _get_base_resource_cost(state: GameState, action: Action) -> int:
@@ -660,6 +677,22 @@ def _pay_costs(state, player_id, action):
     # Deduct final resource cost using the pre-calculated modified value
     action.resource_cost = resource_cost
     player.resources -= resource_cost
+
+    # Consume one-shot DSL cost-reduction flags now that cost has been paid
+    card = action.card
+    card_types = [t.lower() for t in (getattr(card, 'types', None) or [])]
+    card_classes = [c.lower() for c in (getattr(card, 'classes', None) or [])]
+    is_attack_action = 'attack' in card_types
+    for key in [k for k in player.current_turn_effects
+                if re.match(r'^next_attack_action_cost_-\d+$', k)]:
+        if is_attack_action:
+            player.current_turn_effects.remove(key)
+            break
+    for key in [k for k in player.current_turn_effects
+                if re.match(r'^next_guardian_attack_action_cost_-\d+$', k)]:
+        if is_attack_action and 'guardian' in card_classes:
+            player.current_turn_effects.remove(key)
+            break
 
     life_cost: int = 0
     if hasattr(action, "life_cost") and (action.life_cost or 0) > 0 and player.hero is not None:

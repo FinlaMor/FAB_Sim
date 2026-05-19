@@ -6,7 +6,8 @@
       "trigger": "START_OF_TURN",
       "conditions": [
         {
-          "type": "COUNTER_GTE",
+          "type": "NOT",
+          "inner_type": "COUNTER_GTE",
           "counter_type": "energy",
           "min": 3
         }

@@ -40,9 +40,10 @@ venv/
 dist/
 build/
 
-# --- Claude Code / Auto Claude ---
+# --- Claude Code / Auto Claude / OMC ---
 .claude/
 .auto-claude/
+.omc/
 .auto-claude-security.json
 .claude_settings.json
 

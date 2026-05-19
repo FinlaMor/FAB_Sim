@@ -2,26 +2,18 @@
   "slug": "heartened_cross_strap",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_DEATH",
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_PLAY",
-          "conditions": [
-            {
-              "type": "ATTACK_IS_WEAPON"
-            }
-          ],
-          "effects": [
-            {
-              "type": "MODIFY_ATTACK_POWER",
-              "amount": -2
-            },
-            {
-              "type": "GO_AGAIN"
-            }
-          ]
+          "type": "REDUCE_NEXT_CARD_COST",
+          "amount": 2,
+          "filter_types": ["attack"]
         }
       ]
     }

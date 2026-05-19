@@ -14,6 +14,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             effect_gain_life(state, _controller_id(card), _a)
         return _fn
 
+    if etype == "GAIN_LIFE_PER_CARD_IN_HAND":
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import effect_gain_life, _controller_id
+            cid = _controller_id(card)
+            n = len(state.players[cid].hand.cards)
+            if n > 0:
+                effect_gain_life(state, cid, n)
+        return _fn
+
     if etype == "LOSE_LIFE":
         amt = params.get("amount", 0)
         def _fn(card, event, state, _a=amt):
@@ -77,35 +86,37 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "BANISH":
         amt = params.get("amount", 1)
         from_zone = params.get("from_zone", "TOP_DECK")
-        def _fn(card, event, state, _a=amt, _fz=from_zone):
+        player_target = params.get("player", "SELF")
+        def _fn(card, event, state, _a=amt, _fz=from_zone, _pt=player_target):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
             from engine.effect_keywords import banish as _ek_banish
             cid = _controller_id(card)
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             fz = _fz.upper()
             if fz in ("TOP_DECK", "DECK"):
-                targets = state.players[cid].deck.cards[:_a]
+                targets = state.players[tid].deck.cards[:_a]
                 for t in targets:
-                    _ek_banish(state, t, cid, origin_zone="deck")
+                    _ek_banish(state, t, tid, origin_zone="deck")
             elif fz == "HAND":
-                hand = state.players[cid].hand.cards
+                hand = state.players[tid].hand.cards
                 if not hand:
                     return
                 for _ in range(min(_a, len(hand))):
-                    options = [c.slug for c in state.players[cid].hand.cards]
-                    pick = _ask_player(state, cid, options, context="Choose a card to banish from hand")
-                    target = next((c for c in state.players[cid].hand.cards if c.slug == pick), None)
+                    options = [c.slug for c in state.players[tid].hand.cards]
+                    pick = _ask_player(state, tid, options, context="Choose a card to banish from hand")
+                    target = next((c for c in state.players[tid].hand.cards if c.slug == pick), None)
                     if target:
-                        _ek_banish(state, target, cid, origin_zone="hand")
+                        _ek_banish(state, target, tid, origin_zone="hand")
             elif fz == "GRAVEYARD":
-                gy = state.players[cid].graveyard.cards
+                gy = state.players[tid].graveyard.cards
                 if not gy:
                     return
                 for _ in range(min(_a, len(gy))):
-                    options = [c.slug for c in state.players[cid].graveyard.cards]
-                    pick = _ask_player(state, cid, options, context="Choose a card to banish from graveyard")
-                    target = next((c for c in state.players[cid].graveyard.cards if c.slug == pick), None)
+                    options = [c.slug for c in state.players[tid].graveyard.cards]
+                    pick = _ask_player(state, tid, options, context="Choose a card to banish from graveyard")
+                    target = next((c for c in state.players[tid].graveyard.cards if c.slug == pick), None)
                     if target:
-                        _ek_banish(state, target, cid, origin_zone="graveyard")
+                        _ek_banish(state, target, tid, origin_zone="graveyard")
         return _fn
 
     if etype == "CHARGE":
@@ -283,6 +294,33 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 player.deck.add_bottom(target)
         return _fn
 
+    if etype == "CREATE_AURA_TOKEN":
+        token_slug = params.get("token", "")
+        def _fn(card, event, state, _slug=token_slug):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.card import Card
+            pid = _controller_id(card)
+            player = state.players[pid]
+            token = Card(slug=_slug, name=_slug, types=["Token"])
+            token.owner = pid
+            token.controller = pid
+            player.auras.add(token)
+        return _fn
+
+    if etype == "PUT_SELF_BOTTOM_DECK":
+        # Remove this card from the graveyard and put it on the bottom of its owner's deck.
+        # Used for replacement effects like Drone of Brutality.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            pid = _controller_id(card)
+            player = state.players[pid]
+            if hasattr(player, 'graveyard') and hasattr(player.graveyard, 'cards'):
+                if card in player.graveyard.cards:
+                    player.graveyard.cards.remove(card)
+            player.deck.add_bottom(card)
+            card.zone = "deck"
+        return _fn
+
     if etype == "SEARCH_DECK":
         # Search your deck for any card, put it in hand, then shuffle.
         # Player may "fail to find" (CR 8.5.19). Follows the nimby pattern.
@@ -329,8 +367,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         ap_gain = params.get("ap_gain", 0)
         draw_count = params.get("draw", 0)
         go_again = params.get("go_again", False)
+        power_bonus = params.get("power_bonus", 0)
         def _fn(card, event, state, _a=amt, _pg=power_gte, _ap=ap_gain,
-                _dr=draw_count, _ga=go_again):
+                _dr=draw_count, _ga=go_again, _pb=power_bonus):
             from engine.card_effects.ability_keywords import effect_discard, _controller_id
             cid = _controller_id(card)
             discarded = effect_discard(state, cid, _a, random_discard=True)
@@ -342,6 +381,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     effect_draw(state, cid, _dr)
                 if _ga and state.combat:
                     state.combat.grant_keyword("go_again")
+                if _pb and state.combat:
+                    state.combat.attack_power = (state.combat.attack_power or 0) + _pb
         return _fn
 
     if etype == "AMP":
@@ -362,9 +403,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "CREATE_TOKEN":
         token = params.get("token", "")
         count = params.get("count", 1)
-        def _fn(card, event, state, _tok=token, _cnt=count):
+        player_target = params.get("player", "SELF")
+        def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target):
             from engine.card_effects.ability_keywords import create_token, _controller_id
-            create_token(state, _controller_id(card), _tok, _cnt)
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            create_token(state, tid, _tok, _cnt)
         return _fn
 
     if etype == "PUT_COUNTER":
@@ -467,6 +511,276 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     except Exception:
                         zone.cards.remove(card)
                     return
+        return _fn
+
+    if etype == "ROLL_DIE_BRANCHES":
+        # Roll a die; execute effects from the matching range branch.
+        # branches: [{"range": [low, high], "effects": [{...}, ...]}, ...]
+        faces = params.get("faces", 6)
+        raw_branches = params.get("branches", [])
+        compiled_branches = []
+        for branch in raw_branches:
+            lo, hi = branch.get("range", [1, faces])
+            inner_effs = [
+                compile_effect(e.get("type", "").upper(),
+                               {k: v for k, v in e.items() if k != "type"})
+                for e in branch.get("effects", [])
+            ]
+            compiled_branches.append((lo, hi, inner_effs))
+        def _fn(card, event, state, _f=faces, _cb=compiled_branches):
+            from engine.card_effects.ability_keywords import roll_die, _controller_id
+            result = roll_die(state, _controller_id(card), faces=_f)
+            for lo, hi, effs in _cb:
+                if lo <= result <= hi:
+                    for eff_fn in effs:
+                        eff_fn(card, event, state)
+                    break
+        return _fn
+
+    if etype == "ALL_WEAPONS_BONUS":
+        # All weapon attacks this turn gain +N{p} (biting_blade reprise).
+        amt = params.get("amount", 0)
+        def _fn(card, event, state, _a=amt):
+            state.active().current_turn_effects.append(f"all_weapon_attacks_+{_a}")
+        return _fn
+
+    if etype == "MODIFY_POWER_PER_CHAIN_HIT":
+        # +amount_per_hit × (number of prior chain-link hits) (fluster_fist).
+        amt_per = params.get("amount_per_hit", 1)
+        def _fn(card, event, state, _a=amt_per):
+            n_hits = len(getattr(state, 'chain_links', []))
+            if state.combat and n_hits:
+                state.combat.attack_power = (state.combat.attack_power or 0) + _a * n_hits
+        return _fn
+
+    if etype == "REVEAL_TOP_DECK":
+        # Reveal top N cards; gain gain_life{h} per card with cost >= cost_gte.
+        amount = params.get("amount", 1)
+        gain_life = params.get("gain_life", 0)
+        cost_gte = params.get("cost_gte", None)
+        def _fn(card, event, state, _a=amount, _gl=gain_life, _cg=cost_gte):
+            from engine.card_effects.ability_keywords import effect_gain_life, _controller_id
+            pid = _controller_id(card)
+            revealed = state.players[pid].deck.cards[:_a]
+            if _gl and _cg is not None:
+                matching = sum(1 for c in revealed
+                               if (getattr(c, 'cost', None) or 0) >= _cg)
+                if matching:
+                    effect_gain_life(state, pid, _gl * matching)
+        return _fn
+
+    if etype == "PUT_ARSENAL_BOTTOM":
+        # Put the opponent's arsenal card on the bottom of their deck (disable).
+        player_target = params.get("player", "OPPONENT")
+        def _fn(card, event, state, _pt=player_target):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            player = state.players[tid]
+            arsenal = getattr(player, 'arsenal', None)
+            if arsenal and hasattr(arsenal, 'cards') and arsenal.cards:
+                card_to_move = arsenal.cards[0]
+                arsenal.cards.remove(card_to_move)
+                player.deck.cards.append(card_to_move)
+        return _fn
+
+    if etype == "REDUCE_NEXT_CARD_COST":
+        # Sets a cost-reduction flag consumed when the next qualifying card is played.
+        # filter_types: ["attack"] restricts to attack action cards; empty = any card.
+        # filter_classes: ["Guardian"] restricts to specific class.
+        amt = params.get("amount", 0)
+        filter_types = [t.lower() for t in params.get("filter_types", [])]
+        filter_classes = [c.lower() for c in params.get("filter_classes", [])]
+        def _fn(card, event, state, _a=amt, _ft=filter_types, _fc=filter_classes):
+            from engine.card_effects.ability_keywords import _controller_id
+            parts = []
+            if "attack" in _ft:
+                parts.append("attack_action")
+            if _fc:
+                parts.append("_".join(_fc))
+            qualifier = ("_" + "_".join(parts)) if parts else ""
+            state.active().current_turn_effects.append(f"next{qualifier}_cost_-{_a}")
+        return _fn
+
+    if etype == "SHUFFLE_HAND_TO_DECK_DRAW":
+        # hope_merchants_hood: shuffle any number of hand cards into deck, draw same count.
+        # Simulation: shuffles all hand cards (agent has no partial-choice mechanism).
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import effect_draw, _controller_id
+            import random as _random
+            cid = _controller_id(card)
+            player = state.players[cid]
+            n = len(player.hand.cards)
+            if not n:
+                return
+            for c in list(player.hand.cards):
+                player.hand.cards.remove(c)
+                player.deck.cards.append(c)
+            _random.shuffle(player.deck.cards)
+            effect_draw(state, cid, n)
+        return _fn
+
+    if etype == "CHOOSE_ONE":
+        # Present N option-lists; randomly pick one and execute its effects.
+        # options: [[{effect}, ...], [{effect}, ...], ...]
+        options_raw = params.get("options", [])
+        compiled_options = [
+            [compile_effect(e.get("type", "").upper(),
+                            {k: v for k, v in e.items() if k != "type"})
+             for e in opt]
+            for opt in options_raw
+        ]
+        def _fn(card, event, state, _opts=compiled_options):
+            if not _opts:
+                return
+            import random as _random
+            for eff_fn in _random.choice(_opts):
+                eff_fn(card, event, state)
+        return _fn
+
+    if etype == "DESTROY_PERMANENT":
+        target = params.get("target", "self")
+        def _fn(card, event, state, _t=target):
+            from engine.card_effects.ability_keywords import _controller_id
+            pid = _controller_id(card)
+            player = state.players[pid]
+            if _t == "self":
+                for zone_name in ('permanents', 'items', 'auras', 'allies'):
+                    zone = getattr(player, zone_name, None)
+                    if zone and hasattr(zone, 'cards') and card in zone.cards:
+                        try:
+                            from engine.effect_keywords import destroy as _ek_destroy
+                            _ek_destroy(state, card, None)
+                        except Exception:
+                            zone.cards.remove(card)
+                        return
+        return _fn
+
+    if etype in ("MODIFY_DEFENSE_VALUE", "MODIFY_DEFENSE_POWER"):
+        amt = params.get("amount", 0)
+        def _fn(card, event, state, _a=amt):
+            if state.combat:
+                state.combat.total_defense = (getattr(state.combat, 'total_defense', 0) or 0) + _a
+        return _fn
+
+    if etype == "ATTACK":
+        # Weapon attack initiation is handled by the engine's ACTIVATE pathway.
+        # This DSL effect is a no-op placeholder for harmonized_kodachi / romping_club.
+        def _fn(card, event, state):
+            pass
+        return _fn
+
+    if etype == "RETURN_DR_FROM_GRAVEYARD":
+        # Return a defense reaction card from any graveyard to its owner's hand.
+        # Simplified: searches controller's graveyard first, then opponent's.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            for pid in (cid, 3 - cid):
+                player = state.players.get(pid)
+                if not player:
+                    continue
+                for c in list(getattr(player.graveyard, 'cards', [])):
+                    types = [t.lower() for t in (getattr(c, 'types', None) or [])]
+                    subtypes = [st.lower() for st in (getattr(c, 'subtypes', None) or [])]
+                    if 'defense reaction' in types or 'defense_reaction' in subtypes:
+                        player.graveyard.cards.remove(c)
+                        owner_player = state.players.get(c.owner if c.owner is not None else pid)
+                        if owner_player:
+                            owner_player.hand.add(c)
+                        return
+        return _fn
+
+    if etype == "GAIN_POWER_FROM_ROLL":
+        # Roll a die, gain that many attack power (Swing Big style).
+        faces = params.get("faces", 6)
+        def _fn(card, event, state, _f=faces):
+            from engine.card_effects.ability_keywords import roll_die, _controller_id
+            pid = _controller_id(card)
+            result = roll_die(state, pid, faces=_f)
+            if state.combat:
+                state.combat.attack_power = (state.combat.attack_power or 0) + result
+        return _fn
+
+    if etype == "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA":
+        # +N power per distinct aura name the controller has in play (Overcrowded).
+        per = params.get("per", 1)
+        def _fn(card, event, state, _per=per):
+            from engine.card_effects.ability_keywords import _controller_id
+            pid = _controller_id(card)
+            auras = getattr(state.players[pid], 'auras', None)
+            if not auras:
+                return
+            distinct = len({getattr(c, 'slug', '') for c in auras.cards})
+            if distinct and state.combat:
+                state.combat.attack_power = (state.combat.attack_power or 0) + distinct * _per
+        return _fn
+
+    if etype == "CROWD_BOO":
+        player_target = params.get("player", "SELF")
+        def _fn(card, event, state, _pt=player_target):
+            from engine.card_effects.ability_keywords import effect_crowd_boos, _controller_id
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            effect_crowd_boos(state, tid)
+        return _fn
+
+    if etype == "DEAL_GENERIC":
+        amt = params.get("amount", 0)
+        tgt = params.get("target", "OPPONENT")
+        def _fn(card, event, state, _a=amt, _t=tgt):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import deal_damage, DamageType
+            cid = _controller_id(card)
+            tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            deal_damage(state, _a, DamageType.GENERIC, target_player_id=tid, source_card=card)
+        return _fn
+
+    if etype == "ROLL_ATTACK_BONUS":
+        # Roll a die; if result >= threshold, grant +N power to the current attack.
+        faces = params.get("faces", 6)
+        threshold = params.get("threshold", 4)
+        bonus = params.get("bonus", 0)
+        def _fn(card, event, state, _f=faces, _th=threshold, _b=bonus):
+            from engine.card_effects.ability_keywords import roll_die, _controller_id
+            pid = _controller_id(card)
+            result = roll_die(state, pid, faces=_f)
+            if result >= _th and state.combat:
+                state.combat.attack_power = (state.combat.attack_power or 0) + _b
+        return _fn
+
+    if etype == "STEAL_AURA_TOKEN":
+        token_slug = params.get("token", "")
+        def _fn(card, event, state, _slug=token_slug):
+            from engine.card_effects.ability_keywords import effect_steal_token, _controller_id
+            cid = _controller_id(card)
+            effect_steal_token(state, cid, 3 - cid)
+        return _fn
+
+    if etype == "RETRIEVE_DAGGER":
+        # Pay 1{r} to retrieve a dagger from your graveyard into the appropriate weapon slot.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import retrieve
+            cid = _controller_id(card)
+            player = state.players[cid]
+            daggers = [c for c in player.graveyard.cards
+                       if "dagger" in [s.lower() for s in (getattr(c, 'subtypes', None) or [])]]
+            if not daggers or player.resources < 1:
+                return
+            retrieve(state, daggers[0], cid, chose_to_pay=True)
+        return _fn
+
+    if etype == "DESTROY_ARSENAL":
+        # Destroy the target player's arsenal card.
+        player_target = params.get("player", "OPPONENT")
+        def _fn(card, event, state, _pt=player_target):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            player = state.players[tid]
+            if hasattr(player, 'arsenal') and player.arsenal.cards:
+                player.arsenal.cards.clear()
         return _fn
 
     # ── unknown → no-op ────────────────────────────────────────────────────

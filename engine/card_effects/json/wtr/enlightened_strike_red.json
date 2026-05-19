@@ -4,68 +4,21 @@
     {
       "ability_type": "PLAY",
       "additional_cost": [
-        {
-          "type": "PUT_HAND_CARD_BOTTOM"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
-      "effects": [
-        {
-          "type": "DRAW",
-          "amount": 1
-        }
+        {"type": "PUT_HAND_CARD_BOTTOM"}
       ],
-      "conditions": [
-        {
-          "type": "OR",
-          "any": [
-            {
-              "type": "FLAG_SET",
-              "flag": "draw_card"
-            },
-            {
-              "type": "FLAG_SET",
-              "flag": "go_again"
-            },
-            {
-              "type": "FLAG_SET",
-              "flag": "power_bonus"
-            }
-          ]
-        }
-      ]
+      "effects": []
     },
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "STATIC",
       "effects": [
         {
           "type": "MODIFY_ATTACK_POWER",
-          "amount": 2
-        }
-      ],
-      "conditions": [
+          "amount": 2,
+          "conditions": [{"type": "FLAG_SET", "flag": "power_bonus"}]
+        },
         {
-          "type": "FLAG_SET",
-          "flag": "power_bonus"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
-      "effects": [
-        {
-          "type": "GO_AGAIN"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "go_again"
+          "type": "GO_AGAIN",
+          "conditions": [{"type": "FLAG_SET", "flag": "go_again"}]
         }
       ]
     }

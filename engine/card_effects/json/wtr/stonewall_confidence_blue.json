@@ -2,31 +2,11 @@
   "slug": "stonewall_confidence_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "DEFENSE_REACTION",
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER",
-          "amount": 2,
-          "target": "SELF"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "ATTACK_IS_NOT_WEAPON"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
-      "conditions": [
-        {
-          "type": "IS_ACTIVE_PLAYER"
-        }
-      ],
-      "effects": [
-        {
-          "type": "DESTROY_SELF"
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 2
         }
       ]
     }

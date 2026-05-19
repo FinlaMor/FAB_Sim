@@ -1,0 +1,9 @@
+{
+  "slug": "reckless_arithmetic_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [{"type": "GAIN_POWER_FROM_ROLL", "faces": 6}]
+    }
+  ]
+}

@@ -45,11 +45,9 @@ def dispatch_event(card_def, event_type: str, card, event, state) -> None:
                 run_ability(ability, card, event, state)
             continue
 
-        # PLAY / ATTACK_REACTION / DEFENSE_REACTION / ACTIVATE:
+        # PLAY / ATTACK_REACTION / DEFENSE_REACTION / ACTIVATE / STATIC:
         # matches if the mapped event equals event_type
         mapped = ABILITY_TYPE_TO_EVENT.get(atype)
         if mapped and mapped == event_type:
             run_ability(ability, card, event, state)
             continue
-
-        # STATIC: not dispatched here — handled by the static ability system

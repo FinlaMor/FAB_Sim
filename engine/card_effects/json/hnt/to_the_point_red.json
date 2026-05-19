@@ -1,0 +1,16 @@
+{
+  "slug": "to_the_point_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {"type": "MODIFY_ATTACK_POWER", "amount": 3},
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "conditions": [{"type": "OPPONENT_IS_MARKED"}]
+        }
+      ]
+    }
+  ]
+}

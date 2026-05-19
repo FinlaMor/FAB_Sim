@@ -63,14 +63,16 @@ See [[Card Set Status]] for per-set tracking.
 
 ### Immediate (block target decks)
 - [ ] Victor CC deck — identify hero + key cards, implement
-- [ ] Mario CC deck — identify hero + key cards, implement
+- [ ] Arakni, Marionette CC deck — identify hero + key cards, implement
+- [ ] Kayo, Underhanded Cheat CC deck — identify hero + key cards, implement
 
 ### Process for each new card
 1. Find card in slug_index (functional_text, keywords, types)
-2. Check if text_trigger_parser handles the pattern automatically
-3. If not: add to appropriate registry or card_triggers_extended.py
-4. Write test in `tests/test_card_implementations.py`
-5. Run `pytest tests/test_card_implementations.py`
+2. ~~Check if text_trigger_parser handles the pattern automatically~~
+3. ~~If not: add to appropriate registry or card_triggers_extended.py~~
+4. Add dsl implementation if needed
+5. Write test in `tests/test_card_implementations.py`
+6. Run `pytest tests/test_card_implementations.py`
 
 ### Templates to build
 - [ ] Card implementation template (alt cost / additional cost / effect / counters format) — from Next Actions.md
@@ -79,7 +81,7 @@ See [[Card Set Status]] for per-set tracking.
 ---
 ## Track 2.5 - Talishar Front End
 - Use the talishar front-end design to track games in a human-readable way
-- [ ] Only use it for tracking card movements. Don't need to adapt the actor decision inputs if we only use it to update card locations
+- [ ] Only use it for tracking card movements. Don't need to adapt the actor decision inputs if we only use it to  review games (update card locations)
 ## Track 3 — ML / Training (lower priority until card coverage improves)
 - IQL v3 trained, needs fresh H2H eval after turn_penalty retraining
 - [ ] Run v3 vs v2 H2H to confirm improvement

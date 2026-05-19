@@ -4,92 +4,21 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ENTER_PLAY",
-      "effects": [
-        {
-          "type": "DRAW",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "pitch",
-              "cost_gte": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
       "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "blessing_of_deliverance_active"
-        }
+        {"type": "CARD_IN_ZONE", "zone": "pitch", "cost_gte": 3}
       ],
       "effects": [
-        {
-          "type": "GAIN_LIFE",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "deck",
-              "cost_gte": 3
-            }
-          ]
-        }
+        {"type": "DRAW", "amount": 1}
       ]
     },
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "pitch", "cost_gte": 3}
+      ],
       "effects": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_ACTIVATE",
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "blessing_of_deliverance_active"
-            }
-          ],
-          "effects": [
-            {
-              "type": "SEARCH_DECK",
-              "filter_types": [
-                "card"
-              ],
-              "amount": 3
-            },
-            {
-              "type": "INJECT_TRIGGER",
-              "trigger": "ON_ACTIVATE",
-              "conditions": [
-                {
-                  "type": "FLAG_SET",
-                  "flag": "blessing_of_deliverance_active"
-                }
-              ],
-              "effects": [
-                {
-                  "type": "GAIN_LIFE",
-                  "amount": 1,
-                  "conditions": [
-                    {
-                      "type": "CARD_IN_ZONE",
-                      "zone": "deck",
-                      "cost_gte": 3
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
+        {"type": "DRAW", "amount": 1}
       ]
     }
   ]

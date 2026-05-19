@@ -1,0 +1,12 @@
+{
+  "slug": "codex_of_frailty_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "frailty", "count": 1, "player": "OPPONENT"},
+        {"type": "GAIN_ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ]
+}

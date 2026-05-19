@@ -1,0 +1,9 @@
+{
+  "slug": "nights_embrace_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [{"type": "ALL_ATTACKS_BONUS", "amount": 1}]
+    }
+  ]
+}

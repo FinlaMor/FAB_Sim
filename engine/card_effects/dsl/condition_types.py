@@ -127,6 +127,9 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return len(s.players[pid].deck.cards) == 0
         return _de
 
+    if ctype == "REPRISE_ACTIVE":
+        return lambda c, e, s: bool(s.combat and getattr(s.combat, 'defender_used_hand_card', False))
+
     if ctype == "PLAYED_FROM_ARSENAL":
         # card.prev_zone is 'arsenal' when played from arsenal (set by Zone tracking)
         return lambda c, e, s: getattr(c, 'prev_zone', '').lower() == 'arsenal'
@@ -194,6 +197,56 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             from engine.card_effects.ability_keywords import _controller_id
             return _f in s.players[_controller_id(c)].current_turn_effects
         return _fs
+
+    if ctype == "CHAIN_HIT_COUNT_GTE":
+        # True when the current chain has >= N prior hits (mask_of_momentum: 3rd+ hit).
+        amount = params.get("amount", 3)
+        def _cgh(c, e, s, _amt=amount):
+            return len(getattr(s, 'chain_links', [])) >= _amt - 1
+        return _cgh
+
+    if ctype == "DISCARDED_CARD_POWER_GTE":
+        # True when the discarded card (passed as event) has >= N base power.
+        amount = params.get("amount", 0)
+        def _dcpg(c, e, s, _amt=amount):
+            power = getattr(e, 'power', None) or getattr(e, 'base_power', None) or 0
+            return (power or 0) >= _amt
+        return _dcpg
+
+    if ctype == "IS_BOOED":
+        # True if the controller has been booed this turn.
+        def _ib(c, e, s):
+            from engine.card_effects.ability_keywords import has_been_booed, _controller_id
+            return has_been_booed(s, _controller_id(c))
+        return _ib
+
+    if ctype == "OPPONENT_IS_MARKED":
+        # True if the opponent hero is currently marked.
+        def _oim(c, e, s):
+            from engine.card_effects.ability_keywords import _controller_id
+            opp = 3 - _controller_id(c)
+            return s.players[opp].class_counters.get("marked", 0) > 0
+        return _oim
+
+    if ctype == "CONTROLS_TOKEN_TYPE":
+        # True if the controller has >= 1 token of the given slug in their tokens zone.
+        token_slug = params.get("token", "")
+        def _ctt(c, e, s, _slug=token_slug):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = s.players[_controller_id(c)]
+            tokens = getattr(player, 'tokens', None) or getattr(player, 'auras', None)
+            if tokens is None:
+                return False
+            return any(getattr(t, 'slug', '') == _slug for t in tokens.cards)
+        return _ctt
+
+    if ctype == "ATTACK_HAS_KEYWORD":
+        kw = params.get("keyword", "")
+        def _ahk(c, e, s, _kw=kw):
+            if not s.combat:
+                return False
+            return _kw in (s.combat.keywords or [])
+        return _ahk
 
     # ── boolean combinators ────────────────────────────────────────────────
     if ctype == "OR":

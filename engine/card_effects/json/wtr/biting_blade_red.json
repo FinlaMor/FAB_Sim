@@ -7,6 +7,15 @@
         {
           "type": "MODIFY_ATTACK_POWER",
           "amount": 3
+        },
+        {
+          "type": "ALL_WEAPONS_BONUS",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "REPRISE"
+            }
+          ]
         }
       ]
     }

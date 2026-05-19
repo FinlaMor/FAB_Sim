@@ -2,19 +2,20 @@
   "slug": "remembrance_yellow",
   "abilities": [
     {
-      "ability_type": "PLAY",
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 1
+        }
+      ],
       "effects": [
         {
-          "type": "BANISH",
-          "amount": 1,
-          "from_zone": "GRAVEYARD"
+          "type": "CREATE_AURA_TOKEN",
+          "token": "seismic_surge"
         },
         {
-          "type": "SEARCH_DECK",
-          "filter_types": [
-            "Action"
-          ],
-          "slug_contains": "remembrance"
+          "type": "GO_AGAIN"
         }
       ]
     }

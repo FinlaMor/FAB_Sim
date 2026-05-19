@@ -9,6 +9,19 @@
           "amount": 3
         }
       ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "REPRISE_ACTIVE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_DR_FROM_GRAVEYARD"
+        }
+      ]
     }
   ]
 }

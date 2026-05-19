@@ -4,58 +4,21 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "pitch", "cost_gte": 3}
+      ],
       "effects": [
-        {
-          "type": "DRAW",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "pitch",
-              "cost_gte": 3
-            }
-          ]
-        }
+        {"type": "DRAW", "amount": 1}
       ]
     },
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "pitch", "cost_gte": 3}
+      ],
       "effects": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_ACTIVATE",
-          "conditions": [
-            {
-              "type": "IS_ACTIVE_PLAYER"
-            }
-          ],
-          "effects": [
-            {
-              "type": "SEARCH_DECK",
-              "filter_types": [
-                "Action"
-              ],
-              "amount": 1,
-              "put_bottom_draw": true
-            },
-            {
-              "type": "GAIN_LIFE",
-              "amount": 1,
-              "conditions": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "hand",
-                  "cost_gte": 3
-                }
-              ]
-            }
-          ]
-        }
+        {"type": "DRAW", "amount": 1}
       ]
     }
   ]

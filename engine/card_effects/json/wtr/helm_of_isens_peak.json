@@ -9,7 +9,8 @@
           "amount": 1
         },
         {
-          "type": "DESTROY_PERMANENT"
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
         }
       ],
       "effects": [

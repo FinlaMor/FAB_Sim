@@ -6,34 +6,35 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
+          "type": "IS_ACTIVE_PLAYER"
+        },
+        {
           "type": "ATTACK_IS_NOT_WEAPON"
         },
         {
-          "type": "IS_ACTIVE_PLAYER"
+          "type": "NOT",
+          "inner_type": "FLAG_SET",
+          "flag": "katsu_used"
         }
       ],
       "effects": [
         {
+          "type": "SET_FLAG",
+          "flag": "katsu_used"
+        },
+        {
           "type": "DISCARD",
           "amount": 1,
-          "random": true
+          "random": false
         },
         {
           "type": "SEARCH_DECK",
-          "filter_types": [
-            "combo"
-          ]
+          "filter_types": ["combo"]
         },
         {
           "type": "BANISH",
           "amount": 1,
-          "from_zone": "TOP_DECK"
-        },
-        {
-          "type": "PUT_HAND_CARD_BOTTOM"
-        },
-        {
-          "type": "DRAW"
+          "from_zone": "HAND"
         }
       ]
     }

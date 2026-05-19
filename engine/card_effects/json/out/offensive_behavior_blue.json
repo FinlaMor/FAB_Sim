@@ -1,0 +1,31 @@
+{
+  "slug": "offensive_behavior_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "OR",
+              "any": [
+                {"type": "CONTROLS_TOKEN_TYPE", "token": "might"},
+                {"type": "CONTROLS_TOKEN_TYPE", "token": "vigor"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "might", "count": 1},
+        {"type": "CREATE_TOKEN", "token": "vigor", "count": 1}
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "slug": "unmovable_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "DEFENSE_REACTION",
       "conditions": [
         {
           "type": "PLAYED_FROM_ARSENAL"
@@ -10,7 +10,7 @@
       ],
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER",
+          "type": "MODIFY_DEFENSE_VALUE",
           "amount": 1
         }
       ]

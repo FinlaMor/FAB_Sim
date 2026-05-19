@@ -1,0 +1,12 @@
+{
+  "slug": "cut_from_the_same_cloth_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "NEXT_ATTACK_BONUS", "amount": 4},
+        {"type": "GAIN_ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ]
+}

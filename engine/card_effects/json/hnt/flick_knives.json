@@ -1,0 +1,9 @@
+{
+  "slug": "flick_knives",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [{"type": "DEAL_GENERIC", "amount": 1, "target": "OPPONENT"}]
+    }
+  ]
+}

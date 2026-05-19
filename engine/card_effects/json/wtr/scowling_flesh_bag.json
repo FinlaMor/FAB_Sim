@@ -1,0 +1,10 @@
+{
+  "slug": "scowling_flesh_bag",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [{"type": "INTIMIDATE"}]
+    }
+  ]
+}

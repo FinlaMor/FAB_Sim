@@ -2,35 +2,11 @@
   "slug": "stonewall_confidence_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "DEFENSE_REACTION",
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER",
-          "amount": 3,
-          "target": "SELF"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "IN_COMBAT"
-        },
-        {
-          "type": "ATTACK_COST_GTE",
+          "type": "MODIFY_DEFENSE_VALUE",
           "amount": 3
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
-      "conditions": [
-        {
-          "type": "IS_ACTIVE_PLAYER"
-        }
-      ],
-      "effects": [
-        {
-          "type": "DESTROY_SELF"
         }
       ]
     }

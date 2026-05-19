@@ -3,20 +3,10 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_LEAVE_PLAY",
-      "conditions": [
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "graveyard",
-          "slug_contains": "drone_of_brutality_blue"
-        }
-      ],
+      "trigger": "ON_DISCARD",
       "effects": [
         {
-          "type": "PUT_HAND_CARD_BOTTOM"
-        },
-        {
-          "type": "DRAW"
+          "type": "PUT_SELF_BOTTOM_DECK"
         }
       ]
     }

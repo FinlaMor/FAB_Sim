@@ -6,8 +6,8 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
-          "type": "COMBO_CONTAINS",
-          "substring": "attack_action"
+          "type": "CHAIN_HIT_COUNT_GTE",
+          "amount": 3
         }
       ],
       "effects": [

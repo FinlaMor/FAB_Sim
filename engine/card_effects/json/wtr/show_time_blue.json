@@ -7,10 +7,8 @@
       "effects": [
         {
           "type": "SEARCH_DECK",
-          "filter_types": [
-            "Action"
-          ],
-          "slug_contains": "guardian"
+          "filter_types": ["Action"],
+          "filter_classes": ["Guardian"]
         }
       ]
     },

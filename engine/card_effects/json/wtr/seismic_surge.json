@@ -12,6 +12,12 @@
       "effects": [
         {
           "type": "DESTROY_SELF"
+        },
+        {
+          "type": "REDUCE_NEXT_CARD_COST",
+          "amount": 1,
+          "filter_types": ["attack"],
+          "filter_classes": ["Guardian"]
         }
       ]
     }

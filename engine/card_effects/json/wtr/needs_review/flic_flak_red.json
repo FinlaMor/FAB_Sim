@@ -10,7 +10,7 @@
       ],
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_POWER",
+          "type": "MODIFY_DEFENSE_VALUE",
           "amount": 2
         }
       ]

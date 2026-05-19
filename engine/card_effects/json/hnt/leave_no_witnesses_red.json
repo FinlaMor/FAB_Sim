@@ -1,0 +1,13 @@
+{
+  "slug": "leave_no_witnesses_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "BANISH", "from_zone": "TOP_DECK", "player": "OPPONENT", "amount": 1},
+        {"type": "DESTROY_ARSENAL", "player": "OPPONENT"}
+      ]
+    }
+  ]
+}

@@ -5,7 +5,8 @@
       "ability_type": "ACTIVATE",
       "additional_cost": [
         {
-          "type": "DESTROY_PERMANENT"
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
         }
       ],
       "effects": [

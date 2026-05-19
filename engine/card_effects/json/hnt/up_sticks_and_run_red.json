@@ -1,0 +1,13 @@
+{
+  "slug": "up_sticks_and_run_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "RETRIEVE_DAGGER"},
+        {"type": "NEXT_ATTACK_BONUS", "amount": 4},
+        {"type": "GAIN_ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ]
+}

@@ -14,7 +14,7 @@
         {
           "type": "PUT_COUNTER",
           "counter_type": "-1{d}",
-          "target": "equipment"
+          "amount": 1
         }
       ]
     }

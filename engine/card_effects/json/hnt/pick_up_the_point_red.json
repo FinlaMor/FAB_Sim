@@ -1,0 +1,9 @@
+{
+  "slug": "pick_up_the_point_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [{"type": "RETRIEVE_DAGGER"}]
+    }
+  ]
+}

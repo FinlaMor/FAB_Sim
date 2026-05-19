@@ -2,21 +2,11 @@
   "slug": "disable_yellow",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "CRUSH",
-          "amount": 4
-        }
-      ],
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "PUT_HAND_CARD_BOTTOM",
+          "type": "PUT_ARSENAL_BOTTOM",
           "player": "OPPONENT"
-        },
-        {
-          "type": "DRAW"
         }
       ]
     }

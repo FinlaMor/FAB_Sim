@@ -10,28 +10,15 @@
             {
               "type": "AND",
               "all": [
-                {
-                  "type": "ATTACK_IS_WEAPON"
-                },
-                {
-                  "type": "WEAPON_SUBTYPE_IN",
-                  "values": [
-                    "Dagger",
-                    "Sword"
-                  ]
-                }
+                {"type": "ATTACK_IS_WEAPON"},
+                {"type": "WEAPON_SUBTYPE_IN", "values": ["Dagger", "Sword"]}
               ]
             },
             {
               "type": "AND",
               "all": [
-                {
-                  "type": "ATTACK_IS_NOT_WEAPON"
-                },
-                {
-                  "type": "ATTACK_COST_GTE",
-                  "amount": 1
-                }
+                {"type": "ATTACK_IS_NOT_WEAPON"},
+                {"type": "NOT", "inner_type": "ATTACK_COST_GTE", "amount": 2}
               ]
             }
           ]
@@ -45,11 +32,8 @@
         {
           "type": "INJECT_TRIGGER",
           "trigger": "ON_HIT",
-          "effects": [
-            {
-              "type": "GO_AGAIN"
-            }
-          ]
+          "conditions": [{"type": "ATTACK_IS_NOT_WEAPON"}],
+          "effects": [{"type": "GO_AGAIN"}]
         }
       ]
     }

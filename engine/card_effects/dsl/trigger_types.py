@@ -15,6 +15,7 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "ON_LEAVE_PLAY":    "ON_LEAVE_PLAY",
     "START_OF_COMBAT":  "START_OF_COMBAT",
     "END_OF_COMBAT":    "END_OF_COMBAT",
+    "ON_DISCARD":       "ON_DISCARD",
 }
 
 # ability_type → the event that fires this ability
@@ -23,4 +24,5 @@ ABILITY_TYPE_TO_EVENT: dict[str, str] = {
     "ATTACK_REACTION":  "ON_PLAY",
     "DEFENSE_REACTION": "ON_PLAY",
     "ACTIVATE":         "ON_ACTIVATE",
+    "STATIC":           "ON_ATTACK",
 }

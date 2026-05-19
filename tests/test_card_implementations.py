@@ -97,7 +97,8 @@ from engine.state import (
 )
 from tests.conftest import _make_card, _make_player, _make_state, _mock_agent
 from engine.engine import _pitch_for_cost, evaluate_play_cost, _apply_play_card, _calculate_resource_cost
-from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
+from engine.card_effects.costs.alt_costs import ALTERNATE_COSTS
+from engine.card_effects.costs.effect_costs import KEYWORD_COSTS
 
 # ---------------------------------------------------------------------------
 # Shared helpers
@@ -1083,7 +1084,7 @@ class Test10000YearReunion:
     """
 
     _COST_FN = staticmethod(
-        __import__("engine.card_effects.effect_cost", fromlist=["ALTERNATE_COSTS"]).ALTERNATE_COSTS[
+        __import__("engine.card_effects.costs.alt_costs", fromlist=["ALTERNATE_COSTS"]).ALTERNATE_COSTS[
             "10000_year_reunion_red"
         ]
     )
@@ -1185,7 +1186,7 @@ class Test10000YearReunion:
         self._add_aura(state, "aura_a", 0)
         action = self._action()
 
-        from engine.card_effects.effect_cost import _10000_year_reunion_alt_cost
+        from engine.card_effects.costs.alt_costs import _10000_year_reunion_alt_cost
         assert _10000_year_reunion_alt_cost(state, 1, action, check=True) is False
 
         assert evaluate_play_cost(state, action, check=True) is False

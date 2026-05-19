@@ -25,7 +25,7 @@
         }
       ],
       "effects": [
-        {"type": "MODIFY_ATTACK_POWER", "amount": 4},
+        {"type": "MODIFY_ATTACK_POWER", "amount": 2},
         {
           "type": "INJECT_TRIGGER",
           "trigger": "ON_HIT",
