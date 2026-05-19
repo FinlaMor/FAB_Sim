@@ -8,7 +8,7 @@
           "type": "CARD_IN_ZONE",
           "zone": "pitch",
           "filter_cost_gte": 3,
-          "amount_gte": 2
+          "count_gte": 2
         }
       ],
       "effects": [
