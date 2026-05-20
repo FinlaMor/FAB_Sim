@@ -7,11 +7,11 @@
         {
           "type": "ROLL",
           "faces": 6
-        }, 
+        },
         {
           "type": "GAIN",
-          "asset": "ACTION_POINT",
-          "amount": "ROLL_NUMBER_HALF_ROUNDED_DOWN"
+          "asset": "ACTION_POINTS",
+          "amount": "ROLL_NUMBER_HALF_ROUND_DOWN"
         }
       ]
     }

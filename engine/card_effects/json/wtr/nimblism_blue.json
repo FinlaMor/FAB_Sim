@@ -5,11 +5,12 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "NEXT_ATTACK_POWER_PLUS",
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
           "conditions": [
-              {"type": "ATTACK_COST_LTE", "cost": 1},
-              {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
-              {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+            {"type": "ATTACK_COST_LTE", "cost": 1},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
           ],
           "amount": 1
         }

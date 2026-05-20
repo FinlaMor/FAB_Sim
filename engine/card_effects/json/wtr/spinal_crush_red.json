@@ -2,29 +2,27 @@
   "slug": "spinal_crush_red",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
+      "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_CRUSH",
-      "effects":
+      "effects": [
         {
-          "type": "INJECT_REPLACEMENT",
-          "object": "PLAYER",
-          "replace": {
-            "type": "ON_PLAY_ACTIVATE",
-            "keyword": "GO_AGAIN",
-            "effect": "LOSE",
-            "can_gain": "FALSE"
-          },
-          "with": "NO_EFFECT",
-          "conditions": 
-          {
+          "type": "APPLY_CONTINUOUS",
+          "target": "OPPONENT_CARDS",
+          "filter": {
             "type": "OR",
             "any": [
               {"type": "CARD_TYPE_IN", "types": ["Action"]},
               {"type": "ABILITY_TYPE_IN", "types": ["Activated"]},
               {"type": "CARD_SUBTYPE_IN", "subtypes": ["Attack"]}
             ]
-          }
-      }
+          },
+          "modifications": [
+            {"type": "LOSES", "property": "GO_AGAIN"},
+            {"type": "CANT_GAIN", "property": "GO_AGAIN", "TODO": "model as replacement effect"}
+          ],
+          "span": "NEXT_ACTION_PHASE"
+        }
+      ]
     }
   ]
 }

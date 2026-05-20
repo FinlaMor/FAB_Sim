@@ -7,13 +7,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     """Return a (card, event, state)->None callable."""
 
     # ── life / damage ──────────────────────────────────────────────────────
-    if etype == "GAIN_LIFE":
-        amt = params.get("amount", 0)
-        def _fn(card, event, state, _a=amt):
-            from engine.card_effects.ability_keywords import effect_gain_life, _controller_id
-            effect_gain_life(state, _controller_id(card), _a)
-        return _fn
-
     if etype == "GAIN_LIFE_PER_CARD_IN_HAND":
         def _fn(card, event, state):
             from engine.card_effects.ability_keywords import effect_gain_life, _controller_id
@@ -129,50 +122,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 effect_charge(state, cid, chosen)
         return _fn
 
-    # ── resources ──────────────────────────────────────────────────────────
-    if etype == "GAIN_RESOURCES":
-        amt = params.get("amount", 1)
-        def _fn(card, event, state, _a=amt):
-            from engine.card_effects.ability_keywords import effect_gain_resources, _controller_id
-            effect_gain_resources(state, _controller_id(card), _a)
-        return _fn
-
-    if etype == "GAIN_RESOURCES_FROM_ROLL":
-        # Roll a die, optionally scale the result, gain that many resources.
-        # "gain {r} equal to half the number rolled, rounded down" ->
-        #   {"type": "GAIN_RESOURCES_FROM_ROLL", "faces": 6, "divisor": 2}
-        faces = params.get("faces", 6)
-        divisor = params.get("divisor", 1)
-        def _fn(card, event, state, _f=faces, _d=divisor):
-            from engine.card_effects.ability_keywords import roll_die, effect_gain_resources, _controller_id
-            pid = _controller_id(card)
-            result = roll_die(state, pid, faces=_f)
-            amount = result // _d
-            if amount > 0:
-                effect_gain_resources(state, pid, amount)
-        return _fn
-
     # ── attack / combat ────────────────────────────────────────────────────
-    if etype == "MODIFY_ATTACK_POWER":
-        amt = params.get("amount", 0)
-        def _fn(card, event, state, _a=amt):
-            if state.combat:
-                state.combat.attack_power = (state.combat.attack_power or 0) + _a
-        return _fn
-
-    if etype == "GO_AGAIN":
-        def _fn(card, event, state):
-            if state.combat and "go_again" not in (state.combat.keywords or []):
-                state.combat.grant_keyword("go_again")
-        return _fn
-
-    if etype == "GRANT_KEYWORD":
-        kw = params.get("keyword", "")
-        def _fn(card, event, state, _kw=kw):
-            if state.combat and _kw not in (state.combat.keywords or []):
-                state.combat.grant_keyword(_kw)
-        return _fn
-
     if etype == "DOMINATE":
         def _fn(card, event, state):
             from engine.card_effects.ability_keywords import effect_dominate, _controller_id
@@ -184,75 +134,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             from engine.card_effects.ability_keywords import effect_intimidate, _controller_id
             cid = _controller_id(card)
             effect_intimidate(state, 3 - cid)
-        return _fn
-
-    if etype == "NEXT_ATTACK_BONUS":
-        amt = params.get("amount", 0)
-        key = f"next_attack_+{amt}"
-        def _fn(card, event, state, _key=key):
-            state.active().current_turn_effects.append(_key)
-        return _fn
-
-    if etype == "NEXT_ATTACK_HIT_DRAW":
-        # Queue a one-shot ON_HIT draw for the NEXT attack this turn.
-        # Stored as "next_attack_hit_draw_N" in current_turn_effects;
-        # consume_card_attack_bonuses in engine.py injects it as a TriggerDef.
-        amt = params.get("amount", 1)
-        key = f"next_attack_hit_draw_{amt}"
-        def _fn(card, event, state, _key=key):
-            state.active().current_turn_effects.append(_key)
-        return _fn
-
-    if etype == "ALL_ATTACKS_BONUS":
-        # +N power to every attack this turn (persistent — not consumed after first attack).
-        # Stored as "all_attacks_+N" in current_turn_effects.
-        amt = params.get("amount", 0)
-        key = f"all_attacks_+{amt}"
-        def _fn(card, event, state, _key=key):
-            state.active().current_turn_effects.append(_key)
-        return _fn
-
-    if etype == "ALL_ATTACKS_HIT_DRAW":
-        # Every attack that hits this turn draws N cards.
-        # Stored as "all_attacks_hit_draw_N" in current_turn_effects;
-        # consume_card_attack_bonuses re-injects an ON_HIT TriggerDef each attack.
-        amt = params.get("amount", 1)
-        key = f"all_attacks_hit_draw_{amt}"
-        def _fn(card, event, state, _key=key):
-            state.active().current_turn_effects.append(_key)
-        return _fn
-
-    if etype == "NEXT_WEAPON_ATTACK_BONUS":
-        # Next weapon attack gets +N power.
-        # Consumed by _apply_turn_attack_effects in engine.py (weapon-only gate).
-        amt = params.get("amount", 0)
-        def _fn(card, event, state, _a=amt):
-            if _a:
-                state.active().current_turn_effects.append(f"next_weapon_attack_+{_a}")
-        return _fn
-
-    if etype == "NEXT_WEAPON_ATTACK_KEYWORD":
-        # Grant a keyword to the next weapon attack this turn.
-        # keyword: "go_again" | "hit_go_again" → sets "next_weapon_attack_<keyword>" turn flag.
-        kw = params.get("keyword", "go_again")
-        def _fn(card, event, state, _kw=kw):
-            state.active().current_turn_effects.append(f"next_weapon_attack_{_kw}")
-        return _fn
-
-    if etype == "NEXT_LOW_COST_ATTACK_BONUS":
-        # Next attack action card with cost ≤1 gets +N power.
-        # Stored as "next_low_cost_attack_+N" in current_turn_effects.
-        amt = params.get("amount", 0)
-        def _fn(card, event, state, _a=amt):
-            state.active().current_turn_effects.append(f"next_low_cost_attack_+{_a}")
-        return _fn
-
-    if etype == "NEXT_HIGH_COST_ATTACK_BONUS":
-        # Next attack action card with cost ≥2 gets +N power.
-        # Stored as "next_high_cost_attack_+N" in current_turn_effects.
-        amt = params.get("amount", 0)
-        def _fn(card, event, state, _a=amt):
-            state.active().current_turn_effects.append(f"next_high_cost_attack_+{_a}")
         return _fn
 
     if etype == "RETURN_TO_HAND":
@@ -292,19 +173,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             if target:
                 player.hand.remove(target)
                 player.deck.add_bottom(target)
-        return _fn
-
-    if etype == "CREATE_AURA_TOKEN":
-        token_slug = params.get("token", "")
-        def _fn(card, event, state, _slug=token_slug):
-            from engine.card_effects.ability_keywords import _controller_id
-            from engine.card import Card
-            pid = _controller_id(card)
-            player = state.players[pid]
-            token = Card(slug=_slug, name=_slug, types=["Token"])
-            token.owner = pid
-            token.controller = pid
-            player.auras.add(token)
         return _fn
 
     if etype == "PUT_SELF_BOTTOM_DECK":
@@ -348,41 +216,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     controller.hand.add(target)
                     state.set_card_visibility(target, True)
             effect_shuffle(state, cid)
-        return _fn
-
-    if etype == "GAIN_ACTION_POINTS":
-        amt = params.get("amount", 1)
-        def _fn(card, event, state, _a=amt):
-            from engine.card_effects.ability_keywords import _controller_id
-            state.players[_controller_id(card)].action_points += _a
-        return _fn
-
-    if etype == "DISCARD_RANDOM_CONDITIONAL":
-        # Discard N cards at random. If a discarded card has power >= power_gte:
-        #   - gain ap_gain action points (if ap_gain > 0)
-        #   - draw draw_count cards (if draw_count > 0)
-        #   - grant go again (if go_again is True)
-        amt = params.get("amount", 1)
-        power_gte = params.get("power_gte", 6)
-        ap_gain = params.get("ap_gain", 0)
-        draw_count = params.get("draw", 0)
-        go_again = params.get("go_again", False)
-        power_bonus = params.get("power_bonus", 0)
-        def _fn(card, event, state, _a=amt, _pg=power_gte, _ap=ap_gain,
-                _dr=draw_count, _ga=go_again, _pb=power_bonus):
-            from engine.card_effects.ability_keywords import effect_discard, _controller_id
-            cid = _controller_id(card)
-            discarded = effect_discard(state, cid, _a, random_discard=True)
-            if discarded and any((getattr(c, 'power', None) or 0) >= _pg for c in discarded):
-                if _ap:
-                    state.players[cid].action_points += _ap
-                if _dr:
-                    from engine.card_effects.ability_keywords import effect_draw
-                    effect_draw(state, cid, _dr)
-                if _ga and state.combat:
-                    state.combat.grant_keyword("go_again")
-                if _pb and state.combat:
-                    state.combat.attack_power = (state.combat.attack_power or 0) + _pb
         return _fn
 
     if etype == "AMP":
@@ -497,62 +330,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             state.combat.injected_triggers.append(td)
         return _inject_fn
 
-    if etype == "DESTROY_SELF":
-        def _fn(card, event, state):
-            from engine.card_effects.ability_keywords import _controller_id
-            pid = _controller_id(card)
-            player = state.players[pid]
-            for zone_name in ('permanents', 'items', 'auras', 'allies'):
-                zone = getattr(player, zone_name, None)
-                if zone and hasattr(zone, 'cards') and card in zone.cards:
-                    try:
-                        from engine.effect_keywords import destroy as _ek_destroy
-                        _ek_destroy(state, card, None)
-                    except Exception:
-                        zone.cards.remove(card)
-                    return
-        return _fn
-
-    if etype == "ROLL_DIE_BRANCHES":
-        # Roll a die; execute effects from the matching range branch.
-        # branches: [{"range": [low, high], "effects": [{...}, ...]}, ...]
-        faces = params.get("faces", 6)
-        raw_branches = params.get("branches", [])
-        compiled_branches = []
-        for branch in raw_branches:
-            lo, hi = branch.get("range", [1, faces])
-            inner_effs = [
-                compile_effect(e.get("type", "").upper(),
-                               {k: v for k, v in e.items() if k != "type"})
-                for e in branch.get("effects", [])
-            ]
-            compiled_branches.append((lo, hi, inner_effs))
-        def _fn(card, event, state, _f=faces, _cb=compiled_branches):
-            from engine.card_effects.ability_keywords import roll_die, _controller_id
-            result = roll_die(state, _controller_id(card), faces=_f)
-            for lo, hi, effs in _cb:
-                if lo <= result <= hi:
-                    for eff_fn in effs:
-                        eff_fn(card, event, state)
-                    break
-        return _fn
-
-    if etype == "ALL_WEAPONS_BONUS":
-        # All weapon attacks this turn gain +N{p} (biting_blade reprise).
-        amt = params.get("amount", 0)
-        def _fn(card, event, state, _a=amt):
-            state.active().current_turn_effects.append(f"all_weapon_attacks_+{_a}")
-        return _fn
-
-    if etype == "MODIFY_POWER_PER_CHAIN_HIT":
-        # +amount_per_hit × (number of prior chain-link hits) (fluster_fist).
-        amt_per = params.get("amount_per_hit", 1)
-        def _fn(card, event, state, _a=amt_per):
-            n_hits = len(getattr(state, 'chain_links', []))
-            if state.combat and n_hits:
-                state.combat.attack_power = (state.combat.attack_power or 0) + _a * n_hits
-        return _fn
-
     if etype == "REVEAL_TOP_DECK":
         # Reveal top N cards; gain gain_life{h} per card with cost >= cost_gte.
         amount = params.get("amount", 1)
@@ -584,60 +361,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 player.deck.cards.append(card_to_move)
         return _fn
 
-    if etype == "REDUCE_NEXT_CARD_COST":
-        # Sets a cost-reduction flag consumed when the next qualifying card is played.
-        # filter_types: ["attack"] restricts to attack action cards; empty = any card.
-        # filter_classes: ["Guardian"] restricts to specific class.
-        amt = params.get("amount", 0)
-        filter_types = [t.lower() for t in params.get("filter_types", [])]
-        filter_classes = [c.lower() for c in params.get("filter_classes", [])]
-        def _fn(card, event, state, _a=amt, _ft=filter_types, _fc=filter_classes):
-            from engine.card_effects.ability_keywords import _controller_id
-            parts = []
-            if "attack" in _ft:
-                parts.append("attack_action")
-            if _fc:
-                parts.append("_".join(_fc))
-            qualifier = ("_" + "_".join(parts)) if parts else ""
-            state.active().current_turn_effects.append(f"next{qualifier}_cost_-{_a}")
-        return _fn
-
-    if etype == "SHUFFLE_HAND_TO_DECK_DRAW":
-        # hope_merchants_hood: shuffle any number of hand cards into deck, draw same count.
-        # Simulation: shuffles all hand cards (agent has no partial-choice mechanism).
-        def _fn(card, event, state):
-            from engine.card_effects.ability_keywords import effect_draw, _controller_id
-            import random as _random
-            cid = _controller_id(card)
-            player = state.players[cid]
-            n = len(player.hand.cards)
-            if not n:
-                return
-            for c in list(player.hand.cards):
-                player.hand.cards.remove(c)
-                player.deck.cards.append(c)
-            _random.shuffle(player.deck.cards)
-            effect_draw(state, cid, n)
-        return _fn
-
-    if etype == "CHOOSE_ONE":
-        # Present N option-lists; randomly pick one and execute its effects.
-        # options: [[{effect}, ...], [{effect}, ...], ...]
-        options_raw = params.get("options", [])
-        compiled_options = [
-            [compile_effect(e.get("type", "").upper(),
-                            {k: v for k, v in e.items() if k != "type"})
-             for e in opt]
-            for opt in options_raw
-        ]
-        def _fn(card, event, state, _opts=compiled_options):
-            if not _opts:
-                return
-            import random as _random
-            for eff_fn in _random.choice(_opts):
-                eff_fn(card, event, state)
-        return _fn
-
     if etype == "DESTROY_PERMANENT":
         target = params.get("target", "self")
         def _fn(card, event, state, _t=target):
@@ -656,18 +379,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                         return
         return _fn
 
-    if etype in ("MODIFY_DEFENSE_VALUE", "MODIFY_DEFENSE_POWER"):
+    if etype == "MODIFY_DEFENSE_VALUE":
         amt = params.get("amount", 0)
         def _fn(card, event, state, _a=amt):
             if state.combat:
                 state.combat.total_defense = (getattr(state.combat, 'total_defense', 0) or 0) + _a
-        return _fn
-
-    if etype == "ATTACK":
-        # Weapon attack initiation is handled by the engine's ACTIVATE pathway.
-        # This DSL effect is a no-op placeholder for harmonized_kodachi / romping_club.
-        def _fn(card, event, state):
-            pass
         return _fn
 
     if etype == "RETURN_DR_FROM_GRAVEYARD":
@@ -689,17 +405,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                         if owner_player:
                             owner_player.hand.add(c)
                         return
-        return _fn
-
-    if etype == "GAIN_POWER_FROM_ROLL":
-        # Roll a die, gain that many attack power (Swing Big style).
-        faces = params.get("faces", 6)
-        def _fn(card, event, state, _f=faces):
-            from engine.card_effects.ability_keywords import roll_die, _controller_id
-            pid = _controller_id(card)
-            result = roll_die(state, pid, faces=_f)
-            if state.combat:
-                state.combat.attack_power = (state.combat.attack_power or 0) + result
         return _fn
 
     if etype == "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA":
@@ -734,19 +439,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             cid = _controller_id(card)
             tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             deal_damage(state, _a, DamageType.GENERIC, target_player_id=tid, source_card=card)
-        return _fn
-
-    if etype == "ROLL_ATTACK_BONUS":
-        # Roll a die; if result >= threshold, grant +N power to the current attack.
-        faces = params.get("faces", 6)
-        threshold = params.get("threshold", 4)
-        bonus = params.get("bonus", 0)
-        def _fn(card, event, state, _f=faces, _th=threshold, _b=bonus):
-            from engine.card_effects.ability_keywords import roll_die, _controller_id
-            pid = _controller_id(card)
-            result = roll_die(state, pid, faces=_f)
-            if result >= _th and state.combat:
-                state.combat.attack_power = (state.combat.attack_power or 0) + _b
         return _fn
 
     if etype == "STEAL_AURA_TOKEN":

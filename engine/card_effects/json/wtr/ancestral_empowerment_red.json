@@ -1,21 +1,17 @@
 {
   "slug": "ancestral_empowerment_red",
-  "conditions": {
-    "play_activate": "PLAY",
-    "optional": "FALSE",
-    "type": {
-      "TARGET": [
-        {"type": "ATTACK_CLASS_IN", "classes": ["Ninja"]},
-        {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
-        {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
-        ]
-    }
-  },
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Ninja"]},
+          {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+        ]
+      },
       "effects": [
-        {"type": "MODIFY_ATTACK_POWER", "amount": 1},
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
         {"type": "DRAW", "amount": 1}
       ]
     }

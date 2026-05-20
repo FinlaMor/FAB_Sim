@@ -3,7 +3,15 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "effects": [{"type": "ALL_ATTACKS_BONUS", "amount": 1}]
+      "effects": [
+        {
+          "type": "APPLY_CONTINUOUS",
+          "target": "PLAYER_ATTACKS",
+          "filter": {"type": "ATTACK_HAS_KEYWORD", "keyword": "Stealth"},
+          "modifications": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}],
+          "span": "THIS_TURN"
+        }
+      ]
     }
   ]
 }

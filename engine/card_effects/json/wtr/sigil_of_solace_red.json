@@ -6,10 +6,10 @@
       "effects": [
         {
           "type": "GAIN",
-          "asset": "LIFE",
+          "asset": "LIFE_POINTS",
           "amount": 3
-          }
-        ]
+        }
+      ]
     }
   ]
 }

@@ -2,19 +2,24 @@
   "slug": "debilitate_blue",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
+      "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_CRUSH",
-      "effects":
+      "effects": [
         {
           "type": "INJECT_TRIGGER",
-          "object": "PLAYER",
+          "object": "OPPONENT",
           "trigger": "ON_PLAY_ACTIVATE_ATTACK",
-          "effects": 
-          {
-            "type": "MODIFY_ATTACK_POWER",
-            "amount": -2
-          }
+          "consume": true,
+          "span": "NEXT_TURN",
+          "effects": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": -2
+            }
+          ]
         }
+      ]
     }
   ]
 }

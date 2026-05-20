@@ -3,16 +3,16 @@
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",
-      "effects":
+      "effects": [
         {
           "type": "PUT_HAND_CARD_BOTTOM",
           "optional": "TRUE",
-          "conditional_effect": 
-          {
+          "conditional_effect": {
             "type": "DRAW",
             "amount": 1
           }
         }
+      ]
     }
   ]
 }

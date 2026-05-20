@@ -127,9 +127,6 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return len(s.players[pid].deck.cards) == 0
         return _de
 
-    if ctype == "REPRISE_ACTIVE":
-        return lambda c, e, s: bool(s.combat and getattr(s.combat, 'defender_used_hand_card', False))
-
     if ctype == "PLAYED_FROM_ARSENAL":
         # card.prev_zone is 'arsenal' when played from arsenal (set by Zone tracking)
         return lambda c, e, s: getattr(c, 'prev_zone', '').lower() == 'arsenal'

@@ -2,7 +2,7 @@
   "slug": "cranial_crush_blue",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
+      "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_CRUSH",
       "effects": [
         {

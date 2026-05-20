@@ -8,15 +8,15 @@
           "type": "INTIMIDATE"
         },
         {
-          "type": "NEXT_ATTACK_POWER_PLUS",
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
           "conditions": [
-              {"type": "ATTACK_CLASS_IN", "classes": ["Brute"]},
-              {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
-              {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
-        ],
+            {"type": "ATTACK_CLASS_IN", "classes": ["Brute"]},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ],
           "amount": 1
         }
-        
       ]
     }
   ]

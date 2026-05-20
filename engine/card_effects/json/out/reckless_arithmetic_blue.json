@@ -3,7 +3,10 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "effects": [{"type": "GAIN_POWER_FROM_ROLL", "faces": 6}]
+      "effects": [
+        {"type": "ROLL", "faces": 6},
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": "ROLL_NUMBER"}
+      ]
     }
   ]
 }

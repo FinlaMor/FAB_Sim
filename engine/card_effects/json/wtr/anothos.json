@@ -1,8 +1,8 @@
 {
   "slug": "anothos",
-  "abilities": 
+  "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
         {
           "type": "CARD_IN_ZONE",
@@ -13,10 +13,11 @@
       ],
       "effects": [
         {
-          "type": "PLUS_ATTACK_POWER",
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
           "amount": 2
         }
       ]
     }
-  
+  ]
 }

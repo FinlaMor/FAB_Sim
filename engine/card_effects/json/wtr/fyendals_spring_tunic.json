@@ -2,7 +2,7 @@
   "slug": "fyendals_spring_tunic",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
+      "ability_type": "STATIC_TRIGGERED",
       "trigger": "START_OF_TURN",
       "conditions": [
         {
@@ -31,7 +31,8 @@
       ],
       "effects": [
         {
-          "type": "GAIN_RESOURCES",
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
           "amount": 1
         }
       ]
