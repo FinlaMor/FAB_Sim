@@ -3,6 +3,18 @@ from __future__ import annotations
 from typing import Any, Callable
 
 
+def _resolve_amount(amount: Any, state) -> int | float:
+    """Resolve a string amount token (ROLL_NUMBER etc.) to a numeric value."""
+    if isinstance(amount, str):
+        roll = getattr(state, '_roll_result', 0) or 0
+        if amount == "ROLL_NUMBER":
+            return roll
+        if amount == "ROLL_NUMBER_HALF_ROUND_DOWN":
+            return roll // 2
+        return 0
+    return amount
+
+
 def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     """Return a (card, event, state)->None callable."""
 
@@ -473,6 +485,130 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             player = state.players[tid]
             if hasattr(player, 'arsenal') and player.arsenal.cards:
                 player.arsenal.cards.clear()
+        return _fn
+
+    # ── new canonical effect types ─────────────────────────────────────────
+
+    if etype == "MODIFY_ATTACK":
+        mod = params.get("mod", "add")
+        amt = params.get("amount", 0)
+        def _fn(card, event, state, _mod=mod, _a=amt):
+            if not state.combat:
+                return
+            val = _resolve_amount(_a, state)
+            if _mod == "add":
+                state.combat.attack_power = (state.combat.attack_power or 0) + val
+            elif _mod == "set":
+                state.combat.attack_power = val
+            elif _mod == "multiply":
+                state.combat.attack_power = (state.combat.attack_power or 0) * val
+        return _fn
+
+    if etype == "MODIFY_NEXT_ATTACK":
+        mod = params.get("mod", "add")
+        amt = params.get("amount", 0)
+        # "filter" holds raw condition specs describing which future attacks qualify.
+        # Using "filter" (not "conditions") so the loader does not pop these as
+        # EffectDef gate conditions — they are pass-through data for the engine.
+        filter_specs = params.get("filter", [])
+        def _fn(card, event, state, _mod=mod, _a=amt, _filt=filter_specs):
+            player = state.active()
+            if not hasattr(player, 'dsl_queued_attack_mods'):
+                player.dsl_queued_attack_mods = []
+            player.dsl_queued_attack_mods.append({
+                "mod": _mod,
+                "amount": _resolve_amount(_a, state),
+                "filter": _filt,
+            })
+        return _fn
+
+    if etype == "GAIN":
+        asset = params.get("asset")
+        keyword = params.get("keyword")
+        amt = params.get("amount", 0)
+        if asset:
+            def _fn(card, event, state, _asset=asset, _a=amt):
+                from engine.card_effects.ability_keywords import _controller_id
+                cid = _controller_id(card)
+                val = _resolve_amount(_a, state)
+                if _asset == "RESOURCE_POINTS":
+                    from engine.card_effects.ability_keywords import effect_gain_resources
+                    effect_gain_resources(state, cid, val)
+                elif _asset == "LIFE_POINTS":
+                    from engine.card_effects.ability_keywords import effect_gain_life
+                    effect_gain_life(state, cid, val)
+                elif _asset == "ACTION_POINTS":
+                    state.players[cid].action_points += val
+                elif _asset == "CHI_POINTS":
+                    state.players[cid].chi = getattr(state.players[cid], 'chi', 0) + val
+            return _fn
+        if keyword:
+            kw = keyword.lower()
+            def _fn(card, event, state, _kw=kw):
+                if state.combat and _kw not in (state.combat.keywords or []):
+                    state.combat.grant_keyword(_kw)
+            return _fn
+
+    if etype == "ROLL":
+        faces = params.get("faces", 6)
+        def _fn(card, event, state, _f=faces):
+            from engine.card_effects.ability_keywords import roll_die, _controller_id
+            result = roll_die(state, _controller_id(card), faces=_f)
+            state._roll_result = result
+        return _fn
+
+    if etype == "APPLY_CONTINUOUS":
+        target = params.get("target", "")
+        modifications = params.get("modifications", [])
+        span = params.get("span", "THIS_TURN")
+        filter_raw = params.get("filter")
+        def _fn(card, event, state, _tgt=target, _mods=modifications,
+                _span=span, _filt=filter_raw):
+            player = state.active()
+            if not hasattr(player, 'dsl_continuous_effects'):
+                player.dsl_continuous_effects = []
+            player.dsl_continuous_effects.append({
+                "target": _tgt,
+                "modifications": _mods,
+                "span": _span,
+                "filter": _filt,
+            })
+        return _fn
+
+    if etype == "DISCARD_RANDOM":
+        amt = params.get("amount", 1)
+        def _fn(card, event, state, _a=amt):
+            from engine.card_effects.ability_keywords import effect_discard, _controller_id
+            effect_discard(state, _controller_id(card), _a, random_discard=True)
+        return _fn
+
+    if etype == "REMOVE_COUNTERS":
+        ctype = params.get("counter_type", "")
+        amt = params.get("amount", 1)
+        def _fn(card, event, state, _ct=ctype, _a=amt):
+            from engine.card_effects.ability_keywords import effect_remove_counter
+            effect_remove_counter(state, card, _ct, _a)
+        return _fn
+
+    if etype == "CHOOSE":
+        choose_amt = params.get("amount", 1)
+        options_raw = params.get("options", [])
+        compiled_options = [
+            [compile_effect(e.get("type", "").upper(),
+                            {k: v for k, v in e.items() if k != "type"})
+             for e in opt]
+            for opt in options_raw
+        ]
+        def _fn(card, event, state, _n=choose_amt, _opts=compiled_options):
+            if not _opts:
+                return
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            cid = _controller_id(card)
+            labels = [str(i) for i in range(len(_opts))]
+            pick = _ask_player(state, cid, labels, context="Choose an effect")
+            idx = int(pick) if pick and pick.isdigit() and int(pick) < len(_opts) else 0
+            for eff_fn in _opts[idx]:
+                eff_fn(card, event, state)
         return _fn
 
     # ── unknown → no-op ────────────────────────────────────────────────────

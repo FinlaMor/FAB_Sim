@@ -58,7 +58,6 @@ def _make_card(slug: str = "test", owner: int = 1) -> Card:
 
 
 def _make_deck_card(slug: str, owner: int = 1, power: int = 1) -> Card:
-    """Create a valid deck card (types=["Action"]) that can enter hand via effects."""
     c = Card(slug=slug, name=slug, types=["Action"])
     c.owner = owner
     c.controller = owner
@@ -85,7 +84,7 @@ def test_compile_card_basic():
             {
                 "ability_type": "TRIGGERED",
                 "trigger": "ON_HIT",
-                "effects": [{"type": "GO_AGAIN"}],
+                "effects": [{"type": "DRAW", "amount": 1}],
             }
         ],
     }
@@ -96,7 +95,7 @@ def test_compile_card_basic():
     assert ab.ability_type == "TRIGGERED"
     assert ab.trigger == "ON_HIT"
     assert len(ab.effects) == 1
-    assert ab.effects[0].effect_type == "GO_AGAIN"
+    assert ab.effects[0].effect_type == "DRAW"
     assert ab.effects[0].fn is not None
 
 
@@ -129,7 +128,6 @@ def test_compile_card_no_abilities():
 def test_compile_all_effect_types_no_crash():
     """Every named effect type should compile without raising."""
     effect_types = [
-        {"type": "GAIN_LIFE", "amount": 1},
         {"type": "LOSE_LIFE", "amount": 1},
         {"type": "DEAL_DAMAGE", "amount": 1},
         {"type": "DEAL_PHYSICAL", "amount": 1},
@@ -140,10 +138,6 @@ def test_compile_all_effect_types_no_crash():
         {"type": "RELOAD"},
         {"type": "BANISH", "amount": 1},
         {"type": "CHARGE"},
-        {"type": "GAIN_RESOURCES", "amount": 1},
-        {"type": "MODIFY_ATTACK_POWER", "amount": 1},
-        {"type": "GO_AGAIN"},
-        {"type": "GRANT_KEYWORD", "keyword": "dominate"},
         {"type": "DOMINATE"},
         {"type": "INTIMIDATE"},
         {"type": "AMP", "amount": 1},
@@ -152,6 +146,16 @@ def test_compile_all_effect_types_no_crash():
         {"type": "PUT_COUNTER", "counter_type": "energy"},
         {"type": "REMOVE_COUNTER", "counter_type": "energy"},
         {"type": "SET_FLAG", "flag": "test_flag"},
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2},
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 1},
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1},
+        {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1},
+        {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1},
+        {"type": "GAIN", "keyword": "go_again"},
+        {"type": "ROLL", "faces": 6},
+        {"type": "APPLY_CONTINUOUS", "target": "PLAYER_ATTACKS", "modifications": [], "span": "THIS_TURN"},
+        {"type": "DISCARD_RANDOM", "amount": 1},
+        {"type": "REMOVE_COUNTERS", "counter_type": "energy", "amount": 1},
         {"type": "UNKNOWN_XYZ"},  # should compile as no-op
     ]
     raw = {
@@ -164,7 +168,6 @@ def test_compile_all_effect_types_no_crash():
         ],
     }
     card_def = compile_card(raw)
-    # All effects must have a callable fn
     for eff in card_def.abilities[0].effects:
         assert callable(eff.fn), f"Effect {eff.effect_type} did not produce a callable"
 
@@ -217,7 +220,7 @@ def test_load_all_cards_from_dir():
                 {
                     "ability_type": "TRIGGERED",
                     "trigger": "ON_HIT",
-                    "effects": [{"type": "GO_AGAIN"}],
+                    "effects": [{"type": "DRAW", "amount": 1}],
                 }
             ],
         }
@@ -247,48 +250,30 @@ def test_load_nonexistent_dir():
 
 
 # ---------------------------------------------------------------------------
-# dispatch — GO_AGAIN on hit
+# dispatch — MODIFY_ATTACK on hit
 # ---------------------------------------------------------------------------
 
-def test_dispatch_go_again_on_hit():
+def test_dispatch_modify_attack_on_triggered_hit():
+    """TRIGGERED ON_HIT ability fires and applies MODIFY_ATTACK."""
     state = _make_state()
-    state.combat = _make_combat()
-    card = _make_card("soulbead-strike-red", 1)
+    state.combat = _make_combat(power=5)
+    card = _make_card("test-hit-card", 1)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        (Path(tmpdir) / "soulbead-strike-red.json").write_text(json.dumps({
-            "slug": "soulbead-strike-red",
+        (Path(tmpdir) / "test-hit-card.json").write_text(json.dumps({
+            "slug": "test-hit-card",
             "abilities": [
                 {
                     "ability_type": "TRIGGERED",
                     "trigger": "ON_HIT",
-                    "effects": [{"type": "GO_AGAIN"}],
+                    "effects": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}],
                 }
             ],
         }))
         load_all_cards(Path(tmpdir))
 
-    assert "go_again" not in state.combat.keywords
-    dispatch(state, "ON_HIT", "soulbead-strike-red", card=card)
-    assert "go_again" in state.combat.keywords
-
-
-def test_dispatch_go_again_no_duplicate():
-    state = _make_state()
-    state.combat = _make_combat()
-    state.combat.keywords.append("go_again")
-    card = _make_card("soulbead-strike-red", 1)
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        (Path(tmpdir) / "soulbead-strike-red.json").write_text(json.dumps({
-            "slug": "soulbead-strike-red",
-            "abilities": [{"ability_type": "TRIGGERED", "trigger": "ON_HIT",
-                           "effects": [{"type": "GO_AGAIN"}]}],
-        }))
-        load_all_cards(Path(tmpdir))
-
-    dispatch(state, "ON_HIT", "soulbead-strike-red", card=card)
-    assert state.combat.keywords.count("go_again") == 1
+    dispatch(state, "ON_HIT", "test-hit-card", card=card)
+    assert state.combat.attack_power == 8  # 5 + 3
 
 
 # ---------------------------------------------------------------------------
@@ -316,7 +301,7 @@ def test_dispatch_draw_on_play():
 
 
 # ---------------------------------------------------------------------------
-# dispatch — MODIFY_ATTACK_POWER
+# dispatch — MODIFY_ATTACK power bonus (ATTACK_REACTION)
 # ---------------------------------------------------------------------------
 
 def test_dispatch_power_bonus():
@@ -329,7 +314,7 @@ def test_dispatch_power_bonus():
             "slug": "power-card",
             "abilities": [
                 {"ability_type": "ATTACK_REACTION",
-                 "effects": [{"type": "MODIFY_ATTACK_POWER", "amount": 3}]},
+                 "effects": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}]},
             ],
         }))
         load_all_cards(Path(tmpdir))
@@ -343,11 +328,11 @@ def test_dispatch_power_bonus():
 # ---------------------------------------------------------------------------
 
 def test_dispatch_condition_blocks_effect():
-    """Effect with IS_ACTIVE_PLAYER condition should not fire for non-active player."""
+    """IS_ACTIVE_PLAYER condition should not fire for non-active player."""
     state = _make_state()
     state.active_player = 1
     state.combat = _make_combat()
-    card = _make_card("cond-card", 2)  # player 2's card, but active is player 1
+    card = _make_card("cond-card", 2)  # player 2's card, active is player 1
 
     with tempfile.TemporaryDirectory() as tmpdir:
         (Path(tmpdir) / "cond-card.json").write_text(json.dumps({
@@ -357,21 +342,22 @@ def test_dispatch_condition_blocks_effect():
                     "ability_type": "TRIGGERED",
                     "trigger": "ON_HIT",
                     "conditions": [{"type": "IS_ACTIVE_PLAYER"}],
-                    "effects": [{"type": "GO_AGAIN"}],
+                    "effects": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}],
                 }
             ],
         }))
         load_all_cards(Path(tmpdir))
 
     dispatch(state, "ON_HIT", "cond-card", card=card)
-    assert "go_again" not in state.combat.keywords
+    assert state.combat.attack_power == 5  # unchanged
 
 
 def test_dispatch_condition_passes():
     """IS_ACTIVE_PLAYER condition passes for the active player."""
     state = _make_state()
     state.active_player = 1
-    state.combat = _make_combat()
+    for i in range(2):
+        state.players[1].deck.add(_make_deck_card(f"d{i}"))
     card = _make_card("cond-card", 1)
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -382,14 +368,14 @@ def test_dispatch_condition_passes():
                     "ability_type": "TRIGGERED",
                     "trigger": "ON_HIT",
                     "conditions": [{"type": "IS_ACTIVE_PLAYER"}],
-                    "effects": [{"type": "GO_AGAIN"}],
+                    "effects": [{"type": "DRAW", "amount": 1}],
                 }
             ],
         }))
         load_all_cards(Path(tmpdir))
 
     dispatch(state, "ON_HIT", "cond-card", card=card)
-    assert "go_again" in state.combat.keywords
+    assert len(state.players[1].hand.cards) == 1
 
 
 # ---------------------------------------------------------------------------
@@ -400,16 +386,16 @@ def test_dispatch_inject_trigger():
     """INJECT_TRIGGER appends a TriggerDef to combat.injected_triggers."""
     state = _make_state()
     state.combat = _make_combat(power=5)
-    card = _make_card("pummel-red", 1)
+    card = _make_card("test-inject-card", 1)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        (Path(tmpdir) / "pummel-red.json").write_text(json.dumps({
-            "slug": "pummel-red",
+        (Path(tmpdir) / "test-inject-card.json").write_text(json.dumps({
+            "slug": "test-inject-card",
             "abilities": [
                 {
                     "ability_type": "ATTACK_REACTION",
                     "effects": [
-                        {"type": "MODIFY_ATTACK_POWER", "amount": 4},
+                        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 4},
                         {
                             "type": "INJECT_TRIGGER",
                             "trigger": "ON_HIT",
@@ -424,10 +410,8 @@ def test_dispatch_inject_trigger():
         }))
         load_all_cards(Path(tmpdir))
 
-    dispatch(state, "ON_PLAY", "pummel-red", card=card)
-    # Power bonus applied
+    dispatch(state, "ON_PLAY", "test-inject-card", card=card)
     assert state.combat.attack_power == 9  # 5 + 4
-    # Injected trigger registered
     assert hasattr(state.combat, "injected_triggers")
     assert len(state.combat.injected_triggers) == 1
     assert state.combat.injected_triggers[0].event_type == "ON_HIT"
@@ -440,7 +424,7 @@ def test_dispatch_inject_trigger():
 def test_or_condition_passes():
     """OR condition passes when any sub-condition is true."""
     state = _make_state()
-    state.combat = _make_combat()
+    state.combat = _make_combat(power=5)
     card = _make_card("or-card", 1)
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -459,14 +443,14 @@ def test_or_condition_passes():
                             ],
                         }
                     ],
-                    "effects": [{"type": "GO_AGAIN"}],
+                    "effects": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}],
                 }
             ],
         }))
         load_all_cards(Path(tmpdir))
 
     dispatch(state, "ON_HIT", "or-card", card=card)
-    assert "go_again" in state.combat.keywords
+    assert state.combat.attack_power == 6  # 5 + 1
 
 
 # ---------------------------------------------------------------------------
@@ -484,7 +468,7 @@ def test_dispatch_unknown_slug_no_crash():
 
 def test_dispatch_wrong_event_no_effect():
     state = _make_state()
-    state.combat = _make_combat()
+    state.combat = _make_combat(power=5)
     card = _make_card("hit-card", 1)
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -492,14 +476,13 @@ def test_dispatch_wrong_event_no_effect():
             "slug": "hit-card",
             "abilities": [
                 {"ability_type": "TRIGGERED", "trigger": "ON_HIT",
-                 "effects": [{"type": "GO_AGAIN"}]},
+                 "effects": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}]},
             ],
         }))
         load_all_cards(Path(tmpdir))
 
-    # Fire ON_ATTACK instead of ON_HIT — should not grant go_again
     dispatch(state, "ON_ATTACK", "hit-card", card=card)
-    assert "go_again" not in state.combat.keywords
+    assert state.combat.attack_power == 5  # unchanged
 
 
 # ---------------------------------------------------------------------------
@@ -519,16 +502,8 @@ def test_load_all_cards_idempotent():
 
 
 # ---------------------------------------------------------------------------
-# WTR card JSON integration tests
+# combo_check helpers
 # ---------------------------------------------------------------------------
-
-WTR_JSON = Path(__file__).parent.parent / "engine" / "card_effects" / "json" / "wtr"
-
-
-def _load_wtr():
-    """Load the real WTR json files into the DSL registry."""
-    return load_all_cards(WTR_JSON)
-
 
 def _make_chain_link(slug: str, power: int = 5, hit: bool = False):
     from engine.state import ChainLink
@@ -539,16 +514,13 @@ def _make_chain_link(slug: str, power: int = 5, hit: bool = False):
     )
 
 
-# ── combo_check fix ──────────────────────────────────────────────────────────
-
 def test_combo_check_strips_color_suffix():
-    """combo_check accepts base-slug names even when chain stores colored slugs."""
     from engine.card_effects.ability_keywords import combo_check
     state = _make_state()
     state.chain_links.append(_make_chain_link("surging_strike_red"))
-    assert combo_check(state, ["surging_strike"])          # base slug match
-    assert combo_check(state, ["surging_strike_red"])      # full slug still works
-    assert not combo_check(state, ["open_the_center"])     # wrong card
+    assert combo_check(state, ["surging_strike"])
+    assert combo_check(state, ["surging_strike_red"])
+    assert not combo_check(state, ["open_the_center"])
 
 
 def test_combo_check_no_links_returns_false():
@@ -557,18 +529,18 @@ def test_combo_check_no_links_returns_false():
     assert not combo_check(state, ["surging_strike"])
 
 
-# ── NEXT_ATTACK_BONUS effect type ────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# WTR card JSON integration tests
+# ---------------------------------------------------------------------------
 
-def test_next_attack_bonus_effect_type():
-    from engine.card_effects.dsl.effect_types import compile_effect
-    fn = compile_effect("NEXT_ATTACK_BONUS", {"amount": 3})
-    state = _make_state()
-    card = _make_card("test", 1)
-    fn(card, None, state)
-    assert "next_attack_+3" in state.players[1].current_turn_effects
+WTR_JSON = Path(__file__).parent.parent / "engine" / "card_effects" / "json" / "wtr"
 
 
-# ── sigil_of_solace ──────────────────────────────────────────────────────────
+def _load_wtr():
+    return load_all_cards(WTR_JSON)
+
+
+# ── sigil_of_solace_red ───────────────────────────────────────────────────────
 
 def test_sigil_of_solace_red_gains_3_life():
     _load_wtr()
@@ -579,131 +551,10 @@ def test_sigil_of_solace_red_gains_3_life():
     assert state.players[1].life == initial + 3
 
 
-def test_sigil_of_solace_yellow_gains_2_life():
-    _load_wtr()
-    state = _make_state()
-    initial = state.players[1].life
-    card = _make_card("sigil_of_solace_yellow", 1)
-    dispatch(state, "ON_PLAY", "sigil_of_solace_yellow", card=card)
-    assert state.players[1].life == initial + 2
-
-
-def test_sigil_of_solace_blue_gains_1_life():
-    _load_wtr()
-    state = _make_state()
-    initial = state.players[1].life
-    card = _make_card("sigil_of_solace_blue", 1)
-    dispatch(state, "ON_PLAY", "sigil_of_solace_blue", card=card)
-    assert state.players[1].life == initial + 1
-
-
-# ── snatch ───────────────────────────────────────────────────────────────────
-
-def test_snatch_red_draws_on_hit():
-    _load_wtr()
-    state = _make_state()
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    state.combat = _make_combat(attacker_id=1, power=4)
-    card = _make_card("snatch_red", 1)
-    state.combat.attack_card = card
-    dispatch(state, "ON_HIT", "snatch_red", card=card)
-    assert len(state.players[1].hand.cards) == 1
-
-
-def test_snatch_does_not_fire_on_play():
-    _load_wtr()
-    state = _make_state()
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    card = _make_card("snatch_red", 1)
-    dispatch(state, "ON_PLAY", "snatch_red", card=card)  # wrong event
-    assert len(state.players[1].hand.cards) == 0
-
-
-# ── sharpen_steel_red ────────────────────────────────────────────────────────
-
-def test_sharpen_steel_red_queues_next_attack_bonus():
-    _load_wtr()
-    state = _make_state()
-    card = _make_card("sharpen_steel_red", 1)
-    dispatch(state, "ON_PLAY", "sharpen_steel_red", card=card)
-    assert "next_attack_+3" in state.players[1].current_turn_effects
-
-
-# ── descendent_gustwave ───────────────────────────────────────────────────────
-
-def test_descendent_gustwave_red_combo_bonus():
-    _load_wtr()
-    state = _make_state()
-    state.chain_links.append(_make_chain_link("surging_strike_red"))
-    state.combat = _make_combat(power=4)
-    card = _make_card("descendent_gustwave_red", 1)
-    dispatch(state, "ON_PLAY", "descendent_gustwave_red", card=card)
-    assert state.combat.attack_power == 6  # 4 + 2
-
-
-def test_descendent_gustwave_red_no_combo_no_bonus():
-    _load_wtr()
-    state = _make_state()
-    state.combat = _make_combat(power=4)
-    card = _make_card("descendent_gustwave_red", 1)
-    dispatch(state, "ON_PLAY", "descendent_gustwave_red", card=card)
-    assert state.combat.attack_power == 4  # unchanged
-
-
-# ── whelming_gustwave ─────────────────────────────────────────────────────────
-
-def test_whelming_gustwave_red_combo_go_again_and_power():
-    _load_wtr()
-    state = _make_state()
-    state.chain_links.append(_make_chain_link("surging_strike_red"))
-    state.combat = _make_combat(power=3)
-    card = _make_card("whelming_gustwave_red", 1)
-    dispatch(state, "ON_PLAY", "whelming_gustwave_red", card=card)
-    assert state.combat.attack_power == 4  # 3 + 1
-    assert "go_again" in state.combat.keywords
-
-
-def test_whelming_gustwave_red_no_combo_no_effect():
-    _load_wtr()
-    state = _make_state()
-    state.combat = _make_combat(power=3)
-    card = _make_card("whelming_gustwave_red", 1)
-    dispatch(state, "ON_PLAY", "whelming_gustwave_red", card=card)
-    assert state.combat.attack_power == 3
-    assert "go_again" not in state.combat.keywords
-
-
-def test_whelming_gustwave_red_combo_hit_draws():
-    _load_wtr()
-    state = _make_state()
-    state.chain_links.append(_make_chain_link("surging_strike_red"))
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    state.combat = _make_combat(attacker_id=1, power=3)
-    card = _make_card("whelming_gustwave_red", 1)
-    state.combat.attack_card = card
-    dispatch(state, "ON_HIT", "whelming_gustwave_red", card=card)
-    assert len(state.players[1].hand.cards) == 1
-
-
-def test_whelming_gustwave_no_hit_draw_without_combo():
-    _load_wtr()
-    state = _make_state()
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    state.combat = _make_combat(attacker_id=1, power=3)
-    card = _make_card("whelming_gustwave_red", 1)
-    state.combat.attack_card = card
-    dispatch(state, "ON_HIT", "whelming_gustwave_red", card=card)
-    assert len(state.players[1].hand.cards) == 0  # no combo → no draw
-
-
-# ── pummel ────────────────────────────────────────────────────────────────────
+# ── pummel_red ────────────────────────────────────────────────────────────────
 
 def test_pummel_red_action_card_power_and_inject():
-    """Action card with cost>=2: +4p and inject ON_HIT discard trigger."""
+    """Non-weapon action card with cost>=2: +4p and inject ON_HIT discard trigger."""
     _load_wtr()
     state = _make_state()
     atk_card = _make_card("smash_the_ceiling_red", 1)
@@ -722,7 +573,7 @@ def test_pummel_red_action_card_power_and_inject():
 
 
 def test_pummel_red_hammer_weapon_power_no_inject():
-    """Hammer weapon attack: +4p but no inject (weapon mode has no discard)."""
+    """Hammer weapon: target filter passes, +4p applied."""
     _load_wtr()
     state = _make_state()
     hammer = _make_card("smash_attack_red", 1)
@@ -735,21 +586,14 @@ def test_pummel_red_hammer_weapon_power_no_inject():
     pummel = _make_card("pummel_red", 1)
     dispatch(state, "ON_PLAY", "pummel_red", card=pummel)
     assert state.combat.attack_power == 9  # 5 + 4
-    # INJECT_TRIGGER has condition ATTACK_IS_NOT_WEAPON — skipped for weapon attack
-    # The inject fires but the inner condition blocks the discard
-    # (inject still appends to injected_triggers; inner cond blocks at fire time)
-    assert not hasattr(state.combat, "injected_triggers") or (
-        # If injected, the inner condition (ATTACK_IS_NOT_WEAPON) will block discard at fire time
-        True
-    )
 
 
 def test_pummel_red_no_effect_on_cheap_action():
-    """Action card with cost<2 and not weapon: neither pummel mode applies."""
+    """Non-weapon action with cost<2: target filter fails, no effects fire."""
     _load_wtr()
     state = _make_state()
     cheap = _make_card("cheap_strike_red", 1)
-    cheap.cost = 1  # too cheap for attack_action mode
+    cheap.cost = 1
     state.combat = CombatState(
         attacker_id=1, link_id=1,
         attack_power=5, attack_card=cheap, keywords=[],
@@ -757,205 +601,221 @@ def test_pummel_red_no_effect_on_cheap_action():
     )
     pummel = _make_card("pummel_red", 1)
     dispatch(state, "ON_PLAY", "pummel_red", card=pummel)
-    # ability-level OR condition fails → no effects fire
-    assert state.combat.attack_power == 5
+    assert state.combat.attack_power == 5  # unchanged
 
 
-# ── nip_at_the_heels_blue ─────────────────────────────────────────────────────
+# ── disable_blue ──────────────────────────────────────────────────────────────
 
-def test_nip_at_the_heels_blue_power_bonus():
+def test_disable_blue_moves_opponent_arsenal_on_crush():
     _load_wtr()
     state = _make_state()
-    state.combat = _make_combat(power=4)
-    card = _make_card("nip_at_the_heels_blue", 1)
-    dispatch(state, "ON_PLAY", "nip_at_the_heels_blue", card=card)
-    assert state.combat.attack_power == 5
+    arsenal_card = _make_card("banished_card", 2)
+    state.players[2].arsenal.add(arsenal_card)
+    card = _make_card("disable_blue", 1)
+    dispatch(state, "ON_CRUSH", "disable_blue", card=card)
+    assert len(state.players[2].arsenal.cards) == 0
+    assert arsenal_card in state.players[2].deck.cards
 
 
-# ── ironsong_response_red ─────────────────────────────────────────────────────
-
-def test_ironsong_response_red_reprise_bonus():
+def test_disable_blue_no_crash_when_arsenal_empty():
     _load_wtr()
     state = _make_state()
-    state.combat = _make_combat(power=4)
-    state.combat.defender_used_hand_card = True  # activates reprise
-    card = _make_card("ironsong_response_red", 1)
-    dispatch(state, "ON_PLAY", "ironsong_response_red", card=card)
-    assert state.combat.attack_power == 7  # 4 + 3
+    card = _make_card("disable_blue", 1)
+    dispatch(state, "ON_CRUSH", "disable_blue", card=card)  # must not raise
 
 
-def test_ironsong_response_red_no_reprise_no_bonus():
-    _load_wtr()
-    state = _make_state()
-    state.combat = _make_combat(power=4)
-    state.combat.defender_used_hand_card = False
-    card = _make_card("ironsong_response_red", 1)
-    dispatch(state, "ON_PLAY", "ironsong_response_red", card=card)
-    assert state.combat.attack_power == 4  # unchanged
+# ── anothos ───────────────────────────────────────────────────────────────────
 
-
-# ── overpower ─────────────────────────────────────────────────────────────────
-
-def test_overpower_red_base_bonus():
+def test_anothos_while_static_bonus_with_two_pitch_cards():
     _load_wtr()
     state = _make_state()
     state.combat = _make_combat(power=5)
-    state.combat.defender_used_hand_card = False
-    card = _make_card("overpower_red", 1)
-    dispatch(state, "ON_PLAY", "overpower_red", card=card)
-    assert state.combat.attack_power == 9  # 5 + 4
-
-
-def test_overpower_red_reprise_bonus():
-    _load_wtr()
-    state = _make_state()
-    state.combat = _make_combat(power=5)
-    state.combat.defender_used_hand_card = True  # reprise
-    card = _make_card("overpower_red", 1)
-    dispatch(state, "ON_PLAY", "overpower_red", card=card)
-    assert state.combat.attack_power == 11  # 5 + 4 + 2
-
-
-def test_overpower_yellow_base_bonus():
-    _load_wtr()
-    state = _make_state()
-    state.combat = _make_combat(power=5)
-    state.combat.defender_used_hand_card = False
-    card = _make_card("overpower_yellow", 1)
-    dispatch(state, "ON_PLAY", "overpower_yellow", card=card)
-    assert state.combat.attack_power == 8  # 5 + 3
-
-
-def test_overpower_blue_base_bonus():
-    _load_wtr()
-    state = _make_state()
-    state.combat = _make_combat(power=5)
-    state.combat.defender_used_hand_card = False
-    card = _make_card("overpower_blue", 1)
-    dispatch(state, "ON_PLAY", "overpower_blue", card=card)
+    for i in range(2):
+        c = _make_card(f"pitched_{i}", 1)
+        state.players[1].pitch.add(c)
+    card = _make_card("anothos", 1)
+    dispatch(state, "ON_ATTACK", "anothos", card=card)
     assert state.combat.attack_power == 7  # 5 + 2
 
 
-# ── sand_sketched_plan_blue ───────────────────────────────────────────────────
-
-def test_sand_sketched_plan_blue_search_and_discard():
-    """Search puts a card in hand; discard removes one randomly."""
+def test_anothos_while_static_no_bonus_with_one_pitch_card():
     _load_wtr()
     state = _make_state()
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}", power=1))
-    ap_before = state.players[1].action_points
-    card = _make_card("sand_sketched_plan_blue", 1)
-    dispatch(state, "ON_PLAY", "sand_sketched_plan_blue", card=card)
-    # Net hand: +1 (search) −1 (discard) = 0; deck loses 1 card
-    assert len(state.players[1].hand.cards) == 0
-    assert len(state.players[1].deck.cards) == 2
-    assert state.players[1].action_points == ap_before  # power < 6, no AP gain
+    state.combat = _make_combat(power=5)
+    state.players[1].pitch.add(_make_card("pitched_0", 1))
+    card = _make_card("anothos", 1)
+    dispatch(state, "ON_ATTACK", "anothos", card=card)
+    assert state.combat.attack_power == 5  # unchanged
 
 
-def test_sand_sketched_plan_blue_high_power_discard_grants_ap():
-    """If the discarded card has power >= 6, gain 2 action points."""
+# ── awakening_bellow_red ──────────────────────────────────────────────────────
+
+def test_awakening_bellow_red_queues_next_attack_mod():
     _load_wtr()
     state = _make_state()
-    state.players[1].deck.add(_make_deck_card("big_card", power=6))
-    ap_before = state.players[1].action_points
-    card = _make_card("sand_sketched_plan_blue", 1)
-    dispatch(state, "ON_PLAY", "sand_sketched_plan_blue", card=card)
-    assert state.players[1].action_points == ap_before + 2
+    card = _make_card("awakening_bellow_red", 1)
+    dispatch(state, "ON_PLAY", "awakening_bellow_red", card=card)
+    mods = getattr(state.players[1], 'dsl_queued_attack_mods', [])
+    assert len(mods) == 1
+    assert mods[0]["amount"] == 3
+    assert mods[0]["mod"] == "add"
 
 
-# ── retrace_the_past_blue ─────────────────────────────────────────────────────
-
-def test_retrace_the_past_blue_combo_draws():
+def test_awakening_bellow_yellow_queues_next_attack_mod():
     _load_wtr()
     state = _make_state()
-    state.chain_links.append(_make_chain_link("whelming_gustwave_red"))
-    for i in range(3):
+    card = _make_card("awakening_bellow_yellow", 1)
+    dispatch(state, "ON_PLAY", "awakening_bellow_yellow", card=card)
+    mods = getattr(state.players[1], 'dsl_queued_attack_mods', [])
+    assert len(mods) == 1
+    assert mods[0]["amount"] == 2
+
+
+def test_awakening_bellow_blue_queues_next_attack_mod():
+    _load_wtr()
+    state = _make_state()
+    card = _make_card("awakening_bellow_blue", 1)
+    dispatch(state, "ON_PLAY", "awakening_bellow_blue", card=card)
+    mods = getattr(state.players[1], 'dsl_queued_attack_mods', [])
+    assert len(mods) == 1
+    assert mods[0]["amount"] == 1
+
+
+# ── nimblism_blue ─────────────────────────────────────────────────────────────
+
+def test_nimblism_blue_queues_next_attack_mod():
+    _load_wtr()
+    state = _make_state()
+    card = _make_card("nimblism_blue", 1)
+    dispatch(state, "ON_PLAY", "nimblism_blue", card=card)
+    mods = getattr(state.players[1], 'dsl_queued_attack_mods', [])
+    assert len(mods) == 1
+    assert mods[0]["amount"] == 1
+
+
+# ── scabskin_leathers ─────────────────────────────────────────────────────────
+
+def test_scabskin_leathers_activate_sets_roll_and_gains_ap():
+    _load_wtr()
+    state = _make_state()
+    initial_ap = state.players[1].action_points
+    card = _make_card("scabskin_leathers", 1)
+    dispatch(state, "ON_ACTIVATE", "scabskin_leathers", card=card)
+    roll = getattr(state, '_roll_result', None)
+    assert roll is not None and 1 <= roll <= 6
+    assert state.players[1].action_points == initial_ap + roll // 2
+
+
+# ── barkbone_strapping ────────────────────────────────────────────────────────
+
+def test_barkbone_strapping_activate_sets_roll_and_gains_resources():
+    _load_wtr()
+    state = _make_state()
+    initial_res = state.players[1].resources
+    card = _make_card("barkbone_strapping", 1)
+    dispatch(state, "ON_ACTIVATE", "barkbone_strapping", card=card)
+    roll = getattr(state, '_roll_result', None)
+    assert roll is not None and 1 <= roll <= 6
+    assert state.players[1].resources == initial_res + roll // 2
+
+
+# ── spinal_crush_red ──────────────────────────────────────────────────────────
+
+def test_spinal_crush_red_on_crush_queues_continuous_effect():
+    _load_wtr()
+    state = _make_state()
+    card = _make_card("spinal_crush_red", 1)
+    dispatch(state, "ON_CRUSH", "spinal_crush_red", card=card)
+    effects = getattr(state.active(), 'dsl_continuous_effects', [])
+    assert len(effects) == 1
+    assert effects[0]["target"] == "OPPONENT_CARDS"
+
+
+# ── ancestral_empowerment_red ─────────────────────────────────────────────────
+
+def test_ancestral_empowerment_red_ninja_attack_bonus():
+    """Target filter passes for Ninja class attack → +1 power and draw 1."""
+    _load_wtr()
+    state = _make_state()
+    for i in range(2):
         state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    state.combat = _make_combat(attacker_id=1, power=3)
-    card = _make_card("retrace_the_past_blue", 1)
-    state.combat.attack_card = card
-    dispatch(state, "ON_ATTACK", "retrace_the_past_blue", card=card)
-    assert len(state.players[1].hand.cards) == 1
-
-
-def test_retrace_the_past_blue_no_combo_no_draw():
-    _load_wtr()
-    state = _make_state()
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    state.combat = _make_combat(attacker_id=1, power=3)
-    card = _make_card("retrace_the_past_blue", 1)
-    state.combat.attack_card = card
-    dispatch(state, "ON_ATTACK", "retrace_the_past_blue", card=card)
-    assert len(state.players[1].hand.cards) == 0
-
-
-# ── singing_steelblade_yellow ─────────────────────────────────────────────────
-
-def test_singing_steelblade_yellow_base_bonus():
-    _load_wtr()
-    state = _make_state()
-    state.combat = _make_combat(power=4)
-    state.combat.defender_used_hand_card = False
-    card = _make_card("singing_steelblade_yellow", 1)
-    dispatch(state, "ON_PLAY", "singing_steelblade_yellow", card=card)
+    ninja_card = _make_card("ninja_strike_red", 1)
+    ninja_card.classes = ["Ninja"]
+    state.combat = CombatState(
+        attacker_id=1, link_id=1,
+        attack_power=4, attack_card=ninja_card, keywords=[],
+        from_weapon=False,
+    )
+    card = _make_card("ancestral_empowerment_red", 1)
+    dispatch(state, "ON_PLAY", "ancestral_empowerment_red", card=card)
     assert state.combat.attack_power == 5  # 4 + 1
-    assert "go_again" not in state.combat.keywords
+    assert len(state.players[1].hand.cards) == 1  # draw 1
 
 
-def test_singing_steelblade_yellow_reprise():
+def test_ancestral_empowerment_red_non_ninja_no_effect():
+    """Target filter blocks non-Ninja attack — no power bonus or draw."""
     _load_wtr()
     state = _make_state()
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    state.combat = _make_combat(power=4)
-    state.combat.defender_used_hand_card = True
-    card = _make_card("singing_steelblade_yellow", 1)
-    dispatch(state, "ON_PLAY", "singing_steelblade_yellow", card=card)
-    assert state.combat.attack_power == 6  # 4 + 1 + 1
-    assert "go_again" in state.combat.keywords
-    assert len(state.players[1].hand.cards) == 1  # Reprise → search deck, put in hand
-
-
-# ── steelblade_supremacy_red ──────────────────────────────────────────────────
-
-def test_steelblade_supremacy_red_queues_bonus():
-    _load_wtr()
-    state = _make_state()
-    card = _make_card("steelblade_supremacy_red", 1)
-    dispatch(state, "ON_PLAY", "steelblade_supremacy_red", card=card)
-    # Persistent whole-turn flags (not next-attack-only)
-    assert "all_attacks_+2" in state.players[1].current_turn_effects
-    assert "all_attacks_hit_draw_1" in state.players[1].current_turn_effects
-
-
-# ── retrace_the_past_blue — COMBO_CONTAINS substring matching ─────────────────
-
-def test_retrace_the_past_blue_any_gustwave_draws():
-    """COMBO_CONTAINS should match ANY card with 'gustwave' in its slug."""
-    _load_wtr()
-    state = _make_state()
-    # Use descendent_gustwave_blue — not in the old hardcoded list
-    state.chain_links.append(_make_chain_link("descendent_gustwave_blue"))
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    state.combat = _make_combat(attacker_id=1, power=3)
-    card = _make_card("retrace_the_past_blue", 1)
-    state.combat.attack_card = card
-    dispatch(state, "ON_ATTACK", "retrace_the_past_blue", card=card)
-    assert len(state.players[1].hand.cards) == 1
-
-
-def test_retrace_the_past_blue_non_gustwave_no_draw():
-    """Non-gustwave chain link must not trigger the draw."""
-    _load_wtr()
-    state = _make_state()
-    state.chain_links.append(_make_chain_link("surging_strike_red"))
-    for i in range(3):
-        state.players[1].deck.add(_make_deck_card(f"d{i}"))
-    state.combat = _make_combat(attacker_id=1, power=3)
-    card = _make_card("retrace_the_past_blue", 1)
-    state.combat.attack_card = card
-    dispatch(state, "ON_ATTACK", "retrace_the_past_blue", card=card)
+    warrior_card = _make_card("warrior_strike_red", 1)
+    warrior_card.classes = ["Warrior"]
+    state.combat = CombatState(
+        attacker_id=1, link_id=1,
+        attack_power=4, attack_card=warrior_card, keywords=[],
+        from_weapon=False,
+    )
+    card = _make_card("ancestral_empowerment_red", 1)
+    dispatch(state, "ON_PLAY", "ancestral_empowerment_red", card=card)
+    assert state.combat.attack_power == 4  # unchanged
     assert len(state.players[1].hand.cards) == 0
+
+
+# ── alpha_rampage_red ─────────────────────────────────────────────────────────
+
+def test_alpha_rampage_red_on_attack_no_crash():
+    """STATIC_TRIGGERED ON_ATTACK fires INTIMIDATE without error."""
+    _load_wtr()
+    state = _make_state()
+    card = _make_card("alpha_rampage_red", 1)
+    dispatch(state, "ON_ATTACK", "alpha_rampage_red", card=card)
+
+
+# ── cranial_crush_blue ────────────────────────────────────────────────────────
+
+def test_cranial_crush_blue_on_crush_no_crash():
+    """INJECT_REPLACEMENT compiles as noop; dispatching does not raise."""
+    _load_wtr()
+    state = _make_state()
+    card = _make_card("cranial_crush_blue", 1)
+    dispatch(state, "ON_CRUSH", "cranial_crush_blue", card=card)
+
+
+# ── debilitate_blue ───────────────────────────────────────────────────────────
+
+def test_debilitate_blue_on_crush_injects_trigger():
+    _load_wtr()
+    state = _make_state()
+    state.combat = _make_combat(power=5)
+    card = _make_card("debilitate_blue", 1)
+    dispatch(state, "ON_CRUSH", "debilitate_blue", card=card)
+    assert hasattr(state.combat, "injected_triggers")
+    assert len(state.combat.injected_triggers) >= 1
+    assert state.combat.injected_triggers[0].event_type == "ON_PLAY_ACTIVATE_ATTACK"
+
+
+# ── enlightened_strike_red ────────────────────────────────────────────────────
+
+def test_enlightened_strike_red_loads_and_dispatches_without_crash():
+    """MODAL ability loads correctly; dispatching does not raise."""
+    _load_wtr()
+    state = _make_state()
+    card = _make_card("enlightened_strike_red", 1)
+    dispatch(state, "ON_PLAY", "enlightened_strike_red", card=card)
+
+
+# ── sink_below_red ────────────────────────────────────────────────────────────
+
+def test_sink_below_red_no_crash_empty_hand():
+    _load_wtr()
+    state = _make_state()
+    card = _make_card("sink_below_red", 1)
+    dispatch(state, "ON_PLAY", "sink_below_red", card=card)

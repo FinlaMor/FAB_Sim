@@ -1,9 +1,0 @@
-{
-  "slug": "savage_swing_red",
-  "abilities": [
-    {
-      "ability_type": "PLAY",
-      "additional_cost": [{"type": "DISCARD_RANDOM", "amount": 1}]
-    }
-  ]
-}

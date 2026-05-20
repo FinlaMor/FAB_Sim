@@ -197,11 +197,14 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
                 can_afford &= cost_func(state, player_id, check=True)
                 setattr(action, 'additional_costs', True)
 
-    # Check DSL-defined additional costs (mandatory; block play if unpayable)
+    # Check DSL-defined play cost and ability additional costs (mandatory; block play if unpayable)
     if card is not None:
         from engine.card_effects.dsl.loader import get_card as _dsl_get_card
         _dsl_cd = _dsl_get_card(card.slug)
         if _dsl_cd:
+            if _dsl_cd.play_cost and _dsl_cd.play_cost.check_fn is not None:
+                if not _dsl_cd.play_cost.check_fn(card, None, state):
+                    can_afford &= False
             for _ab in _dsl_cd.abilities:
                 for _ac in getattr(_ab, 'additional_costs', []):
                     if _ac.check_fn is not None and not _ac.check_fn(card, None, state):
@@ -374,6 +377,17 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     _meld_side = getattr(action, 'meld_side', None)
     # Resource cost already deducted by evaluate_play_cost in apply_action.
     player.hand.remove(card)
+
+    # Pay DSL-defined play cost and any ability-level additional costs.
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    _dsl_cd = _dsl_get_card(card.slug)
+    if _dsl_cd:
+        if _dsl_cd.play_cost and _dsl_cd.play_cost.pay_fn:
+            _dsl_cd.play_cost.pay_fn(card, None, state)
+        for _ab in _dsl_cd.abilities:
+            for _ac in getattr(_ab, 'additional_costs', []):
+                if _ac.pay_fn:
+                    _ac.pay_fn(card, None, state)
 
     # Tag the card so on_play triggers know which side is resolving
     # (AP deduction is handled in _pay_costs — not here)

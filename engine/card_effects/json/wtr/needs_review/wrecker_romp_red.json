@@ -1,9 +1,0 @@
-{
-  "slug": "wrecker_romp_red",
-  "abilities": [
-    {
-      "ability_type": "PLAY",
-      "additional_cost": [{"type": "DISCARD_RANDOM", "amount": 1}]
-    }
-  ]
-}
