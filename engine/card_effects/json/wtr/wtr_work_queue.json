@@ -658,7 +658,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "debilitate_red",
@@ -796,7 +796,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "disable_red",
@@ -1040,7 +1040,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck.\n\nChoose 1;\n- When you attack with Enlightened Strike, draw a card.\n- Enlightened Strike gains +2{p}.\n- Enlightened Strike gains **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "flic_flak_blue",
@@ -1276,7 +1276,7 @@
     ],
     "specializations": [],
     "functional_text": "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it.\n\n**Instant** - Remove 3 energy counters from this: Gain {r}\n\n**Blade Break**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "goliath_gauntlet",
@@ -2394,7 +2394,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per turn Action** - 0: Roll a 6 sided die. Gain action points equal to half the number rolled, rounded down.\n\n**Battleworn**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "seismic_surge",
@@ -2556,7 +2556,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - If Spinal Crush deals 4 or more damage to a hero, action cards, activated abilities, and attacks they control lose and can't gain **go again** during their next action phase.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "staunch_response_blue",
@@ -4258,7 +4258,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "sink_below_yellow",

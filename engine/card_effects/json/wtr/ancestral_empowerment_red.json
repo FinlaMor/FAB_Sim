@@ -1,6 +1,7 @@
 {
   "slug": "ancestral_empowerment_red",
-  "play_cost": {
+  "conditions": {
+    "play_activate": "PLAY",
     "optional": "FALSE",
     "type": {
       "TARGET": [

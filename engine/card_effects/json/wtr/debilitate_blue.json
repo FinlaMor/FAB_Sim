@@ -1,0 +1,20 @@
+{
+  "slug": "debilitate_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "effects":
+        {
+          "type": "INJECT_TRIGGER",
+          "object": "PLAYER",
+          "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+          "effects": 
+          {
+            "type": "MODIFY_ATTACK_POWER",
+            "amount": -2
+          }
+        }
+    }
+  ]
+}

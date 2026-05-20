@@ -2,7 +2,8 @@
   "slug": "disable_blue",
   "abilities": [
     {
-      "ability_type": "PLAY",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CRUSH",
       "effects": [
         {
           "type": "PUT_ARSENAL_BOTTOM",

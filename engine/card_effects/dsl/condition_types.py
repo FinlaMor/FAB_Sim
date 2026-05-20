@@ -269,5 +269,6 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return not (_fn is None or _fn(c, e, s))
         return _not
 
-    # Unknown — always True (safe fallback)
-    return None
+    # i want to catch failures during development.
+    # # Unknown — always True (safe fallback)
+    # return None

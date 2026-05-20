@@ -1,0 +1,18 @@
+{
+  "slug": "sink_below_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects":
+        {
+          "type": "PUT_HAND_CARD_BOTTOM",
+          "optional": "TRUE",
+          "conditional_effect": 
+          {
+            "type": "DRAW",
+            "amount": 1
+          }
+        }
+    }
+  ]
+}
