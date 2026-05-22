@@ -12,10 +12,10 @@ WTR:
 	[x] Disable
 
 ARC:
-	[ ] Command and Conquer
+	[x] Command and Conquer
 	
 CRU:
-	[ ] Righteous Cleansing
+	[x] Righteous Cleansing
 	
 EVR:
 	[ ] Swing Big
