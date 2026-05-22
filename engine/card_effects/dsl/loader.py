@@ -54,9 +54,15 @@ def _compile_ability(raw: dict[str, Any]) -> AbilityDef:
 
     conditions = [_compile_condition(c) for c in raw.get("conditions", [])]
     effects = [_compile_effect(e) for e in raw.get("effects", [])]
-    costs = [_compile_cost(c) for c in raw.get("costs", [])]
+    costs = [_compile_cost(c) for c in raw.get("cost", [])]
     additional_costs = [_compile_cost(c) for c in raw.get("additional_cost", [])]
     alternative_costs = [_compile_cost(c) for c in raw.get("alternative_cost", [])]
+
+    target_raw = raw.get("target", {})
+    target_filter = [_compile_condition(c) for c in target_raw.get("filter", [])]
+
+    choose = raw.get("choose", 0)
+    modes = [_compile_effect(m) for m in raw.get("modes", [])]
 
     return AbilityDef(
         ability_type=atype,
@@ -67,6 +73,9 @@ def _compile_ability(raw: dict[str, Any]) -> AbilityDef:
         additional_costs=additional_costs,
         alternative_costs=alternative_costs,
         is_optional=is_optional,
+        target_filter=target_filter,
+        choose=choose,
+        modes=modes,
     )
 
 
@@ -74,7 +83,11 @@ def compile_card(raw: dict[str, Any]) -> CardDef:
     """Compile a raw JSON dict into a CardDef."""
     slug = raw.get("slug", "")
     abilities = [_compile_ability(a) for a in raw.get("abilities", [])]
-    return CardDef(slug=slug, abilities=abilities)
+    play_cost = None
+    raw_cost = raw.get("cost")
+    if isinstance(raw_cost, dict):
+        play_cost = _compile_cost(raw_cost)
+    return CardDef(slug=slug, abilities=abilities, play_cost=play_cost)
 
 
 def load_all_cards(json_dir: Path | None = None) -> int:

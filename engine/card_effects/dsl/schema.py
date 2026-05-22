@@ -32,17 +32,21 @@ class CostDef:
 
 @dataclass
 class AbilityDef:
-    ability_type: str  # PLAY|TRIGGERED|ACTIVATE|STATIC|ATTACK_REACTION|DEFENSE_REACTION
-    trigger: str | None = None        # event name for TRIGGERED abilities
+    ability_type: str
+    trigger: str | None = None
     effects: list[EffectDef] = field(default_factory=list)
     conditions: list[ConditionDef] = field(default_factory=list)
     costs: list[CostDef] = field(default_factory=list)
-    additional_costs: list[CostDef] = field(default_factory=list)   # mandatory extra costs (block play if unpayable)
-    alternative_costs: list[CostDef] = field(default_factory=list)  # pay INSTEAD of normal resource cost
+    additional_costs: list[CostDef] = field(default_factory=list)
+    alternative_costs: list[CostDef] = field(default_factory=list)
     is_optional: bool = False
+    target_filter: list[ConditionDef] = field(default_factory=list)  # CR 1.8.5 targeting
+    choose: int = 0                                                   # MODAL: modes to select
+    modes: list[EffectDef] = field(default_factory=list)             # MODAL: available modes
 
 
 @dataclass
 class CardDef:
     slug: str
     abilities: list[AbilityDef] = field(default_factory=list)
+    play_cost: CostDef | None = None  # additional cost paid when the card is played
