@@ -152,17 +152,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # Return this card to the controller's hand.
         def _fn(card, event, state):
             from engine.card_effects.ability_keywords import _controller_id
-            from engine.context import effect_context
+            from engine.effect_keywords import put_object
             cid = _controller_id(card)
-            player = state.players[cid]
-            # Remove from current zone
-            current_zone = card.zone if card.zone else None
-            if current_zone:
-                zone_obj = player.zone_by_name(current_zone) if hasattr(player, 'zone_by_name') else None
-                if zone_obj and card in zone_obj.cards:
-                    zone_obj.remove(card)
-            with effect_context():
-                player.hand.add(card)
+            put_object(state, target_card=card, destination_zone="hand",
+                       destination_player_id=cid, source_player_id=cid)
         return _fn
 
     if etype == "PUT_HAND_CARD_BOTTOM":
@@ -171,6 +164,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         player_target = params.get("player", "SELF")
         def _fn(card, event, state, _pt=player_target):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import put_object
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
@@ -183,22 +177,23 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 return
             target = player.hand.find(choice)
             if target:
-                player.hand.remove(target)
-                player.deck.add_bottom(target)
+                # position=None → zone default (append = bottom, cards[-1])
+                put_object(state, target, "deck",
+                           destination_player_id=tid, source_player_id=tid,
+                           position=None)
         return _fn
 
     if etype == "PUT_SELF_BOTTOM_DECK":
-        # Remove this card from the graveyard and put it on the bottom of its owner's deck.
+        # Remove this card from its current zone and put it on the bottom of its owner's deck.
         # Used for replacement effects like Drone of Brutality.
         def _fn(card, event, state):
             from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import put_object
             pid = _controller_id(card)
-            player = state.players[pid]
-            if hasattr(player, 'graveyard') and hasattr(player.graveyard, 'cards'):
-                if card in player.graveyard.cards:
-                    player.graveyard.cards.remove(card)
-            player.deck.add_bottom(card)
-            card.zone = "deck"
+            # position=None → zone default (append = bottom, cards[-1])
+            put_object(state, card, "deck",
+                       destination_player_id=pid, source_player_id=pid,
+                       position=None)
         return _fn
 
     if etype == "SEARCH_DECK":
@@ -222,11 +217,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             if pick != "fail_to_find":
                 target = next((c for c in eligible if c.slug == pick), None)
                 if target:
-                    controller.deck.cards.remove(target)
+                    from engine.effect_keywords import put_object
+                    # Assign ownership before the move so put_object resolves dest correctly.
                     target.owner = cid
                     target.controller = cid
-                    controller.hand.add(target)
-                    state.set_card_visibility(target, True)
+                    # is_public=True: searched cards are revealed when put into hand.
+                    put_object(state, target, "hand",
+                               destination_player_id=cid, source_player_id=cid,
+                               is_public=True)
             effect_shuffle(state, cid)
         return _fn
 
@@ -250,10 +248,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         count = params.get("count", 1)
         player_target = params.get("player", "SELF")
         def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target):
-            from engine.card_effects.ability_keywords import create_token, _controller_id
+            from engine.effect_keywords import create_token as _ek_create_token
+            from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
-            create_token(state, tid, _tok, _cnt)
+            _ek_create_token(state, tid, _tok, _cnt)
         return _fn
 
     if etype == "PUT_COUNTER":
@@ -359,18 +358,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "PUT_ARSENAL_BOTTOM":
-        # Put the opponent's arsenal card on the bottom of their deck (disable).
+        # Put the target player's arsenal card on the bottom of their deck.
         player_target = params.get("player", "OPPONENT")
         def _fn(card, event, state, _pt=player_target):
             from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import put_object
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
             arsenal = getattr(player, 'arsenal', None)
             if arsenal and hasattr(arsenal, 'cards') and arsenal.cards:
                 card_to_move = arsenal.cards[0]
-                arsenal.cards.remove(card_to_move)
-                player.deck.cards.append(card_to_move)
+                # position=None → zone default (append = bottom, cards[-1])
+                put_object(state, card_to_move, "deck",
+                           destination_player_id=tid, source_player_id=tid,
+                           position=None)
         return _fn
 
     if etype == "DESTROY_PERMANENT":
@@ -400,9 +402,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "RETURN_DR_FROM_GRAVEYARD":
         # Return a defense reaction card from any graveyard to its owner's hand.
-        # Simplified: searches controller's graveyard first, then opponent's.
+        # Searches controller's graveyard first, then opponent's.
         def _fn(card, event, state):
             from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import put_object
             cid = _controller_id(card)
             for pid in (cid, 3 - cid):
                 player = state.players.get(pid)
@@ -412,10 +415,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     types = [t.lower() for t in (getattr(c, 'types', None) or [])]
                     subtypes = [st.lower() for st in (getattr(c, 'subtypes', None) or [])]
                     if 'defense reaction' in types or 'defense_reaction' in subtypes:
-                        player.graveyard.cards.remove(c)
-                        owner_player = state.players.get(c.owner if c.owner is not None else pid)
-                        if owner_player:
-                            owner_player.hand.add(c)
+                        owner_pid = c.owner if c.owner is not None else pid
+                        put_object(state, c, "hand",
+                                   destination_player_id=owner_pid, source_player_id=pid)
                         return
         return _fn
 
@@ -480,11 +482,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         player_target = params.get("player", "OPPONENT")
         def _fn(card, event, state, _pt=player_target):
             from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import destroy
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
-            if hasattr(player, 'arsenal') and player.arsenal.cards:
-                player.arsenal.cards.clear()
+            for c in list(getattr(player.arsenal, 'cards', [])):
+                destroy(state, c, None)
         return _fn
 
     # ── new canonical effect types ─────────────────────────────────────────
@@ -538,9 +541,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     from engine.card_effects.ability_keywords import effect_gain_life
                     effect_gain_life(state, cid, val)
                 elif _asset == "ACTION_POINTS":
-                    state.players[cid].action_points += val
+                    from engine.effect_keywords import gain as _ek_gain, AssetType as _AssetType
+                    _ek_gain(state, _AssetType.ACTION_POINTS, val,
+                             source_player_id=cid, target_player_id=cid)
                 elif _asset == "CHI_POINTS":
-                    state.players[cid].chi = getattr(state.players[cid], 'chi', 0) + val
+                    from engine.effect_keywords import gain as _ek_gain, AssetType as _AssetType
+                    _ek_gain(state, _AssetType.CHI, val,
+                             source_player_id=cid, target_player_id=cid)
             return _fn
         if keyword:
             kw = keyword.lower()

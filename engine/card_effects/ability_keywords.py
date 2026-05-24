@@ -66,6 +66,7 @@ from engine.effect_keywords import (
     discard as _ek_discard,
     deal_damage as _ek_deal_damage,
     gain as _ek_gain,
+    lose as _ek_lose,
     opt as _ek_opt,
     intimidate as _ek_intimidate,
     put_counter as _ek_put_counter,
@@ -688,10 +689,11 @@ def create_token_card(token_slug: str, owner_id: int, **kwargs) -> Card:
 
 def effect_crowd_boos(state: GameState, player_id: int) -> None:
     """The crowd boos you — tracks that this player has been booed this turn."""
+    from engine.state import Event
     player = state.players[player_id]
     player.current_turn_effects.append("crowd_booed")
     state.event_manager.emit(
-        type('Event', (), {'type': 'crowd_boos', 'data': {'player_id': player_id}})(),
+        Event(type='crowd_boos', data={'player_id': player_id}),
         state
     )
 
@@ -738,33 +740,15 @@ def effect_steal_token(state: GameState, stealer_id: int, victim_id: int,
 # Token creation
 # ---------------------------------------------------------------------------
 
-AURA_TOKENS = frozenset({
-    "runechant", "seismic_surge", "quicken", "spectral_shield",
-    "frostbite", "bloodrot_pox", "soul_shackle", "ponder",
-    "embodiment_of_earth", "embodiment_of_lightning", "inertia",
-    "frailty", "courage", "might", "vigor", "agility",
-    "eloquence", "confidence", "toughness", "fealty",
-    "zen_state", "spellbane_aegis", "bait",
-})
-
-# Keywords carried by specific tokens — set before zone entry so prevention
-# effects are registered with the correct keyword list (CR 8.5.2b).
-TOKEN_KEYWORDS: dict[str, list[str]] = {
-    "spectral_shield": ["Ward 1"],          # CR 8.6.8
-    "spellbane_aegis": ["Spellvoid 1"],     # CR 8.6.18
-    "aether_ashwing": ["Arcane Barrier 1"], # CR 8.6.15
-}
-
-ITEM_TOKENS = frozenset({
-    "gold", "silver", "copper", "hyper_driver", "golden_cog", "goldkiss_rum",
-})
-
-# Ally tokens: routed to player.allies, can attack (power from slug_index).
-# Maps slug -> (subtypes, base_power, base_life)
-ALLY_TOKENS: dict[str, dict] = {
-    "aether_ashwing": {"subtypes": ["Ally", "Dragon"], "power": 1, "life": 1},
-}
-
+# Token classification tables live in effect_keywords (the canonical layer).
+# Re-exported here so any legacy code that imports them from ability_keywords
+# continues to work without changes.
+from engine.effect_keywords import (
+    AURA_TOKENS,
+    TOKEN_KEYWORDS,
+    ITEM_TOKENS,
+    ALLY_TOKENS,
+)
 
 def _create_token(state: GameState, player: Player, token_slug: str,
                   count: int = 1) -> list:
@@ -896,23 +880,15 @@ def effect_put_arsenal(state: GameState, card: Card, player_id: int,
 
 def create_token(state: GameState, player_id: int, token_slug: str,
                  count: int = 1) -> list:
-    """Public interface for token creation."""
-    # Ripple Away: reduce token creation by 1 when opponent activated it this turn
-    opp_id = 3 - player_id
-    opp = state.players.get(opp_id)
-    if opp and "ripple_away_reduce_tokens" in opp.current_turn_effects:
-        count = max(0, count - 1)
-        if count == 0:
-            return []
-    tokens = _create_token(state, state.players[player_id], token_slug, count)
-    # Prevention effects are registered inside _create_token (before Zone.add)
-    # Emit gold_created event so Gold-Baited Hook can track any gold creation
-    if token_slug == "gold" and tokens:
-        from engine.state import Event
-        state.event_manager.emit(
-            Event(type='gold_created', data={'player_id': player_id, 'count': len(tokens)}),
-            state)
-    return tokens
+    """Thin wrapper — delegates to effect_keywords.create_token (canonical path).
+
+    Signature kept identical so all existing registry.py / engine.py callers
+    continue to work without changes during the DSL migration.
+    Returns [] for backward compat; the canonical function returns CreateTokenEvent.
+    """
+    from engine.effect_keywords import create_token as _ek_create_token
+    _ek_create_token(state, player_id, token_slug, count)
+    return []
 
 
 # ---------------------------------------------------------------------------
@@ -1511,8 +1487,7 @@ def effect_gain_life(state, player_id: int, n: int):
 
 
 def effect_lose_life(state, player_id: int, n: int):
-    player = state.players[player_id]
-    player.life = max(0, player.life - n)
+    _ek_lose(state, _AssetType.LIFE, n, target_player_id=player_id)
 
 
 def effect_gain_resources(state, player_id: int, n: int):

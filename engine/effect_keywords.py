@@ -198,6 +198,43 @@ def _register_return_from_banish(state, card, target_player_id, origin_zone, unt
 
     state.event_manager.register(until_condition, handler)
 
+
+# ---------------------------------------------------------------------------
+# Token classification tables (CR 8.5.2)
+# Kept here so the canonical create_token function owns all token routing
+# logic. ability_keywords.py imports these re-exports for backward compat.
+# ---------------------------------------------------------------------------
+
+#: Tokens that enter as Auras in player.auras
+AURA_TOKENS: frozenset[str] = frozenset({
+    "runechant", "seismic_surge", "quicken", "spectral_shield",
+    "frostbite", "bloodrot_pox", "soul_shackle", "ponder",
+    "embodiment_of_earth", "embodiment_of_lightning", "inertia",
+    "frailty", "courage", "might", "vigor", "agility",
+    "eloquence", "confidence", "toughness", "fealty",
+    "zen_state", "spellbane_aegis", "bait",
+})
+
+#: Keywords set on a token before zone entry (CR 8.5.2b) so prevention
+#: effects are registered with the correct keyword list.
+TOKEN_KEYWORDS: dict[str, list[str]] = {
+    "spectral_shield": ["Ward 1"],          # CR 8.6.8
+    "spellbane_aegis": ["Spellvoid 1"],     # CR 8.6.18
+    "aether_ashwing": ["Arcane Barrier 1"], # CR 8.6.15
+}
+
+#: Tokens that enter as Items in player.items
+ITEM_TOKENS: frozenset[str] = frozenset({
+    "gold", "silver", "copper", "hyper_driver", "golden_cog", "goldkiss_rum",
+})
+
+#: Ally tokens: enter player.allies and can attack.
+#: Maps slug → {subtypes, power, life}
+ALLY_TOKENS: dict[str, dict] = {
+    "aether_ashwing": {"subtypes": ["Ally", "Dragon"], "power": 1, "life": 1},
+}
+
+
 @dataclass
 class CreateTokenEvent:
     """CR 8.5.2 — create a token and put it in the arena under the control of player_id.
@@ -214,19 +251,25 @@ class CreateTokenEvent:
     canceled: bool = False
 
 
-def create_token(state: GameState, token: str, source_player_id: int, target_player_id: int,
-           number: int=1, destination: str='tokens') -> CreateTokenEvent:
-    """CR 8.5.2 Create (token) is a discrete effect. 
-    To create a token, product the specified token and put it in the arena."""
-    
-    card = state.card_db.get(token)
+def create_token(state: GameState, target_player_id: int, token_slug: str,
+                 number: int = 1, source_player_id: int | None = None) -> CreateTokenEvent:
+    """CR 8.5.2 — Create token(s) in the arena under target_player_id's control.
+
+    Replacement effects can intercept CreateTokenEvent to modify event.number
+    (increase or decrease) or cancel creation entirely before execution.
+    Tokens receive keyword registration and prevention effects before zone entry
+    (CR 8.5.2b) so arena-entry triggers find prevention already active.
+    """
+    _src = source_player_id if source_player_id is not None else target_player_id
+
+    # card_db lookup provides a template slug; fresh Card objects are built per token below.
+    template = state.card_db.get(token_slug) if hasattr(state, "card_db") else None
 
     event = CreateTokenEvent(
-                            card=card, 
-                             target_player_id=target_player_id, 
-                             number=number, 
-                             source_player_id=source_player_id,
-                             destination=destination, 
+        card=template,
+        source_player_id=_src,
+        target_player_id=target_player_id,
+        number=number,
     )
 
     event_dict = state.effect_manager.apply_replacements(vars(event).copy(), state)
@@ -235,16 +278,80 @@ def create_token(state: GameState, token: str, source_player_id: int, target_pla
     if event.number == 0 or event.canceled:
         return event
 
-    # execute the creation — each token is a distinct Card object (CR 8.5.2)
+    _slug = (event.card.slug if event.card is not None else token_slug)
     controller = state.players[event.target_player_id]
+    effect_mngr = getattr(state, "effect_manager", None)
 
     for _ in range(event.number):
-        token_card = state.card_db.get(event.card.slug)  # fresh object + unique object_id per CR 3.0.9
-        token_card.owner = event.target_player_id
-        token_card.controller = event.target_player_id
-        getattr(controller, event.destination).add(token_card)
+        # CR 3.0.9: each token is a distinct Card object with its own identity.
+        token = Card(slug=_slug, name=_slug.replace("_", " ").title())
+        token.owner = event.target_player_id
+        token.controller = event.target_player_id
+        token.is_public = True
+        token.types = ["Token"]
 
-    # trigger: "when {token} enters the arena" listeners fire after (CR 8.5.2b)
+        # Set token-specific keywords before zone entry (CR 8.5.2b).
+        if _slug in TOKEN_KEYWORDS:
+            token.keywords = list(TOKEN_KEYWORDS[_slug])
+
+        # Register keyword-based prevention effects before zone entry so that
+        # any arena-entry trigger that immediately deals damage already finds them.
+        if effect_mngr is not None:
+            effect_mngr.register_prevention_effects(token, state)
+            if _slug == "zen_state":
+                # zen_state: text-based "prevent 1 damage" — not a keyword.
+                from engine.effects import ReplacementEffect, ReplacementType
+                def _zen_condition(ev, _state, _card=token):
+                    return (ev.get("type") == "damage"
+                            and ev.get("amount", 0) > 0
+                            and ev.get("target_player_id") == _card.controller
+                            and _card.zone in (
+                                "auras", "items", "tokens", "allies",
+                                "head", "chest", "arms", "legs", "weapon", "hero"))
+                def _zen_replace(ev, _state):
+                    ev["amount"] = max(0, ev.get("amount", 0) - 1)
+                    return ev
+                effect_mngr.add_replacement(ReplacementEffect(
+                    source_card=token,
+                    replacement_type=ReplacementType.PREVENTION,
+                    condition_fn=_zen_condition,
+                    replace_fn=_zen_replace,
+                    owner_id=event.target_player_id,
+                    prevention_amount=1,
+                    is_shielding=True,
+                ))
+
+        # Route to the correct arena zone based on token type.
+        if _slug in AURA_TOKENS:
+            token.types.append("Aura")
+            controller.auras.add(token)
+        elif _slug in ITEM_TOKENS:
+            token.types.append("Item")
+            controller.items.add(token)
+        elif _slug in ALLY_TOKENS:
+            ally_data = ALLY_TOKENS[_slug]
+            token.subtypes = list(ally_data.get("subtypes", ["Ally"]))
+            token.base_power = ally_data.get("power")
+            token.base_life = ally_data.get("life")
+            token.current_life = token.base_life
+            token.permanent_subtype = "Ally"
+            controller.allies.add(token)
+            # Keep allies_exhausted list in sync with allies zone length.
+            while len(controller.allies_exhausted) < len(controller.allies.cards):
+                controller.allies_exhausted.append(False)
+        else:
+            controller.tokens.add(token)
+
+    # Gold-Baited Hook and similar effects listen for this specific event.
+    if _slug == "gold":
+        from engine.state import Event as _StateEvent
+        state.event_manager.emit(
+            _StateEvent(type="gold_created",
+                        data={"player_id": event.target_player_id, "count": event.number}),
+            state,
+        )
+
+    # CR 8.5.2b: "when {token} enters the arena" triggers fire after creation.
     state.event_manager.emit(create_emit_event(event), state)
 
     return event
@@ -1267,19 +1374,33 @@ class PutObjectEvent:
     destination_player_id: int | None = None
     source_player_id: int | None = None
     is_public: bool | None = None       # None = use zone default
+    position: int | None = None         # None/"bottom" = zone default (append); 0/"top" = top; N = Nth from top
     canceled: bool = False
 
 
 def put_object(state: GameState, target_card: Card, destination_zone: str,
                destination_player_id: int | None = None,
                source_player_id: int | None = None,
-               is_public: bool | None = None) -> PutObjectEvent:
+               is_public: bool | None = None,
+               position: int | str | None = None) -> PutObjectEvent:
     """CR 8.5.15 — move an object from its current zone to a specified zone.
 
     destination_player_id: whose zone to target; defaults to card.owner.
     is_public: override the destination zone's default visibility.
+    position: where in the zone to place the card.
+        None / "bottom" → zone default (append to bottom, cards[-1]).
+        0 / "top"       → top of zone (cards[0]).
+        N (int)         → Nth from top (0-indexed).
     Move goes through Zone.add() so zone entry rules are respected.
     """
+    # Normalise position to int | None before storing in event.
+    # zone.add() always appends → bottom (cards[-1]); None means "use that default".
+    _pos: int | None
+    if isinstance(position, str):
+        _pos = 0 if position.lower() == "top" else None   # "bottom" → None
+    else:
+        _pos = position  # already int or None
+
     dest_pid = destination_player_id if destination_player_id is not None else target_card.owner
 
     event = PutObjectEvent(
@@ -1288,6 +1409,7 @@ def put_object(state: GameState, target_card: Card, destination_zone: str,
         destination_player_id=dest_pid,
         source_player_id=source_player_id,
         is_public=is_public,
+        position=_pos,
     )
 
     event_dict = vars(event).copy()
@@ -1322,6 +1444,17 @@ def put_object(state: GameState, target_card: Card, destination_zone: str,
             src_zone.add(card)
         event.canceled = True
         return event
+
+    # Reposition within zone if a specific index was requested.
+    # zone.add() always appends (bottom = cards[-1]); pop and re-insert for any other position.
+    if event.position is not None:
+        target_idx = event.position
+        current_idx = len(dest_zone.cards) - 1   # just appended → always the last index
+        if target_idx != current_idx:
+            dest_zone.cards.pop()                 # remove from bottom
+            # Clamp to valid range so callers don't have to guard against over-large N.
+            target_idx = max(0, min(target_idx, len(dest_zone.cards)))
+            dest_zone.cards.insert(target_idx, card)
 
     state.event_manager.emit(create_emit_event(event), state)
 
