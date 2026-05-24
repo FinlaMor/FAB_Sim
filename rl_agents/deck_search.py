@@ -326,7 +326,7 @@ class HeroCardDB:
                 _card_entry = _slug_idx.get(slug) or _slug_idx.get(slug.replace("-", "_"))
                 if _card_entry:
                     _spec_mismatch = False
-                    for _kw in (_card_entry.get("card_keywords") or []):
+                    for _kw in (_card_entry.get("ability_keywords") or []):
                         if "Specialization" in _kw:
                             _spec_hero = _kw.replace(" Specialization", "").lower().strip()
                             if _spec_hero not in _hero_name_tokens:
@@ -534,7 +534,7 @@ class HeroCardDB:
 
                 # Filter out specialization cards for other heroes
                 _spec_mismatch = False
-                for _kw in (card_entry.get("card_keywords") or []):
+                for _kw in (card_entry.get("ability_keywords") or []):
                     if "Specialization" in _kw:
                         _spec_hero = _kw.replace(" Specialization", "").lower().strip()
                         if _spec_hero not in _hero_name_tokens:
@@ -615,7 +615,7 @@ class HeroCardDB:
             pool.hero_slug.replace("-", "_")
         )
         hero_types: list[str] = (hero_entry or {}).get("types", [])
-        hero_keywords: list[str] = (hero_entry or {}).get("card_keywords", [])
+        hero_keywords: list[str] = (hero_entry or {}).get("ability_keywords", [])
 
         # Convert pool slugs to card dicts expected by validate_deck_legality
         deck_cards = [{"card_slug": s} for s in pool.deck_slugs]

@@ -1,0 +1,33 @@
+{
+  "slug": "nimblism_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACK_COST_LTE",
+              "cost": 1
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            },
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Attack"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

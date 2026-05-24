@@ -186,7 +186,7 @@ def _build_legal_pool_class_heuristic(
     """Legacy class-subset legality check (fallback when legal_heroes is missing)."""
     hero_classes_frozen: frozenset[str] = _expand_hero_classes(
         hero_entry.get("types", []),
-        hero_entry.get("card_keywords", []),
+        hero_entry.get("ability_keywords", []),
     )
     _hero_name_tokens: str = hero_slug.replace("-", " ").replace("_", " ").lower()
     _NON_PLAYABLE: frozenset[str] = frozenset({
@@ -199,7 +199,7 @@ def _build_legal_pool_class_heuristic(
         raw_types = frozenset(t.lower() for t in (entry.get("types") or []))
         if raw_types & _NON_PLAYABLE:
             continue
-        kws = entry.get("card_keywords") or []
+        kws = entry.get("ability_keywords") or []
         spec_mismatch = False
         for kw in kws:
             if "Specialization" in kw:
@@ -758,7 +758,7 @@ def _pick_equipment(
             if slug in used_slugs:
                 continue
             # Specialization check
-            kws = entry.get("card_keywords") or []
+            kws = entry.get("ability_keywords") or []
             legal_spec = True
             for kw in kws:
                 if "Specialization" in kw:
@@ -841,7 +841,7 @@ def _pick_equipment(
             if valid_slugs and slug not in valid_slugs:
                 continue
             # Specialization check
-            kws = entry.get("card_keywords") or []
+            kws = entry.get("ability_keywords") or []
             spec_mismatch = False
             for kw in kws:
                 if "Specialization" in kw:
@@ -906,7 +906,7 @@ def _pick_equipment(
             if "Token" in types or "Ally" in types:
                 continue
             # Skip cards with hero-specialization restrictions that don't match
-            kws = entry.get("card_keywords") or []
+            kws = entry.get("ability_keywords") or []
             for kw in kws:
                 if "Specialization" in kw:
                     spec_hero = kw.replace(" Specialization", "").lower()
@@ -1030,7 +1030,7 @@ def _pick_deck_cards(
 
     def _is_legendary(slug: str) -> bool:
         e = index.get(slug) or index.get(slug.replace("-", "_"))
-        return bool(e and "Legendary" in (e.get("card_keywords") or []))
+        return bool(e and "Legendary" in (e.get("ability_keywords") or []))
 
     index = _get_slug_index()
     for card in deck_cards:
@@ -1261,7 +1261,7 @@ def generate_deck(
 
     # Post-generation safety net: warn on any remaining violations
     hero_types = list((_hero_entry or {}).get("types", []))
-    hero_kws = list((_hero_entry or {}).get("card_keywords", []))
+    hero_kws = list((_hero_entry or {}).get("ability_keywords", []))
     violations = validate_deck_legality(deck_cards, equipment, hero_types, _index, hero_keywords=hero_kws)
     if violations:
         import warnings

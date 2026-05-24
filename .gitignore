@@ -40,9 +40,10 @@ venv/
 dist/
 build/
 
-# --- Claude Code / Auto Claude ---
+# --- Claude Code / Auto Claude / OMC ---
 .claude/
 .auto-claude/
+.omc/
 .auto-claude-security.json
 .claude_settings.json
 
@@ -54,7 +55,6 @@ build/
 # --- Generated output ---
 random_game_output.txt
 card_data/ability_analysis_output.txt
-ROADMAP.md
 debug.txt
 dml_warnings.txt
 complexity_assessment.json

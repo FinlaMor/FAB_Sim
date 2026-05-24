@@ -1,0 +1,299 @@
+[
+  {
+    "slug": "blade_flash_blue",
+    "name": "Blade Flash",
+    "type_text": "Generic Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "bone_basher",
+    "name": "Bone Basher",
+    "type_text": "Brute Weapon - Club (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Club"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**",
+    "status": "pending"
+  },
+  {
+    "slug": "bone_vizier",
+    "name": "Bone Vizier",
+    "type_text": "Brute Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When Bone Vizier is destroyed, reveal the top card of your deck. If it has 6 or more {p}, put it on top of your deck. Otherwise, put it on the bottom.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "chief_rukutan",
+    "name": "Chief Ruk'utan",
+    "type_text": "Brute Mentor",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "While Ruk'utan is face down in arsenal, at the start of your turn, you may turn him face up.\n\nWhile Ruk'utan is face up in arsenal, whenever you play a card with 6 or more {p}, **intimidate**, and put a lesson counter on him. Then if there are 2 or more lesson counters on Ruk'utan, banish him, search your deck for Alpha Rampage, put it face up in arsenal, and shuffle.",
+    "status": "pending"
+  },
+  {
+    "slug": "dodge_blue",
+    "name": "Dodge",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "en_garde_red",
+    "name": "En Garde",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hala_goldenhelm",
+    "name": "Hala Goldenhelm",
+    "type_text": "Warrior Mentor",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "While Hala is face down in arsenal, at the start of your turn, you may turn her face up.\n\nWhile Hala is face up in arsenal, whenever a sword attack you control hits, it gains **go again** and put a lesson counter on Hala. Then if there are 2 or more lesson counters on Hala, banish her, search your deck for Glistening Steelblade, put it face up in arsenal, and shuffle.",
+    "status": "pending"
+  },
+  {
+    "slug": "muscle_mutt_yellow",
+    "name": "Muscle Mutt",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "on_a_knife_edge_yellow",
+    "name": "On a Knife Edge",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gains **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "thrust_red",
+    "name": "Thrust",
+    "type_text": "Generic Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target sword attack gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "titanium_bauble_blue",
+    "name": "Titanium Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "toughen_up_blue",
+    "name": "Toughen Up",
+    "type_text": "Generic Defense Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_the_blacksmith_blue",
+    "name": "Visit the Blacksmith",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "wrecking_ball_red",
+    "name": "Wrecking Ball",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Wrecking Ball, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, **intimidate**.",
+    "status": "pending"
+  }
+]

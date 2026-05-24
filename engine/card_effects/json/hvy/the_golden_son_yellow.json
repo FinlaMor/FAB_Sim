@@ -1,0 +1,13 @@
+{
+  "slug": "the_golden_son_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [{"type": "CONTROLS_TOKEN_TYPE", "token": "gold"}],
+      "effects": [
+        {"type": "MODIFY_ATTACK_POWER", "amount": 3},
+        {"type": "GRANT_KEYWORD", "keyword": "overpower"}
+      ]
+    }
+  ]
+}

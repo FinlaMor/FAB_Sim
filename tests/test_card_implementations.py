@@ -13,7 +13,7 @@ SECTION 2 — Per-card implementation tests
 SECTION 3 — Damage helper coverage
   Parametrized tests for effect_deal_damage, effect_deal_arcane, and
   effect_gain_life.  Card tests that deal damage can assert
-  `opp.health == start - card.base_arcane_damage` without re-testing the
+  `opp.life == start - card.base_arcane_damage` without re-testing the
   pipeline — these tests prove the pipeline itself is correct.
 
 SECTION 4 — Event dispatch coverage
@@ -34,7 +34,7 @@ from __future__ import annotations
 import pytest
 
 from engine.card import Card, CardDB
-from engine.card_effects.keywords import (
+from engine.card_effects.ability_keywords import (
     arcane_barrier,
     arcane_shelter,
     battleworn,
@@ -44,9 +44,6 @@ from engine.card_effects.keywords import (
     combo_check,
     crush_check,
     dominate_check,
-    effect_deal_arcane,
-    effect_deal_damage,
-    effect_gain_life,
     effect_transcend,
     fusion,
     go_again,
@@ -61,6 +58,11 @@ from engine.card_effects.keywords import (
     temper,
     ward,
     watery_grave,
+)
+from engine.card_effects.triggers import (
+    effect_deal_arcane,
+    effect_deal_damage,
+    effect_gain_life,
 )
 from engine.actions import (
     Action, 
@@ -95,7 +97,8 @@ from engine.state import (
 )
 from tests.conftest import _make_card, _make_player, _make_state, _mock_agent
 from engine.engine import _pitch_for_cost, evaluate_play_cost, _apply_play_card, _calculate_resource_cost
-from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
+from engine.card_effects.costs.alt_costs import ALTERNATE_COSTS
+from engine.card_effects.costs.effect_costs import KEYWORD_COSTS
 
 # ---------------------------------------------------------------------------
 # Shared helpers
@@ -118,8 +121,11 @@ def _make_combat_state(
     atk = _make_card("test_attack", types=["Action", "Attack"], base_power=attack_power)
     atk.owner = attacker_id
     atk.controller = attacker_id
+    defender = _make_card(slug='defend_test_hero', name='defend_test_hero',types=['hero'])
+
     return CombatState(
         attacker_id=attacker_id,
+        attack_target=defender,
         link_id=1,
         attack_power=attack_power,
         base_attack_power=attack_power,
@@ -134,9 +140,14 @@ def _make_event(event_type: str = "combat_chain_close", data: dict | None = None
     return Event(type=event_type, data=data or {})
 
 
+_SLOT_SUBTYPE = {"chest": "Chest", "arms": "Arms", "head": "Head", "legs": "Legs"}
+
 def _make_equipment(player, zone_name: str = "chest", base_def: int = 3) -> Card:
     """Create a piece of equipment owned by player and place it in the given slot."""
+    subtype = _SLOT_SUBTYPE.get(zone_name, zone_name.title())
     card = _make_card("test_equip", types=["Equipment"], base_defense=base_def)
+    card.raw_subtypes = [subtype]
+    card.subtypes = [subtype]
     card.owner = player.player_id
     card.controller = player.player_id
     zone = getattr(player, zone_name, None)
@@ -581,9 +592,9 @@ class TestBloodDebt:
         card.zone = "banished"
         card.is_public = True
         state.players[1].banished.add(card)
-        starting = state.players[1].health
+        starting = state.players[1].life
         blood_debt(card, _make_event(), state)
-        assert state.players[1].health == starting - 1
+        assert state.players[1].life == starting - 1
 
     def test_no_loss_when_zone_not_banished(self):
         state = _make_state()
@@ -591,9 +602,9 @@ class TestBloodDebt:
         card.owner = 1
         card.zone = "graveyard"
         card.is_public = True
-        starting = state.players[1].health
+        starting = state.players[1].life
         blood_debt(card, _make_event(), state)
-        assert state.players[1].health == starting
+        assert state.players[1].life == starting
 
     def test_no_loss_when_banished_face_down(self):
         state = _make_state()
@@ -601,9 +612,9 @@ class TestBloodDebt:
         card.owner = 1
         card.zone = "banished"
         card.is_public = False
-        starting = state.players[1].health
+        starting = state.players[1].life
         blood_debt(card, _make_event(), state)
-        assert state.players[1].health == starting
+        assert state.players[1].life == starting
 
 
 # ---------------------------------------------------------------------------
@@ -1073,7 +1084,7 @@ class Test10000YearReunion:
     """
 
     _COST_FN = staticmethod(
-        __import__("engine.card_effects.effect_cost", fromlist=["ALTERNATE_COSTS"]).ALTERNATE_COSTS[
+        __import__("engine.card_effects.costs.alt_costs", fromlist=["ALTERNATE_COSTS"]).ALTERNATE_COSTS[
             "10000_year_reunion_red"
         ]
     )
@@ -1175,7 +1186,7 @@ class Test10000YearReunion:
         self._add_aura(state, "aura_a", 0)
         action = self._action()
 
-        from engine.card_effects.effect_cost import _10000_year_reunion_alt_cost
+        from engine.card_effects.costs.alt_costs import _10000_year_reunion_alt_cost
         assert _10000_year_reunion_alt_cost(state, 1, action, check=True) is False
 
         assert evaluate_play_cost(state, action, check=True) is False
@@ -1350,7 +1361,7 @@ def test_aether_icevein_correct_arcane_value(slug, expected_arcane):
 # ===========================================================================
 # Tests for effect_deal_damage, effect_deal_arcane, and effect_gain_life.
 # Once these pass, card tests can write:
-#   assert opp.health == start - card.base_arcane_damage
+#   assert opp.life == start - card.base_arcane_damage
 # without re-testing the pipeline itself.
 # ===========================================================================
 
@@ -1365,24 +1376,24 @@ class TestEffectDealDamage:
     @pytest.mark.parametrize("amount", [1, 2, 3, 4, 5, 6])
     def test_reduces_health_by_amount(self, amount):
         state = _make_state()
-        start = state.players[2].health
+        start = state.players[2].life
         dealt = effect_deal_damage(state, 2, amount)
         assert dealt == amount
-        assert state.players[2].health == start - amount
+        assert state.players[2].life == start - amount
 
     def test_zero_damage_is_noop(self):
         state = _make_state()
-        start = state.players[2].health
+        start = state.players[2].life
         dealt = effect_deal_damage(state, 2, 0)
         assert dealt == 0
-        assert state.players[2].health == start
+        assert state.players[2].life == start
 
     def test_negative_damage_is_noop(self):
         state = _make_state()
-        start = state.players[2].health
+        start = state.players[2].life
         dealt = effect_deal_damage(state, 2, -3)
         assert dealt == 0
-        assert state.players[2].health == start
+        assert state.players[2].life == start
 
     def test_damage_dealt_event_fires(self):
         """damage_dealt event is emitted with correct payload."""
@@ -1399,11 +1410,11 @@ class TestEffectDealDamage:
 
     def test_can_target_either_player(self):
         state = _make_state()
-        start1, start2 = state.players[1].health, state.players[2].health
+        start1, start2 = state.players[1].life, state.players[2].life
         effect_deal_damage(state, 1, 3)
         effect_deal_damage(state, 2, 5)
-        assert state.players[1].health == start1 - 3
-        assert state.players[2].health == start2 - 5
+        assert state.players[1].life == start1 - 3
+        assert state.players[2].life == start2 - 5
 
 
 # ---------------------------------------------------------------------------
@@ -1416,17 +1427,17 @@ class TestEffectDealArcane:
     @pytest.mark.parametrize("amount", [1, 2, 3, 4, 5])
     def test_reduces_health_by_amount(self, amount):
         state = _make_state()
-        start = state.players[2].health
+        start = state.players[2].life
         dealt = effect_deal_arcane(state, 2, amount)
         assert dealt == amount
-        assert state.players[2].health == start - amount
+        assert state.players[2].life == start - amount
 
     def test_zero_arcane_is_noop(self):
         state = _make_state()
-        start = state.players[2].health
+        start = state.players[2].life
         dealt = effect_deal_arcane(state, 2, 0)
         assert dealt == 0
-        assert state.players[2].health == start
+        assert state.players[2].life == start
 
     def test_arcane_barrier_reduces_damage(self):
         """Arcane Barrier N: pay N to prevent N arcane damage (agent accepts)."""
@@ -1437,13 +1448,13 @@ class TestEffectDealArcane:
         state.players[2].chest.add(barrier)
         state.players[2].resources = 2
         state.player_agents[2] = _scripted_agent(True)   # activate barrier
-        start = state.players[2].health
+        start = state.players[2].life
         # 3 arcane dealt, barrier blocks 2 → only 1 gets through
-        from engine.card_effects.keywords import arcane_barrier as _ab
+        from engine.card_effects.ability_keywords import arcane_barrier as _ab
         prevented = _ab(barrier, 2, state)
         assert prevented == 2
         effect_deal_arcane(state, 2, 3 - prevented)
-        assert state.players[2].health == start - 1
+        assert state.players[2].life == start - 1
 
     def test_arcane_damage_dealt_event_fires(self):
         """arcane_damage_dealt event is emitted when arcane damage is dealt."""
@@ -1478,10 +1489,10 @@ class TestEffectDealArcane:
         source.owner = 1
         source.controller = 1
         state.players[1].current_turn_effects.append("amp_2")
-        start = state.players[2].health
+        start = state.players[2].life
         effect_deal_arcane(state, 2, 3, source=source)
         # 3 base + 2 amp = 5 damage
-        assert state.players[2].health == start - 5
+        assert state.players[2].life == start - 5
         # amp consumed
         assert "amp_2" not in state.players[1].current_turn_effects
 
@@ -1496,15 +1507,15 @@ class TestEffectGainLife:
     @pytest.mark.parametrize("amount", [1, 2, 3, 5])
     def test_increases_health_by_amount(self, amount):
         state = _make_state()
-        start = state.players[1].health
+        start = state.players[1].life
         effect_gain_life(state, 1, amount)
-        assert state.players[1].health == start + amount
+        assert state.players[1].life == start + amount
 
     def test_zero_gain_is_noop(self):
         state = _make_state()
-        start = state.players[1].health
+        start = state.players[1].life
         effect_gain_life(state, 1, 0)
-        assert state.players[1].health == start
+        assert state.players[1].life == start
 
 
 # ===========================================================================

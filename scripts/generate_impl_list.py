@@ -99,7 +99,7 @@ for slug, cd in sorted(slug_index.items()):
     if slug in impl_slugs:
         continue
 
-    kws = cd.get("keywords") or cd.get("card_keywords") or []
+    kws = cd.get("keywords") or cd.get("ability_keywords") or []
     types = cd.get("types") or cd.get("card_type") or []
     if isinstance(types, str):
         types = [types]

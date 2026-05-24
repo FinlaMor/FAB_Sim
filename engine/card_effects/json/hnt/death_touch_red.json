@@ -1,0 +1,10 @@
+{
+  "slug": "death_touch_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [{"type": "CREATE_TOKEN", "token": "frailty", "count": 1, "player": "OPPONENT"}]
+    }
+  ]
+}

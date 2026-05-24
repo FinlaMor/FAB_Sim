@@ -1,0 +1,21 @@
+[
+  {
+    "slug": "lord_sutcliffe",
+    "name": "Lord Sutcliffe",
+    "type_text": "Runeblade Mentor",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Sutcliffe is face down in arsenal, at the start of your turn, you may turn him face up.\n\nWhile Sutcliffe is face up in arsenal, whenever you play a 'non-attack' action card, deal 1 arcane damage to each hero and put a lesson counter on Sutcliffe for each damage dealt this way. Then if there are 3 or more lesson counters on him, banish him, search your deck for a **specialization** card, put it face up into arsenal, and shuffle.",
+    "status": "pending"
+  }
+]

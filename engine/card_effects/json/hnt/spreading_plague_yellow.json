@@ -1,0 +1,9 @@
+{
+  "slug": "spreading_plague_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [{"type": "CREATE_TOKEN", "token": "bloodrot_pox", "count": 1, "player": "OPPONENT"}]
+    }
+  ]
+}

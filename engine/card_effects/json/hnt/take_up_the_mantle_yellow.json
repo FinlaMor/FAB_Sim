@@ -1,0 +1,17 @@
+{
+  "slug": "take_up_the_mantle_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}],
+      "effects": [
+        {"type": "MODIFY_ATTACK_POWER", "amount": 2},
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "conditions": [{"type": "OPPONENT_IS_MARKED"}]
+        }
+      ]
+    }
+  ]
+}

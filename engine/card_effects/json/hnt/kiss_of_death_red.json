@@ -1,0 +1,10 @@
+{
+  "slug": "kiss_of_death_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [{"type": "DEAL_GENERIC", "amount": 1, "target": "OPPONENT"}]
+    }
+  ]
+}

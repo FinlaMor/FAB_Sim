@@ -268,11 +268,11 @@ def create_player(
     # Create player
     player = Player(player_id=player_id, hero_card=hero_card)
 
-    # Override health/intellect from card db if set
-    if hero_card.raw_health and hero_card.raw_health > 0:
-        player.health = hero_card.raw_health
-    if hero_card.raw_intelligence and hero_card.raw_intelligence > 0:
-        player.intellect = hero_card.raw_intelligence
+    # Override life/intellect from card db if set
+    if hero_card.raw_life and hero_card.raw_life > 0:
+        player.life = hero_card.raw_life
+    if hero_card.raw_intellect and hero_card.raw_intellect > 0:
+        player.intellect = hero_card.raw_intellect
 
     # Shuffle and load deck
     deck_slugs = list(deck_data["cards"])
@@ -289,7 +289,7 @@ def create_player(
     # Place weapon
     # CR 3.0.2 / 8.2.10b: 2H weapons occupy both weapon zones simultaneously,
     # which prevents equipping a second weapon.
-    weapon_slugs = deck_data.get("weapon")
+    weapon_slugs = deck_data.get("weapons") or []
     if weapon_slugs:
         for weapon_slug in weapon_slugs:
             wc = get_card_info(weapon_slug, card_db)

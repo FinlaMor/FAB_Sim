@@ -1,0 +1,25 @@
+[
+  {
+    "slug": "knock_em_off_their_feet_red",
+    "name": "Knock 'Em Off Their Feet",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, {t} them.",
+    "status": "pending"
+  }
+]

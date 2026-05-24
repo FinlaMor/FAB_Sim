@@ -1,0 +1,20 @@
+{
+  "slug": "alpha_rampage_red",
+  "cost": {
+    "play_activate": "PLAY",
+    "optional": "FALSE",
+    "type": "DISCARD_RANDOM",
+    "amount": 1
+  },
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

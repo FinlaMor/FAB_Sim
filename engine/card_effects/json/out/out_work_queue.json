@@ -1,0 +1,4677 @@
+[
+  {
+    "slug": "amnesia_red",
+    "name": "Amnesia",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, cards and tokens they own lose and can't gain names until the start of your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "amplifying_arrow_yellow",
+    "name": "Amplifying Arrow",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Amplifying Arrow is face up in any zone, if it would gain {p}, instead it gains that much plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_solitary_confinement",
+    "name": "Arakni, Solitary Confinement",
+    "type_text": "Assassin Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 19,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your first attack with **stealth** each turn has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "back_heel_kick_blue",
+    "name": "Back Heel Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Twin Twisters was the last attack this combat chain, while this is face-up in any zone and would gain {p}, instead it gains that much plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "back_heel_kick_red",
+    "name": "Back Heel Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Twin Twisters was the last attack this combat chain, while this is face-up in any zone and would gain {p}, instead it gains that much plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "back_heel_kick_yellow",
+    "name": "Back Heel Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Twin Twisters was the last attack this combat chain, while this is face-up in any zone and would gain {p}, instead it gains that much plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "back_stab_blue",
+    "name": "Back Stab",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nDefense reaction cards can't be played this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "back_stab_red",
+    "name": "Back Stab",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nDefense reaction cards can't be played this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "back_stab_yellow",
+    "name": "Back Stab",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nDefense reaction cards can't be played this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "barbed_castaway",
+    "name": "Barbed Castaway",
+    "type_text": "Ranger Weapon - Bow (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Bow"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}: You may put an arrow card from your hand face up into your arsenal.\n\n**Once per Turn Instant** - {r}: You may turn a face down arrow in your arsenal face up. If you do, put an aim counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "barbed_undertow_red",
+    "name": "Barbed Undertow",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Barbed Undertow has an aim counter, it gains \"When this hits a hero, choose red, yellow, or blue. Until the start of your next turn, they can't pitch cards of the chosen color.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "be_like_water_blue",
+    "name": "Be Like Water",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, you may pay {r}. If you do, choose Head Jab, Surging Strike, or Twin Twisters. This gains the chosen name.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "be_like_water_red",
+    "name": "Be Like Water",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, you may pay {r}. If you do, choose Head Jab, Surging Strike, or Twin Twisters. This gains the chosen name.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "be_like_water_yellow",
+    "name": "Be Like Water",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, you may pay {r}. If you do, choose Head Jab, Surging Strike, or Twin Twisters. This gains the chosen name.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blade_cuff",
+    "name": "Blade Cuff",
+    "type_text": "Assassin / Ninja Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy Blade Cuff: Your daggers gain +1{p} this turn. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "bleed_out_blue",
+    "name": "Bleed Out",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Bleed Out costs X resource points less to play, where X is the total damage you've dealt with daggers this combat chain.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bleed_out_red",
+    "name": "Bleed Out",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Bleed Out costs X resource points less to play, where X is the total damage you've dealt with daggers this combat chain.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bleed_out_yellow",
+    "name": "Bleed Out",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Bleed Out costs X resource points less to play, where X is the total damage you've dealt with daggers this combat chain.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bloodrot_trap_red",
+    "name": "Bloodrot Trap",
+    "type_text": "Assassin / Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends and the attacking hero has played or activated a reaction this chain link, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_ancestry_blue",
+    "name": "Bonds of Ancestry",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If a card with Gustwave in its name was the last attack this combat chain, this costs {r}{r} less to play, and has **go again** and \"When this attacks, you may banish a card with **combo** from your graveyard. If you do, search your deck for a card with the same name, banish it, then shuffle. You may play it this combat chain.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_ancestry_red",
+    "name": "Bonds of Ancestry",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If a card with Gustwave in its name was the last attack this combat chain, this costs {r}{r} less to play, and has **go again** and \"When this attacks, you may banish a card with **combo** from your graveyard. If you do, search your deck for a card with the same name, banish it, then shuffle. You may play it this combat chain.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bonds_of_ancestry_yellow",
+    "name": "Bonds of Ancestry",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If a card with Gustwave in its name was the last attack this combat chain, this costs {r}{r} less to play, and has **go again** and \"When this attacks, you may banish a card with **combo** from your graveyard. If you do, search your deck for a card with the same name, banish it, then shuffle. You may play it this combat chain.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "boulder_trap_yellow",
+    "name": "Boulder Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends an attack with {p} greater than its base, put a -1{d} counter on an equipment the attacking hero controls.",
+    "status": "pending"
+  },
+  {
+    "slug": "brush_off_blue",
+    "name": "Brush Off",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt 1 damage this turn, prevent it.",
+    "status": "pending"
+  },
+  {
+    "slug": "brush_off_red",
+    "name": "Brush Off",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt 3 or less damage this turn, prevent it.",
+    "status": "pending"
+  },
+  {
+    "slug": "brush_off_yellow",
+    "name": "Brush Off",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt 2 or less damage this turn, prevent it.",
+    "status": "pending"
+  },
+  {
+    "slug": "burdens_of_the_past_blue",
+    "name": "Burdens of the Past",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Until end of turn, target hero can't play defense reaction cards with the same name as a card in their graveyard.\n\nIf there are 10 or more defense reaction cards in their graveyard, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "buzzsaw_trap_blue",
+    "name": "Buzzsaw Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Riptide"
+    ],
+    "functional_text": "**Legendary Riptide Specialization**\n\nWhen this defends an attack with {p} greater than its base, the attack can't gain {p} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "codex_of_bloodrot_yellow",
+    "name": "Codex of Bloodrot",
+    "type_text": "Assassin / Ranger Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero puts a card from their hand face-down into their arsenal.\n\nCreate a Ponder token under your control and a Bloodrot Pox token under each opponent's control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "codex_of_frailty_yellow",
+    "name": "Codex of Frailty",
+    "type_text": "Assassin / Ranger Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero puts an attack action card from their graveyard face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and a Frailty token under each opponent's control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "codex_of_inertia_yellow",
+    "name": "Codex of Inertia",
+    "type_text": "Assassin / Ranger Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero puts the top card of their deck face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and an Inertia token under each opponent's control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "collapsing_trap_blue",
+    "name": "Collapsing Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Riptide"
+    ],
+    "functional_text": "**Legendary Riptide Specialization**\n\nWhen this defends an attack with **go again**, the attacking hero discards their hand then draws that many cards minus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "concealed_blade_blue",
+    "name": "Concealed Blade",
+    "type_text": "Assassin / Ninja Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target Assassin or Ninja attack action card gains +1{p} and \"When this hits, equip a dagger from your inventory.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "crows_nest",
+    "name": "Crow's Nest",
+    "type_text": "Ranger Equipment - Quiver",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Quiver"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Azalea"
+    ],
+    "functional_text": "**Azalea Specialization**\n\nWhenever an arrow is put face up into your arsenal from your deck, you may pay {r}. If you do, put an aim counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_down_to_size_blue",
+    "name": "Cut Down to Size",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if they have 4 or more cards in hand, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_down_to_size_red",
+    "name": "Cut Down to Size",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if they have 4 or more cards in hand, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_down_to_size_yellow",
+    "name": "Cut Down to Size",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, if they have 4 or more cards in hand, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "cyclone_roundhouse_yellow",
+    "name": "Cyclone Roundhouse",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Spinning Wheel Kick was the last attack this combat chain, this has \"At the beginning of the reaction step, banish a random defending card from each chain link.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "deadly_duo_blue",
+    "name": "Deadly Duo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, the next attack action card with 2 or less base {p} you play this combat chain gains +2 {p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "deadly_duo_red",
+    "name": "Deadly Duo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, the next attack action card with 2 or less base {p} you play this combat chain gains +2 {p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "deadly_duo_yellow",
+    "name": "Deadly Duo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, the next attack action card with 2 or less base {p} you play this combat chain gains +2 {p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "death_touch_blue",
+    "name": "Death Touch",
+    "type_text": "Assassin / Ranger Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Death Touch can't be played from hand.\n\nWhen this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "death_touch_red",
+    "name": "Death Touch",
+    "type_text": "Assassin / Ranger Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Death Touch can't be played from hand.\n\nWhen this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "death_touch_yellow",
+    "name": "Death Touch",
+    "type_text": "Assassin / Ranger Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Death Touch can't be played from hand.\n\nWhen this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "descendent_gustwave_blue",
+    "name": "Descendent Gustwave",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, this costs {r} less to play and has +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "descendent_gustwave_red",
+    "name": "Descendent Gustwave",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, this costs {r} less to play and has +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "descendent_gustwave_yellow",
+    "name": "Descendent Gustwave",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, this costs {r} less to play and has +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "destructive_deliberation_blue",
+    "name": "Destructive Deliberation",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, create a Ponder token.",
+    "status": "pending"
+  },
+  {
+    "slug": "destructive_deliberation_red",
+    "name": "Destructive Deliberation",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, create a Ponder token.",
+    "status": "pending"
+  },
+  {
+    "slug": "destructive_deliberation_yellow",
+    "name": "Destructive Deliberation",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, create a Ponder token.",
+    "status": "pending"
+  },
+  {
+    "slug": "dishonor_blue",
+    "name": "Dishonor",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Bonds of Ancestry was the last attack this combat chain, this has +2{p}.\n\nWhen this hits a hero, if you control Surging Strike, Descendent Gustwave, and Bonds of Ancestry, that hero loses all abilities for the rest of the game.",
+    "status": "pending"
+  },
+  {
+    "slug": "down_and_dirty_red",
+    "name": "Down and Dirty",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While Down and Dirty is in your arsenal, you may defend with it.",
+    "status": "pending"
+  },
+  {
+    "slug": "driftwood_quiver",
+    "name": "Driftwood Quiver",
+    "type_text": "Ranger Equipment - Quiver",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Quiver"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Riptide"
+    ],
+    "functional_text": "**Riptide Specialization**\n\n**Instant** - Destroy Driftwood Quiver: Put a card from your arsenal on the bottom of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "falcon_wing_blue",
+    "name": "Falcon Wing",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Falcon Wing has an aim counter, it has +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "falcon_wing_red",
+    "name": "Falcon Wing",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Falcon Wing has an aim counter, it has +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "falcon_wing_yellow",
+    "name": "Falcon Wing",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Falcon Wing has an aim counter, it has +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "feisty_locals_blue",
+    "name": "Feisty Locals",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by an action card, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "feisty_locals_red",
+    "name": "Feisty Locals",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by an action card, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "feisty_locals_yellow",
+    "name": "Feisty Locals",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by an action card, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fisticuffs",
+    "name": "Fisticuffs",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - {r}{r}, destroy Fisticuffs: Target attack action card gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fleet_foot_sandals",
+    "name": "Fleet Foot Sandals",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy Fleet Foot Sandals: Target attack with 1 or less base {p} gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "fletch_a_blue_tail_blue",
+    "name": "Fletch a Blue Tail",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +2{p}.\n\nIf it has an aim counter, it gains \"Blue cards have -1{d} while defending this.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "fletch_a_red_tail_red",
+    "name": "Fletch a Red Tail",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +4{p}.\n\nIf it has an aim counter, it gains \"Red cards have -1{d} while defending this.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "fletch_a_yellow_tail_yellow",
+    "name": "Fletch a Yellow Tail",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p}.\n\nIf it has an aim counter, it gains \"Yellow cards have -1{d} while defending this.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flick_knives",
+    "name": "Flick Knives",
+    "type_text": "Assassin / Ninja Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - 0: Target dagger you control that isn't on the active chain link deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "frailty_trap_red",
+    "name": "Frailty Trap",
+    "type_text": "Assassin / Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends an attack with **go again**, create a Frailty token under the attacking hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "freewheeling_renegades_blue",
+    "name": "Freewheeling Renegades",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by an action card, this has -2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "freewheeling_renegades_red",
+    "name": "Freewheeling Renegades",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by an action card, this has -2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "freewheeling_renegades_yellow",
+    "name": "Freewheeling Renegades",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by an action card, this has -2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "give_and_take_red",
+    "name": "Give and Take",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an action card defends this, you may put an action card with cost less than this card's {p} from your graveyard on top of your deck.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gore_belching_red",
+    "name": "Gore Belching",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 7,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, reveal cards from the top of your deck until you reveal an attack action card. If you do, banish it and this gets -X{p}, where X is the {p} of the card banished this way. Otherwise, this gets -7{p}. Shuffle.",
+    "status": "pending"
+  },
+  {
+    "slug": "head_leads_the_tail_red",
+    "name": "Head Leads the Tail",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, name another card. Attack action cards with that name have +1{p} this combat chain.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "humble_blue",
+    "name": "Humble",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they lose all hero card abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "humble_red",
+    "name": "Humble",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they lose all hero card abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "humble_yellow",
+    "name": "Humble",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they lose all hero card abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "hurl_blue",
+    "name": "Hurl",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Hurl, you may pay {r}. When you do, it gains \"When this attacks, target dagger you control deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hurl_red",
+    "name": "Hurl",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Hurl, you may pay {r}. When you do, it gains \"When this attacks, target dagger you control deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hurl_yellow",
+    "name": "Hurl",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Hurl, you may pay {r}. When you do, it gains \"When this attacks, target dagger you control deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "inertia_trap_red",
+    "name": "Inertia Trap",
+    "type_text": "Assassin / Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infect_blue",
+    "name": "Infect",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infect_red",
+    "name": "Infect",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infect_yellow",
+    "name": "Infect",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infecting_shot_blue",
+    "name": "Infecting Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Infecting Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infecting_shot_red",
+    "name": "Infecting Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Infecting Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infecting_shot_yellow",
+    "name": "Infecting Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Infecting Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infectious_host_blue",
+    "name": "Infectious Host",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you control a Frailty token, create a Frailty token under their control, then repeat for Inertia and Bloodrot Pox.",
+    "status": "pending"
+  },
+  {
+    "slug": "infectious_host_red",
+    "name": "Infectious Host",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you control a Frailty token, create a Frailty token under their control, then repeat for Inertia and Bloodrot Pox.",
+    "status": "pending"
+  },
+  {
+    "slug": "infectious_host_yellow",
+    "name": "Infectious Host",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you control a Frailty token, create a Frailty token under their control, then repeat for Inertia and Bloodrot Pox.",
+    "status": "pending"
+  },
+  {
+    "slug": "infiltrate_red",
+    "name": "Infiltrate",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck. You may play it until the end of your next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "isolate_blue",
+    "name": "Isolate",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Dominate",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Dominate**",
+    "status": "pending"
+  },
+  {
+    "slug": "isolate_red",
+    "name": "Isolate",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Dominate",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Dominate**",
+    "status": "pending"
+  },
+  {
+    "slug": "isolate_yellow",
+    "name": "Isolate",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Dominate",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Dominate**",
+    "status": "pending"
+  },
+  {
+    "slug": "knives_out_blue",
+    "name": "Knives Out",
+    "type_text": "Assassin / Ninja Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your daggers gain +1{p} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "lace_with_bloodrot_red",
+    "name": "Lace with Bloodrot",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p} and \"When this hits a hero, create a Bloodrot Pox token under their control.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lace_with_frailty_red",
+    "name": "Lace with Frailty",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p} and \"When this hits a hero, create a Frailty token under their control.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lace_with_inertia_red",
+    "name": "Lace with Inertia",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p} and \"When this hits a hero, create an Inertia token under their control.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "looking_for_a_scrap_blue",
+    "name": "Looking for a Scrap",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "looking_for_a_scrap_red",
+    "name": "Looking for a Scrap",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "looking_for_a_scrap_yellow",
+    "name": "Looking for a Scrap",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "malign_blue",
+    "name": "Malign",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nDamage that would be dealt by Malign can't be prevented.",
+    "status": "pending"
+  },
+  {
+    "slug": "malign_red",
+    "name": "Malign",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nDamage that would be dealt by Malign can't be prevented.",
+    "status": "pending"
+  },
+  {
+    "slug": "malign_yellow",
+    "name": "Malign",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nDamage that would be dealt by Malign can't be prevented.",
+    "status": "pending"
+  },
+  {
+    "slug": "mask_of_malicious_manifestations",
+    "name": "Mask of Malicious Manifestations",
+    "type_text": "Assassin / Ranger Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, put a card from your hand or arsenal on the bottom of your deck, destroy Mask of Malicious Manifestations: Reveal cards from the top of your deck until you reveal an attack action card. Put it into your hand, then shuffle. **Go again**\n\n**Blade break**",
+    "status": "pending"
+  },
+  {
+    "slug": "mask_of_many_faces",
+    "name": "Mask of Many Faces",
+    "type_text": "Ninja Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy Mask of Many Faces: Name a card. The next attack action card you play this turn gains that name.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "mask_of_shifting_perspectives",
+    "name": "Mask of Shifting Perspectives",
+    "type_text": "Assassin / Ninja Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy Mask of Shifting Perspectives: Whenever a dagger hits this turn, you may put a card from your hand on the bottom of your deck. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "melting_point_red",
+    "name": "Melting Point",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +4{p}.\n\nIf it has an aim counter, it gains \"When this hits a hero, destroy a 1H weapon they control with 1 base {p}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "murkmire_grapnel_blue",
+    "name": "Murkmire Grapnel",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Murkmire Grapnel has an aim counter, it has +1{p}.\n\nDamage that would be dealt by Murkmire Grapnel can't be prevented.",
+    "status": "pending"
+  },
+  {
+    "slug": "murkmire_grapnel_red",
+    "name": "Murkmire Grapnel",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Murkmire Grapnel has an aim counter, it has +1{p}.\n\nDamage that would be dealt by Murkmire Grapnel can't be prevented.",
+    "status": "pending"
+  },
+  {
+    "slug": "murkmire_grapnel_yellow",
+    "name": "Murkmire Grapnel",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Murkmire Grapnel has an aim counter, it has +1{p}.\n\nDamage that would be dealt by Murkmire Grapnel can't be prevented.",
+    "status": "pending"
+  },
+  {
+    "slug": "nerve_scalpel",
+    "name": "Nerve Scalpel",
+    "type_text": "Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Piercing"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\n**Piercing 1**\n\nWhen this hits a hero, the next time they defend with 1 or more reaction cards this turn, those cards have -1{d} while defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "one_two_punch_blue",
+    "name": "One-Two Punch",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, this has \"When this hits a hero, deal 2 damage to them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "one_two_punch_red",
+    "name": "One-Two Punch",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, this has \"When this hits a hero, deal 2 damage to them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "one_two_punch_yellow",
+    "name": "One-Two Punch",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, this has \"When this hits a hero, deal 2 damage to them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "orbitoclast",
+    "name": "Orbitoclast",
+    "type_text": "Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Piercing"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\n**Piercing 1**\n\nWhen this hits a hero, the next time they defend with 1 or more 'non-attack' action cards this turn, those cards have -1{d} while defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "peace_of_mind_blue",
+    "name": "Peace of Mind",
+    "type_text": "Generic Instant",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt {p} damage, prevent 2 of that damage.\n\nCreate a Ponder token.",
+    "status": "pending"
+  },
+  {
+    "slug": "peace_of_mind_red",
+    "name": "Peace of Mind",
+    "type_text": "Generic Instant",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt {p} damage, prevent 4 of that damage.\n\nCreate a Ponder token.",
+    "status": "pending"
+  },
+  {
+    "slug": "peace_of_mind_yellow",
+    "name": "Peace of Mind",
+    "type_text": "Generic Instant",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt {p} damage, prevent 3 of that damage.\n\nCreate a Ponder token.",
+    "status": "pending"
+  },
+  {
+    "slug": "pendulum_trap_yellow",
+    "name": "Pendulum Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends and the attacking hero has played or activated a reaction this chain link, put the top 2 cards of their deck into their graveyard.",
+    "status": "pending"
+  },
+  {
+    "slug": "plague_hive_yellow",
+    "name": "Plague Hive",
+    "type_text": "Assassin / Ranger Resource - Gem",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Gem"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nWhen you pitch Plague Hive, for each opposing hero, choose Inertia, Frailty, or Bloodrot Pox at random and create that token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "plunge_blue",
+    "name": "Plunge",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, your next dagger attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "plunge_red",
+    "name": "Plunge",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, your next dagger attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "plunge_yellow",
+    "name": "Plunge",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, your next dagger attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "premeditate_red",
+    "name": "Premeditate",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack action card hits a hero this turn, create a Ponder token.\n\nThe next attack action card you play from arsenal this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "prowl_blue",
+    "name": "Prowl",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nThe next attack with **stealth** you play this combat chain gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "prowl_red",
+    "name": "Prowl",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nThe next attack with **stealth** you play this combat chain gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "prowl_yellow",
+    "name": "Prowl",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nThe next attack with **stealth** you play this combat chain gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "quiver_of_abyssal_depths",
+    "name": "Quiver of Abyssal Depths",
+    "type_text": "Ranger Equipment - Quiver",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Quiver"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}{r}, destroy Quiver of Abyssal Depths: Shuffle up to 3 arrows with different names from your graveyard into your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "quiver_of_rustling_leaves",
+    "name": "Quiver of Rustling Leaves",
+    "type_text": "Ranger Equipment - Quiver",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Quiver"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}{r}: Reveal the top card of your deck. If it's an arrow, put it face up into your arsenal and destroy Quiver of Rustling Leaves.",
+    "status": "pending"
+  },
+  {
+    "slug": "razors_edge_blue",
+    "name": "Razor's Edge",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "razors_edge_red",
+    "name": "Razor's Edge",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "razors_edge_yellow",
+    "name": "Razor's Edge",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "recoil_blue",
+    "name": "Recoil",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, this has \"When this hits a hero, they put a card from their hand on top of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "recoil_red",
+    "name": "Recoil",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, this has \"When this hits a hero, they put a card from their hand on top of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "recoil_yellow",
+    "name": "Recoil",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Head Jab was the last attack this combat chain, this has \"When this hits a hero, they put a card from their hand on top of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "redback_shroud",
+    "name": "Redback Shroud",
+    "type_text": "Assassin Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "While Redback Shroud is in your graveyard, at the start of your turn, you may destroy 2 Silver you control. If you do, equip Redback Shroud.\n\n**Attack Reaction** - Destroy Redback Shroud: The next attack reaction card you play this turn costs {r} less to play.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "riptide",
+    "name": "Riptide",
+    "type_text": "Ranger Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 19,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you play a card from hand, you may put a card from hand face down into your arsenal.\n\nWhenever a trap you control triggers, deal 1 damage to the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "riptide_lurker_of_the_deep",
+    "name": "Riptide, Lurker of the Deep",
+    "type_text": "Ranger Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 38,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you play a card from hand, you may put a card from hand face down into your arsenal.\n\nWhenever a trap you control triggers, deal 1 damage to the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "scale_peeler",
+    "name": "Scale Peeler",
+    "type_text": "Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Piercing"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\n**Piercing 1**\n\nWhen this hits a hero, the next time they defend with 1 or more equipment this turn, those equipment have -1{d} while defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "scout_the_periphery_blue",
+    "name": "Scout the Periphery",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Look at the top card of target hero's deck.\n\nThe next attack action card you play from arsenal this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "scout_the_periphery_red",
+    "name": "Scout the Periphery",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Look at the top card of target hero's deck.\n\nThe next attack action card you play from arsenal this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "scout_the_periphery_yellow",
+    "name": "Scout the Periphery",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Look at the top card of target hero's deck.\n\nThe next attack action card you play from arsenal this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sedate_blue",
+    "name": "Sedate",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create an Inertia token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sedate_red",
+    "name": "Sedate",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create an Inertia token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sedate_yellow",
+    "name": "Sedate",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create an Inertia token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sedation_shot_blue",
+    "name": "Sedation Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Sedation Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create an Inertia token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sedation_shot_red",
+    "name": "Sedation Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Sedation Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create an Inertia token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sedation_shot_yellow",
+    "name": "Sedation Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Sedation Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create an Inertia token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "seekers_gilet",
+    "name": "Seeker's Gilet",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy Seeker's Gilet: Prevent the next 1 damage that would be dealt to your hero this turn. **Opt 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "seekers_hood",
+    "name": "Seeker's Hood",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy Seeker's Hood: Prevent the next 1 damage that would be dealt to your hero this turn. **Opt 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "seekers_leggings",
+    "name": "Seeker's Leggings",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy Seeker's Leggings: Prevent the next 1 damage that would be dealt to your hero this turn. **Opt 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "seekers_mitts",
+    "name": "Seeker's Mitts",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy Seeker's Mitts: Prevent the next 1 damage that would be dealt to your hero this turn. **Opt 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "shake_down_red",
+    "name": "Shake Down",
+    "type_text": "Assassin Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Uzuri"
+    ],
+    "functional_text": "**Uzuri Specialization**\n\nIf you've played or activated an attack reaction this chain link, Shake Down has \"When this hits a hero, choose red, yellow, or blue. They reveal their hand. Banish a card of the chosen color.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "short_and_sharp_blue",
+    "name": "Short and Sharp",
+    "type_text": "Assassin / Ninja Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose 1;\n- Target dagger attack gains +1{p}.\n- Target attack action card with 2 or less base {p} gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "short_and_sharp_red",
+    "name": "Short and Sharp",
+    "type_text": "Assassin / Ninja Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose 1;\n- Target dagger attack gains +3{p}.\n- Target attack action card with 2 or less base {p} gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "short_and_sharp_yellow",
+    "name": "Short and Sharp",
+    "type_text": "Assassin / Ninja Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose 1;\n- Target dagger attack gains +2{p}.\n- Target attack action card with 2 or less base {p} gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "silken_gi",
+    "name": "Silken Gi",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Silken Gi: The next attack action card you play this turn has -1{p} and costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "silverwind_shuriken_blue",
+    "name": "Silverwind Shuriken",
+    "type_text": "Ninja Action - Shuriken Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack",
+      "Shuriken"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy Silverwind Shuriken: Target attack action card with **combo** gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "skybound_shot_blue",
+    "name": "Skybound Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Skybound Shot has an aim counter, it has +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "skybound_shot_red",
+    "name": "Skybound Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Skybound Shot has an aim counter, it has +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "skybound_shot_yellow",
+    "name": "Skybound Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Skybound Shot has an aim counter, it has +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sneak_attack_blue",
+    "name": "Sneak Attack",
+    "type_text": "Assassin Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played or activated an attack reaction this chain link, Sneak Attack has +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sneak_attack_red",
+    "name": "Sneak Attack",
+    "type_text": "Assassin Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played or activated an attack reaction this chain link, Sneak Attack has +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sneak_attack_yellow",
+    "name": "Sneak Attack",
+    "type_text": "Assassin Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played or activated an attack reaction this chain link, Sneak Attack has +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "spike_pit_trap_blue",
+    "name": "Spike Pit Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Riptide"
+    ],
+    "functional_text": "**Legendary Riptide Specialization**\n\nWhen this defends and the attacking hero has played or activated a reaction this chain link, put the top card of their deck into their graveyard, then they lose X{h}, where X is the number of cards in their graveyard with that name.",
+    "status": "pending"
+  },
+  {
+    "slug": "spike_with_bloodrot_red",
+    "name": "Spike with Bloodrot",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gains +3{p} and \"When this hits a hero, create a Bloodrot Pox token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "spike_with_frailty_red",
+    "name": "Spike with Frailty",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gains +3{p} and \"When this hits a hero, create a Frailty token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "spike_with_inertia_red",
+    "name": "Spike with Inertia",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gains +3{p} and \"When this hits a hero, create an Inertia token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "spinning_wheel_kick_blue",
+    "name": "Spinning Wheel Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Twin Twisters or Spinning Wheel Kick was the last attack this combat chain, this has +1{p} and \"When this hits, put it on the bottom of its owner's deck.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spinning_wheel_kick_red",
+    "name": "Spinning Wheel Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Twin Twisters or Spinning Wheel Kick was the last attack this combat chain, this has +1{p} and \"When this hits, put it on the bottom of its owner's deck.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spinning_wheel_kick_yellow",
+    "name": "Spinning Wheel Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Twin Twisters or Spinning Wheel Kick was the last attack this combat chain, this has +1{p} and \"When this hits, put it on the bottom of its owner's deck.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spire_sniping_blue",
+    "name": "Spire Sniping",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When Spire Sniping is put or turned face up in arsenal, look at the top 2 cards of your deck, then put them back in any order.",
+    "status": "pending"
+  },
+  {
+    "slug": "spire_sniping_red",
+    "name": "Spire Sniping",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When Spire Sniping is put or turned face up in arsenal, look at the top 2 cards of your deck, then put them back in any order.",
+    "status": "pending"
+  },
+  {
+    "slug": "spire_sniping_yellow",
+    "name": "Spire Sniping",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When Spire Sniping is put or turned face up in arsenal, look at the top 2 cards of your deck, then put them back in any order.",
+    "status": "pending"
+  },
+  {
+    "slug": "spreading_plague_yellow",
+    "name": "Spreading Plague",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create X Bloodrot Pox tokens under the defending hero's control, where X is the number of defending cards this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "spring_load_blue",
+    "name": "Spring Load",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you have no cards in hand, it gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "spring_load_red",
+    "name": "Spring Load",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you have no cards in hand, it gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "spring_load_yellow",
+    "name": "Spring Load",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you have no cards in hand, it gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stab_wound_blue",
+    "name": "Stab Wound",
+    "type_text": "Assassin / Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they lose X{h}, where X is the number of times a dagger has hit this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "tarpit_trap_yellow",
+    "name": "Tarpit Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends an attack with **go again**, the next time an attack action card hits this turn, effects don't trigger.",
+    "status": "pending"
+  },
+  {
+    "slug": "threadbare_tunic",
+    "name": "Threadbare Tunic",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Threadbare Tunic: Gain {r}. Activate this ability only if you have no cards in hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "toxic_tips",
+    "name": "Toxic Tips",
+    "type_text": "Assassin / Ranger Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, destroy Toxic Tips: The next attack action card you play this turn gains \"When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.\" **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "toxicity_blue",
+    "name": "Toxicity",
+    "type_text": "Assassin / Ranger Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Assassin or Ranger attack action card you play this turn gains \"When this hits a hero, they lose 3{h}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "toxicity_red",
+    "name": "Toxicity",
+    "type_text": "Assassin / Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Assassin or Ranger attack action card you play this turn gains \"When this hits a hero, they lose 5{h}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "toxicity_yellow",
+    "name": "Toxicity",
+    "type_text": "Assassin / Ranger Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Assassin or Ranger attack action card you play this turn gains \"When this hits a hero, they lose 4{h}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "trench_of_sunken_treasure",
+    "name": "Trench of Sunken Treasure",
+    "type_text": "Ranger Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - Put a face down card from your arsenal on the bottom of your deck: Gain {r}\n\n**Arcane Barrier 1**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "uzuri",
+    "name": "Uzuri",
+    "type_text": "Assassin Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - Banish a card from your hand face down: Turn the card banished this way face up. If it's an attack action card with cost 2 or less, put target attacking card with **stealth** from the active chain link on the bottom of its owner's deck, then put the banished card onto the active chain link as the attacking card.",
+    "status": "pending"
+  },
+  {
+    "slug": "uzuri_switchblade",
+    "name": "Uzuri, Switchblade",
+    "type_text": "Assassin Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - Banish a card from your hand face down: Turn the card banished this way face up. If it's an attack action card with cost 2 or less, put target attacking card with **stealth** from the active chain link on the bottom of its owner's deck, then put the banished card onto the active chain link as the attacking card.",
+    "status": "pending"
+  },
+  {
+    "slug": "vambrace_of_determination",
+    "name": "Vambrace of Determination",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Attack Reaction** - {r}: The next prevention effect that prevents {p} damage this turn, prevents 1 less of that damage.\n\nWhen this defends, you may pay {r}. If you do, it gains +1{d} and **blade break**.",
+    "status": "pending"
+  },
+  {
+    "slug": "virulent_touch_blue",
+    "name": "Virulent Touch",
+    "type_text": "Assassin / Ranger Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Virulent Touch can't be played from hand.\n\nWhen this chain link resolves, if Virulent Touch is defended by a card from hand, create a Bloodrot Pox token under the defending hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "virulent_touch_red",
+    "name": "Virulent Touch",
+    "type_text": "Assassin / Ranger Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Virulent Touch can't be played from hand.\n\nWhen this chain link resolves, if Virulent Touch is defended by a card from hand, create a Bloodrot Pox token under the defending hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "virulent_touch_yellow",
+    "name": "Virulent Touch",
+    "type_text": "Assassin / Ranger Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Virulent Touch can't be played from hand.\n\nWhen this chain link resolves, if Virulent Touch is defended by a card from hand, create a Bloodrot Pox token under the defending hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_the_floating_dojo_blue",
+    "name": "Visit the Floating Dojo",
+    "type_text": "Ninja Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Katsu"
+    ],
+    "functional_text": "**Katsu Specialization**\n\nPut a Surging Strike and a card with **combo** from your graveyard on the top and/or bottom of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "wander_with_purpose_yellow",
+    "name": "Wander With Purpose",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Benji"
+    ],
+    "functional_text": "**Benji Specialization**\n\nWhen this hits, you may discard a card with cost 0. If you do, search your deck for a card with **combo**, banish it, then shuffle. You may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "wayfinders_crest",
+    "name": "Wayfinder's Crest",
+    "type_text": "Ranger Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When you defend with Wayfinder's Crest, look at the top card of target hero's deck.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "widowmaker_blue",
+    "name": "Widowmaker",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reactions can't be played to Widowmaker's chain link.\n\nIf Widowmaker is defended by fewer than 2 cards, it has +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "widowmaker_red",
+    "name": "Widowmaker",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reactions can't be played to Widowmaker's chain link.\n\nIf Widowmaker is defended by fewer than 2 cards, it has +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "widowmaker_yellow",
+    "name": "Widowmaker",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reactions can't be played to Widowmaker's chain link.\n\nIf Widowmaker is defended by fewer than 2 cards, it has +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "wither_blue",
+    "name": "Wither",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create a Frailty token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "wither_red",
+    "name": "Wither",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create a Frailty token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "wither_yellow",
+    "name": "Wither",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create a Frailty token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "withering_shot_blue",
+    "name": "Withering Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Withering Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Frailty token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "withering_shot_red",
+    "name": "Withering Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Withering Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Frailty token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "withering_shot_yellow",
+    "name": "Withering Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Withering Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Frailty token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "wreck_havoc_blue",
+    "name": "Wreck Havoc",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reactions can't be played to this chain link.\n\nWhen this hits a hero, you may turn a card in their arsenal face up, then destroy a defense reaction in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "wreck_havoc_red",
+    "name": "Wreck Havoc",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reactions can't be played to this chain link.\n\nWhen this hits a hero, you may turn a card in their arsenal face up, then destroy a defense reaction in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "wreck_havoc_yellow",
+    "name": "Wreck Havoc",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reactions can't be played to this chain link.\n\nWhen this hits a hero, you may turn a card in their arsenal face up, then destroy a defense reaction in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "bloodrot_pox",
+    "name": "Bloodrot Pox",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Bloodrot Pox, then it deals 2 damage to you unless you pay {r}{r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "frailty",
+    "name": "Frailty",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your attack action cards played from arsenal and weapon attacks have -1{p}.\n\nAt the beginning of your end phase destroy Frailty.",
+    "status": "pending"
+  },
+  {
+    "slug": "inertia",
+    "name": "Inertia",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Inertia, then put all cards from your hand and arsenal on the bottom of your deck.",
+    "status": "pending"
+  }
+]

@@ -8,11 +8,15 @@ from numpy.random import random
 from engine.card import CardDB, Card
 from engine.state import GameState, Step, EventManager, Event, Player, CombatState, ChainLink, StackEntry
 from engine.deck import load_deck, create_player
-from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, get_pitchable_cards, can_pay_cost
+from engine.actions import legal_actions, Action, ActionType, get_defendable_cards, can_pay_cost
 from engine.effects import EffectManager
 from engine.card_effects.triggers import register_card_triggers, register_hero_triggers
-from engine.card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
-from engine.play import available_actions, apply_action
+from engine.card_effects.costs.effect_costs import KEYWORD_COSTS
+from engine.card_effects.costs.alt_costs import ALTERNATE_COSTS
+from engine.play import (available_actions, apply_action,
+                         _pitch_for_cost, evaluate_play_cost,
+                         _apply_play_card, _calculate_resource_cost,
+                         _apply_defend)
 
 def new_game(
         p1_deck_path: Optional[str],
@@ -80,6 +84,9 @@ def new_game(
     # Register a single dispatcher for keyword static abilities (e.g. Piercing).
     # One permanent listener is cheaper than registering/deregistering per combat.
     _setup_static_ability_listeners(state)
+
+    # Load DSL-defined card effects and register event listeners.
+    _setup_dsl_listeners(state)
 
     # Player that won coin flip decides who goes first (once at game start)
     if state.step == Step.BEGIN_GAME:
@@ -157,8 +164,15 @@ def _end_game_on_turn_cap(state: GameState) -> None:
     state.ended_on_turn_cap = True
     state.step = Step.END_GAME
     state._next_phase = "end_game"
-    for event_name in state._static_listeners:
-        state.event_manager.unregister(event_name, _meta_dispatcher)
+    # Listeners are automatically cleared with game teardown in this flow.
+    # Guard against missing local dispatcher reference.
+    _listeners = getattr(state, "_static_listeners", []) or []
+    for event_name in _listeners:
+        try:
+            if hasattr(state.event_manager, "listeners") and event_name in state.event_manager.listeners:
+                state.event_manager.listeners[event_name] = []
+        except Exception:
+            pass
 
 
 def _game_loop(state: GameState) -> None:
@@ -195,7 +209,7 @@ def check_state_based_actions(state: GameState) -> bool:
     CR 1.10.2b: Living objects (heroes and allies) with 0 or less life are
     destroyed simultaneously, then triggers from those deaths are ordered.
     """
-    from engine.card_effects.keywords import _move_to_graveyard
+    from engine.effect_keywords import destroy as _ek_destroy
 
     # Hero death — check both players first (simultaneous)
     dead_heroes = [pid for pid in state.players if state.players[pid].health <= 0]
@@ -216,7 +230,7 @@ def check_state_based_actions(state: GameState) -> bool:
                 dead_allies.append((pid, ally))
 
     for pid, ally in dead_allies:
-        _move_to_graveyard(ally, state)
+        _ek_destroy(state, ally, None)
 
     if dead_allies:
         _resolve_all_triggers(state)
@@ -231,13 +245,9 @@ def start_of_turn_refresh_player(state: GameState, playerid: int):
     player = state.players[playerid]
 
     for card in player.arena_cards:
-        if getattr(card, 'has_once_per_turn_limit'):
-            setattr(card, 'activations', 1)
-        if getattr(card, 'has_twice_per_turn_limit'):
-            setattr(card, 'activations', 2)
-        if getattr(card, 'has_thrice_per_turn_limit'):
-            setattr(card, 'activations', 3)
-            
+        if getattr(card, 'has_per_turn_limit'):
+            setattr(card, 'activations', card.base_activations)
+
     setattr(player, 'resources', 0)
     setattr(player, 'chi', 0)
     setattr(player, 'action_points', 0)
@@ -786,10 +796,13 @@ def _resolve_all_triggers(state: GameState) -> None:
             )
             state.stack_entries.clear()
             return
+        count_before = len(state.stack_entries)
         resolve_stack(state)
         if check_state_based_actions(state):
             return
-        if state.stack_entries:
+        # Only re-order if new triggers arrived during resolution.
+        # After one pop, count_before - 1 entries remain; more means new entries were added.
+        if len(state.stack_entries) > count_before - 1:
             order_stack(state)
 
 def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
@@ -813,6 +826,182 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
             consumed.append(effect_key)
     for key in consumed:
         player.current_turn_effects.remove(key)
+
+    # DSL: handle next/all attack bonus flags from effect_types.py.
+    import re as _re
+    pid = state.active_player
+
+    # One-shot: "next_attack_hit_draw_N" — inject ON_HIT draw, then consume.
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_attack_hit_draw_(\d+)$', k)]:
+        n = int(_re.match(r'^next_attack_hit_draw_(\d+)$', key).group(1))
+        from engine.card_effects.triggers import TriggerDef
+        def _hit_draw_once(c, ev, st, _n=n, _pid=pid):
+            from engine.card_effects.ability_keywords import effect_draw
+            effect_draw(st, _pid, _n)
+        td = TriggerDef(event_type="ON_HIT", condition_fn=None,
+                        effect_fn=_hit_draw_once, is_optional=False)
+        if not hasattr(state.combat, 'injected_triggers'):
+            state.combat.injected_triggers = []
+        state.combat.injected_triggers.append(td)
+        player.current_turn_effects.remove(key)
+
+    # Persistent: "all_attacks_+N" — apply power bonus every attack, keep flag.
+    from engine.card_effects.registry import CardEffect
+    for key in player.current_turn_effects:
+        m = _re.match(r'^all_attacks_\+(\d+)$', key)
+        if m:
+            n = int(m.group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+
+
+    # Persistent: "all_attacks_hit_draw_N" — inject ON_HIT draw every attack, keep flag.
+    for key in player.current_turn_effects:
+        m = _re.match(r'^all_attacks_hit_draw_(\d+)$', key)
+        if m:
+            n = int(m.group(1))
+            from engine.card_effects.triggers import TriggerDef
+            def _all_hit_draw(c, ev, st, _n=n, _pid=pid):
+                from engine.card_effects.ability_keywords import effect_draw
+                effect_draw(st, _pid, _n)
+            td = TriggerDef(event_type="ON_HIT", condition_fn=None,
+                            effect_fn=_all_hit_draw, is_optional=False)
+            if not hasattr(state.combat, 'injected_triggers'):
+                state.combat.injected_triggers = []
+            state.combat.injected_triggers.append(td)
+
+    # One-shot: "next_weapon_attack_+N" — apply +N to next weapon attack only.
+    is_weapon_atk = getattr(attack_card, 'is_weapon', False) or (
+        state.combat and getattr(state.combat, 'from_weapon', False))
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_weapon_attack_\+(\d+)$', k)]:
+        if is_weapon_atk:
+            n = int(_re.match(r'^next_weapon_attack_\+(\d+)$', key).group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+        player.current_turn_effects.remove(key)
+
+    # Persistent: "all_weapon_attacks_+N" — weapon-only power bonus every attack, keep flag.
+    for key in player.current_turn_effects:
+        m = _re.match(r'^all_weapon_attacks_\+(\d+)$', key)
+        if m and is_weapon_atk:
+            n = int(m.group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+
+    # One-shot: "next_weapon_attack_go_again" — grant go again on next weapon attack.
+    if "next_weapon_attack_go_again" in player.current_turn_effects:
+        if is_weapon_atk and state.combat:
+            state.combat.grant_keyword("go_again")
+        player.current_turn_effects.remove("next_weapon_attack_go_again")
+
+    # One-shot: "next_weapon_attack_hit_go_again" — inject ON_HIT go_again for next weapon attack.
+    if "next_weapon_attack_hit_go_again" in player.current_turn_effects:
+        if is_weapon_atk and state.combat:
+            from engine.card_effects.triggers import TriggerDef
+            def _weapon_hit_ga(c, ev, st):
+                if st.combat:
+                    st.combat.grant_keyword("go_again")
+            td = TriggerDef(event_type="ON_HIT", condition_fn=None,
+                            effect_fn=_weapon_hit_ga, is_optional=False)
+            if not hasattr(state.combat, 'injected_triggers'):
+                state.combat.injected_triggers = []
+            state.combat.injected_triggers.append(td)
+        player.current_turn_effects.remove("next_weapon_attack_hit_go_again")
+
+    # One-shot: "next_low_cost_attack_+N" — apply +N to next cost≤1 attack only.
+    atk_cost = getattr(attack_card, 'cost', None) or getattr(attack_card, 'raw_cost', None) or 0
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_low_cost_attack_\+(\d+)$', k)]:
+        if atk_cost <= 1:
+            n = int(_re.match(r'^next_low_cost_attack_\+(\d+)$', key).group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+        player.current_turn_effects.remove(key)
+
+    # One-shot: "next_high_cost_attack_+N" — apply +N to next cost≥2 attack only.
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_high_cost_attack_\+(\d+)$', k)]:
+        if atk_cost >= 2:
+            n = int(_re.match(r'^next_high_cost_attack_\+(\d+)$', key).group(1))
+            attack_card.effects = list(getattr(attack_card, 'effects', []))
+            attack_card.effects.append(
+                CardEffect(prop="power", stage=7, substage=5,
+                           fn=lambda val, _n=n: val + _n))
+        player.current_turn_effects.remove(key)
+
+
+def _setup_dsl_listeners(state: GameState) -> None:
+    """Load DSL card definitions and register event listeners that call dispatch().
+
+    This is additive — existing Python CARD_TRIGGERS still fire for cards not
+    yet migrated to JSON.  Once a card has a JSON file, both systems run; the
+    Python triggers should be removed as part of Step 4/5.
+    """
+    from engine.card_effects.dsl import load_all_cards, dispatch
+
+    load_all_cards()
+
+    def _dsl_hit_listener(event, game_state: GameState) -> None:
+        combat = game_state.combat
+        if not combat or not combat.attack_card:
+            return
+        slug = combat.attack_card.slug
+        # Fire DSL ON_HIT abilities for the attack card
+        dispatch(game_state, "ON_HIT", slug,
+                 card=combat.attack_card, event=event)
+        # Fire and consume injected_triggers (e.g. created by INJECT_TRIGGER / Pummel)
+        remaining = []
+        for td in combat.injected_triggers:
+            if td.event_type != "ON_HIT":
+                remaining.append(td)
+                continue
+            cond_ok = td.condition_fn is None or td.condition_fn(
+                combat.attack_card, event, game_state)
+            if cond_ok:
+                td.effect_fn(combat.attack_card, event, game_state)
+            # consumed=True: drop after firing; keep if condition failed? Drop anyway.
+        combat.injected_triggers = remaining
+
+    def _dsl_start_of_turn_listener(event, game_state: GameState) -> None:
+        # Fire START_OF_TURN DSL abilities for all permanents in play
+        for player in game_state.players.values():
+            for zone in (player.permanents, player.items, player.auras, player.allies):
+                for card in list(zone.cards):
+                    dispatch(game_state, "START_OF_TURN", card.slug, card=card)
+
+    def _dsl_end_of_turn_listener(event, game_state: GameState) -> None:
+        for player in game_state.players.values():
+            for zone in (player.permanents, player.items, player.auras, player.allies):
+                for card in list(zone.cards):
+                    dispatch(game_state, "END_OF_TURN", card.slug, card=card)
+
+    def _dsl_on_play_listener(event, game_state: GameState) -> None:
+        slug = event.card
+        card_obj = event.data.get('card') if isinstance(event.data, dict) else None
+        dispatch(game_state, "ON_PLAY", slug, card=card_obj, event=event)
+
+    def _dsl_attacking_listener(event, game_state: GameState) -> None:
+        combat = game_state.combat
+        if not combat or not combat.attack_card:
+            return
+        slug = event.card
+        dispatch(game_state, "ON_ATTACK", slug, card=combat.attack_card, event=event)
+
+    state.event_manager.register('hit', _dsl_hit_listener)
+    state.event_manager.register('on_play', _dsl_on_play_listener)
+    state.event_manager.register('attacking', _dsl_attacking_listener)
+    state.event_manager.register('start_of_turn', _dsl_start_of_turn_listener)
+    state.event_manager.register('end_of_turn', _dsl_end_of_turn_listener)
 
 
 def _setup_static_ability_listeners(state: GameState) -> None:
@@ -872,43 +1061,32 @@ def _validate_combat_state(state: GameState) -> None:
 def _register_card_continuous_effects(state: GameState, card: Card) -> None:
     """Register card.effects list as ContinuousEffects for the current attack.
 
-    Clears existing per-attack power/keyword effects first so prior chain links
+    Clears existing per-attack staged effects first so prior chain links
     don't bleed into new ones.  Called from _attack_step after
     _apply_turn_attack_effects so any effects that function appends to
     card.effects are also captured here.
     """
     from engine.continuous_effects import ContinuousEffect, next_timestamp
+    from engine.card import CardEffect
     mgr = state.continuous_effect_manager
     # Purge leftover per-attack staged effects from any previous chain link
     mgr.remove_by_prop('power')
+    mgr.remove_by_prop('defense')
     mgr.remove_by_prop('keywords')
-    for effect_type, fn in getattr(card, 'effects', []):
-        if effect_type == "base_power":
-            # Stage 7 substage 2 (set-like transform — fn takes current and returns new)
-            eid = f"card_effect_{card.slug}_{effect_type}_{id(fn)}"
-            mgr.add(ContinuousEffect(
-                stage=7,
-                substage=2,
-                timestamp=next_timestamp(),
-                prop='power',
-                source_slug=card.slug,
-                effect_id=eid,
-                apply_fn=lambda val, _s, _c, _fn=fn: _fn(val),
-                persistent=False,
-            ))
-        elif effect_type == "base_power_multiply":
-            # Stage 7 substage 3 (multiply)
-            eid = f"card_effect_{card.slug}_{effect_type}_{id(fn)}"
-            mgr.add(ContinuousEffect(
-                stage=7,
-                substage=3,
-                timestamp=next_timestamp(),
-                prop='power',
-                source_slug=card.slug,
-                effect_id=eid,
-                apply_fn=lambda val, _s, _c, _fn=fn: _fn(val),
-                persistent=False,
-            ))
+    for effect in getattr(card, 'effects', []):
+        if not isinstance(effect, CardEffect):
+            continue
+        eid = f"card_effect_{card.slug}_{effect.prop}_{effect.stage}_{effect.substage}_{id(effect.fn)}"
+        mgr.add(ContinuousEffect(
+            stage=effect.stage,
+            substage=effect.substage,
+            timestamp=next_timestamp(),
+            prop=effect.prop,
+            source_slug=card.slug,
+            effect_id=eid,
+            apply_fn=lambda val, _s, _c, _fn=effect.fn: _fn(val),
+            persistent=False,
+        ))
 
 
 def _recalculate_attack_power(state: GameState) -> None:
@@ -999,7 +1177,7 @@ def _resolve_wagers(state: GameState, combat) -> None:
     If the attack hit, the controller (attacker) wins. Otherwise the
     opponent (defender) wins. The winner creates the prize token.
     """
-    from engine.card_effects.keywords import create_token
+    from engine.card_effects.ability_keywords import create_token
     if not combat.wagers:
         return
 
@@ -1028,7 +1206,7 @@ def _apply_watery_grave(card, state: GameState) -> None:
     has_wg = any("watery grave" in re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw).lower() for kw in card.keywords)
     if not has_wg:
         return
-    from engine.card_effects.keywords import ARENA_ZONE_NAMES
+    from engine.card_effects.ability_keywords import ARENA_ZONE_NAMES
     if card.prev_zone in ARENA_ZONE_NAMES:
         card.face_down = True
         card.is_public = False
@@ -1136,20 +1314,24 @@ def resolve_stack(game_state: GameState) -> None:
     _card_subtypes = card.subtypes or [] if card else []
     _is_ally = (entry.layer_type == 'card' and card is not None
                 and ("Ally" in _card_types or "Ally" in _card_subtypes))
+    # CR 8.2.9a: Landmark cards enter the arena as permanents instead of ceasing to exist.
+    _is_landmark = (entry.layer_type == 'card' and card is not None
+                    and ("Landmark" in _card_types or "Landmark" in _card_subtypes))
 
-    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura and not _is_ally:
+    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura \
+            and not _is_ally and not _is_landmark:
         game_state.stack.remove(card)  # CR 3.0.1: card leaves stack zone on resolution
         game_state.process_cease_to_exist(card)
 
     if entry.effect_fn:
         result = entry.effect_fn(card, game_state)  # call once — not twice
 
-        if environ['debug'] == 'True':
+        if environ.get('debug') == 'True':
             with open(environ['debug_file'], 'a') as f:
                 f.write(f'stack {entry} resolves: {result}\n')
 
-    # Figments, Auras, and Allies enter the arena as permanents instead of ceasing to exist.
-    if _is_figment or _is_aura or _is_ally:
+    # Figments, Auras, Allies, and Landmarks enter the arena as permanents instead of ceasing to exist.
+    if _is_figment or _is_aura or _is_ally or _is_landmark:
         player_id = entry.player_id
         player = game_state.players[player_id]
         # Remove from stack zone tracking (triggered layers add here; card layers may not)
@@ -1165,6 +1347,15 @@ def resolve_stack(game_state: GameState) -> None:
                 card.current_health = card.raw_health
             elif hasattr(card, 'life') and card.life is not None:
                 card.base_health = card.health
+        elif _is_landmark:
+            # Use SubZoneView.add so permanent_subtype="Landmark" is set (needed for filter)
+            player.landmarks.add(card, is_public=True)
+            # CR 8.2.9b: clear all OTHER landmark permanents across all players
+            for pid, p in game_state.players.items():
+                for lm in list(p.landmarks.cards):
+                    if lm is not card:
+                        p.permanents.remove(lm)
+                        p.graveyard.add(lm, is_public=True)
         else:
             if "Ally" in _card_types or "Ally" in _card_subtypes:
                 card.permanent_subtype = "Ally"
@@ -1392,304 +1583,3 @@ def player_decision_raw(state: GameState, player_id: int, options, context=None)
     """Get a raw choice from player agent (index into options list)."""
     choice = state.player_agents[player_id](state, options, context if context else None)
     return choice
-
-# # ---------------------------------------------------------------------------
-# # Apply action
-# # ---------------------------------------------------------------------------
-
-
-# def _apply_chi_toward_resources(state: GameState, player_id: int, needed_cost: int) -> None:
-#     """CR 1.14.2d: Drain chi into floating resources before spending resources.
-
-#     Chi converts 1-for-1 into resources for the purpose of the current payment.
-#     Only converts as much chi as needed to cover the shortfall.
-#     """
-#     player = state.players[player_id]
-#     chi = getattr(player, 'chi', 0)
-#     if chi <= 0 or needed_cost <= 0:
-#         return
-#     shortfall = needed_cost - player.resources
-#     if shortfall <= 0:
-#         return
-#     chi_applied = min(chi, shortfall)
-#     player.resources += chi_applied
-#     player.chi -= chi_applied
-
-
-# def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
-    
-
-#     can_pay = True
-
-#     if action.player_id is None:
-#         return can_pay
-#     player = state.players[action.player_id]
-
-#     # --- 1. Resource asset-cost -------------------------------------------
-#     resource_cost = _calculate_resource_cost(state, action)
-
-#     if check:
-#         # CR 5.1.6a / 1.14.2b: can the player cover the cost via resources + pitch?
-#         exclude = action.card if hasattr(action, "card") and isinstance(action.card, Card) else None
-#         chi = getattr(player, 'chi', 0)
-#         effective_resources = player.resources + chi
-#         if (effective_resources < resource_cost) and not hasattr(action, "alternative_costs"):
-#             if not can_pay_cost(player.hand.cards, resource_cost,
-#                                 effective_resources, exclude_card=exclude):
-#                 can_pay = False
-#     else:
-#         # CR 1.14.2d: drain chi first, then pitch to cover remainder
-#         _apply_chi_toward_resources(state, action.player_id, resource_cost)
-#         _pitch_for_cost(state, action, resource_cost)
-#         # Deduct final resource cost using the pre-calculated modified value
-#         action.resource_cost = resource_cost
-#         player.resources -= resource_cost
-
-#     # --- 2. Action-point asset-cost ----------------------------------------
-#     # (Already checked by _check_still_legal / legal_actions AP guards;
-#     #  the actual deduction is handled inside each _apply_* dispatcher since
-#     #  it interacts with Instant-speed and meld-side logic there.)
-
-#     # --- 3. Life asset-cost (CR 1.14.2e) ------------------------------------
-
-#     # --- 4. Effect-costs (CR 5.1.8–5.1.9) ----------------------------------
-#     if action.type in (ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL, ActionType.PLAY_BANISH):
-#         card = action.card
-#         if hasattr(action, "additional_costs") and any(c is not None for c in action.additional_costs or []): # check for any additional costs declared by keywords
-#             from engine.card_effects.registry import KEYWORD_COSTS
-#             for keyword, fn in KEYWORD_COSTS.items():
-#                 if keyword in action.additional_costs.keys() and action.additional_costs[keyword]:
-#                     fn(state, action.player_id, action, check=check)
-#         if getattr(action, 'alternative_costs', None) and action.alternative_costs.get(card.slug, 0) > 0:
-#             if card is not None:
-#                 if check:
-#                     # CR 5.1.8a: verify each effect-cost is resolvable before paying any
-#                     cost_fn = ALTERNATE_COSTS.get(card.slug)
-#                     if cost_fn is not None:
-#                         # Registered cost functions support a dry-run check= kwarg if the
-#                         # function accepts it; otherwise assume payable (optional costs).
-#                         import inspect as _ins
-#                         sig = _ins.signature(cost_fn)
-#                         if 'check' in sig.parameters:
-#                             if not cost_fn(state, action.player_id, action, check=True):
-#                                 can_pay = False
-#                 else:
-#                     # Pay effect-costs
-#                     if not :
-#                         can_pay = False
-
-#     return can_pay
-
-
-# def _apply_play_arsenal(state: GameState, action: Action) -> None:
-#     """Play a card from arsenal: pitch from hand for cost, place on stack (CR 3.3.4, CR 5.1.1a)."""
-#     player = state.players[action.player_id]
-#     card = action.card
-#     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
-
-#     # Resource cost already deducted by evaluate_play_cost in apply_action.
-#     player.arsenal.remove(card)
-
-#     if "Instant" not in (card.types or []):
-#         player.action_points -= 1
-
-#     # CR 3.0.1 / CR 5.3.4c: card enters stack zone (Zone.add keeps card.zone in sync)
-#     if card is not None:
-#         state.stack.add(card)
-
-#     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
-#     # CR 3.15.4: layer position is N+1 where N is existing layers
-#     entry = StackEntry(
-#         player_id=action.player_id,
-#         card=card,
-#         from_arsenal=True,
-#         layer_type='card',
-#         layer_position=len(state.stack_entries) + 1,
-#         declared_modes=declared_modes,
-#         declared_targets=declared_targets,
-#         declared_x=declared_x,
-#     )
-#     state.stack_entries.append(entry)
-#     player.cards_played_this_turn.append(card)
-#     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'target': action.target}), state)
-
-# def _apply_play_banish(state: GameState, action: Action) -> None:
-#     """Play a card from the banish zone (e.g. via Under the Trap-Door trap_door_playable_ flag)."""
-#     player = state.players[action.player_id]
-#     card = action.card
-#     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
-
-#     # Resource cost already deducted by evaluate_play_cost in apply_action.
-#     player.banished.remove(card)
-#     # Consume the playable flag (trap-door or infiltrate)
-#     for prefix in (f"trap_door_playable_{card.slug}", f"infiltrate_play_{card.slug}"):
-#         if prefix in player.current_turn_effects:
-#             player.current_turn_effects.remove(prefix)
-#         if hasattr(player, 'next_turn_effects') and prefix in player.next_turn_effects:
-#             player.next_turn_effects.remove(prefix)
-
-#     if "Instant" not in (card.types or []):
-#         player.action_points -= 1
-
-#     # CR 3.0.1 / CR 5.3.4c: card enters stack zone (Zone.add keeps card.zone in sync)
-#     if card is not None:
-#         state.stack.add(card)
-
-#     # CR 3.15.4: layer position is N+1 where N is existing layers
-#     entry = StackEntry(
-#         player_id=action.player_id,
-#         card=card,
-#         layer_type='card',
-#         layer_position=len(state.stack_entries) + 1,
-#         declared_modes=declared_modes,
-#         declared_targets=declared_targets,
-#         declared_x=declared_x,
-#     )
-#     state.stack_entries.append(entry)
-#     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'target': action.target}), state)
-
-# def _apply_weapon_attack(state: GameState, action: Action) -> None:
-#     """Attack with a weapon: exhaust weapon, place attack on stack."""
-#     player = state.players[action.player_id]
-#     player.weapon_exhausted = True
-#     player.action_points -= 1
-
-#     # Pay "banish a card from under" cost if required (e.g., Nitro Mechanoid)
-#     weapon_card = action.card
-#     text = getattr(weapon_card, 'functional_text', '') or ''
-#     if "banish a card from under" in text.lower():
-#         underneath = getattr(weapon_card, 'cards_underneath', [])
-#         if underneath:
-#             from engine.card_effects.keywords import banish_card
-#             banished = underneath.pop(0)
-#             banish_card(state, player, banished, face_up=True)
-
-#     # Pay "{t} a cog you control" cost if required (e.g., Spitfire)
-#     if "{t} a cog you control" in text and "Attack" in text:
-#         # Only tap as cost when cog-tap appears before the Attack keyword (i.e. it's a cost)
-#         cost_part = text.split("**Attack**")[0] if "**Attack**" in text else text.split(": Attack")[0]
-#         if "{t} a cog you control" in cost_part:
-#             cog = next(
-#                 (c for c in player.items.cards if "Cog" in (c.types or []) and not c.tapped),
-#                 None,
-#             )
-#             if cog is not None:
-#                 cog.tapped = True
-
-#     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
-
-#     # CR 1.6.2b: Weapon attack is an activated ability (activated-layer)
-#     # CR 3.15.4: layer position is N+1 where N is existing layers
-#     entry = StackEntry(
-#         player_id=action.player_id, 
-#         card=action.card,
-#         layer_type='activated',
-#         layer_position=len(state.stack_entries) + 1,
-#         declared_modes=declared_modes,
-#         declared_targets=declared_targets,
-#         declared_x=declared_x,
-#     )
-#     state.stack_entries.append(entry)
-
-# def _ally_attack_resource_cost(ally_card) -> int:
-#     """Parse the resource cost of an ally's attack ability from functional text.
-#     Falls back to card.cost if set. Returns 0 if no cost found."""
-#     if ally_card.cost is not None:
-#         return int(ally_card.cost)
-#     text = ally_card.functional_text or ""
-#     # Match "Action - {r}{r}:" or "Once per Turn Action - {r}:" patterns
-#     match = re.search(r'\*\*(?:[\w\s]+ )?[Aa]ction\*\*\s*[-\u2014]\s*((?:\{[rR]\})*)', text)
-#     if match and match.group(1):
-#         return match.group(1).lower().count('{r}')
-#     return 0
-
-
-# def _apply_activate_hero(state: GameState, action: Action) -> None:
-#     """Activate a hero ability: tap if required, apply effect."""
-#     from engine.card_effects.registry import HERO_ACTIVATION_CONDITIONS
-#     player = state.players[action.player_id]
-
-#     hero_cfg = HERO_ACTIVATION_CONDITIONS.get(player.hero.slug, {})
-#     cost_raw = hero_cfg.get("cost", 0)
-#     cost = cost_raw(player, state) if callable(cost_raw) else cost_raw
-#     player.resources -= cost
-
-#     # Action-timing abilities consume an action point
-#     hero_timing = hero_cfg.get("timing", "action")
-#     if hero_timing == "action":
-#         player.action_points -= 1
-
-#     # Tap hero if required
-#     if hero_cfg.get("requires_tap", False):
-#         player.hero.tapped = True
-
-#     # Pay additional costs (e.g. destroy Gold, discard instant — before the colon)
-#     pay_cost_fn = hero_cfg.get("pay_cost_fn")
-#     if callable(pay_cost_fn):
-#         pay_cost_fn(player, state)
-
-#     # Dispatch to registry callback (effect after the colon)
-#     effect_fn = hero_cfg.get("effect_fn")
-#     if callable(effect_fn):
-#         effect_fn(action, player, state)
-
-# def _apply_react(state: GameState, action: Action) -> None:
-#     """Play a reaction card (defense reaction or attack reaction)."""
-#     player = state.players[action.player_id]
-#     card = action.card
-#     declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
-
-#     # Resource cost already deducted by evaluate_play_cost in apply_action.
-
-#     # Reactions can be played from hand or arsenal; remove from the declared source zone.
-#     if action.from_arsenal:
-#         removed = player.arsenal.remove(card)
-#         if not removed:
-#             # Fallback safety to avoid ghost copies if metadata gets out of sync.
-#             player.hand.remove(card)
-#     else:
-#         removed = player.hand.remove(card)
-#         if not removed:
-#             # Fallback safety for legacy actions incorrectly marked as hand plays.
-#             player.arsenal.remove(card)
-#         # CR 8.3.4b: a DR played from hand counts as "defender used hand card" for Dominate/Reprise
-#         if state.combat is not None and "Defense Reaction" in (card.types or []):
-#             state.combat.defender_used_hand_card = True
-
-#     # CR 3.0.1 / CR 5.3.4c: card enters stack zone.
-#     # Defense reactions played from arsenal are additionally placed on the combat chain so
-#     # _close_combat_chain() moves them to graveyard at chain close rather than leaving them
-#     # in limbo (zone='stack' but absent from every Zone collection).
-#     if action.from_arsenal and state.combat is not None and "Defense Reaction" in (card.types or []):
-#         state.combat_chain.add(card)  # zone='combat chain', is_public=True
-#     else:
-#         card.prev_zone = card.zone
-#         card.zone = 'stack'
-
-#     # CR 5.1.2: card moves to stack first, then on_play triggered layers sit above it (LIFO resolves them first)
-#     # CR 3.15.4: layer position is N+1 where N is existing layers
-#     entry = StackEntry(
-#         player_id=action.player_id,
-#         card=card,
-#         layer_type='card',
-#         layer_position=len(state.stack_entries) + 1,
-#         declared_modes=declared_modes,
-#         declared_targets=declared_targets,
-#         declared_x=declared_x,
-#     )
-#     state.stack_entries.append(entry)
-#     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'target': action.target}), state)
-
-# def _apply_discard_activate(state: GameState, action: Action) -> None:
-#     """Activate a 'Instant - Discard this:' hand ability. Cost: discard the card."""
-#     from engine.card_effects.registry import DISCARD_ACTIVATE_EFFECTS
-#     player = state.players[action.player_id]
-#     card = action.card
-#     # Pay cost: discard the card to graveyard
-#     state.remember_last_known(card)
-#     player.hand.remove(card)
-#     player.graveyard.add(card)
-#     # Apply effect
-#     effect_fn = DISCARD_ACTIVATE_EFFECTS.get(card.slug)
-#     if callable(effect_fn):
-#         effect_fn(action, player, state)

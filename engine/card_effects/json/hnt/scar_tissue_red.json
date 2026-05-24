@@ -1,0 +1,16 @@
+{
+  "slug": "scar_tissue_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {"type": "MODIFY_ATTACK_POWER", "amount": 3},
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_HIT",
+          "effects": [{"type": "MARK"}]
+        }
+      ]
+    }
+  ]
+}

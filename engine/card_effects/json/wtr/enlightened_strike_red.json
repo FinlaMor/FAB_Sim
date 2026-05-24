@@ -1,0 +1,19 @@
+{
+  "slug": "enlightened_strike_red",
+  "cost": {
+    "play_activate": "PLAY",
+    "optional": "FALSE",
+    "type": "PUT_HAND_CARD_BOTTOM"
+  },
+  "abilities": [
+    {
+      "ability_type": "MODAL",
+      "choose": 1,
+      "modes": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2},
+        {"type": "GAIN", "keyword": "GO_AGAIN"},
+        {"type": "DRAW", "amount": 1}
+      ]
+    }
+  ]
+}

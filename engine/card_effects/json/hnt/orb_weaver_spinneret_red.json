@@ -1,0 +1,12 @@
+{
+  "slug": "orb_weaver_spinneret_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "NEXT_ATTACK_BONUS", "amount": 3},
+        {"type": "GAIN_ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ]
+}

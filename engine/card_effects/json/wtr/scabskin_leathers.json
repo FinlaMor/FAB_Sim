@@ -1,0 +1,19 @@
+{
+  "slug": "scabskin_leathers",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "ROLL",
+          "faces": 6
+        },
+        {
+          "type": "GAIN",
+          "asset": "ACTION_POINTS",
+          "amount": "ROLL_NUMBER_HALF_ROUND_DOWN"
+        }
+      ]
+    }
+  ]
+}

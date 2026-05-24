@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "stardust_spike_red",
+    "name": "Stardust Spike",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Amp",
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, gain {r} and **amp 1**.\n\n**Ward 2**",
+    "status": "pending"
+  }
+]

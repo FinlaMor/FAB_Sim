@@ -1,0 +1,67 @@
+[
+  {
+    "slug": "hide_tanner",
+    "name": "Hide Tanner",
+    "type_text": "Brute Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "When you discard a random card with 6 or more {p}, you may destroy this. If you do, create 2 Might tokens.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "run_roughshod_blue",
+    "name": "Run Roughshod",
+    "type_text": "Brute Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've discarded a card with 6 or more {p} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "strength_rules_all_red",
+    "name": "Strength Rules All",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, turn a card in their arsenal face-up, then banish an attack action card in their arsenal with {p} less than the damage dealt this way.",
+    "status": "pending"
+  }
+]

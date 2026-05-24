@@ -5,9 +5,10 @@ from __future__ import annotations
 import json
 import msgpack
 import re
+from copy import copy
 from dataclasses import dataclass, field
 from itertools import count
-from typing import Optional
+from typing import Callable, Optional
 import os, sys
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,6 +18,24 @@ from config import SLUG_INDEX_PATH
 
 
 _CARD_OBJECT_ID_COUNTER = count(1)
+
+
+@dataclass
+class CardEffect:
+    """CR 6.3 staged continuous effect attached to a card object.
+
+    stage: CR 6.3 layer (7 = base numeric properties, 8 = transient/timestamp)
+    substage: CR 6.3.3 ordering within stage:
+        1 = add/remove property  2 = set (independent)  3 = multiply (independent)
+        4 = divide (independent)  5 = add (independent)  6 = subtract (independent)
+        7 = dependent effects
+    prop: card property being modified e.g. "power", "defense", "life"
+    fn: (current_value) -> new_value
+    """
+    prop: str
+    stage: int
+    substage: int
+    fn: Callable
 
 
 def _int_or_none(val) -> Optional[int]:
@@ -52,14 +71,14 @@ class Card:
     raw_cost: Optional[int] = None
     raw_power: Optional[int] = None
     raw_defense: Optional[int] = None
-    raw_health: Optional[int] = None
-    raw_intelligence: Optional[int] = None
+    raw_life: Optional[int] = None
+    raw_intellect: Optional[int] = None
     raw_arcane: Optional[int] = None
     raw_color: Optional[str] = None
     raw_types: Optional[list[str]] = None
     raw_text_box: str = ""
     raw_subtypes: Optional[list[str]] = None
-    raw_card_keyworda: Optional[list[str]] = None
+    raw_ability_keywords: Optional[list[str]] = None
     raw_functional_text: Optional[str] = None
     raw_type_text: Optional[str] = None
     raw_classes: Optional[list[str]] = None
@@ -67,33 +86,83 @@ class Card:
     raw_legal_formats: Optional[list[str]] = None
     raw_played_horizontally: Optional[bool] = None
 
-# 'Base' characteristics can be changed by the effects of card is they specify 'base'
+# 'Base' characteristics can be changed by the effects of card if they specify 'base'
 # Only fields without a 'base' value are legal_heroes, legal_formats, and played_horizontally
-    base_name = Optional[str] = None
+    base_name: Optional[str] = None
     base_pitch: Optional[int] = None
     base_cost: Optional[int] = None
     base_x_cost: Optional[int] = None
     base_power: Optional[int] = None
     base_defense: Optional[int] = None
-    base_health: Optional[int] = None
-    base_intelligence: Optional[int] = None
+    base_life: Optional[int] = None
+    base_intellect: Optional[int] = None
     base_arcane: Optional[int] = None
     base_color: Optional[str] = None
-    base_types: list[str]
+    base_types: list[str] = field(default_factory=list)
     base_text_box: str = ""
-    base_subtypes: list[str]
-    base_card_keywords: Optional[list[str]] = None
+    base_subtypes: Optional[list[str]] = None
+    base_keywords: Optional[list[str]] = None
+    base_ability_keywords: Optional[list[str]] = None
     base_functional_text: Optional[str] = None
     base_type_text: Optional[str] = None
     base_classes: Optional[list[str]] = None
+
+# These characteristics are the ones most likely to be modified by effects or events.
+    name: Optional[str] = None
+    pitch: Optional[int] = None
+    cost: Optional[int] = None
+    x_cost: Optional[int] = None
+    power: Optional[int] = None
+    defense: Optional[int] = None
+    life: Optional[int] = None
+    intellect: Optional[int] = None
+    arcane: Optional[int] = None
+    color: Optional[str] = None
+    types: list[str] = field(default_factory=list)
+    text_box: str = ""
+    subtypes: list[str] = field(default_factory=list)
+    keywords: Optional[list[str]] = None
+    functional_text: Optional[str] = None
+    type_text: Optional[str] = None
+    classes: Optional[list[str]] = None
+
     
+    # Extended fields from index.ts (all optional, populated by CardDB.get)
+    talents: list[str] = field(default_factory=list)
+    shorthands: list[str] = field(default_factory=list)
+    meta: list[str] = field(default_factory=list)
+    metatypes: list[str] = field(default_factory=list)
+    traits: list[str] = field(default_factory=list)
+    fusions: list[str] = field(default_factory=list)
+    bonds: list[str] = field(default_factory=list)
+    flows: list[str] = field(default_factory=list)
+    specializations: list[str] = field(default_factory=list)
+    banned_formats: list[str] = field(default_factory=list)
+    restricted_formats: list[str] = field(default_factory=list)
+    special_cost: Optional[str] = None
+    special_power: Optional[str] = None
+    special_defense: Optional[str] = None
+    special_life: Optional[str] = None
+    special_arcane: Optional[str] = None
+    hero_enum: Optional[str] = None
+    young: bool = False
+    is_card_back: bool = False
+    opposite_side_card_identifiers: list[str] = field(default_factory=list)
+    set_identifiers: list[str] = field(default_factory=list)
+    sets: list[str] = field(default_factory=list)
+    rarity: Optional[str] = None
+    default_image: Optional[str] = None
+
     # Characteristics that are calculated or parsed from the 'raw' fields
     category: Optional[str] = None
-    raw_playable: bool = False # Immutable. True if card isinherently playable from hand/arsenal without continuous effects.
+    raw_playable: bool = False # Immutable. True if card is inherently playable from hand/arsenal without continuous effects.
     raw_activatable: bool = False # Immutable. True if card inherently has activated abilities without continuous effects.
+    # Back-compat aliases used by play/effects logic.
+    base_playable: bool = False
+    base_activatable: bool = False
     activation_cost: Optional[int] = None  
     abilities_and_effects: list[str] = field(default_factory=list)  # From slug_index
-    effects: list[tuple[str, function]] = field(default_factory=list)
+    effects: list[tuple] = field(default_factory=list)
     counters: dict[str, int] = field(default_factory=dict)  # Card-specific counters
     object_id: int = field(default_factory=lambda: next(_CARD_OBJECT_ID_COUNTER))
     last_known_state: Optional[dict] = field(default=None, repr=False)
@@ -102,8 +171,8 @@ class Card:
     activation_conditions: Optional[bool] = None
     play_conditions: Optional[bool] = None
     alternate_cost: Optional[bool] = None
-    mandatory_additional_costs: Optional[bool] = None
-    optional_additional_costs: Optional[bool] = None
+    mandatory_additional_costs: Optional[dict[str,dict]] = field(default_factory=dict) # format is {'play':(additional mandatory play costs), 'activate':(additional mandatory activation costs)}
+    optional_additional_costs: Optional[dict[str,dict]] = field(default_factory=dict) # format is {'play':(additional optional play costs), 'activate':(additional optional activation costs)}
 
     # Zone tracking
     zone: str = "inventory"
@@ -111,6 +180,7 @@ class Card:
     owner: int = 0
     controller: Optional[int] = None
     is_public: bool = False
+    known_by: set = field(default_factory=set)  # player IDs who can currently see this card (CR 8.5.11)
 
     # State
     tapped: bool = False
@@ -120,13 +190,15 @@ class Card:
     activatable: bool = False  # Runtime flag for whether the card's activated abilities are currently usable
     exhausted: bool = False
     face_down: bool = False  # CR 8.5.24: face-down = private, face-up = public
-    cards_underneath: list = field(default_factory=list)  # Cards placed "under" this card (Mechanologist)
+    cards_underneath: list = field(default_factory=list)  # Cards placed "under" this card (CR 3.0.14)
     permanent_subtype: Optional[str] = None  # Set by SubZoneView when card enters items/auras/allies/tokens/soul
+    is_sub_card: bool = False          # CR 3.0.14: True when this card is under a top-card
+    top_card: Optional["Card"] = field(default=None, repr=False)  # Back-ref to the top-card (CR 3.0.14c)
 
     # Ability structure flags
     # Activated abilities (CR 5.2)
     has_activated_ability: bool = False
-    has_once_per_turn_limit: bool = False
+    has_per_turn_limit: bool = False
     has_action_activation: bool = False
     has_instant_activation: bool = False
     has_attack_reaction_activation: bool = False
@@ -157,28 +229,80 @@ class Card:
     # Meld side tracking (CR 8.3.38): set by engine when the card is played
     meld_side: Optional[str] = None  # 'top', 'bottom', 'both', or None
 
-    # ---------------------------------------------------------------------------
-    # Computed properties
-    # ---------------------------------------------------------------------------
-    @property
-    def pitch(self):
+    def __post_init__(self):
+        # Copy raw → base (only if base not explicitly provided)
+        if self.base_name is None:
+            self.base_name = self.raw_name
         if self.base_pitch is None:
-            return None
-        val = self.base_pitch
-        for func in [x[1] for x in self.effects if x[0] == 'base_pitch']:
-            val = func(self.base_pitch)
-        return val
-
-
-    @property
-    def cost(self):
+            self.base_pitch = self.raw_pitch
         if self.base_cost is None:
-            return None
+            self.base_cost = self.raw_cost
+        if self.base_power is None:
+            self.base_power = self.raw_power
+        if self.base_defense is None:
+            self.base_defense = self.raw_defense
+        if self.base_life is None:
+            self.base_life = self.raw_life
+        if self.base_intellect is None:
+            self.base_intellect = self.raw_intellect
+        if self.base_arcane is None:
+            self.base_arcane = self.raw_arcane
+        if self.base_color is None:
+            self.base_color = self.raw_color
+        if not self.base_types:
+            self.base_types = list(self.raw_types or [])
+        if self.base_text_box == "":
+            self.base_text_box = self.raw_text_box or ""
+        if self.base_subtypes is None:
+            self.base_subtypes = list(self.raw_subtypes or []) if self.raw_subtypes else None
+        if self.base_keywords is None:
+            self.base_keywords = list(self.raw_ability_keywords or []) if self.raw_ability_keywords else None
+        if self.base_functional_text is None:
+            self.base_functional_text = self.raw_functional_text
+        if self.base_type_text is None:
+            self.base_type_text = self.raw_type_text
+        if self.base_classes is None:
+            self.base_classes = list(self.raw_classes or []) if self.raw_classes else None
 
-        val = self.base_cost
-        for func in [x[1] for x in self.effects if x[0] == 'base_cost']:
-            val = func(self.base_cost)
-        return val
+        # Copy base → current (only if current not explicitly provided)
+        if self.name is None:
+            self.name = self.base_name
+        if self.pitch is None:
+            self.pitch = self.base_pitch
+        if self.cost is None:
+            self.cost = self.base_cost
+        if self.x_cost is None:
+            self.x_cost = self.base_x_cost
+        if self.power is None:
+            self.power = self.base_power
+        if self.defense is None:
+            self.defense = self.base_defense
+        if self.life is None:
+            self.life = self.base_life
+        if self.intellect is None:
+            self.intellect = self.base_intellect
+        if self.arcane is None:
+            self.arcane = self.base_arcane
+        if self.color is None:
+            self.color = self.base_color
+        if not self.types:
+            self.types = list(self.base_types)
+        if self.text_box == "":
+            self.text_box = self.base_text_box
+        if not self.subtypes:
+            self.subtypes = list(self.base_subtypes or [])
+        if self.keywords is None:
+            self.keywords = list(self.base_keywords or []) if self.base_keywords else None
+        if self.functional_text is None:
+            self.functional_text = self.base_functional_text
+        if self.type_text is None:
+            self.type_text = self.base_type_text
+        if self.classes is None:
+            self.classes = list(self.base_classes or []) if self.base_classes else None
+
+# ===============================================================================
+# Computed Methods
+# ===============================================================================
 
     @property
     def meld_cost(self):
@@ -194,80 +318,13 @@ class Card:
         return (self.base_cost * 2) + modifier_delta
 
     @property
-    def power(self):
-        if self.base_power is None:
-            return None
-        val = self.base_power
-        for func in [x[1] for x in self.effects if x[0] == 'base_power']:
-            val = func(self.base_power)
-        return val
-
-    @property
-    def defense(self):
-        if self.base_defense is None:
-            return None
-        val = self.base_defense
-        for func in [x[1] for x in self.effects if x[0] == 'base_defense']:
-            val = func(self.base_defense)
-        return val
-    
-    @property
-    def health(self):
-        if self.base_health is None:
-            return None
-        val = self.base_health
-        for func in [x[1] for x in self.effects if x[0] == 'base_health']:
-            val = func(self.base_health)
-        return val
-
-    @property
-    def intelligence(self):
-        if self.base_intelligence is None:
-            return None
-        val = self.base_intelligence
-        for func in [x[1] for x in self.effects if x[0] == 'base_intelligence']:
-            val = func(self.base_intelligence)
-        return val
-    
-    @property
-    def color(self):
-        if self.base_color is None:
-            return None
-        val = self.base_color
-        for func in [x[1] for x in self.effects if x[0] == 'base_color']:
-            val = func(self.base_color)
-        return val
-
-    @property
-    def text_box(self):
-        if self.base_text_box is None:
-            return None
-        val = self.base_text_box
-        for func in [x[1] for x in self.effects if x[0] == 'base_text_box']:
-            val = func(self.base_text_box)
-        return val
-    
-    @property
-    def functional_text(self):
-        if self.base_functional_text is None:
-            return None
-        val = self.base_functional_text
-        for func in [x[1] for x in self.effects if x[0] == 'base_functional_text']:
-            val = func(self.base_functional_text)
-        return val
-    
-    @property
-    def arcane_damage(self):
-        if self.base_arcane_damage is None:
-            return None
-        val = self.base_arcane_damage
-        for func in [x[1] for x in self.effects if x[0] == 'base_arcane_damage']:
-            val = func(self.base_arcane_damage)
-        return val
-
-    @property
     def has_defense(self) -> bool:
         return self.defense is not None
+
+    @property
+    def underneath_slugs(self) -> list[str]:
+        """Slugs of all cards placed under this card (e.g. transformed cards, soul charges)."""
+        return [c.slug for c in self.cards_underneath]
 
     @property
     def is_targetable(self) -> bool:
@@ -275,8 +332,11 @@ class Card:
 
     @property
     def is_in_arena(self) -> bool:
+        # CR 3.1.2a: a sub-card is NOT in the arena even if top-card is (CR 3.0.14b)
+        if self.is_sub_card:
+            return False
         return self.zone.lower() in (
-            'arms', 'chest', 'combat chain', 'head', 'hero', 'legs', 'permanent', 'weapon'
+            'arms', 'chest', 'combat chain', 'head', 'hero', 'legs', 'permanents', 'weapon'
         )
 
     @property
@@ -285,31 +345,32 @@ class Card:
 
     @property
     def is_attack(self) -> bool:
-        return "Attack" in (self.base_types or [])
+        return "Attack" in (self.subtypes or [])
 
     @property
     def is_action(self) -> bool:
-        return "Action" in (self.base_types or [])
+        return "Action" in (self.types or [])
 
     @property
     def is_instant(self) -> bool:
-        return "Instant" in (self.base_types or [])
+        return "Instant" in (self.types or [])
 
     @property
     def is_weapon(self) -> bool:
-        return "Weapon" in (self.base_types or [])
+        return "Weapon" in (self.types or [])
 
     @property
     def is_equipment(self) -> bool:
-        return "Equipment" in (self.base_types or [])
+        return "Equipment" in (self.types or [])
 
     @property
     def is_hero(self) -> bool:
-        return "Hero" in (self.base_types or [])
+        types = [t.lower() for t in self.types or []]
+        return "hero" in types or "demihero" in types or "demi-hero" in types
 
     @property
     def is_defense_reaction(self) -> bool:
-        return "Defense Reaction" in (self.base_types or [])
+        return "Defense Reaction" in (self.types or [])
 
     @property
     def has_go_again(self) -> bool:
@@ -326,6 +387,10 @@ class Card:
     @property
     def has_reprise(self) -> bool:
         return any(k.lower() == "reprise" for k in (self.keywords or []))
+    
+    @property
+    def is_living(self) -> bool:
+        return True if hasattr(self, 'life') else False
     
     def get_keyword_value(self, keyword_name: str) -> Optional[int]:
         """Extract numeric value from a keyword (e.g., 'Ward 10' -> 10).
@@ -351,7 +416,7 @@ class Card:
         return {
             'object_id': self.object_id,
             'slug': self.slug,
-            'name': self.base_name,
+            'name': self.name,
             'zone': self.zone,
             'prev_zone': self.prev_zone,
             'owner': self.owner,
@@ -364,13 +429,12 @@ class Card:
             'cost': self.cost,
             'power': self.power,
             'defense': self.defense,
-            'health': self.health,
-            'intelligence': self.intelligence,
-            'arcane_damage': self.arcane_damage,
+            'life': self.life,
+            'intellect': self.intellect,
+            'arcane_damage': self.arcane,
             'types': list(self.base_types),
-            'subtypes': list(self.base_subtypes),
-            'supertypes': list(self.base_supertypes),
-            'keywords': list(self.keywords),
+            'subtypes': list(self.subtypes),
+            'keywords': list(self.keywords or []),
             'counters': dict(self.counters),
         }
 
@@ -412,6 +476,8 @@ class Card:
         self.exhausted = False
         self.face_down = False
         self.cards_underneath = []
+        self.is_sub_card = False
+        self.top_card = None
         self.meld_side = None
         self.last_known_state = None
         self.permanent_subtype = None
@@ -436,12 +502,17 @@ class CardDB:
                 data = json.load(f)
         self._by_slug: dict[str, dict] = data.get("by_slug", {})
         self._by_name: dict[str, list[str]] = data.get("by_name", {})
+        self._card_cache: dict[str, Card] = {}  # template cache — shared across all games
 
     def resolve_slug(self, slug: str) -> Optional[str]:
         """Resolve a slug to the canonical slug in the database.
         Handles mismatches from slugify differences (e.g. unicode normalization)."""
         if slug in self._by_slug:
             return slug
+        # Normalize hyphens to underscores (index.ts uses hyphens, slug_index uses underscores)
+        normalized = slug.replace("-", "_")
+        if normalized in self._by_slug:
+            return normalized
         # Try by_name fallback: strip color suffix and look up by name
         color_suffix = None
         base = slug
@@ -481,33 +552,98 @@ class CardDB:
         resolved = self.resolve_slug(slug)
         if resolved is None:
             return None
+        if resolved in self._card_cache:
+            c = copy(self._card_cache[resolved])
+            c.object_id = next(_CARD_OBJECT_ID_COUNTER)  # CR 3.0.9: each retrieval is a new game object
+            return c
         raw = self._by_slug[resolved]
         slug = resolved  # use canonical slug
 
         card = Card(slug=slug)
 
-        # Generate 'raw' card values
-        for kw, value in raw.items():
-            if value.isnumeric():
-                setattr(card, f'raw_{kw}', _int_or_none(value))
-            elif value.strip().lower() in ['true', 'false']:
-                setattr(card, f'raw_{kw}', bool(value))
-            else:
-                setattr(card, f'raw_{kw}', value)
-        
-        # Generate 'base' card values
-        for kw, value in raw.items():
-            if kw in ['legal_heroes', 'legal_formats', 'played_horizontally']:
-                continue
-            if value.isnumeric():
-                setattr(card, f'base_{kw}', _int_or_none(value))
-            elif value.strip().lower() in ['true', 'false']:
-                setattr(card, f'base_{kw}', bool(value))
-            else:
-                setattr(card, f'base_{kw}', value)
+        # --- Map slug_index fields → Card raw_* fields ---
+        # slug_index uses index.ts field names exactly (life, intellect, keywords, …)
+        # All values arriving from msgpack/json are already native Python types
+        # (int, list, str, bool, None) — no .isnumeric() needed.
+
+        # Direct int stats
+        card.raw_pitch        = _int_or_none(raw.get("pitch"))
+        card.raw_cost         = _int_or_none(raw.get("cost"))
+        card.raw_power        = _int_or_none(raw.get("power"))
+        card.raw_defense      = _int_or_none(raw.get("defense"))
+        card.raw_life       = _int_or_none(raw.get("life"))         
+        card.raw_intellect = _int_or_none(raw.get("intellect"))
+        card.raw_arcane       = _int_or_none(raw.get("arcane"))
+
+        # String fields
+        card.raw_name             = raw.get("name")
+        card.raw_color            = raw.get("color")
+        card.raw_functional_text  = raw.get("functionalText") or raw.get("functional_text")
+        card.raw_type_text        = raw.get("typeText") or raw.get("type_text")
+
+        # List fields
+        card.raw_types        = raw.get("types") or []
+        card.raw_subtypes     = raw.get("subtypes") or []
+        card.raw_classes      = raw.get("classes") or []
+        card.raw_ability_keywords = raw.get("keywords") or raw.get("ability_keywords") or []
+        card.raw_legal_heroes = raw.get("legalHeroes") or raw.get("legal_heroes") or []
+        card.raw_legal_formats = raw.get("legalFormats") or raw.get("legal_formats") or []
+
+        # Bool flags
+        card.raw_played_horizontally = bool(raw.get("playedHorizontally") or raw.get("played_horizontally"))
+
+        # Extra fields stored as card attributes (not part of layer system but useful)
+        card.talents          = raw.get("talents") or []
+        card.shorthands       = raw.get("shorthands") or []
+        card.meta             = raw.get("meta") or []
+        card.metatypes        = raw.get("metatypes") or []
+        card.traits           = raw.get("traits") or []
+        card.fusions          = raw.get("fusions") or []
+        card.bonds            = raw.get("bonds") or []
+        card.flows            = raw.get("flows") or []
+        card.specializations  = raw.get("specializations") or []
+        card.banned_formats   = raw.get("bannedFormats") or raw.get("banned_formats") or []
+        card.restricted_formats = raw.get("restrictedFormats") or raw.get("restricted_formats") or []
+        card.special_cost     = raw.get("specialCost") or raw.get("special_cost")
+        card.special_power    = raw.get("specialPower") or raw.get("special_power")
+        card.special_defense  = raw.get("specialDefense") or raw.get("special_defense")
+        card.special_life     = raw.get("specialLife") or raw.get("special_life")
+        card.special_arcane   = raw.get("specialArcane") or raw.get("special_arcane")
+        card.hero_enum        = raw.get("hero")
+        card.young            = bool(raw.get("young"))
+        card.is_card_back     = bool(raw.get("isCardBack") or raw.get("is_card_back"))
+        card.opposite_side_card_identifiers = raw.get("oppositeSideCardIdentifiers") or []
+        card.set_identifiers  = raw.get("setIdentifiers") or raw.get("set_identifiers") or []
+        card.sets             = raw.get("sets") or []
+        card.rarity           = raw.get("rarity")
+        card.default_image    = raw.get("defaultImage") or raw.get("default_image")
+
+        # Populate base_* from raw_* (base can be changed by "base" effects)
+        card.base_name        = card.raw_name
+        card.base_pitch       = card.raw_pitch
+        card.base_cost        = card.raw_cost
+        card.base_power       = card.raw_power
+        card.base_defense     = card.raw_defense
+        card.base_life        = card.raw_life
+        card.base_intellect   = card.raw_intellect
+        card.base_arcane      = card.raw_arcane
+        card.base_color       = card.raw_color
+        card.base_types       = list(card.raw_types or [])
+        card.types            = list(card.base_types)          # sync: __post_init__ ran before raw_ fields were set
+        card.base_subtypes    = list(card.raw_subtypes or [])
+        card.subtypes         = list(card.base_subtypes)       # sync
+        card.base_keywords    = list(card.raw_ability_keywords or [])
+        card.keywords         = list(card.base_keywords)              # sync
+        # Back-compat alias used by parts of the effect system.
+        card.base_ability_keywords = list(card.raw_ability_keywords or [])
+        card.base_classes     = list(card.raw_classes or [])
+        card.classes          = list(card.base_classes)               # sync
+        card.base_functional_text = card.raw_functional_text
+        card.base_type_text   = card.raw_type_text
 
         # Parse activation cost from abilities (e.g., "Once per Turn Action - {r}{r}" -> cost=2)
-        abilities_list = getattr(card, 'raw_functional_text', '').split(r"\n\n")
+        functional_text = getattr(card, "raw_functional_text", "") or ""
+        abilities_list = functional_text.split(r"\n\n")
         if abilities_list != '':
             import re
             for ability in abilities_list:
@@ -521,7 +657,7 @@ class CardDB:
         import re
         ability_flags = {
             'has_activated_ability': False,
-            'has_once_per_turn_limit': False,
+            'has_per_turn_limit': False,
             'has_action_activation': False,
             'has_instant_activation': False,
             'has_attack_reaction_activation': False,
@@ -557,7 +693,7 @@ class CardDB:
                         num = 3 if 'thrice per turn' in ability_type.lower() else num
                         card.base_activations = num
                         card.activations = num
-                        card.has_once_per_turn_limit = True
+                        card.has_per_turn_limit = True
                     else:
                         if text in ability_type.lower():
                             setattr(card, f'has_{text.replace(' ', '_')}_activation', True)
@@ -693,8 +829,8 @@ class CardDB:
         setattr(card,'ability_type_count', ability_count)
         setattr(card, 'has_multiple_ability_types', ability_count >= 2)
 
-
-        return card
+        self._card_cache[resolved] = card
+        return copy(card)
 
     def __contains__(self, slug: str) -> bool:
         return slug in self._by_slug

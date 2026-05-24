@@ -1,0 +1,38 @@
+{
+  "slug": "awakening_bellow_red",
+  "abilities": [
+    {
+      "ability_type": "ACTION",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Brute"
+              ]
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            },
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Attack"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

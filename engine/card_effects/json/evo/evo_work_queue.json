@@ -1,0 +1,5501 @@
+[
+  {
+    "slug": "adaptive_plating",
+    "name": "Adaptive Plating",
+    "type_text": "Mechanologist Equipment",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Galvanize",
+      "Modular"
+    ],
+    "specializations": [],
+    "functional_text": "**Modular**\n\n**Action** - 0: Equip this to another equipment zone.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d} until end of turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "already_dead_red",
+    "name": "Already Dead",
+    "type_text": "Assassin Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Contract"
+    ],
+    "specializations": [],
+    "functional_text": "**Contract** - You are contracted to banish opponents' non-action cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck and a defending card.",
+    "status": "pending"
+  },
+  {
+    "slug": "annihilator_engine_red",
+    "name": "Annihilator Engine",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If you have 1 or more Evos equipped, this gets \"When this hits a hero, destroy all cards defending this,\"\n\n- 2 or more, this costs {r}{r}{r} less to play,\n- 3 or more, this gets **overpower**,\n- 4 or more, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "autosave_script_blue",
+    "name": "Autosave Script",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nYour Mechanologist attack action cards get \"When this hits, put it on the bottom of its owner's deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "backup_protocol_blu_blue",
+    "name": "Backup Protocol: BLU",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - {r}{r}, destroy this: Return a blue Mechanologist attack action card from your graveyard to your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "backup_protocol_red_red",
+    "name": "Backup Protocol: RED",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - {r}{r}, destroy this: Return a red Mechanologist attack action card from your graveyard to your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "backup_protocol_yel_yellow",
+    "name": "Backup Protocol: YEL",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - {r}{r}, destroy this: Return a yellow Mechanologist attack action card from your graveyard to your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "banksy",
+    "name": "Banksy",
+    "type_text": "Mechanologist Weapon - Wrench (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Wrench"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Maxx"
+    ],
+    "functional_text": "**Maxx Specialization**\n\n**Once per Turn Action** - {r}: **Attack**. Activate this ability only if you've cranked this turn.\n\nWhen this hits a hero, put a steam counter on an item you control with crank.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_bertha_blue",
+    "name": "Big Bertha",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_bertha_red",
+    "name": "Big Bertha",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_bertha_yellow",
+    "name": "Big Bertha",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_shot_red",
+    "name": "Big Shot",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **boosted** 2 or more times this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "boom_grenade_blue",
+    "name": "Boom Grenade",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen a Mechanologist attack action card you control hits a hero, destroy this and deal 2 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "boom_grenade_red",
+    "name": "Boom Grenade",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen a Mechanologist attack action card you control hits a hero, destroy this and deal 4 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "boom_grenade_yellow",
+    "name": "Boom Grenade",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen a Mechanologist attack action card you control hits a hero, destroy this and deal 3 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "bull_bar_blue",
+    "name": "Bull Bar",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nIf you control a Hyper Driver, this gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "bull_bar_red",
+    "name": "Bull Bar",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nIf you control a Hyper Driver, this gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "bull_bar_yellow",
+    "name": "Bull Bar",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nIf you control a Hyper Driver, this gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "burn_rubber_red",
+    "name": "Burn Rubber",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **boosted** 2 or more times this turn, this gets +2{p} and can't be defended by equipment.",
+    "status": "pending"
+  },
+  {
+    "slug": "cognition_field_blue",
+    "name": "Cognition Field",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "cognition_field_red",
+    "name": "Cognition Field",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "cognition_field_yellow",
+    "name": "Cognition Field",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "cogwerx_base_arms",
+    "name": "Cogwerx Base Arms",
+    "type_text": "Mechanologist Equipment - Base Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Base"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is equipped, put a steam counter on it.\n\n**Once per Turn Instant** - {r}, remove a steam counter from this: Your next Mechanologist attack this turn gets +1{p}. Activate this ability only if you've **boosted** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "cogwerx_base_chest",
+    "name": "Cogwerx Base Chest",
+    "type_text": "Mechanologist Equipment - Base Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Chest"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is equipped, put a steam counter on it.\n\n**Once per Turn Instant** - {r}, remove a steam counter from this: Gain {r}{r}. Activate this ability only if you've **boosted** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "cogwerx_base_head",
+    "name": "Cogwerx Base Head",
+    "type_text": "Mechanologist Equipment - Base Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is equipped, put a steam counter on it.\n\n**Once per Turn Instant** - {r}, remove a steam counter from this: Shuffle a Mechanologist attack action card from your banished zone into your deck. Activate this ability only if you've **boosted** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "cogwerx_base_legs",
+    "name": "Cogwerx Base Legs",
+    "type_text": "Mechanologist Equipment - Base Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is equipped, put a steam counter on it.\n\n**Once per Turn Instant** - {r}, remove a steam counter from this: Gain 1 action point. Activate this ability only if you've **boosted** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "contest_the_mindfield_blue",
+    "name": "Contest the Mindfield",
+    "type_text": "Wizard Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "All heroes get -1{i}.\n\nAt the start of your turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "dash_io",
+    "name": "Dash I/O",
+    "type_text": "Mechanologist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 36,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may look at the top card of your deck at any time.\n\nOnce per turn, you may play a Mechanologist item with cost 0 or 1 from the top of your deck as though it were an instant. It costs an additional {r} to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "data_link_blue",
+    "name": "Data Link",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "data_link_red",
+    "name": "Data Link",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "data_link_yellow",
+    "name": "Data Link",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "demolition_protocol_red",
+    "name": "Demolition Protocol",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - When this attacks a hero, remove all steam counters from up to X equipment, items, and/or weapons they control, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "dissolving_shield_blue",
+    "name": "Dissolving Shield",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - Remove a steam counter from this: Prevent the next 1 damage that would be dealt to you this turn. If this has no steam counters, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "dissolving_shield_red",
+    "name": "Dissolving Shield",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 3 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - Remove a steam counter from this: Prevent the next 1 damage that would be dealt to you this turn. If this has no steam counters, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "dissolving_shield_yellow",
+    "name": "Dissolving Shield",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - Remove a steam counter from this: Prevent the next 1 damage that would be dealt to you this turn. If this has no steam counters, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "dive_through_data_blue",
+    "name": "Dive Through Data",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "dive_through_data_red",
+    "name": "Dive Through Data",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "dive_through_data_yellow",
+    "name": "Dive Through Data",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "dumpster_dive_blue",
+    "name": "Dumpster Dive",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n \nIf an item or equipment was banished from **boosting** this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "dumpster_dive_red",
+    "name": "Dumpster Dive",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n \nIf an item or equipment was banished from **boosting** this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "dumpster_dive_yellow",
+    "name": "Dumpster Dive",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n \nIf an item or equipment was banished from **boosting** this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "dust_from_the_chrome_caverns_red",
+    "name": "Dust from the Chrome Caverns",
+    "type_text": "Draconic Illusionist Action - Ash",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Ash",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Material",
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Material** - While this is under a permanent other than Cromai, that permanent has **phantasm**.",
+    "status": "pending"
+  },
+  {
+    "slug": "emboldened_blade_blue",
+    "name": "Emboldened Blade",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Turn a face-down card in any arsenal face-up. If it's a defense reaction, destroy it and your next weapon attack this turn gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_atom_breaker_red",
+    "name": "Evo Atom Breaker",
+    "type_text": "Mechanologist Instant Equipment - Evo Chest",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest",
+      "Evo"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, **transform** it and X Hyper Drivers you control into this, then equip this. If you do, the next time you would be dealt damage this turn, prevent twice X of that damage.\n\nWhenever you **boost**, you may destroy a card under this. If you do, gain {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_battery_pack_yellow",
+    "name": "Evo Battery Pack",
+    "type_text": "Mechanologist Action Equipment - Evo Chest",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: Put a steam counter on an item you control with crank.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_buzz_hive_yellow",
+    "name": "Evo Buzz Hive",
+    "type_text": "Mechanologist Instant Equipment - Evo Chest",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest",
+      "Evo"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, **transform** it into this, then equip this.\n\nWhen this is equipped, gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_charging_rods_yellow",
+    "name": "Evo Charging Rods",
+    "type_text": "Mechanologist Action Equipment - Evo Legs",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Legs",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: Create a Quicken token.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_circuit_breaker_red",
+    "name": "Evo Circuit Breaker",
+    "type_text": "Mechanologist Instant Equipment - Evo Head",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it and X Hyper Drivers you control into this, then equip this. If you do, the next time you would be dealt damage this turn, prevent twice X of that damage.\n\nWhenever you **boost**, you may destroy a card under this. If you do, shuffle 2 attack action cards from your banished zone into your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_cogspitter_yellow",
+    "name": "Evo Cogspitter",
+    "type_text": "Mechanologist Action Equipment - Evo Arms",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base arms equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: Put an item with cost 0 or 1 from your hand into the arena.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_command_center_yellow",
+    "name": "Evo Command Center",
+    "type_text": "Mechanologist Action Equipment - Evo Head",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Head",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: Your next weapon attack this turn gets \"When this hits, draw a card.\"\n \n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_data_mine_yellow",
+    "name": "Evo Data Mine",
+    "type_text": "Mechanologist Action Equipment - Evo Head",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Head",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: Draw a card, then put a card from your hand on top of your deck.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_energy_matrix_blue",
+    "name": "Evo Energy Matrix",
+    "type_text": "Mechanologist Action Equipment - Evo Chest",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, **transform** it into this, then equip this.\n\nYour Teklo Blaster costs {r} less to activate for each opposing hero.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_engine_room_yellow",
+    "name": "Evo Engine Room",
+    "type_text": "Mechanologist Action Equipment - Evo Chest",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: Your next weapon attack this turn costs {r} less to activate.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_face_breaker_red",
+    "name": "Evo Face Breaker",
+    "type_text": "Mechanologist Instant Equipment - Evo Arms",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Evo"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base arms equipped, **transform** it and X Hyper Drivers you control into this, then equip this. If you do, the next time you would be dealt damage this turn, prevent twice X of that damage.\n\nWhenever you **boost** an attack action card, you may destroy a card under this. If you do, the attack gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_mach_breaker_red",
+    "name": "Evo Mach Breaker",
+    "type_text": "Mechanologist Instant Equipment - Evo Legs",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it and X Hyper Drivers you control into this, then equip this. If you do, the next time you would be dealt damage this turn, prevent twice X of that damage.\n\nWhenever you **boost**, you may destroy a card under this. If you do, create a Quicken token.",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_rapid_fire_blue",
+    "name": "Evo Rapid Fire",
+    "type_text": "Mechanologist Action Equipment - Evo Legs",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Legs",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\nYour Teklo Blaster attacks get **go again**.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_scatter_shot_blue",
+    "name": "Evo Scatter Shot",
+    "type_text": "Mechanologist Action Equipment - Evo Arms",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base arms equipped, **transform** it into this, then equip this.\n\nYour Teklo Blaster gets +1{p} for each opposing hero.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_sentry_base_arms_red",
+    "name": "Evo Sentry Base Arms",
+    "type_text": "Mechanologist Action Equipment - Evo Base Arms",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Base",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base arms equipped, **transform** it into this, then equip this.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_sentry_base_chest_red",
+    "name": "Evo Sentry Base Chest",
+    "type_text": "Mechanologist Action Equipment - Evo Base Chest",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Chest",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, **transform** it into this, then equip this.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_sentry_base_head_red",
+    "name": "Evo Sentry Base Head",
+    "type_text": "Mechanologist Action Equipment - Evo Base Head",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Evo",
+      "Head",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it into this, then equip this.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_sentry_base_legs_red",
+    "name": "Evo Sentry Base Legs",
+    "type_text": "Mechanologist Action Equipment - Evo Base Legs",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Evo",
+      "Legs",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_smoothbore_yellow",
+    "name": "Evo Smoothbore",
+    "type_text": "Mechanologist Action Equipment - Evo Arms",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base arms equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: Your next weapon attack this turn gets +1{p}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_steel_soul_controller_blue",
+    "name": "Evo Steel Soul Controller",
+    "type_text": "Mechanologist Action Equipment - Evo Base Arms",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Base",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have base arms equipped, **transform** it into this, then equip this.\n\nWhen this **transforms** from or into an Evo with a different name, you may put an attack action card with 6{p} from your graveyard into your deck fifth from the top. If that Evo is a hero, instead this triggers twice.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_steel_soul_memory_blue",
+    "name": "Evo Steel Soul Memory",
+    "type_text": "Mechanologist Action Equipment - Evo Base Head",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Evo",
+      "Head",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it into this, then equip this.\n\nWhen this **transforms** from or into an Evo with a different name, your hero gets +1{i} until end of turn. If that Evo is a hero, instead this triggers twice.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_steel_soul_processor_blue",
+    "name": "Evo Steel Soul Processor",
+    "type_text": "Mechanologist Action Equipment - Evo Base Chest",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Chest",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, **transform** it into this, then equip this.\n\nWhen this **transforms** from or into an Evo with a different name, gain {r}{r}{r}. If that Evo is a hero, instead this triggers twice.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_steel_soul_tower_blue",
+    "name": "Evo Steel Soul Tower",
+    "type_text": "Mechanologist Action Equipment - Evo Base Legs",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Evo",
+      "Legs",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\nWhen this **transforms** from or into an Evo with a different name, gain 1 action point. If that Evo is a hero, instead this triggers twice.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_tekloscope_blue",
+    "name": "Evo Tekloscope",
+    "type_text": "Mechanologist Action Equipment - Evo Head",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Head",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it into this, then equip this.\n\nYour Teklo Blaster attacks can target any opposing hero.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_thruster_yellow",
+    "name": "Evo Thruster",
+    "type_text": "Mechanologist Action Equipment - Evo Legs",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Legs",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: You may attack an additional time with target weapon this turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_whizz_bang_yellow",
+    "name": "Evo Whizz Bang",
+    "type_text": "Mechanologist Instant Equipment - Evo Arms",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Evo"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it into this, then equip this.\n\nWhen this is equipped, up to 1 target attack gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_zip_line_yellow",
+    "name": "Evo Zip Line",
+    "type_text": "Mechanologist Instant Equipment - Evo Legs",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\nWhen this is equipped, up to 1 target attack gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_zoom_call_yellow",
+    "name": "Evo Zoom Call",
+    "type_text": "Mechanologist Instant Equipment - Evo Head",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it into this, then equip this.\n\nWhen this is equipped, you may banish a card from you hand. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "expedite_blue",
+    "name": "Expedite",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "expedite_red",
+    "name": "Expedite",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "expedite_yellow",
+    "name": "Expedite",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "fabricate_red",
+    "name": "Fabricate",
+    "type_text": "Mechanologist Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose 2;\n\n- Equip a base equipment with Proto in its name from your inventory.\n- Evo permanents you control get +1{d} this turn.\n- Put this under an Evo permanent you control.\n- You may banish an Evo from your hand. If you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "fender_bender_blue",
+    "name": "Fender Bender",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "fender_bender_red",
+    "name": "Fender Bender",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "fender_bender_yellow",
+    "name": "Fender Bender",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "firewall_blue",
+    "name": "Firewall",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "firewall_red",
+    "name": "Firewall",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "firewall_yellow",
+    "name": "Firewall",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "fuel_injector_blue",
+    "name": "Fuel Injector",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Put this on the bottom of its owner's deck: Gain {r}",
+    "status": "pending"
+  },
+  {
+    "slug": "full_tilt_blue",
+    "name": "Full Tilt",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "full_tilt_red",
+    "name": "Full Tilt",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "full_tilt_yellow",
+    "name": "Full Tilt",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "gas_guzzler_blue",
+    "name": "Gas Guzzler",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "gas_guzzler_red",
+    "name": "Gas Guzzler",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "gas_guzzler_yellow",
+    "name": "Gas Guzzler",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "gas_up_blue",
+    "name": "Gas Up",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack you **boost** this turn gets +2{p}.\n\nYou may put a Hyper Driver from your banished zone into the arena.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gas_up_red",
+    "name": "Gas Up",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack you **boost** this turn gets +4{p}.\n\nYou may put a Hyper Driver from your banished zone into the arena.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gas_up_yellow",
+    "name": "Gas Up",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack you **boost** this turn gets +3{p}.\n\nYou may put a Hyper Driver from your banished zone into the arena.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gigawatt_blue",
+    "name": "Gigawatt",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Mechanologist attack this turn gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gigawatt_red",
+    "name": "Gigawatt",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Mechanologist attack this turn gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gigawatt_yellow",
+    "name": "Gigawatt",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Mechanologist attack this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "grinding_gears_blue",
+    "name": "Grinding Gears",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Action** - 0: Target hero destroys the top card of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "hadron_collider_blue",
+    "name": "Hadron Collider",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen you **boost** an attack, destroy this. If you do, the attack gets +X{p}, where X is the number of steam counters on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "hadron_collider_red",
+    "name": "Hadron Collider",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 4 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen you **boost** an attack, destroy this. If you do, the attack gets +X{p}, where X is the number of steam counters on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "hadron_collider_yellow",
+    "name": "Hadron Collider",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 3 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen you **boost** an attack, destroy this. If you do, the attack gets +X{p}, where X is the number of steam counters on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "heavy_artillery_blue",
+    "name": "Heavy Artillery",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - The defending hero can't defend this with attack action cards with cost less than X, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "heavy_artillery_red",
+    "name": "Heavy Artillery",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - The defending hero can't defend this with attack action cards with cost less than X, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "heavy_artillery_yellow",
+    "name": "Heavy Artillery",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - The defending hero can't defend this with attack action cards with cost less than X, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "heist_red",
+    "name": "Heist",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits a hero, you may put an item with cost 0 or 1 from any banished zone into the arena under your control.",
+    "status": "pending"
+  },
+  {
+    "slug": "hydraulic_press_blue",
+    "name": "Hydraulic Press",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Overpower",
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, this gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "hydraulic_press_red",
+    "name": "Hydraulic Press",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Overpower",
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, this gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "hydraulic_press_yellow",
+    "name": "Hydraulic Press",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Overpower",
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, this gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "hyper_scrapper_blue",
+    "name": "Hyper Scrapper",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": null,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play this, banish X items from your graveyard.\n\nWhen this attacks it gets +X{p}. If 3 or more Hyper Drivers were banished to play this, gain {r}{r}{r} {r}{r}{r} and this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "hyper_x3",
+    "name": "Hyper-X3",
+    "type_text": "Mechanologist Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you banish a Hyper Driver from **boosting**, put it under this.\n\nOnce per turn, when a Hyper Driver is put under this, if there are 3 or more Hyper Drivers under this, draw a card.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "infuse_alloy_blue",
+    "name": "Infuse Alloy",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "infuse_alloy_red",
+    "name": "Infuse Alloy",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "infuse_alloy_yellow",
+    "name": "Infuse Alloy",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "infuse_titanium_blue",
+    "name": "Infuse Titanium",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "infuse_titanium_red",
+    "name": "Infuse Titanium",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "infuse_titanium_yellow",
+    "name": "Infuse Titanium",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "intoxicating_shot_blue",
+    "name": "Intoxicating Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Riptide"
+    ],
+    "functional_text": "**Riptide Specialization**\n\nWhen this hits a hero, they create a Courage and Quicken token.",
+    "status": "pending"
+  },
+  {
+    "slug": "junkyard_dogg_blue",
+    "name": "Junkyard Dogg",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "junkyard_dogg_red",
+    "name": "Junkyard Dogg",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "junkyard_dogg_yellow",
+    "name": "Junkyard Dogg",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lay_waste_blue",
+    "name": "Lay Waste",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
+    "status": "pending"
+  },
+  {
+    "slug": "lay_waste_red",
+    "name": "Lay Waste",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
+    "status": "pending"
+  },
+  {
+    "slug": "lay_waste_yellow",
+    "name": "Lay Waste",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
+    "status": "pending"
+  },
+  {
+    "slug": "liquid_cooled_mayhem_blue",
+    "name": "Liquid-Cooled Mayhem",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This costs {r} less to play for each Evo you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "liquid_cooled_mayhem_red",
+    "name": "Liquid-Cooled Mayhem",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This costs {r} less to play for each Evo you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "liquid_cooled_mayhem_yellow",
+    "name": "Liquid-Cooled Mayhem",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This costs {r} less to play for each Evo you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "master_cog_yellow",
+    "name": "Master Cog",
+    "type_text": "Mechanologist Resource - Gem",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Gem"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nWhen this is pitched, you may put a steam counter on an item you control with **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "maxx_nitro",
+    "name": "Maxx Nitro",
+    "type_text": "Mechanologist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: Create a Hyper Driver token with 2 steam counters.  Activate this ability only if you've boosted this turn.\n\nHyper Drivers you control get **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "maxx_the_hype_nitro",
+    "name": "Maxx 'The Hype' Nitro",
+    "type_text": "Mechanologist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: Create a Hyper Driver token with 2 steam counters.  Activate this ability only if you've boosted this turn.\n\nHyper Drivers you control get **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "mechanical_strength_blue",
+    "name": "Mechanical Strength",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This gets +X{p}, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "mechanical_strength_red",
+    "name": "Mechanical Strength",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This gets +X{p}, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "mechanical_strength_yellow",
+    "name": "Mechanical Strength",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This gets +X{p}, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "medkit_blue",
+    "name": "Medkit",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - Put this on the bottom of its owner's deck: Gain 2{h}",
+    "status": "pending"
+  },
+  {
+    "slug": "meganetic_lockwave_blue",
+    "name": "Meganetic Lockwave",
+    "type_text": "Mechanologist Action",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target hero chooses X equipment they control, then you choose 1 from among them. That hero must defend your attacks this turn with that equipment if able. \n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "meganetic_protocol_blue",
+    "name": "Meganetic Protocol",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - The defending hero must defend this with X equipment they control with -1{d} counters if able, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "metex_blue",
+    "name": "MetEx",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "metex_red",
+    "name": "MetEx",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "metex_yellow",
+    "name": "MetEx",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "mhz_script_yellow",
+    "name": "MHz Script",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nYour Mechanologist attack action cards get **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "mini_forcefield_blue",
+    "name": "Mini Forcefield",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank",
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Ward X**, where X is the number of steam counters on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "mini_forcefield_red",
+    "name": "Mini Forcefield",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank",
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 4 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Ward X**, where X is the number of steam counters on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "mini_forcefield_yellow",
+    "name": "Mini Forcefield",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank",
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 3 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Ward X**, where X is the number of steam counters on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "moonshot_yellow",
+    "name": "Moonshot",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": null,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "Play this only if you've **boosted** this turn. As an additional cost to play this, destroy X Hyper Drivers you control.\n\nWhen this attacks, it gets +3{p} for each Hyper Driver destroyed this way.\n\nIf this has 10 or more {p}, it gets **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "out_pace_blue",
+    "name": "Out Pace",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
+    "status": "pending"
+  },
+  {
+    "slug": "out_pace_red",
+    "name": "Out Pace",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
+    "status": "pending"
+  },
+  {
+    "slug": "out_pace_yellow",
+    "name": "Out Pace",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
+    "status": "pending"
+  },
+  {
+    "slug": "overload_script_red",
+    "name": "Overload Script",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nYour Mechanologist attack action cards get **overpower**.",
+    "status": "pending"
+  },
+  {
+    "slug": "panel_beater_blue",
+    "name": "Panel Beater",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "panel_beater_red",
+    "name": "Panel Beater",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "panel_beater_yellow",
+    "name": "Panel Beater",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "penetration_script_yellow",
+    "name": "Penetration Script",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nYour Mechanologist attack action cards get +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "phantom_tidemaw_blue",
+    "name": "Phantom Tidemaw",
+    "type_text": "Illusionist Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm",
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an Illusionist card you control is destroyed, put a +1{p} counter on this.\n\n**Phantasm**\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "polarity_reversal_script_red",
+    "name": "Polarity Reversal Script",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nAction cards get -1{d} while defending your Mechanologist attack action cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "prismatic_lens_yellow",
+    "name": "Prismatic Lens",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Once per Turn Instant** - 0: Reveal the top card of your deck. Put a Mechanologist item of the same color from your banished zone on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "proto_base_arms",
+    "name": "Proto Base Arms",
+    "type_text": "Mechanologist Equipment - Base Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Base"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "proto_base_chest",
+    "name": "Proto Base Chest",
+    "type_text": "Mechanologist Equipment - Base Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Chest"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "proto_base_head",
+    "name": "Proto Base Head",
+    "type_text": "Mechanologist Equipment - Base Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "proto_base_legs",
+    "name": "Proto Base Legs",
+    "type_text": "Mechanologist Equipment - Base Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "pulsewave_protocol_yellow",
+    "name": "Pulsewave Protocol",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - When this attacks a hero, they reveal X cards from their hand, where X is the number of Evos you have equipped. Choose an action card with {d} less than X, then add it to this chain link as a defending card.",
+    "status": "pending"
+  },
+  {
+    "slug": "quantum_processor_yellow",
+    "name": "Quantum Processor",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Once per Turn Instant** - 0: Put a Mechanologist item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "quickfire_blue",
+    "name": "Quickfire",
+    "type_text": "Mechanologist Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Hyper Driver you control.\n\nThe next attack you **boost** this turn gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "quickfire_red",
+    "name": "Quickfire",
+    "type_text": "Mechanologist Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Hyper Driver you control.\n\nThe next attack you **boost** this turn gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "quickfire_yellow",
+    "name": "Quickfire",
+    "type_text": "Mechanologist Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "This costs {r} less to play for each Hyper Driver you control.\n\nThe next attack you **boost** this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ratchet_up_blue",
+    "name": "Ratchet Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, action cards get -1{d} while defending this.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "ratchet_up_red",
+    "name": "Ratchet Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, action cards get -1{d} while defending this.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "ratchet_up_yellow",
+    "name": "Ratchet Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, action cards get -1{d} while defending this.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "razzle_dazzle_blue",
+    "name": "Razzle Dazzle",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "razzle_dazzle_red",
+    "name": "Razzle Dazzle",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "razzle_dazzle_yellow",
+    "name": "Razzle Dazzle",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "re_charge_blue",
+    "name": "Re-Charge!",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put a steam counter on a Hyper Driver you control.\n\nThe next attack you **boost** this turn gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "re_charge_red",
+    "name": "Re-Charge!",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put a steam counter on a Hyper Driver you control.\n\nThe next attack you **boost** this turn gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "re_charge_yellow",
+    "name": "Re-Charge!",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Put a steam counter on a Hyper Driver you control.\n\nThe next attack you **boost** this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rev_up_blue",
+    "name": "Rev Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Hyper Driver, this costs {r} less to play.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "rev_up_red",
+    "name": "Rev Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Hyper Driver, this costs {r} less to play.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "rev_up_yellow",
+    "name": "Rev Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Hyper Driver, this costs {r} less to play.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_compactor_blue",
+    "name": "Scrap Compactor",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, you may play your next Evo this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_compactor_red",
+    "name": "Scrap Compactor",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, you may play your next Evo this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_compactor_yellow",
+    "name": "Scrap Compactor",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, you may play your next Evo this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_harvester_blue",
+    "name": "Scrap Harvester",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, put a steam counter on an item you control with **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_harvester_red",
+    "name": "Scrap Harvester",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, put a steam counter on an item you control with **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_harvester_yellow",
+    "name": "Scrap Harvester",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, put a steam counter on an item you control with **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_hopper_blue",
+    "name": "Scrap Hopper",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, create a Quicken token.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_hopper_red",
+    "name": "Scrap Hopper",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, create a Quicken token.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_hopper_yellow",
+    "name": "Scrap Hopper",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, create a Quicken token.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_prospector_blue",
+    "name": "Scrap Prospector",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_prospector_red",
+    "name": "Scrap Prospector",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_prospector_yellow",
+    "name": "Scrap Prospector",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "scrap_trader_red",
+    "name": "Scrap Trader",
+    "type_text": "Mechanologist Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Scrap"
+    ],
+    "specializations": [],
+    "functional_text": "**Scrap**\n\n**Scrap**\n\nGain {r}{r} for each card this **scrapped**.",
+    "status": "pending"
+  },
+  {
+    "slug": "security_script_blue",
+    "name": "Security Script",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nYour Mechanologist attack action cards get +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "shriek_razors",
+    "name": "Shriek Razors",
+    "type_text": "Assassin Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "While this is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip this.\n\n**Attack Reaction** - {r}{r}, destroy this: Target attack action card defending an Assassin attack gets -1{d}.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "singularity_red",
+    "name": "Singularity",
+    "type_text": "Mechanologist Action - Construct",
+    "cost": 6,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Construct",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization",
+      "Transform"
+    ],
+    "specializations": [
+      "Teklovossen"
+    ],
+    "functional_text": "**Legendary Teklovossen Specialization**\n\n**Transform** your hero, your weapon, and 4 Evos you have equipped into Teklovossen, the Mechropotent. It enters the arena with {h} equal to the hero it transformed from.",
+    "status": "pending"
+  },
+  {
+    "slug": "slay_red",
+    "name": "Slay",
+    "type_text": "Shadow Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Destroy target angel ally.",
+    "status": "pending"
+  },
+  {
+    "slug": "smash_and_grab_red",
+    "name": "Smash and Grab",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've **boosted** 2 or more times this turn, this gets +2{p} and \"When this hits a hero, gain control of an item they control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "smashing_performance_yellow",
+    "name": "Smashing Performance",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks draw a card, then discard a random card. If a card with 6 or more {p} is discarded this way, destroy a random item in the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "sonata_fantasmia_blue",
+    "name": "Sonata Fantasmia",
+    "type_text": "Runeblade Action",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Viserai"
+    ],
+    "functional_text": "**Viserai Specialization**\n\nCreate X Runechant tokens.\n\nIf X is 6 or greater, target hero discards 3 random cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "soup_up_blue",
+    "name": "Soup Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, this gets **go again**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "soup_up_red",
+    "name": "Soup Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, this gets **go again**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "soup_up_yellow",
+    "name": "Soup Up",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, this gets **go again**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "spring_a_leak_blue",
+    "name": "Spring a Leak",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits a hero, remove all steam counters from an equipment, item, or weapon they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "spring_a_leak_red",
+    "name": "Spring a Leak",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits a hero, remove all steam counters from an equipment, item, or weapon they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "spring_a_leak_yellow",
+    "name": "Spring a Leak",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits a hero, remove all steam counters from an equipment, item, or weapon they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "sprocket_rocket_blue",
+    "name": "Sprocket Rocket",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n \nIf an item or equipment was banished from boosting this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sprocket_rocket_red",
+    "name": "Sprocket Rocket",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n \nIf an item or equipment was banished from boosting this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sprocket_rocket_yellow",
+    "name": "Sprocket Rocket",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n \nIf an item or equipment was banished from boosting this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stasis_cell_blue",
+    "name": "Stasis Cell",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters or leaves the arena, activated abilities of target equipment can't be activated until the end of its controller's next turn.\n\n**Action** - Put this on the bottom of its owner's deck: Choose an equipment. It can't defend this turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "steam_canister_blue",
+    "name": "Steam Canister",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Put this on the bottom of its owner's deck: Put a steam counter on an item you control with **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "steel_street_enforcement_blue",
+    "name": "Steel Street Enforcement",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - While this is defending, it gets +X{d}, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "steel_street_hoons_blue",
+    "name": "Steel Street Hoons",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Galvanize"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nIf an item you control has been destroyed this turn, this gets +2{p}.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d).",
+    "status": "pending"
+  },
+  {
+    "slug": "symbiosis_shot",
+    "name": "Symbiosis Shot",
+    "type_text": "Mechanologist Weapon - Gun (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Gun"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Dash"
+    ],
+    "functional_text": "**Dash Specialization**\n\n**Action** - Remove a steam counter from this: **Attack**\n\nWhenever a Mechanologist item enters the arena under your control, if this has fewer than 6 steam counters, you may put a steam counter on this.",
+    "status": "pending"
+  },
+  {
+    "slug": "system_failure_yellow",
+    "name": "System Failure",
+    "type_text": "Mechanologist Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Remove all steam counters from target equipment, item, or weapon. If 2 or more steam counters are removed this way, deal 2 damage to its controler.",
+    "status": "pending"
+  },
+  {
+    "slug": "system_reset_yellow",
+    "name": "System Reset",
+    "type_text": "Mechanologist Action",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Banish X Mechanologist items you control with cost 0 or 1, then return them to the arena under their owners' control.",
+    "status": "pending"
+  },
+  {
+    "slug": "tectonic_rift_blue",
+    "name": "Tectonic Rift",
+    "type_text": "Guardian Action",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create X Seismic Surge tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "teklo_base_arms",
+    "name": "Teklo Base Arms",
+    "type_text": "Mechanologist Equipment - Base Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Base"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "teklo_base_chest",
+    "name": "Teklo Base Chest",
+    "type_text": "Mechanologist Equipment - Base Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Chest"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "teklo_base_head",
+    "name": "Teklo Base Head",
+    "type_text": "Mechanologist Equipment - Base Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "teklo_base_legs",
+    "name": "Teklo Base Legs",
+    "type_text": "Mechanologist Equipment - Base Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "teklo_leveler",
+    "name": "Teklo Leveler",
+    "type_text": "Mechanologist Weapon - Gun (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Gun"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you have 1 or more Evos equipped, this gets \"**Once per Turn Action** - {r}{r}{r}: **Attack**,\"\n\n* 2 or more, this costs {r}{r} less to activate,\n* 3 or more, this gets **go again**,\n* 4 or more, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklonetic_force_field_blue",
+    "name": "Teklonetic Force Field",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends an attack with **overpower**, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklonetic_force_field_red",
+    "name": "Teklonetic Force Field",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends an attack with **overpower**, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklonetic_force_field_yellow",
+    "name": "Teklonetic Force Field",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends an attack with **overpower**, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklovossen_esteemed_magnate",
+    "name": "Teklovossen, Esteemed Magnate",
+    "type_text": "Mechanologist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may play Evos from your banished zone.\n\n**Once per Turn Instant** - {r}{r}{r}: You may play your next Evo this turn as though it were an instant. When you do, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "terminator_tank_red",
+    "name": "Terminator Tank",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If you have 1 or more Evos equipped, this gets \"When this hits a hero, they discard a card,\"\n\n- 2 or more, this costs {r}{r}{r} less to play,\n- 3 or more, this gets **overpower**,\n- 4 or more, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tick_tock_clock_red",
+    "name": "Tick Tock Clock",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this and it deals 1 damage to you unless you remove a steam counter from it.\n\nWhen a Mechanologist attack action card you control hits a hero, destroy this and up to 2 other items in the arena. Then deal X damage to them, where X is the number of items destroyed this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "tome_of_imperial_flame_red",
+    "name": "Tome of Imperial Flame",
+    "type_text": "Draconic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Draw a card. If you are Royal, instead draw 2 cards.\n\nYou may pitch 2 red cards. If you don't, banish your hand.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "torque_tuned_blue",
+    "name": "Torque Tuned",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, this gets **overpower**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "torque_tuned_red",
+    "name": "Torque Tuned",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, this gets **overpower**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "torque_tuned_yellow",
+    "name": "Torque Tuned",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Galvanize",
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If an item you control has been destroyed this turn, this gets **overpower**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "twin_drive_red",
+    "name": "Twin Drive",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "under_loop_blue",
+    "name": "Under Loop",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "under_loop_red",
+    "name": "Under Loop",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "under_loop_yellow",
+    "name": "Under Loop",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "war_machine_red",
+    "name": "War Machine",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Overpower"
+    ],
+    "specializations": [],
+    "functional_text": "If you have 1 or more Evos equipped, this gets \"When this hits a hero, destroy all cards in their arsenal,\"\"\n\n- 2 or more, this costs {r}{r}{r} less to play,\n- 3 or more, this gets **overpower**,\n- 4 or more, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "warband_of_bellona",
+    "name": "Warband of Bellona",
+    "type_text": "Light Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Charge",
+      "GoAgain",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy this: The next time you attack this turn, you may **charge** your hero's soul. If a yellow card is **charged** this way, draw a card. **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "wax_off_blue",
+    "name": "Wax Off",
+    "type_text": "Ninja Defense Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've played Wax On this turn, create a Zen State token.",
+    "status": "pending"
+  },
+  {
+    "slug": "zero_to_fifty_blue",
+    "name": "Zero to Fifty",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "zero_to_fifty_red",
+    "name": "Zero to Fifty",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "zero_to_fifty_yellow",
+    "name": "Zero to Fifty",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "hyper_driver",
+    "name": "Hyper Driver",
+    "type_text": "Mechanologist Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this has no steam counters, destroy it.\n\nOnce per turn, when you boost a card, remove a steam counter from this and gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklovossen_the_mechropotent",
+    "name": "Teklovossen, the Mechropotent",
+    "type_text": "Shadow Mechanologist Demi-Hero Equipment - Evo",
+    "cost": null,
+    "pitch": null,
+    "power": 6,
+    "defense": 6,
+    "life": "*",
+    "intellect": 3,
+    "subtypes": [
+      "Evo"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, banish 2 cards from your soul: **Attack**\n\nWhenever this attacks a hero, they discard a card.\n\nYour Mechanologist attack action cards get **go again**.\n\nThis counts as having 4 Evos equipped.\n\n**Battleworn**",
+    "status": "pending"
+  }
+]

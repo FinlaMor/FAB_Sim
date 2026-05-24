@@ -1,0 +1,194 @@
+[
+  {
+    "slug": "channel_mount_isen_blue",
+    "name": "Channel Mount Isen",
+    "type_text": "Ice Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Channel",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the start of each hero's turn, they lose {h} equal to the number of Frostbites in their equipment zones.\n\n**Channel Ice** - At the beginning of your end phase, put a flow counter on this, then destroy it unless you put an Ice card from your pitch zone on the bottom of your deck for each flow counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "crumble_to_eternity_blue",
+    "name": "Crumble to Eternity",
+    "type_text": "Ice Earth Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "Specialization"
+    ],
+    "specializations": [
+      "Jarl"
+    ],
+    "functional_text": "**Jarl Specialization**\n\nWhen this enters the arena, you may put a -1{d} counter on an equipment.\n\nAt the beginning of your action phase, destroy this, then your next attack this turn gets **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "frozen_to_death_blue",
+    "name": "Frozen to Death",
+    "type_text": "Ice Guardian Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf this was **fused**, you may destroy an equipment with a -1{d} counter.\n\nYou may create a Frostbite token in an exposed head, chest, arms, or legs zone.",
+    "status": "pending"
+  },
+  {
+    "slug": "gauntlets_of_the_boreal_domain",
+    "name": "Gauntlets of the Boreal Domain",
+    "type_text": "Earth Ice Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: If an Earth card is pitched this way, your attacks named Mangle get +2{p} this turn. If an Ice card is pitched this way, your attacks named Mangle get **dominate** this turn. **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "ollin_ice_cap",
+    "name": "Ollin Ice Cap",
+    "type_text": "Ice Guardian Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends together with an Ice card, create a Frostbite token under the attacking hero's control.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "root_bound_trunks",
+    "name": "Root-Bound Trunks",
+    "type_text": "Earth Guardian Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends together with an aura card, create an Embodiment of Earth token.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "tectonic_crust",
+    "name": "Tectonic Crust",
+    "type_text": "Earth Guardian Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends together with an Earth card, create a Seismic Surge token.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "unforgetting_unforgiving_red",
+    "name": "Unforgetting Unforgiving",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Jarl"
+    ],
+    "functional_text": "**Jarl Specialization**\n\nWhen this defends, if the attacking hero controls an equipment with a -1{d} counter, you may search your deck for a Mangle, banish it, then shuffle. You may play it during your next action phase.",
+    "status": "pending"
+  }
+]

@@ -1,0 +1,69 @@
+[
+  {
+    "slug": "nights_embrace_blue",
+    "name": "Night's Embrace",
+    "type_text": "Assassin Attack Reaction",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your attacks with stealth get +1{p} this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "prey_spotters",
+    "name": "Prey Spotters",
+    "type_text": "Assassin Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: **Mark** target opposing hero.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "stalkers_steps",
+    "name": "Stalker's Steps",
+    "type_text": "Assassin Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target attack with stealth gets **go again**\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  }
+]

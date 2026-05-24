@@ -15,8 +15,8 @@ from engine.state import CombatState, GameState, Player, Step, Zone
 # ---------------------------------------------------------------------------
 
 def _make_hero(pid: int = 1) -> Card:
-    c = Card(slug="test_hero", raw_name="Test Hero", raw_types=["Hero"], base_health=40,
-            base_intelligence=4)
+    c = Card(slug="test_hero", raw_name="Test Hero", raw_types=["Hero"], raw_life=40,
+            raw_intellect=4)
     c.owner = pid
     c.controller = pid
     return c
@@ -47,14 +47,22 @@ def _make_state() -> GameState:
     )
 
 
-def _make_card(slug: str = "test_card", name: str = "Test Card", 
-               types: list[str] = []) -> Card:
-    """Create a Card with sensible defaults, overridable via kwargs."""
-    slug=slug
-    raw_name=name
-    raw_types=types if types != [] else None
-
-    return Card(slug=slug,raw_name=raw_name, raw_types=raw_types if raw_types is not None else None)
+def _make_card(slug: str = "test_card", name: str = "Test Card",
+               types: list[str] | None = None, **kwargs) -> Card:
+    """Create a Card with sensible defaults, overridable via kwargs.
+    Defaults to type 'Action' so cards can legally enter hand/deck zones.
+    Extra kwargs (e.g. base_defense, base_power) are set as attributes on the card.
+    """
+    raw_types = types if types is not None else ["Action"]
+    card = Card(slug=slug, raw_name=name, raw_types=raw_types)
+    for attr, val in kwargs.items():
+        setattr(card, attr, val)
+        # Propagate base_X → X so the current field reflects the new base value
+        if attr.startswith('base_'):
+            current = attr[5:]
+            if hasattr(card, current) and getattr(card, current) is None:
+                setattr(card, current, val)
+    return card
 
 
 def _make_combat(attacker_id: int = 1, attack_card: Card | None = None) -> CombatState:

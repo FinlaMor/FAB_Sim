@@ -1,0 +1,90 @@
+[
+  {
+    "slug": "bolfar_bear_hands",
+    "name": "Bolfar, Bear Hands",
+    "type_text": "Guardian Hero - Pit-Fighter",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "PitFighter"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You can't equip weapons.\n\n**Action** - {r}{r}{r}, {t}: The next attack action card with **crush** you play this turn may attack an additional hero. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "fightmaster_kox",
+    "name": "Fightmaster Kox",
+    "type_text": "Guardian Hero - Pit-Fighter",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 19,
+    "intellect": 4,
+    "subtypes": [
+      "PitFighter"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - {t}, destroy a Gold you control: Look at the top 3 cards of the event deck, then put them back in any order. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "reya_the_unyielding",
+    "name": "Reya, the Unyielding",
+    "type_text": "Guardian Hero - Pit-Fighter",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 21,
+    "intellect": 4,
+    "subtypes": [
+      "PitFighter"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Block cards you own and equipment you control with 1 or greater {d} get **protect**.\n\nWhenever you protect another hero, create a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "victor_goldmane_match_fixer",
+    "name": "Victor Goldmane, Match Fixer",
+    "type_text": "Guardian Hero - Pit-Fighter",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "PitFighter"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}: Choose an opponent. The first card they reveal for their next clash this turn gets +1{p}. When they win that clash, you create a Gold token.\n\nWhenever you attack, you may destroy 3 Gold you control. If you do, the attack gets +3{p} and **dominate**.",
+    "status": "pending"
+  }
+]

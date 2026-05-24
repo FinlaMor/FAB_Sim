@@ -32,14 +32,14 @@ def _make_effect(effect_type: str, effect_params: dict,
     if effect_type == "gain_life":
         amt = effect_params.get("amount", 0)
         def _fn(card, event, state, _amt=amt):
-            from engine.card_effects.keywords import effect_gain_life, _controller_id
+            from engine.card_effects.ability_keywords import effect_gain_life, _controller_id
             effect_gain_life(state, _controller_id(card), _amt)
         return _fn
 
     if effect_type == "lose_life":
         amt = effect_params.get("amount", 0)
         def _fn(card, event, state, _amt=amt):
-            from engine.card_effects.keywords import effect_lose_life, _controller_id
+            from engine.card_effects.ability_keywords import effect_lose_life, _controller_id
             effect_lose_life(state, _controller_id(card), _amt)
         return _fn
 
@@ -47,7 +47,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         amt = effect_params.get("amount", 0)
         tgt = effect_params.get("target", "opponent")  # 'opponent' | 'self'
         def _fn(card, event, state, _amt=amt, _tgt=tgt):
-            from engine.card_effects.keywords import effect_deal_damage, _controller_id
+            from engine.card_effects.ability_keywords import effect_deal_damage, _controller_id
             cid = _controller_id(card)
             target_id = (3 - cid) if _tgt == "opponent" else cid
             effect_deal_damage(state, target_id, _amt, card)
@@ -57,7 +57,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         amt = effect_params.get("amount", 0)
         tgt = effect_params.get("target", "opponent")
         def _fn(card, event, state, _amt=amt, _tgt=tgt):
-            from engine.card_effects.keywords import effect_deal_arcane, _controller_id
+            from engine.card_effects.ability_keywords import effect_deal_arcane, _controller_id
             cid = _controller_id(card)
             target_id = (3 - cid) if _tgt == "opponent" else cid
             effect_deal_arcane(state, target_id, _amt, card)
@@ -66,7 +66,7 @@ def _make_effect(effect_type: str, effect_params: dict,
     if effect_type == "draw":
         amt = effect_params.get("amount", 1)
         def _fn(card, event, state, _amt=amt):
-            from engine.card_effects.keywords import effect_draw, _controller_id
+            from engine.card_effects.ability_keywords import effect_draw, _controller_id
             effect_draw(state, _controller_id(card), _amt)
         return _fn
 
@@ -74,7 +74,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         token = effect_params.get("token", "")
         count = effect_params.get("count", 1)
         def _fn(card, event, state, _tok=token, _cnt=count):
-            from engine.card_effects.keywords import create_token, _controller_id
+            from engine.card_effects.ability_keywords import create_token, _controller_id
             create_token(state, _controller_id(card), _tok, _cnt)
         return _fn
 
@@ -87,20 +87,20 @@ def _make_effect(effect_type: str, effect_params: dict,
 
     if effect_type == "intimidate":
         def _fn(card, event, state):
-            from engine.card_effects.keywords import effect_intimidate, _controller_id
+            from engine.card_effects.ability_keywords import effect_intimidate, _controller_id
             cid = _controller_id(card)
             effect_intimidate(state, 3 - cid)
         return _fn
 
     if effect_type == "dominate":
         def _fn(card, event, state):
-            from engine.card_effects.keywords import effect_dominate, _controller_id
+            from engine.card_effects.ability_keywords import effect_dominate, _controller_id
             effect_dominate(state, _controller_id(card))
         return _fn
 
     if effect_type == "mark":
         def _fn(card, event, state):
-            from engine.card_effects.keywords import effect_mark, _controller_id
+            from engine.card_effects.ability_keywords import effect_mark, _controller_id
             cid = _controller_id(card)
             effect_mark(state, 3 - cid)
         return _fn
@@ -108,14 +108,14 @@ def _make_effect(effect_type: str, effect_params: dict,
     if effect_type == "amp":
         amt = effect_params.get("amount", 1)
         def _fn(card, event, state, _amt=amt):
-            from engine.card_effects.keywords import effect_amp, _controller_id
+            from engine.card_effects.ability_keywords import effect_amp, _controller_id
             effect_amp(state, _controller_id(card), _amt)
         return _fn
 
     if effect_type == "gain_resources":
         amt = effect_params.get("amount", 1)
         def _fn(card, event, state, _amt=amt):
-            from engine.card_effects.keywords import effect_gain_resources, _controller_id
+            from engine.card_effects.ability_keywords import effect_gain_resources, _controller_id
             effect_gain_resources(state, _controller_id(card), _amt)
         return _fn
 
@@ -123,7 +123,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         flag = effect_params.get("flag", "")
         scope = effect_params.get("scope", "current")
         def _fn(card, event, state, _flag=flag, _scope=scope):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.ability_keywords import _controller_id
             player = state.players[_controller_id(card)]
             if _scope == "next" and hasattr(player, "next_turn_effects"):
                 player.next_turn_effects.append(_flag)
@@ -134,7 +134,7 @@ def _make_effect(effect_type: str, effect_params: dict,
     if effect_type == "put_counter":
         ctype = effect_params.get("counter_type", "")
         def _fn(card, event, state, _ct=ctype):
-            from engine.card_effects.keywords import effect_put_counter
+            from engine.card_effects.ability_keywords import effect_put_counter
             effect_put_counter(state, card, _ct)
         return _fn
 
@@ -149,7 +149,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         amt = effect_params.get("amount", 1)
         random_discard = effect_params.get("random", False)
         def _fn(card, event, state, _amt=amt, _rand=random_discard):
-            from engine.card_effects.keywords import effect_discard, _controller_id
+            from engine.card_effects.ability_keywords import effect_discard, _controller_id
             effect_discard(state, _controller_id(card), _amt, random_discard=_rand)
         return _fn
 
@@ -157,7 +157,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         amt = effect_params.get("amount", 0)
         tgt = effect_params.get("target", "opponent")
         def _fn(card, event, state, _amt=amt, _tgt=tgt):
-            from engine.card_effects.keywords import effect_deal_damage, _controller_id
+            from engine.card_effects.ability_keywords import effect_deal_damage, _controller_id
             cid = _controller_id(card)
             target_id = (3 - cid) if _tgt == "opponent" else cid
             effect_deal_damage(state, target_id, _amt, card, damage_type="physical")
@@ -175,7 +175,7 @@ def _make_effect(effect_type: str, effect_params: dict,
         ctype = effect_params.get("counter_type", "")
         amt = effect_params.get("amount", 1)
         def _fn(card, event, state, _ct=ctype, _amt=amt):
-            from engine.card_effects.keywords import effect_remove_counter
+            from engine.card_effects.ability_keywords import effect_remove_counter
             effect_remove_counter(state, card, _ct, _amt)
         return _fn
 
@@ -183,31 +183,31 @@ def _make_effect(effect_type: str, effect_params: dict,
         amt = effect_params.get("amount", 1)
         face_up = effect_params.get("face_up", True)
         def _fn(card, event, state, _amt=amt, _fu=face_up):
-            from engine.card_effects.keywords import effect_banish_top_deck, _controller_id
+            from engine.card_effects.ability_keywords import effect_banish_top_deck, _controller_id
             effect_banish_top_deck(state, _controller_id(card), _amt, face_up=_fu)
         return _fn
 
     if effect_type == "reload":
         def _fn(card, event, state):
-            from engine.card_effects.keywords import effect_reload, _controller_id
+            from engine.card_effects.ability_keywords import effect_reload, _controller_id
             effect_reload(state, _controller_id(card))
         return _fn
 
     if effect_type == "opt":
         amt = effect_params.get("amount", 1)
         def _fn(card, event, state, _amt=amt):
-            from engine.card_effects.keywords import effect_opt, _controller_id
+            from engine.card_effects.ability_keywords import effect_opt, _controller_id
             effect_opt(state, _controller_id(card), _amt)
         return _fn
 
     if effect_type == "charge":
         def _fn(card, event, state):
-            from engine.card_effects.keywords import effect_charge, _controller_id
+            from engine.card_effects.ability_keywords import effect_charge, _controller_id
             cid = _controller_id(card)
             player = state.players[cid]
             if player.hand.cards:
                 slugs = [c.slug for c in player.hand.cards]
-                from engine.card_effects.keywords import _ask_player
+                from engine.card_effects.ability_keywords import _ask_player
                 choice = _ask_player(state, cid, slugs,
                                      context="Choose a card to charge (put into soul)")
                 chosen = player.hand.find(choice)
@@ -246,11 +246,11 @@ def _make_condition(condition_type: str, condition_params: dict,
                                  c in s.combat.defending_cards)
 
     if condition_type == "player_is_active":
-        from engine.card_effects.keywords import _controller_id
+        from engine.card_effects.ability_keywords import _controller_id
         return lambda c, e, s: (_controller_id(c) == s.active_player)
 
     if condition_type == "health_more_than_opp":
-        from engine.card_effects.keywords import _controller_id
+        from engine.card_effects.ability_keywords import _controller_id
         return lambda c, e, s: (s.players[_controller_id(c)].health >
                                   s.players[3 - _controller_id(c)].health)
 
@@ -267,7 +267,7 @@ def _make_condition(condition_type: str, condition_params: dict,
         ctype = condition_params.get("type", "")
         max_val = condition_params.get("max", 999)
         def _cond(c, e, s, _ct=ctype, _max=max_val):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.ability_keywords import _controller_id
             key = (c.slug, c.zone, _ct)
             return s.players[_controller_id(c)].counters.get(key, 0) < _max
         return _cond
@@ -276,7 +276,7 @@ def _make_condition(condition_type: str, condition_params: dict,
         ctype = condition_params.get("counter_type", condition_params.get("type", ""))
         min_val = condition_params.get("min", 1)
         def _cond(c, e, s, _ct=ctype, _min=min_val):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.ability_keywords import _controller_id
             key = (c.slug, c.zone, _ct)
             return s.players[_controller_id(c)].counters.get(key, 0) >= _min
         return _cond
@@ -284,7 +284,7 @@ def _make_condition(condition_type: str, condition_params: dict,
     if condition_type == "flag_set":
         flag = condition_params.get("flag", "")
         def _cond(c, e, s, _flag=flag):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.ability_keywords import _controller_id
             return _flag in s.players[_controller_id(c)].current_turn_effects
         return _cond
 
@@ -294,7 +294,7 @@ def _make_condition(condition_type: str, condition_params: dict,
 
     if condition_type == "player_is_non_active":
         def _cond(c, e, s):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.ability_keywords import _controller_id
             return _controller_id(c) != s.active_player
         return _cond
 
@@ -302,7 +302,7 @@ def _make_condition(condition_type: str, condition_params: dict,
         card_type = condition_params.get("card_type", "")
         zone = condition_params.get("zone", "")
         def _cond(c, e, s, _ct=card_type, _z=zone):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.ability_keywords import _controller_id
             player = s.players[_controller_id(c)]
             zone_obj = getattr(player, _z, None) if _z else None
             if zone_obj is not None and hasattr(zone_obj, 'cards'):
@@ -314,7 +314,7 @@ def _make_condition(condition_type: str, condition_params: dict,
         supertype = condition_params.get("supertype", "")
         zone = condition_params.get("zone", "")
         def _cond(c, e, s, _st=supertype, _z=zone):
-            from engine.card_effects.keywords import _controller_id
+            from engine.card_effects.ability_keywords import _controller_id
             opp = s.players[3 - _controller_id(c)]
             zone_obj = getattr(opp, _z, None) if _z else None
             if zone_obj is not None and hasattr(zone_obj, 'cards'):
@@ -342,33 +342,33 @@ def _make_condition(condition_type: str, condition_params: dict,
 
     if condition_type == "reprise_check":
         def _cond(c, e, s):
-            from engine.card_effects.keywords import reprise_check
+            from engine.card_effects.ability_keywords import reprise_check
             return reprise_check(s)
         return _cond
 
     if condition_type == "crush_check":
         def _cond(c, e, s):
-            from engine.card_effects.keywords import crush_check
+            from engine.card_effects.ability_keywords import crush_check
             return crush_check(e, s)
         return _cond
 
     if condition_type == "combo_check":
         combo_names = condition_params.get("combo_names", [])
         def _cond(c, e, s, _cn=combo_names):
-            from engine.card_effects.keywords import combo_check
+            from engine.card_effects.ability_keywords import combo_check
             return combo_check(s, _cn)
         return _cond
 
     if condition_type == "surge_check":
         amount = condition_params.get("amount", 1)
         def _cond(c, e, s, _amt=amount):
-            from engine.card_effects.keywords import surge_check
+            from engine.card_effects.ability_keywords import surge_check
             return surge_check(e, _amt)
         return _cond
 
     if condition_type == "rupture_check":
         def _cond(c, e, s):
-            from engine.card_effects.keywords import rupture_check
+            from engine.card_effects.ability_keywords import rupture_check
             return rupture_check(s)
         return _cond
 

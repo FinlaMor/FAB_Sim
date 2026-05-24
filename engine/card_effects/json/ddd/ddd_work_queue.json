@@ -1,0 +1,65 @@
+[
+  {
+    "slug": "back_for_seconds_yellow",
+    "name": "Back for Seconds",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +2{p}. If it's your second attack this turn, instead it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "cutting_couriers",
+    "name": "Cutting Couriers",
+    "type_text": "Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When your sword attack hits, you may destroy this. If you do, the attack gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "squires_bracers",
+    "name": "Squire's Bracers",
+    "type_text": "Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When your sword attack hits, you may destroy this. If you do, the sword's next attack this turn gets +2{p}.",
+    "status": "pending"
+  }
+]

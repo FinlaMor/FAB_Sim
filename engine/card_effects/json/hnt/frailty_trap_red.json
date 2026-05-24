@@ -1,0 +1,10 @@
+{
+  "slug": "frailty_trap_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "go_again"}],
+      "effects": [{"type": "CREATE_TOKEN", "token": "frailty", "count": 1, "player": "OPPONENT"}]
+    }
+  ]
+}

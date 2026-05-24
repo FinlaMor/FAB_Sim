@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -31,6 +32,8 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 PYTHON = sys.executable
 TRACKER_PATH = ROOT / "data_collection" / "experiments.jsonl"
 
@@ -49,7 +52,10 @@ def run_step(description: str, cmd: list[str], allow_fail: bool = False) -> int:
     print()
 
     t0 = time.time()
-    result = subprocess.run(cmd, cwd=str(ROOT))
+    env = os.environ.copy()
+    existing = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = str(ROOT) if not existing else f"{ROOT}:{existing}"
+    result = subprocess.run(cmd, cwd=str(ROOT), env=env)
     elapsed = time.time() - t0
 
     if result.returncode != 0:

@@ -1,0 +1,11 @@
+{
+  "slug": "boulder_drop_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [{"type": "CRUSH"}],
+      "effects": [{"type": "PUT_HAND_CARD_BOTTOM", "player": "OPPONENT"}]
+    }
+  ]
+}

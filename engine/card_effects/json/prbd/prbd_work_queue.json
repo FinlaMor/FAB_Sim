@@ -1,0 +1,21 @@
+[
+  {
+    "slug": "the_librarian",
+    "name": "The Librarian",
+    "type_text": "Illusionist Mentor",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While The Librarian is face down in arsenal, at the start of your turn, you may turn him face up.\n\nWhile The Librarian is face up in arsenal, once per turn when you create a Spectral Shield token, draw a card and put a lesson counter on The Librarian. Then if there are 3 or more lesson counters on him, banish him, search your deck for a **specialization** card, put it face up into arsenal, and shuffle.",
+    "status": "pending"
+  }
+]

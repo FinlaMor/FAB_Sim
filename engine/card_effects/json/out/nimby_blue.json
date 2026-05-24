@@ -1,0 +1,9 @@
+{
+  "slug": "nimby_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [{"type": "SEARCH_DECK", "slug_contains": "nimblism"}]
+    }
+  ]
+}

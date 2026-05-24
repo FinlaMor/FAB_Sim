@@ -1,0 +1,13 @@
+# Core engine
+numpy
+
+# RL training stack
+torch
+
+# Testing
+pytest
+
+# Optional: offline AI development assistant (local LLM toolchain, not required to run the engine)
+# sentence-transformers
+# chromadb
+# ollama

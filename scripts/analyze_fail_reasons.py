@@ -24,7 +24,7 @@ for slug, data in slug_index.items():
     try:
         card = Card(slug=slug, name=data.get("name", ""), base_functional_text=ft,
                     types=data.get("types", []) or [], subtypes=data.get("subtypes", []) or [],
-                    keywords=data.get("card_keywords", []) or [])
+                    keywords=data.get("ability_keywords", []) or [])
         if not parse_functional_text(card):
             unparsed.append((slug, ft))
     except Exception:

@@ -1,0 +1,12 @@
+{
+  "slug": "mocking_blow_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CROWD_BOO", "player": "SELF", "conditions": [{"type": "HEALTH_GT_OPP"}]},
+        {"type": "MODIFY_ATTACK_POWER", "amount": 4, "conditions": [{"type": "IS_BOOED"}]}
+      ]
+    }
+  ]
+}

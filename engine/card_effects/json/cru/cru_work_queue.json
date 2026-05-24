@@ -1,0 +1,3866 @@
+[
+  {
+    "slug": "absorption_dome_yellow",
+    "name": "Absorption Dome",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Absorption Dome enters the arena with steam counters on it equal to the number of times you have **boosted** this turn.\n\nIf your hero would be dealt damage, remove that many steam counters from Absorption Dome instead, then prevent damage equal to the number of steam counters removed this way.\n\nWhen Absorption Dome has no steam counters on it, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_conduit",
+    "name": "Aether Conduit",
+    "type_text": "Wizard Weapon - Staff (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Staff"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: Deal 2 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "aetherize_blue",
+    "name": "Aetherize",
+    "type_text": "Wizard Instant",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Negate"
+    ],
+    "specializations": [],
+    "functional_text": "**Negate** target instant card with cost {r} or less.",
+    "status": "pending"
+  },
+  {
+    "slug": "argh_smash_yellow",
+    "name": "Argh... Smash!",
+    "type_text": "Brute Action",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Roll a 6 sided die. Destroy up to X items, where X is half the number rolled, rounded down.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "arknight_shard_blue",
+    "name": "Arknight Shard",
+    "type_text": "Runeblade Resource - Gem",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Gem"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization"
+    ],
+    "specializations": [
+      "Viserai"
+    ],
+    "functional_text": "**Legendary Viserai Specialization**\n\nWhen you pitch Arknight Shard, create a Runechant token.",
+    "status": "pending"
+  },
+  {
+    "slug": "barraging_big_horn_blue",
+    "name": "Barraging Big Horn",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Barraging Big Horn, discard a random card.\n\nWhile Barraging Big Horn is defended by less than 2 non-equipment cards, it has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "barraging_big_horn_red",
+    "name": "Barraging Big Horn",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Barraging Big Horn, discard a random card.\n\nWhile Barraging Big Horn is defended by less than 2 non-equipment cards, it has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "barraging_big_horn_yellow",
+    "name": "Barraging Big Horn",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Barraging Big Horn, discard a random card.\n\nWhile Barraging Big Horn is defended by less than 2 non-equipment cards, it has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "beast_within_yellow",
+    "name": "Beast Within",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Beast Within is put into a graveyard from anywhere other than the combat chain, banish the top card of your deck and lose 1{h}. If it has 6 or more {p}, put it into your hand, otherwise, repeat this process.",
+    "status": "pending"
+  },
+  {
+    "slug": "benji_the_piercing_wind",
+    "name": "Benji, the Piercing Wind",
+    "type_text": "Ninja Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 17,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your attack action cards with 2 or less {p} can't be defended by cards from hand.\n\nThe first time an attack action card you control hits each turn, your next attack gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bittering_thorns_yellow",
+    "name": "Bittering Thorns",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, your next attack this turn gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blessing_of_serenity_blue",
+    "name": "Blessing of Serenity",
+    "type_text": "Guardian Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time your hero would be dealt {p} damage this turn, prevent 1 damage that source would deal.",
+    "status": "pending"
+  },
+  {
+    "slug": "blessing_of_serenity_red",
+    "name": "Blessing of Serenity",
+    "type_text": "Guardian Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time your hero would be dealt {p} damage this turn, prevent 3 damage that source would deal.",
+    "status": "pending"
+  },
+  {
+    "slug": "blessing_of_serenity_yellow",
+    "name": "Blessing of Serenity",
+    "type_text": "Guardian Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time your hero would be dealt {p} damage this turn, prevent 2 damage that source would deal.",
+    "status": "pending"
+  },
+  {
+    "slug": "bloodsheath_skeleta",
+    "name": "Bloodsheath Skeleta",
+    "type_text": "Runeblade Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: The next attack action card and non-attack action card you play this turn get \"This card costs {r} less to play for each Runechant you control.\"\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "breeze_rider_boots",
+    "name": "Breeze Rider Boots",
+    "type_text": "Ninja Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When a Ninja attack action card you control hits, you may destroy Breeze Rider Boots. If you do, attack action cards with **combo** gain **go again** this turn.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "brutal_assault_blue",
+    "name": "Brutal Assault",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "brutal_assault_red",
+    "name": "Brutal Assault",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "brutal_assault_yellow",
+    "name": "Brutal Assault",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "cash_in_yellow",
+    "name": "Cash In",
+    "type_text": "Generic Action",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may destroy 4 Coppers, 2 Silvers, or 1 Gold you control rather than pay Cash In's {r} cost.\n\nDraw 2 cards.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "chain_lightning_yellow",
+    "name": "Chain Lightning",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may play your next Wizard 'non-attack' action card this turn as though it were an instant.\n\nIf you have played another Wizard 'non-attack' action card this turn, deal 3 arcane damage to each opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "chokeslam_blue",
+    "name": "Chokeslam",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "chokeslam_red",
+    "name": "Chokeslam",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "chokeslam_yellow",
+    "name": "Chokeslam",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "cindering_foresight_blue",
+    "name": "Cindering Foresight",
+    "type_text": "Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "If it's not your turn, you may play Cindering Foresight as though it were an instant.\n\nThe next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.\n\n**Opt 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "cindering_foresight_red",
+    "name": "Cindering Foresight",
+    "type_text": "Wizard Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "If it's not your turn, you may play Cindering Foresight as though it were an instant.\n\nThe next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.\n\n**Opt 3**",
+    "status": "pending"
+  },
+  {
+    "slug": "cindering_foresight_yellow",
+    "name": "Cindering Foresight",
+    "type_text": "Wizard Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "If it's not your turn, you may play Cindering Foresight as though it were an instant.\n\nThe next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.\n\n**Opt 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "cintari_saber",
+    "name": "Cintari Saber",
+    "type_text": "Warrior Weapon - Sword (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nWhenever Cintari Saber is defended by 1 or more attack action cards, it gains +1{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "coax_a_commotion_red",
+    "name": "Coax a Commotion",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits, choose any number:\n\n- Each hero creates a Quicken token.\n- Each hero draws a card.\n- Each hero gains 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "combustible_courier_blue",
+    "name": "Combustible Courier",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If Combustible Courier hits, the next attack you **boost** this combat chain gains +3{p}.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "combustible_courier_red",
+    "name": "Combustible Courier",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If Combustible Courier hits, the next attack you **boost** this combat chain gains +3{p}.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "combustible_courier_yellow",
+    "name": "Combustible Courier",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If Combustible Courier hits, the next attack you **boost** this combat chain gains +3{p}.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "consuming_volition_blue",
+    "name": "Consuming Volition",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've dealt arcane damage this turn, this gets \"When this hits a hero, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "consuming_volition_red",
+    "name": "Consuming Volition",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've dealt arcane damage this turn, this gets \"When this hits a hero, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "consuming_volition_yellow",
+    "name": "Consuming Volition",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've dealt arcane damage this turn, this gets \"When this hits a hero, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "courage_of_bladehold",
+    "name": "Courage of Bladehold",
+    "type_text": "Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy Courage of Bladehold: Your sword attacks cost {r} less this turn. **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "crane_dance_blue",
+    "name": "Crane Dance",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Soulbead Strike was the last attack this combat chain, Crane Dance gains +1{p}, **go again**, and it can't be defended by attack action cards with base {p} greater than the number of chain links you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "crane_dance_red",
+    "name": "Crane Dance",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Soulbead Strike was the last attack this combat chain, Crane Dance gains +1{p}, **go again**, and it can't be defended by attack action cards with base {p} greater than the number of chain links you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "crane_dance_yellow",
+    "name": "Crane Dance",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Soulbead Strike was the last attack this combat chain, Crane Dance gains +1{p}, **go again**, and it can't be defended by attack action cards with base {p} greater than the number of chain links you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "crater_fist",
+    "name": "Crater Fist",
+    "type_text": "Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy Crater Fist: Your attacks with **crush** gain +2{p} this turn. **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "crush_the_weak_blue",
+    "name": "Crush the Weak",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't play attack action cards with 3 or less base {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "crush_the_weak_red",
+    "name": "Crush the Weak",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't play attack action cards with 3 or less base {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "crush_the_weak_yellow",
+    "name": "Crush the Weak",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't play attack action cards with 3 or less base {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "data_doll_mkii",
+    "name": "Data Doll MKII",
+    "type_text": "Mechanologist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 3,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever a Mechanologist item with cost 2 or less is put into your banished zone from your deck, put it into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "dauntless_blue",
+    "name": "Dauntless",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +1{p}.\n\nThe next defense reaction card the defending hero plays this turn costs an additional {r} to play.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dauntless_red",
+    "name": "Dauntless",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p}.\n\nThe next defense reaction card the defending hero plays this turn costs an additional {r} to play.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dauntless_yellow",
+    "name": "Dauntless",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +2{p}.\n\nThe next defense reaction card the defending hero plays this turn costs an additional {r} to play.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dread_triptych_blue",
+    "name": "Dread Triptych",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you attack with Dread Triptych, if you've played a 'non-attack' action card this turn, create a Runechant token.\n\nWhen you attack with Dread Triptych, if you've dealt arcane damage this turn, create a Runechant token.\n\nIf Dread Triptych hits, create a Runechant token.",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_of_autumn",
+    "name": "Edge of Autumn",
+    "type_text": "Ninja Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_dominance_blue",
+    "name": "Emerging Dominance",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy Emerging Dominance then the next Guardian attack action card you play this turn gains +1{p} and **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_dominance_red",
+    "name": "Emerging Dominance",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy Emerging Dominance then the next Guardian attack action card you play this turn gains +3{p} and **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_dominance_yellow",
+    "name": "Emerging Dominance",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy Emerging Dominance then the next Guardian attack action card you play this turn gains +2{p} and **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "feign_death_yellow",
+    "name": "Feign Death",
+    "type_text": "Ranger Instant",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play Feign Death only if your hero has been dealt damage this turn.\n\nThe next time your hero would be dealt damage this turn, prevent it.",
+    "status": "pending"
+  },
+  {
+    "slug": "find_center_blue",
+    "name": "Find Center",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crane Dance was the last attack this combat chain, Find Center can't be defended by cards with {r} cost less than the number of chain links you control, and it gains \"If this hits, create a Zen State token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "flood_of_force_yellow",
+    "name": "Flood of Force",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Rushing River or Flood of Force was the last attack this combat chain, when you attack with Flood of Force, reveal the top card of your deck. If it's a card with **combo,** put it into your hand then Flood of Force gains +3{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flying_kick_blue",
+    "name": "Flying Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flying_kick_red",
+    "name": "Flying Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flying_kick_yellow",
+    "name": "Flying Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "foreboding_bolt_blue",
+    "name": "Foreboding Bolt",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "Deal 1 damage to target hero.\n\n**Opt 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "foreboding_bolt_red",
+    "name": "Foreboding Bolt",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "Deal 3 damage to target hero.\n\n**Opt 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "foreboding_bolt_yellow",
+    "name": "Foreboding Bolt",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "Deal 2 damage to target hero.\n\n**Opt 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "gamblers_gloves",
+    "name": "Gambler's Gloves",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If a hero would roll one or more 6 sided dice, instead after the roll you may destroy Gambler's Gloves. If you do, that hero rerolls all 6 sided dice rolled this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "gaze_the_ages_blue",
+    "name": "Gaze the Ages",
+    "type_text": "Wizard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt 2**\n\nIf you've played another Wizard non-attack action card this turn, put this into its owner's hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "gorganian_tome",
+    "name": "Gorganian Tome",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nDraw X cards, where X is 1 plus the number of Gorganian Tomes in all graveyards.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "herons_flight_red",
+    "name": "Heron's Flight",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crane Dance was the last attack this combat chain, when you attack with Heron's Flight, it gains +2{p} and you choose 1;\n\n- Heron's flight can only be defended by attack action cards.\n- Heron's flight can only be defended by 'non-attack' action cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "high_speed_impact_blue",
+    "name": "High Speed Impact",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "If High Speed Impact hits, the next attack you boost this combat chain gains **dominate**.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "high_speed_impact_red",
+    "name": "High Speed Impact",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "If High Speed Impact hits, the next attack you boost this combat chain gains **dominate**.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "high_speed_impact_yellow",
+    "name": "High Speed Impact",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "If High Speed Impact hits, the next attack you boost this combat chain gains **dominate**.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "hit_and_run_blue",
+    "name": "Hit and Run",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains **go again**.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hit_and_run_red",
+    "name": "Hit and Run",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains **go again**.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hit_and_run_yellow",
+    "name": "Hit and Run",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains **go again**.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "increase_the_tension_blue",
+    "name": "Increase the Tension",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +1{p} and \"Defense reactions can't be played from hand this chain link.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "increase_the_tension_red",
+    "name": "Increase the Tension",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p} and \"Defense reactions can't be played from hand this chain link.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "increase_the_tension_yellow",
+    "name": "Increase the Tension",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +2{p} and \"Defense reactions can't be played from hand this chain link.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ira_crimson_haze",
+    "name": "Ira, Crimson Haze",
+    "type_text": "Ninja Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your second attack each turn gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "kassai_cintari_sellsword",
+    "name": "Kassai, Cintari Sellsword",
+    "type_text": "Warrior Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your second sword attack each turn costs {r} less.\n\nAt the beginning of your end phase, if you have attacked 2 or more times with weapons this turn, create a Copper token for each weapon attack that hit.",
+    "status": "pending"
+  },
+  {
+    "slug": "kavdaen_trader_of_skins",
+    "name": "Kavdaen, Trader of Skins",
+    "type_text": "Merchant Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Merchant"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: If a hero has more {h} than all other hero's, they lose 1{h} and create a Copper token. Then if a hero has less {h} than all other hero's, they gain 1{h}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "kayo_berserker_runt",
+    "name": "Kayo, Berserker Runt",
+    "type_text": "Brute Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 19,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you play an attack action card with base power 6 or more {p}, roll a 6 sided die. On;\n\n- 1 to 4 - Halve the attack's base {p}, rounded down.\n\n- 5 to 6 - Double the attack's base {p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lunging_press_blue",
+    "name": "Lunging Press",
+    "type_text": "Generic Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "mandible_claw",
+    "name": "Mandible Claw",
+    "type_text": "Brute Weapon - Claw (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Claw"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nIf you have discarded a card with 6 or more {p} this turn, this card's attacks **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "mangle_red",
+    "name": "Mangle",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy target equipment they control with a -1{d} counter.",
+    "status": "pending"
+  },
+  {
+    "slug": "massacre_red",
+    "name": "Massacre",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Massacre, if you have discarded a card with 6 or more {p} this turn, Massacre gains +2{p} and **intimidate**.\n\nIf Massacre is discarded to pay the cost of a Brute attack action card, **intimidate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "mauvrion_skies_blue",
+    "name": "Mauvrion Skies",
+    "type_text": "Runeblade Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next Runeblade attack action card you play this turn gets **go again** and \"When this hits, create a Runechant token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "mauvrion_skies_red",
+    "name": "Mauvrion Skies",
+    "type_text": "Runeblade Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next runeblade attack action card you play this turn gains **go again** and \"If this hits, create 3 Runechant tokens.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "mauvrion_skies_yellow",
+    "name": "Mauvrion Skies",
+    "type_text": "Runeblade Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next runeblade attack action card you play this turn gains **go again** and \"If this hits, create 2 Runechant tokens.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "meat_and_greet_blue",
+    "name": "Meat and Greet",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Runechant token.\n\nIf you've dealt arcane damage to an opposing hero this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "meat_and_greet_red",
+    "name": "Meat and Greet",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Runechant token.\n\nIf you've dealt arcane damage to an opposing hero this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "meat_and_greet_yellow",
+    "name": "Meat and Greet",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Runechant token.\n\nIf you've dealt arcane damage to an opposing hero this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "meganetic_shockwave_blue",
+    "name": "Meganetic Shockwave",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The defending hero must defend Meganetic Shockwave with X equipment they control, where X is the number of times you have **boosted** this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "metacarpus_node",
+    "name": "Metacarpus Node",
+    "type_text": "Wizard Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you play a card with an effect that deals arcane damage, you may pay {r}. If you do, instead it deals that much arcane damage plus 1, and destroy Metacarpus Node at the beginning of the end phase.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "out_for_blood_blue",
+    "name": "Out for Blood",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Reprise"
+    ],
+    "specializations": [],
+    "functional_text": "Target weapon attack gains +1{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, your next attack this turn gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "out_for_blood_red",
+    "name": "Out for Blood",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Reprise"
+    ],
+    "specializations": [],
+    "functional_text": "Target weapon attack gains +3{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, your next attack this turn gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "out_for_blood_yellow",
+    "name": "Out for Blood",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Reprise"
+    ],
+    "specializations": [],
+    "functional_text": "Target weapon attack gains +2{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, your next attack this turn gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "overblast_blue",
+    "name": "Overblast",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Overblast gains +X{p}, where X is the number of times you have **boosted** this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "overblast_red",
+    "name": "Overblast",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Overblast gains +X{p}, where X is the number of times you have **boosted** this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "overblast_yellow",
+    "name": "Overblast",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Overblast gains +X{p}, where X is the number of times you have **boosted** this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "pathing_helix_blue",
+    "name": "Pathing Helix",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Pathing Helix hits and you have no cards in your arsenal, you may put a card from your hand face down into your arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "pathing_helix_red",
+    "name": "Pathing Helix",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Pathing Helix hits and you have no cards in your arsenal, you may put a card from your hand face down into your arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "pathing_helix_yellow",
+    "name": "Pathing Helix",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Pathing Helix hits and you have no cards in your arsenal, you may put a card from your hand face down into your arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "perch_grapplers",
+    "name": "Perch Grapplers",
+    "type_text": "Ranger Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy Perch Grapplers: Until end of turn, face up arrow cards played from arsenal gain **go again**. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "pitfall_trap_yellow",
+    "name": "Pitfall Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Pitfall Trap can only be played from arsenal.\n\nWhen this defends, deal 2 damage to the attacking hero unless they pay {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "plasma_barrel_shot",
+    "name": "Plasma Barrel Shot",
+    "type_text": "Mechanologist Weapon - Gun (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": "X",
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Gun"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - Remove a steam counter from Plasma Barrel Shot: **Attack**\n\n**Action** - {r}{r}: If there are no steam counters on Plasma Barrel Shot, put a steam counter on it. **Go again**\n\nX is equal to 1 plus the number of times you have **boosted** this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "plasma_purifier_red",
+    "name": "Plasma Purifier",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}: If there are no steam counters on Plasma Purifier, put a steam counter on it. **Go again**\n\n**Once per Turn Action** - Remove a steam counter from Plasma Purifier: Target Mechanologist pistol you control gains +1{p} until end of turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "poison_the_tips_yellow",
+    "name": "Poison the Tips",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "Until end of turn, arrows you control gain \"If this hits a hero, they discard a card.\"\n\n**Reload**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "predatory_assault_blue",
+    "name": "Predatory Assault",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "If you have discarded a card with 6 or more {p} this turn, Predatory Assault gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "predatory_assault_red",
+    "name": "Predatory Assault",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "If you have discarded a card with 6 or more {p} this turn, Predatory Assault gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "predatory_assault_yellow",
+    "name": "Predatory Assault",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "If you have discarded a card with 6 or more {p} this turn, Predatory Assault gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "promise_of_plenty_blue",
+    "name": "Promise of Plenty",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Promise of Plenty hits, each hero who doesn't have a card in their arsenal puts the top card of their deck face down into their arsenal.\n\nIf Promise of Plenty is played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "promise_of_plenty_red",
+    "name": "Promise of Plenty",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Promise of Plenty hits, each hero who doesn't have a card in their arsenal puts the top card of their deck face down into their arsenal.\n\nIf Promise of Plenty is played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "promise_of_plenty_yellow",
+    "name": "Promise of Plenty",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If Promise of Plenty hits, each hero who doesn't have a card in their arsenal puts the top card of their deck face down into their arsenal.\n\nIf Promise of Plenty is played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "push_forward_blue",
+    "name": "Push Forward",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +1{p}.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "push_forward_red",
+    "name": "Push Forward",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p}.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "push_forward_yellow",
+    "name": "Push Forward",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +2{p}.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rattle_bones_red",
+    "name": "Rattle Bones",
+    "type_text": "Runeblade Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Banish target Runeblade attack action card from your graveyard. You may play it this turn.\n\nIf you have dealt arcane damage to an opposing hero this turn, you may play Rattle Bones as though it were an instant.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "reaping_blade",
+    "name": "Reaping Blade",
+    "type_text": "Runeblade Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nIf a hero has more {h} than any other hero, they can't gain {h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "red_liner",
+    "name": "Red Liner",
+    "type_text": "Ranger Weapon - Bow (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Bow"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - 0: If you have no cards in your arsenal, put an arrow card from your hand face up into your arsenal. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "reinforce_the_line_blue",
+    "name": "Reinforce the Line",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending attack action card gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "reinforce_the_line_red",
+    "name": "Reinforce the Line",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending attack action card gains +4{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "reinforce_the_line_yellow",
+    "name": "Reinforce the Line",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending attack action card gains +3{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "remorseless_red",
+    "name": "Remorseless",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Remorseless is put into your arsenal face up, until end of turn it gains \"Defense reaction cards can't be played from arsenal to Remoreseless's chain link.\"\n\nIf Remorseless hits a hero, until the end of their next turn, whenever they play an action card, they lose 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "righteous_cleansing_yellow",
+    "name": "Righteous Cleansing",
+    "type_text": "Guardian Action - Attack",
+    "cost": 7,
+    "pitch": 2,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - If Righteous Cleansing deals 4 or more damage to a hero, look at the top 5 cards of their deck. Banish 1 or more cards with the same name from among them, then put the rest on top of their deck in any order.",
+    "status": "pending"
+  },
+  {
+    "slug": "riled_up_blue",
+    "name": "Riled Up",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've discarded a card with 6 or more {p} this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "riled_up_red",
+    "name": "Riled Up",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've discarded a card with 6 or more {p} this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "riled_up_yellow",
+    "name": "Riled Up",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've discarded a card with 6 or more {p} this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rockslide_trap_blue",
+    "name": "Rockslide Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Rockslide Trap can only be played from arsenal.\n\nWhen this defends, target attack gets -2{p}, unless the attacking hero pays {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rousing_aether_blue",
+    "name": "Rousing Aether",
+    "type_text": "Wizard Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to target hero.\n\nThe next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "rousing_aether_red",
+    "name": "Rousing Aether",
+    "type_text": "Wizard Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 4 arcane damage to target hero.\n\nThe next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "rousing_aether_yellow",
+    "name": "Rousing Aether",
+    "type_text": "Wizard Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to target hero.\n\nThe next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "runeblood_barrier_yellow",
+    "name": "Runeblood Barrier",
+    "type_text": "Runeblade Action - Aura",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this enters the arena, create 4 Runechant tokens.\n\nIf your hero would be dealt damage, instead destroy that many Runechant tokens you control and prevent 1 damage for each Runechant token destroyed this way.\n\nAt the beginning of your action phase, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "rushing_river_blue",
+    "name": "Rushing River",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Torrent of Tempo was the last attack this combat chain, Rushing River gains +1{p}, **go again**, and \"If Rushing River hits, draw X cards then put X cards from your hand on top of your deck in any order, where X is the number of attacks that have hit this combat chain.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "rushing_river_red",
+    "name": "Rushing River",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Torrent of Tempo was the last attack this combat chain, Rushing River gains +1{p}, **go again**, and \"If Rushing River hits, draw X cards then put X cards from your hand on top of your deck in any order, where X is the number of attacks that have hit this combat chain.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "rushing_river_yellow",
+    "name": "Rushing River",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Torrent of Tempo was the last attack this combat chain, Rushing River gains +1{p}, **go again**, and \"If Rushing River hits, draw X cards then put X cards from your hand on top of your deck in any order, where X is the number of attacks that have hit this combat chain.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "salt_the_wound_yellow",
+    "name": "Salt the Wound",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This gets +1{p} for each attack that has hit this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "shiyana_diamond_gemini",
+    "name": "Shiyana, Diamond Gemini",
+    "type_text": "Shapeshifter Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Shapeshifter"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may have **specialization** cards of any hero in your deck.\n\nAt the beginning of your action phase, Shiyana becomes a copy of target hero until the start of your next turn, and gains \"Cards you own are the class of your hero in addition to their other class types.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "skullhorn",
+    "name": "Skullhorn",
+    "type_text": "Brute Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy Skullhorn: Draw a card then discard a random card. **Go again**\n\n**Arcane Barrier 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "sledge_of_anvilheim",
+    "name": "Sledge of Anvilheim",
+    "type_text": "Guardian Weapon - Hammer (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}{r}: **Attack**",
+    "status": "pending"
+  },
+  {
+    "slug": "sleep_dart_blue",
+    "name": "Sleep Dart",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Sleep Dart hits a hero, they lose all hero card effects and activated abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "sleep_dart_red",
+    "name": "Sleep Dart",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Sleep Dart hits a hero, they lose all hero card effects and activated abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "sleep_dart_yellow",
+    "name": "Sleep Dart",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Sleep Dart hits a hero, they lose all hero card effects and activated abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "snag_blue",
+    "name": "Snag",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Attack action cards can't gain {p} from their own effects, or the effects of attack reaction cards this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "snapback_blue",
+    "name": "Snapback",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero.\n\nIf you have played another Wizard 'non-attack' action card this turn, you may play Snapback as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "snapback_red",
+    "name": "Snapback",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to target hero.\n\nIf you have played another Wizard 'non-attack' action card this turn, you may play Snapback as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "snapback_yellow",
+    "name": "Snapback",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to target hero.\n\nIf you have played another Wizard 'non-attack' action card this turn, you may play Snapback as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "soulbead_strike_blue",
+    "name": "Soulbead Strike",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "soulbead_strike_red",
+    "name": "Soulbead Strike",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "soulbead_strike_yellow",
+    "name": "Soulbead Strike",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "spoils_of_war_red",
+    "name": "Spoils of War",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +2{p} and **go again**.\n\nWhenever a weapon you control hits this turn, create 2 Copper tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "springboard_somersault_yellow",
+    "name": "Springboard Somersault",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Springboard Somersault is played from arsenal, it gains +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "stamp_authority_blue",
+    "name": "Stamp Authority",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When Stamp Authority enters the arena, if you have 2 or more cards in your pitch zone with cost 3 or greater, your hero gains +1{i} until end of turn.\n\nWhile Stamp Authority is in the arena, attack action card effects do not trigger when they hit.\n\nAt the beginning of your action phase, destroy Stamp Authority.",
+    "status": "pending"
+  },
+  {
+    "slug": "sutcliffes_research_notes_blue",
+    "name": "Sutcliffe's Research Notes",
+    "type_text": "Runeblade Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Reveal the top card of your deck. Create a Runechant token for each Runeblade attack action card revealed this way, then put the cards on top of your deck in any order.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sutcliffes_research_notes_red",
+    "name": "Sutcliffe's Research Notes",
+    "type_text": "Runeblade Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Reveal the top 3 cards of your deck. Create a Runechant token for each Runeblade attack action card revealed this way, then put the cards on top of your deck in any order.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sutcliffes_research_notes_yellow",
+    "name": "Sutcliffe's Research Notes",
+    "type_text": "Runeblade Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Reveal the top 2 cards of your deck. Create a Runechant token for each Runeblade attack action card revealed this way, then put the cards on top of your deck in any order.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "swing_fist_think_later_blue",
+    "name": "Swing Fist, Think Later",
+    "type_text": "Brute Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Swing Fist, Think Later, discard a random card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "swing_fist_think_later_red",
+    "name": "Swing Fist, Think Later",
+    "type_text": "Brute Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Swing Fist, Think Later, discard a random card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "swing_fist_think_later_yellow",
+    "name": "Swing Fist, Think Later",
+    "type_text": "Brute Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Swing Fist, Think Later, discard a random card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "talishar_the_lost_prince",
+    "name": "Talishar, the Lost Prince",
+    "type_text": "Generic Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}, put a rust counter on Talishar, the Lost Prince: **Attack**\n\nAt the beginning of your end phase, if Talishar, the Lost Prince has 3 or more rust counters on it, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklovossens_workshop_blue",
+    "name": "Teklovossen's Workshop",
+    "type_text": "Mechanologist Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt X**, where X is the number of times you have **boosted** this turn.\n\nReveal the top card of your deck. If it's a Mechanologist item card with cost 0, put it into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklovossens_workshop_red",
+    "name": "Teklovossen's Workshop",
+    "type_text": "Mechanologist Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt X**, where X is the number of times you have **boosted** this turn.\n\nReveal the top card of your deck. If it's a Mechanologist item card with cost 2 or less, put it into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "teklovossens_workshop_yellow",
+    "name": "Teklovossen's Workshop",
+    "type_text": "Mechanologist Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Opt X**, where X is the number of times you have **boosted** this turn.\n\nReveal the top card of your deck. If it's a Mechanologist item card with cost 1 or less, put it into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "torrent_of_tempo_blue",
+    "name": "Torrent of Tempo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "torrent_of_tempo_red",
+    "name": "Torrent of Tempo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "torrent_of_tempo_yellow",
+    "name": "Torrent of Tempo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "towering_titan_blue",
+    "name": "Towering Titan",
+    "type_text": "Guardian Action - Aura",
+    "cost": 9,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy Towering Titan then the next Guardian attack action card you play this turn gains +8{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "towering_titan_red",
+    "name": "Towering Titan",
+    "type_text": "Guardian Action - Aura",
+    "cost": 9,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy Towering Titan then the next Guardian attack action card you play this turn gains +10{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "towering_titan_yellow",
+    "name": "Towering Titan",
+    "type_text": "Guardian Action - Aura",
+    "cost": 9,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy Towering Titan then the next Guardian attack action card you play this turn gains +9{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tripwire_trap_red",
+    "name": "Tripwire Trap",
+    "type_text": "Ranger Defense Reaction - Trap",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Trap"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Tripwire Trap can only be played from arsenal.\n\nWhen this defends, effects don't trigger when an attack hits this chain link unless the attacking hero pays {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "twinning_blade_yellow",
+    "name": "Twinning Blade",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may attack an additional time with target sword this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "unified_decree_yellow",
+    "name": "Unified Decree",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Reprise"
+    ],
+    "specializations": [],
+    "functional_text": "Target weapon attack gains +3{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, look at the top card of your deck. If it's an attack reaction card, you may banish it. If you do, you may play it this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "viziertronic_model_i",
+    "name": "Viziertronic Model i",
+    "type_text": "Mechanologist Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - destroy Vizertronic Model i: Whenever you **boost** this turn, draw a card then put a card from your hand on top of your deck. **Go again**\n\n**Arcane Barrier 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "whirling_mist_blossom_yellow",
+    "name": "Whirling Mist Blossom",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Ira"
+    ],
+    "functional_text": "**Ira Specialization**\n\nWhen this hits and it's the second or higher chain link in a row to hit, draw 2 cards.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "zephyr_needle",
+    "name": "Zephyr Needle",
+    "type_text": "Ninja Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**. **Go again**\n\nWhen Zephyr Needle is defended by a card with {d} greater than Zephyr Needle's {p}, destroy it when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "copper",
+    "name": "Copper",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}{r}, destroy this: Draw a card. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "zen_state",
+    "name": "Zen State",
+    "type_text": "Ninja Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This enters the arena with a balance counter. At the beginning of your action phase, destroy this unless you remove a balance counter from it.\n\nIf you would be dealt damage, prevent 1 of that damage.",
+    "status": "pending"
+  }
+]

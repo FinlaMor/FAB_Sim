@@ -1,0 +1,119 @@
+[
+  {
+    "slug": "cerebellum_processor_blue",
+    "name": "Cerebellum Processor",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Once per Turn Action** - 0: Draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "heavy_industry_gear_shift",
+    "name": "Heavy Industry Gear Shift",
+    "type_text": "Mechanologist Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Banish the top 2 cards of your deck. Gain 1 action point for each Mechanologist card banished this way.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "heavy_industry_power_plant",
+    "name": "Heavy Industry Power Plant",
+    "type_text": "Mechanologist Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, destroy this: Whenever you **boost** this turn, gain {r}. **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "heavy_industry_ram_stop",
+    "name": "Heavy Industry Ram Stop",
+    "type_text": "Mechanologist Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay {r}. If you do, it gets +1{d} until end of turn.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "heavy_industry_surveillance",
+    "name": "Heavy Industry Surveillance",
+    "type_text": "Mechanologist Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may banish the top card of your deck. If it's a Mechanologist card, this gets +1{d} until end of turn.\n\n**Temper**",
+    "status": "pending"
+  }
+]

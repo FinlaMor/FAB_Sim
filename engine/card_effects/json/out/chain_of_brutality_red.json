@@ -1,0 +1,10 @@
+{
+  "slug": "chain_of_brutality_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [{"type": "NEXT_ATTACK_BONUS", "amount": 4}]
+    }
+  ]
+}

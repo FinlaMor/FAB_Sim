@@ -1,0 +1,41 @@
+{
+  "slug": "fyendals_spring_tunic",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "NOT",
+          "inner_type": "COUNTER_GTE",
+          "counter_type": "energy",
+          "min": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "energy",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "additional_cost": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter_type": "energy",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

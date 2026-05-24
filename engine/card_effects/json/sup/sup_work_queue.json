@@ -1,0 +1,5792 @@
+[
+  {
+    "slug": "a_good_clean_fight_red",
+    "name": "A Good Clean Fight",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is attacking a hero, non-equipment cards they own lose and can't gain abilities.",
+    "status": "pending"
+  },
+  {
+    "slug": "act_of_glory_blue",
+    "name": "Act of Glory",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "act_of_glory_red",
+    "name": "Act of Glory",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 4,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +6{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "act_of_glory_yellow",
+    "name": "Act of Glory",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "adaptive_alpha_mold",
+    "name": "Adaptive Alpha Mold",
+    "type_text": "Mechanologist Equipment - Base",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Modular"
+    ],
+    "specializations": [],
+    "functional_text": "**Modular**\n\n**Action** - 0: Equip this to another equipment zone.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "angelic_attendant_yellow",
+    "name": "Angelic Attendant",
+    "type_text": "Light Illusionist Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Awaken",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Awaken** target figment you control.\n\nPut this into your soul.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "arrogant_showboating_blue",
+    "name": "Arrogant Showboating",
+    "type_text": "Reviled Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Might token for each defending card controlled by an opponent on the combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "asking_for_trouble_yellow",
+    "name": "Asking for Trouble",
+    "type_text": "Brute Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, create a Vigor token under the attacking hero's control.",
+    "status": "pending"
+  },
+  {
+    "slug": "attention_grabbers",
+    "name": "Attention Grabbers",
+    "type_text": "Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may remove a suspense counter from an aura you control. If you do, this gets +2{d} this chain link.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "authority_of_ataya_blue",
+    "name": "Authority of Ataya",
+    "type_text": "Generic Resource - Gem",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Gem"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Legendary"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nWhen this is pitched, defense reaction cards cost opponents an additional {r} to play this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "backspin_thrust_red",
+    "name": "Backspin Thrust",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {u} a cog you control: This gets +1{p} or **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "bark_obscenities_red",
+    "name": "Bark Obscenities",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack that targets a Guardian hero this turn gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bash_brute_red",
+    "name": "Bash Brute",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by a Brute card, this gets +1{p}.\n\nWhen this hits a Brute hero, destroy an aura token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "bash_guardian_red",
+    "name": "Bash Guardian",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by a Guardian card, this gets +1{p}.\n\nWhen this hits a Guardian hero, destroy an aura token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "bask_in_your_own_greatness_blue",
+    "name": "Bask in Your Own Greatness",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may pay up to {r}{r}{r}. Create that many Might tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "bask_in_your_own_greatness_red",
+    "name": "Bask in Your Own Greatness",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may pay up to {r}{r}{r}. Create that many Might tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "bask_in_your_own_greatness_yellow",
+    "name": "Bask in Your Own Greatness",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may pay up to {r}{r}{r}. Create that many Might tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "battered_beaten_and_broken_yellow",
+    "name": "Battered, Beaten, and Broken",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, **intimidate** them.\n\nIf you control 3 or more auras, this gets +3{p} and \"When this hits a hero, destroy an intimidated card they own.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "battlefield_beacon_yellow",
+    "name": "Battlefield Beacon",
+    "type_text": "Light Warrior Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, choose 1 for each card you've banished from your soul this combat chain. You may choose the same mode up to 3 times;\n- Create a Courage token.\n- Create a Toughness token.\n- Create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "beat_of_the_ironsong_blue",
+    "name": "Beat of the Ironsong",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose X+1, where X is the number of +1{p} counters on an attacking Dawnblade;\n- Target Dawnblade attack gets +1{p}.\n- Target Dawnblade attack gets **go again**.\n- Cards defending target Dawnblade attack can't gain {d}.\n- Damage target Dawnblade attack would deal can't be prevented.",
+    "status": "pending"
+  },
+  {
+    "slug": "beat_the_same_drum_blue",
+    "name": "Beat the Same Drum",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've controlled an Agility token this turn, create an Agility token, then repeat for Confidence, Might, Toughness, and Vigor.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "big_bully_red",
+    "name": "Big Bully",
+    "type_text": "Reviled Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this card's base {p} is doubled.",
+    "status": "pending"
+  },
+  {
+    "slug": "blood_follows_blade_yellow",
+    "name": "Blood Follows Blade",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Kassai"
+    ],
+    "functional_text": "**Kassai Specialization**\n\nTarget sword attack gets **go again** and \"When this hits, create a Cintari Sellsword token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "bluster_buff_red",
+    "name": "Bluster Buff",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, it gets -1{p} unless you pay {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "boots_to_the_boards",
+    "name": "Boots to the Boards",
+    "type_text": "Revered Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, pay up to {r}{r}{r}. Create that many Toughness tokens.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "booze_blue",
+    "name": "Booze!",
+    "type_text": "Reviled Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters or leaves the arena, **the crowd boos** you.\n\nAt the start of your turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "buckwild_blue",
+    "name": "Buckwild",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "buckwild_red",
+    "name": "Buckwild",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "buckwild_yellow",
+    "name": "Buckwild",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "bully_tactics_red",
+    "name": "Bully Tactics",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may pay up to {r}{r}{r}. **Intimidate** them that many times.",
+    "status": "pending"
+  },
+  {
+    "slug": "catch_of_the_day_blue",
+    "name": "Catch of the Day",
+    "type_text": "Pirate Ranger Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Pirate",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gets +2{p}.\n\nIf a go fish effect would trigger this turn, instead it triggers twice.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "challenge_the_alpha_yellow",
+    "name": "Challenge the Alpha",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a Brute hero, this gets +2{p}.\n\nWhen this hits a Brute hero, they discard a card. If it has 6 or more {p}, you lose 2{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "channel_the_tranquil_domain_yellow",
+    "name": "Channel the Tranquil Domain",
+    "type_text": "Earth Action - Aura",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Channel",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters the arena and at the start of your action phase, put another target aura on the obttom of its owner's deck.\n\n**Channel Earth** - At the beginning of your end phase, put a flow counter on this, then destroy it unless you put an Earth card from your pitch zone on the bottom of your deck for each flow counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "cheap_shot_yellow",
+    "name": "Cheap Shot",
+    "type_text": "Reviled Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've been booed this turn, you may play this as though it were an instant.\n\nDeal 2 damage to target hero unless they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "cheaters_charm_yellow",
+    "name": "Cheater's Charm",
+    "type_text": "Reviled Brute Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Steal",
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "Choose any number;\n- **Steal** a Confidence or Toughness token.\n- **The crowd boos** you.\n- If you control an attack with 6 or more {p}, deal 2 damage to target hero unless they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "cheers_blue",
+    "name": "Cheers!",
+    "type_text": "Revered Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters or leaves the arena, **the crowd cheers** you.\n\nAt the start of your turn, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "chest_puff_red",
+    "name": "Chest Puff",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, it gets -1{p} unless you pay {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "clench_the_upper_hand_blue",
+    "name": "Clench the Upper Hand",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd boos** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "clench_the_upper_hand_red",
+    "name": "Clench the Upper Hand",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd boos** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "clench_the_upper_hand_yellow",
+    "name": "Clench the Upper Hand",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd boos** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "comeback_kid_blue",
+    "name": "Comeback Kid",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.\n\nIf you've been cheered this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "comeback_kid_red",
+    "name": "Comeback Kid",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.\n\nIf you've been cheered this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "comeback_kid_yellow",
+    "name": "Comeback Kid",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.\n\nIf you've been cheered this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "concealed_object_blue",
+    "name": "Concealed Object",
+    "type_text": "Reviled Instant - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, **the crowd boos** you.\n\n**Instant** - {t}: Target attack gets +1{p}.\n\nAt the beginning of your end phase, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "cries_of_encore_red",
+    "name": "Cries of Encore",
+    "type_text": "Revered Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.\n\nIf you've been cheered this turn, this gets \"When this hits a hero, you may plan an aura of suspense from your graveyard this turn.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "crowd_goes_wild_yellow",
+    "name": "Crowd Goes Wild",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've been cheered this turn, this costs {r}{r}{r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "cruel_ambition_red",
+    "name": "Cruel Ambition",
+    "type_text": "Reviled Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create 3 Might tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_a_long_story_short_yellow",
+    "name": "Cut a Long Story Short",
+    "type_text": "Guardian Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets +1{p}.\n\n**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, they discard their hand.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_off_at_the_knees_yellow",
+    "name": "Cut Off at the Knees",
+    "type_text": "Guardian Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets +1{p}.\n\n**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, destroy the top 3 cards of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "cut_the_small_talk_yellow",
+    "name": "Cut the Small Talk",
+    "type_text": "Guardian Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets +1{p}.\n\n**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, destroy all auras they control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "cutting_retort_red",
+    "name": "Cutting Retort",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, you may pay up to {r}{r}{r}. Destroy that many aura tokens with different names they control. If you do, this gets +1{p} for each aura destroyed this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "darling_of_the_crowd_yellow",
+    "name": "Darling of the Crowd",
+    "type_text": "Revered Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While this is defending, if you've been cheered this turn, it gets +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "dig_in_blue",
+    "name": "Dig In",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay up to {r}{r}{r}. Create that many Toughness tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "dig_in_red",
+    "name": "Dig In",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay up to {r}{r}{r}. Create that many Toughness tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "dig_in_yellow",
+    "name": "Dig In",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay up to {r}{r}{r}. Create that many Toughness tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "disarm_yellow",
+    "name": "Disarm",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've been cheered this turn, create a Toughness token.\n\nWhen this defends, if it has 6 or more {d}, the attacking hero puts a card from their hand on the bottom of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "disdainful_delight_yellow",
+    "name": "Disdainful Delight",
+    "type_text": "Reviled Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "While this is defending, if you've been booed this turn, this gets +1{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "disembody_red",
+    "name": "Disembody",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've been cheered this turn, create a Toughness token.\n\nWhen this defends, if it has 6 or more {d}, the attacking hero puts an aura they control on the bottom of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "disperse_blue",
+    "name": "Disperse",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've been cheered this turn, create a Toughness token.\n\nWhen this defends, if it has 6 or more {d}, the attacking hero puts a card from their arsenal on the bottom of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "disturb_the_peace_red",
+    "name": "Disturb the Peace",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This can't be defended by Guardian auras.\n\nWhen this hits a Guardian hero, destroy an aura they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "dramatic_pause_blue",
+    "name": "Dramatic Pause",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this enters the arena, target defending action card gets +1{d} this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "dramatic_pause_red",
+    "name": "Dramatic Pause",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this enters the arena, target defending action card gets +3{d} this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "dramatic_pause_yellow",
+    "name": "Dramatic Pause",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this enters the arena, target defending action card gets +2{d} this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_of_their_seats_blue",
+    "name": "Edge of Their Seats",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_of_their_seats_red",
+    "name": "Edge of Their Seats",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_of_their_seats_yellow",
+    "name": "Edge of Their Seats",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "empowering_ruckus_yellow",
+    "name": "Empowering Ruckus",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've been cheered this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "energetic_impact_blue",
+    "name": "Energetic Impact",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends together with a card with 6 or more {p}, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "escalate_order_red",
+    "name": "Escalate Order",
+    "type_text": "Revered Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you control a Toughness token, create 3 more.",
+    "status": "pending"
+  },
+  {
+    "slug": "escalate_violence_blue",
+    "name": "Escalate Violence",
+    "type_text": "Reviled Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you control a Might token, create 3 more.",
+    "status": "pending"
+  },
+  {
+    "slug": "familiar_stench_red",
+    "name": "Familiar Stench",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When 1 or more Brute cards defend this, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "familiar_story_red",
+    "name": "Familiar Story",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When 1 or more Guardian cards defend this, create a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "fight_dirty_red",
+    "name": "Fight Dirty",
+    "type_text": "Reviled Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by a Revered card, this gets +1{p}.\n\nWhen this hits a Revered hero, destroy the top card of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "fight_fair_red",
+    "name": "Fight Fair",
+    "type_text": "Revered Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this is defended by a Reviled card, this gets +1{p}.\n\nWhen this hits a Reviled hero, put this on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "fight_from_behind_blue",
+    "name": "Fight from Behind",
+    "type_text": "Revered Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "fight_from_behind_red",
+    "name": "Fight from Behind",
+    "type_text": "Revered Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "fight_from_behind_yellow",
+    "name": "Fight from Behind",
+    "type_text": "Revered Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "fix_the_match_yellow",
+    "name": "Fix the Match",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, search your deck for a card, then shuffle and put that card on top.\n\nWhenever a card defends this, **clash** with the defending hero. The winner creates a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_speed_blue",
+    "name": "Flex Speed",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this has 6 or more {p}, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_speed_red",
+    "name": "Flex Speed",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this has 6 or more {p}, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_speed_yellow",
+    "name": "Flex Speed",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this has 6 or more {p}, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_strength_blue",
+    "name": "Flex Strength",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this has 6 or more {p}, it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_strength_red",
+    "name": "Flex Strength",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this has 6 or more {p}, it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_strength_yellow",
+    "name": "Flex Strength",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this has 6 or more {p}, it gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "full_of_bravado_blue",
+    "name": "Full of Bravado",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you control an aura of suspense, create a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "full_of_bravado_red",
+    "name": "Full of Bravado",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you control an aura of suspense, create a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "full_of_bravado_yellow",
+    "name": "Full of Bravado",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you control an aura of suspense, create a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "gallow_end_of_the_line_yellow",
+    "name": "Gallow, End of the Line",
+    "type_text": "Pirate Necromancer Action - Ally",
+    "cost": 3,
+    "pitch": 2,
+    "power": 4,
+    "defense": null,
+    "life": 3,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "WateryGrave"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, {t}: **Attack**\n\n**Instant** - {t}, discard a card with watery grave: Until end of turn, effects controlled by opponents don't trigger when their attacks hit.\n\n**Watery Grave**",
+    "status": "pending"
+  },
+  {
+    "slug": "gang_robbery_yellow",
+    "name": "Gang Robbery",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Steal"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, **steal** an aura token they control.\n\nIf you control 3 or more auras, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "garland_of_spring",
+    "name": "Garland of Spring",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain {r}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gauntlets_of_tyrannical_rex",
+    "name": "Gauntlets of Tyrannical Rex",
+    "type_text": "Brute Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, {t}: Your next attack this turn gets +1{p}. Activate this only if there is a card with 6 or more {p} in your pitch zone. **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "give_em_a_piece_of_your_mind_blue",
+    "name": "Give 'Em a Piece of Your Mind",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "give_em_a_piece_of_your_mind_red",
+    "name": "Give 'Em a Piece of Your Mind",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "give_em_a_piece_of_your_mind_yellow",
+    "name": "Give 'Em a Piece of Your Mind",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "golden_gait",
+    "name": "Golden Gait",
+    "type_text": "Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization",
+      "Temper"
+    ],
+    "specializations": [
+      "Olympia"
+    ],
+    "functional_text": "**Legendary Olympia Specialization**\n\nThis counts as a Gold.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "golden_galea",
+    "name": "Golden Galea",
+    "type_text": "Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization",
+      "Temper"
+    ],
+    "specializations": [
+      "Olympia"
+    ],
+    "functional_text": "**Legendary Olympia Specialization**\n\nThis counts as a Gold.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "golden_gauntlets",
+    "name": "Golden Gauntlets",
+    "type_text": "Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization",
+      "Temper"
+    ],
+    "specializations": [
+      "Olympia"
+    ],
+    "functional_text": "**Legendary Olympia Specialization**\n\nThis counts as a Gold.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "golden_heart_plate",
+    "name": "Golden Heart Plate",
+    "type_text": "Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Legendary",
+      "Specialization",
+      "Temper"
+    ],
+    "specializations": [
+      "Olympia"
+    ],
+    "functional_text": "**Legendary Olympia Specialization**\n\nThis counts as a Gold.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "good_natured_brutality_yellow",
+    "name": "Good Natured Brutality",
+    "type_text": "Revered Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, if you have no cards in hand, it gets +6{d} and **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "goon_battery_blue",
+    "name": "Goon Battery",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control 3 or more auras, this gets +3{p} and \"When this hits a hero, {t} them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "goon_beatdown_blue",
+    "name": "Goon Beatdown",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 3 or more auras, this gets +3{p} and \"When this hits a hero, **the crowd boos** you.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "goon_tactics_blue",
+    "name": "Goon Tactics",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control 3 or more auras, this gets +3{p} and \"When this hits a hero, destroy the top card of their deck.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "helm_of_hindsight",
+    "name": "Helm of Hindsight",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}{r}, destroy this: Put target attack action card from your graveyard on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "helm_of_the_adored",
+    "name": "Helm of the Adored",
+    "type_text": "Revered Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **the crowd cheers** you.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "heroic_grit_yellow",
+    "name": "Heroic Grit",
+    "type_text": "Revered Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets \"This gets +1{p} for each Toughness token you control.\"\n\nCreate a Toughness token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "heroic_pose_blue",
+    "name": "Heroic Pose",
+    "type_text": "Revered Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +1{p}.\n\n**The crowd cheers** you.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "heroic_pose_red",
+    "name": "Heroic Pose",
+    "type_text": "Revered Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +3{p}.\n\n**The crowd cheers** you.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "heroic_pose_yellow",
+    "name": "Heroic Pose",
+    "type_text": "Revered Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +2{p}.\n\n**The crowd cheers** you.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "high_pitched_howl_blue",
+    "name": "High Pitched Howl",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "high_pitched_howl_red",
+    "name": "High Pitched Howl",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "high_pitched_howl_yellow",
+    "name": "High Pitched Howl",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "hit_the_gas_blue",
+    "name": "Hit the Gas",
+    "type_text": "Mechanologist Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Maxx"
+    ],
+    "functional_text": "**Maxx Specialization**\n\nTurn any number of Hyper Drivers in your banished zone face-down and gain that many action points. If 3 or more cards are turned face-down this way, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "hold_firm",
+    "name": "Hold Firm",
+    "type_text": "Revered Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy this: Create 3 Toughness tokens. Activate this only if you have less {h} than each other hero. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "horns_of_the_despised",
+    "name": "Horns of the Despised",
+    "type_text": "Reviled Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **the crowd boos** you.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "humble_entrance_blue",
+    "name": "Humble Entrance",
+    "type_text": "Revered Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create 3 Toughness tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hungry_for_more_red",
+    "name": "Hungry for More",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, gain 3{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "hunter_or_hunted_blue",
+    "name": "Hunter or Hunted?",
+    "type_text": "Assassin Defense Reaction",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Contract"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, name a card. The attacking hero reveals the top card of their deck. If it's the named card, banish it, search their hand, deck, and arsenal for up to 3 cards with that name and banish them, then they shuffle.\n\n**Contract** - While this is defending, you are contracted to banish opponents' cards with the chosen name. Whenever you complete this contract, create a Silver token.",
+    "status": "pending"
+  },
+  {
+    "slug": "in_the_palm_of_your_hand_red",
+    "name": "In the Palm of Your Hand",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this enters or leaves the arena, draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "instill_fear_blue",
+    "name": "Instill Fear",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, **intimidate** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "instill_fear_red",
+    "name": "Instill Fear",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, **intimidate** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "instill_fear_yellow",
+    "name": "Instill Fear",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, **intimidate** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "ironfist_revelation",
+    "name": "Ironfist Revelation",
+    "type_text": "Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may turn a face-down card with crush in your arsenal face-up. If you do, put a +1{p} counter on it.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "jaws_of_victory_red",
+    "name": "Jaws of Victory",
+    "type_text": "Revered Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.\n\nIf you've been cheered this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "kayo_strong_arm",
+    "name": "Kayo, Strong-arm",
+    "type_text": "Reviled Brute Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You start the game with 1 weapon zone.\n\n**Instant** - {r}{r}{r}{r}, {t}: Target attack action card you control has 6 base {p}.\n\nWhenever the crowd boos you, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "kayo_underhanded_cheat",
+    "name": "Kayo, Underhanded Cheat",
+    "type_text": "Reviled Brute Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You start the game with 1 weapon zone.\n\n**Instant** - {r}{r}{r}{r}, {t}: Target attack action card you control has 6 base {p}.\n\nWhenever the crowd boos you, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "kick_the_hornets_nest_yellow",
+    "name": "Kick the Hornet's Nest",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When an opponent's effect puts this into your graveyard from anywhere, create a Confidence, Might, Toughness, and Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "laughing_knee_slappers",
+    "name": "Laughing Knee-Slappers",
+    "type_text": "Reviled Brute Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Might and a Vigor token, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "leave_them_hanging_red",
+    "name": "Leave Them Hanging",
+    "type_text": "Reviled Guardian Instant - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Intimidate",
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this enters or leaves the arena, **intimidate** target hero.\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "liars_charm_yellow",
+    "name": "Liar's Charm",
+    "type_text": "Reviled Guardian Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Steal",
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "Choose any number;\n- **Steal** a Toughness or Vigor token.\n- **The crowd boos** you.\n- Target hero loses and can't gain abilities this action phase unless they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "light_up_the_leaves_red",
+    "name": "Light Up the Leaves",
+    "type_text": "Earth Wizard Action",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 6 arcane damage to any target.\n\n**Instant** - Discard this and an Earth card: Prevent the next 6 arcane damage target source would deal this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "look_tuff_red",
+    "name": "Look Tuff",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, it gets -1{p} unless you pay {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "low_blow_red",
+    "name": "Low Blow",
+    "type_text": "Reviled Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've been booed this turn, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lyath_goldmane",
+    "name": "Lyath Goldmane",
+    "type_text": "Reviled Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 5,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "The base {p} and {d} of cards you control are halved, rounded up.\n\n**Instant** - {r}{r}, {t}: **The crowd boos** you. Defending action cards you control get +1{d} this turn.\n\nWhenever the crowd boos you, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "lyath_goldmane_vile_savant",
+    "name": "Lyath Goldmane, Vile Savant",
+    "type_text": "Reviled Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 5,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "The base {p} and {d} of cards you control are halved, rounded up.\n\n**Instant** - {r}{r}, {t}: **The crowd boos** you. Defending action cards you control get +1{d} this turn.\n\nWhenever the crowd boos you, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "mage_hunter_arrow_red",
+    "name": "Mage Hunter Arrow",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: The next time you would be dealt arcane damage this turn, prevent 3 of that damage. Activate this only while this is face-up in your arsenal.\n\nWhen this hits a Runeblade or Wizard hero, you may destroy an aura they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "mightybone_knuckles",
+    "name": "Mightybone Knuckles",
+    "type_text": "Reviled Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy this: Create 3 Might tokens. Activate this only if you have more {h} than each other hero. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "mocking_blow_blue",
+    "name": "Mocking Blow",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "mocking_blow_red",
+    "name": "Mocking Blow",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "mocking_blow_yellow",
+    "name": "Mocking Blow",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "never_give_up_yellow",
+    "name": "Never Give Up",
+    "type_text": "Revered Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}, put this on the bottom of your deck: Target defending action card gets +3{d} this chain link. Activate this only while it's in your graveyard, you have less {h} than each hero, and you've been cheered this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "no_hero_stands_alone_yellow",
+    "name": "No Hero Stands Alone",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Ambush",
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "While this is in any zone, if you've controlled a Toughness token this turn, this gets +3{d} and **ambush**.\n\nWhen this defends, **clash** with the attacking hero. The winner may choose an attacking or defending card to get -3{p} -3{d} this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "no_tall_tales_yellow",
+    "name": "No Tall Tales",
+    "type_text": "Guardian Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets +1{p}.\n\n**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, cards they own lose and can't get go again during their next action phase.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "not_so_mighty_blue",
+    "name": "Not So Mighty",
+    "type_text": "Revered Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends a Reviled hero's attack, destroy a Might token they control. If you do, create a Toughness token.",
+    "status": "pending"
+  },
+  {
+    "slug": "not_so_tuff_blue",
+    "name": "Not So Tuff",
+    "type_text": "Reviled Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends a Revered hero's attack, destroy a Toughness token they control. If you do, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "numbskull_charm_yellow",
+    "name": "Numbskull Charm",
+    "type_text": "Revered Brute Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "Choose any number;\n- Destroy a Confidence or Might token.\n- **The crowd cheers** you.\n- Pitch the top card of your deck. If it has 6 or more {p}, create a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "offensive_behavior_blue",
+    "name": "Offensive Behavior",
+    "type_text": "Reviled Brute Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control a Might or Vigor token, this gets +1{p}.\n\nWhen this hits a hero, create a Might and a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "old_favorite_yellow",
+    "name": "Old Favorite",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if you've been cheered this turn, create a Toughness token.\n\nWhen this defends, if it has 6 or more {d}, put it on the bottom of its owner's deck when the combat chain closes.",
+    "status": "pending"
+  },
+  {
+    "slug": "old_leather_and_vim_red",
+    "name": "Old Leather and Vim",
+    "type_text": "Revered Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control a Toughness or Vigor token, this gets +1{p}.\n\nWhen this hits a hero, create a Toughness and a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "outside_interference_blue",
+    "name": "Outside Interference",
+    "type_text": "Reviled Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: You may reveal a Reviled attack action card from your inventory and put it into your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "overbearing_presence",
+    "name": "Overbearing Presence",
+    "type_text": "Brute Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy this: Create 3 Vigor tokens. Activate this only if there is a card with 6 or more {p} in your pitch zone. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "overcrowded_blue",
+    "name": "Overcrowded",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Ambush"
+    ],
+    "specializations": [],
+    "functional_text": "**Ambush**\n\nWhen this attacks or defends, it gets +1{p} +1{d} for each different name among aura tokens in the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "overturn_the_results_blue",
+    "name": "Overturn the Results",
+    "type_text": "Reviled Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "If you would fail to win a clash revealing this, instead you win the clash and **the crowd boos** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "painful_passage_red",
+    "name": "Painful Passage",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may banish an attack action card from your hand. If you do, it gets +3{p} or **go again** until end of turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "parched_terrain_red",
+    "name": "Parched Terrain",
+    "type_text": "Draconic Instant - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Heroes can't gain {h}.\n\nAt the beginning of your end phase, put a sand counter on this, then destroy it unless you banish a red card from your graveyard for each sand counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "plate_of_tough_love",
+    "name": "Plate of Tough Love",
+    "type_text": "Revered Guardian Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Confidence and a Toughness token, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "pleiades",
+    "name": "Pleiades",
+    "type_text": "Revered Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}, remove a suspense counter from an aura you control: You may put a suspense counter on an aura of suspense you control.\n\nWhenever the crowd cheers you, create a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "pleiades_superstar",
+    "name": "Pleiades, Superstar",
+    "type_text": "Revered Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}, remove a suspense counter from an aura you control: You may put a suspense counter on an aura of suspense you control.\n\nWhenever the crowd cheers you, create a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "power_play_blue",
+    "name": "Power Play",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "power_play_red",
+    "name": "Power Play",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "power_play_yellow",
+    "name": "Power Play",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "prime_the_crowd_blue",
+    "name": "Prime the Crowd",
+    "type_text": "Generic Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdBoos",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gets +2{p}.\n\n**The crowd cheers** each Revered hero.\n\n**The crowd boos** each Reviled hero.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "prime_the_crowd_red",
+    "name": "Prime the Crowd",
+    "type_text": "Generic Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdBoos",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gets +4{p}.\n\n**The crowd cheers** each Revered hero.\n\n**The crowd boos** each Reviled hero.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "prime_the_crowd_yellow",
+    "name": "Prime the Crowd",
+    "type_text": "Generic Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdBoos",
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn gets +3{p}.\n\n**The crowd cheers** each Revered hero.\n\n**The crowd boos** each Reviled hero.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "punch_above_your_weight_blue",
+    "name": "Punch Above Your Weight",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may pay {r}{r}{r}. If you do, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "punch_above_your_weight_red",
+    "name": "Punch Above Your Weight",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may pay {r}{r}{r}. If you do, this gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "punch_above_your_weight_yellow",
+    "name": "Punch Above Your Weight",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, you may pay {r}{r}{r}. If you do, this gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "punching_gloves",
+    "name": "Punching Gloves",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy this: The next attack card you play this turn gets +2{p}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rapturous_applause_blue",
+    "name": "Rapturous Applause",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When you win a clash revealing this, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "rapturous_applause_red",
+    "name": "Rapturous Applause",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When you win a clash revealing this, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "rapturous_applause_yellow",
+    "name": "Rapturous Applause",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When you win a clash revealing this, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "reckless_stampede_red",
+    "name": "Reckless Stampede",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a card defends this, **clash** with the defending hero. The winner deals 1 damage to each other hero. Each hero may put their revealed card on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "renounce_violence_blue",
+    "name": "Renounce Violence",
+    "type_text": "Revered Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Destroy up to 3 Might tokens. Create a Toughness token for each token destroyed this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "revolting_gesture_red",
+    "name": "Revolting Gesture",
+    "type_text": "Reviled Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +3{p}.\n\nCreate a Might token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "right_behind_you_blue",
+    "name": "Right Behind You",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends together with another card from hand, this gets +1{d} and you may look at the top card of your deck. You may put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "right_behind_you_red",
+    "name": "Right Behind You",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends together with another card from hand, this gets +1{d} and you may look at the top card of your deck. You may put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "right_behind_you_yellow",
+    "name": "Right Behind You",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends together with another card from hand, this gets +1{d} and you may look at the top card of your deck. You may put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "rip_up_their_virtues_blue",
+    "name": "Rip Up Their Virtues",
+    "type_text": "Reviled Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Destroy up to 3 Toughness tokens. Create a Might token for each token destroyed this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "rough_up_blue",
+    "name": "Rough Up",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rough_up_red",
+    "name": "Rough Up",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rough_up_yellow",
+    "name": "Rough Up",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "sadistic_scowl_red",
+    "name": "Sadistic Scowl",
+    "type_text": "Reviled Action",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +5{p}.\n\n**Intimidate** target hero.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "shining_courage_red",
+    "name": "Shining Courage",
+    "type_text": "Revered Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "Up to one target defending action card gets +3{d} this turn.\n\n**The crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "shoot_your_mouth_off_blue",
+    "name": "Shoot Your Mouth Off",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "shoot_your_mouth_off_red",
+    "name": "Shoot Your Mouth Off",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 8,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "shoot_your_mouth_off_yellow",
+    "name": "Shoot Your Mouth Off",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "short_shrift_yellow",
+    "name": "Short Shrift",
+    "type_text": "Guardian Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "show_of_strength_red",
+    "name": "Show of Strength",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This gets -1{p} for each card with 6 or more {p} defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "sit_red",
+    "name": "Sit!",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends a Brute attack, this gets +3{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "small_problem_yellow",
+    "name": "Small Problem",
+    "type_text": "Guardian Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, destroy an aura they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "smash_with_big_rock_yellow",
+    "name": "Smash with Big Rock",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Cards defending this can't gain {d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "smashing_ground_blue",
+    "name": "Smashing Ground",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this has 6 or more {p}, it gets \"When this hits a hero, destroy a card in their arsenal.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "song_of_sinew_yellow",
+    "name": "Song of Sinew",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Reveal the top 4 cards of your deck. Your next attack this turn gets +X{p}, where X is the number of cards with 6 or more {p} revealed this way. Put them back in any order.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "spew_obscenities_yellow",
+    "name": "Spew Obscenities",
+    "type_text": "Reviled Guardian Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control a Confidence or Might token, this gets +1{p}.\n\nWhen this hits a hero, create a Confidence and a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "stand_strong",
+    "name": "Stand Strong",
+    "type_text": "Guardian Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy this: Create a Confidence token. Activate this only if you control an aura of suspense. **Go again**\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "steal_victory_blue",
+    "name": "Steal Victory",
+    "type_text": "Reviled Brute Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Steal"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **steal** an aura token the attacking hero controls.",
+    "status": "pending"
+  },
+  {
+    "slug": "story_beats_blue",
+    "name": "Story Beats",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, you may put a suspense counter on, or remove one from, an aura of suspense you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "story_beats_red",
+    "name": "Story Beats",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, you may put a suspense counter on, or remove one from, an aura of suspense you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "story_beats_yellow",
+    "name": "Story Beats",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, you may put a suspense counter on, or remove one from, an aura of suspense you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "strong_stomach_for_adversity",
+    "name": "Strong Stomach for Adversity",
+    "type_text": "Reviled Guardian Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Confidence and a Might token, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "strongest_survive_blue",
+    "name": "Strongest Survive",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they discard a card unless they reveal a card from their hand with {p} greater than the damage dealt this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "strongest_survive_red",
+    "name": "Strongest Survive",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they discard a card unless they reveal a card from their hand with {p} greater than the damage dealt this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "strongest_survive_yellow",
+    "name": "Strongest Survive",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they discard a card unless they reveal a card from their hand with {p} greater than the damage dealt this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_that_blue",
+    "name": "Take That!",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_that_red",
+    "name": "Take That!",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_that_yellow",
+    "name": "Take That!",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_bait_red",
+    "name": "Take the Bait",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Riptide"
+    ],
+    "functional_text": "**Riptide Specialization**\n\nSearch your deck for a card, then shuffle and put it on top.\n\nCreate a Bait token under an opponent's control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tame_the_beastly_behavior_red",
+    "name": "Tame the Beastly Behavior",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks a Reviled hero, this gets +1{p}.\n\nWhen this hits a Reviled hero, put a card from their arsenal on the bottom of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "tear_down_the_idols_red",
+    "name": "Tear Down the Idols",
+    "type_text": "Reviled Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a Revered hero, **intimidate** them.\n\nWhen this hits a Revered hero, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "tempest_palm_gustwave_yellow",
+    "name": "Tempest Palm Gustwave",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, this gets +2{p}.\n\nIf this is played at chain link 3 or higher, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "tension_in_the_air_blue",
+    "name": "Tension in the Air",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tension_in_the_air_red",
+    "name": "Tension in the Air",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tension_in_the_air_yellow",
+    "name": "Tension in the Air",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "the_old_switcheroo_blue",
+    "name": "The Old Switcheroo",
+    "type_text": "Reviled Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: the next time you would clash with target hero this turn, instead you reveal the top card of their deck and they reveal the top card of your deck. If you win the clash, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "the_suspense_is_killing_me_blue",
+    "name": "The Suspense is Killing Me",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nYour first attack each turn gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "thespian_charm_yellow",
+    "name": "Thespian Charm",
+    "type_text": "Revered Guardian Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "Choose any number;\n- Destroy a Might or Vigor token.\n- **The crowd cheers** you.\n- Return an aura permanent you control to its owner's hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "tiara_of_suspense",
+    "name": "Tiara of Suspense",
+    "type_text": "Revered Guardian Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Put a suspense counter on an aura of suspense you control. Activate this only if you've been cheered this turn.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "time_flies_when_youre_having_fun_red",
+    "name": "Time Flies When You're Having Fun",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack action card hits a hero this turn, you may destroy an aura they control.\n\nIf this was played from arsenal, the next attack action card you play this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "to_be_continued_blue",
+    "name": "To Be Continued...",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nThe first time you would be dealt damage each turn, prevent 1 of that damage.",
+    "status": "pending"
+  },
+  {
+    "slug": "toby_jugs",
+    "name": "Toby Jugs",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may pay {r}. If you do, it gets +2{d} this turn.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "tough_leather_boots",
+    "name": "Tough Leather Boots",
+    "type_text": "Revered Brute Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Toughness and a Vigor token, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "tough_smashup_blue",
+    "name": "Tough Smashup",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "tough_smashup_red",
+    "name": "Tough Smashup",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "tough_smashup_yellow",
+    "name": "Tough Smashup",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "truth_or_trickery_yellow",
+    "name": "Truth or Trickery",
+    "type_text": "Reviled Guardian Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may look at the top card of your deck and choose a color. If you do, the attacking hero guesses if that card is the chosen color, then they look at it. If they guessed wrong, they discard a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "tuffnut",
+    "name": "Tuffnut",
+    "type_text": "Revered Brute Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 3,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}: Pitch the top card of your deck. If it has 6 or more {p}, **the crowd cheers** you.\n\nWhenever the crowd cheers you, create a Toughness token.",
+    "status": "pending"
+  },
+  {
+    "slug": "tuffnut_bumbling_hulkster",
+    "name": "Tuffnut, Bumbling Hulkster",
+    "type_text": "Revered Brute Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 3,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}: Pitch the top card of your deck. If it has 6 or more {p}, **the crowd cheers** you.\n\nWhenever the crowd cheers you, create a Toughness token.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_heads_blue",
+    "name": "Turn Heads",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, {t} target Brute hero. They don't {u} during their next end phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_the_crowd_grateful_blue",
+    "name": "Turn the Crowd Grateful",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a Reviled hero, this gets +1{p}.\n\nWhen this hits a Reviled hero, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_the_crowd_grateful_red",
+    "name": "Turn the Crowd Grateful",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a Reviled hero, this gets +1{p}.\n\nWhen this hits a Reviled hero, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_the_crowd_grateful_yellow",
+    "name": "Turn the Crowd Grateful",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a Reviled hero, this gets +1{p}.\n\nWhen this hits a Reviled hero, **the crowd cheers** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_the_crowd_hateful_blue",
+    "name": "Turn the Crowd Hateful",
+    "type_text": "Reviled Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a Revered hero, this gets +3{p}.\n\nWhen this hits a Revered hero, **the crowd boos** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_the_crowd_hateful_red",
+    "name": "Turn the Crowd Hateful",
+    "type_text": "Reviled Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a Revered hero, this gets +3{p}.\n\nWhen this hits a Revered hero, **the crowd boos** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "turn_the_crowd_hateful_yellow",
+    "name": "Turn the Crowd Hateful",
+    "type_text": "Reviled Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a Revered hero, this gets +3{p}.\n\nWhen this hits a Revered hero, **the crowd boos** you.",
+    "status": "pending"
+  },
+  {
+    "slug": "turning_point_blue",
+    "name": "Turning Point",
+    "type_text": "Revered Guardian Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, if you have less {h} than the attacking hero, **the crowd cheers** you.\n\nWhile this is defending, if you've been cheered this turn, it gets +3{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "two_steps_ahead_blue",
+    "name": "Two Steps Ahead",
+    "type_text": "Reviled Guardian Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then create a Confidence and 3 Might tokens.",
+    "status": "pending"
+  },
+  {
+    "slug": "unexpected_backhand_blue",
+    "name": "Unexpected Backhand",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a clash revealing this, deal 1 damage to the other hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "unexpected_backhand_red",
+    "name": "Unexpected Backhand",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a clash revealing this, deal 1 damage to the other hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "unexpected_backhand_yellow",
+    "name": "Unexpected Backhand",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you win a clash revealing this, deal 1 damage to the other hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "unwavering_resolve_red",
+    "name": "Unwavering Resolve",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you have no cards in your deck, this gets +4{p}.\n\nIf this is defended by 3 or more cards, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "up_on_a_pedestal_blue",
+    "name": "Up on a Pedestal",
+    "type_text": "Revered Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this enters or leaves the arena, you may put a Revered or Guardian attack action card from your graveyard on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "uplifting_performance_blue",
+    "name": "Uplifting Performance",
+    "type_text": "Revered Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control a Confidence or Toughness token, this gets +1{p}.\n\nWhen this hits a hero, create a Confidence and a Toughness token.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_roar_red",
+    "name": "Vigorous Roar",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +3{p}.\n\nIf there is a card with 6 or more {p} in your pitch zone, create a Vigor token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_smashup_blue",
+    "name": "Vigorous Smashup",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token. You may put your revealed card on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_smashup_red",
+    "name": "Vigorous Smashup",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token. You may put your revealed card on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "vigorous_smashup_yellow",
+    "name": "Vigorous Smashup",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token. You may put your revealed card on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "villainous_pose_blue",
+    "name": "Villainous Pose",
+    "type_text": "Reviled Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +2{p}.\n\n**The crowd boos** you.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "villainous_pose_red",
+    "name": "Villainous Pose",
+    "type_text": "Reviled Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +4{p}.\n\n**The crowd boos** you.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "villainous_pose_yellow",
+    "name": "Villainous Pose",
+    "type_text": "Reviled Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain",
+      "TheCrowdBoos"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +3{p}.\n\n**The crowd boos** you.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "virtuoso_bodice",
+    "name": "Virtuoso Bodice",
+    "type_text": "Guardian Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may remove a suspense counter from an aura you control. If you do, gain {r}{r}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_the_boneyard_blue",
+    "name": "Visit the Boneyard",
+    "type_text": "Brute Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put a card with 6 or more {p} from your graveyard on top of your deck.\n\nCreate a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "wee_wrecking_ball_yellow",
+    "name": "Wee Wrecking Ball",
+    "type_text": "Guardian Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "If this has {p} greater than its base, it gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, destroy a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "what_happens_next_blue",
+    "name": "What Happens Next?",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nThe first card with cost 1 or more you play each turn costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "who_blinks_first_blue",
+    "name": "Who Blinks First?",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, you may destroy an aura permanent that a Guardian hero controls.",
+    "status": "pending"
+  },
+  {
+    "slug": "whos_the_tough_guy_blue",
+    "name": "Who's the Tough Guy?",
+    "type_text": "Revered Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Toughness token.",
+    "status": "pending"
+  },
+  {
+    "slug": "whos_the_tough_guy_red",
+    "name": "Who's the Tough Guy?",
+    "type_text": "Revered Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Toughness token.",
+    "status": "pending"
+  },
+  {
+    "slug": "whos_the_tough_guy_yellow",
+    "name": "Who's the Tough Guy?",
+    "type_text": "Revered Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Toughness token.",
+    "status": "pending"
+  },
+  {
+    "slug": "will_of_the_crowd_blue",
+    "name": "Will of the Crowd",
+    "type_text": "Revered Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, if you've been cheered this turn, defending action cards get +3{d} this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "wind_up_the_crowd_blue",
+    "name": "Wind Up the Crowd",
+    "type_text": "Revered Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create a Toughness and a Vigor token.",
+    "status": "pending"
+  },
+  {
+    "slug": "bait",
+    "name": "Bait",
+    "type_text": "Ranger Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You can't play or activate cards you own.\n\n**Action** - Destroy this when the chain link resolves: **Attack**\n\n**Once per Turn Attack Reaction** - 0: This gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "confidence",
+    "name": "Confidence",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then the next attack card you play this turn can't be defended by more than 2 non-block cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "toughness",
+    "name": "Toughness",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your opponent's turn, destroy this, then the next action card you defend with this turn gets +1{d} this chain link.",
+    "status": "pending"
+  }
+]

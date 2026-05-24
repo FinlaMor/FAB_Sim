@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "breakwater_undertow",
+    "name": "Breakwater Undertow",
+    "type_text": "Pirate Necromancer Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target Pirate ally attack gets **go again**. When the combat chain closes, destroy the ally.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "graven_justaucorpse",
+    "name": "Graven Justaucorpse",
+    "type_text": "Necromancer Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Necromancer"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Discard a card. Gain {r} equal to its pitch value.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "tricorn_of_saltwater_death",
+    "name": "Tricorn of Saltwater Death",
+    "type_text": "Pirate Necromancer Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may discard a card with watery grave. If you do, draw a card.\n\n**Blade Break**",
+    "status": "pending"
+  }
+]

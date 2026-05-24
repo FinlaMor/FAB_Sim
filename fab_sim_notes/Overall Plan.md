@@ -1,0 +1,10 @@
+- [ ] Finish game engine
+	- [ ] work through comprehensive rules
+		- [ ] finish effect keywords (8.5)
+- [ ] implement cards from three top decks.
+	- [ ] kayo
+	- [ ] victor
+	- [ ] mario
+- [ ] train model on the implemented decks while working on other card implementations
+	- [ ] focus on cards that can be run in the three decks so deckbot can get up and running as soon as possible.
+- [ ] once all cards are implemented, have deckbot create decks for every hero.

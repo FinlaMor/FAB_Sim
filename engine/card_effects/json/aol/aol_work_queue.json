@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "odds_on_favorite_blue",
+    "name": "Odds on Favorite",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets \"When this attacks, **wager** with the defending hero. The winner searches their deck for a card, shuffles, then puts that card on top.\"\n\n**Go again**",
+    "status": "pending"
+  }
+]

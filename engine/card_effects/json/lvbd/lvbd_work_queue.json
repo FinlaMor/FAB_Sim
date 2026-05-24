@@ -1,0 +1,23 @@
+[
+  {
+    "slug": "lady_barthimont",
+    "name": "Lady Barthimont",
+    "type_text": "Brute Mentor",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "While Barthimont is face down in arsenal, at the start of your turn, you may turn her face up.\n\nWhile Barthimont is face up in arsenal, whenever you play an attack action card, banish the top card of your deck. If the banished card has 6 or more {p}, the attack gains **dominate** and put a lesson counter on Barthimont. Then if there are 2 or more lesson counters on her, banish her, search your deck for a **specialization** card, put it face up into arsenal, and shuffle.",
+    "status": "pending"
+  }
+]

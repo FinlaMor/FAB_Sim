@@ -1,0 +1,143 @@
+[
+  {
+    "slug": "flight_path",
+    "name": "Flight Path",
+    "type_text": "Ranger Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target arrow attack with an aim counter gets **go again**.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "hidden_agenda",
+    "name": "Hidden Agenda",
+    "type_text": "Ranger Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Turn a face-down arrow in your arsenal face-up: Gain {r}. At the beginning of the end phase, destroy this.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "line_it_up_yellow",
+    "name": "Line It Up",
+    "type_text": "Ranger Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gets +3{p}.\n\nYou may turn a face-down arrow in your arsenal face-up. If you do, put an aim counter on it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sharp_shooters",
+    "name": "Sharp Shooters",
+    "type_text": "Ranger Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Put an arrow from your hand face-up into your arsenal with an aim counter. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "stone_rain_red",
+    "name": "Stone Rain",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "If this has an aim counter, it gets **dominate** and \"When this hits a hero, they banish face-down a card from their hand. At the beginning of their next end phase, they return it to their hand.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "target_totalizer",
+    "name": "Target Totalizer",
+    "type_text": "Ranger Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Whenever an arrow with an aim counter hits this turn, draw a card. **Go again**",
+    "status": "pending"
+  }
+]

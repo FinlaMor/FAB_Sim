@@ -133,7 +133,7 @@ class ReplacementEffect:
     prevention_amount: int = 0      # for prevention effects (6.4.10)
     is_shielding: bool = False      # shielding vs fixed prevention (6.4.10i/j)
 
-    def is_active(self, event: dict, state: GameState) -> bool:
+    def is_active(self, event, state: GameState) -> bool:
         """Check if this replacement effect should apply to the event."""
         if self.consumed:
             return False
@@ -159,6 +159,8 @@ class EffectManager:
     """
 
     def __init__(self):
+        from engine.continuous_effects import ContinuousEffectManager
+        self.staging: ContinuousEffectManager = ContinuousEffectManager()
         self.continuous_effects: list[ContinuousEffect] = []
         self.replacement_effects: list[ReplacementEffect] = []
         self._timestamp: int = 0
@@ -213,7 +215,7 @@ class EffectManager:
         """Add a replacement effect."""
         self.replacement_effects.append(effect)
 
-    def apply_replacements(self, event: dict, state: GameState) -> dict:
+    def apply_replacements(self, event, state: GameState):
         """Apply replacement effects to an event in rules order (CR 6.5).
 
         Order: self/identity → standard → prevention → outcome (CR 6.5.1)
@@ -294,7 +296,7 @@ class EffectManager:
         """Register prevention replacement effects from a card's keywords.
         Called when a card enters the arena or becomes public."""
         import re
-        keywords = card.keywords or []
+        keywords = card.base_ability_keywords or []
         for kw in keywords:
             # Normalize CamelCase keywords from card DB (e.g. "ArcaneBarrier" -> "arcane barrier")
             kw_spaced = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw.strip())
@@ -342,7 +344,7 @@ def _choose_prevention(effects: list, event: dict, state: "GameState") -> "Repla
         options = [
             Action(
                 type=ActionType.CHOOSE,
-                card_idx=i,
+                choose_index=i,
                 card=r.source_card,
                 slot=getattr(r.source_card, "slug", None),
             )
@@ -356,7 +358,7 @@ def _choose_prevention(effects: list, event: dict, state: "GameState") -> "Repla
                 f"Choose which prevention effect applies next (CR 6.5.2) — "
                 f"{event.get('amount', 0)} damage remaining",
             )
-            idx = getattr(choice, "card_idx", 0) or 0
+            idx = getattr(choice, "choose_index", 0)
             idx = max(0, min(idx, len(effects) - 1))
             return effects[idx]
     except Exception:
@@ -377,7 +379,7 @@ def _order_effects(effects: list, event: dict, state: "GameState") -> list:
             options = [
                 Action(
                     type=ActionType.CHOOSE,
-                    card_idx=i,
+                    choose_index=i,
                     card=r.source_card,
                     slot=getattr(r.source_card, "slug", None),
                 )
@@ -386,12 +388,15 @@ def _order_effects(effects: list, event: dict, state: "GameState") -> list:
             agents = getattr(state, "player_agents", {})
             agent = agents.get(affected_pid)
             if agent is None:
-                break
-            choice = agent(
+                from numpy.random import default_rng as _rng
+                rand = _rng()
+                choice = options[rand.choice(range(len(options)))]
+            else: 
+                choice = agent(
                 state, options,
                 "Choose which replacement effect applies first (CR 6.5.2)",
             )
-            idx = getattr(choice, "card_idx", 0) or 0
+            idx = getattr(choice, "choose_index", 0)
             idx = max(0, min(idx, len(remaining) - 1))
             ordered.append(remaining.pop(idx))
         ordered.extend(remaining)
@@ -420,8 +425,8 @@ def _make_ward(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import _move_to_graveyard
-        _move_to_graveyard(source_card, state)  # Cost always paid (destroy this)
+        from engine.effect_keywords import destroy as _ek_destroy
+        _ek_destroy(state, source_card, None)  # Cost always paid (destroy this)
         if not event.get("unpreventable", False):
             prevented = min(amount, event.get("amount", 0))
             event["amount"] = event.get("amount", 0) - prevented
@@ -454,7 +459,7 @@ def _make_arcane_barrier(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import arcane_barrier
+        from engine.card_effects.ability_keywords import arcane_barrier
         # arcane_barrier handles the player decision and pitching
 
         prevented = arcane_barrier(source_card, amount, state)
@@ -487,7 +492,7 @@ def _make_spellvoid(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import spellvoid
+        from engine.card_effects.ability_keywords import spellvoid
 
         prevented = spellvoid(source_card, amount, state)
         event["amount"] = event.get("amount", 0) - prevented
@@ -519,7 +524,7 @@ def _make_quell(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import quell
+        from engine.card_effects.ability_keywords import quell
 
         prevented = quell(source_card, amount, state)
         event["amount"] = event.get("amount", 0) - prevented
@@ -550,9 +555,9 @@ def _make_arcane_shelter(source_card: Card, amount: int) -> ReplacementEffect:
         )
 
     def _replace(event, state):
-        from engine.card_effects.keywords import _move_to_graveyard
+        from engine.effect_keywords import destroy as _ek_destroy
         prevented = min(amount, event.get("amount", 0))
-        _move_to_graveyard(source_card, state)
+        _ek_destroy(state, source_card, None)
         event["amount"] = event.get("amount", 0) - prevented
         return event
 

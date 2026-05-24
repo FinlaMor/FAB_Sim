@@ -1,0 +1,966 @@
+[
+  {
+    "slug": "batter_to_a_pulp_red",
+    "name": "Batter to a Pulp",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "If this would deal 4 or more damage, that damage can't be prevented.\n\n**Crush** - When this deals 4 or more damage to a hero, destroy an equipment they control with no defense value.",
+    "status": "pending"
+  },
+  {
+    "slug": "brush_of_heavenly_rites",
+    "name": "Brush of Heavenly Rites",
+    "type_text": "Adjudicator Weapon - Brush (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded"
+    ],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: Equip an off-hand with Proclamation in its name from your inventory. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "brutus_summa_rudis",
+    "name": "Brutus, Summa Rudis",
+    "type_text": "Adjudicator Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may have cards with **clash** of any class or talent in your deck.\n\nIf all heroes in a **clash** would fail to win, instead choose which hero wins the clash.",
+    "status": "pending"
+  },
+  {
+    "slug": "cracker_bauble_yellow",
+    "name": "Cracker Bauble",
+    "type_text": "Generic Resource",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is pitched, you and target opponent randomly choose opposite ends of this and pull them until this breaks in half. Then each hero creates the token on the back of their half, and this ceases to exist.",
+    "status": "pending"
+  },
+  {
+    "slug": "diamond_hands",
+    "name": "Diamond Hands",
+    "type_text": "Merchant Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Merchant"
+    ],
+    "keywords": [
+      "BladeBreak",
+      "Specialization"
+    ],
+    "specializations": [
+      "Ruudi"
+    ],
+    "functional_text": "**Ruu'di Specialization**\n\nAt the beginning of your end phase, if you have 4 or more cards in hand, create a Diamond token.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "fabric_of_blossoms_blue",
+    "name": "Fabric of Blossoms",
+    "type_text": "Generic Action - Construct",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Construct",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Negate"
+    ],
+    "specializations": [],
+    "functional_text": "Equip Blossom of Spring. If you don't, **negate this**.",
+    "status": "pending"
+  },
+  {
+    "slug": "fabric_of_hope_red",
+    "name": "Fabric of Hope",
+    "type_text": "Generic Action - Construct",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Construct",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Negate"
+    ],
+    "specializations": [],
+    "functional_text": "Equip Hope Merchant's Hood. If you don't, **negate** this.",
+    "status": "pending"
+  },
+  {
+    "slug": "fabric_of_providence_red",
+    "name": "Fabric of Providence",
+    "type_text": "Generic Action - Construct",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Construct",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Legendary",
+      "Negate"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nEquip Crown of Providence. If you don't, **negate** this.",
+    "status": "pending"
+  },
+  {
+    "slug": "fabric_of_scales_blue",
+    "name": "Fabric of Scales",
+    "type_text": "Generic Action - Construct",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Construct",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Negate"
+    ],
+    "specializations": [],
+    "functional_text": "Equip Snapdragon Scalers. If you don't, **negate** this.",
+    "status": "pending"
+  },
+  {
+    "slug": "fabric_of_spring_yellow",
+    "name": "Fabric of Spring",
+    "type_text": "Generic Action - Construct",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Construct",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Legendary",
+      "Negate"
+    ],
+    "specializations": [],
+    "functional_text": "Equip Fyendal's Spring Tunic. If you don't, **negate this**.",
+    "status": "pending"
+  },
+  {
+    "slug": "frankie_make_ends_meat",
+    "name": "Frankie, Make Ends Meat",
+    "type_text": "Necromancer Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Necromancer"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an equipment you control would be put into a graveyard, instead banish it.\n\n**Action** - {r}{r}{r}, {t}: Equip an equipment from a graveyard. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gavel_of_natural_order",
+    "name": "Gavel of Natural Order",
+    "type_text": "Adjudicator Weapon - Hammer (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [
+      "Pairs"
+    ],
+    "specializations": [],
+    "functional_text": "**Pairs** with an off-hand\n\n**Once per Turn Action** - {r}{r}: **Attack**\n\nWhenever an opponent plays or activates their first card or ability each turn, if it's not their turn, put a +1{p} counter on this. At the beginning of your end phase, remove all +1{p} counters from this.",
+    "status": "pending"
+  },
+  {
+    "slug": "gesture_of_goodwill_blue",
+    "name": "Gesture of Goodwill",
+    "type_text": "Generic Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Protect"
+    ],
+    "specializations": [],
+    "functional_text": "**Protect**\n\nWhen this **protects** another hero, they may give you a token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "go_bananas_yellow",
+    "name": "Go Bananas",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Name an action card. Open and reveal a booster pack of Flesh and Blood and put all cards with the chosen name into your hand. If the booster pack does not contain a card with the chosen name, you may repeat this process.",
+    "status": "pending"
+  },
+  {
+    "slug": "good_deeds_dont_go_unnoticed_yellow",
+    "name": "Good Deeds Don't Go Unnoticed",
+    "type_text": "Generic Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of each other hero's turn, choose 1; they draw a card, they gain {r}, they gain 1{h}, or their next attack this turn gains +1{p}.\n\nAt the start of your turn, destroy this. If another hero drew a card from this, you draw a card, then repeat for {r}, {h}, and {p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "groundbreaker_crix",
+    "name": "Groundbreaker Crix",
+    "type_text": "Guardian Hero - Pit-Fighter",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "PitFighter"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash",
+      "Protect"
+    ],
+    "specializations": [],
+    "functional_text": "Your attacks get +1{p} while attacking a hero who controls a Seismic Surge token.\n\nWhenever you attack a Guardian hero, **clash** with them. The winner creates a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "hummingbird_call_of_adventure",
+    "name": "Hummingbird, Call of Adventure",
+    "type_text": "Bard Weapon - Lute (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Lute"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, choose 1;\n- Each hero creates a Quicken token.\n- Each hero draws a card.\n- Each hero gains 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "jack_o_lantern_blue",
+    "name": "Jack-o'-lantern",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Banish the top card of your deck. If it's blue, create a Runechant token.",
+    "status": "pending"
+  },
+  {
+    "slug": "jack_o_lantern_red",
+    "name": "Jack-o'-lantern",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Banish the top card of your deck. If it's red, create a Runechant token.",
+    "status": "pending"
+  },
+  {
+    "slug": "jack_o_lantern_yellow",
+    "name": "Jack-o'-lantern",
+    "type_text": "Shadow Runeblade Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Banish the top card of your deck. If it's yellow, create a Runechant token.",
+    "status": "pending"
+  },
+  {
+    "slug": "magrar",
+    "name": "Magrar",
+    "type_text": "Merchant Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Merchant"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Genis"
+    ],
+    "functional_text": "**Genis Specialization**\n\n**Action** - Destroy this: Create a Zen State and an Inertia token.",
+    "status": "pending"
+  },
+  {
+    "slug": "off_cuts_blue",
+    "name": "Off Cuts",
+    "type_text": "Necromancer Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Frankie"
+    ],
+    "functional_text": "**Frankie Specialization**\n\nEach hero destroys an equipment they control.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pink_visor",
+    "name": "Pink Visor",
+    "type_text": "Merchant Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Merchant"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Ruudi"
+    ],
+    "functional_text": "**Ruu'di Specialization**\n\n**Once per Turn Action** - {r}: The next card you reveal this turn has its grade increased by 1. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "popped_collar_polo",
+    "name": "Popped Collar Polo",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain {r}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "proclamation_of_abundance",
+    "name": "Proclamation of Abundance",
+    "type_text": "Adjudicator Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy this: Each hero draws up to their {i}.",
+    "status": "pending"
+  },
+  {
+    "slug": "proclamation_of_combat",
+    "name": "Proclamation of Combat",
+    "type_text": "Adjudicator Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Until the start of your next turn, the only actions heroes may play or activate are weapon and attack actions.",
+    "status": "pending"
+  },
+  {
+    "slug": "proclamation_of_production",
+    "name": "Proclamation of Production",
+    "type_text": "Adjudicator Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Each hero may search their deck for an item with cost 0 or 1, put it into the arena, then shuffle. Each hero who doesn't put an item into the arena this way discards a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "proclamation_of_requisition",
+    "name": "Proclamation of Requisition",
+    "type_text": "Adjudicator Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - Discard a red card, destroy Proclamation of Requisition: Each opponent chooses an item or landmark they control. Gain control of the chosen permanents.",
+    "status": "pending"
+  },
+  {
+    "slug": "ruudi_gem_keeper",
+    "name": "Ruu'di, Gem Keeper",
+    "type_text": "Hero - Merchant",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Merchant"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may only have PSA graded cards in your deck.\n\n**Once per Turn Action** - {r}: Reveal the top card of your deck. If it's graded Gem Mint 10, put it into your hand, otherwise each opponent may draw a card. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "scarf_for_a_scarf_red",
+    "name": "Scarf for a Scarf",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, exchange a head equipment permanent with them. If you do, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "shitty_xmas_present_yellow",
+    "name": "Shitty Xmas Present",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put a Cracked Bauble from outside the game on top of target hero's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "silversheen_needle",
+    "name": "Silversheen Needle",
+    "type_text": "Generic Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your constructs with Fabric in their name gain **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "spirit_of_christmas_blue",
+    "name": "Spirit of Christmas",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero chooses another hero. The chosen hero creates an Agility, Might, Vigor, and Gold token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "squizzy_floof",
+    "name": "Squizzy & Floof",
+    "type_text": "Merchant Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Merchant"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of each opposing hero's turn, they may create a Cracked Bauble in their hand. If they do, you create a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "stormshard_red",
+    "name": "Stormshard",
+    "type_text": "Lightning Instant",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may destroy a Lightning Flow you control rather than pay this card's {r} cost. Target Lightning attack gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "taipanis_dracai_of_judgement",
+    "name": "Taipanis, Dracai of Judgement",
+    "type_text": "Draconic Adjudicator Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The first time each turn another hero becomes the target of a source that would deal lethal damage, you may discard a red card. If you do, choose new targets for that source.",
+    "status": "pending"
+  },
+  {
+    "slug": "tales_of_adventure_blue",
+    "name": "Tales of Adventure",
+    "type_text": "Bard Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Yorick"
+    ],
+    "functional_text": "**Yorick Specialization**\n\nEach other hero chooses and creates a token that hasn't been chosen; Aether Ashwing, Embodiment of Earth, Embodiment of Lightning, Ponder, Quicken, Runechant, Seismic Surge, Soul Shackle, Spectral Shield, Zen State.\n\nYou create a Copper, Silver, and Gold.",
+    "status": "pending"
+  },
+  {
+    "slug": "taylor",
+    "name": "Taylor",
+    "type_text": "Shapeshifter Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 18,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Shapeshifter"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may have equipment of any class or talent in your inventory. Each equipment in your starting inventory must have a different name.\n\nAt the start of your turn, you may banish an equipment you control. If you do, equip a card of the same subtype from your inventory.",
+    "status": "pending"
+  },
+  {
+    "slug": "the_librarian_magister_of_history",
+    "name": "The Librarian, Magister of History",
+    "type_text": "Light Adjudicator Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may have cards with Tome in their name of any class or talent in your deck.\n\n**Action** - {t}, reveal a card with Tome in its name from your inventory: Put it into your hand. Another target hero gets +1{i} until the end of their next turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "theryon_magister_of_justice",
+    "name": "Theryon, Magister of Justice",
+    "type_text": "Light Adjudicator Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Adjudicator"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The first time each turn another hero destroys a card they don't control, you may pay {r}{r}. If you do, they destroy a non-hero permanent they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "venomback_fabric_yellow",
+    "name": "Venomback Fabric",
+    "type_text": "Generic Action - Construct",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Construct",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Legendary",
+      "Negate"
+    ],
+    "specializations": [],
+    "functional_text": "**Legendary**\n\nEquip Scabskin Leathers. If you don't, **negate** this.",
+    "status": "pending"
+  },
+  {
+    "slug": "yorick_weaver_of_tales",
+    "name": "Yorick, Weaver of Tales",
+    "type_text": "Bard Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Bard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of the game, all heroes shuffle their starting decks together. All heroes share the same deck and graveyard this game.",
+    "status": "pending"
+  },
+  {
+    "slug": "diamond",
+    "name": "Diamond",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy Diamond: Draw a card. **Go again**",
+    "status": "pending"
+  }
+]

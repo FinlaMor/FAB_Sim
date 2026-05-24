@@ -1,0 +1,26 @@
+{
+  "slug": "looking_for_a_scrap_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "BANISH",
+          "from_zone": "GRAVEYARD",
+          "player": "SELF",
+          "amount": 1,
+          "conditions": [{"type": "CARD_IN_ZONE", "zone": "graveyard", "count_gte": 1}]
+        },
+        {
+          "type": "MODIFY_ATTACK_POWER",
+          "amount": 1,
+          "conditions": [{"type": "CARD_IN_ZONE", "zone": "graveyard", "count_gte": 1}]
+        },
+        {
+          "type": "GO_AGAIN",
+          "conditions": [{"type": "CARD_IN_ZONE", "zone": "graveyard", "count_gte": 1}]
+        }
+      ]
+    }
+  ]
+}

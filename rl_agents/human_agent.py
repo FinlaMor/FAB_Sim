@@ -12,22 +12,14 @@ from engine.state import GameState, Step
 # Human-readable labels for each ActionType
 _ACTION_LABELS = {
     ActionType.PASS: "Pass",
-    ActionType.ATTACK_WEAPON: "Attack with weapon",
     ActionType.PLAY_CARD: "Play card",
-    ActionType.PLAY_ARSENAL: "Play from arsenal",
     ActionType.DEFEND_CARDS: "Defend with cards",
-    ActionType.DEFEND_EQUIPMENT: "Defend with equipment",
     ActionType.STORE_ARSENAL: "Store in arsenal",
-    ActionType.PLAY_ATTACK_REACTION: "Play attack reaction",
-    ActionType.PLAY_DEFENSE_REACTION: "Play defense reaction",
     ActionType.REACTION_PASS: "Pass (no reaction)",
-    ActionType.ACTIVATE_ITEM: "Activate item",
-    ActionType.ATTACK_ALLY: "Attack with ally",
-    ActionType.ACTIVATE_EQUIPMENT: "Activate equipment",
-    ActionType.ACTIVATE_WEAPON: "Activate weapon",
-    ActionType.ACTIVATE_HERO: "Activate hero ability",
-    ActionType.DISCARD_ACTIVATE: "Discard to activate",
-    ActionType.PLAY_BANISH: "Play from banish",
+    ActionType.ACTIVATE_CARD: "Activate card",
+    ActionType.CHOOSE: "Choose",
+    ActionType.PITCH_CARD: "Pitch card",
+    ActionType.PITCH_TO_DECK: "Pitch to deck",
 }
 
 

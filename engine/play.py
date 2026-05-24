@@ -1,15 +1,13 @@
-"""
-Program for 
-1. Finding card playability and available actions
-2. Applying actions to a Gamestate object
-"""
+"""Card playability checks and action application for the FAB game engine."""
 
+import re
 from typing import Optional
 
 from engine.actions import Action, ActionType
-from card_effects.additional_conditions import ADDITIONAL_CONDITIONS
-from card_effects.additional_costs import ADDITIONAL_COSTS
-from card_effects.effect_cost import ALTERNATE_COSTS, KEYWORD_COSTS
+from engine.card_effects.costs.activation_conditions import ADDITIONAL_CONDITIONS
+from engine.card_effects.costs.mandatory_play_costs import ADDITIONAL_COSTS
+from engine.card_effects.costs.effect_costs import KEYWORD_COSTS
+from engine.card_effects.costs.alt_costs import ALTERNATE_COSTS
 from engine.card import Card
 from engine.state import GameState, Player, Event, StackEntry
 
@@ -46,7 +44,9 @@ def available_actions(state, player_id) -> list[Action]:
         if can_play:
             affordable_actions.append(action)
     for card in activatable_cards:
-        can_activate, action = _cost_check(state, card, player_id, action, playable=False):
+        if not _legality_check(state, card, player_id):
+            continue
+        can_activate, action = _cost_check(state, card, player_id, action, playable=False)
         if can_activate:
             affordable_actions.append(action)
     
@@ -55,16 +55,38 @@ def available_actions(state, player_id) -> list[Action]:
     return affordable_actions
 
 def _legality_check(state, card, player_id) -> bool:
-        
-    legal_flag = True
+    if card is None:
+        return True
+    types = card.types or []
 
-    if 'action' in card.base_text_box or 'action' in card.base_functional_text:
+    # Use card.types as authoritative source; fall back to text scanning for
+    # cards where the type string lives inside functional text only.
+    _types_lower = {t.lower().replace(" ", "_") for t in types}
+    is_ar  = "attackreaction" in _types_lower or "attack_reaction" in _types_lower
+    is_dr  = "defensereaction" in _types_lower or "defense_reaction" in _types_lower
+    is_act = "action" in _types_lower
+    is_ins = "instant" in _types_lower
+
+    # Supplement with text scan for hybrid/multi-type cards
+    tb  = card.base_text_box or ""
+    ft  = card.base_functional_text or ""
+    if not is_act and ('action' in tb or 'action' in ft):
+        is_act = True
+    if not is_ar and ('attack_reaction' in tb or 'attack_reaction' in ft):
+        is_ar = True
+    if not is_dr and ('defense_reaction' in tb or 'defense_reaction' in ft):
+        is_dr = True
+    if not is_ins and ('instant' in tb or 'instant' in ft):
+        is_ins = True
+
+    legal_flag = True
+    if is_act:
         legal_flag &= _action_legal_check(state, card, player_id)
-    if 'attack_reaction' in card.base_text_box or 'attack_reaction' in card.base_functional_text:
+    if is_ar:
         legal_flag &= _attack_reaction_legal_check(state, card, player_id)
-    if 'defense_reaction' in card.base_text_box or 'defense_reaction' in card.base_functional_text:
+    if is_dr:
         legal_flag &= _defense_reaction_legal_check(state, card, player_id)
-    if 'instant' in card.base_text_box or 'instant' in card.base_functional_text:
+    if is_ins:
         legal_flag &= _instant_legal_check(state, card, player_id)
 
     return legal_flag
@@ -104,19 +126,21 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
         """    # Turn card into action
     player = state.players[player_id]
     can_afford = True
-
-    resource_cost = _calculate_resource_cost(state, action)
-
     exclude = card if card is not None else None
+
+    if playable: # play cards are evaluated with the properties cost and special_cost
+        if card.raw_cost is not None:
+            resource_cost = _calculate_resource_cost(state, action)
+        elif card.special_cost is not None:
+                cost_with_x = card.special_cost
+                min_cost = int(str(cost_with_x).strip(r'Xx\s')) #ie '3X' cost on imposing visage means 'pay at least 3
+                if min_cost >= 0:
+                    resource_cost = min_cost
+        else:
+            return False, action # cards without costs are not playable
+
     
     effective_resources = player.resources
-
-    x_in_cost = 'X' in str(resource_cost) or 'x' in str(resource_cost)
-    if x_in_cost:
-        cost_with_x = resource_cost
-        base_cost = int(str(resource_cost).strip(r'Xx\s')) #ie '3X' cost on imposing visage means 'pay at least 3
-        if base_cost > 0:
-            resource_cost = base_cost
 
     # --- 1. Resource cost ---
     if not can_pay_resource_cost(player.hand.cards, resource_cost, effective_resources, exclude_card=exclude):
@@ -133,11 +157,27 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
                     else:
                         can_afford &= False
             else:
-                can_afford &= False
+                # Check DSL-defined alternative costs
+                _dsl_alt_ok = False
+                if card is not None:
+                    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+                    _dsl_cd = _dsl_get_card(card.slug)
+                    if _dsl_cd:
+                        for _ab in _dsl_cd.abilities:
+                            for _ac in getattr(_ab, 'alternative_costs', []):
+                                if _ac.check_fn is None or _ac.check_fn(card, None, state):
+                                    setattr(action, 'use_dsl_alt_cost', True)
+                                    setattr(action, 'resource_cost', 0)
+                                    _dsl_alt_ok = True
+                                    break
+                            if _dsl_alt_ok:
+                                break
+                if not _dsl_alt_ok:
+                    can_afford &= False
     else:
         can_afford &= True
         setattr(action, 'resource_cost', cost_with_x if x_in_cost else resource_cost)
-    
+
 
     # --- 2. Life cost ---
     if hasattr(card, 'life_cost')and (card.life_cost or 0) > 0 and player.hero is not None:
@@ -151,11 +191,24 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
     # --- 3. effect-costs ---
     if getattr(card, 'mandatory_additional_costs', None) is not None:
         if card is not None:
-            from engine.card_effects.additional_costs import ADDITIONAL_COSTS
+            from engine.card_effects.costs.mandatory_play_costs import ADDITIONAL_COSTS
             if card in ADDITIONAL_COSTS.keys():
                 cost_func = ADDITIONAL_COSTS[card.slug]
                 can_afford &= cost_func(state, player_id, check=True)
                 setattr(action, 'additional_costs', True)
+
+    # Check DSL-defined play cost and ability additional costs (mandatory; block play if unpayable)
+    if card is not None:
+        from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+        _dsl_cd = _dsl_get_card(card.slug)
+        if _dsl_cd:
+            if _dsl_cd.play_cost and _dsl_cd.play_cost.check_fn is not None:
+                if not _dsl_cd.play_cost.check_fn(card, None, state):
+                    can_afford &= False
+            for _ab in _dsl_cd.abilities:
+                for _ac in getattr(_ab, 'additional_costs', []):
+                    if _ac.check_fn is not None and not _ac.check_fn(card, None, state):
+                        can_afford &= False
 
     # --- 4. additional conditions ---
     if playable:
@@ -194,7 +247,8 @@ def recalculate_playable(state, player_id):
     mgr = state.continuous_effect_manager
 
     for card in player.hand.cards + player.arsenal.cards:
-        if card.base_playable:
+        # Block cards have no play cost (raw_cost is None) — they can only be used for blocking.
+        if card.raw_cost is not None:
             card.playable = True
 
     for card in player.all_cards:
@@ -207,47 +261,47 @@ def recalculate_activatable(state, player_id):
     player = state.players[player_id]
     mgr = state.continuous_effect_manager
 
-    for card in player.arena.cards:
+    arena_cards = player.arena_cards
+    for card in arena_cards:
         card.activatable = card.base_activatable
 
     for card in player.all_cards:
-        if card not in player.arena.cards:
+        if card not in arena_cards:
             card.activatable = False
         mgr.recalculate(state, card, 'activatable', card.activatable)
     state.event_manager.emit('recalculate_activatable', state)
 
 def _action_legal_check(state, card, player_id) -> bool:
     # CR 8.1.1: Requirements for playing/activating a card with the "action" keyword
-    # 8.1.1a: Stack must be empty
-    can_play_or_activate = True
-    if len(state.stack.slugs) > 0:
-        can_play_or_activate = False
-    
-    # 8.1.1b: Actions can't be played/activated during combat except during resolution phase
-    if 'combat' in state.step:
-        if not state.step.endswith('resolution'):
-            can_play_or_activate = False
-        # 7.6.3a: During resolution, the attacking hero may play/activate an attack action
-        if 'attack' in card.base_text_box or 'attack' in card.base_functional_text:
-            if player_id != state.combat.attacker_id:
-                can_play_or_activate = False
-    
-    # 8.1.1c: Actions have an additional asset cost of one action-point
-    if state.players[player_id].action_points < 1:
-        can_play_or_activate = False
-    
-    # 8.1.1d: Actions that can be 'played as an instant' only require priority.
-    if 'play_as_instant' not in state.effect_manager.continuous_effects:
-        can_play_or_activate = False
+    step_val = state.step.value if hasattr(state.step, 'value') else str(state.step)
 
-    return can_play_or_activate
+    # 8.1.1a: Stack must be empty
+    if len(state.stack.slugs) > 0:
+        return False
+
+    # 8.1.1b: Actions can't be played/activated during combat (except resolution with play_as_instant)
+    if 'combat' in step_val:
+        if 'play_as_instant' not in state.effect_manager.continuous_effects:
+            return False
+        if not step_val.endswith('resolution'):
+            return False
+        # 7.6.3a: During resolution, only attacker may play attack actions
+        if 'attack' in card.base_text_box or 'attack' in card.base_functional_text:
+            if state.combat and player_id != state.combat.attacker_id:
+                return False
+
+    # 8.1.1c: Actions require one action-point
+    if state.players[player_id].action_points < 1:
+        return False
+
+    return True
 
 def _attack_reaction_legal_check(state, card, player_id) -> bool:
     # CR 8.1.2: Requirements for playing/activating a card with the "attack reaction" keyword
     can_play_or_activate = True
     # 8.1.2a An attack reaction card/activated ability can only be played/activated by a player who controls the attack during the Reaction Step of combat
     if not hasattr(state, 'combat') or state.combat is None:
-        can_play_or_activate = False
+        return False
     if state.step != 'combat_reaction':
         can_play_or_activate = False
     if player_id != state.combat.attacker_id:
@@ -265,10 +319,11 @@ def _defense_reaction_legal_check(state, card, player_id) -> bool:
 
     # 8.1.3a A defense reaction card/activated ability can only be played/activated by a player who controls a hero as an attack-target during the Reaction Step of combat.
     if not hasattr(state, 'combat') or state.combat is None:
-        can_play_or_activate = False
+        return False
     if state.step != 'combat_reaction':
         can_play_or_activate = False
-    if state.players[player_id].hero.slug != state.combat.attack_target.slug:
+    attack_target = getattr(state.combat, 'attack_target', None)
+    if attack_target is None or state.players[player_id].hero.slug != attack_target.slug:
         can_play_or_activate = False
     
     # 8.1.3b When a defense reaction card resolves as a layer on the stack, it becomes a defending card on the active chain link.
@@ -281,7 +336,7 @@ def _instant_legal_check(state, card, player_id) -> bool:
     can_play_or_activate = True
 
     # 8.1.6a A card/activated ability with the type instant can be played/activated any time the player has priority.
-    if state.priority_player_id != player_id:
+    if state.priority_player != player_id:
         can_play_or_activate = False
 
     return can_play_or_activate
@@ -292,8 +347,7 @@ def apply_action(state: GameState, action: Action) -> None:
     """Apply a player action to the game state."""
     # Sequential pitch: ask model which cards to pitch before dispatching
     _no_pitch_types = (ActionType.PASS, ActionType.DEFEND_CARDS,
-                       ActionType.STORE_ARSENAL, ActionType.ATTACK_ALLY,
-                       ActionType.CHOOSE)
+                       ActionType.STORE_ARSENAL, ActionType.CHOOSE)
     if action.type not in _no_pitch_types:
         # CR 5.1.5: Verify legality BEFORE any cost payment (declare → check → pay).
         if not _legality_check(state, action.card, action.player_id):
@@ -324,18 +378,19 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # Resource cost already deducted by evaluate_play_cost in apply_action.
     player.hand.remove(card)
 
-    # Meld-side-aware action point deduction.
-    # 'top' / 'both' are explicit action-speed plays → spend 1 AP.
-    # 'bottom' is instant-speed → no AP.
-    # None = regular card or meld card played at instant-speed → use Instant-type check.
-    if _meld_side in ('top', 'both'):
-        player.action_points -= 1
-    elif "Instant" not in (card.types or []):
-        player.action_points -= 1
-    elif not action.played_as_instant:
-        player.action_points -= 1
+    # Pay DSL-defined play cost and any ability-level additional costs.
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    _dsl_cd = _dsl_get_card(card.slug)
+    if _dsl_cd:
+        if _dsl_cd.play_cost and _dsl_cd.play_cost.pay_fn:
+            _dsl_cd.play_cost.pay_fn(card, None, state)
+        for _ab in _dsl_cd.abilities:
+            for _ac in getattr(_ab, 'additional_costs', []):
+                if _ac.pay_fn:
+                    _ac.pay_fn(card, None, state)
 
     # Tag the card so on_play triggers know which side is resolving
+    # (AP deduction is handled in _pay_costs — not here)
     card.meld_side = _meld_side
 
     # CR 3.0.1 / CR 5.3.4c: card enters stack zone (Zone.add keeps card.zone in sync)
@@ -363,30 +418,43 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'meld_side': _meld_side, 'target': action.target}), state)
 
 def _apply_activate(state: GameState, action: Action) -> None:
-    """Activate an equipment/item/weapon/ally/hero/card ability: pay cost, exhaust, apply effect."""
-    from engine.card_effects.registry import EQUIPMENT_ACTIVATION_EFFECTS
+    """Activate an equipment/item/weapon/ally/hero/card ability: pay cost, exhaust, apply effect.
+
+    All costs (AP, resources, exhaustion) are paid by _pay_costs() before this function is called.
+    This function handles only effects: once-per-turn tracking, additional cost side-effects, and
+    dispatching to the effect registry.
+
+    Attack activations (is_attack_proxy=True) create an activated-layer StackEntry so the engine's
+    stack resolution loop (_combat_phase_iter → _attack_step) can handle combat.
+    """
+    from engine.card_effects.registry import EQUIPMENT_ACTIVATION_EFFECTS, EQUIPMENT_PAY_COSTS
+    if action.player_id is None or action.card is None:
+        return
     player = state.players[action.player_id]
     card = action.card
 
-    # Use EQUIPMENT_ACTIVATION_COST override when available (handles tokens/items with resource
-    # cost embedded in functional text and a cost field that doesn't reflect activation cost).
-    activation_cost = card.activation_cost or 0
-    player.resources -= activation_cost
+    # CR 1.6.2b / CR 11.0: weapon and ally attacks go onto the chain as activated-layer entries.
+    # All costs already paid by _pay_costs(). Just create the StackEntry.
+    if getattr(action, 'is_attack_proxy', False):
+        declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
+        entry = StackEntry(
+            player_id=action.player_id,
+            card=card,
+            layer_type='activated',
+            layer_position=len(state.stack_entries) + 1,
+            declared_modes=declared_modes,
+            declared_targets=declared_targets,
+            declared_x=declared_x,
+        )
+        state.stack_entries.append(entry)
+        return
 
-    # CR 4.4.3d / 8.x: Mark exhausted for "once per turn" abilities.
-    # {t} (tap symbol as activation cost) → tapped=True, not exhausted.
-    # Tapped permanents untap at end of turn (4.4.3d), so effects can re-enable
-    # them mid-turn. exhausted=True is a harder "once per turn" gate.
-    if card.has_once_per_turn_limit:
+    # CR 4.4.3d: Mark exhausted for "X per turn" abilities.
+    if card.has_per_turn_limit:
         card.activations -= 1
         assert card.activations >= 0
 
-    # Use action point if it's an Action-speed ability (not Instant)
-    if re.search(r'\*\*(?:\w+ per turn )?Action\*\*', text) and not (action.played_as_instant or 0):
-        player.action_points -= 1
-
-    # Pay additional costs (destroy, tap, etc. — everything before the colon)
-    from engine.card_effects.registry import EQUIPMENT_PAY_COSTS
+    # Pay additional costs (destroy, tap, etc. — everything before the colon in card text)
     pay_cost_fn = EQUIPMENT_PAY_COSTS.get(card.slug)
     if callable(pay_cost_fn):
         pay_cost_fn(action, player, state, check=False)
@@ -394,7 +462,7 @@ def _apply_activate(state: GameState, action: Action) -> None:
     # Dispatch to registry callback (effect after the colon)
     effect_fn = EQUIPMENT_ACTIVATION_EFFECTS.get(card.slug)
     if callable(effect_fn):
-        effect_fn(action, player, state,)
+        effect_fn(action, player, state)
 
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""
@@ -463,6 +531,23 @@ def _calculate_resource_cost(state: GameState, action: Action) -> int:
 
     mgr = state.continuous_effect_manager
     cost = mgr.recalculate(state, card, 'cost', base_cost, action=action)
+
+    # DSL cost-reduction flags from current_turn_effects (seismic_surge, heartened_cross_strap, etc.)
+    player = state.players[action.player_id] if action.player_id is not None else None
+    if player is not None:
+        card_types = [t.lower() for t in (getattr(card, 'types', None) or [])]
+        card_classes = [c.lower() for c in (getattr(card, 'classes', None) or [])]
+        is_attack_action = 'attack' in card_types
+        for key in player.current_turn_effects:
+            m = re.match(r'^next_attack_action_cost_-(\d+)$', key)
+            if m and is_attack_action:
+                cost -= int(m.group(1))
+                break
+            m2 = re.match(r'^next_guardian_attack_action_cost_-(\d+)$', key)
+            if m2 and is_attack_action and 'guardian' in card_classes:
+                cost -= int(m2.group(1))
+                break
+
     return max(0, cost)  # CR 5.1.6a: floor at 0
 
 def _get_base_resource_cost(state: GameState, action: Action) -> int:
@@ -480,8 +565,14 @@ def _get_base_resource_cost(state: GameState, action: Action) -> int:
             return card.meld_cost or 0
         else:
             return card.cost or 0
-    elif action.type == ActionType.ACTIVATE_CARD or action.type == ActionType.ATTACK_ALLY:
-        return card.activation_cost or 0
+    elif action.type == ActionType.ACTIVATE_CARD:
+        if getattr(action, 'is_attack_proxy', False) and card is not None:
+            if card.is_weapon:
+                from engine.actions import _weapon_cost
+                return _weapon_cost(card)
+            else:  # ally attack
+                return _ally_attack_resource_cost(card)
+        return (card.activation_cost or 0) if card else 0
 
     return 0
 
@@ -533,7 +624,7 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
             player.chi += pitch_val
         elif getattr(card, 'pitch_gives_chi', False) and action.player_id is not None:
             # Cards like inner_chi can fill either pool — ask the player
-            from engine.card_effects.keywords import _ask_player as _apk
+            from engine.card_effects.ability_keywords import _ask_player as _apk
             chi_choice = _apk(state, action.player_id, ['chi', 'resources'],
                               context=f"Pitch {card.slug} for {pitch_val} chi or {pitch_val} resources?")
             if str(chi_choice) == 'chi':
@@ -553,8 +644,46 @@ def get_pitchable_cards(hand_cards: list[Card], exclude_card: Card | None = None
         c for c in hand_cards
         if c is not exclude_card and c.pitch is not None and c.pitch > 0
     ]
-def _pay_costs(state, player_id, action):
 
+
+def evaluate_play_cost(state: GameState, action: Action, check: bool) -> bool:
+    """Check or pay the resource cost for an action (CR 5.1.6 / 1.14.2).
+
+    check=True  — return True if the player can afford the action (no state change).
+    check=False — pitch cards and deduct resources to pay the cost; return True.
+    """
+    from engine.actions import can_pay_cost
+    if action.player_id is None:
+        return True
+    player = state.players[action.player_id]
+    resource_cost = _calculate_resource_cost(state, action)
+    if check:
+        exclude = action.card if isinstance(getattr(action, 'card', None), Card) else None
+        effective = player.resources + getattr(player, 'chi', 0)
+        if effective >= resource_cost:
+            return True
+        return can_pay_cost(player.hand.cards, resource_cost, effective, exclude_card=exclude)
+    else:
+        _pitch_for_cost(state, action, resource_cost)
+        action.resource_cost = resource_cost
+        player.resources = max(0, player.resources - resource_cost)
+        return True
+def _ally_attack_resource_cost(ally_card) -> int:
+    """Parse the resource cost of an ally's attack ability from functional text.
+    Falls back to card.cost if set. Returns 0 if no cost found."""
+    if ally_card.cost is not None:
+        return int(ally_card.cost)
+    text = ally_card.functional_text or ""
+    # Match "Action - {r}{r}:" or "Once per Turn Action - {r}:" patterns
+    match = re.search(r'\*\*(?:[\w\s]+ )?[Aa]ction\*\*\s*[-\u2014]\s*((?:\{[rR]\})*)', text)
+    if match and match.group(1):
+        return match.group(1).lower().count('{r}')
+    return 0
+
+
+def _pay_costs(state, player_id, action):
+    if player_id is None:
+        return
     player = state.players[player_id]
     resource_cost = _calculate_resource_cost(state, action)
 
@@ -562,13 +691,58 @@ def _pay_costs(state, player_id, action):
     # Deduct final resource cost using the pre-calculated modified value
     action.resource_cost = resource_cost
     player.resources -= resource_cost
-    
+
+    # Consume one-shot DSL cost-reduction flags now that cost has been paid
+    card = action.card
+    card_types = [t.lower() for t in (getattr(card, 'types', None) or [])]
+    card_classes = [c.lower() for c in (getattr(card, 'classes', None) or [])]
+    is_attack_action = 'attack' in card_types
+    for key in [k for k in player.current_turn_effects
+                if re.match(r'^next_attack_action_cost_-\d+$', k)]:
+        if is_attack_action:
+            player.current_turn_effects.remove(key)
+            break
+    for key in [k for k in player.current_turn_effects
+                if re.match(r'^next_guardian_attack_action_cost_-\d+$', k)]:
+        if is_attack_action and 'guardian' in card_classes:
+            player.current_turn_effects.remove(key)
+            break
+
     life_cost: int = 0
     if hasattr(action, "life_cost") and (action.life_cost or 0) > 0 and player.hero is not None:
         life_cost = action.life_cost
         player.health -= life_cost
-    
+
+    # CR 4.4.3: action-speed plays/activations consume 1 AP
+    _meld_side = getattr(action, 'meld_side', None)
+    if action.type == ActionType.PLAY_CARD:
+        if _meld_side in ('top', 'both'):
+            player.action_points -= 1
+        elif "Instant" not in (action.card.types or []):
+            player.action_points -= 1
+        elif not getattr(action, 'played_as_instant', False):
+            player.action_points -= 1
+    elif action.type == ActionType.ACTIVATE_CARD:
+        if getattr(action, 'is_attack_proxy', False):
+            # Weapon and ally attacks always cost 1 AP (CR 1.6.2b, CR 11.0)
+            player.action_points -= 1
+        else:
+            _text = (action.card.functional_text or '') if action.card else ''
+            if re.search(r'\*\*(?:[\w ]+ per \w+ )?[Aa]ction\*\*', _text) and not getattr(action, 'played_as_instant', False):
+                player.action_points -= 1
+
+    # CR 1.6.2b / CR 11.0: exhaust weapon or ally as part of the attack activation cost
+    if action.type == ActionType.ACTIVATE_CARD and getattr(action, 'is_attack_proxy', False):
+        card = action.card
+        if card is not None and card.is_weapon:
+            player.weapon_exhausted = True
+        else:
+            idx = getattr(action, 'choose_index', None)
+            if idx is not None and idx < len(player.allies_exhausted):
+                player.allies_exhausted[idx] = True
+
     _pay_effect_costs(state, action)
+    return True
 
 def _pay_effect_costs(state: GameState, action: Action) -> bool:
     """CR 5.1.8-5.1.9: Calculate and pay effect-costs before the card enters the stack.

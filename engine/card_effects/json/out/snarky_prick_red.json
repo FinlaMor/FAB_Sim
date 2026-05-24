@@ -1,0 +1,11 @@
+{
+  "slug": "snarky_prick_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "BANISH", "from_zone": "TOP_DECK", "player": "OPPONENT", "amount": 1}
+      ]
+    }
+  ]
+}

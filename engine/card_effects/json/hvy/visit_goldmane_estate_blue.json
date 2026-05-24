@@ -1,0 +1,12 @@
+{
+  "slug": "visit_goldmane_estate_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "gold", "count": 1},
+        {"type": "GAIN_ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ]
+}

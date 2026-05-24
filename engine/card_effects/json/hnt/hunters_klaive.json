@@ -1,0 +1,10 @@
+{
+  "slug": "hunters_klaive",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [{"type": "MARK"}]
+    }
+  ]
+}

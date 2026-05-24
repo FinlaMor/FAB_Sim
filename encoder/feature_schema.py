@@ -117,7 +117,7 @@ def build_schema_metadata(embedder: str, d_model: int, extra: dict[str, Any] | N
         "d_model": int(d_model),
         "keyword_vocab_size": len(CARD_KEYWORDS),
         "counter_vocab_size": len(COUNTER_TYPES),
-        "card_keywords": list(CARD_KEYWORDS),
+        "ability_keywords": list(CARD_KEYWORDS),
         "counter_types": list(COUNTER_TYPES),
     }
     if extra:
