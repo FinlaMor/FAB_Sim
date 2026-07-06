@@ -1,4 +1,18 @@
 {
   "slug": "test_of_iron_grip_red",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CLASH",
+          "opponent": "ATTACKING_HERO",
+          "on_winner": [
+            {"action": "discard", "who": "LOSER", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ]
 }

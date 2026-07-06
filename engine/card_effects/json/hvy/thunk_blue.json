@@ -1,4 +1,12 @@
 {
   "slug": "thunk_blue",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "might"}
+      ]
+    }
+  ]
 }

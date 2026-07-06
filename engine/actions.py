@@ -200,6 +200,25 @@ def _get_pitch_value(card: Card) -> int:
     return card.pitch or 0
 
 
+def _dsl_activation_costs_payable(card, state: GameState) -> bool:
+    """True if the DSL ACTIVATE/INSTANT ability costs for *card* are all payable.
+
+    Used to gate legality of activating DSL-authoritative equipment/weapons
+    (e.g. Fyendal's Spring Tunic's "Remove 3 energy counters" cost).
+    """
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    cd = _dsl_get_card(card.slug)
+    if cd is None:
+        return True
+    for ability in cd.abilities:
+        if ability.ability_type.upper() not in ("ACTIVATE", "INSTANT"):
+            continue
+        for cost in getattr(ability, 'costs', []):
+            if cost.check_fn is not None and not cost.check_fn(card, None, state):
+                return False
+    return True
+
+
 def _can_afford_action(state: GameState, action: Action) -> tuple[bool, dict[str, int]]:
     """Check whether a player can afford all costs of an action.
 
@@ -680,17 +699,13 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
             if equip_card.tapped and r"{t}" in text:
                 continue
 
-            # Check additonal activation conditions from registry
-            cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(equip_slug)
-            if cond_fn is not None:
-                import inspect as _inspect
-                _sig = _inspect.signature(cond_fn)
-                _cond_result = cond_fn(player, slot_name, equip_card, state) if len(_sig.parameters) >= 4 else cond_fn(player, slot_name, equip_card)
-                if not _cond_result:
-                    continue
-            
+            # Activation gate: the card's DSL ability costs must be payable
+            # (e.g. Fyendal's Spring Tunic needs 3 energy counters).
+            if not _dsl_activation_costs_payable(equip_card, state):
+                continue
+
             for _t in _legal_targets_for_card(state, pp, equip_card):
-                _equip_action = Action(type=ActionType.ACTIVATE_EQUIPMENT, card=equip_card, slot=slot_name, target=_t)
+                _equip_action = Action(type=ActionType.ACTIVATE_CARD, card=equip_card, slot=slot_name, target=_t)
                 _equip_action.player_id = pp
                 if _can_afford_action(state, _equip_action):
                     actions.append(_equip_action)
@@ -960,14 +975,9 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
         if equip_card.tapped:
             continue
 
-        # Check additional activation conditions from registry
-        cond_fn = EQUIPMENT_ACTIVATION_CONDITIONS.get(equip_slug)
-        if cond_fn is not None:
-            import inspect as _inspect_r
-            _sig_r = _inspect_r.signature(cond_fn)
-            _cond_r = cond_fn(player, slot_name, equip_card, state) if len(_sig_r.parameters) >= 4 else cond_fn(player, slot_name, equip_card)
-            if not _cond_r:
-                continue
+        # Activation gate: the card's DSL ability costs must be payable.
+        if not _dsl_activation_costs_payable(equip_card, state):
+            continue
 
         cost_override = EQUIPMENT_ACTIVATION_COST.get(equip_slug)
         if cost_override is not None:
@@ -983,7 +993,7 @@ def _legal_reaction_step(state: GameState, card_db: CardDB) -> list[Action]:
         if can_pay_cost(player.hand.cards, effective_cost, player.resources):
             for _t in _legal_targets_for_card(state, pp, equip_card):
                 actions.append(Action(
-                    type=ActionType.ACTIVATE_EQUIPMENT,
+                    type=ActionType.ACTIVATE_CARD,
                     card=equip_card,
                     slot=slot_name,
                     target=_t,

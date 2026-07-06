@@ -23,6 +23,26 @@ def run_ability(ability, card, event, state) -> None:
         if fn is not None and not fn(card, event, state):
             return
 
+    # MODAL abilities ("Choose N"): the controller picks modes, each of which
+    # is a compiled EffectDef. Non-modal abilities run their effects in order.
+    if getattr(ability, 'modes', None):
+        from engine.card_effects.ability_keywords import _ask_player, _controller_id
+        n_choices = ability.choose or 1
+        cid = _controller_id(card)
+        remaining = list(range(len(ability.modes)))
+        chosen = []
+        for _ in range(min(n_choices, len(remaining))):
+            labels = [str(i) for i in remaining]
+            pick = _ask_player(state, cid, labels, context="Choose a mode")
+            idx = (int(pick) if isinstance(pick, str) and pick.isdigit()
+                   and int(pick) in remaining else remaining[0])
+            chosen.append(idx)
+            remaining.remove(idx)
+        for idx in chosen:
+            mode = ability.modes[idx]
+            if mode.fn is not None:
+                mode.fn(card, event, state)
+
     # Execute effects in order
     for eff in ability.effects:
         # Check effect-level conditions
@@ -51,9 +71,13 @@ def dispatch_event(card_def, event_type: str, card, event, state) -> None:
                 run_ability(ability, card, event, state)
             continue
 
-        # WHILE_STATIC: always watching; conditions are the gate
+        # WHILE_STATIC: a continuous static re-evaluated each attack-power
+        # recalculation. It fires ONLY on RECALC_ATTACK_POWER so its
+        # MODIFY_ATTACK lands in the stage-8 window (after the staged recalc)
+        # and is not double-applied by unrelated dispatches. Conditions gate it.
         if atype == "WHILE_STATIC":
-            run_ability(ability, card, event, state)
+            if event_type == "RECALC_ATTACK_POWER":
+                run_ability(ability, card, event, state)
             continue
 
         # PLAY / ACTION / MODAL / ATTACK_REACTION / DEFENSE_REACTION / ACTIVATE / INSTANT / STATIC:

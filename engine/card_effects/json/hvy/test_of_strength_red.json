@@ -1,4 +1,18 @@
 {
   "slug": "test_of_strength_red",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CLASH",
+          "opponent": "ATTACKING_HERO",
+          "on_winner": [
+            {"action": "create_token", "who": "WINNER", "token": "gold"}
+          ]
+        }
+      ]
+    }
+  ]
 }

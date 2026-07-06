@@ -30,9 +30,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "LOSE_LIFE":
         amt = params.get("amount", 0)
-        def _fn(card, event, state, _a=amt):
+        tgt = params.get("player", "SELF")
+        def _fn(card, event, state, _a=amt, _t=tgt):
             from engine.card_effects.ability_keywords import effect_lose_life, _controller_id
-            effect_lose_life(state, _controller_id(card), _a)
+            cid = _controller_id(card)
+            tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            effect_lose_life(state, tid, _a)
         return _fn
 
     if etype in ("DEAL_DAMAGE", "DEAL_PHYSICAL"):
@@ -203,7 +206,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         filter_slug_contains = params.get("slug_contains", None)  # optional substring
         def _fn(card, event, state, _ft=filter_types, _fsc=filter_slug_contains):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
-            from engine.card_effects.triggers.card_triggers_extended import effect_shuffle
+            from engine.effect_keywords import shuffle as effect_shuffle
             cid = _controller_id(card)
             controller = state.players[cid]
             eligible = list(controller.deck.cards)
@@ -290,9 +293,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "SET_FLAG":
         flag = params.get("flag", "")
         scope = params.get("scope", "CURRENT").upper()
-        def _fn(card, event, state, _f=flag, _s=scope):
+        player_target = params.get("player", "SELF")
+        def _fn(card, event, state, _f=flag, _s=scope, _pt=player_target):
             from engine.card_effects.ability_keywords import _controller_id
-            player = state.players[_controller_id(card)]
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            player = state.players[tid]
             if _s == "NEXT" and hasattr(player, "next_turn_effects"):
                 player.next_turn_effects.append(_f)
             else:
@@ -375,22 +381,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                            position=None)
         return _fn
 
-    if etype == "DESTROY_PERMANENT":
+    if etype in ("DESTROY_PERMANENT", "DESTROY_SELF"):
         target = params.get("target", "self")
         def _fn(card, event, state, _t=target):
-            from engine.card_effects.ability_keywords import _controller_id
-            pid = _controller_id(card)
-            player = state.players[pid]
             if _t == "self":
-                for zone_name in ('permanents', 'items', 'auras', 'allies'):
-                    zone = getattr(player, zone_name, None)
-                    if zone and hasattr(zone, 'cards') and card in zone.cards:
-                        try:
-                            from engine.effect_keywords import destroy as _ek_destroy
-                            _ek_destroy(state, card, None)
-                        except Exception:
-                            zone.cards.remove(card)
-                        return
+                # destroy() resolves the card's actual zone itself.
+                from engine.effect_keywords import destroy as _ek_destroy
+                _ek_destroy(state, card, None)
         return _fn
 
     if etype == "MODIFY_DEFENSE_VALUE":
@@ -448,11 +445,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         amt = params.get("amount", 0)
         tgt = params.get("target", "OPPONENT")
         def _fn(card, event, state, _a=amt, _t=tgt):
-            from engine.card_effects.ability_keywords import _controller_id
-            from engine.effect_keywords import deal_damage, DamageType
+            from engine.card_effects.ability_keywords import _controller_id, effect_deal_damage
             cid = _controller_id(card)
             tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
-            deal_damage(state, _a, DamageType.GENERIC, target_player_id=tid, source_card=card)
+            effect_deal_damage(state, tid, _a, card, damage_type="generic")
         return _fn
 
     if etype == "STEAL_AURA_TOKEN":
@@ -492,6 +488,219 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     # ── new canonical effect types ─────────────────────────────────────────
 
+    if etype == "CLASH":
+        # "Clash with the attacking hero", optionally repeated, with role-based
+        # outcome effects. opponent: ATTACKING_HERO (default) → the attacker in
+        # combat, else the plain opponent. Outcome specs are small dicts:
+        #   {"action": "create_token"|"discard", "who": ROLE, ...}
+        # ROLE ∈ WINNER, LOSER, SWEEPER, SELF, OPPONENT.
+        opponent_kind = params.get("opponent", "ATTACKING_HERO").upper()
+        repeat = params.get("repeat", 1)
+        reveal_dest = params.get("reveal_dest", "top").lower()
+        on_winner = params.get("on_winner", [])
+        on_loser = params.get("on_loser", [])
+        on_sweep = params.get("on_sweep", [])
+
+        def _run_outcome(spec, state, role_players):
+            who = spec.get("who", "SELF").upper()
+            pid = role_players.get(who)
+            if pid is None:
+                return
+            action = spec.get("action", "")
+            if action == "create_token":
+                from engine.effect_keywords import create_token as _ct
+                _ct(state, target_player_id=pid, token_slug=spec.get("token", ""),
+                    number=spec.get("number", 1))
+            elif action == "discard":
+                from engine.card_effects.ability_keywords import effect_discard
+                effect_discard(state, pid, count=spec.get("amount", 1),
+                               random_discard=spec.get("random", True))
+
+        def _fn(card, event, state, _opp=opponent_kind, _rep=repeat, _rd=reveal_dest,
+                _ow=on_winner, _ol=on_loser, _os=on_sweep):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import clash as _clash
+            cid = _controller_id(card)
+            if _opp == "ATTACKING_HERO" and state.combat is not None:
+                opp = state.combat.attacker_id
+            else:
+                opp = 3 - cid
+            winners = []
+            for _ in range(_rep):
+                ev = _clash(state, cid, opp)
+                winner = ev.winner_id
+                winners.append(winner)
+                revealed = {cid: ev.card1, opp: ev.card2}
+                loser = None
+                if winner is not None:
+                    loser = opp if winner == cid else cid
+                roles = {"SELF": cid, "OPPONENT": opp,
+                         "WINNER": winner, "LOSER": loser}
+                if winner is not None:
+                    for spec in _ow:
+                        _run_outcome(spec, state, roles)
+                    for spec in _ol:
+                        _run_outcome(spec, state, roles)
+                # Move revealed cards to the bottom between clashes if instructed.
+                if _rd == "bottom":
+                    for pid_, rc in revealed.items():
+                        if rc is not None:
+                            owner = state.players[rc.owner]
+                            if rc in owner.deck.cards:
+                                owner.deck.cards.remove(rc)
+                                owner.deck.add_bottom(rc)
+            # Sweep: one hero won every clash.
+            if _os and _rep >= 2 and winners and all(w == winners[0] and w is not None
+                                                     for w in winners):
+                sweeper = winners[0]
+                roles = {"SELF": cid, "OPPONENT": opp, "SWEEPER": sweeper,
+                         "WINNER": sweeper, "LOSER": (opp if sweeper == cid else cid)}
+                for spec in _os:
+                    _run_outcome(spec, state, roles)
+        return _fn
+
+    if etype == "PAY_OR_DAMAGE":
+        # "Deals N damage to you unless you pay {r}..." — the controller may pay
+        # the resources to avoid the damage (e.g. Bloodrot Pox).
+        resources = params.get("resources", 0)
+        dmg = params.get("damage", 0)
+        def _fn(card, event, state, _r=resources, _d=dmg):
+            from engine.card_effects.ability_keywords import (
+                _ask_player, _controller_id, effect_deal_damage)
+            cid = _controller_id(card)
+            player = state.players[cid]
+            paid = False
+            if player.resources >= _r:
+                choice = _ask_player(state, cid, ["pay", "take_damage"],
+                                     context=f"Pay {_r} to avoid {_d} damage?")
+                if str(choice) == "pay":
+                    player.resources -= _r
+                    paid = True
+            if not paid:
+                effect_deal_damage(state, cid, _d, card, damage_type="generic")
+        return _fn
+
+    if etype == "PUT_CARDS_BOTTOM":
+        # Put all cards from the given zones on the bottom of the controller's
+        # deck (e.g. Inertia token: hand + arsenal → bottom of deck).
+        from_zones = params.get("from_zones", ["hand", "arsenal"])
+        def _fn(card, event, state, _zones=from_zones):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = state.players[_controller_id(card)]
+            for zone_name in _zones:
+                zone = getattr(player, zone_name, None)
+                if zone is None:
+                    continue
+                for c in list(zone.cards):
+                    zone.remove(c)
+                    player.deck.add_bottom(c)
+        return _fn
+
+    if etype == "LOOK":
+        # "Look at the top N cards of a deck." Pops them aside into a
+        # dispatch-scoped buffer; BANISH_FROM_LOOKED / PUT_LOOKED_BACK consume it.
+        n = params.get("amount", 5)
+        target = params.get("target", "OPP_DECK").upper()
+        def _fn(card, event, state, _n=n, _t=target):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            tid = (3 - cid) if "OPP" in _t else cid
+            deck = state.players[tid].deck
+            looked = []
+            for _ in range(min(_n, len(deck.cards))):
+                looked.append(deck.pop_top())
+            state.dsl_look_buffer = {"player_id": tid, "cards": looked}
+        return _fn
+
+    if etype == "BANISH_FROM_LOOKED":
+        # "Banish 1 or more cards with the same name from among them." The
+        # controller picks a name present in the look buffer; all copies of that
+        # name are banished. Mandatory (banish at least one) when a card exists.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            buf = getattr(state, "dsl_look_buffer", None)
+            if not buf or not buf["cards"]:
+                return
+            cid = _controller_id(card)
+            groups: dict = {}
+            for c in buf["cards"]:
+                groups.setdefault(c.name, []).append(c)
+            options = list(groups.keys())
+            pick = _ask_player(state, cid, options,
+                               context="Banish all copies of which name?")
+            chosen = pick if pick in groups else options[0]
+            tid = buf["player_id"]
+            for c in list(groups[chosen]):
+                buf["cards"].remove(c)
+                state.remember_last_known(c, overwrite=False)
+                state.players[tid].banished.add(c)
+        return _fn
+
+    if etype == "PUT_LOOKED_BACK":
+        # "Put the rest on top of their deck in any order." The controller orders
+        # the remaining look-buffer cards; the first chosen ends up on top.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            buf = getattr(state, "dsl_look_buffer", None)
+            if not buf:
+                return
+            cid = _controller_id(card)
+            remaining = list(buf["cards"])
+            deck = state.players[buf["player_id"]].deck
+            ordered = []
+            while remaining:
+                if len(remaining) == 1:
+                    ordered.append(remaining.pop())
+                    break
+                pick = _ask_player(state, cid, remaining,
+                                   context="Choose the next card to place on top")
+                chosen = pick if pick in remaining else remaining[0]
+                remaining.remove(chosen)
+                ordered.append(chosen)
+            # Insert so ordered[0] is on top: insert in reverse at index 0.
+            for c in reversed(ordered):
+                c.zone = "deck"
+                deck.cards.insert(0, c)
+            state.dsl_look_buffer = None
+        return _fn
+
+    if etype == "TRANSFORM_HERO":
+        # Arakni: "become a random Agent of Chaos" / "return to the brood".
+        mode = params.get("mode", "random_agent_of_chaos").lower()
+        def _fn(card, event, state, _m=mode):
+            from engine.card_effects.ability_keywords import (
+                _controller_id, become_agent_of_chaos, return_to_brood)
+            pid = _controller_id(card)
+            if _m == "return_to_brood":
+                return_to_brood(state, pid)
+            else:
+                become_agent_of_chaos(state, pid)
+        return _fn
+
+    if etype == "SET_BASE_POWER":
+        # "Target attack action card you control has N base {p}" (e.g. Kayo).
+        # Target: the current combat's attack card, if it is an attack action
+        # controlled by this card's controller. Sets base power and refreshes
+        # the live combat power. Only attack ACTION cards qualify (no weapons).
+        amount = params.get("amount", 0)
+        def _fn(card, event, state, _amt=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            if not state.combat or not state.combat.attack_card:
+                return
+            target = state.combat.attack_card
+            cid = _controller_id(card)
+            types = [t.lower() for t in (target.types or [])]
+            subs = [s.lower() for s in (target.subtypes or [])]
+            is_attack_action = ("action" in types and "attack" in subs)
+            if getattr(target, 'controller', None) != cid or not is_attack_action:
+                return
+            target.base_power = _amt
+            state.combat.base_attack_power = _amt
+            # Re-derive live power so the change is visible immediately; staged
+            # effects reapply on the next recalculation.
+            state.combat.attack_power = _amt
+        return _fn
+
     if etype == "MODIFY_ATTACK":
         mod = params.get("mod", "add")
         amt = params.get("amount", 0)
@@ -515,7 +724,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # EffectDef gate conditions — they are pass-through data for the engine.
         filter_specs = params.get("filter", [])
         def _fn(card, event, state, _mod=mod, _a=amt, _filt=filter_specs):
-            player = state.active()
+            # Queue on the card's controller, not the turn player — an
+            # instant-speed card using this effect must buff its own controller.
+            from engine.card_effects.ability_keywords import _controller_id
+            player = state.players[_controller_id(card)]
             if not hasattr(player, 'dsl_queued_attack_mods'):
                 player.dsl_queued_attack_mods = []
             player.dsl_queued_attack_mods.append({
@@ -618,7 +830,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 eff_fn(card, event, state)
         return _fn
 
-    # ── unknown → no-op ────────────────────────────────────────────────────
-    def _noop(card, event, state, _et=etype):
-        pass  # unknown effect type; silently skip
-    return _noop
+    # Unknown effect types are authoring errors — fail at JSON load time
+    # rather than silently no-opping (fail-open let bad JSON go unnoticed).
+    raise ValueError(f"Unknown DSL effect type: {etype!r} (params: {params!r})")

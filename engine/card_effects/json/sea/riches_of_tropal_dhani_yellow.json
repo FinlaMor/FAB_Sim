@@ -1,0 +1,12 @@
+{
+  "slug": "riches_of_tropal_dhani_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_PITCH",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "gold"}
+      ]
+    }
+  ]
+}

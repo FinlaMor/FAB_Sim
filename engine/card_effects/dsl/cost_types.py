@@ -111,6 +111,14 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             state.players[cid].deck.cards.append(target)
         return can_pay, pay
 
+    if ctype == "TAP_SELF":
+        # {t}: tap the activating card (hero/permanent). Payable if not tapped.
+        def can_pay(card, event, state):
+            return not getattr(card, 'tapped', False)
+        def pay(card, event, state):
+            card.tapped = True
+        return can_pay, pay
+
     if ctype == "PAY_LIFE":
         amount = params.get("amount", 1)
         def can_pay(card, event, state, _a=amount):
@@ -131,22 +139,14 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         slug_filter = params.get("slug", "")
 
         if target == "self":
-            # Destroy the card that is paying this cost (e.g. equipment that destroys itself)
+            # Destroy the card that is paying this cost (e.g. equipment that destroys itself).
+            # destroy() resolves the card's actual zone (chest/head/items/...), so this works
+            # for equipment in slot zones as well as permanents.
             def can_pay(card, event, state):
                 return True  # card must exist to be activating
             def pay(card, event, state):
-                from engine.card_effects.ability_keywords import _controller_id
-                pid = _controller_id(card)
-                player = state.players[pid]
-                for zone_name in ('equipment', 'items', 'auras', 'permanents'):
-                    zone = getattr(player, zone_name, None)
-                    if zone and hasattr(zone, 'cards') and card in zone.cards:
-                        try:
-                            from engine.effect_keywords import destroy as _ek_destroy
-                            _ek_destroy(state, card, None)
-                        except (ImportError, Exception):
-                            zone.cards.remove(card)
-                        return
+                from engine.effect_keywords import destroy as _ek_destroy
+                _ek_destroy(state, card, None)
             return can_pay, pay
 
         def can_pay(card, event, state, _pt=perm_type, _sl=slug_filter):
@@ -281,5 +281,6 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             state.players[_controller_id(card)].resources -= _a
         return can_pay, pay
 
-    # Unknown cost type — always payable, no-op payment
-    return lambda card, event, state: True, lambda card, event, state: None
+    # Unknown cost types are authoring errors — fail at JSON load time rather
+    # than treating the cost as free (fail-open let bad JSON go unnoticed).
+    raise ValueError(f"Unknown DSL cost type: {ctype!r} (params: {params!r})")

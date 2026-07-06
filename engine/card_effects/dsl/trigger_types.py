@@ -18,6 +18,12 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "END_OF_COMBAT":            "END_OF_COMBAT",
     "ON_DISCARD":               "ON_DISCARD",
     "ON_PLAY_ACTIVATE_ATTACK":  "ON_PLAY_ACTIVATE_ATTACK",
+    "ON_PITCH":                 "ON_PITCH",
+    "ON_DEFEND":                "ON_DEFEND",
+    "ON_BOO":                   "ON_BOO",
+    "ON_GOLD_CREATED":          "ON_GOLD_CREATED",
+    "ON_CLASH_WIN_REVEALED":    "ON_CLASH_WIN_REVEALED",
+    "RECALC_ATTACK_POWER":      "RECALC_ATTACK_POWER",
 }
 
 # Simple ability_type → event mappings.

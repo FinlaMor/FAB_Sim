@@ -1,0 +1,19 @@
+{
+  "slug": "seismic_surge",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "next_guardian_attack_action_cost_-1",
+          "scope": "CURRENT"
+        }
+      ]
+    }
+  ]
+}

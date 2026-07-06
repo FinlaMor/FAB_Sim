@@ -1,0 +1,20 @@
+{
+  "slug": "nimblism_red",
+  "abilities": [
+    {
+      "ability_type": "ACTION",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_COST_LTE", "cost": 1},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ]
+}

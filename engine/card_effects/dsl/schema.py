@@ -43,6 +43,7 @@ class AbilityDef:
     target_filter: list[ConditionDef] = field(default_factory=list)  # CR 1.8.5 targeting
     choose: int = 0                                                   # MODAL: modes to select
     modes: list[EffectDef] = field(default_factory=list)             # MODAL: available modes
+    params: dict[str, Any] = field(default_factory=dict)             # ability-level extras (e.g. REPLACEMENT kind)
 
 
 @dataclass
@@ -50,3 +51,4 @@ class CardDef:
     slug: str
     abilities: list[AbilityDef] = field(default_factory=list)
     play_cost: CostDef | None = None  # additional cost paid when the card is played
+    setup: dict[str, Any] = field(default_factory=dict)  # game-start config (e.g. weapon_zones)

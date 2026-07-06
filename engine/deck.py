@@ -274,6 +274,12 @@ def create_player(
     if hero_card.raw_intellect and hero_card.raw_intellect > 0:
         player.intellect = hero_card.raw_intellect
 
+    # Apply hero DSL setup (e.g. Kayo "starts with 1 weapon zone").
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    _hero_def = _dsl_get_card(hero_card.slug)
+    if _hero_def is not None and _hero_def.setup:
+        player.weapon_zone_count = int(_hero_def.setup.get("weapon_zones", 2))
+
     # Shuffle and load deck
     deck_slugs = list(deck_data["cards"])
     rng.shuffle(deck_slugs)
@@ -298,10 +304,10 @@ def create_player(
             if not player.weapon1.top:
                 player.weapon1.add(wc)
                 is_two_handed = "2H" in (wc.raw_types or [])
-                if is_two_handed:
+                if is_two_handed and player.weapon_zone_count >= 2:
                     player.weapon2.add(wc)  # same object in both zones — CR 3.0.2
             else:
-                if not player.weapon2.top:
+                if not player.weapon2.top and player.weapon_zone_count >= 2:
                     player.weapon2.add(wc)
                 else:
                     continue

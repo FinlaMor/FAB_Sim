@@ -3,13 +3,27 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}],
-      "effects": [
-        {"type": "MODIFY_ATTACK_POWER", "amount": 2},
+      "conditions": [
         {
-          "type": "MODIFY_ATTACK_POWER",
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "stealth"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "amount": 2,
+          "mod": "add"
+        },
+        {
+          "type": "MODIFY_ATTACK",
           "amount": 1,
-          "conditions": [{"type": "OPPONENT_IS_MARKED"}]
+          "conditions": [
+            {
+              "type": "OPPONENT_IS_MARKED"
+            }
+          ],
+          "mod": "add"
         }
       ]
     }

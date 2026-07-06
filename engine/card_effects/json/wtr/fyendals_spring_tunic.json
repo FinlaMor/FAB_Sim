@@ -16,13 +16,14 @@
         {
           "type": "PUT_COUNTER",
           "counter_type": "energy",
-          "amount": 1
+          "amount": 1,
+          "_comment": "At the start of your turn, if fewer than 3 energy counters, put one on (capped at 3)."
         }
       ]
     },
     {
-      "ability_type": "ACTIVATE",
-      "additional_cost": [
+      "ability_type": "INSTANT",
+      "cost": [
         {
           "type": "REMOVE_COUNTERS",
           "counter_type": "energy",

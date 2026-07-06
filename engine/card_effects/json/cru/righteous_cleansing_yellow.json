@@ -5,11 +5,10 @@
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_CRUSH",
       "effects": [
-        {"type": "LOOK", "target": "OPP_DECK", "amount": 5, "_comment": "'look' only shows the cards to one player. this is separate from 'reveal' which lets both players know the card"},
-        {"type": "CHOOSE", "amount": 1},
-        {"type": "BANISH", "target": "CARDS_WITH_SAME_NAME_AS_CHOSEN_IN_TOP_5_OF_OPP_DECK"},
-        {"type": "PUT_OBJECT", "target": "CARDS_IN_TOP_5_NOT_BANISHED", "destination_zone": "TOP_OPP_DECK", "order": "PLAYER_CHOOSE_UNTIL_NONE_LEFT"}
-            ]
-        }
-    ]
+        {"type": "LOOK", "target": "OPP_DECK", "amount": 5},
+        {"type": "BANISH_FROM_LOOKED", "same_name": true, "min": 1},
+        {"type": "PUT_LOOKED_BACK", "destination": "TOP_DECK", "order": "AGENT_CHOICE"}
+      ]
+    }
+  ]
 }

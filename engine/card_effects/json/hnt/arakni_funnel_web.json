@@ -1,0 +1,16 @@
+{
+  "slug": "arakni_funnel_web",
+  "_todo": "Once per Turn Attack Reaction (discard an Assassin: +3p; stealth rider banish arsenal) not yet modeled.",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "mode": "return_to_brood"
+        }
+      ]
+    }
+  ]
+}

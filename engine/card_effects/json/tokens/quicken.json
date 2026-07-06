@@ -1,0 +1,18 @@
+{
+  "slug": "quicken",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "go again"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "slug": "arakni_tarantula",
+  "_todo": "Once per Turn Attack Reaction (discard an Assassin: target dagger attack +3p) not yet modeled.",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "ATTACK_SUBTYPE_IN",
+          "subtypes": [
+            "Dagger"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOSE_LIFE",
+          "amount": 1,
+          "player": "OPPONENT"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "mode": "return_to_brood"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "slug": "inertia",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {"type": "PUT_CARDS_BOTTOM", "from_zones": ["hand", "arsenal"]}
+      ]
+    }
+  ]
+}

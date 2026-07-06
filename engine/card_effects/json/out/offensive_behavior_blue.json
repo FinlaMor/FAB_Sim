@@ -5,17 +5,24 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER",
+          "type": "MODIFY_ATTACK",
           "amount": 1,
           "conditions": [
             {
               "type": "OR",
               "any": [
-                {"type": "CONTROLS_TOKEN_TYPE", "token": "might"},
-                {"type": "CONTROLS_TOKEN_TYPE", "token": "vigor"}
+                {
+                  "type": "CONTROLS_TOKEN_TYPE",
+                  "token": "might"
+                },
+                {
+                  "type": "CONTROLS_TOKEN_TYPE",
+                  "token": "vigor"
+                }
               ]
             }
-          ]
+          ],
+          "mod": "add"
         }
       ]
     },
@@ -23,8 +30,16 @@
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
       "effects": [
-        {"type": "CREATE_TOKEN", "token": "might", "count": 1},
-        {"type": "CREATE_TOKEN", "token": "vigor", "count": 1}
+        {
+          "type": "CREATE_TOKEN",
+          "token": "might",
+          "count": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "vigor",
+          "count": 1
+        }
       ]
     }
   ]

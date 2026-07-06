@@ -83,15 +83,15 @@ def test_auras_does_not_include_items():
 # Soul sub-zone
 # ---------------------------------------------------------------------------
 
-def test_soul_is_subzone_of_permanents():
-    """Soul is a SubZoneView of permanents — soul cards live in the arena."""
+def test_soul_is_independent_zone():
+    """Soul is its own zone (reverted from SubZoneView by 36a8d22)."""
     p = _make_player()
     card = Card(slug="soul_card", name="Soul Card", types=["Action"])
     p.soul.add(card)
     assert card in p.soul.cards
-    assert card.zone == "permanents"
-    # Soul cards ARE in the permanents zone
-    assert card in p.permanents.cards
+    assert card.zone == "soul"
+    # Soul cards are NOT in the permanents zone
+    assert card not in p.permanents.cards
 
 
 def test_soul_zone_independent_from_items():
@@ -162,12 +162,11 @@ def test_card_permanent_subtype_set():
 
 
 def test_card_soul_zone_tracking():
-    """Cards added to soul have card.zone == 'permanents' (unified zone)."""
+    """Cards added to soul have card.zone == 'soul' (independent zone)."""
     p = _make_player()
     card = Card(slug="action1", name="Action", types=["Action"])
     p.soul.add(card)
-    assert card.zone == "permanents"
-    assert card.permanent_subtype == "Soul"
+    assert card.zone == "soul"
 
 
 # ---------------------------------------------------------------------------

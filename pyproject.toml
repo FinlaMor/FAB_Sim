@@ -2,7 +2,15 @@
 name = "fab-sim"
 version = "0.1.0"
 requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "thefuzz",
+    "msgpack",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = [
+    "slow: long-running tests (full-game simulations); deselect with -m 'not slow'",
+]

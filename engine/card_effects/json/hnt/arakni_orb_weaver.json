@@ -1,0 +1,16 @@
+{
+  "slug": "arakni_orb_weaver",
+  "_todo": "Graphene Chelicera cost reduction + Once per Turn Instant (equip token, next stealth +3p) not yet modeled.",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "mode": "return_to_brood"
+        }
+      ]
+    }
+  ]
+}

@@ -3,10 +3,29 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "conditions": [{"type": "CONTROLS_TOKEN_TYPE", "token": "gold"}],
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token": "gold"
+        }
+      ],
       "effects": [
-        {"type": "MODIFY_ATTACK_POWER", "amount": 3},
-        {"type": "GRANT_KEYWORD", "keyword": "overpower"}
+        {
+          "type": "MODIFY_ATTACK",
+          "amount": 3,
+          "mod": "add"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "overpower"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "gold"}
       ]
     }
   ]

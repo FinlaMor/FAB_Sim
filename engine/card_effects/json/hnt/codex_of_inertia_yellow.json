@@ -4,9 +4,20 @@
     {
       "ability_type": "PLAY",
       "effects": [
-        {"type": "RELOAD"},
-        {"type": "CREATE_TOKEN", "token": "inertia", "count": 1, "player": "OPPONENT"},
-        {"type": "GAIN_ACTION_POINTS", "amount": 1}
+        {
+          "type": "RELOAD"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "inertia",
+          "count": 1,
+          "player": "OPPONENT"
+        },
+        {
+          "type": "GAIN",
+          "amount": 1,
+          "asset": "ACTION_POINTS"
+        }
       ]
     }
   ]

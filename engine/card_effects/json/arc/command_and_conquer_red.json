@@ -1,19 +1,14 @@
 {
-    "slug": "command_and_conquer_red",
-    "abilities": [
-        {
-            "ability_type": "STATIC_CONTINUOUS",
-            "effects": {
-                "type": "APPLY_CONTINUOUS",
-                "target": "OPPONENT_CARDS",
-                "filter": {"type": "CARD_TYPE_IN", "types": ["Defense Reaction"]},
-                "modifications": [{"type":"NOT_PLAYABLE"}]
-            }
-        },
-        {
-            "ability_type": "TRIGGERED",
-            "trigger": "ON_HIT",
-            "effects": {"type": "DESTROY", "target": "OPPONENT_ARSENAL"}
-        }
-]
+  "slug": "command_and_conquer_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [{"type": "SET_FLAG", "flag": "command_and_conquer_no_dr"}]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [{"type": "DESTROY_ARSENAL", "player": "OPPONENT"}]
+    }
+  ]
 }

@@ -294,8 +294,8 @@ def card_to_features(
         float(card.life is not None),      # has_life flag
         (card.intellect or 0) / _NORM["intellect"],
         float(card.intellect is not None), # has_intellect flag
-        (card.arcane_damage or 0) / _NORM["arcane"],
-        float(card.arcane_damage is not None),  # has_arcane flag
+        (card.arcane or 0) / _NORM["arcane"],
+        float(card.arcane is not None),  # has_arcane flag
         (card.activation_cost or 0) / _NORM["activation"],
         float(card.activation_cost is not None),  # has_activation flag
         float(card.owner) / 2.0,           # owner (0-2, normalized)
@@ -317,7 +317,7 @@ def card_to_features(
         spellvoid_value / 1.0,             # Spellvoid value
         # Ability structure flags (18): CR 5.2, 5.4, 6.2.3 - Gap #1 fix (+20 points)
         float(card.has_activated_ability),
-        float(card.has_once_per_turn_limit),
+        float(card.has_per_turn_limit),
         float(card.has_action_activation),
         float(card.has_instant_activation),
         float(card.has_attack_reaction_activation),
@@ -352,24 +352,25 @@ def card_to_features(
         raise RuntimeError(f"card_to_features produced {numeric.numel()} numeric dims, expected {N_NUMERIC}")
 
     types_vec = torch.zeros(N_TYPES, dtype=torch.float32)
-    for t in card.types:
+    for t in (card.types or []):
         if t in _TYPE_IDX:
             types_vec[_TYPE_IDX[t]] = 1.0
     
     subtypes_vec = torch.zeros(N_SUBTYPES, dtype=torch.float32)
-    for st in card.subtypes:
+    for st in (card.subtypes or []):
         if st in _SUBTYPE_IDX:
             subtypes_vec[_SUBTYPE_IDX[st]] = 1.0
     
     supertypes_vec = torch.zeros(N_SUPERTYPES, dtype=torch.float32)
-    for st in card.supertypes:
+    # Card model rework (aa9addf): classes/talents now live in card.classes.
+    for st in (card.classes or []):
         if st in _SUPERTYPE_IDX:
             supertypes_vec[_SUPERTYPE_IDX[st]] = 1.0
 
     # Parse keywords into a weighted bag-of-keywords vector.
     # Parameterized keywords carry normalized values; unknown keywords go to OOV bucket.
     kw_vec = torch.zeros(N_KEYWORDS, dtype=torch.float32)
-    for raw_keyword in card.keywords:
+    for raw_keyword in (card.keywords or []):
         keyword_text = str(raw_keyword or "").strip()
         if not keyword_text:
             continue

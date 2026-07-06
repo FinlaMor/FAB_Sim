@@ -15,6 +15,50 @@ logger = logging.getLogger(__name__)
 # Registry of compiled cards: slug → CardDef
 _CARDS: dict[str, CardDef] = {}
 
+# JSON files that failed to compile in the last load_all_cards() pass:
+# file stem → "path: error". These slugs count as unimplemented.
+LOAD_ERRORS: dict[str, str] = {}
+
+# True once load_all_cards() has run; get_card() lazy-loads on first lookup.
+_LOADED = False
+
+class MissingCardImplementation(NotImplementedError):
+    """Raised when a card in play has no DSL definition.
+
+    Every card the engine touches must have a JSON definition under
+    engine/card_effects/json/ (a card with no abilities still needs a stub
+    with "abilities": []). This error names exactly which JSON to author.
+    """
+
+    def __init__(self, slugs):
+        self.slugs = sorted(set(slugs)) if not isinstance(slugs, str) else [slugs]
+        lines = []
+        for s in self.slugs:
+            if s in LOAD_ERRORS:
+                lines.append(f"{s}  [JSON failed to load: {LOAD_ERRORS[s]}]")
+            else:
+                lines.append(s)
+        listing = "\n  ".join(lines)
+        super().__init__(
+            f"No DSL implementation for {len(self.slugs)} card(s). "
+            f"Author JSON under engine/card_effects/json/:\n  {listing}"
+        )
+
+
+def require_card(slug: str) -> "CardDef":
+    """Return the DSL definition for *slug*, or raise MissingCardImplementation."""
+    cd = get_card(slug)
+    if cd is None:
+        raise MissingCardImplementation(slug)
+    return cd
+
+
+def validate_slugs(slugs) -> None:
+    """Raise MissingCardImplementation listing every slug with no DSL definition."""
+    missing = [s for s in slugs if s and get_card(s) is None]
+    if missing:
+        raise MissingCardImplementation(missing)
+
 
 def _json_dir() -> Path:
     return Path(__file__).parent.parent / "json"
@@ -64,6 +108,14 @@ def _compile_ability(raw: dict[str, Any]) -> AbilityDef:
     choose = raw.get("choose", 0)
     modes = [_compile_effect(m) for m in raw.get("modes", [])]
 
+    # Ability-level extras not captured by structured fields (e.g. a REPLACEMENT
+    # ability's "replacement" kind). Keep raw scalars for engine-side lookup.
+    _structured = {"ability_type", "trigger", "optional", "conditions", "effects",
+                   "cost", "additional_cost", "alternative_cost", "target",
+                   "choose", "modes"}
+    ab_params = {k: v for k, v in raw.items()
+                 if k not in _structured and not k.startswith("_")}
+
     return AbilityDef(
         ability_type=atype,
         trigger=trigger,
@@ -76,6 +128,7 @@ def _compile_ability(raw: dict[str, Any]) -> AbilityDef:
         target_filter=target_filter,
         choose=choose,
         modes=modes,
+        params=ab_params,
     )
 
 
@@ -87,7 +140,8 @@ def compile_card(raw: dict[str, Any]) -> CardDef:
     raw_cost = raw.get("cost")
     if isinstance(raw_cost, dict):
         play_cost = _compile_cost(raw_cost)
-    return CardDef(slug=slug, abilities=abilities, play_cost=play_cost)
+    setup = raw.get("setup", {}) or {}
+    return CardDef(slug=slug, abilities=abilities, play_cost=play_cost, setup=setup)
 
 
 def load_all_cards(json_dir: Path | None = None) -> int:
@@ -96,8 +150,10 @@ def load_all_cards(json_dir: Path | None = None) -> int:
     Returns the number of cards loaded.
     Idempotent — calling multiple times re-loads everything.
     """
-    global _CARDS
+    global _CARDS, _LOADED
+    _LOADED = True
     _CARDS.clear()
+    LOAD_ERRORS.clear()
 
     root = json_dir or _json_dir()
     if not root.exists():
@@ -106,27 +162,35 @@ def load_all_cards(json_dir: Path | None = None) -> int:
 
     count = 0
     for path in sorted(root.rglob("*.json")):
+        if path.stem.endswith("_work_queue"):
+            continue  # authoring TODO lists, not card definitions
+        if any(part.startswith(".") for part in path.relative_to(root).parts):
+            continue  # hidden dirs (e.g. tooling state) are not card definitions
         try:
             with open(path, encoding="utf-8") as f:
                 raw = json.load(f)
             if not isinstance(raw, dict):
-                logger.warning("Skipping %s: expected JSON object", path)
-                continue
+                raise ValueError("expected a JSON object")
             card = compile_card(raw)
             if not card.slug:
-                logger.warning("Skipping %s: missing 'slug'", path)
-                continue
+                raise ValueError("missing 'slug'")
             _CARDS[card.slug] = card
             count += 1
         except Exception as exc:
+            # A broken definition means the card is unimplemented: it will not
+            # be in _CARDS, so require_card/validate_slugs reject it at game
+            # start with the error recorded here.
+            LOAD_ERRORS[path.stem] = f"{path}: {exc}"
             logger.warning("Failed to load %s: %s", path, exc)
 
-    logger.debug("DSL loaded %d cards from %s", count, root)
+    logger.debug("DSL loaded %d cards from %s (%d failed)", count, root, len(LOAD_ERRORS))
     return count
 
 
 def get_card(slug: str) -> CardDef | None:
-    """Return compiled CardDef for slug, or None."""
+    """Return compiled CardDef for slug, or None. Lazy-loads on first lookup."""
+    if not _LOADED:
+        load_all_cards()
     return _CARDS.get(slug)
 
 

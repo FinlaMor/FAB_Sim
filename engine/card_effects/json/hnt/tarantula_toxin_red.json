@@ -3,7 +3,13 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "effects": [{"type": "MODIFY_ATTACK_POWER", "amount": 3}]
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "amount": 3,
+          "mod": "add"
+        }
+      ]
     }
   ]
 }

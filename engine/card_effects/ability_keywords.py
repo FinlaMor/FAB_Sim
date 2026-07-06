@@ -1467,7 +1467,12 @@ def effect_deal_damage(state, player_id: int, amount: int, source=None, damage_t
     target_card = player.hero
     if target_card is None:
         return 0
-    evt = _ek_deal_damage(state, amount, _DamageType.PHYSICAL, 3 - player_id,
+    dtype = {
+        "generic": _DamageType.GENERIC,
+        "physical": _DamageType.PHYSICAL,
+        "arcane": _DamageType.ARCANE,
+    }.get(damage_type, _DamageType.GENERIC)
+    evt = _ek_deal_damage(state, amount, dtype, 3 - player_id,
                           target_card, 'effect', damage_source_card=source)
     return 0 if evt.canceled else amount
 
@@ -1534,6 +1539,49 @@ def effect_charge(state, player_id: int, card):
 
 def effect_mark(state, target_player_id: int):
     _ek_mark(state, target_player_id)
+
+
+# ── Arakni, Marionette — Agent of Chaos transform ────────────────────────────
+# The Marionette hero transforms into a random Agent of Chaos demi-hero at the
+# end of a turn in which an opponent is marked, and the demi-hero "returns to the
+# brood" (reverts) at the beginning of a later end phase.
+AGENT_OF_CHAOS_SLUGS = [
+    "arakni_black_widow", "arakni_funnel_web", "arakni_orb_weaver",
+    "arakni_redback", "arakni_tarantula", "arakni_trap_door",
+]
+
+
+def become_agent_of_chaos(state, player_id: int, choose: bool = False):
+    """Transform the player's hero into a random (or chosen) Agent of Chaos.
+
+    Keeps the hero's identity (life, zone) but swaps slug/name/types so the
+    demi-hero's DSL abilities apply. No-op if the hero is already a demi-hero.
+    """
+    import random as _rng
+    player = state.players[player_id]
+    hero = player.hero
+    if hero is None or hero.slug in AGENT_OF_CHAOS_SLUGS:
+        return
+    if choose:
+        pick = _ask_player(state, player_id, AGENT_OF_CHAOS_SLUGS,
+                           context="Choose which Agent of Chaos to become")
+        slug = pick if pick in AGENT_OF_CHAOS_SLUGS else _rng.choice(AGENT_OF_CHAOS_SLUGS)
+    else:
+        slug = _rng.choice(AGENT_OF_CHAOS_SLUGS)
+    hero.slug = slug
+    hero.name = slug.replace("_", " ").title()
+    hero.types = ["Chaos", "Assassin", "Demi-Hero"]
+
+
+def return_to_brood(state, player_id: int):
+    """Revert an Agent of Chaos demi-hero back to Arakni, Marionette."""
+    player = state.players[player_id]
+    hero = player.hero
+    if hero is None or hero.slug not in AGENT_OF_CHAOS_SLUGS:
+        return
+    hero.slug = "arakni_marionette"
+    hero.name = "Arakni, Marionette"
+    hero.types = ["Chaos", "Assassin", "Hero"]
 
 
 def effect_reload(state, player_id: int, source_card=None):

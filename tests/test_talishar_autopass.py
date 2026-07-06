@@ -63,6 +63,12 @@ class _RandomGameStubClient:
     def submit_action(self, game_name: int, auth_key: str, action: dict, player_id: int = 1) -> None:
         self.submitted_actions.append(dict(action))
 
+    def submit_action_fused(self, game_name: int, auth_key: str, action: dict, player_id: int = 1):
+        # Fused submit+get_state: record and return None so the runner falls
+        # back to a separate get_state() call, same as the unfused path.
+        self.submitted_actions.append(dict(action))
+        return None
+
     def process_input(
         self,
         game_name: int,
@@ -145,6 +151,15 @@ class _PvpGameStubClient:
 
     def submit_action(self, game_name: int, auth_key: str, action: dict, player_id: int = 1) -> None:
         self.submitted_actions.append((player_id, dict(action)))
+
+    def submit_action_fused(self, game_name: int, auth_key: str, action: dict, player_id: int = 1):
+        # Fused submit+get_state: record and return None so the runner falls
+        # back to a separate get_state() call, same as the unfused path.
+        self.submitted_actions.append((player_id, dict(action)))
+        return None
+
+    def parallel_get_states(self, game_name: int, auth_keys: dict, player_ids: tuple = (1, 2)) -> dict:
+        return {pid: self.get_state(game_name, auth_keys[pid], pid) for pid in player_ids}
 
     def process_input(
         self,

@@ -320,12 +320,16 @@ def test_hybrid_card_legal_right_matches():
 
 
 def test_hybrid_card_rejected_neither_matches():
-    """Hybrid card rejected when neither side matches hero classes."""
+    """Hybrid card rejected when the hero is not in its legal_heroes list.
+
+    Class legality is driven by the upstream ``legal_heroes`` field, not by
+    parsing the type text.
+    """
     slug_index = {
         "hybrid-card": {
             "name": "Hybrid Card",
             "types": [],
-            "type_text": "Warrior Action / Wizard Action",
+            "legal_heroes": ["Dorinthea", "Kano"],
         },
     }
     violations = validate_deck_legality(
@@ -334,9 +338,10 @@ def test_hybrid_card_rejected_neither_matches():
         hero_types=["Ninja", "Hero"],
         slug_index=slug_index,
         hero_keywords=[],
+        hero_enum="Katsu",
     )
     assert len(violations) == 1
-    assert "hybrid" in violations[0].lower()
+    assert "hybrid-card" in violations[0] or "Hybrid Card" in violations[0]
 
 
 def test_hybrid_card_both_sides_match():
@@ -359,21 +364,22 @@ def test_hybrid_card_both_sides_match():
 
 
 def test_non_hybrid_multi_class_requires_all_types():
-    """Non-hybrid multi-class card still requires all types to match."""
+    """Multi-class card rejected when the hero is not in legal_heroes."""
     slug_index = {
         "multi-class-card": {
             "name": "Multi Class Card",
             "types": ["Warrior", "Wizard"],
-            "type_text": "Warrior Wizard Action",
+            "legal_heroes": ["Viserai"],
         },
     }
-    # Hero is only Warrior, not Wizard — should fail
+    # Hero is a plain Warrior, not in legal_heroes — should fail
     violations = validate_deck_legality(
         deck_cards=[{"card_slug": "multi-class-card"}],
         equipment=[],
         hero_types=["Warrior", "Hero"],
         slug_index=slug_index,
         hero_keywords=[],
+        hero_enum="Dorinthea",
     )
     assert len(violations) == 1
     assert "multi-class-card" in violations[0] or "Multi Class Card" in violations[0]

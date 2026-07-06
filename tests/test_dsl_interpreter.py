@@ -156,7 +156,6 @@ def test_compile_all_effect_types_no_crash():
         {"type": "APPLY_CONTINUOUS", "target": "PLAYER_ATTACKS", "modifications": [], "span": "THIS_TURN"},
         {"type": "DISCARD_RANDOM", "amount": 1},
         {"type": "REMOVE_COUNTERS", "counter_type": "energy", "amount": 1},
-        {"type": "UNKNOWN_XYZ"},  # should compile as no-op
     ]
     raw = {
         "slug": "all-effects-test",
@@ -170,6 +169,14 @@ def test_compile_all_effect_types_no_crash():
     card_def = compile_card(raw)
     for eff in card_def.abilities[0].effects:
         assert callable(eff.fn), f"Effect {eff.effect_type} did not produce a callable"
+
+
+def test_compile_unknown_effect_type_raises():
+    """Unknown effect types are authoring errors and must fail at compile time."""
+    import pytest
+    from engine.card_effects.dsl.effect_types import compile_effect
+    with pytest.raises(ValueError, match="Unknown DSL effect type"):
+        compile_effect("UNKNOWN_XYZ", {})
 
 
 def test_compile_all_condition_types_no_crash():
@@ -196,7 +203,6 @@ def test_compile_all_condition_types_no_crash():
         {"type": "AND", "all": [{"type": "IN_COMBAT"}]},
         {"type": "NOT", "inner_type": "IN_COMBAT"},
         {"type": "none"},
-        {"type": "UNKNOWN_COND_XYZ"},
     ]
     from engine.card_effects.dsl.condition_types import compile_condition
     for cond_raw in conditions:
@@ -204,6 +210,14 @@ def test_compile_all_condition_types_no_crash():
         params = {k: v for k, v in cond_raw.items() if k != "type"}
         result = compile_condition(ctype, params)
         assert result is None or callable(result), f"Condition {ctype} didn't produce callable/None"
+
+
+def test_compile_unknown_condition_type_raises():
+    """Unknown condition types are authoring errors and must fail at compile time."""
+    import pytest
+    from engine.card_effects.dsl.condition_types import compile_condition
+    with pytest.raises(ValueError, match="Unknown DSL condition type"):
+        compile_condition("UNKNOWN_COND_XYZ", {})
 
 
 # ---------------------------------------------------------------------------
@@ -225,9 +239,13 @@ def test_load_all_cards_from_dir():
             ],
         }
         (set_dir / "test-strike-red.json").write_text(json.dumps(card_json))
-        count = load_all_cards(Path(tmpdir))
-        assert count == 1
-        assert get_card("test-strike-red") is not None
+        try:
+            count = load_all_cards(Path(tmpdir))
+            assert count == 1
+            assert get_card("test-strike-red") is not None
+        finally:
+            # Restore the real card registry for later tests.
+            load_all_cards()
 
 
 def test_load_skips_missing_slug():
@@ -537,7 +555,10 @@ WTR_JSON = Path(__file__).parent.parent / "engine" / "card_effects" / "json" / "
 
 
 def _load_wtr():
-    return load_all_cards(WTR_JSON)
+    # Load the full json tree (superset of WTR). Loading only the WTR subdir
+    # would leave the module-global card registry without tokens etc. and
+    # pollute later test modules.
+    return load_all_cards()
 
 
 # ── sigil_of_solace_red ───────────────────────────────────────────────────────
@@ -627,14 +648,17 @@ def test_disable_blue_no_crash_when_arsenal_empty():
 # ── anothos ───────────────────────────────────────────────────────────────────
 
 def test_anothos_while_static_bonus_with_two_pitch_cards():
+    # WHILE_STATIC fires on the RECALC_ATTACK_POWER bridge; anothos needs 2+
+    # cards with cost >= 3 in the pitch zone.
     _load_wtr()
     state = _make_state()
     state.combat = _make_combat(power=5)
     for i in range(2):
         c = _make_card(f"pitched_{i}", 1)
+        c.cost = 3
         state.players[1].pitch.add(c)
     card = _make_card("anothos", 1)
-    dispatch(state, "ON_ATTACK", "anothos", card=card)
+    dispatch(state, "RECALC_ATTACK_POWER", "anothos", card=card)
     assert state.combat.attack_power == 7  # 5 + 2
 
 
@@ -642,10 +666,26 @@ def test_anothos_while_static_no_bonus_with_one_pitch_card():
     _load_wtr()
     state = _make_state()
     state.combat = _make_combat(power=5)
-    state.players[1].pitch.add(_make_card("pitched_0", 1))
+    c = _make_card("pitched_0", 1)
+    c.cost = 3
+    state.players[1].pitch.add(c)
+    card = _make_card("anothos", 1)
+    dispatch(state, "RECALC_ATTACK_POWER", "anothos", card=card)
+    assert state.combat.attack_power == 5  # unchanged — only 1 card
+
+
+def test_anothos_while_static_not_fired_on_other_events():
+    # WHILE_STATIC must NOT fire on unrelated dispatches (no double-application).
+    _load_wtr()
+    state = _make_state()
+    state.combat = _make_combat(power=5)
+    for i in range(2):
+        c = _make_card(f"pitched_{i}", 1)
+        c.cost = 3
+        state.players[1].pitch.add(c)
     card = _make_card("anothos", 1)
     dispatch(state, "ON_ATTACK", "anothos", card=card)
-    assert state.combat.attack_power == 5  # unchanged
+    assert state.combat.attack_power == 5  # unchanged — ON_ATTACK doesn't fire statics
 
 
 # ── awakening_bellow_red ──────────────────────────────────────────────────────
@@ -721,14 +761,13 @@ def test_barkbone_strapping_activate_sets_roll_and_gains_resources():
 
 # ── spinal_crush_red ──────────────────────────────────────────────────────────
 
-def test_spinal_crush_red_on_crush_queues_continuous_effect():
+def test_spinal_crush_red_on_crush_suppresses_opponent_go_again():
     _load_wtr()
     state = _make_state()
     card = _make_card("spinal_crush_red", 1)
     dispatch(state, "ON_CRUSH", "spinal_crush_red", card=card)
-    effects = getattr(state.active(), 'dsl_continuous_effects', [])
-    assert len(effects) == 1
-    assert effects[0]["target"] == "OPPONENT_CARDS"
+    # Opponent loses go again on their next turn.
+    assert "cant_go_again" in state.players[2].next_turn_effects
 
 
 # ── ancestral_empowerment_red ─────────────────────────────────────────────────
@@ -741,6 +780,7 @@ def test_ancestral_empowerment_red_ninja_attack_bonus():
         state.players[1].deck.add(_make_deck_card(f"d{i}"))
     ninja_card = _make_card("ninja_strike_red", 1)
     ninja_card.classes = ["Ninja"]
+    ninja_card.subtypes = ["Attack"]  # target filter requires an Attack action card
     state.combat = CombatState(
         attacker_id=1, link_id=1,
         attack_power=4, attack_card=ninja_card, keywords=[],
@@ -781,25 +821,25 @@ def test_alpha_rampage_red_on_attack_no_crash():
 
 # ── cranial_crush_blue ────────────────────────────────────────────────────────
 
-def test_cranial_crush_blue_on_crush_no_crash():
-    """INJECT_REPLACEMENT compiles as noop; dispatching does not raise."""
+def test_cranial_crush_blue_on_crush_blocks_opponent_draw():
+    """Crush sets the opponent's 'cant_draw' flag for their next turn."""
     _load_wtr()
     state = _make_state()
     card = _make_card("cranial_crush_blue", 1)
     dispatch(state, "ON_CRUSH", "cranial_crush_blue", card=card)
+    assert "cant_draw" in state.players[2].next_turn_effects
 
 
 # ── debilitate_blue ───────────────────────────────────────────────────────────
 
-def test_debilitate_blue_on_crush_injects_trigger():
+def test_debilitate_blue_on_crush_debuffs_opponent_first_attack():
     _load_wtr()
     state = _make_state()
     state.combat = _make_combat(power=5)
     card = _make_card("debilitate_blue", 1)
     dispatch(state, "ON_CRUSH", "debilitate_blue", card=card)
-    assert hasattr(state.combat, "injected_triggers")
-    assert len(state.combat.injected_triggers) >= 1
-    assert state.combat.injected_triggers[0].event_type == "ON_PLAY_ACTIVATE_ATTACK"
+    # Opponent's first attack next turn gets -2 power.
+    assert "first_attack_-2p" in state.players[2].next_turn_effects
 
 
 # ── enlightened_strike_red ────────────────────────────────────────────────────

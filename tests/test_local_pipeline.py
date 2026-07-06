@@ -138,11 +138,11 @@ def test_validation_to_simulation() -> None:
     import json
 
     gen_dir = _resolve_decks_dir()
-    if not os.path.isdir(gen_dir):
-        pytest.skip("decks/generated/ not found")
+    if not os.path.isdir(gen_dir) or not os.listdir(gen_dir):
+        pytest.skip("decks/generated/ missing or empty (run the deck generator first)")
 
     card_db = CardDB(SLUG_INDEX_PATH)
-    with open(SLUG_INDEX_PATH) as f:
+    with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
         slug_index = json.load(f)
     by_slug = slug_index if isinstance(slug_index, dict) and "by_slug" not in slug_index else slug_index.get("by_slug", slug_index)
 
@@ -188,7 +188,7 @@ def test_deck_evolution_produces_valid_decks(tmp_path: pytest.TempPathFactory) -
     export_evolved_decks(checkpoint=ckpt_path, output_dir=out_dir)
 
     card_db = CardDB(SLUG_INDEX_PATH)
-    with open(SLUG_INDEX_PATH) as f:
+    with open(SLUG_INDEX_PATH, encoding="utf-8") as f:
         slug_index = json.load(f)
     by_slug = slug_index if isinstance(slug_index, dict) and "by_slug" not in slug_index else slug_index.get("by_slug", slug_index)
 

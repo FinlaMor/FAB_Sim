@@ -6,21 +6,11 @@
       "trigger": "ON_CRUSH",
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "target": "OPPONENT_CARDS",
-          "filter": {
-            "type": "OR",
-            "any": [
-              {"type": "CARD_TYPE_IN", "types": ["Action"]},
-              {"type": "ABILITY_TYPE_IN", "types": ["Activated"]},
-              {"type": "CARD_SUBTYPE_IN", "subtypes": ["Attack"]}
-            ]
-          },
-          "modifications": [
-            {"type": "LOSES", "property": "GO_AGAIN"},
-            {"type": "CANT_GAIN", "property": "GO_AGAIN", "TODO": "model as replacement effect"}
-          ],
-          "span": "NEXT_ACTION_PHASE"
+          "type": "SET_FLAG",
+          "flag": "cant_go_again",
+          "player": "OPPONENT",
+          "scope": "NEXT",
+          "_comment": "Crush: action cards, activated abilities, and attacks they control lose and can't gain go again during their next action phase."
         }
       ]
     }

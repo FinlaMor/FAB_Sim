@@ -1,4 +1,22 @@
 {
   "slug": "trounce_red",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CLASH",
+          "opponent": "ATTACKING_HERO",
+          "repeat": 2,
+          "reveal_dest": "bottom",
+          "on_sweep": [
+            {"action": "create_token", "who": "SWEEPER", "token": "gold"},
+            {"action": "create_token", "who": "SWEEPER", "token": "might"},
+            {"action": "create_token", "who": "SWEEPER", "token": "vigor"}
+          ]
+        }
+      ]
+    }
+  ]
 }

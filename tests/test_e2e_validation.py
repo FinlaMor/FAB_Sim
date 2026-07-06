@@ -31,13 +31,16 @@ def _run_help(script: str) -> str:
     return result.stdout + result.stderr
 
 
-def test_collect_agent_mode_flag():
-    """Verify collect_iql_mixed_data.py supports --agent-mode."""
+def test_collect_cli_flags():
+    """Verify collect_iql_mixed_data.py exposes its core CLI flags.
+
+    (--agent-mode was removed; matchups are configured via --games-per-matchup
+    and the backend via --game-backend.)
+    """
     output = _run_help(os.path.join(ROOT, "rl_agents", "collect_iql_mixed_data.py"))
-    assert "--agent-mode" in output, f"--agent-mode not found in help output:\n{output}"
-    for mode in ("random-vs-random", "heuristic-vs-random", "heuristic-vs-heuristic"):
-        assert mode in output, f"Agent mode {mode!r} not found in help"
-    print("  [PASS] collect_iql_mixed_data.py --agent-mode flag present")
+    for flag in ("--out-dir", "--games-per-matchup", "--seed", "--game-backend"):
+        assert flag in output, f"{flag} not found in help output:\n{output}"
+    print("  [PASS] collect_iql_mixed_data.py CLI flags present")
 
 
 def test_train_iql_flags():

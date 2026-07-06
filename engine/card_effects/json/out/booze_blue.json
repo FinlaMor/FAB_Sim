@@ -4,16 +4,28 @@
     {
       "ability_type": "PLAY",
       "effects": [
-        {"type": "GAIN_ACTION_POINTS", "amount": 1},
-        {"type": "CROWD_BOO", "player": "SELF"}
+        {
+          "type": "GAIN",
+          "amount": 1,
+          "asset": "ACTION_POINTS"
+        },
+        {
+          "type": "CROWD_BOO",
+          "player": "SELF"
+        }
       ]
     },
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
       "effects": [
-        {"type": "CROWD_BOO", "player": "SELF"},
-        {"type": "DESTROY_SELF"}
+        {
+          "type": "CROWD_BOO",
+          "player": "SELF"
+        },
+        {
+          "type": "DESTROY_SELF"
+        }
       ]
     }
   ]

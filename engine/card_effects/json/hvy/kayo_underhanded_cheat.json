@@ -1,0 +1,30 @@
+{
+  "slug": "kayo_underhanded_cheat",
+  "setup": {"weapon_zones": 1},
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_BOO",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "vigor"}
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "_comment": "{r}{r}{r}{r} is charged by the engine via activation_cost; {t} is TAP_SELF here.",
+      "cost": [
+        {"type": "TAP_SELF"}
+      ],
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CONTROLLED_BY_YOU"},
+          {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+        ]
+      },
+      "effects": [
+        {"type": "SET_BASE_POWER", "amount": 6}
+      ]
+    }
+  ]
+}

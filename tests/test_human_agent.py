@@ -130,7 +130,9 @@ class TestDisplayState:
         assert "YOU" in out
 
     def test_with_equipment(self, agent, state, capsys):
-        equip = _make_card(slug="helm", name="Iron Helm", types=["Equipment"], base_defense=1)
+        # Head zone entry requires the "Head" subtype (CR 3.x zone rules).
+        equip = _make_card(slug="helm", name="Iron Helm", types=["Equipment"],
+                           subtypes=["Head"], base_defense=1)
         equip.owner = 1
         equip.controller = 1
         state.players[1].head.add(equip)
@@ -175,9 +177,12 @@ class TestFormatAction:
         assert "Scar for a Scar" in result
 
     def test_attack_weapon(self, agent):
+        # Weapon attacks route through ACTIVATE_CARD with is_attack_proxy=True.
         wpn = _make_card(name="Dawnblade", types=["Weapon"])
-        result = agent._format_action(_action(ActionType.ATTACK_WEAPON, card=wpn))
-        assert "Attack with weapon" in result
+        action = _action(ActionType.ACTIVATE_CARD, card=wpn)
+        action.is_attack_proxy = True
+        result = agent._format_action(action)
+        assert "Activate card" in result
         assert "Dawnblade" in result
 
     def test_defend_cards(self, agent):
@@ -186,8 +191,13 @@ class TestFormatAction:
         assert "Defend with cards" in result
 
     def test_defend_equipment(self, agent):
-        result = agent._format_action(_action(ActionType.DEFEND_EQUIPMENT, card=_make_card(name="Helm")))
-        assert "Defend with equipment" in result
+        # Equipment defends go through DEFEND_CARDS with the equipment in card_list.
+        helm = _make_card(name="Helm", types=["Equipment"])
+        action = _action(ActionType.DEFEND_CARDS)
+        action.card_list = [helm]
+        result = agent._format_action(action)
+        assert "Defend with cards" in result
+        assert "Helm" in result
 
     def test_store_arsenal(self, agent):
         result = agent._format_action(_action(ActionType.STORE_ARSENAL, card=_make_card(name="Stored")))

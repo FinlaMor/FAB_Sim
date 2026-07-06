@@ -1,0 +1,15 @@
+{
+  "slug": "disable_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "effects": [
+        {
+          "type": "PUT_ARSENAL_BOTTOM",
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ]
+}

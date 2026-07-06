@@ -199,17 +199,17 @@ def _state_with_db():
 # CR 8.5.2 — create_token
 # ---------------------------------------------------------------------------
 
-def test_create_token_adds_to_tokens_zone():
-    """Basic case: token appears in controlling player's tokens zone."""
+def test_create_token_adds_to_arena():
+    """Basic case: token enters the controlling player's arena (aura tokens
+    route to the auras sub-zone of permanents)."""
     state = _state_with_db()
 
-    assert len(state.players[1].tokens.cards) == 0 # baseline
+    assert len(state.players[1].permanents.cards) == 0 # baseline
 
     event = create_token(state, token="vigor", source_player_id=1, target_player_id=1)
 
     assert not event.canceled
-    assert len(state.players[1].tokens.cards) == 1
-    assert state.players[1].tokens.cards[0].slug == "vigor"
+    assert state.players[1].permanents.find("vigor") is not None
 
 
 def test_create_token_emits_trigger():
@@ -230,8 +230,7 @@ def test_create_token_number_creates_multiple():
 
     create_token(state, token="might", source_player_id=1, target_player_id=1, number=3)
 
-    assert len(state.players[1].tokens.cards) == 3
-    assert state.players[1].tokens.cards[0].slug == "might"
+    assert len(state.players[1].permanents.find_all("might")) == 3
 
 
 def test_create_token_canceled_creates_nothing():
@@ -261,15 +260,14 @@ def test_create_token_target_player_controls_token():
 
     create_token(state, token="frailty", source_player_id=1, target_player_id=2)
 
-    assert len(state.players[2].tokens.cards) == 1
-    assert len(state.players[1].tokens.cards) == 0
+    assert state.players[2].permanents.find("frailty") is not None
+    assert len(state.players[1].permanents.cards) == 0
 
-    create_token(state, "ponder", 1, 1)
+    create_token(state, token="ponder", source_player_id=1, target_player_id=1)
 
-    assert len(state.players[2].tokens.cards) == 1
-    assert len(state.players[1].tokens.cards) == 1
-    assert state.players[2].tokens.cards[0].slug == "frailty"
-    assert state.players[1].tokens.cards[0].slug == "ponder"
+    assert state.players[2].permanents.find("frailty") is not None
+    assert state.players[1].permanents.find("ponder") is not None
+    assert state.players[1].permanents.find("frailty") is None
 
 def test_create_token_weapon_in_weapon_zone():
     """Test creating token in zone other than tokens (weapon zone)"""

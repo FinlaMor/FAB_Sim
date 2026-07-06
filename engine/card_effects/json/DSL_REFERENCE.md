@@ -2,6 +2,16 @@
 
 JSON schema patterns for card effect definitions. All files live under `json/<set>/`.
 
+**Every card the engine touches must have a JSON definition here** — deck cards,
+heroes, equipment, weapons, and tokens. A card with no special abilities still
+needs a stub with `"abilities": []`. Games refuse to start (raising
+`MissingCardImplementation` with the full list) if any card lacks a definition.
+
+**Unknown types fail at load time.** `type` values for effects, conditions, and
+costs must be spelled exactly as implemented in `dsl/effect_types.py`,
+`dsl/condition_types.py`, and `dsl/cost_types.py` — an unrecognized type raises
+`ValueError` when the JSON is loaded, and the card counts as unimplemented.
+
 ---
 
 ## Top-Level Structure
@@ -156,17 +166,26 @@ All effects use `{"type": "EFFECT_TYPE", ...}`. Effects are always arrays.
 ```json
 {"type": "MODIFY_ATTACK", "mod": "add", "amount": 4}
 {"type": "MODIFY_ATTACK", "mod": "add", "amount": -2}
-{"type": "MODIFY_NEXT_ATTACK", "mod": "add", "conditions": [...], "amount": 3}
+{"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 3,
+ "filter": [{"type": "ATTACK_COST_LTE", "cost": 1},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}]}
 ```
 
 | Type | Description |
 |---|---|
 | `MODIFY_ATTACK` | Modifies the current attack's power |
 | `MODIFY_NEXT_ATTACK` | Modifies the next qualifying attack's power |
+| `DESTROY_SELF` / `DESTROY_PERMANENT` | Destroys this card (canonical `destroy()` resolves its zone) |
 
 `mod` values: `"add"` (subtraction uses negative `amount`). Future values: `"multiply"`, `"set"`.
 
-`MODIFY_NEXT_ATTACK` takes an optional `conditions` array to filter which attacks it applies to.
+`MODIFY_NEXT_ATTACK` takes an optional `filter` array of condition specs
+describing which future attacks qualify. It is deliberately named `filter`, not
+`conditions` — `conditions` on an effect gate whether the effect runs *now*,
+while `filter` is pass-through data evaluated later against each attack. The
+mod is queued on the card's controller and consumed by the first matching
+attack that turn (unused mods expire at end of turn).
 
 ### Gain (Asset)
 
@@ -384,3 +403,40 @@ Always a string, not a boolean.
 |---|---|
 | `"TRUE"` | Effect may be skipped by the player |
 | `"FALSE"` | Effect is mandatory |
+
+## Continuous attack-power statics (`WHILE_STATIC`)
+
+A `WHILE_STATIC` ability is re-evaluated every attack-power recalculation and
+fires only on the `RECALC_ATTACK_POWER` event (dispatched by the engine to the
+attack card, both heroes, and in-play permanents/weapons). Its `conditions`
+gate it; its `MODIFY_ATTACK` lands in the stage-8 static window so it is never
+double-applied by unrelated dispatches. Use it for "while … has +N{p}"
+(Anothos), pitch-conditioned bonuses (Savage Claw), and hero auras that watch
+the current attack (Arakni's stealth-vs-marked +1{p}).
+
+## Hero and clash vocabulary (added for Victor / Kayo / Arakni)
+
+Triggers: `ON_PITCH`, `ON_DEFEND`, `ON_BOO`, `ON_GOLD_CREATED`,
+`ON_CLASH_WIN_REVEALED`, `RECALC_ATTACK_POWER`.
+
+Effects:
+- `SET_BASE_POWER` `{amount}` — set the current combat attack's base power;
+  only an attack ACTION card controlled by the ability's controller qualifies.
+- `CLASH` `{opponent, repeat, reveal_dest, on_winner, on_loser, on_sweep}` —
+  clash with the attacking hero (CR 8.5.45). Outcome specs are
+  `{"action": "create_token"|"discard", "who": ROLE, ...}` with ROLE ∈
+  `WINNER`/`LOSER`/`SWEEPER`/`SELF`/`OPPONENT`.
+- `TRANSFORM_HERO` `{mode}` — `random_agent_of_chaos` or `return_to_brood`.
+- `LOOK` `{target, amount}`, `BANISH_FROM_LOOKED` `{same_name, min}`,
+  `PUT_LOOKED_BACK` — look at top N of a deck, banish a same-name group, order
+  the rest back on top (Righteous Cleansing).
+- `PUT_CARDS_BOTTOM` `{from_zones}`, `PAY_OR_DAMAGE` `{resources, damage}`,
+  `DESTROY_SELF` — token effects (Inertia, Bloodrot Pox).
+
+Costs: `TAP_SELF` (`{t}`). Conditions: `ATTACK_PITCH_POWER_GTE` `{amount}`
+(a card of that power was pitched to pay for THIS attack — not the pitch zone),
+`ATTACK_CONTROLLED_BY_YOU`.
+
+Card-level fields: `"setup": {"weapon_zones": 1}` (Kayo starts with 1 weapon
+zone); a `REPLACEMENT` ability with `"replacement": "fail_clash_retry"` is
+registered at game start (Victor's clash retry).

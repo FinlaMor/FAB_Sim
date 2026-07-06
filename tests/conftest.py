@@ -10,6 +10,20 @@ from engine.card import Card
 from engine.state import CombatState, GameState, Player, Step, Zone
 
 
+@pytest.fixture(autouse=True, scope="module")
+def _restore_dsl_registry():
+    """Reload the full DSL card registry after each test module.
+
+    Some tests call load_all_cards() on a temp dir or a single set folder,
+    which replaces the module-global registry; without restoration, later
+    modules see a polluted card set (e.g. tokens missing for create_token).
+    """
+    yield
+    from engine.card_effects.dsl import loader
+    if loader._LOADED:
+        loader.load_all_cards()
+
+
 # ---------------------------------------------------------------------------
 # Test helper factories (extracted from tests/test_loader_conditions.py)
 # ---------------------------------------------------------------------------
@@ -72,13 +86,12 @@ def _make_combat(attacker_id: int = 1, attack_card: Card | None = None) -> Comba
             slug="test_attack",
             name="Test Attack",
             types=["Action", "Attack"])
-        
+
         attack_card.base_power=3
         attack_card.owner = attacker_id
         attack_card.controller = attacker_id
 
-        opp = 3 - attacker_id
-        opp_hero = _make_hero(opp)
+    opp_hero = _make_hero(3 - attacker_id)
 
     return CombatState(
         attacker_id=attacker_id,

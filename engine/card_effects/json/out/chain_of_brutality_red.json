@@ -4,7 +4,13 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
-      "effects": [{"type": "NEXT_ATTACK_BONUS", "amount": 4}]
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "amount": 4,
+          "mod": "add"
+        }
+      ]
     }
   ]
 }

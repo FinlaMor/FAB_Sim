@@ -4,11 +4,20 @@
     {
       "ability_type": "ATTACK_REACTION",
       "effects": [
-        {"type": "MODIFY_ATTACK_POWER", "amount": 3},
         {
-          "type": "MODIFY_ATTACK_POWER",
+          "type": "MODIFY_ATTACK",
+          "amount": 3,
+          "mod": "add"
+        },
+        {
+          "type": "MODIFY_ATTACK",
           "amount": 1,
-          "conditions": [{"type": "OPPONENT_IS_MARKED"}]
+          "conditions": [
+            {
+              "type": "OPPONENT_IS_MARKED"
+            }
+          ],
+          "mod": "add"
         }
       ]
     }

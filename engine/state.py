@@ -755,9 +755,11 @@ class Player:
         self.chest = Zone("chest", player_id)
         self.arms = Zone("arms", player_id)
         self.legs = Zone("legs", player_id)
-        # CR 3.0.2: "Each player has two weapon zones"
+        # CR 3.0.2: "Each player has two weapon zones" (some heroes start with 1,
+        # e.g. Kayo — see hero setup.weapon_zones and create_player).
         self.weapon1 = Zone("weapon1", player_id)
         self.weapon2 = Zone("weapon2", player_id)
+        self.weapon_zone_count = 2
         # CR: single permanents zone with sub-zone views
         self.permanents = Zone("permanents", player_id)
         self.items = SubZoneView(self.permanents, "Item")
@@ -1086,6 +1088,10 @@ class CombatState:
     # One-shot triggers created by INJECT_TRIGGER DSL effects (e.g. Pummel).
     # Iterated and consumed by the DSL hit listener after 'hit' fires.
     injected_triggers: list = field(default_factory=list)
+    # Cards pitched specifically to pay for THIS attack's activation (CR: "pitched
+    # to attack with this"). Distinct from the pitch zone — a card pitched for a
+    # different cost does not appear here. Used by e.g. Savage Claw.
+    pitched_for_attack: list[Card] = field(default_factory=list)
 
     def grant_keyword(self, keyword: str) -> None:
         """Add a keyword effect and immediately update combat.keywords for read consistency."""

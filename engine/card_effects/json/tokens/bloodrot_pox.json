@@ -1,0 +1,13 @@
+{
+  "slug": "bloodrot_pox",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {"type": "PAY_OR_DAMAGE", "resources": 3, "damage": 2}
+      ]
+    }
+  ]
+}

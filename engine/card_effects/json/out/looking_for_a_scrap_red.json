@@ -9,16 +9,36 @@
           "from_zone": "GRAVEYARD",
           "player": "SELF",
           "amount": 1,
-          "conditions": [{"type": "CARD_IN_ZONE", "zone": "graveyard", "count_gte": 1}]
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "graveyard",
+              "count_gte": 1
+            }
+          ]
         },
         {
-          "type": "MODIFY_ATTACK_POWER",
+          "type": "MODIFY_ATTACK",
           "amount": 1,
-          "conditions": [{"type": "CARD_IN_ZONE", "zone": "graveyard", "count_gte": 1}]
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "graveyard",
+              "count_gte": 1
+            }
+          ],
+          "mod": "add"
         },
         {
-          "type": "GO_AGAIN",
-          "conditions": [{"type": "CARD_IN_ZONE", "zone": "graveyard", "count_gte": 1}]
+          "type": "GAIN",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "graveyard",
+              "count_gte": 1
+            }
+          ],
+          "keyword": "go again"
         }
       ]
     }

@@ -63,11 +63,11 @@ def test_arsenal_face_up():
     
     # Create state with arsenal face-up vs face-down
     state1 = _create_test_state()
-    state1.players[1].arsenal.add(card_db.get("command_and_conquer"))
+    state1.players[1].arsenal.add(card_db.get("command_and_conquer_red"))
     state1.players[1].arsenal.cards[0].is_public = True  # Face-up
     
     state2 = _create_test_state()
-    state2.players[1].arsenal.add(card_db.get("command_and_conquer"))
+    state2.players[1].arsenal.add(card_db.get("command_and_conquer_red"))
     state2.players[1].arsenal.cards[0].is_public = False  # Face-down
     
     emb1 = embedder(state1, perspective_player=1)
@@ -227,14 +227,14 @@ def test_action_multi_target_pooling_and_count():
     action_single = Action(
         type=ActionType.PLAY_CARD,
         player_id=1,
-        card=card_db.get("command_and_conquer"),
-        targets=["pummel"],
+        card=card_db.get("command_and_conquer_red"),
+        targets=["pummel_red"],
     )
     action_multi = Action(
         type=ActionType.PLAY_CARD,
         player_id=1,
-        card=card_db.get("command_and_conquer"),
-        targets=["pummel", "steadfast"],
+        card=card_db.get("command_and_conquer_red"),
+        targets=["pummel_red", "steadfast_red"],
     )
 
     emb_single = embedder(action_single)
@@ -277,11 +277,11 @@ def test_permanents_pooling_count_signal():
     card_db = CardDB()
 
     state_one = _create_test_state()
-    state_one.players[1].items.add(card_db.get("command_and_conquer"))
+    state_one.players[1].items.add(card_db.get("command_and_conquer_red"))
 
     state_two = _create_test_state()
-    state_two.players[1].items.add(card_db.get("command_and_conquer"))
-    state_two.players[1].items.add(card_db.get("command_and_conquer"))
+    state_two.players[1].items.add(card_db.get("command_and_conquer_red"))
+    state_two.players[1].items.add(card_db.get("command_and_conquer_red"))
 
     emb_one = embedder(state_one, perspective_player=1)
     emb_two = embedder(state_two, perspective_player=1)
@@ -304,8 +304,8 @@ def test_stack_overflow_summary_signal():
             layer_position=pos,
         )
 
-    base_top_five = ["pummel", "steadfast", "command_and_conquer", "pummel", "steadfast"]
-    deeper_layers = ["pummel", "command_and_conquer"]
+    base_top_five = ["pummel_red", "steadfast_red", "command_and_conquer", "pummel_red", "steadfast_red"]
+    deeper_layers = ["pummel_red", "command_and_conquer"]
 
     state_shallow = _create_test_state()
     state_shallow.stack_entries = [_entry(slug, i + 1) for i, slug in enumerate(base_top_five)]
@@ -336,9 +336,9 @@ def test_stack_overflow_ordering_signal():
             layer_position=pos,
         )
 
-    base_top_five = ["pummel", "steadfast", "command_and_conquer", "pummel", "steadfast"]
-    overflow_a = ["pummel", "command_and_conquer"]
-    overflow_b = ["command_and_conquer", "pummel"]
+    base_top_five = ["pummel_red", "steadfast_red", "command_and_conquer", "pummel_red", "steadfast_red"]
+    overflow_a = ["pummel_red", "command_and_conquer"]
+    overflow_b = ["command_and_conquer", "pummel_red"]
 
     state_a = _create_test_state()
     state_a.stack_entries = [_entry(slug, i + 1) for i, slug in enumerate(overflow_a + base_top_five)]
@@ -363,9 +363,9 @@ def test_defending_equipment_identity_pooling_signal():
     state_a = _create_test_state()
     state_b = _create_test_state()
 
-    attacker_card = card_db.get("pummel")
+    attacker_card = card_db.get("pummel_red")
     defend_head_a = card_db.get("nullrune_hood")
-    defend_head_b = card_db.get("command_and_conquer")
+    defend_head_b = card_db.get("command_and_conquer_red")
 
     state_a.players[2].head.add(defend_head_a)
     state_b.players[2].head.add(defend_head_b)
@@ -408,7 +408,7 @@ def test_action_attack_source_modality_signal():
     weapon = card_db.get("teklo_plasma_pistol")
 
     proxy_action = Action(
-        type=ActionType.ATTACK_WEAPON,
+        type=ActionType.ACTIVATE_CARD,
         player_id=1,
         card=weapon,
         attack_source=weapon,
@@ -416,7 +416,7 @@ def test_action_attack_source_modality_signal():
         is_attack_layer=False,
     )
     layer_action = Action(
-        type=ActionType.ATTACK_WEAPON,
+        type=ActionType.ACTIVATE_CARD,
         player_id=1,
         card=weapon,
         attack_source=None,
@@ -437,7 +437,7 @@ def test_effect_ordering_signals():
     embedder = GameStateEmbedder(d_model=128)
     card_db = CardDB()
 
-    source_card = card_db.get("command_and_conquer")
+    source_card = card_db.get("command_and_conquer_red")
 
     # Continuous effects: same stage/mod histograms, different substage range.
     state_cont_a = _create_test_state()
@@ -493,7 +493,7 @@ def test_keyword_pooling_fixed_output():
     card_db = CardDB()
     slug_vocab = SlugVocab.from_card_db(card_db)
 
-    base_card = card_db.get("command_and_conquer")
+    base_card = card_db.get("command_and_conquer_red")
     short_kw_card = deepcopy(base_card)
     short_kw_card.keywords = ["Go Again"]
 
@@ -532,10 +532,10 @@ def test_non_parameterized_keyword_accumulation():
     card_db = CardDB()
     slug_vocab = SlugVocab.from_card_db(card_db)
 
-    card_single = deepcopy(card_db.get("command_and_conquer"))
+    card_single = deepcopy(card_db.get("command_and_conquer_red"))
     card_single.keywords = ["Go Again"]
 
-    card_double = deepcopy(card_db.get("command_and_conquer"))
+    card_double = deepcopy(card_db.get("command_and_conquer_red"))
     card_double.keywords = ["Go Again", "Go Again"]
 
     single_features = card_to_features(card_single, slug_vocab)

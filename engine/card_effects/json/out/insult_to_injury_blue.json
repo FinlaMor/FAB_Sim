@@ -4,7 +4,15 @@
     {
       "ability_type": "PLAY",
       "effects": [
-        {"type": "GO_AGAIN", "conditions": [{"type": "HEALTH_GT_OPP"}]}
+        {
+          "type": "GAIN",
+          "conditions": [
+            {
+              "type": "HEALTH_GT_OPP"
+            }
+          ],
+          "keyword": "go again"
+        }
       ]
     }
   ]

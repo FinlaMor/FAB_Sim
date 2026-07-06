@@ -3,6 +3,14 @@ from __future__ import annotations
 from typing import Any, Callable
 
 
+def _attack_card_cost(attack_card) -> int:
+    """Printed resource cost of the attack card (0-cost cards stay 0)."""
+    cost = getattr(attack_card, 'cost', None)
+    if cost is None:
+        cost = getattr(attack_card, 'raw_cost', None)
+    return cost if cost is not None else 0
+
+
 def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
     """Return a (card, event, state)->bool callable, or None (always-True)."""
 
@@ -43,10 +51,61 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         def _acg(c, e, s, _amt=amount):
             if not s.combat or not s.combat.attack_card:
                 return False
-            cost = (getattr(s.combat.attack_card, 'cost', None)
-                    or getattr(s.combat.attack_card, 'raw_cost', None) or 0)
-            return cost >= _amt
+            return _attack_card_cost(s.combat.attack_card) >= _amt
         return _acg
+
+    if ctype == "ATTACK_COST_LTE":
+        # Accept "cost" or "amount" key. Default high so a missing value never blocks.
+        amount = params.get("cost", params.get("amount", 999))
+        def _acl(c, e, s, _amt=amount):
+            if not s.combat or not s.combat.attack_card:
+                return False
+            return _attack_card_cost(s.combat.attack_card) <= _amt
+        return _acl
+
+    if ctype == "ATTACK_TYPE_IN":
+        types = [v.lower() for v in params.get("types", [])]
+        def _ati(c, e, s, _types=types):
+            if not s.combat or not getattr(s.combat, 'attack_card', None):
+                return False
+            card_types = [x.lower() for x in (getattr(s.combat.attack_card, 'types', None) or [])]
+            return any(t in card_types for t in _types)
+        return _ati
+
+    if ctype == "ATTACK_SUBTYPE_IN":
+        subtypes = [v.lower() for v in params.get("subtypes", [])]
+        def _asi(c, e, s, _subs=subtypes):
+            if not s.combat or not getattr(s.combat, 'attack_card', None):
+                return False
+            card_subs = [x.lower() for x in (getattr(s.combat.attack_card, 'subtypes', None) or [])]
+            return any(st in card_subs for st in _subs)
+        return _asi
+
+    if ctype == "ATTACK_PITCH_POWER_GTE":
+        # True if a card with printed power >= amount was pitched to pay for the
+        # current attack (CR "pitched to attack with this"). Reads
+        # combat.pitched_for_attack, NOT the pitch zone.
+        amount = params.get("amount", params.get("power", 6))
+        def _appg(c, e, s, _amt=amount):
+            if not s.combat:
+                return False
+            for pc in getattr(s.combat, 'pitched_for_attack', None) or []:
+                power = getattr(pc, 'power', None)
+                if power is None:
+                    power = getattr(pc, 'base_power', None)
+                if power is not None and power >= _amt:
+                    return True
+            return False
+        return _appg
+
+    if ctype == "ATTACK_CONTROLLED_BY_YOU":
+        # True if the current attack is controlled by this card's controller.
+        def _acby(c, e, s):
+            from engine.card_effects.ability_keywords import _controller_id
+            if not s.combat or not getattr(s.combat, 'attack_card', None):
+                return False
+            return getattr(s.combat.attack_card, 'controller', None) == _controller_id(c)
+        return _acby
 
     if ctype == "DEFENDER_USED_HAND_CARD":
         return lambda c, e, s: (s.combat is not None
@@ -238,11 +297,11 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _ctt
 
     if ctype == "ATTACK_HAS_KEYWORD":
-        kw = params.get("keyword", "")
+        kw = params.get("keyword", "").lower()
         def _ahk(c, e, s, _kw=kw):
             if not s.combat:
                 return False
-            return _kw in (s.combat.keywords or [])
+            return _kw in [k.lower() for k in (s.combat.keywords or [])]
         return _ahk
 
     # ── boolean combinators ────────────────────────────────────────────────
@@ -266,6 +325,6 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return not (_fn is None or _fn(c, e, s))
         return _not
 
-    # i want to catch failures during development.
-    # # Unknown — always True (safe fallback)
-    # return None
+    # Unknown condition types are authoring errors — fail at JSON load time
+    # rather than silently passing (fail-open let bad JSON go unnoticed).
+    raise ValueError(f"Unknown DSL condition type: {ctype!r} (params: {params!r})")

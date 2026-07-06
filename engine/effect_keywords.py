@@ -251,16 +251,30 @@ class CreateTokenEvent:
     canceled: bool = False
 
 
-def create_token(state: GameState, target_player_id: int, token_slug: str,
-                 number: int = 1, source_player_id: int | None = None) -> CreateTokenEvent:
+def create_token(state: GameState, target_player_id: int = None, token_slug: str = None,
+                 number: int = 1, source_player_id: int | None = None,
+                 token: str | None = None, destination: str | None = None) -> CreateTokenEvent:
     """CR 8.5.2 — Create token(s) in the arena under target_player_id's control.
 
     Replacement effects can intercept CreateTokenEvent to modify event.number
-    (increase or decrease) or cancel creation entirely before execution.
-    Tokens receive keyword registration and prevention effects before zone entry
-    (CR 8.5.2b) so arena-entry triggers find prevention already active.
+    (increase or decrease), change event.destination, or cancel creation
+    entirely before execution. Tokens receive keyword registration and
+    prevention effects before zone entry (CR 8.5.2b) so arena-entry triggers
+    find prevention already active.
+
+    `token` is an alias for token_slug. `destination` names an explicit player
+    zone (e.g. "weapon1") overriding type-based routing — needed for tokens
+    whose zone cannot be inferred (a weapon token can go to either weapon slot).
     """
+    if token is not None:
+        token_slug = token
+    if token_slug is None or target_player_id is None:
+        raise TypeError("create_token requires target_player_id and token_slug")
     _src = source_player_id if source_player_id is not None else target_player_id
+
+    # Tokens entering play must have a DSL definition, same as deck cards.
+    from engine.card_effects.dsl.loader import require_card
+    require_card(token_slug)
 
     # card_db lookup provides a template slug; fresh Card objects are built per token below.
     template = state.card_db.get(token_slug) if hasattr(state, "card_db") else None
@@ -270,6 +284,7 @@ def create_token(state: GameState, target_player_id: int, token_slug: str,
         source_player_id=_src,
         target_player_id=target_player_id,
         number=number,
+        destination=destination or "tokens",
     )
 
     event_dict = state.effect_manager.apply_replacements(vars(event).copy(), state)
@@ -288,7 +303,15 @@ def create_token(state: GameState, target_player_id: int, token_slug: str,
         token.owner = event.target_player_id
         token.controller = event.target_player_id
         token.is_public = True
-        token.types = ["Token"]
+        # Inherit the printed type line from the card DB template so zone
+        # entry checks see the real types (e.g. weapon tokens need "Weapon").
+        if template is not None and (template.types or template.subtypes):
+            token.types = list(template.types or [])
+            token.subtypes = list(template.subtypes or [])
+            if "Token" not in token.types:
+                token.types.append("Token")
+        else:
+            token.types = ["Token"]
 
         # Set token-specific keywords before zone entry (CR 8.5.2b).
         if _slug in TOKEN_KEYWORDS:
@@ -321,8 +344,14 @@ def create_token(state: GameState, target_player_id: int, token_slug: str,
                     is_shielding=True,
                 ))
 
-        # Route to the correct arena zone based on token type.
-        if _slug in AURA_TOKENS:
+        # Route to the correct arena zone. An explicit destination (from the
+        # caller or a replacement effect) wins; otherwise route by token type.
+        if event.destination and event.destination != "tokens":
+            dest_zone = getattr(controller, event.destination, None)
+            if dest_zone is None:
+                raise ValueError(f"create_token: unknown destination zone {event.destination!r}")
+            dest_zone.add(token)
+        elif _slug in AURA_TOKENS:
             token.types.append("Aura")
             controller.auras.add(token)
         elif _slug in ITEM_TOKENS:
@@ -630,6 +659,13 @@ def draw(state: GameState, draw_player: int, source: Optional[Card] = None,
         return event
 
     player = state.players[event.draw_player]
+
+    # Cranial Crush (WTR): "they can't draw cards during their next action phase."
+    # The end-phase draw-to-intellect uses _draw_cards() (a separate path), so this
+    # only suppresses action-phase / effect-driven draws, as the card intends.
+    if "cant_draw" in getattr(player, "current_turn_effects", []):
+        return event
+
     drawn = 0
 
     for _ in range(event.number):
@@ -638,7 +674,12 @@ def draw(state: GameState, draw_player: int, source: Optional[Card] = None,
             # CR 8.5.6b: deck empty — draw fails, emit loss condition signal
             state.event_manager.emit(Event(type=EventType.DECK_EMPTY, data={"player_id": event.draw_player}), state)
             break
-        getattr(player, event.destination).add(card)
+        from engine.state import ZoneEntryResult
+        if getattr(player, event.destination).add(card) == ZoneEntryResult.FAIL:
+            # Destination refused the card (CR 3.0.11) — undo the pop so the
+            # card is not silently lost from the game.
+            getattr(player, event.origin).cards.insert(0, card)
+            break
         drawn += 1
         state.event_manager.emit(Event(type=EventType.DRAW, data={
             "draw_player": event.draw_player,
@@ -1055,6 +1096,41 @@ def intimidate(state: GameState, source_player_id: int,
     }), state)
 
     return event
+
+
+def _apply_fail_clash_retry(state: GameState, pid: int, revealed: dict) -> bool:
+    """Victor's outcome replacement: the first time each turn you would fail to
+    win a clash, you may destroy a Gold you control; if you do, put 1 of the
+    revealed cards on the bottom of its owner's deck, then clash again.
+
+    Returns True if the retry was taken (decks were modified → caller re-clashes).
+    """
+    player = state.players[pid]
+    flag = "victor_clash_retry_used"
+    if flag in player.current_turn_effects:
+        return False
+    gold = player.permanents.find("gold")
+    if gold is None:
+        return False
+    # "may" — ask the controller (default agents pick the first option = yes).
+    from engine.card_effects.ability_keywords import _ask_player
+    choice = _ask_player(state, pid, ["retry", "decline"],
+                         context="Destroy a Gold to bottom a revealed card and clash again?")
+    if str(choice) == "decline":
+        return False
+    player.current_turn_effects.append(flag)
+    destroy(state, gold, None)
+    # Put 1 of the revealed cards on the bottom of its owner's deck. Prefer
+    # bottoming an opponent's higher card; default to the controller's choice of
+    # any revealed card (agents pick the first — bottom this player's own card).
+    options = [c for c in revealed.values() if c is not None]
+    if options:
+        pick = options[0]
+        owner = state.players[pick.owner]
+        if pick in owner.deck.cards:
+            owner.deck.cards.remove(pick)
+            owner.deck.add_bottom(pick)
+    return True
 
 
 # ---------------------------------------------------------------------------
@@ -2500,6 +2576,17 @@ def clash(state: GameState, player1_id: int, player2_id: int,
         # CR 8.5.45c: tie — no winner
         winner = None
 
+    # Fail-clash retry (e.g. Victor): a clasher who did NOT win may, once per
+    # turn, destroy a Gold, bottom a revealed card, and clash again.
+    retry = getattr(state, "clash_fail_retry", {})
+    for pid in (event.player1_id, event.player2_id):
+        if pid == winner or retry.get(pid) is None:
+            continue
+        if _apply_fail_clash_retry(state, pid, {event.player1_id: card1,
+                                                event.player2_id: card2}):
+            return clash(state, event.player1_id, event.player2_id,
+                         source_player_id=source_player_id)
+
     event = dataclasses.replace(event,
         card1=card1, card2=card2,
         power1=power1, power2=power2,
@@ -2507,6 +2594,16 @@ def clash(state: GameState, player1_id: int, player2_id: int,
     )
 
     state.event_manager.emit(create_emit_event(event), state)
+
+    # "When you win a clash revealing this" (Thunk, Golden Son): dispatch to the
+    # winner's revealed card so its ON_CLASH_WIN_REVEALED ability can fire.
+    if winner is not None:
+        winner_card = card1 if winner == event.player1_id else card2
+        state.event_manager.emit(Event(type='clash_resolved', data={
+            'winner_id': winner,
+            'winner_card': winner_card,
+            'revealed': {event.player1_id: card1, event.player2_id: card2},
+        }), state)
 
     return event
 

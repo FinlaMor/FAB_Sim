@@ -1,0 +1,14 @@
+{
+  "slug": "savage_claw",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "ATTACK_PITCH_POWER_GTE", "amount": 6}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ]
+}

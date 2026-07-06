@@ -6,11 +6,11 @@
       "trigger": "ON_CRUSH",
       "effects": [
         {
-          "type": "INJECT_REPLACEMENT",
-          "object": "PLAYER",
-          "replace": "DRAW",
-          "with": "NO_EFFECT",
-          "span": "NEXT_TURN"
+          "type": "SET_FLAG",
+          "flag": "cant_draw",
+          "player": "OPPONENT",
+          "scope": "NEXT",
+          "_comment": "Crush: they can't draw cards during their next action phase."
         }
       ]
     }

@@ -1,9 +1,12 @@
-# triggers package
-from engine.card_effects.triggers.triggers import *  # noqa: F401,F403
-from engine.card_effects.triggers.triggers import register_card_triggers, register_hero_triggers, CARD_TRIGGERS, TriggerDef
-from engine.card_effects.triggers.card_triggers_extended import (  # noqa: F401
-    effect_deal_arcane,
-    effect_deal_arcane_to_target,
-    effect_deal_damage,
-    effect_gain_life,
+# triggers package — keyword-trigger infrastructure only.
+# Card-specific effects live in the JSON DSL (engine/card_effects/json/).
+from engine.card_effects.triggers.triggers import (  # noqa: F401
+    CARD_TRIGGERS,
+    MELD_EFFECT_REGISTRY,
+    TriggerDef,
+    build_keyword_triggers,
+    get_triggers_for_card,
+    register_all_triggers,
+    register_card_triggers,
+    register_hero_triggers,
 )

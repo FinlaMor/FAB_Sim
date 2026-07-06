@@ -1,0 +1,24 @@
+{
+  "slug": "gold",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 2
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

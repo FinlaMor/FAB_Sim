@@ -3,10 +3,22 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}],
+      "conditions": [
+        {
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "stealth"
+        }
+      ],
       "effects": [
-        {"type": "MODIFY_ATTACK_POWER", "amount": 3},
-        {"type": "GO_AGAIN"}
+        {
+          "type": "MODIFY_ATTACK",
+          "amount": 3,
+          "mod": "add"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "go again"
+        }
       ]
     }
   ]

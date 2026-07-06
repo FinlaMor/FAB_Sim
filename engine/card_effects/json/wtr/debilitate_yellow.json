@@ -1,0 +1,18 @@
+{
+  "slug": "debilitate_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "first_attack_-2p",
+          "player": "OPPONENT",
+          "scope": "NEXT",
+          "_comment": "Crush: their first attack during their next turn gets -2{p}."
+        }
+      ]
+    }
+  ]
+}

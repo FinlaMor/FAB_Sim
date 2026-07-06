@@ -1,0 +1,21 @@
+{
+  "slug": "victor_goldmane_high_and_mighty",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_GOLD_CREATED",
+      "conditions": [
+        {"type": "NOT", "inner_type": "FLAG_SET", "flag": "victor_gold_draw_used"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1},
+        {"type": "SET_FLAG", "flag": "victor_gold_draw_used", "scope": "CURRENT"}
+      ]
+    },
+    {
+      "ability_type": "REPLACEMENT",
+      "replacement": "fail_clash_retry",
+      "_comment": "First time each turn you would fail to win a clash: may destroy a Gold, bottom 1 revealed card, then clash again. Registered at game start; consulted by the clash keyword function."
+    }
+  ]
+}

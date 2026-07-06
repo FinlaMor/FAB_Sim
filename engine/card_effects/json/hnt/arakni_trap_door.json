@@ -1,0 +1,16 @@
+{
+  "slug": "arakni_trap_door",
+  "_todo": "On-become search/banish-a-trap ability not yet modeled.",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "mode": "return_to_brood"
+        }
+      ]
+    }
+  ]
+}

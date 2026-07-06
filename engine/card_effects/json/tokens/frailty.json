@@ -1,0 +1,15 @@
+{
+  "slug": "frailty",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_SELF",
+          "_comment": "TODO: '-1{p} on arsenal attack actions and weapon attacks' static not yet expressible"
+        }
+      ]
+    }
+  ]
+}

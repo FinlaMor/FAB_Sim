@@ -1,0 +1,15 @@
+{
+  "slug": "agility",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_SELF",
+          "_comment": "TODO: 'your next attack this turn gets go again' needs a next-attack keyword grant effect type"
+        }
+      ]
+    }
+  ]
+}

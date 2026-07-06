@@ -53,6 +53,19 @@ def new_game(
     p1 = create_player(p1_deck, player_id=1, card_db=card_db, seed=p1_seed)
     p2 = create_player(p2_deck, player_id=2, card_db=card_db, seed=p2_seed)
 
+    # Every card in the game must have a DSL definition (JSON under
+    # engine/card_effects/json/). Fail fast at game start with the full list
+    # of missing implementations rather than mid-game.
+    from engine.card_effects.dsl.loader import validate_slugs
+    from engine.card_effects.dsl import load_all_cards as _dsl_load_all
+    _dsl_load_all()
+    _game_slugs = set()
+    for _p in (p1, p2):
+        _game_slugs.update(c.slug for c in _p.all_cards)
+        if _p.hero is not None:
+            _game_slugs.add(_p.hero.slug)
+    validate_slugs(_game_slugs)
+
     ## CR 4.1.2 Reveal Heroes - for future code, reveal hero cards to both players then they decide on which cards to include in deck.
     ## For now, pre-sideboard decks in txt files.
 
@@ -108,6 +121,22 @@ def new_game(
             effect_mngr.register_prevention_effects(card, state)
         # Register passive hero triggers from HERO_TRIGGERS
         register_hero_triggers(state.players[player_id].hero, state.players[player_id], event_mngr)
+
+    # Register hero DSL REPLACEMENT abilities (e.g. Victor's fail-clash retry),
+    # consulted by the clash keyword function.
+    state.clash_fail_retry = {}
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    for player_id, _pl in state.players.items():
+        _hero = _pl.hero
+        if _hero is None:
+            continue
+        _hdef = _dsl_get_card(_hero.slug)
+        if _hdef is None:
+            continue
+        for _ab in _hdef.abilities:
+            if _ab.ability_type.upper() == "REPLACEMENT" and \
+                    _ab.params.get("replacement") == "fail_clash_retry":
+                state.clash_fail_retry[player_id] = "fail_clash_retry"
 
     # CR 4.1.5b: Check metastatic abilities for heroes that allows deck cards to start in
     # a different zone ie Fai's pheonix flame, or Dash IE's item.
@@ -411,6 +440,7 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
         from_weapon=attack_card.is_weapon,
         attack_card=attack_card,
         keywords=list(attack_card.keywords),
+        pitched_for_attack=list(getattr(entry, 'pitched_for_attack', None) or []) if entry else [],
     )
 
     # Resolve card target from declared_targets (e.g. attack targeting a Spectra aura).
@@ -583,7 +613,9 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
     state.event_manager.emit('chain_link_resolves', state)
     # CR 8.3.5b: Go Again grants +1 AP at Resolution Step.
     # Keywords may appear as "Go again", "Go Again", or "go_again" depending on source.
-    if any(re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', k).lower() == 'go again' for k in state.combat.keywords):
+    # Spinal Crush (WTR): suppress go again for the affected player's attacks this turn.
+    if (any(re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', k).lower() == 'go again' for k in state.combat.keywords)
+            and "cant_go_again" not in state.active().current_turn_effects):
         state.active().action_points += 1
 
     # 7.6.3: turn player gains priority
@@ -750,6 +782,9 @@ def _end_phase_iter(state: GameState) -> None:
 
     # 4.4.4: turn ends, effects that last "until end of turn" / "this turn" end
     player.current_turn_effects = []
+    # Unused "next attack this turn" power mods (MODIFY_NEXT_ATTACK) expire.
+    if hasattr(player, 'dsl_queued_attack_mods'):
+        player.dsl_queued_attack_mods = []
     state.effect_manager.clear_turn_effects()  # CR 4.4.4 / CR 6.2.2a: remove end_of_turn ContinuousEffects
     state.continuous_effect_manager.clear_transient()  # CR 6.3: remove non-persistent staged effects
     state.continuous_effect_manager.clear_cost_modifiers(state.active_player)  # CR 5.1.6a: turn-scoped cost effects
@@ -939,6 +974,41 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                            fn=lambda val, _n=n: val + _n))
         player.current_turn_effects.remove(key)
 
+    # Debilitate (WTR): "their first attack during their next turn gets -2{p}."
+    # Consumed once, on the first attack of the affected player's turn.
+    if "first_attack_-2p" in player.current_turn_effects:
+        attack_card.effects = list(getattr(attack_card, 'effects', []))
+        attack_card.effects.append(
+            CardEffect(prop="power", stage=7, substage=5,
+                       fn=lambda val: val - 2))
+        player.current_turn_effects.remove("first_attack_-2p")
+
+    # DSL MODIFY_NEXT_ATTACK queue (e.g. Awakening Bellow, Nimblism): each entry is
+    # {"mod": "add", "amount": N, "filter": [<condition specs>]}. Apply the power mod
+    # to the first attack matching the filter, then consume that entry. state.combat
+    # already holds this attack, so the DSL ATTACK_* condition compilers evaluate it.
+    queued = getattr(player, 'dsl_queued_attack_mods', None)
+    if queued:
+        from engine.card_effects.dsl.condition_types import compile_condition as _cc
+        remaining = []
+        for mod in queued:
+            matches = True
+            for spec in mod.get('filter', []):
+                fn = _cc(spec.get('type', 'none'), spec)
+                if fn is not None and not fn(attack_card, None, state):
+                    matches = False
+                    break
+            if matches and mod.get('mod', 'add') == 'add':
+                amt = mod.get('amount', 0)
+                attack_card.effects = list(getattr(attack_card, 'effects', []))
+                attack_card.effects.append(
+                    CardEffect(prop="power", stage=7, substage=5,
+                               fn=lambda val, _n=amt: val + _n))
+                # consumed — not re-added to remaining
+            else:
+                remaining.append(mod)
+        player.dsl_queued_attack_mods = remaining
+
 
 def _setup_dsl_listeners(state: GameState) -> None:
     """Load DSL card definitions and register event listeners that call dispatch().
@@ -971,19 +1041,42 @@ def _setup_dsl_listeners(state: GameState) -> None:
                 td.effect_fn(combat.attack_card, event, game_state)
             # consumed=True: drop after firing; keep if condition failed? Drop anyway.
         combat.injected_triggers = remaining
+        # CR 8.4.2: Crush — fire ON_CRUSH abilities when this dealt 4+ damage.
+        from engine.card_effects.ability_keywords import crush_check
+        if crush_check(event, game_state):
+            dispatch(game_state, "ON_CRUSH", slug,
+                     card=combat.attack_card, event=event)
+        # Hero passives that react to their controller's attack hitting
+        # (e.g. Arakni's stealth-vs-marked "go again" grant). Pass the hero as
+        # context so _controller_id resolves to the hero's owner; ATTACK_*
+        # conditions read state.combat directly, and keyword grants act on it.
+        attacker = game_state.players[combat.attacker_id]
+        if attacker.hero is not None:
+            dispatch(game_state, "ON_HIT", attacker.hero.slug,
+                     card=attacker.hero, event=event)
+
+    def _dsl_permanent_zones(player):
+        # Permanents plus equipment/weapon slot zones and the hero, so
+        # START_OF_TURN / END_OF_TURN abilities on any of them (Fyendal's Spring
+        # Tunic, Arakni's end-phase transform) fire via the DSL.
+        return (player.permanents, player.items, player.auras, player.allies,
+                player.tokens,
+                player.head, player.chest, player.arms, player.legs,
+                player.weapon1, player.weapon2, player.hero_zone)
 
     def _dsl_start_of_turn_listener(event, game_state: GameState) -> None:
-        # Fire START_OF_TURN DSL abilities for all permanents in play
-        for player in game_state.players.values():
-            for zone in (player.permanents, player.items, player.auras, player.allies):
-                for card in list(zone.cards):
-                    dispatch(game_state, "START_OF_TURN", card.slug, card=card)
+        # "At the start of your turn" — only the turn player's permanents/equipment fire.
+        player = game_state.active()
+        for zone in _dsl_permanent_zones(player):
+            for card in list(zone.cards):
+                dispatch(game_state, "START_OF_TURN", card.slug, card=card)
 
     def _dsl_end_of_turn_listener(event, game_state: GameState) -> None:
-        for player in game_state.players.values():
-            for zone in (player.permanents, player.items, player.auras, player.allies):
-                for card in list(zone.cards):
-                    dispatch(game_state, "END_OF_TURN", card.slug, card=card)
+        # "At the end of your turn" — only the turn player's permanents/equipment fire.
+        player = game_state.active()
+        for zone in _dsl_permanent_zones(player):
+            for card in list(zone.cards):
+                dispatch(game_state, "END_OF_TURN", card.slug, card=card)
 
     def _dsl_on_play_listener(event, game_state: GameState) -> None:
         slug = event.card
@@ -997,11 +1090,82 @@ def _setup_dsl_listeners(state: GameState) -> None:
         slug = event.card
         dispatch(game_state, "ON_ATTACK", slug, card=combat.attack_card, event=event)
 
+    def _dsl_pitch_listener(event, game_state: GameState) -> None:
+        # "When this is pitched" — e.g. Riches of Trōpal-Dhani creates a Gold.
+        card_obj = event.data.get('card') if isinstance(event.data, dict) else None
+        if card_obj is None:
+            return
+        dispatch(game_state, "ON_PITCH", card_obj.slug, card=card_obj, event=event)
+
+    def _dsl_defend_listener(event, game_state: GameState) -> None:
+        # "When this defends" — dispatch to the actual defending card object
+        # (e.g. Scowling Flesh Bag intimidates).
+        card_obj = event.data.get('card') if isinstance(event.data, dict) else None
+        if card_obj is None:
+            return
+        dispatch(game_state, "ON_DEFEND", card_obj.slug, card=card_obj, event=event)
+
+    def _dsl_boo_listener(event, game_state: GameState) -> None:
+        # "Whenever the crowd boos you" — fires on the booed player's hero.
+        pid = event.data.get('player_id') if isinstance(event.data, dict) else None
+        if pid is None:
+            return
+        hero = game_state.players[pid].hero
+        if hero is not None:
+            dispatch(game_state, "ON_BOO", hero.slug, card=hero, event=event)
+
+    def _dsl_gold_created_listener(event, game_state: GameState) -> None:
+        # "The first time each turn you create a Gold token" — Victor draws.
+        pid = event.data.get('player_id') if isinstance(event.data, dict) else None
+        if pid is None:
+            return
+        hero = game_state.players[pid].hero
+        if hero is not None:
+            dispatch(game_state, "ON_GOLD_CREATED", hero.slug, card=hero, event=event)
+
+    def _dsl_clash_resolved_listener(event, game_state: GameState) -> None:
+        # "When you win a clash revealing this" — dispatch to the winner's
+        # revealed card (e.g. Thunk, The Golden Son).
+        data = event.data if isinstance(event.data, dict) else {}
+        revealed = data.get('winner_card')
+        if revealed is None:
+            return
+        dispatch(game_state, "ON_CLASH_WIN_REVEALED", revealed.slug,
+                 card=revealed, event=event)
+
+    def _dsl_recalc_listener(event, game_state: GameState) -> None:
+        # WHILE_STATIC bridge: re-evaluate continuous attack-power statics on the
+        # attack card, both heroes, and in-play permanents/weapons. Runs AFTER the
+        # staged recalculation (this event is emitted at the end of
+        # _recalculate_attack_power), so MODIFY_ATTACK effects land in stage 8.
+        combat = game_state.combat
+        if not combat or not combat.attack_card:
+            return
+        seen: set[int] = set()
+        cards = [combat.attack_card]
+        for p in game_state.players.values():
+            if p.hero is not None:
+                cards.append(p.hero)
+            for zone in (p.permanents, p.items, p.auras, p.allies,
+                         p.head, p.chest, p.arms, p.legs, p.weapon1, p.weapon2):
+                cards.extend(zone.cards)
+        for c in cards:
+            if id(c) in seen:
+                continue
+            seen.add(id(c))
+            dispatch(game_state, "RECALC_ATTACK_POWER", c.slug, card=c, event=event)
+
     state.event_manager.register('hit', _dsl_hit_listener)
     state.event_manager.register('on_play', _dsl_on_play_listener)
     state.event_manager.register('attacking', _dsl_attacking_listener)
     state.event_manager.register('start_of_turn', _dsl_start_of_turn_listener)
     state.event_manager.register('end_of_turn', _dsl_end_of_turn_listener)
+    state.event_manager.register('card_pitched', _dsl_pitch_listener)
+    state.event_manager.register('defend', _dsl_defend_listener)
+    state.event_manager.register('crowd_boos', _dsl_boo_listener)
+    state.event_manager.register('gold_created', _dsl_gold_created_listener)
+    state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)
+    state.event_manager.register('recalculate_attack_power', _dsl_recalc_listener)
 
 
 def _setup_static_ability_listeners(state: GameState) -> None:
@@ -1380,7 +1544,10 @@ def resolve_stack(game_state: GameState) -> None:
             game_state, card, 'keywords', base_kws)
         _ga_strings = {"Go Again", "Go again", "go again"}
         has_effective_go_again = bool(effective_kws & _ga_strings) or card.has_go_again
-        if has_effective_go_again and entry.player_id == game_state.active_player:
+        # Spinal Crush (WTR): suppress go again for the affected player's
+        # action cards / activated abilities this turn.
+        if (has_effective_go_again and entry.player_id == game_state.active_player
+                and "cant_go_again" not in game_state.players[entry.player_id].current_turn_effects):
             game_state.players[entry.player_id].action_points += 1
 
     game_state.priority_player = game_state.active_player

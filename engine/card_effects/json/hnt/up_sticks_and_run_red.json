@@ -4,9 +4,19 @@
     {
       "ability_type": "PLAY",
       "effects": [
-        {"type": "RETRIEVE_DAGGER"},
-        {"type": "NEXT_ATTACK_BONUS", "amount": 4},
-        {"type": "GAIN_ACTION_POINTS", "amount": 1}
+        {
+          "type": "RETRIEVE_DAGGER"
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "amount": 4,
+          "mod": "add"
+        },
+        {
+          "type": "GAIN",
+          "amount": 1,
+          "asset": "ACTION_POINTS"
+        }
       ]
     }
   ]

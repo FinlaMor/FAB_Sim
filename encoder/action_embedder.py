@@ -85,15 +85,14 @@ ACTION_PACKED_SIZE = (
 )
 
 
-# Action type vocabulary (19 types — subset of ActionType enum used by the model)
-# defend_cards and pitch_card are excluded: both use iterative CHOOSE loops.
+# Action type vocabulary — mirrors the consolidated engine ActionType enum
+# (weapon/equipment/item/hero activations all route through activate_card now).
+# NOTE: changing this list changes the embedding layout; checkpoints trained
+# on the old 19-type vocabulary are incompatible.
 ACTION_TYPES = [
-    "pass", "attack_weapon", "play_card", "play_arsenal",
-    "defend_equipment", "store_arsenal", "play_attack_reaction",
-    "play_defense_reaction", "reaction_pass", "activate_item",
-    "activate_ally", "attack_ally", "activate_equipment", "activate_weapon",
-    "activate_hero", "discard_activate", "play_banish",
-    "choose", "pitch_to_deck",
+    "pass", "play_card", "defend_cards", "store_arsenal",
+    "reaction_pass", "activate_card", "choose", "pitch_card",
+    "pitch_to_deck",
 ]
 
 # Equipment slot vocabulary (4 slots per CR 8.2.10a - Off-Hand is weapon subtype, not equipment)
@@ -419,7 +418,7 @@ class ActionEmbedder(nn.Module):
         # ── 3. Card embedding (forward() feature 3)
         card_emb = self._batch_card_embed_by_slug(card_slug_idxs, device)  # (B, d_model)
 
-        # ── 4. Card index (forward() uses action.card_idx / 10.0; use -1.0 default)
+        # ── 4. Card index (forward() uses getattr(action, 'card_idx', None) / 10.0; use -1.0 default)
         card_idx_f = torch.full((B, 1), -1.0, device=device)
 
         # ── 5. Pitch cards embedding — sum pool (forward() feature 5)
@@ -545,8 +544,11 @@ class ActionEmbedder(nn.Module):
         """
         features = []
         
-        # 1. Action type (19-dim one-hot → 64-dim projection)
-        action_type_idx = ACTION_TYPES.index(action.type.value)
+        # 1. Action type (one-hot → 64-dim projection); unknown types → index 0
+        try:
+            action_type_idx = ACTION_TYPES.index(action.type.value)
+        except (ValueError, AttributeError):
+            action_type_idx = 0
         action_type_onehot = torch.zeros(len(ACTION_TYPES))
         action_type_onehot[action_type_idx] = 1.0
         action_type_emb = self.action_type_embed(action_type_onehot)
@@ -561,7 +563,7 @@ class ActionEmbedder(nn.Module):
         features.append(card_emb)
         
         # 4. Card index (1-dim normalized, -1.0 if not present)
-        card_idx_normalized = (action.card_idx / 10.0) if action.card_idx is not None else -1.0
+        card_idx_normalized = (getattr(action, 'card_idx', None) / 10.0) if getattr(action, 'card_idx', None) is not None else -1.0
         features.append(torch.tensor([card_idx_normalized]))
         
         # 5. Pitch cards embedding (d_model-dim, sum pool over pitch cards)
@@ -609,15 +611,16 @@ class ActionEmbedder(nn.Module):
 
         # 9. Attack-source embedding + attack modality flags.
         # CR 1.4.3/1.4.4: attack may be represented by proxy/layer distinct from card object.
+        # Weapon/ally attacks route through ACTIVATE_CARD with is_attack_proxy=True.
         attack_source_card = action.attack_source
-        if attack_source_card is None and action.type in (ActionType.ATTACK_WEAPON, ActionType.ATTACK_ALLY):
+        if attack_source_card is None and getattr(action, 'is_attack_proxy', False):
             attack_source_card = action.card
         attack_source_emb = self.embed_card(attack_source_card, player_counters)
         features.append(attack_source_emb)
 
         attack_proxy = action.is_attack_proxy
         if attack_proxy is None:
-            attack_proxy = action.type in (ActionType.ATTACK_WEAPON, ActionType.ATTACK_ALLY)
+            attack_proxy = False
         attack_layer = bool(action.is_attack_layer)
         attack_card = bool(action.card is not None and not attack_layer)
         features.append(torch.tensor([
@@ -632,8 +635,8 @@ class ActionEmbedder(nn.Module):
         features.append(target_count)
         
         # 11. Phase (3-dim one-hot → 32-dim projection) (CR 4.0.3)
-        if action.phase and action.phase in PHASES:
-            phase_idx = PHASES.index(action.phase)
+        if getattr(action, 'phase', None) and getattr(action, 'phase', None) in PHASES:
+            phase_idx = PHASES.index(getattr(action, 'phase', None))
             phase_onehot = torch.zeros(len(PHASES))
             phase_onehot[phase_idx] = 1.0
             phase_emb = self.phase_embed(phase_onehot)
@@ -642,9 +645,9 @@ class ActionEmbedder(nn.Module):
         features.append(phase_emb)
         
         # 12. Step (14-dim one-hot → 32-dim projection) (CR 4.0.4)
-        if action.step:
+        if getattr(action, 'step', None):
             try:
-                step_value = action.step.value if hasattr(action.step, 'value') else str(action.step)
+                step_value = getattr(action, 'step', None).value if hasattr(getattr(action, 'step', None), 'value') else str(getattr(action, 'step', None))
                 step_idx = STEPS.index(step_value)
                 step_onehot = torch.zeros(len(STEPS))
                 step_onehot[step_idx] = 1.0
@@ -656,11 +659,11 @@ class ActionEmbedder(nn.Module):
         features.append(step_emb)
         
         # 13. Chain link number (1-dim normalized) (CR 7.0.3b)
-        chain_link_norm = (action.chain_link_number or 0) / 10.0  # Aligned with gamestate_embedder
+        chain_link_norm = (getattr(action, 'chain_link_number', None) or 0) / 10.0  # Aligned with gamestate_embedder
         features.append(torch.tensor([chain_link_norm]))
         
         # 14. Priority player (1-dim binary) (CR 1.10)
-        priority_norm = float(action.priority_player or 0) / 2.0
+        priority_norm = float(getattr(action, 'priority_player', None) or 0) / 2.0
         features.append(torch.tensor([priority_norm]))
         
         # 15. Action points available (1-dim normalized) (CR 4.3.2)
@@ -684,11 +687,11 @@ class ActionEmbedder(nn.Module):
         features.append(torch.tensor([go_again_flag]))
         
         # 20. Is instant speed (1-dim binary) (CR 8.1.6a)
-        instant_speed_flag = float(action.is_instant_speed or False)
+        instant_speed_flag = float(getattr(action, 'is_instant_speed', None) or False)
         features.append(torch.tensor([instant_speed_flag]))
         
         # 21. Is action speed (1-dim binary) (CR 8.1.1a/b)
-        action_speed_flag = float(action.is_action_speed or False)
+        action_speed_flag = float(getattr(action, 'is_action_speed', None) or False)
         features.append(torch.tensor([action_speed_flag]))
         
         # 22. Played as instant (1-dim binary) (CR 8.1.1d)
@@ -722,12 +725,12 @@ class ActionEmbedder(nn.Module):
         # Verified alternative costs: rune_gate, cash_in, rise_above, life_of_party, double_down, reunion, soul_reaping, meld
         _n_alt = len(ACTION_ALT_COST_TYPES)
         alt_cost_vec = torch.zeros(_n_alt + 2)  # named types + "other" + "none"
-        if action.alternative_cost_used:
+        if getattr(action, 'alternative_cost_used', None):
             try:
-                idx = ACTION_ALT_COST_TYPES.index(action.alternative_cost_used)
+                idx = ACTION_ALT_COST_TYPES.index(getattr(action, 'alternative_cost_used', None))
                 alt_cost_vec[idx] = 1.0
             except ValueError:
-                logger.warning(f"Unknown alternative cost type: '{action.alternative_cost_used}' - using 'other' category")
+                logger.warning(f"Unknown alternative cost type: '{getattr(action, 'alternative_cost_used', None)}' - using 'other' category")
                 alt_cost_vec[_n_alt] = 1.0  # "other" category
         else:
             alt_cost_vec[_n_alt + 1] = 1.0  # "none" category
@@ -798,7 +801,7 @@ def action_to_features(action: Action) -> dict:
         "has_card": action.card is not None,
         "card_slug": card_slug,
         "card_name": card_name,
-        "card_idx": action.card_idx,
+        "card_idx": getattr(action, 'card_idx', None),
         "num_pitch_cards": len(action.pitch_cards),
         "pitch_card_slugs": pitch_card_slugs,
         "pitch_card_names": pitch_card_names,
@@ -815,22 +818,22 @@ def action_to_features(action: Action) -> dict:
         "has_attack_source": action.attack_source is not None,
         "is_attack_proxy": bool(action.is_attack_proxy),
         "is_attack_layer": bool(action.is_attack_layer),
-        "phase": action.phase,
-        "step": action.step.value if action.step else None,
-        "chain_link_number": action.chain_link_number,
-        "priority_player": action.priority_player,
+        "phase": getattr(action, 'phase', None),
+        "step": getattr(action, 'step', None).value if getattr(action, 'step', None) else None,
+        "chain_link_number": getattr(action, 'chain_link_number', None),
+        "priority_player": getattr(action, 'priority_player', None),
         "action_points_available": action.action_points_available,
         "resources_available": action.resources_available,
         "action_cost": action.action_cost,
         "resource_cost": action.resource_cost,
         "has_go_again": action.has_go_again,
-        "is_instant_speed": action.is_instant_speed,
-        "is_action_speed": action.is_action_speed,
+        "is_instant_speed": getattr(action, 'is_instant_speed', None),
+        "is_action_speed": getattr(action, 'is_action_speed', None),
         "played_as_instant": action.played_as_instant,
         "modes_selected": list(action.modes_selected) if action.modes_selected else [],
         "x_value_declared": action.x_value_declared,
         "is_melded": bool(action.is_melded),
-        "alternative_cost_used": action.alternative_cost_used,
+        "alternative_cost_used": getattr(action, 'alternative_cost_used', None),
     }
 
 

@@ -4,8 +4,16 @@
     {
       "ability_type": "PLAY",
       "effects": [
-        {"type": "NEXT_ATTACK_BONUS", "amount": 3},
-        {"type": "GAIN_ACTION_POINTS", "amount": 1}
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "amount": 3,
+          "mod": "add"
+        },
+        {
+          "type": "GAIN",
+          "amount": 1,
+          "asset": "ACTION_POINTS"
+        }
       ]
     }
   ]

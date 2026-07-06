@@ -4,11 +4,19 @@
     {
       "ability_type": "ATTACK_REACTION",
       "effects": [
-        {"type": "MODIFY_ATTACK_POWER", "amount": 3},
+        {
+          "type": "MODIFY_ATTACK",
+          "amount": 3,
+          "mod": "add"
+        },
         {
           "type": "INJECT_TRIGGER",
           "trigger": "ON_HIT",
-          "effects": [{"type": "MARK"}]
+          "effects": [
+            {
+              "type": "MARK"
+            }
+          ]
         }
       ]
     }

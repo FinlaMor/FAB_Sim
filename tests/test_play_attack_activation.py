@@ -251,7 +251,8 @@ def test_ally_attack_deducts_action_point():
 
 def test_non_attack_activate_does_not_create_stack_entry():
     """is_attack_proxy=False: effect resolves immediately, no StackEntry created."""
-    from engine.card_effects.registry import EQUIPMENT_ACTIVATION_EFFECTS
+    from engine.card_effects.dsl.loader import _CARDS, _compile_ability
+    from engine.card_effects.dsl.schema import CardDef
 
     state = _make_state()
     item = _make_card("test_item", types=["Item"])
@@ -259,24 +260,32 @@ def test_non_attack_activate_does_not_create_stack_entry():
     item.has_once_per_turn_limit = False
     item.base_text_box = ""
     item.base_functional_text = ""
+    item.owner = 1
+    item.controller = 1
 
-    fired = []
-    EQUIPMENT_ACTIVATION_EFFECTS["test_item"] = lambda action, player, s: fired.append(True)
+    # Inject a DSL definition whose ACTIVATE ability draws a card.
+    filler = _make_card("deck_filler")
+    filler.owner = 1
+    state.players[1].deck.add(filler)
+    _CARDS["test_item"] = CardDef(slug="test_item", abilities=[
+        _compile_ability({"ability_type": "ACTIVATE",
+                          "effects": [{"type": "DRAW", "amount": 1}]}),
+    ])
+    try:
+        action = Action(
+            type=ActionType.ACTIVATE_CARD,
+            player_id=1,
+            card=item,
+            is_attack_proxy=False,
+        )
+        state.players[1].action_points = 1
+        hand_before = len(state.players[1].hand.cards)
+        apply_action(state, action)
 
-    action = Action(
-        type=ActionType.ACTIVATE_CARD,
-        player_id=1,
-        card=item,
-        is_attack_proxy=False,
-    )
-    state.players[1].action_points = 1
-    apply_action(state, action)
-
-    assert len(state.stack_entries) == 0
-    assert len(fired) == 1
-
-    # Clean up registry
-    del EQUIPMENT_ACTIVATION_EFFECTS["test_item"]
+        assert len(state.stack_entries) == 0
+        assert len(state.players[1].hand.cards) == hand_before + 1
+    finally:
+        del _CARDS["test_item"]
 
 
 # ---------------------------------------------------------------------------
