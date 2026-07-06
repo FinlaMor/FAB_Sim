@@ -59,12 +59,14 @@ def available_actions(state, player_id) -> list[Action]:
 
 
 def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
-    """Offer the hero's DSL ACTIVATE/INSTANT abilities as ACTIVATE_CARD actions.
+    """Offer the hero's DSL activated abilities as ACTIVATE_CARD actions.
 
-    Generic: any hero whose JSON defines an ACTIVATE (action-speed) or INSTANT
-    ability is offered when timing, costs, and the ability's target filter allow.
-    INSTANT abilities are legal whenever the player has priority; ACTIVATE
-    abilities need an action point, an empty stack, and the action phase.
+    Timing per ability type:
+      * INSTANT          — any priority window
+      * ACTIVATE         — action phase, action point, empty stack
+      * ATTACK_REACTION  — combat reaction step, with a legal attack to target
+    An ability is offered only when its DSL costs, ability conditions (e.g. a
+    "once per turn" NOT-FLAG_SET gate), and target filter all pass.
     """
     from engine.card_effects.dsl.loader import get_card as _dsl_get_card
     player = state.players[player_id]
@@ -76,13 +78,20 @@ def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
         return
 
     in_action_phase = state.step == Step.ACTION and len(state.stack_entries) == 0
+    in_reaction_step = state.step == Step.COMBAT_REACTION and state.combat is not None
     for ability in cd.abilities:
         atype = ability.ability_type.upper()
-        if atype not in ("ACTIVATE", "INSTANT"):
+        if atype not in ("ACTIVATE", "INSTANT", "ATTACK_REACTION"):
             continue
         if atype == "ACTIVATE" and not (in_action_phase and player.action_points > 0):
             continue
-        # Ability's own DSL costs (e.g. TAP_SELF) must be payable.
+        if atype == "ATTACK_REACTION" and not in_reaction_step:
+            continue
+        # Ability conditions (e.g. once-per-turn NOT FLAG_SET) must hold.
+        if any(cond.fn is not None and not cond.fn(hero, None, state)
+               for cond in getattr(ability, 'conditions', [])):
+            continue
+        # Ability's own DSL costs (TAP_SELF, discard-an-Assassin) must be payable.
         payable = True
         for cost in getattr(ability, 'costs', []):
             if cost.check_fn is not None and not cost.check_fn(hero, None, state):
@@ -517,7 +526,8 @@ def _apply_activate(state: GameState, action: Action) -> None:
     from engine.card_effects.dsl.loader import require_card
     cd = require_card(card.slug)
     activatable = [a for a in cd.abilities
-                   if a.ability_type.upper() in ("ACTIVATE", "INSTANT")]
+                   if a.ability_type.upper() in
+                   ("ACTIVATE", "INSTANT", "ATTACK_REACTION", "DEFENSE_REACTION")]
     if len(activatable) > 1:
         # The Action does not yet carry which ability was chosen; paying every
         # ability's costs and firing them all would be wrong. Fail loudly.
@@ -533,8 +543,17 @@ def _apply_activate(state: GameState, action: Action) -> None:
         for cost in getattr(ability, 'costs', []):
             if cost.pay_fn is not None:
                 cost.pay_fn(card, None, state)
-    from engine.card_effects.dsl import dispatch as _dsl_dispatch
-    _dsl_dispatch(state, "ON_ACTIVATE", card.slug, card=card)
+    ability = activatable[0] if activatable else None
+    if ability is not None and ability.ability_type.upper() in (
+            "ATTACK_REACTION", "DEFENSE_REACTION"):
+        # Reaction abilities act on the current combat now — run the specific
+        # ability (target filter + conditions + effects) directly rather than
+        # broadcasting ON_ACTIVATE (which maps to ACTIVATE/INSTANT only).
+        from engine.card_effects.dsl.interpreter import run_ability
+        run_ability(ability, card, None, state)
+    else:
+        from engine.card_effects.dsl import dispatch as _dsl_dispatch
+        _dsl_dispatch(state, "ON_ACTIVATE", card.slug, card=card)
 
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""

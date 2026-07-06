@@ -12,14 +12,17 @@ from engine.state import CombatState, GameState, Player, Step, Zone
 
 @pytest.fixture(autouse=True, scope="module")
 def _restore_dsl_registry():
-    """Reload the full DSL card registry after each test module.
+    """Keep the full DSL card registry loaded around each test module.
 
-    Some tests call load_all_cards() on a temp dir or a single set folder,
-    which replaces the module-global registry; without restoration, later
-    modules see a polluted card set (e.g. tokens missing for create_token).
+    Some tests (and some modules at import time) call load_all_cards() on a temp
+    dir or a single set folder, which replaces the module-global registry.
+    Reload the full tree both before and after each module so no module runs
+    against a subset polluted during collection or by a prior module.
     """
-    yield
     from engine.card_effects.dsl import loader
+    if loader._LOADED:
+        loader.load_all_cards()
+    yield
     if loader._LOADED:
         loader.load_all_cards()
 

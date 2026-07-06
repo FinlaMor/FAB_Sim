@@ -440,3 +440,30 @@ Costs: `TAP_SELF` (`{t}`). Conditions: `ATTACK_PITCH_POWER_GTE` `{amount}`
 Card-level fields: `"setup": {"weapon_zones": 1}` (Kayo starts with 1 weapon
 zone); a `REPLACEMENT` ability with `"replacement": "fail_clash_retry"` is
 registered at game start (Victor's clash retry).
+
+## Hero activated abilities and demi-hero reactions
+
+Heroes are offered their DSL activated abilities by `play.available_actions`
+(`_add_hero_dsl_activations`) when timing/costs/conditions/target-filter allow:
+- `INSTANT` — any priority window.
+- `ACTIVATE` — action phase, action point, empty stack.
+- `ATTACK_REACTION` — combat reaction step, targeting the current attack. Runs
+  the specific ability directly (not the ON_ACTIVATE broadcast). Use ability
+  `conditions` (e.g. `NOT FLAG_SET`) for once-per-turn gating, set the flag with
+  a `SET_FLAG` effect, and `target.filter` for what the reaction may target
+  (`ATTACK_CLASS_IN`, `ATTACK_SUBTYPE_IN`).
+
+Conditional (stealth-rider) effects: put an effect-level `conditions` array on
+the sub-effect (e.g. `INJECT_TRIGGER` gated by `ATTACK_HAS_KEYWORD stealth`) —
+the loader turns it into a gate, so the sub-effect runs only when it holds.
+
+More vocabulary added for the Arakni demi-heroes:
+- Cost `DISCARD_CARD` `{class_filter|type_filter, amount}` — filtered discard;
+  when filtered, the controller chooses which matching card.
+- `BANISH` `{from_zone}` now includes `ARSENAL` (and `HAND`, `DECK`, `GRAVEYARD`).
+- `CREATE_TOKEN` `{destination: "weapon_slot"}` equips a weapon token into a free
+  weapon zone (respects `weapon_zone_count`); tokens inherit keywords from the
+  card-DB template (a Graphene Chelicera token carries Stealth).
+- `SEARCH_BANISH_FACE_DOWN` — search your deck, banish a card face-down, shuffle
+  (trap_door). Trigger `ON_BECOME` fires when a hero transforms into that form
+  (`become_agent_of_chaos`).

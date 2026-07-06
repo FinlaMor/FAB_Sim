@@ -125,6 +125,16 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     target = next((c for c in state.players[tid].graveyard.cards if c.slug == pick), None)
                     if target:
                         _ek_banish(state, target, tid, origin_zone="graveyard")
+            elif fz == "ARSENAL":
+                arsenal = state.players[tid].arsenal.cards
+                for _ in range(min(_a, len(arsenal))):
+                    if not state.players[tid].arsenal.cards:
+                        break
+                    options = [c.slug for c in state.players[tid].arsenal.cards]
+                    pick = _ask_player(state, tid, options, context="Choose a card to banish from arsenal")
+                    target = next((c for c in state.players[tid].arsenal.cards if c.slug == pick), None)
+                    if target:
+                        _ek_banish(state, target, tid, origin_zone="arsenal")
         return _fn
 
     if etype == "CHARGE":
@@ -199,6 +209,33 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                        position=None)
         return _fn
 
+    if etype == "SEARCH_BANISH_FACE_DOWN":
+        # trap_door on-become: "you may search your deck for a card, banish it
+        # face-down, then shuffle. If it's a trap, you may play it until the
+        # start of your next turn." Optional (may fail to find).
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import shuffle as _shuffle, banish as _banish
+            cid = _controller_id(card)
+            controller = state.players[cid]
+            eligible = list(controller.deck.cards)
+            options = [c.slug for c in eligible] + ["fail_to_find"]
+            pick = _ask_player(state, cid, options,
+                               context="Search your deck for a card to banish face-down (or fail to find)")
+            if pick != "fail_to_find":
+                target = next((c for c in eligible if c.slug == pick), None)
+                if target is not None:
+                    _banish(state, target, cid, origin_zone="deck")
+                    if target in controller.banished.cards:
+                        target.is_public = False  # banished face-down
+                    subtypes = [s.lower() for s in (target.subtypes or [])]
+                    if "trap" in subtypes:
+                        # TODO: allow playing the trap from banished until the
+                        # start of your next turn; flag it for now.
+                        controller.next_turn_effects.append(f"trap_playable_{target.slug}")
+            _shuffle(state, cid)
+        return _fn
+
     if etype == "SEARCH_DECK":
         # Search your deck for any card, put it in hand, then shuffle.
         # Player may "fail to find" (CR 8.5.19). Follows the nimby pattern.
@@ -250,12 +287,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         token = params.get("token", "")
         count = params.get("count", 1)
         player_target = params.get("player", "SELF")
-        def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target):
+        destination = params.get("destination")  # e.g. "weapon_slot" to equip
+        def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target, _dest=destination):
             from engine.effect_keywords import create_token as _ek_create_token
             from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
-            _ek_create_token(state, tid, _tok, _cnt)
+            _ek_create_token(state, tid, _tok, _cnt, destination=_dest)
         return _fn
 
     if etype == "PUT_COUNTER":

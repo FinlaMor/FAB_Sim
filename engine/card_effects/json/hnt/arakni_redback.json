@@ -1,15 +1,34 @@
 {
   "slug": "arakni_redback",
-  "_todo": "Once per Turn Attack Reaction (discard an Assassin: +3p; stealth rider go again) not yet modeled.",
   "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {"type": "NOT", "inner_type": "FLAG_SET", "flag": "redback_ar_used"}
+      ],
+      "cost": [
+        {"type": "DISCARD_CARD", "class_filter": "Assassin", "amount": 1}
+      ],
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Assassin"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3},
+        {
+          "type": "GAIN",
+          "keyword": "go again",
+          "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}]
+        },
+        {"type": "SET_FLAG", "flag": "redback_ar_used", "scope": "CURRENT"}
+      ]
+    },
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "END_OF_TURN",
       "effects": [
-        {
-          "type": "TRANSFORM_HERO",
-          "mode": "return_to_brood"
-        }
+        {"type": "TRANSFORM_HERO", "mode": "return_to_brood"}
       ]
     }
   ]

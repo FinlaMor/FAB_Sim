@@ -1,15 +1,31 @@
 {
   "slug": "arakni_orb_weaver",
-  "_todo": "Graphene Chelicera cost reduction + Once per Turn Instant (equip token, next stealth +3p) not yet modeled.",
+  "_todo": "Passive 'Graphene Chelicerae cost you {r} less to activate' is a continuous cost modifier not yet modeled.",
   "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "NOT", "inner_type": "FLAG_SET", "flag": "orb_weaver_instant_used"}
+      ],
+      "cost": [
+        {"type": "DISCARD_CARD", "class_filter": "Assassin", "amount": 1}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "graphene_chelicera", "destination": "weapon_slot"},
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}]
+        },
+        {"type": "SET_FLAG", "flag": "orb_weaver_instant_used", "scope": "CURRENT"}
+      ]
+    },
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "END_OF_TURN",
       "effects": [
-        {
-          "type": "TRANSFORM_HERO",
-          "mode": "return_to_brood"
-        }
+        {"type": "TRANSFORM_HERO", "mode": "return_to_brood"}
       ]
     }
   ]

@@ -114,7 +114,9 @@ def _hit_event(damage: int = 4) -> Event:
 # Module-level setup
 # ---------------------------------------------------------------------------
 
-_load_wtr()
+# Load the full card tree at import (WTR is a subset). Loading only WTR here
+# would pollute the shared registry during collection for other test modules.
+load_all_cards()
 
 
 # ===========================================================================

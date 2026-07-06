@@ -1,15 +1,19 @@
 {
   "slug": "arakni_trap_door",
-  "_todo": "On-become search/banish-a-trap ability not yet modeled.",
+  "_todo": "'If it's a trap, you may play it from banished until the start of your next turn' is flagged (trap_playable_<slug>) but play-from-banished legality is not yet wired.",
   "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_BECOME",
+      "effects": [
+        {"type": "SEARCH_BANISH_FACE_DOWN"}
+      ]
+    },
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "END_OF_TURN",
       "effects": [
-        {
-          "type": "TRANSFORM_HERO",
-          "mode": "return_to_brood"
-        }
+        {"type": "TRANSFORM_HERO", "mode": "return_to_brood"}
       ]
     }
   ]

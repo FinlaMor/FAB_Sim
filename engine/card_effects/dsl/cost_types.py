@@ -29,20 +29,43 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         return can_pay, pay
 
     if ctype == "DISCARD_CARD":
-        # Generic discard cost (optional type filter)
+        # Discard cost with an optional type or class filter (e.g. "discard an
+        # Assassin card"). When filtered, the controller chooses which matching
+        # card to discard; unfiltered discards are random.
         amount = params.get("amount", 1)
         type_filter = params.get("type_filter", "")
-        def can_pay(card, event, state, _a=amount, _tf=type_filter):
+        class_filter = params.get("class_filter", "")
+
+        def _matches(c, _tf=type_filter, _cf=class_filter):
+            if _tf and _tf.upper() not in [t.upper() for t in (getattr(c, 'types', None) or [])]:
+                return False
+            if _cf and _cf.upper() not in [x.upper() for x in (getattr(c, 'classes', None) or [])]:
+                return False
+            return True
+
+        def can_pay(card, event, state, _a=amount):
             from engine.card_effects.ability_keywords import _controller_id
             hand = state.players[_controller_id(card)].hand
-            if _tf:
-                matches = [c for c in hand.cards
-                           if _tf.upper() in [t.upper() for t in (getattr(c, 'types', None) or [])]]
-                return len(matches) >= _a
+            if type_filter or class_filter:
+                return len([c for c in hand.cards if _matches(c)]) >= _a
             return len(hand.cards) >= _a
+
         def pay(card, event, state, _a=amount):
-            from engine.card_effects.ability_keywords import _controller_id, effect_discard
-            effect_discard(state, _controller_id(card), _a, random_discard=True)
+            from engine.card_effects.ability_keywords import _controller_id, _ask_player, effect_discard
+            from engine.effect_keywords import discard as _ek_discard
+            cid = _controller_id(card)
+            if not (type_filter or class_filter):
+                effect_discard(state, cid, _a, random_discard=True)
+                return
+            hand = state.players[cid].hand
+            for _ in range(_a):
+                eligible = [c for c in hand.cards if _matches(c)]
+                if not eligible:
+                    break
+                pick = _ask_player(state, cid, [c.slug for c in eligible],
+                                   context="Choose a card to discard as a cost")
+                chosen = next((c for c in eligible if c.slug == pick), eligible[0])
+                _ek_discard(state, chosen, card, origin="hand")
         return can_pay, pay
 
     if ctype == "REVEAL_CARD_COST_GTE":

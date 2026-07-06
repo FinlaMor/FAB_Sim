@@ -1,5 +1,17 @@
 {
   "slug": "graphene_chelicera",
-  "abilities": [],
-  "_comment": "TODO: Stealth; Once per Turn Action {r}: Attack; go again vs marked hero."
+  "_todo": "Weapon-attack activation ('Once per Turn Action - {r}: Attack') is engine-side and needs the token to expose attack text; not yet attackable as a token. Stealth is inherited from the card DB template keywords.",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_CONTROLLED_BY_YOU"},
+        {"type": "OPPONENT_IS_MARKED"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "go again"}
+      ]
+    }
+  ]
 }

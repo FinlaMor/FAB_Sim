@@ -1571,6 +1571,9 @@ def become_agent_of_chaos(state, player_id: int, choose: bool = False):
     hero.slug = slug
     hero.name = slug.replace("_", " ").title()
     hero.types = ["Chaos", "Assassin", "Demi-Hero"]
+    # "When you become this ..." — fire the new form's on-become ability.
+    from engine.card_effects.dsl import dispatch as _dsl_dispatch
+    _dsl_dispatch(state, "ON_BECOME", hero.slug, card=hero)
 
 
 def return_to_brood(state, player_id: int):

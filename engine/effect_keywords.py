@@ -313,9 +313,13 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
         else:
             token.types = ["Token"]
 
-        # Set token-specific keywords before zone entry (CR 8.5.2b).
+        # Set token keywords before zone entry (CR 8.5.2b): explicit override
+        # first, else inherit the printed keywords from the card DB template
+        # (e.g. a Graphene Chelicera weapon token carries Stealth).
         if _slug in TOKEN_KEYWORDS:
             token.keywords = list(TOKEN_KEYWORDS[_slug])
+        elif template is not None and getattr(template, 'keywords', None):
+            token.keywords = list(template.keywords)
 
         # Register keyword-based prevention effects before zone entry so that
         # any arena-entry trigger that immediately deals damage already finds them.
@@ -346,7 +350,18 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
 
         # Route to the correct arena zone. An explicit destination (from the
         # caller or a replacement effect) wins; otherwise route by token type.
-        if event.destination and event.destination != "tokens":
+        if event.destination == "weapon_slot":
+            # Equip a weapon token into an available weapon zone (respects a
+            # hero's weapon-zone count, e.g. 1 for some heroes).
+            slots = [controller.weapon1]
+            if getattr(controller, "weapon_zone_count", 2) >= 2:
+                slots.append(controller.weapon2)
+            dest_zone = next((z for z in slots if not z.cards), None)
+            if dest_zone is not None:
+                dest_zone.add(token)
+            # No free weapon zone → the token cannot be equipped (CR: it would
+            # cease to exist); drop it.
+        elif event.destination and event.destination != "tokens":
             dest_zone = getattr(controller, event.destination, None)
             if dest_zone is None:
                 raise ValueError(f"create_token: unknown destination zone {event.destination!r}")
