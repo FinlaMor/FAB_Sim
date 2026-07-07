@@ -1,7 +1,12 @@
 {
   "slug": "arakni_orb_weaver",
-  "_todo": "Passive 'Graphene Chelicerae cost you {r} less to activate' is a continuous cost modifier not yet modeled.",
   "abilities": [
+    {
+      "ability_type": "COST_MODIFIER",
+      "applies_to": "graphene_chelicera",
+      "activation_delta": -1,
+      "_comment": "Graphene Chelicerae cost you {r} less to activate."
+    },
     {
       "ability_type": "INSTANT",
       "conditions": [

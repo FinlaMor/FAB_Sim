@@ -1,6 +1,6 @@
 {
   "slug": "graphene_chelicera",
-  "_todo": "Weapon-attack activation ('Once per Turn Action - {r}: Attack') is engine-side and needs the token to expose attack text; not yet attackable as a token. Stealth is inherited from the card DB template keywords.",
+  "_comment": "Weapon token: power 1, 'Once per Turn Action - {r}: Attack', Stealth — all inherited from the card DB template; attacks are offered by the engine weapon-attack path.",
   "abilities": [
     {
       "ability_type": "STATIC_TRIGGERED",

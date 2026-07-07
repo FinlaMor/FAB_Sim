@@ -221,10 +221,11 @@ def _deck_state(hero_slug="arakni_marionette"):
     return st
 
 
-def _trap(slug, owner=1):
+def _trap(slug, owner=1, cost=0):
     c = Card(slug=slug, name=slug, types=["Action"], subtypes=["Trap"])
     c.owner = owner
     c.controller = owner
+    c.raw_cost = cost
     return c
 
 
@@ -238,7 +239,36 @@ def test_trap_door_on_become_banishes_a_card_face_down():
     banished = st.players[1].banished.cards
     assert len(banished) == 1
     assert banished[0].is_public is False           # face-down
-    assert "trap_playable_snare_trap" in st.players[1].next_turn_effects  # was a Trap
+    assert trap in st.players[1].playable_from_banished  # was a Trap
+
+
+def test_trap_door_banished_trap_is_playable_then_expires():
+    from engine.card_effects.dsl import dispatch
+    from engine.play import recalculate_playable
+    from engine.engine import start_of_turn_refresh_player
+    st = _deck_state("arakni_trap_door")
+    trap = _trap("snare_trap")
+    st.players[1].deck.add(trap)
+    dispatch(st, "ON_BECOME", "arakni_trap_door", card=st.players[1].hero)
+    recalculate_playable(st, 1)
+    assert trap.playable is True            # playable from banished
+    # At the start of this player's next turn the grant expires.
+    start_of_turn_refresh_player(st, 1)
+    recalculate_playable(st, 1)
+    assert trap.playable is False
+    assert trap in st.players[1].banished.cards  # still banished, just not playable
+
+
+def test_trap_door_non_trap_not_playable_from_banished():
+    from engine.card_effects.dsl import dispatch
+    st = _deck_state("arakni_trap_door")
+    non_trap = Card(slug="just_a_card", name="X", types=["Action"], subtypes=["Attack"])
+    non_trap.owner = 1
+    non_trap.controller = 1
+    non_trap.raw_cost = 1
+    st.players[1].deck.add(non_trap)
+    dispatch(st, "ON_BECOME", "arakni_trap_door", card=st.players[1].hero)
+    assert non_trap not in st.players[1].playable_from_banished
 
 
 def test_become_trap_door_fires_on_become_search():

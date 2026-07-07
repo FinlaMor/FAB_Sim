@@ -786,6 +786,11 @@ class Player:
         self.next_turn_effects: list[str] = []
         self.class_counters: dict[str, int] = {}
         self.allies_exhausted: list[bool] = []
+        # Cards this player may currently play from their banished zone (e.g.
+        # trap_door's banished trap). Cleared at the start of this player's turn.
+        # A list with identity semantics — Card is unhashable, and the grant is
+        # for that specific card object, not any equal copy.
+        self.playable_from_banished: list = []
         self.current_turn_effects: list[str] = []
         self.weapon_exhausted: bool = False
         self.hero_power_exhausted: bool = False

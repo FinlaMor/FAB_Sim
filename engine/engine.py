@@ -273,6 +273,13 @@ def start_of_turn_refresh_player(state: GameState, playerid: int):
     """
     player = state.players[playerid]
 
+    # "until the start of your next turn" grants (e.g. trap_door's banished
+    # trap) expire at the start of this player's turn.
+    player.playable_from_banished = []
+
+    # Weapons ready at the start of the turn (CR 4.4.3d).
+    player.weapon_exhausted = False
+
     for card in player.arena_cards:
         if getattr(card, 'has_per_turn_limit'):
             setattr(card, 'activations', card.base_activations)

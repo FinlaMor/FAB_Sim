@@ -134,6 +134,46 @@ def test_golden_son_revealed_in_winning_clash_creates_gold():
     assert st.players[1].permanents.find("gold") is not None
 
 
+# ── Golden Son: optional "destroy a Gold" additional cost on play ─────────────
+
+def _golden_son_play(choice):
+    """Play Golden Son with a Gold controlled; agent picks CHOOSE option `choice`."""
+    from engine.effect_keywords import create_token
+    st = _state()
+    st.player_agents[1] = lambda s, o, context=None: (choice if choice in o else o[0])
+    create_token(st, target_player_id=1, token_slug="gold")
+    gs = _deck_card("the_golden_son_yellow", 1, power=7)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=7,
+                            base_attack_power=7, attack_card=gs, keywords=[],
+                            from_weapon=False)
+    dispatch(st, "ON_PLAY", "the_golden_son_yellow", card=gs)
+    return st
+
+
+def test_golden_son_destroys_gold_for_plus3_and_overpower():
+    st = _golden_son_play("0")  # option 0: destroy the Gold
+    assert st.players[1].permanents.find("gold") is None
+    assert st.combat.attack_power == 10  # 7 + 3
+    assert any(k.lower() == "overpower" for k in st.combat.keywords)
+
+
+def test_golden_son_may_decline_destroying_gold():
+    st = _golden_son_play("1")  # option 1: decline
+    assert st.players[1].permanents.find("gold") is not None
+    assert st.combat.attack_power == 7
+    assert not any(k.lower() == "overpower" for k in st.combat.keywords)
+
+
+def test_golden_son_no_buff_without_a_gold():
+    st = _state()
+    gs = _deck_card("the_golden_son_yellow", 1, power=7)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=7,
+                            base_attack_power=7, attack_card=gs, keywords=[],
+                            from_weapon=False)
+    dispatch(st, "ON_PLAY", "the_golden_son_yellow", card=gs)
+    assert st.combat.attack_power == 7  # no Gold → cost/buff unavailable
+
+
 def test_clash_resolved_bridge_dispatches_to_winner_card():
     # Integration: a real clash where the winner reveals Thunk fires its ability
     # via the engine's clash_resolved → ON_CLASH_WIN_REVEALED bridge.

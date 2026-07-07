@@ -457,6 +457,18 @@ Conditional (stealth-rider) effects: put an effect-level `conditions` array on
 the sub-effect (e.g. `INJECT_TRIGGER` gated by `ATTACK_HAS_KEYWORD stealth`) —
 the loader turns it into a gate, so the sub-effect runs only when it holds.
 
+Hero `COST_MODIFIER` abilities (no effects — read by the engine's cost pipeline):
+`{"ability_type": "COST_MODIFIER", "applies_to": "<slug>", "activation_delta": -1}`
+reduces that card's activation cost while this hero is in play (orb_weaver's
+"Graphene Chelicerae cost you {r} less to activate"). Weapon attacks themselves
+are offered engine-side (`play._add_weapon_attacks`) for any weapon-zone card
+with printed power + a parsed activation cost — including weapon tokens, which
+inherit power/activation fields and keywords from the card-DB template.
+
+Optional "you may destroy a Gold" style additional play costs: use a `CHOOSE`
+effect whose option 0 is `[DESTROY_TOKEN{token}, ...buffs]` and option 1 is
+`[]`, gated by a `CONTROLS_TOKEN_TYPE` condition (see the_golden_son_yellow).
+
 More vocabulary added for the Arakni demi-heroes:
 - Cost `DISCARD_CARD` `{class_filter|type_filter, amount}` — filtered discard;
   when filtered, the controller chooses which matching card.
@@ -466,4 +478,7 @@ More vocabulary added for the Arakni demi-heroes:
   card-DB template (a Graphene Chelicera token carries Stealth).
 - `SEARCH_BANISH_FACE_DOWN` — search your deck, banish a card face-down, shuffle
   (trap_door). Trigger `ON_BECOME` fires when a hero transforms into that form
-  (`become_agent_of_chaos`).
+  (`become_agent_of_chaos`). If the banished card is a Trap it is added to
+  `player.playable_from_banished` — playable from the banished zone until the
+  start of that player's next turn (cleared in `start_of_turn_refresh_player`).
+- `DESTROY_TOKEN` `{token}` — destroy one such permanent you control.

@@ -3,21 +3,21 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "conditions": [
-        {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token": "gold"
-        }
-      ],
+      "_comment": "Optional additional cost: you MAY destroy a Gold you control; if you do, this gets +3{p} and overpower. Only offered when you control a Gold; option 0 destroys + buffs, option 1 declines.",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
-          "amount": 3,
-          "mod": "add"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "overpower"
+          "type": "CHOOSE",
+          "conditions": [
+            {"type": "CONTROLS_TOKEN_TYPE", "token": "gold"}
+          ],
+          "options": [
+            [
+              {"type": "DESTROY_TOKEN", "token": "gold"},
+              {"type": "MODIFY_ATTACK", "amount": 3, "mod": "add"},
+              {"type": "GAIN", "keyword": "overpower"}
+            ],
+            []
+          ]
         }
       ]
     },

@@ -1,6 +1,5 @@
 {
   "slug": "arakni_trap_door",
-  "_todo": "'If it's a trap, you may play it from banished until the start of your next turn' is flagged (trap_playable_<slug>) but play-from-banished legality is not yet wired.",
   "abilities": [
     {
       "ability_type": "STATIC_TRIGGERED",

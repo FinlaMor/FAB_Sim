@@ -46,16 +46,62 @@ def available_actions(state, player_id) -> list[Action]:
     for card in activatable_cards:
         if not _legality_check(state, card, player_id):
             continue
+        # Build a fresh Action per card (reusing the playable-loop action object
+        # here previously produced wrong/unbound actions).
+        action = Action(ActionType.ACTIVATE_CARD, player_id, card)
         can_activate, action = _cost_check(state, card, player_id, action, playable=False)
         if can_activate:
             affordable_actions.append(action)
-    
+
+    # Weapon attacks (CR 1.6.2b): offered from the weapon zones during the
+    # turn player's action phase.
+    _add_weapon_attacks(state, player_id, affordable_actions)
+
     # Hero activated/instant abilities defined in the DSL (e.g. Kayo's Instant).
     _add_hero_dsl_activations(state, player_id, affordable_actions)
 
     affordable_actions.append(Action(ActionType.PASS)) #can always choose to pass
 
     return affordable_actions
+
+
+def _add_weapon_attacks(state, player_id, affordable_actions) -> None:
+    """Offer weapon attacks from the weapon zones (CR 1.6.2b).
+
+    Legal when: it's this player's action phase with an empty stack, they have
+    an action point, no weapon has attacked yet this turn (weapon_exhausted),
+    and the weapon is untapped with a per-turn activation remaining. Cost is the
+    weapon's activation cost (hero COST_MODIFIER deltas applied), payable from
+    resources plus pitch.
+    """
+    from engine.actions import can_pay_cost
+    player = state.players[player_id]
+    if state.active_player != player_id:
+        return
+    if state.step != Step.ACTION or state.stack_entries:
+        return
+    if player.action_points <= 0 or getattr(player, 'weapon_exhausted', False):
+        return
+
+    seen: set[int] = set()
+    for zone in (player.weapon1, player.weapon2):
+        for wc in zone.cards:
+            if id(wc) in seen:
+                continue  # a 2H weapon occupies both zones as the same object
+            seen.add(id(wc))
+            # Attackable weapon: printed power and a parsed activation cost.
+            if not (wc.is_weapon and wc.raw_power is not None
+                    and wc.activation_cost is not None):
+                continue
+            if getattr(wc, 'tapped', False) or getattr(wc, 'exhausted', False):
+                continue
+            if wc.has_per_turn_limit and (wc.activations or 0) <= 0:
+                continue
+            action = Action(type=ActionType.ACTIVATE_CARD, player_id=player_id,
+                            card=wc, attack_source=wc, is_attack_proxy=True)
+            cost = _calculate_resource_cost(state, action)
+            if can_pay_cost(player.hand.cards, cost, player.resources):
+                affordable_actions.append(action)
 
 
 def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
@@ -316,8 +362,17 @@ def recalculate_playable(state, player_id):
         if card.raw_cost is not None:
             card.playable = True
 
+    # Cards granted temporary play-from-banished (e.g. trap_door's trap).
+    # Identity comparison: the grant applies to that exact card object.
+    _banish_playable = [c for c in player.banished.cards
+                        if any(c is g for g in player.playable_from_banished)
+                        and c.raw_cost is not None]
+    for card in _banish_playable:
+        card.playable = True
+
+    _playable_pool = player.hand.cards + player.arsenal.cards + _banish_playable
     for card in player.all_cards:
-        if card not in player.hand.cards + player.arsenal.cards:
+        if card not in _playable_pool:
             card.playable = False
         mgr.recalculate(state, card, 'playable', card.playable)
     state.event_manager.emit('recalculate_playable', state)
@@ -441,7 +496,15 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # Pitch sequences were already generated for the correct effective cost per side.
     _meld_side = getattr(action, 'meld_side', None)
     # Resource cost already deducted by evaluate_play_cost in apply_action.
-    player.hand.remove(card)
+    # Remove from the card's current zone (hand normally; arsenal or banished for
+    # cards played from those zones, e.g. trap_door's "play from banished").
+    _src_zone = player.zone_by_name(getattr(card, 'zone', None) or 'hand')
+    if _src_zone is not None and card in _src_zone.cards:
+        _src_zone.remove(card)
+    else:
+        player.hand.remove(card)
+    player.playable_from_banished = [g for g in player.playable_from_banished
+                                     if g is not card]
 
     # Pay DSL-defined play cost and any ability-level additional costs.
     from engine.card_effects.dsl.loader import get_card as _dsl_get_card
@@ -659,13 +722,51 @@ def _get_base_resource_cost(state: GameState, action: Action) -> int:
     elif action.type == ActionType.ACTIVATE_CARD:
         if getattr(action, 'is_attack_proxy', False) and card is not None:
             if card.is_weapon:
-                from engine.actions import _weapon_cost
-                return _weapon_cost(card)
+                # Prefer the DB-parsed activation cost; the text parser returns 0
+                # on cards whose functional_text is empty in this database.
+                if card.activation_cost is not None:
+                    base = card.activation_cost
+                else:
+                    from engine.actions import _weapon_cost
+                    base = _weapon_cost(card)
+                base += _hero_activation_cost_delta(state, action.player_id, card)
+                return max(0, base)
             else:  # ally attack
                 return _ally_attack_resource_cost(card)
-        return (card.activation_cost or 0) if card else 0
+        base = (card.activation_cost or 0) if card else 0
+        if card is not None:
+            base += _hero_activation_cost_delta(state, action.player_id, card)
+        return max(0, base)
 
     return 0
+
+
+def _hero_activation_cost_delta(state: GameState, player_id, card) -> int:
+    """Sum of activation-cost deltas granted by the player's hero (DSL).
+
+    A hero JSON may declare COST_MODIFIER abilities, e.g. orb_weaver's
+    "Graphene Chelicerae cost you {r} less to activate":
+        {"ability_type": "COST_MODIFIER", "applies_to": "graphene_chelicera",
+         "activation_delta": -1}
+    """
+    if player_id is None:
+        return 0
+    hero = state.players[player_id].hero
+    if hero is None:
+        return 0
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    cd = _dsl_get_card(hero.slug)
+    if cd is None:
+        return 0
+    delta = 0
+    for ability in cd.abilities:
+        if ability.ability_type.upper() != "COST_MODIFIER":
+            continue
+        applies_to = ability.params.get("applies_to", "")
+        if applies_to and applies_to != card.slug:
+            continue
+        delta += int(ability.params.get("activation_delta", 0))
+    return delta
 
 def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
                     for_chi: bool = False) -> None:
@@ -833,6 +934,10 @@ def _pay_costs(state, player_id, action):
         card = action.card
         if card is not None and card.is_weapon:
             player.weapon_exhausted = True
+            # "Once per Turn Action — Attack" weapons consume their per-turn use
+            # (the attack-proxy path returns before _apply_activate's decrement).
+            if card.has_per_turn_limit and card.activations:
+                card.activations -= 1
         else:
             idx = getattr(action, 'choose_index', None)
             if idx is not None and idx < len(player.allies_exhausted):

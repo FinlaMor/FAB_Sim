@@ -230,9 +230,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                         target.is_public = False  # banished face-down
                     subtypes = [s.lower() for s in (target.subtypes or [])]
                     if "trap" in subtypes:
-                        # TODO: allow playing the trap from banished until the
-                        # start of your next turn; flag it for now.
-                        controller.next_turn_effects.append(f"trap_playable_{target.slug}")
+                        # "If it's a trap, you may play it from banished until the
+                        # start of your next turn." Cleared in start_of_turn_refresh.
+                        controller.playable_from_banished.append(target)
             _shuffle(state, cid)
         return _fn
 
@@ -417,6 +417,18 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 put_object(state, card_to_move, "deck",
                            destination_player_id=tid, source_player_id=tid,
                            position=None)
+        return _fn
+
+    if etype == "DESTROY_TOKEN":
+        # Destroy one token of the given slug the ability's controller controls.
+        token_slug = params.get("token", "")
+        def _fn(card, event, state, _slug=token_slug):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import destroy as _ek_destroy
+            player = state.players[_controller_id(card)]
+            tok = player.permanents.find(_slug)
+            if tok is not None:
+                _ek_destroy(state, tok, None)
         return _fn
 
     if etype in ("DESTROY_PERMANENT", "DESTROY_SELF"):

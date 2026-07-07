@@ -321,6 +321,16 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
         elif template is not None and getattr(template, 'keywords', None):
             token.keywords = list(template.keywords)
 
+        # Inherit printed stats/activation fields so ability tokens function
+        # (a Graphene Chelicera weapon token has power 1 and a "Once per Turn
+        # Action — {r}: Attack" activation).
+        if template is not None:
+            for attr in ("raw_power", "base_power", "power", "activation_cost",
+                         "base_activations", "activations", "has_per_turn_limit"):
+                val = getattr(template, attr, None)
+                if val is not None and getattr(token, attr, None) in (None, False):
+                    setattr(token, attr, val)
+
         # Register keyword-based prevention effects before zone entry so that
         # any arena-entry trigger that immediately deals damage already finds them.
         if effect_mngr is not None:
