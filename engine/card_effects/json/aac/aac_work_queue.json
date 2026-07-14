@@ -116,5 +116,581 @@
     "specializations": [],
     "functional_text": "**Attack Reaction** - {r}, {t}: Target attack with stealth gets \"When this hits a hero, **mark** them.\"\n\n**Blade Break**",
     "status": "pending"
+  },
+  {
+    "slug": "arakni_5lp3d_7hru_7h3_cr4x",
+    "name": "Arakni, 5L!p3d 7hRu 7h3 cR4X",
+    "type_text": "Chaos Assassin Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 38,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The first attack with **stealth** each turn gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "art_of_desire_body_red",
+    "name": "Art of Desire: Body",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a red card, draw a card and gain 1{h}.",
+    "status": "done"
+  },
+  {
+    "slug": "bloodrot_pox",
+    "name": "Bloodrot Pox",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Bloodrot Pox, then it deals 2 damage to you unless you pay {r}{r}{r}.",
+    "status": "done"
+  },
+  {
+    "slug": "hunters_klaive",
+    "name": "Hunter's Klaive",
+    "type_text": "Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Mark",
+      "Piercing"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this hits a hero, **mark** them.\n\n**Piercing 1**",
+    "status": "done"
+  },
+  {
+    "slug": "infect_red",
+    "name": "Infect",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infiltrate_red",
+    "name": "Infiltrate",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck. You may play it until the end of your next turn.",
+    "status": "done"
+  },
+  {
+    "slug": "mark_of_the_black_widow_blue",
+    "name": "Mark of the Black Widow",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_black_widow_red",
+    "name": "Mark of the Black Widow",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
+    "status": "done"
+  },
+  {
+    "slug": "mark_of_the_funnel_web_blue",
+    "name": "Mark of the Funnel Web",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, banish a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "mark_of_the_funnel_web_red",
+    "name": "Mark of the Funnel Web",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, banish a card in their arsenal.",
+    "status": "pending"
+  },
+  {
+    "slug": "marked",
+    "name": "Marked",
+    "type_text": "Token",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "You are **marked** until an opponent hits you",
+    "status": "pending"
+  },
+  {
+    "slug": "nights_embrace_blue",
+    "name": "Night's Embrace",
+    "type_text": "Assassin Attack Reaction",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your attacks with stealth get +1{p} this turn.",
+    "status": "done"
+  },
+  {
+    "slug": "pick_to_pieces_red",
+    "name": "Pick to Pieces",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nIf you've played or activated an attack reaction this chain link, this gets +1{p} and \"Damage that would be dealt by this can't be prevented.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "prey_spotters",
+    "name": "Prey Spotters",
+    "type_text": "Assassin Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Mark"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: **Mark** target opposing hero.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "prowl_red",
+    "name": "Prowl",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nThe next attack with **stealth** you play this combat chain gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "razors_edge_red",
+    "name": "Razor's Edge",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "reapers_call_blue",
+    "name": "Reaper's Call",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Mark",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\n**Instant** - Discard this: **Mark** target opposing hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "scuttle_the_canal_red",
+    "name": "Scuttle the Canal",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this attacks a **marked** hero, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "shred_blue",
+    "name": "Shred",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target card defending an Assassin attack gets -2{d} this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "shred_yellow",
+    "name": "Shred",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target card defending an Assassin attack gets -3{d} this combat chain.",
+    "status": "done"
+  },
+  {
+    "slug": "spiders_bite",
+    "name": "Spider's Bite",
+    "type_text": "Assassin Weapon - Dagger (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Dagger"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Piercing"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\n**Piercing 1**\n\nWhen this hits a hero, the next time they defend with 1 or more attack action cards this turn, those cards have -1{d} while defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "spike_with_bloodrot_red",
+    "name": "Spike with Bloodrot",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gains +3{p} and \"When this hits a hero, create a Bloodrot Pox token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "stains_of_the_redback_red",
+    "name": "Stains of the Redback",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +3{p} and **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "stalkers_steps",
+    "name": "Stalker's Steps",
+    "type_text": "Assassin Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target attack with stealth gets **go again**\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "take_up_the_mantle_yellow",
+    "name": "Take Up the Mantle",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gets +2{p}. If it's attacking a **marked** hero, instead it gets +3{p} and you may banish an attack action card with **stealth** from your graveyard. If you do, the target becomes a copy of the banished card.",
+    "status": "done"
+  },
+  {
+    "slug": "undercover_acquisition_red",
+    "name": "Undercover Acquisition",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Steal",
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nWhen this hits a hero, steal an item they control.",
+    "status": "pending"
   }
 ]

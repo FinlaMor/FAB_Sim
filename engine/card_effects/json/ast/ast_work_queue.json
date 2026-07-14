@@ -175,5 +175,429 @@
     "specializations": [],
     "functional_text": "When this defends, you may reveal an instant card from your hand. If you do, deal 1 arcane damage to the attacking hero.\n\n**Blade Break**",
     "status": "pending"
+  },
+  {
+    "slug": "arc_lightning_yellow",
+    "name": "Arc Lightning",
+    "type_text": "Lightning Runeblade Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Aurora"
+    ],
+    "functional_text": "**Aurora Specialization**\n\nWhenever you **go again** this turn, deal 1 arcane damage to any target.\n\nThe next action card you play this turn gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_crackle_blue",
+    "name": "Arcanic Crackle",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_crackle_red",
+    "name": "Arcanic Crackle",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "arcanic_shockwave_red",
+    "name": "Arcanic Shockwave",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nWhen you attack with Arcanic Shockwave, if it was **fused**, deal 1 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "aurora_shooting_star",
+    "name": "Aurora, Shooting Star",
+    "type_text": "Elemental Runeblade Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}{r}: Create an Embodiment of Lightning token. Activate this only if you've played a Lightning card this turn.\n\n**Essence of Lightning**",
+    "status": "pending"
+  },
+  {
+    "slug": "burn_up__shock_red",
+    "name": "Burn Up // Shock",
+    "type_text": "Runeblade Action // Lightning Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Meld"
+    ],
+    "specializations": [],
+    "functional_text": "**Meld**\n\nThe next time an attack you control hits a hero this turn, deal 4 arcane damage to them.\n\n**Go again**\n\n//\n\nDeal 1 arcane damage to any target.",
+    "status": "pending"
+  },
+  {
+    "slug": "captains_call_blue",
+    "name": "Captain's Call",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose 1;\n\nThe next attack action card with cost 0 you play this turn gains +2{p}.\n\nThe next attack action card with cost 0 you play this turn gains **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "electromagnetic_somersault_red",
+    "name": "Electromagnetic Somersault",
+    "type_text": "Lightning Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Choose up to 2 attack action cards with cost 0 or more on the active chain link. Return them to their owner's hand when the chain link resolves.",
+    "status": "pending"
+  },
+  {
+    "slug": "electrostatic_discharge_red",
+    "name": "Electrostatic Discharge",
+    "type_text": "Lightning Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next attack action card you play this turn with cost 1 or less gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "embodiment_of_lightning",
+    "name": "Embodiment of Lightning",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you play an attack action card, destroy this, then the attack gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "entwine_lightning_red",
+    "name": "Entwine Lightning",
+    "type_text": "Elemental Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Fusion**\n\nIf Entwine Lightning was **fused**, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "flittering_charge_red",
+    "name": "Flittering Charge",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've played an instant card this chain link, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "heavens_claws_blue",
+    "name": "Heaven's Claws",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_press_red",
+    "name": "Lightning Press",
+    "type_text": "Lightning Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with cost 1 or less gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_surge_red",
+    "name": "Lightning Surge",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "photon_rush_red",
+    "name": "Photon Rush",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Flow",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Flow** - If you've played a Lightning card this turn, this gets **go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sizzle_red",
+    "name": "Sizzle",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Lightning or Elemental attack this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "star_fall",
+    "name": "Star Fall",
+    "type_text": "Lightning Runeblade Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nIf you've played a Lightning card this turn, this card's attacks get +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "static_shock_red",
+    "name": "Static Shock",
+    "type_text": "Elemental Runeblade Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Flow"
+    ],
+    "specializations": [],
+    "functional_text": "**Lightning Flow** - When this hits a hero, if you've played a Lightning card this turn, deal 1 arcane damage to them.",
+    "status": "pending"
   }
 ]

@@ -58,7 +58,8 @@ def run_ability(ability, card, event, state) -> None:
 
 def dispatch_event(card_def, event_type: str, card, event, state) -> None:
     """Fire all abilities in card_def that match event_type."""
-    from engine.card_effects.dsl.trigger_types import ABILITY_TYPE_TO_EVENT, TRIGGER_TO_EVENT
+    from engine.card_effects.dsl.trigger_types import (
+        ABILITY_TYPE_TO_EVENT, TRIGGER_TO_EVENT, TRIGGER_EVENT_GATES)
 
     for ability in card_def.abilities:
         atype = ability.ability_type.upper()
@@ -68,7 +69,11 @@ def dispatch_event(card_def, event_type: str, card, event, state) -> None:
             trigger_event = TRIGGER_TO_EVENT.get(ability.trigger or "",
                                                   ability.trigger or "")
             if trigger_event == event_type:
-                run_ability(ability, card, event, state)
+                # Sugar triggers (e.g. ON_GOLD_CREATED → ON_TOKEN_CREATED)
+                # map to a broader engine event and gate on the payload.
+                gate = TRIGGER_EVENT_GATES.get(ability.trigger or "")
+                if gate is None or gate(event):
+                    run_ability(ability, card, event, state)
             continue
 
         # WHILE_STATIC: a continuous static re-evaluated each attack-power

@@ -187,7 +187,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends together with a card with 6 or more {p}, create a Might token.\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "assault_and_battery_blue",
@@ -282,7 +282,7 @@
       "Victor"
     ],
     "functional_text": "**Victor Specialization**\n\nThis counts as a Gold.\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "balance_of_justice",
@@ -2692,7 +2692,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nWhen this hits a hero, **clash** with them. If you win, destroy the top card of their deck. If they win, put a -1{p} counter on this.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mini_meataxe",
@@ -3491,7 +3491,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: If an action card effect would create 1 or more tokens this turn, instead it creates that many minus 1 of each of those tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rising_energy_blue",
@@ -4305,7 +4305,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Gold token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "test_of_vigor_red",
@@ -4353,7 +4353,7 @@
       "Victor"
     ],
     "functional_text": "**Victor Specialization**\n\nAs an additional cost to play this, you may destroy a Gold you control. If you do, this gets +3{p} and **overpower**.\n\nWhen you win a **clash** revealing this, create a Gold token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thunk_blue",
@@ -4374,7 +4374,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a **clash** revealing this, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thunk_red",
@@ -4460,7 +4460,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. Put the revealed cards on the bottom of their owner's deck, then **clash** again.\n\nIf a hero wins both **clashes**, they create a Gold, Might, and Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "up_the_ante_blue",
@@ -4528,7 +4528,7 @@
     ],
     "specializations": [],
     "functional_text": "The first time each turn you create a Gold token from an effect you control, draw a card.\n\nThe first time each turn you would fail to win a **clash**, instead you may destroy a Gold you control. If you do, put 1 of the revealed cards on the bottom of its owner's deck, then **clash** again.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigor_girth",
@@ -4632,7 +4632,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigorous_windup_red",
@@ -5070,7 +5070,7 @@
     ],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cintari_sellsword",
@@ -5114,7 +5114,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigor",
@@ -5135,6 +5135,157 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then gain {r}.",
+    "status": "done"
+  },
+  {
+    "slug": "adrenaline_rush_blue",
+    "name": "Adrenaline Rush",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play this, if you have less {h} than an opposing hero, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "adrenaline_rush_red",
+    "name": "Adrenaline Rush",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play this, if you have less {h} than an opposing hero, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "adrenaline_rush_yellow",
+    "name": "Adrenaline Rush",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play this, if you have less {h} than an opposing hero, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rally_the_rearguard_blue",
+    "name": "Rally the Rearguard",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - Discard a card: This gets +3{d}. Activate this ability only while this is defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "rally_the_rearguard_yellow",
+    "name": "Rally the Rearguard",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - Discard a card: This gets +3{d}. Activate this ability only while this is defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "trade_in_blue",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "trade_in_yellow",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
     "status": "pending"
   }
 ]

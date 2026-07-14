@@ -164,5 +164,371 @@
     "specializations": [],
     "functional_text": "**Twice per Turn Action** - {r}: **Attack**. Activate this only if you've cranked this turn.\n\nWhen this attacks, you may banish a card from under it. If you do, the attack gets **overpower** and **go again**.",
     "status": "pending"
+  },
+  {
+    "slug": "banksy",
+    "name": "Banksy",
+    "type_text": "Mechanologist Weapon - Wrench (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Wrench"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Maxx"
+    ],
+    "functional_text": "**Maxx Specialization**\n\n**Once per Turn Action** - {r}: **Attack**. Activate this ability only if you've cranked this turn.\n\nWhen this hits a hero, put a steam counter on an item you control with crank.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_bertha_blue",
+    "name": "Big Bertha",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "clamp_press_blue",
+    "name": "Clamp Press",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWrenches you control get +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "crankshaft_blue",
+    "name": "Crankshaft",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "crankshaft_red",
+    "name": "Crankshaft",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "crankshaft_yellow",
+    "name": "Crankshaft",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "expedite_red",
+    "name": "Expedite",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "heist_red",
+    "name": "Heist",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits a hero, you may put an item with cost 0 or 1 from any banished zone into the arena under your control.",
+    "status": "pending"
+  },
+  {
+    "slug": "hyper_driver",
+    "name": "Hyper Driver",
+    "type_text": "Mechanologist Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this has no steam counters, destroy it.\n\nOnce per turn, when you boost a card, remove a steam counter from this and gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "hyper_driver_blue",
+    "name": "Hyper Driver",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This enters the arena with a steam counters on it. When this has no steam counters on it, destroy it.\n\nOnce per turn, when you boost a card, remove a steam counter from this and gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "hyper_driver_yellow",
+    "name": "Hyper Driver",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This enters the arena with 2 steam counters on it. When this has no steam counters on it, destroy it.\n\nOnce per turn, when you boost a card, remove a steam counter from this and gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "jump_start_red",
+    "name": "Jump Start",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Hyper Driver, this costs {r} less to play.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "maxx_the_hype_nitro",
+    "name": "Maxx 'The Hype' Nitro",
+    "type_text": "Mechanologist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: Create a Hyper Driver token with 2 steam counters.  Activate this ability only if you've boosted this turn.\n\nHyper Drivers you control get **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "sprocket_rocket_red",
+    "name": "Sprocket Rocket",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n \nIf an item or equipment was banished from boosting this, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "t_bone_red",
+    "name": "T-Bone",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a card on the combat chain that was boosted, the defending hero must defend this with an equipment they control if able.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "zero_to_fifty_red",
+    "name": "Zero to Fifty",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
   }
 ]

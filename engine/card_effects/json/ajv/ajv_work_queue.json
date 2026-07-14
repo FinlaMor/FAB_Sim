@@ -190,5 +190,459 @@
     ],
     "functional_text": "**Jarl Specialization**\n\nWhen this defends, if the attacking hero controls an equipment with a -1{d} counter, you may search your deck for a Mangle, banish it, then shuffle. You may play it during your next action phase.",
     "status": "pending"
+  },
+  {
+    "slug": "amulet_of_ice_blue",
+    "name": "Amulet of Ice",
+    "type_text": "Ice Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\n**Instant** - Destroy Amulet of Ice: Target hero discards a card unless they pay {r}{r}. Activate this ability only if you have **Ice fused** this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "autumns_touch_blue",
+    "name": "Autumn's Touch",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "buckling_blow_red",
+    "name": "Buckling Blow",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "earth_form_red",
+    "name": "Earth Form",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits, create an Embodiment of Earth token.",
+    "status": "pending"
+  },
+  {
+    "slug": "embodiment_of_earth",
+    "name": "Embodiment of Earth",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "'Non-attack' action cards you control have +1{d} while defending.\n\nAt the beginning of your action phase, destroy Embodiment of Earth.",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_avalanche_blue",
+    "name": "Emerging Avalanche",
+    "type_text": "Elemental Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\n**Go again**\n\nWhen Emerging Avalanche enters the arena, if it was **fused**, create a Frostbite token under target hero control.\n\nAt the beginning of your action phase, destroy Emerging Avalanche then the next attack action card you play this turn gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "exposed_to_the_elements_blue",
+    "name": "Exposed to the Elements",
+    "type_text": "Elemental Instant",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth and/or Ice Fusion**\n\nIf Exposed to the Elements was **fused** with an Earth card, put a -1{d} counter on target equipment.\n\nIf Exposed to the Elements was **fused** with an Ice card, destroy an equipment with 0{d} controlled by target hero unless they pay {r}{r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "frostbite",
+    "name": "Frostbite",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Cards and abilities cost you an additional {r} to play or activate.\n\nAt the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.",
+    "status": "pending"
+  },
+  {
+    "slug": "glacial_footsteps_blue",
+    "name": "Glacial Footsteps",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Glacial Footsteps was **fused**, it gains **dominate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "icy_encounter_red",
+    "name": "Icy Encounter",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Icy Encounter hits a hero, create a Frostbite token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "jarl_vetreidi",
+    "name": "Jarl Vetreiði",
+    "type_text": "Elemental Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you play an Ice card, create a Frostbite token in an opponent's exposed head, chest, arms, or legs zone.\n\n**Essence of Earth and Ice**",
+    "status": "pending"
+  },
+  {
+    "slug": "polar_blast_blue",
+    "name": "Polar Blast",
+    "type_text": "Ice Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target opposing hero may pay {r}. If they don't your next attack this turn gains **dominate**.\n\nIf Polar Blast is played from arsenal, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_earth_blue",
+    "name": "Sigil of Earth",
+    "type_text": "Earth Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this.\n\nWhen this leaves the arena, create an Embodiment of Earth token.",
+    "status": "pending"
+  },
+  {
+    "slug": "snow_under_red",
+    "name": "Snow Under",
+    "type_text": "Elemental Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion"
+    ],
+    "specializations": [],
+    "functional_text": "**Ice Fusion**\n\nIf Snow Under was **fused**, it gains \"If this hits a hero, create a Frostbite token under their control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "steelbraid_buckler",
+    "name": "Steelbraid Buckler",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "strength_of_sequoia_blue",
+    "name": "Strength of Sequoia",
+    "type_text": "Elemental Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Fusion",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Earth Fusion**\n\n**Go again**\n\nWhen Strength of Sequoia enters the arena, if it was **fused**, create a Seismic Surge token.\n\nAt the beginning of your action phase, destroy Strength of Sequoia then the next attack action card you play this turn gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "strong_yield_blue",
+    "name": "Strong Yield",
+    "type_text": "Earth Action - Aura",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then your next attack this turn gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "summit_the_unforgiving",
+    "name": "Summit, the Unforgiving",
+    "type_text": "Earth Ice Guardian Weapon - Polearm (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Polearm"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heavy"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r} {r}{r}{r}: **Attack**\n\nWhen this hits a hero, create a Frostbite token in their exposed head, chest, arms, or legs zone.\n\n**Heavy** - If this is the only card equipped to your weapon zones, it gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_bite_blue",
+    "name": "Winter's Bite",
+    "type_text": "Ice Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target hero discards a card unless they pay {r}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "winters_grasp_blue",
+    "name": "Winter's Grasp",
+    "type_text": "Ice Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
   }
 ]

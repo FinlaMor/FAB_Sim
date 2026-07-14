@@ -21,10 +21,29 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "ON_PITCH":                 "ON_PITCH",
     "ON_DEFEND":                "ON_DEFEND",
     "ON_BOO":                   "ON_BOO",
-    "ON_GOLD_CREATED":          "ON_GOLD_CREATED",
+    "ON_TOKEN_CREATED":         "ON_TOKEN_CREATED",
+    # Sugar: fires on ON_TOKEN_CREATED, gated on the created token's slug.
+    "ON_GOLD_CREATED":          "ON_TOKEN_CREATED",
     "ON_CLASH_WIN_REVEALED":    "ON_CLASH_WIN_REVEALED",
     "RECALC_ATTACK_POWER":      "RECALC_ATTACK_POWER",
     "ON_BECOME":                "ON_BECOME",
+}
+
+
+def _event_data(event) -> dict:
+    """Extract the payload dict from an engine Event object or a plain dict."""
+    if event is None:
+        return {}
+    data = getattr(event, "data", None)
+    if isinstance(data, dict):
+        return data
+    return event if isinstance(event, dict) else {}
+
+
+# JSON trigger name → gate fn(event) -> bool, for sugar triggers that map to
+# a broader engine event and must filter on the event payload.
+TRIGGER_EVENT_GATES: dict[str, callable] = {
+    "ON_GOLD_CREATED": lambda event: _event_data(event).get("slug") == "gold",
 }
 
 # Simple ability_type → event mappings.

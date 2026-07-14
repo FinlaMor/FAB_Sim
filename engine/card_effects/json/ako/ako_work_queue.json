@@ -63,5 +63,470 @@
     "specializations": [],
     "functional_text": "When this hits a hero, turn a card in their arsenal face-up, then banish an attack action card in their arsenal with {p} less than the damage dealt this way.",
     "status": "pending"
+  },
+  {
+    "slug": "agile_windup_blue",
+    "name": "Agile Windup",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "agility",
+    "name": "Agility",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "assault_and_battery_blue",
+    "name": "Assault and Battery",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "bare_fangs_red",
+    "name": "Bare Fangs",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bare_fangs_yellow",
+    "name": "Bare Fangs",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "battlefront_bastion_blue",
+    "name": "Battlefront Bastion",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends alone, prevent the next 1 damage that would be dealt to you this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "beaten_trackers",
+    "name": "Beaten Trackers",
+    "type_text": "Brute Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you discard a random card with 6 or more {p}, you may destroy this. If you do, gain 1 action point.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_agility_red",
+    "name": "Clash of Agility",
+    "type_text": "Brute / Warrior Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Warrior"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "humble_red",
+    "name": "Humble",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they lose all hero card abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "kayo_armed_and_dangerous",
+    "name": "Kayo, Armed and Dangerous",
+    "type_text": "Brute Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You have 1 weapon zone.\n\nAttack action cards you own get +1{p} while they are in any zone other than the combat chain.\n\nThe first time you discard a card with 6 or more {p} during each of your action phases, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "knucklehead",
+    "name": "Knucklehead",
+    "type_text": "Brute Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Specialization",
+      "Temper"
+    ],
+    "specializations": [
+      "Kayo"
+    ],
+    "functional_text": "**Kayo Specialization** \n\nAction - Destroy this: Roll a 6-sided die. Until end of turn, your base {i} is the number rolled.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "might",
+    "name": "Might",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets +1{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "mighty_windup_blue",
+    "name": "Mighty Windup",
+    "type_text": "Brute / Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute",
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: Create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_town_blue",
+    "name": "Pound Town",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "pulping_red",
+    "name": "Pulping",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **dominate**.\n\nIf this is defended by fewer than 2 non-equipment cards, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rally_the_rearguard_red",
+    "name": "Rally the Rearguard",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - Discard a card: This gets +3{d}. Activate this ability only while this is defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "reincarnate_blue",
+    "name": "Reincarnate",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is discarded at random, put it on the bottom of its owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "savage_beatdown_red",
+    "name": "Savage Beatdown",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've discarded a card with 6 or more {p} this turn.\n\nAs an additional cost to play this, discard a random card.\n\nIf the discarded card has 6 or more {p}, this gets +6{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "savage_sash",
+    "name": "Savage Sash",
+    "type_text": "Brute Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Attack action cards with 6 or more {p} cost you {r} less to play this turn. **Go again**\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "wild_ride_red",
+    "name": "Wild Ride",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "wreck_havoc_red",
+    "name": "Wreck Havoc",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reactions can't be played to this chain link.\n\nWhen this hits a hero, you may turn a card in their arsenal face up, then destroy a defense reaction in their arsenal.",
+    "status": "pending"
   }
 ]

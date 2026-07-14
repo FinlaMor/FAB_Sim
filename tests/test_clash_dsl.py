@@ -197,12 +197,16 @@ def test_victor_first_gold_draws_once_per_turn():
     hero = st.players[1].hero
     hand0 = len(st.players[1].hand.cards)
     # First gold → draw.
-    dispatch(st, "ON_GOLD_CREATED", hero.slug, card=hero,
-             event=Event(type="ON_GOLD_CREATED", data={"player_id": 1}))
+    dispatch(st, "ON_TOKEN_CREATED", hero.slug, card=hero,
+             event=Event(type="token_created", data={"player_id": 1, "slug": "gold"}))
     assert len(st.players[1].hand.cards) == hand0 + 1
     # Second gold same turn → no draw.
-    dispatch(st, "ON_GOLD_CREATED", hero.slug, card=hero,
-             event=Event(type="ON_GOLD_CREATED", data={"player_id": 1}))
+    dispatch(st, "ON_TOKEN_CREATED", hero.slug, card=hero,
+             event=Event(type="token_created", data={"player_id": 1, "slug": "gold"}))
+    assert len(st.players[1].hand.cards) == hand0 + 1
+    # A non-Gold token does not trigger the gold-gated ability.
+    dispatch(st, "ON_TOKEN_CREATED", hero.slug, card=hero,
+             event=Event(type="token_created", data={"player_id": 1, "slug": "might"}))
     assert len(st.players[1].hand.cards) == hand0 + 1
 
 

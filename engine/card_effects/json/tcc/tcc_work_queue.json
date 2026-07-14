@@ -1052,5 +1052,28 @@
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Gain 2 action points.",
     "status": "pending"
+  },
+  {
+    "slug": "cranial_crush_blue",
+    "name": "Cranial Crush",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase",
+    "status": "done"
   }
 ]

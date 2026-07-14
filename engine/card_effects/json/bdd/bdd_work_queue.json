@@ -21,5 +21,227 @@
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, {t} them.",
     "status": "pending"
+  },
+  {
+    "slug": "bravo_flattering_showman",
+    "name": "Bravo, Flattering Showman",
+    "type_text": "Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, {t}: Turn a face-down card in your arsenal face-up. If it has crush, it gets +2{p} and **dominate** this turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "buckling_blow_yellow",
+    "name": "Buckling Blow",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "clash_of_mountains_blue",
+    "name": "Clash of Mountains",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. The winner creates a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "cracker_jax",
+    "name": "Cracker Jax",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: The next attack action card you play this turn gets +1{p}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "crash_and_bash_blue",
+    "name": "Crash and Bash",
+    "type_text": "Guardian Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, you may reveal a card with **crush** from your hand. If you do, create a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "crash_down_red",
+    "name": "Crash Down",
+    "type_text": "Guardian Action - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then the next Guardian attack action card you play this turn gets +6{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flatten_the_field_blue",
+    "name": "Flatten the Field",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy a Seismic Surge token they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "grind_them_down_blue",
+    "name": "Grind Them Down",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy the top card of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "reinforce_the_line_blue",
+    "name": "Reinforce the Line",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending attack action card gets +2{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "thunder_quake_red",
+    "name": "Thunder Quake",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Heave 3**",
+    "status": "pending"
   }
 ]

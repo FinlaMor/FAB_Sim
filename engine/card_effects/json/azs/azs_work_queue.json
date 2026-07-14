@@ -22,5 +22,46 @@
     "specializations": [],
     "functional_text": "When this leaves the arena, gain {r} and **amp 1**.\n\n**Ward 2**",
     "status": "pending"
+  },
+  {
+    "slug": "aphrodias",
+    "name": "Aphrodias",
+    "type_text": "Lightning Illusionist Weapon - Orb (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Orb"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, {t}: Deal 2 arcane damage to target hero. Activate this only if an aura with a holo counter has entered the arena under your control this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "zyggy_starlight",
+    "name": "Zyggy Starlight",
+    "type_text": "Lightning Illusionist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}, {t}, destroy a Lightning Flow you control, banish another Lightning aura permanent you control with no holo counters: Return the banished aura to the arena with a holo counter.",
+    "status": "pending"
   }
 ]

@@ -200,5 +200,116 @@
     "specializations": [],
     "functional_text": "**Combo** - If Edge of Autumn was the last attack this combat chain, this gets **go again** and \"When this hits a hero, banish it. You may play it this turn.\"",
     "status": "pending"
+  },
+  {
+    "slug": "bittering_thorns_red",
+    "name": "Bittering Thorns",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, your next attack this turn gets +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "enact_vengeance_red",
+    "name": "Enact Vengeance",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Edge of Autumn or a card with Vengeance in its name was the last attack this combat chain, this gets \"When this hits a hero, destroy all cards in their arsenal.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "flying_kick_blue",
+    "name": "Flying Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "flying_kick_red",
+    "name": "Flying Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "give_and_take_red",
+    "name": "Give and Take",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an action card defends this, you may put an action card with cost less than this card's {p} from your graveyard on top of your deck.\n\n**Go again**",
+    "status": "pending"
   }
 ]

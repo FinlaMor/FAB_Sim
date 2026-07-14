@@ -101,7 +101,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets \"When this hits a hero, they banish a card from their hand.\"\n\nAt the beginning of your end phase, **return to the brood**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arakni_funnel_web",
@@ -120,7 +120,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets \"When this hits a hero, banish a card in their arsenal.\"\n\nAt the beginning of your end phase, **return to the brood**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arakni_marionette",
@@ -141,7 +141,7 @@
     ],
     "specializations": [],
     "functional_text": "Your attacks with **stealth** that are attacking a **marked** hero get +1{p} and \"When this hits, this gets **go again**.\"\n\nAt the beginning of your end phase, if an opponent is **marked**, you become a random Agent of Chaos.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arakni_orb_weaver",
@@ -160,7 +160,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Graphene Chelicerae cost you {r} less to activate.\n\n**Once per Turn Instant** - Discard an Assassin card: Equip a Graphene Chelicera token. Your next attack with **stealth** this turn gets +3{p}.\n\nAt the beginning of your end phase, **return to the brood**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arakni_redback",
@@ -181,7 +181,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets **go again**.\n\nAt the beginning of your end phase, **return to the brood**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arakni_tarantula",
@@ -200,7 +200,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Whenever a dagger you own hits a hero, they lose 1{h}.\n\n**Once per Turn Attack Reaction** - Discard an Assassin card: Target dagger attack gets +3{p}.\n\nAt the beginning of your end phase, **return to the brood**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arakni_trap_door",
@@ -219,7 +219,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you become this, you may search your deck for a card, banish it face-down, then shuffle. If it's a trap, you may play it until the start of your next turn.\n\nAt the beginning of your end phase, **return to the brood**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arakni_web_of_deceit",
@@ -969,7 +969,7 @@
     ],
     "specializations": [],
     "functional_text": "Target opposing hero reveals their hand. If an attack reaction card is revealed this way, **mark** them.\n\nYour next dagger attack this turn gets +4{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cut_from_the_same_cloth_yellow",
@@ -2111,7 +2111,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this hits a hero, **mark** them.\n\n**Piercing 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hunts_end_red",
@@ -2323,7 +2323,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, they lose 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "knife_through_butter_blue",
@@ -2440,7 +2440,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends an attack with **go again**, **mark** the attacking hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lay_low_yellow",
@@ -2662,7 +2662,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mark_of_the_black_widow_yellow",
@@ -2901,7 +2901,7 @@
       "Arakni"
     ],
     "functional_text": "**Arakni Specialization**\n\nWhen this defends, become a random Agent of Chaos. If the attacking hero is **marked**, instead choose the Agent of Chaos.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "misfire_dampener",
@@ -3060,7 +3060,7 @@
     ],
     "specializations": [],
     "functional_text": "Equip a Graphene Chelicera token.\n\nYour next attack with **stealth** this turn gets +3{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "orb_weaver_spinneret_yellow",
@@ -3130,7 +3130,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "path_of_vengeance",
@@ -3224,7 +3224,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may **retrieve** a dagger from your graveyard.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pick_up_the_point_yellow",
@@ -3722,7 +3722,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Defense Reaction** - {r}: Add this to the active chain link as a defending card. It has 2 base {d} this chain link.\n\nAt the beginning of the end phase, if this defendend this turn, destroy it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rake_over_the_coals_red",
@@ -4054,7 +4054,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next dagger attack this turn gets +4{p}.\n\nThe next time you hit a **marked** hero with a dagger this turn, draw a card.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scalding_iron_red",
@@ -4117,7 +4117,7 @@
     ],
     "specializations": [],
     "functional_text": "Target dagger attack gets +3{p} and \"When this hits a hero, **mark** them.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scar_tissue_yellow",
@@ -4162,7 +4162,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen this is pitched, each hero shuffles, then puts the top card of their deck facedown into their arsenal.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scuttle_the_canal_blue",
@@ -4317,7 +4317,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Gain 3{h}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "silver_talons_blue",
@@ -4525,7 +4525,7 @@
     ],
     "specializations": [],
     "functional_text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stains_of_the_redback_red",
@@ -4546,7 +4546,7 @@
     ],
     "specializations": [],
     "functional_text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +3{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stains_of_the_redback_yellow",
@@ -4814,7 +4814,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target attack action card with **stealth** gets +2{p}. If it's attacking a **marked** hero, instead it gets +3{p} and you may banish an attack action card with **stealth** from your graveyard. If you do, the target becomes a copy of the banished card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tarantula_toxin_red",
@@ -4833,7 +4833,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Choose 1 or both;\n\n* Target dagger attack gets +3{p}.\n* Target card defending an attack with stealth gets -3{d} this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thick_hide_hunter_yellow",
@@ -5055,7 +5055,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target dagger attack gets +3{p}. If the defending hero is **marked**, instead it gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "to_the_point_yellow",
@@ -5325,7 +5325,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\n**Instant** - Discard this: Banish target trap from your graveyard. If you do, you may play it this turn and if it would be put into the graveyard this turn, instead banish it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "up_sticks_and_run_blue",
@@ -5375,7 +5375,7 @@
     ],
     "specializations": [],
     "functional_text": "You may **retrieve** a dagger from your graveyard.\n\nYour next dagger attack this turn gets +4{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "up_sticks_and_run_yellow",
@@ -5605,7 +5605,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\n**Once per Turn Action** - {r}: **Attack**\n\nWhen this attacks a **marked** hero, the attack gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "marked",
@@ -5626,6 +5626,29 @@
     ],
     "specializations": [],
     "functional_text": "You are **marked** until an opponent hits you",
+    "status": "pending"
+  },
+  {
+    "slug": "back_stab_red",
+    "name": "Back Stab",
+    "type_text": "Assassin Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "Stealth"
+    ],
+    "specializations": [],
+    "functional_text": "**Stealth**\n\nDefense reaction cards can't be played this chain link.",
     "status": "pending"
   }
 ]

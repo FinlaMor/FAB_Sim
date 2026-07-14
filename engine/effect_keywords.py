@@ -200,39 +200,11 @@ def _register_return_from_banish(state, card, target_player_id, origin_zone, unt
 
 
 # ---------------------------------------------------------------------------
-# Token classification tables (CR 8.5.2)
-# Kept here so the canonical create_token function owns all token routing
-# logic. ability_keywords.py imports these re-exports for backward compat.
+# Token metadata (CR 8.5.2) lives in engine/card_effects/token_meta.py so this
+# file stays free of card-specific data. Zone routing is derived from the card
+# DB template; token_meta provides numbered keywords, ally stats, per-token
+# entry hooks, and a slug-table fallback for card-DB-less test states.
 # ---------------------------------------------------------------------------
-
-#: Tokens that enter as Auras in player.auras
-AURA_TOKENS: frozenset[str] = frozenset({
-    "runechant", "seismic_surge", "quicken", "spectral_shield",
-    "frostbite", "bloodrot_pox", "soul_shackle", "ponder",
-    "embodiment_of_earth", "embodiment_of_lightning", "inertia",
-    "frailty", "courage", "might", "vigor", "agility",
-    "eloquence", "confidence", "toughness", "fealty",
-    "zen_state", "spellbane_aegis", "bait",
-})
-
-#: Keywords set on a token before zone entry (CR 8.5.2b) so prevention
-#: effects are registered with the correct keyword list.
-TOKEN_KEYWORDS: dict[str, list[str]] = {
-    "spectral_shield": ["Ward 1"],          # CR 8.6.8
-    "spellbane_aegis": ["Spellvoid 1"],     # CR 8.6.18
-    "aether_ashwing": ["Arcane Barrier 1"], # CR 8.6.15
-}
-
-#: Tokens that enter as Items in player.items
-ITEM_TOKENS: frozenset[str] = frozenset({
-    "gold", "silver", "copper", "hyper_driver", "golden_cog", "goldkiss_rum",
-})
-
-#: Ally tokens: enter player.allies and can attack.
-#: Maps slug → {subtypes, power, life}
-ALLY_TOKENS: dict[str, dict] = {
-    "aether_ashwing": {"subtypes": ["Ally", "Dragon"], "power": 1, "life": 1},
-}
 
 
 @dataclass
@@ -314,8 +286,13 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
             token.types = ["Token"]
 
         # Set token keywords before zone entry (CR 8.5.2b): explicit override
-        # first, else inherit the printed keywords from the card DB template
+        # first (restores numbers the card DB drops, e.g. "Ward 1"), else
+        # inherit the printed keywords from the card DB template
         # (e.g. a Graphene Chelicera weapon token carries Stealth).
+        from engine.card_effects.token_meta import (
+            TOKEN_KEYWORDS, TOKEN_ENTRY_HOOKS, ALLY_TOKEN_STATS,
+            AURA_TOKENS, ITEM_TOKENS, ALLY_TOKENS,
+        )
         if _slug in TOKEN_KEYWORDS:
             token.keywords = list(TOKEN_KEYWORDS[_slug])
         elif template is not None and getattr(template, 'keywords', None):
@@ -335,31 +312,25 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
         # any arena-entry trigger that immediately deals damage already finds them.
         if effect_mngr is not None:
             effect_mngr.register_prevention_effects(token, state)
-            if _slug == "zen_state":
-                # zen_state: text-based "prevent 1 damage" — not a keyword.
-                from engine.effects import ReplacementEffect, ReplacementType
-                def _zen_condition(ev, _state, _card=token):
-                    return (ev.get("type") == "damage"
-                            and ev.get("amount", 0) > 0
-                            and ev.get("target_player_id") == _card.controller
-                            and _card.zone in (
-                                "auras", "items", "tokens", "allies",
-                                "head", "chest", "arms", "legs", "weapon", "hero"))
-                def _zen_replace(ev, _state):
-                    ev["amount"] = max(0, ev.get("amount", 0) - 1)
-                    return ev
-                effect_mngr.add_replacement(ReplacementEffect(
-                    source_card=token,
-                    replacement_type=ReplacementType.PREVENTION,
-                    condition_fn=_zen_condition,
-                    replace_fn=_zen_replace,
-                    owner_id=event.target_player_id,
-                    prevention_amount=1,
-                    is_shielding=True,
-                ))
+            # Token text that isn't a keyword (e.g. Zen State's prevention)
+            # is registered via per-token entry hooks in token_meta.
+            entry_hook = TOKEN_ENTRY_HOOKS.get(_slug)
+            if entry_hook is not None:
+                entry_hook(state, token)
 
         # Route to the correct arena zone. An explicit destination (from the
-        # caller or a replacement effect) wins; otherwise route by token type.
+        # caller or a replacement effect) wins; otherwise route by the token's
+        # printed subtypes from the card DB template. The token_meta slug
+        # tables are only a fallback for minimal test states without a card DB.
+        _printed_subtypes = list(getattr(template, "subtypes", None) or [])
+        if _printed_subtypes:
+            _is_aura = "Aura" in _printed_subtypes
+            _is_item = "Item" in _printed_subtypes
+            _is_ally = "Ally" in _printed_subtypes
+        else:
+            _is_aura = _slug in AURA_TOKENS
+            _is_item = _slug in ITEM_TOKENS
+            _is_ally = _slug in ALLY_TOKENS
         if event.destination == "weapon_slot":
             # Equip a weapon token into an available weapon zone (respects a
             # hero's weapon-zone count, e.g. 1 for some heroes).
@@ -376,17 +347,21 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
             if dest_zone is None:
                 raise ValueError(f"create_token: unknown destination zone {event.destination!r}")
             dest_zone.add(token)
-        elif _slug in AURA_TOKENS:
+        elif _is_aura:
             token.types.append("Aura")
             controller.auras.add(token)
-        elif _slug in ITEM_TOKENS:
+        elif _is_item:
             token.types.append("Item")
             controller.items.add(token)
-        elif _slug in ALLY_TOKENS:
-            ally_data = ALLY_TOKENS[_slug]
-            token.subtypes = list(ally_data.get("subtypes", ["Ally"]))
-            token.base_power = ally_data.get("power")
-            token.base_life = ally_data.get("life")
+        elif _is_ally:
+            # Stats: token_meta override first, then the card DB template.
+            _stats = ALLY_TOKEN_STATS.get(_slug, {})
+            if not token.subtypes:
+                token.subtypes = ["Ally"]
+            token.base_power = _stats.get(
+                "power",
+                getattr(template, "base_power", None) or getattr(template, "power", None))
+            token.base_life = _stats.get("life", getattr(template, "base_life", None))
             token.current_life = token.base_life
             token.permanent_subtype = "Ally"
             controller.allies.add(token)
@@ -396,14 +371,15 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
         else:
             controller.tokens.add(token)
 
-    # Gold-Baited Hook and similar effects listen for this specific event.
-    if _slug == "gold":
-        from engine.state import Event as _StateEvent
-        state.event_manager.emit(
-            _StateEvent(type="gold_created",
-                        data={"player_id": event.target_player_id, "count": event.number}),
-            state,
-        )
+    # Generic token-creation event: DSL triggers (e.g. "the first time each
+    # turn you create a Gold token") and listeners filter by data["slug"].
+    from engine.state import Event as _StateEvent
+    state.event_manager.emit(
+        _StateEvent(type="token_created",
+                    data={"player_id": event.target_player_id,
+                          "slug": _slug, "count": event.number}),
+        state,
+    )
 
     # CR 8.5.2b: "when {token} enters the arena" triggers fire after creation.
     state.event_manager.emit(create_emit_event(event), state)
@@ -1121,41 +1097,6 @@ def intimidate(state: GameState, source_player_id: int,
     }), state)
 
     return event
-
-
-def _apply_fail_clash_retry(state: GameState, pid: int, revealed: dict) -> bool:
-    """Victor's outcome replacement: the first time each turn you would fail to
-    win a clash, you may destroy a Gold you control; if you do, put 1 of the
-    revealed cards on the bottom of its owner's deck, then clash again.
-
-    Returns True if the retry was taken (decks were modified → caller re-clashes).
-    """
-    player = state.players[pid]
-    flag = "victor_clash_retry_used"
-    if flag in player.current_turn_effects:
-        return False
-    gold = player.permanents.find("gold")
-    if gold is None:
-        return False
-    # "may" — ask the controller (default agents pick the first option = yes).
-    from engine.card_effects.ability_keywords import _ask_player
-    choice = _ask_player(state, pid, ["retry", "decline"],
-                         context="Destroy a Gold to bottom a revealed card and clash again?")
-    if str(choice) == "decline":
-        return False
-    player.current_turn_effects.append(flag)
-    destroy(state, gold, None)
-    # Put 1 of the revealed cards on the bottom of its owner's deck. Prefer
-    # bottoming an opponent's higher card; default to the controller's choice of
-    # any revealed card (agents pick the first — bottom this player's own card).
-    options = [c for c in revealed.values() if c is not None]
-    if options:
-        pick = options[0]
-        owner = state.players[pick.owner]
-        if pick in owner.deck.cards:
-            owner.deck.cards.remove(pick)
-            owner.deck.add_bottom(pick)
-    return True
 
 
 # ---------------------------------------------------------------------------
@@ -2601,14 +2542,17 @@ def clash(state: GameState, player1_id: int, player2_id: int,
         # CR 8.5.45c: tie — no winner
         winner = None
 
-    # Fail-clash retry (e.g. Victor): a clasher who did NOT win may, once per
-    # turn, destroy a Gold, bottom a revealed card, and clash again.
+    # Fail-clash replacement abilities: a clasher who did NOT win may have a
+    # DSL REPLACEMENT ability (registered at game start) that modifies the
+    # decks and re-clashes. Handlers live in card_effects.replacement_abilities.
     retry = getattr(state, "clash_fail_retry", {})
     for pid in (event.player1_id, event.player2_id):
         if pid == winner or retry.get(pid) is None:
             continue
-        if _apply_fail_clash_retry(state, pid, {event.player1_id: card1,
-                                                event.player2_id: card2}):
+        from engine.card_effects.replacement_abilities import REPLACEMENT_ABILITIES
+        handler = REPLACEMENT_ABILITIES.get(retry[pid])
+        if handler is not None and handler(state, pid, {event.player1_id: card1,
+                                                        event.player2_id: card2}):
             return clash(state, event.player1_id, event.player2_id,
                          source_player_id=source_player_id)
 

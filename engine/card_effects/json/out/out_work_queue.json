@@ -680,7 +680,7 @@
     ],
     "specializations": [],
     "functional_text": "Each hero puts an attack action card from their graveyard face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and a Frailty token under each opponent's control.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "codex_of_inertia_yellow",
@@ -704,7 +704,7 @@
     ],
     "specializations": [],
     "functional_text": "Each hero puts the top card of their deck face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and an Inertia token under each opponent's control.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "collapsing_trap_blue",
@@ -974,7 +974,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Death Touch can't be played from hand.\n\nWhen this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "death_touch_yellow",
@@ -1472,7 +1472,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Attack Reaction** - 0: Target dagger you control that isn't on the active chain link deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "frailty_trap_red",
@@ -1494,7 +1494,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends an attack with **go again**, create a Frailty token under the attacking hero's control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "freewheeling_renegades_blue",
@@ -1781,7 +1781,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "infect_blue",
@@ -2002,7 +2002,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck. You may play it until the end of your next turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "isolate_blue",
@@ -2209,7 +2209,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "looking_for_a_scrap_yellow",
@@ -3896,7 +3896,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create X Bloodrot Pox tokens under the defending hero's control, where X is the number of defending cards this chain link.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spring_load_blue",
@@ -4630,7 +4630,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the beginning of your end phase, destroy Bloodrot Pox, then it deals 2 damage to you unless you pay {r}{r}{r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "frailty",
@@ -4651,7 +4651,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your attack action cards played from arsenal and weapon attacks have -1{p}.\n\nAt the beginning of your end phase destroy Frailty.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "inertia",
@@ -4672,6 +4672,6 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the beginning of your end phase, destroy Inertia, then put all cards from your hand and arsenal on the bottom of your deck.",
-    "status": "pending"
+    "status": "done"
   }
 ]

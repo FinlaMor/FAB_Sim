@@ -416,8 +416,14 @@ the current attack (Arakni's stealth-vs-marked +1{p}).
 
 ## Hero and clash vocabulary (added for Victor / Kayo / Arakni)
 
-Triggers: `ON_PITCH`, `ON_DEFEND`, `ON_BOO`, `ON_GOLD_CREATED`,
+Triggers: `ON_PITCH`, `ON_DEFEND`, `ON_BOO`, `ON_TOKEN_CREATED`,
 `ON_CLASH_WIN_REVEALED`, `RECALC_ATTACK_POWER`.
+
+`ON_TOKEN_CREATED` fires on the creator's hero whenever any token is created;
+the event payload carries `{"player_id", "slug", "count"}`. `ON_GOLD_CREATED`
+is sugar for `ON_TOKEN_CREATED` gated on `slug == "gold"` (see
+`TRIGGER_EVENT_GATES` in `dsl/trigger_types.py` — add new gated sugar triggers
+there rather than new engine events).
 
 Effects:
 - `SET_BASE_POWER` `{amount}` — set the current combat attack's base power;

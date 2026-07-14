@@ -236,5 +236,262 @@
     "specializations": [],
     "functional_text": "Whenever you beat chest, you may destroy this. If you do, create an Agility token.\n\n**Temper**",
     "status": "pending"
+  },
+  {
+    "slug": "assault_and_battery_red",
+    "name": "Assault and Battery",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "assault_and_battery_yellow",
+    "name": "Assault and Battery",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create an Agility token.",
+    "status": "pending"
+  },
+  {
+    "slug": "bonebreaker_bellow_blue",
+    "name": "Bonebreaker Bellow",
+    "type_text": "Brute Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nYour next Brute attack this turn gains +1{p}. If you've **beaten chest** this turn, instead it gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bonebreaker_bellow_red",
+    "name": "Bonebreaker Bellow",
+    "type_text": "Brute Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nYour next Brute attack this turn gains +3{p}. If you've **beaten chest** this turn, instead it gains +5{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "buckwild_yellow",
+    "name": "Buckwild",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_town_red",
+    "name": "Pound Town",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "pound_town_yellow",
+    "name": "Pound Town",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
+    "status": "pending"
+  },
+  {
+    "slug": "rawhide_rumble_red",
+    "name": "Rawhide Rumble",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "BeatChest",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "**Beat Chest**\n\nWhen this attacks a hero, if you've **beaten chest** this turn, **intimidate** them.",
+    "status": "pending"
+  },
+  {
+    "slug": "show_no_mercy_red",
+    "name": "Show No Mercy",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate",
+      "Specialization"
+    ],
+    "specializations": [
+      "Rhinar"
+    ],
+    "functional_text": "**Rhinar Specialization**\n\nWhen this attacks a hero, **intimidate** them.\n\nIf the defending hero has no cards in hand, this gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "smashback_alehorn_blue",
+    "name": "Smashback Alehorn",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create an Agility and a Might token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "strongest_survive_red",
+    "name": "Strongest Survive",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits a hero, they discard a card unless they reveal a card from their hand with {p} greater than the damage dealt this way.",
+    "status": "pending"
   }
 ]

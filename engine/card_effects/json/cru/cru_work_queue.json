@@ -2708,7 +2708,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - If Righteous Cleansing deals 4 or more damage to a hero, look at the top 5 cards of their deck. Banish 1 or more cards with the same name from among them, then put the rest on top of their deck in any order.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "riled_up_blue",

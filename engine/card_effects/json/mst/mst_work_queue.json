@@ -136,7 +136,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a red card, draw a card and gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "art_of_desire_mind_blue",
@@ -2690,7 +2690,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card with cost 1 or less you play this turn gains +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nimblism_red",
@@ -2713,7 +2713,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card with cost 1 or less you play this turn gains +3{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nimblism_yellow",
@@ -2736,7 +2736,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card with cost 1 or less you play this turn gains +2{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nuu",
@@ -4434,7 +4434,7 @@
       "Victor"
     ],
     "functional_text": "**Victor Specialization**\n\nCreate a Gold token. Then if you control 3 or more Gold, create that many Might tokens.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "visit_the_golden_anvil_blue",
@@ -4857,6 +4857,90 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
+    "status": "pending"
+  },
+  {
+    "slug": "nimble_strike_blue",
+    "name": "Nimble Strike",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Nimble Strike, you may banish a card named Nimblism from your graveyard. If you do, Nimble Strike gain +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "nimble_strike_red",
+    "name": "Nimble Strike",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Nimble Strike, you may banish a card named Nimblism from your graveyard. If you do, Nimble Strike gain +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "nimble_strike_yellow",
+    "name": "Nimble Strike",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Nimble Strike, you may banish a card named Nimblism from your graveyard. If you do, Nimble Strike gain +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "wounding_blow_yellow",
+    "name": "Wounding Blow",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
     "status": "pending"
   }
 ]

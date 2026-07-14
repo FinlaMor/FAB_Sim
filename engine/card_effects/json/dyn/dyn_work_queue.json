@@ -380,7 +380,7 @@
     ],
     "specializations": [],
     "functional_text": "While Blacktek Whisperers is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip Blacktek Whisperers.\n\n**Attack Reaction** - Destroy Blacktek Whisperers: Target Assassin attack action card gains \"When this hits a hero, it gains **go again**.\"\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blazen_yoroi",
@@ -1238,7 +1238,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your hero is Royal.\n\nWhen you equip Crown of Dominion, create a Gold token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cryptic_crossing_yellow",
@@ -2281,7 +2281,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck and up to 1 card in their arsenal.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "long_shot_blue",
@@ -4267,7 +4267,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target card defending an Assassin attack gets -3{d} this combat chain.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "skull_crack_red",
@@ -5367,7 +5367,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}, destroy this: Draw a card. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nitro_mechanoid",
@@ -5412,7 +5412,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the beginning of your end phase, destroy Ponder and draw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "silver",

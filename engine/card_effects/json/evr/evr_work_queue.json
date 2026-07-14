@@ -1577,7 +1577,7 @@
     ],
     "specializations": [],
     "functional_text": "**Dominate**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "macho_grande_red",
@@ -3402,7 +3402,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Quicken token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "t_bone_blue",
@@ -3683,7 +3683,7 @@
     ],
     "specializations": [],
     "functional_text": "**Heave 3**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thunder_quake_red",

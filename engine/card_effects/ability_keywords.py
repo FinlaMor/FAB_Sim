@@ -412,8 +412,7 @@ def heave(card: Card, amount: int, state: GameState) -> bool:
         return False
     controller.hand.remove(card)
     controller.arsenal.add(card, is_public=True)  # add() updates zone tracking
-    for _ in range(amount):
-        _create_token(state, controller, "seismic_surge")
+    create_token(state, cid, "seismic_surge", amount)
     return True
 
 
@@ -734,96 +733,6 @@ def effect_steal_token(state: GameState, stealer_id: int, victim_id: int,
     token.controller = stealer_id
     stealer.auras.add(token)
     return True
-
-
-# ---------------------------------------------------------------------------
-# Token creation
-# ---------------------------------------------------------------------------
-
-# Token classification tables live in effect_keywords (the canonical layer).
-# Re-exported here so any legacy code that imports them from ability_keywords
-# continues to work without changes.
-from engine.effect_keywords import (
-    AURA_TOKENS,
-    TOKEN_KEYWORDS,
-    ITEM_TOKENS,
-    ALLY_TOKENS,
-)
-
-def _create_token(state: GameState, player: Player, token_slug: str,
-                  count: int = 1) -> list:
-    """Create token(s) in player's aura/item/token zone.
-    Tokens are created directly via Zone.add() — no remove needed since
-    the token doesn't exist in any zone before creation.
-
-    Keywords and prevention effects are registered BEFORE Zone.add() so that
-    any arena-entry trigger that immediately deals damage finds the token's
-    prevention effects already active (CR 8.5.2b).
-    """
-    from engine.card import Card as CardClass
-    effect_mngr = getattr(state, 'effect_manager', None)
-    tokens = []
-    for _ in range(count):
-        token = CardClass(slug=token_slug,
-                          name=token_slug.replace("_", " ").title())
-        token.owner = player.player_id
-        token.controller = player.player_id
-        token.is_public = True
-        token.types = ["Token"]
-
-        # Set token-specific keywords before zone entry
-        if token_slug in TOKEN_KEYWORDS:
-            token.keywords = list(TOKEN_KEYWORDS[token_slug])
-
-        # Register keyword-based prevention effects before zone entry (5-A, 5-B fix)
-        if effect_mngr is not None:
-            effect_mngr.register_prevention_effects(token, state)
-            # Zen State: text-based "prevent 1 damage" — not a keyword, handled specially
-            if token_slug == "zen_state":
-                from engine.effects import ReplacementEffect, ReplacementType
-                def _zen_condition(event, _state, _card=token):
-                    return (event.get("type") == "damage"
-                            and event.get("amount", 0) > 0
-                            and event.get("target_player_id") == _card.controller
-                            and _card.zone in (
-                                "auras", "items", "tokens", "allies",
-                                "head", "chest", "arms", "legs", "weapon", "hero"))
-                def _zen_replace(event, _state):
-                    event["amount"] = max(0, event.get("amount", 0) - 1)
-                    return event
-                effect_mngr.add_replacement(ReplacementEffect(
-                    source_card=token,
-                    replacement_type=ReplacementType.PREVENTION,
-                    condition_fn=_zen_condition,
-                    replace_fn=_zen_replace,
-                    owner_id=player.player_id,
-                    prevention_amount=1,
-                    is_shielding=True,  # persists until token is destroyed
-                ))
-
-        if token_slug in AURA_TOKENS:
-            token.types.append("Aura")
-            player.auras.add(token)
-        elif token_slug in ITEM_TOKENS:
-            token.types.append("Item")
-            player.items.add(token)
-        elif token_slug in ALLY_TOKENS:
-            # Ally tokens enter the allies zone and can attack
-            ally_data = ALLY_TOKENS[token_slug]
-            token.subtypes = list(ally_data.get("subtypes", ["Ally"]))
-            token.base_power = ally_data.get("power")
-            token.base_life = ally_data.get("life")
-            token.current_life = token.base_life
-            token.permanent_subtype = "Ally"
-            player.allies.add(token)
-            # Extend allies_exhausted list to match new ally count
-            while len(player.allies_exhausted) < len(player.allies.cards):
-                player.allies_exhausted.append(False)
-        else:
-            player.tokens.add(token)
-
-        tokens.append(token)
-    return tokens
 
 
 def effect_reveal_top(state: GameState, player_id: int, count: int = 1) -> list:

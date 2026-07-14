@@ -115,5 +115,331 @@
     "specializations": [],
     "functional_text": "When this defends, you may banish the top card of your deck. If it's a Mechanologist card, this gets +1{d} until end of turn.\n\n**Temper**",
     "status": "pending"
+  },
+  {
+    "slug": "backup_protocol_blu_blue",
+    "name": "Backup Protocol: BLU",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - {r}{r}, destroy this: Return a blue Mechanologist attack action card from your graveyard to your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "backup_protocol_red_red",
+    "name": "Backup Protocol: RED",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - {r}{r}, destroy this: Return a red Mechanologist attack action card from your graveyard to your hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "boom_grenade_red",
+    "name": "Boom Grenade",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen a Mechanologist attack action card you control hits a hero, destroy this and deal 4 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "boom_grenade_yellow",
+    "name": "Boom Grenade",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nWhen a Mechanologist attack action card you control hits a hero, destroy this and deal 3 damage to them.",
+    "status": "pending"
+  },
+  {
+    "slug": "dash_io",
+    "name": "Dash I/O",
+    "type_text": "Mechanologist Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 36,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may look at the top card of your deck at any time.\n\nOnce per turn, you may play a Mechanologist item with cost 0 or 1 from the top of your deck as though it were an instant. It costs an additional {r} to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "data_link_blue",
+    "name": "Data Link",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "data_link_red",
+    "name": "Data Link",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "dissolving_shield_red",
+    "name": "Dissolving Shield",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Crank"
+    ],
+    "specializations": [],
+    "functional_text": "**Crank**\n\nThis enters the arena with 3 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Instant** - Remove a steam counter from this: Prevent the next 1 damage that would be dealt to you this turn. If this has no steam counters, destroy it.",
+    "status": "pending"
+  },
+  {
+    "slug": "dive_through_data_red",
+    "name": "Dive Through Data",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, **opt 1**.",
+    "status": "pending"
+  },
+  {
+    "slug": "expedite_blue",
+    "name": "Expedite",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "fast_and_furious_red",
+    "name": "Fast and Furious",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nIf you've **cranked** this turn, this gets +1{p}.\n\nWhen this is banished from **boosting**, put a steam counter on an item you control with **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "maximum_velocity_red",
+    "name": "Maximum Velocity",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've **boosted** 3 or more times this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "steam_canister_blue",
+    "name": "Steam Canister",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Put this on the bottom of its owner's deck: Put a steam counter on an item you control with **crank**.",
+    "status": "pending"
+  },
+  {
+    "slug": "symbiosis_shot",
+    "name": "Symbiosis Shot",
+    "type_text": "Mechanologist Weapon - Gun (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Gun"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Dash"
+    ],
+    "functional_text": "**Dash Specialization**\n\n**Action** - Remove a steam counter from this: **Attack**\n\nWhenever a Mechanologist item enters the arena under your control, if this has fewer than 6 steam counters, you may put a steam counter on this.",
+    "status": "pending"
   }
 ]

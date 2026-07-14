@@ -1,6 +1,13 @@
-Implement the following card and its color variants if applicable.
-You should only need to change the programs in the card_effects folder. If you think you need to change something else, ask for user input first.
-First check if the card is already implemented in the card effects folder. This could include explicit implementation or if it is captured by the trigger parsers.
-The goal is to have as close to a rules accurate representation of the card(s) per the comprehensive rules in the docs/refs folder. This includes giving priority to both players if the card makes a layer on the stack both before and after the card effect resolves. If ANYTHING is not explicitly by-the-rules, check with the user for how you should proceed.
+Implement the following Flesh and Blood card (and its red/yellow/blue color variants if applicable) as a JSON DSL definition.
+
+Before writing anything, read engine/card_effects/json/IMPLEMENTATION_GUIDE.md and follow its workflow exactly. The schema is in engine/card_effects/json/DSL_REFERENCE.md.
+
+Hard constraints:
+- Card behavior goes ONLY in engine/card_effects/json/<set>/<slug>.json. Never edit engine/*.py for a card.
+- Check first whether the card already has a JSON definition or is fully covered by a CR section-8 keyword (keywords fire automatically from the card DB).
+- Implement from the card's functionalText in card_data/slug_index.json and the comprehensive rules in docs/ref/ — not from memory.
+- If no existing DSL effect/condition/cost type fits, add a GENERIC new type per the guide's "Extending the DSL" section and document it in DSL_REFERENCE.md.
+- Add a behavioral test (asserts on observable GameState outcomes) and run it plus tests/test_dsl_interpreter.py before claiming completion.
+- If anything cannot be implemented exactly by-the-rules, stop and ask the user how to proceed.
 
 Card: __CARD__

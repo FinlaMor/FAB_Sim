@@ -566,5 +566,32 @@
     "specializations": [],
     "functional_text": "When you activate a weapon attack, destroy this and you may attack with the weapon twice this turn.",
     "status": "pending"
+  },
+  {
+    "slug": "zenith_blade",
+    "name": "Zenith Blade",
+    "type_text": "Warrior Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Hala"
+    ],
+    "functional_text": "**Hala Specialization**\n\n**Once per Turn Action** - {r}: **Attack**\n\nIf this has been sharpened this turn, its first attack this turn gets **go again**.",
+    "status": "pending"
   }
 ]

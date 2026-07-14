@@ -4857,5 +4857,47 @@
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen this is pitched, **amp 1**.",
     "status": "pending"
+  },
+  {
+    "slug": "fyendals_fighting_spirit_blue",
+    "name": "Fyendal's Fighting Spirit",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fyendals_fighting_spirit_yellow",
+    "name": "Fyendal's Fighting Spirit",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
+    "status": "pending"
   }
 ]

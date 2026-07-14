@@ -848,7 +848,7 @@ class GlobalStateEmbedder(nn.Module):
         tracked_events = [
             'card_pitched', 'on_play', 'attacking', 'defend', 'hit',
             'damage_dealt', 'arcane_damage_dealt', 'card_banished', 'card_destroyed',
-            'gold_created', 'die_roll', 'crowd_boos',
+            'token_created', 'die_roll', 'crowd_boos',
             'start_of_turn', 'start_of_action_phase', 'start_of_end_phase',
         ]
         events_this_turn = getattr(state, 'events_this_turn', set())

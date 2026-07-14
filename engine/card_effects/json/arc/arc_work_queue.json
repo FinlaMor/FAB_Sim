@@ -846,7 +846,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Defense reaction cards can't be played this chain link. When this hits a hero, destroy all cards in their arsenal.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "convection_amplifier_red",
@@ -4877,6 +4877,25 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and deal 1 arcane damage to target opposing hero.",
+    "status": "done"
+  },
+  {
+    "slug": "cracked_bauble_yellow",
+    "name": "Cracked Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
     "status": "pending"
   }
 ]

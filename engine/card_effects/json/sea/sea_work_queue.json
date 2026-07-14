@@ -3161,7 +3161,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nimby_red",
@@ -4062,7 +4062,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen this is pitched, create a Gold token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "riddle_with_regret_red",

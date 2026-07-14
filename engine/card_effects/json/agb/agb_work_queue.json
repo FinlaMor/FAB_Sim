@@ -70,5 +70,616 @@
     "specializations": [],
     "functional_text": "When this defends, you may discard a card with watery grave. If you do, draw a card.\n\n**Blade Break**",
     "status": "pending"
+  },
+  {
+    "slug": "anka_drag_under_yellow",
+    "name": "Anka, Drag Under",
+    "type_text": "Pirate Necromancer Action - Ally",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": null,
+    "life": 3,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "WateryGrave"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, {t}: Attack\n\n**Instant** - {t}, discard a card with watery grave: The next time an opponent draws one or more cards this action phase, they discard a card.\n\n**Watery Grave**",
+    "status": "pending"
+  },
+  {
+    "slug": "avast_ye_blue",
+    "name": "Avast Ye!",
+    "type_text": "Pirate Necromancer Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Pirate ally attack this turn gets **go again** and \"When this hits a hero, create a Gold token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "back_alley_breakline_blue",
+    "name": "Back Alley Breakline",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If an activated ability or action card effect puts Back Alley Breakline face up into a zone from your deck, gain 1 action point.",
+    "status": "pending"
+  },
+  {
+    "slug": "barnacle_yellow",
+    "name": "Barnacle",
+    "type_text": "Pirate Necromancer Action - Ally",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": null,
+    "life": 3,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "WateryGrave"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {t}: **Attack**\n\n**Watery Grave**",
+    "status": "pending"
+  },
+  {
+    "slug": "battalion_barque_red",
+    "name": "Battalion Barque",
+    "type_text": "Pirate Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Pirate"
+    ],
+    "keywords": [
+      "HighTide"
+    ],
+    "specializations": [],
+    "functional_text": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "call_to_the_grave_blue",
+    "name": "Call to the Grave",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Search your deck for a card, put it into your graveyard, then shuffle.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "compass_of_sunken_depths",
+    "name": "Compass of Sunken Depths",
+    "type_text": "Pirate Necromancer Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}: Look at the top card of your deck.\n\nThe first card with watery grave you play from your graveyard each turn gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "fiddlers_green_red",
+    "name": "Fiddler's Green",
+    "type_text": "Generic Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is put into your graveyard from anywhere, gain 3{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "gold",
+    "name": "Gold",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy this: Draw a card. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "golden_tipple_blue",
+    "name": "Golden Tipple",
+    "type_text": "Pirate Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gravy_bones",
+    "name": "Gravy Bones",
+    "type_text": "Pirate Necromancer Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}, destroy a Gold you control: Draw a card, then discard a card.\n\nIf a blue card has been put into your graveyard this turn, you may play cards with watery grave from your graveyard.",
+    "status": "pending"
+  },
+  {
+    "slug": "gravy_bones_shipwrecked_looter",
+    "name": "Gravy Bones, Shipwrecked Looter",
+    "type_text": "Pirate Necromancer Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}, destroy a Gold you control: Draw a card, then discard a card.\n\nIf a blue card has been put into your graveyard this turn, you may play cards with watery grave from your graveyard.",
+    "status": "pending"
+  },
+  {
+    "slug": "jittery_bones_blue",
+    "name": "Jittery Bones",
+    "type_text": "Pirate Necromancer Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "jittery_bones_red",
+    "name": "Jittery Bones",
+    "type_text": "Pirate Necromancer Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "limpit_hop_a_long_yellow",
+    "name": "Limpit, Hop-a-long",
+    "type_text": "Pirate Necromancer Action - Ally",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": null,
+    "life": 1,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain",
+      "WateryGrave"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, {t}: **Attack**. **Go again**\n\n**Watery Grave**",
+    "status": "pending"
+  },
+  {
+    "slug": "loot_the_arsenal_blue",
+    "name": "Loot the Arsenal",
+    "type_text": "Pirate Necromancer Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Pirate ally attack this turn gets \"When this hits a hero, destroy a card in their arsenal. If you do, create a Gold token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "loot_the_hold_blue",
+    "name": "Loot the Hold",
+    "type_text": "Pirate Necromancer Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Pirate ally attack this turn gets \"When this hits a hero, they discard a card. If they do, create a Gold token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "murderous_rabble_blue",
+    "name": "Murderous Rabble",
+    "type_text": "Pirate Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 0,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, reveal the top card of your deck. This gets +X{p}, where X is the pitch value of the card revealed this way.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "oysten_heart_of_gold_yellow",
+    "name": "Oysten, Heart of Gold",
+    "type_text": "Pirate Necromancer Action - Ally",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": null,
+    "life": 1,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "WateryGrave"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {t}: Attack\n\nWhen this dies, create a Gold token.\n\n**Watery Grave**",
+    "status": "pending"
+  },
+  {
+    "slug": "paddle_faster_red",
+    "name": "Paddle Faster",
+    "type_text": "Pirate Necromancer Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may {t} an ally you control. If you do, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "portside_exchange_blue",
+    "name": "Portside Exchange",
+    "type_text": "Pirate Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Discard a card, then draw a card. If a yellow card is discarded this way, create a Gold token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "restless_bones_blue",
+    "name": "Restless Bones",
+    "type_text": "Pirate Necromancer Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "restless_bones_red",
+    "name": "Restless Bones",
+    "type_text": "Pirate Necromancer Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "riggermortis_yellow",
+    "name": "Riggermortis",
+    "type_text": "Pirate Necromancer Action - Ally",
+    "cost": 1,
+    "pitch": 2,
+    "power": 6,
+    "defense": null,
+    "life": 1,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "WateryGrave"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, {t}: **Attack**\n\n**Watery Grave**",
+    "status": "pending"
+  },
+  {
+    "slug": "sawbones_dock_hand_yellow",
+    "name": "Sawbones, Dock Hand",
+    "type_text": "Pirate Necromancer Action - Ally",
+    "cost": 2,
+    "pitch": 2,
+    "power": 6,
+    "defense": null,
+    "life": 2,
+    "intellect": null,
+    "subtypes": [
+      "Ally",
+      "NonAttack"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "WateryGrave"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, {t}: **Attack**\n\n**Instant** - {t}: The next time you or a Pirate you control would be dealt damage this turn, prevent 1 of that damage.\n\n**Watery Grave**",
+    "status": "pending"
+  },
+  {
+    "slug": "washed_up_wave",
+    "name": "Washed Up Wave",
+    "type_text": "Pirate Necromancer Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Necromancer",
+      "Pirate"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
   }
 ]

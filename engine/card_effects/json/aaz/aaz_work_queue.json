@@ -139,5 +139,435 @@
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Whenever an arrow with an aim counter hits this turn, draw a card. **Go again**",
     "status": "pending"
+  },
+  {
+    "slug": "barbed_undertow_red",
+    "name": "Barbed Undertow",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Barbed Undertow has an aim counter, it gains \"When this hits a hero, choose red, yellow, or blue. Until the start of your next turn, they can't pitch cards of the chosen color.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "boltn_shot_red",
+    "name": "Bolt'n' Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload"
+    ],
+    "specializations": [],
+    "functional_text": "If Bolt'n' Shot's {p} is greater than its base {p}, it has **go again** and \"If this hits, **reload.**\"",
+    "status": "pending"
+  },
+  {
+    "slug": "crows_nest",
+    "name": "Crow's Nest",
+    "type_text": "Ranger Equipment - Quiver",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Quiver"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Azalea"
+    ],
+    "functional_text": "**Azalea Specialization**\n\nWhenever an arrow is put face up into your arsenal from your deck, you may pay {r}. If you do, put an aim counter on it.",
+    "status": "pending"
+  },
+  {
+    "slug": "drill_shot_red",
+    "name": "Drill Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Piercing"
+    ],
+    "specializations": [],
+    "functional_text": "If Drill Shot has an aim counter, it has **piercing 1**.\n\nWhen this hits a hero, put a -1{d} counter on an equipment they control.",
+    "status": "pending"
+  },
+  {
+    "slug": "frailty",
+    "name": "Frailty",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your attack action cards played from arsenal and weapon attacks have -1{p}.\n\nAt the beginning of your end phase destroy Frailty.",
+    "status": "done"
+  },
+  {
+    "slug": "inertia",
+    "name": "Inertia",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Inertia, then put all cards from your hand and arsenal on the bottom of your deck.",
+    "status": "done"
+  },
+  {
+    "slug": "infecting_shot_blue",
+    "name": "Infecting Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Infecting Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "infecting_shot_red",
+    "name": "Infecting Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Infecting Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "lace_with_bloodrot_red",
+    "name": "Lace with Bloodrot",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p} and \"When this hits a hero, create a Bloodrot Pox token under their control.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lace_with_frailty_red",
+    "name": "Lace with Frailty",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p} and \"When this hits a hero, create a Frailty token under their control.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lace_with_inertia_red",
+    "name": "Lace with Inertia",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p} and \"When this hits a hero, create an Inertia token under their control.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "memorial_ground_yellow",
+    "name": "Memorial Ground",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Put target attack action card with cost 1 or less from your graveyard on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "point_the_tip_red",
+    "name": "Point the Tip",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Target face up arrow in your arsenal gains +3{p} until end of turn. Put an aim counter on it.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "read_the_glide_path_red",
+    "name": "Read the Glide Path",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +3{p}.\n\n**Opt 1**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "read_the_glide_path_yellow",
+    "name": "Read the Glide Path",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Opt"
+    ],
+    "specializations": [],
+    "functional_text": "Your next arrow attack this turn gains +2{p}.\n\n**Opt 1**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "scout_the_periphery_red",
+    "name": "Scout the Periphery",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Look at the top card of target hero's deck.\n\nThe next attack action card you play from arsenal this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sedation_shot_red",
+    "name": "Sedation Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Sedation Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create an Inertia token under their control.",
+    "status": "pending"
+  },
+  {
+    "slug": "spire_sniping_blue",
+    "name": "Spire Sniping",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When Spire Sniping is put or turned face up in arsenal, look at the top 2 cards of your deck, then put them back in any order.",
+    "status": "pending"
+  },
+  {
+    "slug": "spire_sniping_yellow",
+    "name": "Spire Sniping",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When Spire Sniping is put or turned face up in arsenal, look at the top 2 cards of your deck, then put them back in any order.",
+    "status": "pending"
   }
 ]

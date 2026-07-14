@@ -22,5 +22,676 @@
     "specializations": [],
     "functional_text": "**Suspense**\n\nWhen this enters or leaves the arena, **the crowd cheers** you.",
     "status": "pending"
+  },
+  {
+    "slug": "act_of_glory_blue",
+    "name": "Act of Glory",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "act_of_glory_red",
+    "name": "Act of Glory",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 4,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +6{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "attention_grabbers",
+    "name": "Attention Grabbers",
+    "type_text": "Guardian Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may remove a suspense counter from an aura you control. If you do, this gets +2{d} this chain link.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "boots_to_the_boards",
+    "name": "Boots to the Boards",
+    "type_text": "Revered Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, pay up to {r}{r}{r}. Create that many Toughness tokens.\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "boulder_drop_blue",
+    "name": "Boulder Drop",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "boulder_drop_red",
+    "name": "Boulder Drop",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.",
+    "status": "done"
+  },
+  {
+    "slug": "comeback_kid_blue",
+    "name": "Comeback Kid",
+    "type_text": "Revered Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.\n\nIf you've been cheered this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "confidence",
+    "name": "Confidence",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then the next attack card you play this turn can't be defended by more than 2 non-block cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_of_their_seats_blue",
+    "name": "Edge of Their Seats",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_of_their_seats_red",
+    "name": "Edge of Their Seats",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "fault_line_red",
+    "name": "Fault Line",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a card in your arsenal, this gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, put all cards in all arsenals on bottom of their owner's deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "macho_grande_blue",
+    "name": "Macho Grande",
+    "type_text": "Guardian Action - Attack",
+    "cost": 7,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**",
+    "status": "done"
+  },
+  {
+    "slug": "moment_maker",
+    "name": "Moment Maker",
+    "type_text": "Revered Guardian Weapon - Hammer Axe (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Axe",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf you control 3 or more auras of suspense, this gets +2{p} and \"When this hits a hero, **the crowd cheers** you.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "never_give_up_yellow",
+    "name": "Never Give Up",
+    "type_text": "Revered Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}, put this on the bottom of your deck: Target defending action card gets +3{d} this chain link. Activate this only while it's in your graveyard, you have less {h} than each hero, and you've been cheered this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "pleiades",
+    "name": "Pleiades",
+    "type_text": "Revered Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}, remove a suspense counter from an aura you control: You may put a suspense counter on an aura of suspense you control.\n\nWhenever the crowd cheers you, create a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "pleiades_superstar",
+    "name": "Pleiades, Superstar",
+    "type_text": "Revered Guardian Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {t}, remove a suspense counter from an aura you control: You may put a suspense counter on an aura of suspense you control.\n\nWhenever the crowd cheers you, create a Confidence token.",
+    "status": "pending"
+  },
+  {
+    "slug": "standing_ovation_blue",
+    "name": "Standing Ovation",
+    "type_text": "Revered Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If 3 or more auras of suspense have left the arena this turn, this gets \"When this hits a hero, take an extra turn after this one. At the beginning of the next end phase, they draw up to their {i}.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "tear_asunder_blue",
+    "name": "Tear Asunder",
+    "type_text": "Guardian Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Guardian attack this turn gains +1{p}, **dominate**, and \"When this hits a hero, they discard 2 cards.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "tension_in_the_air_blue",
+    "name": "Tension in the Air",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "tension_in_the_air_red",
+    "name": "Tension in the Air",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "the_suspense_is_killing_me_blue",
+    "name": "The Suspense is Killing Me",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nYour first attack each turn gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "thespian_charm_yellow",
+    "name": "Thespian Charm",
+    "type_text": "Revered Guardian Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "Choose any number;\n- Destroy a Might or Vigor token.\n- **The crowd cheers** you.\n- Return an aura permanent you control to its owner's hand.",
+    "status": "pending"
+  },
+  {
+    "slug": "tiara_of_suspense",
+    "name": "Tiara of Suspense",
+    "type_text": "Revered Guardian Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Put a suspense counter on an aura of suspense you control. Activate this only if you've been cheered this turn.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "to_be_continued_blue",
+    "name": "To Be Continued...",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nThe first time you would be dealt damage each turn, prevent 1 of that damage.",
+    "status": "pending"
+  },
+  {
+    "slug": "toughness",
+    "name": "Toughness",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your opponent's turn, destroy this, then the next action card you defend with this turn gets +1{d} this chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "turning_point_blue",
+    "name": "Turning Point",
+    "type_text": "Revered Guardian Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "TheCrowdCheers"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, if you have less {h} than the attacking hero, **the crowd cheers** you.\n\nWhile this is defending, if you've been cheered this turn, it gets +3{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "up_on_a_pedestal_blue",
+    "name": "Up on a Pedestal",
+    "type_text": "Revered Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nWhen this enters or leaves the arena, you may put a Revered or Guardian attack action card from your graveyard on top of your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "uplifting_performance_blue",
+    "name": "Uplifting Performance",
+    "type_text": "Revered Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control a Confidence or Toughness token, this gets +1{p}.\n\nWhen this hits a hero, create a Confidence and a Toughness token.",
+    "status": "pending"
+  },
+  {
+    "slug": "virtuoso_bodice",
+    "name": "Virtuoso Bodice",
+    "type_text": "Guardian Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends, you may remove a suspense counter from an aura you control. If you do, gain {r}{r}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "what_happens_next_blue",
+    "name": "What Happens Next?",
+    "type_text": "Guardian Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Suspense"
+    ],
+    "specializations": [],
+    "functional_text": "**Suspense**\n\nThe first card with cost 1 or more you play each turn costs {r} less to play.",
+    "status": "pending"
   }
 ]

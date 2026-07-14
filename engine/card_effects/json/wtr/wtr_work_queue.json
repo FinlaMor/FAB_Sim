@@ -494,7 +494,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "crazy_brew_blue",
@@ -681,7 +681,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "debilitate_yellow",
@@ -704,7 +704,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "demolition_crew_blue",
@@ -819,7 +819,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "disable_yellow",
@@ -842,7 +842,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "dorinthea",
@@ -1985,7 +1985,7 @@
     ],
     "specializations": [],
     "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and the attack gains **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "raging_onslaught_blue",
@@ -2415,7 +2415,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "show_time_blue",
@@ -3820,7 +3820,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Choose 1;\n- Target club or hammer weapon attack gains +4{p}.\n- Target attack action with cost 2 or greater gains +4{p} and \"If this hits a hero, they discard a card.\"",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "pummel_yellow",

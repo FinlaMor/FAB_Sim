@@ -893,7 +893,7 @@
     ],
     "specializations": [],
     "functional_text": "This can't be defended by non-head equipment.\n\nIf you have a head equipped and the defending hero doesn't, this gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on a head they have equipped, then if it has 0{d}, destroy it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hoarding_of_denial",
@@ -1552,7 +1552,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. If there is a winner, the other hero discards a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "testament_of_valahai",
@@ -1640,6 +1640,30 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Remove X -1{d} counters from a Guardian off-hand you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_power_blue",
+    "name": "Emerging Power",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +1{p}.",
     "status": "pending"
   }
 ]

@@ -22,5 +22,46 @@
     "specializations": [],
     "functional_text": "Your next sword attack this turn gets \"When this attacks, **wager** with the defending hero. The winner searches their deck for a card, shuffles, then puts that card on top.\"\n\n**Go again**",
     "status": "pending"
+  },
+  {
+    "slug": "golden_grail",
+    "name": "Golden Grail",
+    "type_text": "Warrior Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r} or destroy a Gold you control: **Attack**. If this attack has wagered, it gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "olympia_prized_fighter",
+    "name": "Olympia, Prized Fighter",
+    "type_text": "Warrior Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The first time each of your attacks wins a **wager**, create a Gold token.",
+    "status": "pending"
   }
 ]
