@@ -1,0 +1,1014 @@
+{"kind": "decision", "turn": 0, "step": "begin_game", "player_id": 2, "context": "Who goes first?", "options": [{"type": "choose", "from_arsenal": false, "choose_index": 0}, {"type": "choose", "from_arsenal": false, "choose_index": 1}], "chosen": {"type": "choose", "from_arsenal": false, "choose_index": 1}, "chosen_index": 1, "legal_actions_count": 2}
+{"kind": "step_change", "turn": 0, "step": "start_phase", "from": "begin_game", "to": "start_phase"}
+{"kind": "event", "turn": 0, "step": "start_phase", "event": {"type": "start_of_game", "card": null, "target": null, "data": {}}}
+{"kind": "game_start", "turn": 0, "step": "start_phase", "snapshot": {"turn_number": 0, "individual_turns": 0, "step": "start_phase", "active_player": 1, "priority_player": 1, "done": false, "winner": null, "players": {"1": {"hero": "victor_goldmane_high_and_mighty", "life": 40, "resources": 0, "chi": 0, "action_points": 0, "intellect": 4, "hand": ["test_of_strength_red", "cranial_crush_blue", "test_of_strength_red", "macho_grande_blue"], "deck_count": 56, "graveyard": [], "pitch": [], "arsenal": [], "banished": [], "permanents": [], "items": [], "auras": [], "allies": [], "tokens": [], "equipment": {"head": ["crown_of_dominion"], "chest": ["fyendals_spring_tunic"], "arms": ["ironfist_revelation"], "legs": ["quickdodge_flexors"], "weapon1": ["millers_grindstone"], "weapon2": []}, "current_turn_effects": [], "class_counters": {}}, "2": {"hero": "kayo_underhanded_cheat", "life": 40, "resources": 0, "chi": 0, "action_points": 0, "intellect": 4, "hand": ["pummel_red", "offensive_behavior_blue", "show_of_strength_red", "reckless_arithmetic_blue"], "deck_count": 56, "graveyard": [], "pitch": [], "arsenal": [], "banished": [], "permanents": [], "items": [], "auras": [], "allies": [], "tokens": [], "equipment": {"head": ["scowling_flesh_bag"], "chest": ["fyendals_spring_tunic"], "arms": ["apex_bonebreaker"], "legs": ["scabskin_leathers"], "weapon1": ["savage_claw"], "weapon2": []}, "current_turn_effects": [], "class_counters": {}}}, "combat": null, "stack": [], "stack_entries": [], "chain_links": [], "events_this_turn": ["start_of_game"]}}
+{"kind": "event", "turn": 0, "step": "start_phase", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "action", "from": "start_phase", "to": "action"}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 0, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 3, "legal_actions_count": 4}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 0, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "decision", "turn": 0, "step": "end_phase_cleanup", "player_id": 1, "context": "Arsenal a card?", "options": [{"type": "store_arsenal", "from_arsenal": false, "card": "test_of_strength_red"}, {"type": "store_arsenal", "from_arsenal": false, "card": "cranial_crush_blue"}, {"type": "store_arsenal", "from_arsenal": false, "card": "test_of_strength_red"}, {"type": "store_arsenal", "from_arsenal": false, "card": "macho_grande_blue"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 4, "legal_actions_count": 5}
+{"kind": "event", "turn": 0, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 0, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "offensive_behavior_blue"}, {"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}, {"type": "play_card", "player_id": 2, "card": "reckless_arithmetic_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "reckless_arithmetic_blue"}, "chosen_index": 2, "legal_actions_count": 5}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "on_play", "card": "reckless_arithmetic_blue", "target": null, "data": {"card": "reckless_arithmetic_blue", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 0, "step": "action", "action": {"type": "play_card", "player_id": 2, "card": "reckless_arithmetic_blue"}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 0, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 0, "step": "combat_attack", "event": {"type": "roll", "card": null, "target": null, "data": {"num_dice": 1, "faces": 6, "results": [2], "total": 2, "source_player_id": 2, "canceled": false}}}
+{"kind": "event", "turn": 0, "step": "combat_attack", "event": {"type": "attacking", "card": "reckless_arithmetic_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "reckless_arithmetic_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 0, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 0, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 0, "step": "combat_reaction", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "pummel_red"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 1, "legal_actions_count": 2}
+{"kind": "event", "turn": 0, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 0, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_damage", "event": {"type": "hit", "card": "reckless_arithmetic_blue", "target": null, "data": {"damage": 1}}}
+{"kind": "event", "turn": 0, "step": "combat_damage", "event": {"type": "hit_hero", "card": "reckless_arithmetic_blue", "target": null, "data": {"damage": 1}}}
+{"kind": "event", "turn": 0, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 1, "target": 1}}}
+{"kind": "event", "turn": 0, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 0, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 0, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 0, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 0, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 0, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "decision", "turn": 0, "step": "end_phase_cleanup", "player_id": 2, "context": "Arsenal a card?", "options": [{"type": "store_arsenal", "from_arsenal": false, "card": "pummel_red"}, {"type": "store_arsenal", "from_arsenal": false, "card": "offensive_behavior_blue"}, {"type": "store_arsenal", "from_arsenal": false, "card": "show_of_strength_red"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "store_arsenal", "from_arsenal": false, "card": "offensive_behavior_blue"}, "chosen_index": 1, "legal_actions_count": 4}
+{"kind": "event", "turn": 0, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "mocking_blow_yellow", "player_id": 2}}}
+{"kind": "event", "turn": 0, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "insult_to_injury_blue", "player_id": 2}}}
+{"kind": "event", "turn": 0, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 1, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 3, "legal_actions_count": 4}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 1, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "decision", "turn": 1, "step": "end_phase_cleanup", "player_id": 1, "context": "Arsenal a card?", "options": [{"type": "store_arsenal", "from_arsenal": false, "card": "test_of_strength_red"}, {"type": "store_arsenal", "from_arsenal": false, "card": "cranial_crush_blue"}, {"type": "store_arsenal", "from_arsenal": false, "card": "test_of_strength_red"}, {"type": "store_arsenal", "from_arsenal": false, "card": "macho_grande_blue"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "store_arsenal", "from_arsenal": false, "card": "macho_grande_blue"}, "chosen_index": 3, "legal_actions_count": 5}
+{"kind": "event", "turn": 1, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "enlightened_strike_red", "player_id": 1}}}
+{"kind": "event", "turn": 1, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 1, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}, {"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "insult_to_injury_blue"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "offensive_behavior_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "offensive_behavior_blue"}, "chosen_index": 3, "legal_actions_count": 6}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "on_play", "card": "offensive_behavior_blue", "target": null, "data": {"card": "offensive_behavior_blue", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 1, "step": "action", "action": {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "offensive_behavior_blue"}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 1, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 1, "step": "combat_attack", "event": {"type": "attacking", "card": "offensive_behavior_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "offensive_behavior_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 1, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 1, "step": "combat_reaction", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "pummel_red"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "pummel_red"}, "chosen_index": 0, "legal_actions_count": 2}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "on_play", "card": "pummel_red", "target": null, "data": {"card": "pummel_red", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 1, "step": "combat_reaction", "action": {"type": "play_card", "player_id": 2, "card": "pummel_red"}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "layer_resolved", "turn": 1, "step": "combat_reaction", "layer_type": "card", "card": "pummel_red", "player_id": 2}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "hit", "card": "offensive_behavior_blue", "target": null, "data": {"damage": 2}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "token_created", "card": null, "target": null, "data": {"player_id": 2, "slug": "might", "count": 1}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "create_token", "card": "might", "target": null, "data": {"source_player_id": 2, "target_player_id": 2, "destination": "tokens", "number": 1, "canceled": false}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "token_created", "card": null, "target": null, "data": {"player_id": 2, "slug": "vigor", "count": 1}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "create_token", "card": "vigor", "target": null, "data": {"source_player_id": 2, "target_player_id": 2, "destination": "tokens", "number": 1, "canceled": false}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "hit_hero", "card": "offensive_behavior_blue", "target": null, "data": {"damage": 2}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 2, "target": 1}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 1, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 1, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 1, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 1, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 1, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "decision", "turn": 1, "step": "end_phase_cleanup", "player_id": 2, "context": "Arsenal a card?", "options": [{"type": "store_arsenal", "from_arsenal": false, "card": "show_of_strength_red"}, {"type": "store_arsenal", "from_arsenal": false, "card": "mocking_blow_yellow"}, {"type": "store_arsenal", "from_arsenal": false, "card": "insult_to_injury_blue"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "store_arsenal", "from_arsenal": false, "card": "insult_to_injury_blue"}, "chosen_index": 2, "legal_actions_count": 4}
+{"kind": "event", "turn": 1, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "sigil_of_solace_red", "player_id": 2}}}
+{"kind": "event", "turn": 1, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "sink_below_red", "player_id": 2}}}
+{"kind": "event", "turn": 1, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 2, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 2, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "enlightened_strike_red"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 4, "legal_actions_count": 5}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 2, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "sigil_of_solace_red"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 1, "legal_actions_count": 2}
+{"kind": "step_change", "turn": 2, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 2, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 2, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "leaves_arena", "card": null, "target": null, "data": {"card": "might"}}}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "destroy", "card": "might", "target": "might", "data": {"destroy_source": null, "source_player_id": null, "canceled": false}}}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "leaves_arena", "card": null, "target": null, "data": {"card": "vigor"}}}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "destroy", "card": "vigor", "target": "vigor", "data": {"destroy_source": null, "source_player_id": null, "canceled": false}}}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "gain", "card": null, "target": null, "data": {"asset_type": "resources", "amount": 1, "source_player_id": 2, "target_player_id": 2, "target_card": null, "canceled": false}}}
+{"kind": "step_change", "turn": 2, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 2, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}, {"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "sigil_of_solace_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "sigil_of_solace_red"}, "chosen_index": 2, "legal_actions_count": 6}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "on_play", "card": "sigil_of_solace_red", "target": null, "data": {"card": "sigil_of_solace_red", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 2, "step": "action", "action": {"type": "play_card", "player_id": 2, "card": "sigil_of_solace_red"}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "gain", "card": null, "target": null, "data": {"asset_type": "life", "amount": 3, "source_player_id": 2, "target_player_id": 2, "target_card": null, "canceled": false}}}
+{"kind": "layer_resolved", "turn": 2, "step": "action", "layer_type": "card", "card": "sigil_of_solace_red", "player_id": 2}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 2, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 2, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 2, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 2, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "looking_for_a_scrap_red", "player_id": 2}}}
+{"kind": "event", "turn": 2, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 3, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 3, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 3, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "enlightened_strike_red"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 4, "legal_actions_count": 5}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 3, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 3, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 3, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 3, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 3, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 3, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 3, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}, {"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "looking_for_a_scrap_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 5, "legal_actions_count": 6}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 3, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 3, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 3, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 3, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 3, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 4, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "enlightened_strike_red"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 1, "card": "enlightened_strike_red"}, "chosen_index": 1, "legal_actions_count": 5}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "on_play", "card": "enlightened_strike_red", "target": null, "data": {"card": "enlightened_strike_red", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 4, "step": "action", "action": {"type": "play_card", "player_id": 1, "card": "enlightened_strike_red"}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 4, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "decision", "turn": 4, "step": "combat_attack", "player_id": 1, "context": "Choose a mode", "options": ["0", "1", "2"], "chosen": "0", "chosen_index": 0, "legal_actions_count": 3}
+{"kind": "event", "turn": 4, "step": "combat_attack", "event": {"type": "attacking", "card": "enlightened_strike_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "enlightened_strike_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 4, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 4, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 4, "step": "combat_reaction", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "sink_below_red"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 1, "legal_actions_count": 2}
+{"kind": "event", "turn": 4, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 4, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_damage", "event": {"type": "hit", "card": "enlightened_strike_red", "target": null, "data": {"damage": 5}}}
+{"kind": "event", "turn": 4, "step": "combat_damage", "event": {"type": "hit_hero", "card": "enlightened_strike_red", "target": null, "data": {"damage": 5}}}
+{"kind": "event", "turn": 4, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 5, "target": 2}}}
+{"kind": "event", "turn": 4, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 4, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 4, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 4, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 3, "legal_actions_count": 4}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 4, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 4, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "thunder_quake_blue", "player_id": 1}}}
+{"kind": "event", "turn": 4, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "right_behind_you_blue", "player_id": 1}}}
+{"kind": "event", "turn": 4, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 4, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}, {"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "looking_for_a_scrap_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 5, "legal_actions_count": 6}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 4, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 4, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 4, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 4, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 5, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "thunder_quake_blue"}, {"type": "play_card", "player_id": 1, "card": "right_behind_you_blue"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 5, "legal_actions_count": 6}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 5, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 5, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 5, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}, {"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "looking_for_a_scrap_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, "chosen_index": 4, "legal_actions_count": 6}
+{"kind": "action_applied", "turn": 5, "step": "action", "action": {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 5, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 5, "step": "combat_attack", "event": {"type": "attacking", "card": "savage_claw", "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "savage_claw", "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 5, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 5, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 5, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_damage", "event": {"type": "hit", "card": "savage_claw", "target": null, "data": {"damage": 3}}}
+{"kind": "event", "turn": 5, "step": "combat_damage", "event": {"type": "hit_hero", "card": "savage_claw", "target": null, "data": {"damage": 3}}}
+{"kind": "event", "turn": 5, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 3, "target": 1}}}
+{"kind": "event", "turn": 5, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 5, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 5, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 5, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 5, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 5, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 5, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 6, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "thunder_quake_blue"}, {"type": "play_card", "player_id": 1, "card": "right_behind_you_blue"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, "chosen_index": 4, "legal_actions_count": 6}
+{"kind": "action_applied", "turn": 6, "step": "action", "action": {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 6, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 6, "step": "combat_attack", "event": {"type": "attacking", "card": "millers_grindstone", "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "millers_grindstone", "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 6, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 6, "step": "combat_reaction", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "sink_below_red"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "sink_below_red"}, "chosen_index": 0, "legal_actions_count": 2}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "on_play", "card": "sink_below_red", "target": null, "data": {"card": "sink_below_red", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 6, "step": "combat_reaction", "action": {"type": "play_card", "player_id": 2, "card": "sink_below_red"}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 6, "step": "combat_reaction", "player_id": 2, "context": "Choose a card to put on the bottom of your deck", "options": ["show_of_strength_red", "mocking_blow_yellow", "looking_for_a_scrap_red", "decline"], "chosen": "show_of_strength_red", "chosen_index": 0, "legal_actions_count": 4}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "put_object", "card": null, "target": null, "data": {"target_card": "show_of_strength_red", "destination_zone": "deck", "destination_player_id": 2, "source_player_id": 2, "is_public": null, "position": null, "canceled": false}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "add_defend", "card": "sink_below_red", "target": null, "data": {"chain_link": null, "source_player_id": null, "canceled": false}}}
+{"kind": "layer_resolved", "turn": 6, "step": "combat_reaction", "layer_type": "card", "card": "sink_below_red", "player_id": 2}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 6, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_damage", "event": {"type": "hit", "card": "millers_grindstone", "target": null, "data": {"damage": 4}}}
+{"kind": "event", "turn": 6, "step": "combat_damage", "event": {"type": "hit_hero", "card": "millers_grindstone", "target": null, "data": {"damage": 4}}}
+{"kind": "event", "turn": 6, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 4, "target": 2}}}
+{"kind": "event", "turn": 6, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 6, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 6, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 6, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 6, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 6, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "looking_for_a_scrap_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "pass", "from_arsenal": false}, "chosen_index": 4, "legal_actions_count": 5}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 6, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 6, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 6, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 6, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "mocking_blow_blue", "player_id": 2}}}
+{"kind": "event", "turn": 6, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "chain_of_brutality_red", "player_id": 2}}}
+{"kind": "event", "turn": 6, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 7, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "thunder_quake_blue"}, {"type": "play_card", "player_id": 1, "card": "right_behind_you_blue"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 1, "card": "thunder_quake_blue"}, "chosen_index": 1, "legal_actions_count": 6}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "on_play", "card": "thunder_quake_blue", "target": null, "data": {"card": "thunder_quake_blue", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 7, "step": "action", "action": {"type": "play_card", "player_id": 1, "card": "thunder_quake_blue"}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "attacking", "card": "thunder_quake_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "thunder_quake_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "hit", "card": "thunder_quake_blue", "target": null, "data": {"damage": 8}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "hit_hero", "card": "thunder_quake_blue", "target": null, "data": {"damage": 8}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 8, "target": 2}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 7, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 7, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 7, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "ripple_away_blue", "player_id": 1}}}
+{"kind": "event", "turn": 7, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 7, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "looking_for_a_scrap_red"}, {"type": "play_card", "player_id": 2, "card": "mocking_blow_blue"}, {"type": "play_card", "player_id": 2, "card": "chain_of_brutality_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "looking_for_a_scrap_red"}, "chosen_index": 1, "legal_actions_count": 7}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "on_play", "card": "looking_for_a_scrap_red", "target": null, "data": {"card": "looking_for_a_scrap_red", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 7, "step": "action", "action": {"type": "play_card", "player_id": 2, "card": "looking_for_a_scrap_red"}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "decision", "turn": 7, "step": "combat_attack", "player_id": 2, "context": "Choose a card to banish from graveyard", "options": ["reckless_arithmetic_blue", "pummel_red", "offensive_behavior_blue", "sigil_of_solace_red", "sink_below_red"], "chosen": "sigil_of_solace_red", "chosen_index": 3, "legal_actions_count": 5}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "banish", "card": "sigil_of_solace_red", "target": "sigil_of_solace_red", "data": {"source_player_id": 2, "target_player_id": 2, "origin_zone": "graveyard", "destination": "banished", "until_condition": null, "cancelled": false}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "attacking", "card": "looking_for_a_scrap_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "looking_for_a_scrap_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "hit", "card": "looking_for_a_scrap_red", "target": null, "data": {"damage": 4}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "hit_hero", "card": "looking_for_a_scrap_red", "target": null, "data": {"damage": 4}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 4, "target": 1}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 7, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 7, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "mocking_blow_blue"}, {"type": "play_card", "player_id": 2, "card": "chain_of_brutality_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "chain_of_brutality_red"}, "chosen_index": 2, "legal_actions_count": 6}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "on_play", "card": "chain_of_brutality_red", "target": null, "data": {"card": "chain_of_brutality_red", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 7, "step": "action", "action": {"type": "play_card", "player_id": 2, "card": "chain_of_brutality_red"}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "attacking", "card": "chain_of_brutality_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "chain_of_brutality_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "hit", "card": "chain_of_brutality_red", "target": null, "data": {"damage": 2}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "hit_hero", "card": "chain_of_brutality_red", "target": null, "data": {"damage": 2}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 2, "target": 1}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 7, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 7, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "mocking_blow_blue"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "mocking_blow_blue"}, "chosen_index": 1, "legal_actions_count": 5}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "on_play", "card": "mocking_blow_blue", "target": null, "data": {"card": "mocking_blow_blue", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 7, "step": "action", "action": {"type": "play_card", "player_id": 2, "card": "mocking_blow_blue"}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "attacking", "card": "mocking_blow_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "mocking_blow_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "hit", "card": "mocking_blow_blue", "target": null, "data": {"damage": 1}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "hit_hero", "card": "mocking_blow_blue", "target": null, "data": {"damage": 1}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 1, "target": 1}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 7, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 7, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 7, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 7, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 7, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "command_and_conquer_red", "player_id": 2}}}
+{"kind": "event", "turn": 7, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "show_of_strength_red", "player_id": 2}}}
+{"kind": "event", "turn": 7, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "command_and_conquer_red", "player_id": 2}}}
+{"kind": "event", "turn": 7, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 8, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, {"type": "play_card", "player_id": 1, "card": "right_behind_you_blue"}, {"type": "play_card", "player_id": 1, "card": "ripple_away_blue"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}, "chosen_index": 0, "legal_actions_count": 6}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "on_play", "card": "cranial_crush_blue", "target": null, "data": {"card": "cranial_crush_blue", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 8, "step": "action", "action": {"type": "play_card", "player_id": 1, "card": "cranial_crush_blue"}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 8, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "attacking", "card": "cranial_crush_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "cranial_crush_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 8, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "hit", "card": "cranial_crush_blue", "target": null, "data": {"damage": 8}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "hit_hero", "card": "cranial_crush_blue", "target": null, "data": {"damage": 8}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 8, "target": 2}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 8, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 8, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 8, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "righteous_cleansing_yellow", "player_id": 1}}}
+{"kind": "event", "turn": 8, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 8, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "command_and_conquer_red"}, {"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}, {"type": "play_card", "player_id": 2, "card": "command_and_conquer_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}, "chosen_index": 2, "legal_actions_count": 7}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "on_play", "card": "show_of_strength_red", "target": null, "data": {"card": "show_of_strength_red", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 8, "step": "action", "action": {"type": "play_card", "player_id": 2, "card": "show_of_strength_red"}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 8, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "attacking", "card": "show_of_strength_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "show_of_strength_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 8, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "hit", "card": "show_of_strength_red", "target": null, "data": {"damage": 8}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "hit_hero", "card": "show_of_strength_red", "target": null, "data": {"damage": 8}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 8, "target": 1}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 8, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 8, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 8, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 8, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 8, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "swing_big_red", "player_id": 2}}}
+{"kind": "event", "turn": 8, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 9, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "right_behind_you_blue"}, {"type": "play_card", "player_id": 1, "card": "ripple_away_blue"}, {"type": "play_card", "player_id": 1, "card": "righteous_cleansing_yellow"}, {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}, "chosen_index": 3, "legal_actions_count": 6}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "on_play", "card": "macho_grande_blue", "target": null, "data": {"card": "macho_grande_blue", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 9, "step": "action", "action": {"type": "play_card", "player_id": 1, "from_arsenal": true, "card": "macho_grande_blue"}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 9, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "attacking", "card": "macho_grande_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "macho_grande_blue", "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 9, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "hit", "card": "macho_grande_blue", "target": null, "data": {"damage": 8}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "hit_hero", "card": "macho_grande_blue", "target": null, "data": {"damage": 8}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 8, "target": 2}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 9, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 9, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "decision", "turn": 9, "step": "end_phase_cleanup", "player_id": 1, "context": "Arsenal a card?", "options": [{"type": "store_arsenal", "from_arsenal": false, "card": "test_of_strength_red"}, {"type": "store_arsenal", "from_arsenal": false, "card": "right_behind_you_blue"}, {"type": "store_arsenal", "from_arsenal": false, "card": "ripple_away_blue"}, {"type": "store_arsenal", "from_arsenal": false, "card": "righteous_cleansing_yellow"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "store_arsenal", "from_arsenal": false, "card": "ripple_away_blue"}, "chosen_index": 2, "legal_actions_count": 5}
+{"kind": "event", "turn": 9, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "ripple_away_blue", "player_id": 1}}}
+{"kind": "event", "turn": 9, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 9, "step": "action", "player_id": 2, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 2, "card": "mocking_blow_yellow"}, {"type": "play_card", "player_id": 2, "card": "command_and_conquer_red"}, {"type": "play_card", "player_id": 2, "card": "command_and_conquer_red"}, {"type": "play_card", "player_id": 2, "card": "swing_big_red"}, {"type": "play_card", "player_id": 2, "from_arsenal": true, "card": "insult_to_injury_blue"}, {"type": "activate_card", "player_id": 2, "from_arsenal": false, "is_attack_proxy": true, "card": "savage_claw"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 2, "card": "command_and_conquer_red"}, "chosen_index": 1, "legal_actions_count": 7}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "on_play", "card": "command_and_conquer_red", "target": null, "data": {"card": "command_and_conquer_red", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 9, "step": "action", "action": {"type": "play_card", "player_id": 2, "card": "command_and_conquer_red"}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 9, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "attacking", "card": "command_and_conquer_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "command_and_conquer_red", "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 9, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "hit", "card": "command_and_conquer_red", "target": null, "data": {"damage": 6}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "destroy", "card": "ripple_away_blue", "target": "ripple_away_blue", "data": {"destroy_source": null, "source_player_id": null, "canceled": false}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "hit_hero", "card": "command_and_conquer_red", "target": null, "data": {"damage": 6}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 6, "target": 1}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_damage", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_resolution", "from": "combat_damage", "to": "combat_resolution"}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "chain_link_resolves", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "combat_resolution", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "combat_close", "from": "combat_resolution", "to": "combat_close"}
+{"kind": "event", "turn": 9, "step": "combat_close", "event": {"type": "combat_chain_close", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "action", "from": "combat_close", "to": "action"}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 9, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "end_phase_beginning", "from": "action", "to": "end_phase_beginning"}
+{"kind": "event", "turn": 9, "step": "end_phase_beginning", "event": {"type": "start_of_end_phase", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 9, "step": "end_phase_cleanup", "from": "end_phase_beginning", "to": "end_phase_cleanup"}
+{"kind": "event", "turn": 9, "step": "end_phase_cleanup", "event": {"type": "card_drawn", "card": null, "target": null, "data": {"card": "reckless_arithmetic_blue", "player_id": 2}}}
+{"kind": "event", "turn": 9, "step": "end_phase_cleanup", "event": {"type": "end_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "end_phase_cleanup", "event": {"type": "start_of_turn", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 10, "step": "action", "from": "end_phase_cleanup", "to": "action"}
+{"kind": "event", "turn": 10, "step": "action", "event": {"type": "start_of_action_phase", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "decision", "turn": 10, "step": "action", "player_id": 1, "context": "What do you do?", "options": [{"type": "play_card", "player_id": 1, "card": "right_behind_you_blue"}, {"type": "play_card", "player_id": 1, "card": "righteous_cleansing_yellow"}, {"type": "play_card", "player_id": 1, "card": "ripple_away_blue"}, {"type": "activate_card", "player_id": 1, "from_arsenal": false, "is_attack_proxy": true, "card": "millers_grindstone"}, {"type": "pass", "from_arsenal": false}], "chosen": {"type": "play_card", "player_id": 1, "card": "righteous_cleansing_yellow"}, "chosen_index": 1, "legal_actions_count": 5}
+{"kind": "event", "turn": 10, "step": "action", "event": {"type": "on_play", "card": "righteous_cleansing_yellow", "target": null, "data": {"card": "righteous_cleansing_yellow", "meld_side": null, "target": null}}}
+{"kind": "action_applied", "turn": 10, "step": "action", "action": {"type": "play_card", "player_id": 1, "card": "righteous_cleansing_yellow"}}
+{"kind": "event", "turn": 10, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "action", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "action", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 10, "step": "combat_layer", "from": "action", "to": "combat_layer"}
+{"kind": "event", "turn": 10, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_layer", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_layer", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 10, "step": "combat_attack", "from": "combat_layer", "to": "combat_attack"}
+{"kind": "event", "turn": 10, "step": "combat_attack", "event": {"type": "attacking", "card": "righteous_cleansing_yellow", "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_attack", "event": {"type": "attacking_hero", "card": "righteous_cleansing_yellow", "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_attack", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_attack", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_attack", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 10, "step": "combat_defend", "from": "combat_attack", "to": "combat_defend"}
+{"kind": "event", "turn": 10, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_defend", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_defend", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 10, "step": "combat_reaction", "from": "combat_defend", "to": "combat_reaction"}
+{"kind": "event", "turn": 10, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_reaction", "event": {"type": "recalculate_playable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_reaction", "event": {"type": "recalculate_activatable", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_reaction", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "step_change", "turn": 10, "step": "combat_damage", "from": "combat_reaction", "to": "combat_damage"}
+{"kind": "event", "turn": 10, "step": "combat_damage", "event": {"type": "recalculate_attack_power", "card": null, "target": null, "data": {}}}
+{"kind": "event", "turn": 10, "step": "combat_damage", "event": {"type": "hit", "card": "righteous_cleansing_yellow", "target": null, "data": {"damage": 10}}}
+{"kind": "decision", "turn": 10, "step": "combat_damage", "player_id": 1, "context": "Banish all copies of which name?", "options": [null], "chosen": null, "chosen_index": 0, "legal_actions_count": 1}
+{"kind": "event", "turn": 10, "step": "combat_damage", "event": {"type": "hit_hero", "card": "righteous_cleansing_yellow", "target": null, "data": {"damage": 10}}}
+{"kind": "event", "turn": 10, "step": "combat_damage", "event": {"type": "damage_dealt", "card": null, "target": null, "data": {"damage": 10, "target": 2}}}
+{"kind": "step_change", "turn": 10, "step": "end_game", "from": "combat_damage", "to": "end_game"}
+{"kind": "game_end", "turn": 10, "step": "end_game", "winner": 1, "individual_turns": 21, "snapshot": {"turn_number": 10, "individual_turns": 21, "step": "end_game", "active_player": 1, "priority_player": 2, "done": true, "winner": 1, "players": {"1": {"hero": "victor_goldmane_high_and_mighty", "life": 13, "resources": 0, "chi": 0, "action_points": 0, "intellect": 4, "hand": ["test_of_strength_red", "right_behind_you_blue", "ripple_away_blue"], "deck_count": 51, "graveyard": ["enlightened_strike_red", "thunder_quake_blue", "cranial_crush_blue", "macho_grande_blue", "ripple_away_blue"], "pitch": [], "arsenal": [], "banished": [], "permanents": [], "items": [], "auras": [], "allies": [], "tokens": [], "equipment": {"head": ["crown_of_dominion"], "chest": ["fyendals_spring_tunic"], "arms": ["ironfist_revelation"], "legs": ["quickdodge_flexors"], "weapon1": ["millers_grindstone"], "weapon2": []}, "current_turn_effects": [], "class_counters": {}}, "2": {"hero": "kayo_underhanded_cheat", "life": 0, "resources": 0, "chi": 0, "action_points": 0, "intellect": 4, "hand": ["mocking_blow_yellow", "command_and_conquer_red", "swing_big_red", "reckless_arithmetic_blue"], "deck_count": 40, "graveyard": ["reckless_arithmetic_blue", "pummel_red", "offensive_behavior_blue", "sink_below_red", "looking_for_a_scrap_red", "chain_of_brutality_red", "mocking_blow_blue", "show_of_strength_red", "command_and_conquer_red"], "pitch": [], "arsenal": ["insult_to_injury_blue"], "banished": ["sigil_of_solace_red", "nimby_blue", "booze_blue", "overcrowded_blue", "command_and_conquer_red", "outside_interference_blue"], "permanents": [], "items": [], "auras": [], "allies": [], "tokens": [], "equipment": {"head": ["scowling_flesh_bag"], "chest": ["fyendals_spring_tunic"], "arms": ["apex_bonebreaker"], "legs": ["scabskin_leathers"], "weapon1": ["savage_claw"], "weapon2": []}, "current_turn_effects": [], "class_counters": {}}}, "combat": {"attacker_id": 1, "link_id": 1, "attack_power": 10, "attack_card": {"name": null, "object_id": 76}, "keywords": ["Crush"], "attack_target": null, "base_attack_power": 10, "from_weapon": false, "attack_source": null, "defending_cards": [], "total_defense": 0, "defending_equipment_defense": 0, "defender_used_hand_card": false, "no_defense_reactions": false, "defending_declared": true, "defending_equipment_zones": [], "attack_slug": "righteous_cleansing_yellow", "defending_slugs": [], "defending_equipment_slots": [], "keyword_effects": []}, "stack": [], "stack_entries": [], "chain_links": [{"link number": 1, "attack power": 10}], "events_this_turn": ["attacking", "attacking_hero", "damage_dealt", "hit", "hit_hero", "on_play", "recalculate_activatable", "recalculate_attack_power", "recalculate_playable", "start_of_action_phase", "start_of_turn"]}}

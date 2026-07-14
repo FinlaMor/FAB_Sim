@@ -692,6 +692,11 @@ class EventManager:
         if hasattr(game_state, 'history') and isinstance(game_state.history, GameHistory):
             game_state.history.record(event, game_state)
 
+        # Observability: attached recorders see every event before listeners run.
+        if getattr(game_state, 'recorders', None):
+            from engine.recorder import notify
+            notify(game_state, 'on_event', event)
+
         for listener in list(self.listeners.get(event.type, [])):
             listener(event, game_state)
 
@@ -1188,6 +1193,20 @@ class GameState:
     # card to bottom). Keyed by cost type string. Consumed and cleared by the
     # pay_fn; absent keys fall back to a random choice.
     cost_choices: dict = field(default_factory=dict)
+    # Observability hooks (engine/recorder.py). Attached recorders are
+    # notified of every event, decision, action, step change, and resolution.
+    recorders: list = field(default_factory=list)
+
+    def __setattr__(self, name, value):
+        # Step transitions are an observable moment for attached recorders.
+        if name == 'step' and getattr(self, 'recorders', None):
+            old = getattr(self, 'step', None)
+            object.__setattr__(self, name, value)
+            if old is not value:
+                from engine.recorder import notify
+                notify(self, 'on_step_change', old, value)
+            return
+        object.__setattr__(self, name, value)
 
     def __post_init__(self):
         # Wire players dict into every zone so CLEAR redirects can reach any player's graveyard.
@@ -1207,7 +1226,15 @@ class GameState:
         return self.players[3 - self.active_player]
 
     def copy(self) -> GameState:
-        return copy.deepcopy(self)
+        # Recorders (which may hold open file handles) observe the live game
+        # only — a simulated copy must not notify or deep-copy them.
+        _recorders = self.recorders
+        object.__setattr__(self, 'recorders', [])
+        try:
+            new_state = copy.deepcopy(self)
+        finally:
+            object.__setattr__(self, 'recorders', _recorders)
+        return new_state
 
     def remember_last_known(self, card: Optional[Card], overwrite: bool = True) -> Optional[dict]:
         """Capture and cache last-known information for a card-like object."""
