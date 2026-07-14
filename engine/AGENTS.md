@@ -1,167 +1,185 @@
 # engine/ — Module Reference
 
+**Architecture rule:** `engine/*.py` is a generic, rules-accurate FAB engine
+(rules authority: `docs/ref/en-fab-cr-comprehensive-rules.txt`, "CR" below).
+**No card-specific code in engine files.** All card behavior is declared in
+JSON under `engine/card_effects/json/` and interpreted by
+`engine/card_effects/dsl/`. If you are implementing a card, read
+`card_effects/json/IMPLEMENTATION_GUIDE.md` — you should not need this file.
+
 ## Entry Points
 
-### `engine.py` (1694 lines)
-**Does:** Complete game loop. Turn phases, action dispatch, combat resolution.
+### `engine.py` (~1760 lines)
+**Does:** Complete game loop. Turn phases, combat steps, stack/priority, damage.
 **Key functions:**
-- `new_game()` — initialise GameState from deck paths + agents
-- `run_game()` — step through game until done or max_turns
-- `_start_of_turn()` — CR 4.3: draw, reset resources, aura upkeep
-- `_end_turn()` — CR 4.4: pitch ordering, hand replenishment
-- `_apply_action()` — routes to step-specific handlers
-- `_apply_attack_step()`, `_apply_defend_declare()`, `_apply_reaction_step()`, `_calculate_damage()`
+- `new_game()` / `_game_loop()` — initialise GameState from deck paths + agents; step until done
+- `_start_of_turn_phase()` / `_end_phase_iter()` — CR 4.3 / 4.4
+- `_action_phase_iter()`, `_combat_phase_iter()` — phase drivers
+- `_attack_step()`, `_defend_step()`, `_reaction_step()`, `_damage_step()`, `_resolution_step()`, `_close_step()` — CR 7.x combat steps
+- `check_state_based_actions()` — CR 1.10
+- `resolve_stack()`, `order_stack()`, `priority_loop()` — CR 3.15 / 1.6 layers & priority
+- `_recalculate_attack_power()` — staged power recalc; emits `RECALC_ATTACK_POWER` for DSL `WHILE_STATIC` abilities (stage-8 window)
+- `_setup_dsl_listeners()` — bridges engine events → DSL dispatch (`ON_HIT`, `ON_PITCH`, `ON_DEFEND`, `ON_BOO`, `ON_TOKEN_CREATED`, `ON_CLASH_WIN_REVEALED`, …). Listeners are generic; DSL-side gates filter payloads (see `dsl/trigger_types.py TRIGGER_EVENT_GATES`)
 - `_setup_static_ability_listeners()` — wires keyword statics (Piercing etc.) at game start
-**Imports from:** state, actions, play, effects, card_effects.triggers, card_effects.effect_cost
 
----
-
-### `play.py` (594 lines)
-**Does:** Action interface used by agents and engine. Handles legal action generation for agent choices.
+### `play.py` (~970 lines)
+**Does:** The action interface agents use. Legal action generation + application.
 **Key functions:**
-- `available_actions(state, player_id)` — combines playability + affordability checks; always includes PASS
-- `apply_action(state, action)` — applies a chosen action to state
-- `recalculate_playable()`, `recalculate_activatable()` — refresh card flags based on continuous effects
-- `_legality_check()` — keyword/type-based gate (e.g. Instant-only windows)
-- `_cost_check()` — affordability given current resources + pitch
-**Note:** This is the layer agents interact with. `engine.py` calls lower-level `_apply_*` directly.
-
----
+- `available_actions(state, player_id)` — playability + affordability; always includes PASS
+- `apply_action(state, action)` — applies a chosen action
+- `_add_weapon_attacks()` — offers weapon attacks for any weapon-zone card with printed power + activation cost (incl. weapon tokens)
+- `_add_hero_dsl_activations()` — offers hero DSL `ACTIVATE`/`INSTANT`/`ATTACK_REACTION` abilities when timing/cost/conditions/target-filter allow
+- `_legality_check()`, `_cost_check()`, `evaluate_play_cost()` — gates
+- `_calculate_resource_cost()` — cost pipeline incl. DSL `COST_MODIFIER` hero abilities
+**Note:** legal-action generation is migrating here from `actions.py`; put new logic here.
 
 ## State
 
-### `state.py` (1273 lines)
-**Does:** All game data structures. Zone entry rules.
+### `state.py` (~1310 lines)
 **Key classes:**
-- `GameState` — top-level: players dict, step, combat, event_manager, effect_manager, chain_links
-- `Player` — zones (hand, deck, graveyard, arsenal, pitch, banished, permanents, items, auras, allies, equipment slots), stats, resources
-- `CombatState` — attack_card, attack_power, defending_cards, keywords, from_weapon, defender_used_hand_card, is_dagger_attack, is_stealth_attack
-- `Zone` — list of Cards with `add()`/`remove()` that update `card.zone`/`card.prev_zone`
-- `ZoneEntryResult` — ALLOW / CLEAR / CEASE_TO_EXIST / FAIL (CR 3.0.11-12)
-- `EventManager` — pub/sub for game events (start_of_turn, hit, on_play, etc.)
-- `ChainLink` — snapshot of one resolved attack
-- `StackEntry` — items on the effect stack
-- `Step` (Enum) — BEGIN_GAME, START_OF_TURN, ACTION_PHASE, REACT_ATTACK, REACT_DEFENSE, DAMAGE, END_PHASE
+- `GameState` — players, step, combat, event_manager, effect_manager, stack_entries, chain_links, `events_this_turn`
+- `Player` — zones (hand, deck, graveyard, arsenal, pitch, banished, permanents, items, auras, allies, tokens, equipment slots, weapon1/2, hero_zone), stats, resources, `weapon_zone_count`, `playable_from_banished`
+- `CombatState` — attack_card, attack_power, defending_cards, keywords, from_weapon, defender_used_hand_card, …
+- `Zone` — add/remove keep `card.zone`/`card.prev_zone` in sync; `ZoneEntryResult` (CR 3.0.11-12)
+- `EventManager` — pub/sub; every emitted event type is also recorded in `state.events_this_turn`
+- `StackEntry`, `ChainLink`, `Step` (enum)
 
----
+### `card.py` (~840 lines)
+`Card` (runtime object; properties may be modified by continuous effects) and
+`CardDB` (loads `card_data/slug_index.json`; templates for all printed cards
+including tokens — token zone routing derives from template subtypes).
 
-## Action Generation
+### `deck.py` (~340 lines)
+`load_deck(path, card_db)` — plain and Fabrary deck-file formats; applies hero
+DSL `setup` (e.g. weapon-zone count) via `create_player`.
 
-### `actions.py` (1086 lines)
-**Does:** Holds the Action object. Held legal action generation in the past. Any legal action generation should be moved to play.py and removed from action.py moving forward
-**Key exports:**
-- `ActionType` (Enum) — PASS, PLAY_CARD, DEFEND_CARDS, STORE_ARSENAL, ACTIVATE_CARD, CHOOSE, PITCH_CARD, PITCH_TO_DECK (several more commented out due to deprecation)
-- `Action` (dataclass) — type, player_id, card, pitch_cards, from_arsenal, slot, target, targets, has_go_again, played_as_instant, etc.
-- `legal_actions(state, player_id)` — main entry point; dispatches by `state.step`
-- `can_pay_cost(state, player_id, cost)` — resource check
-- `get_defendable_cards(state, player_id)` — cards eligible to block
-**Imports registries from:** `card_effects/registry.py` for per-card conditions
-
----
+### `actions.py` (~1110 lines)
+`ActionType`/`Action` + older legal-action generation (being migrated to
+play.py — do not add new generation here).
 
 ## Effect Systems
 
-### `effect_keywords.py` (3659 lines) — CR 8.5
-**Does:** Primitive effect functions. These are the atomic operations all card effects compose from.
-**Available primitives:**
-`draw`, `gain`, `lose`, `banish`, `destroy`, `discard`, `deal_damage`, `deal_arcane_damage`,
-`intimidate`, `create_token`, `put_counter`, `remove_counter`, `gets`, `gets_property`,
-`look`, `reveal`, `put_object`, `roll`, `search`, `shuffle`, `name`, `opt`, `reload`, `turn`,
-`add_defend`, `transcend`, `retrieve`, `return_to_brood`, `give`, `steal`, `wager`, `awaken`,
-`contract`, `create_card`, `transform`, `attack`
-**CR reference:** Each function docstring cites the relevant CR 8.5.x clause.
+### `effect_keywords.py` (~3810 lines) — CR 8.5
+Canonical effect primitives — the atomic operations every card effect must
+compose from (they emit events so replacement effects can intercept, CR 6.4):
+`draw, gain, lose, banish, destroy, discard, deal_damage, deal_arcane_damage,
+intimidate, create_token, put_counter, remove_counter, gets, look, reveal,
+put_object, roll, search, shuffle, name, opt, reload, turn, add_defend,
+transcend, retrieve, give, steal, wager, awaken, contract, create_card,
+transform, attack, clash, amp, charge, mark, negate, …`
+Each docstring cites its CR 8.5.x clause. Card-specific data consulted here
+comes from `card_effects.token_meta` (token entry hooks, numbered keywords)
+and `card_effects.replacement_abilities` (named REPLACEMENT handlers) — keep
+it that way.
 
-### `effects.py` (570 lines) — CR 6.2/6.3
-**Does:** Continuous and replacement effect data structures.
-**Key classes:**
-- `ContinuousEffect` — source_card, source_type (LAYER/STATIC), stage (1-8), substage (1-7), mod_fn
-- `EffectManager` — add/remove/query continuous effects; applies staging order
-- `ModType` — ADD_PROPERTY, SET, MULTIPLY, DIVIDE, ADD, SUBTRACT, DEPENDENT
-- `ReplacementEffect` — intercepts and redirects an event before it fires
+### `effects.py` (~570 lines) — CR 6.2/6.3
+`ContinuousEffect` (staged property modification), `EffectManager`,
+`ReplacementEffect` (incl. prevention/shielding), `ModType`.
 
-### `continuous_effects.py` (212 lines) — CR 6.3
-**Does:** Lower-level staging system + cost modifier pipeline (CR 5.1.6a). Should be rolled into effect_manager's ContinuousEffect class for clarity.
-**Key class:** `ContinuousEffectManager` — applies effects in stage/substage/timestamp order
-**Note:** There are two `ContinuousEffect` definitions (effects.py and continuous_effects.py). The one in `continuous_effects.py` is older version that should not be used in future designs.
+### `continuous_effects.py` (~210 lines)
+Older staging + cost-modifier pipeline (CR 5.1.6a). Contains a second,
+legacy `ContinuousEffect` — do **not** use it in new designs; prefer
+`effects.py`. Slated to be folded into EffectManager.
 
----
+### `context.py` (~40 lines)
+`effect_context()` — re-entrancy guard used around DSL dispatch.
 
-## Card Effects Layer
+### `recorder.py` — observability hooks
+Attach `GameRecorder`s via `new_game(..., recorders=[...])` or
+`recorder.attach(state, rec)`. Hooks: `on_game_start/end`, `on_event` (every
+EventManager event), `on_decision` (EVERY agent invocation — the full options
+list presented to the model, the chosen option, its index, and the prompt
+context), `on_action_applied`, `on_step_change`, `on_layer_resolved`.
+`snapshot_state(state)` serializes the complete game state (all zones, stats,
+combat, stack, chain links) to a JSON-able dict at any moment.
+Built-ins: `MemoryRecorder` (in-memory records; `snapshot_on={"decision"}`
+embeds full snapshots per decision) and `JsonlRecorder(path)` (streams one
+JSON line per record — game troubleshooting). For IQL data collection,
+subclass `GameRecorder` and implement `on_decision` + `on_game_end`.
+Recorder exceptions are swallowed (observability never breaks a game);
+`GameState.copy()` excludes recorders so simulated copies don't emit records.
+Zero overhead when no recorder is attached.
 
-### `card_effects/registry.py` (3052 lines)
-**Does:** All callable registries that map card slugs to effect functions. Also static abilities.
-**Registries:**
-- `PLAY_ABILITIES` — slug → fn(state, player_id, card_db, ...) — on-play effects
-- `HIT_EFFECTS` — slug → fn(state, attacker_id, card_db) — on-hit effects
-- `ATTACK_REACTION_CONDITIONS` — slug → fn(combat) → bool — AR targeting gate
-- `ATTACK_REACTION_POWER` — slug → fn(combat, card) → int — AR power bonus
-- `ATTACK_REACTION_EFFECTS` — slug → fn(state, player_id, card_db)
-- `DEFENSE_REACTION_CONDITIONS` — slug → fn(combat) → bool
-- `DEFENSE_REACTION_BONUS` — slug → fn(combat, card, from_arsenal) → int
-- `EQUIPMENT_ACTIVATION_CONDITIONS` / `EQUIPMENT_ACTIVATION_COST`
-- `HERO_ACTIVATION_CONDITIONS`
-- `DISCARD_ACTIVATE_EFFECTS`, `PLAY_TARGET_CONDITIONS`, `WEAPON_ATTACK_CONDITIONS`
-- `BLOCK_EFFECTS` — slug → fn(state, player_id) — on-block effects
-- `PITCH_EFFECTS` — slug → fn(state, player_id) — end-turn pitch effects
-- `AURA_START_OF_TURN_EFFECTS` — slug → fn(state, player_id, card_db) → bool
-- `STATIC_ABILITY_ZONES`, `KEYWORD_STATIC_ABILITIES`, `CARD_STATIC_ABILITIES`
-**Pattern:** Always look up by slug. Never use slug-prefix hacks or if-chains in engine.py.
+## Card Effects Layer (`card_effects/`)
 
-### `card_effects/card_keywords.py` (1984 lines)
-**Does:** Mechanic implementations for ability/label keywords + reusable effect primitives.
-**Keyword mechanics:** `battleworn`, `blade_break`, `temper`, `guardwell`, `go_again`,
-`dominate_check`, `overpower_check`, `piercing`, `phantasm_check`, `spectra_destroy`,
-`blood_debt`, `suspense_*`, `watery_grave`, `boost`, `heave`, `crank`, `fusion`,
-`arcane_barrier`, `spellvoid`, `ward`, `quell`, `arcane_shelter`, `crush_check`,
-`reprise_check`, `combo_check`, `surge_check`, `rupture_check`, `channel_upkeep`, `galvanize`
-**Effect primitives (wrappers over effect_keywords.py):**
-`effect_draw`, `effect_discard`, `effect_banish`, `effect_deal_damage`, `effect_deal_arcane`,
-`effect_gain_life`, `effect_lose_life`, `effect_gain_action_point`, `effect_gain_resources`,
-`effect_destroy`, `effect_opt`, `effect_intimidate`, `effect_put_counter`, `effect_remove_counter`,
-`effect_shuffle`, `effect_amp`, `effect_charge`
-**Helper:** `reprise_active(combat)` — always use this, not `combat.defender_used_hand_card` directly
+### `dsl/` — the JSON card interpreter
+- `loader.py` — loads `json/**/*.json` → `CardDef`; `require_card`/`validate_slugs`
+  raise `MissingCardImplementation` for any slug without a definition;
+  `LOAD_ERRORS` collects files that failed to compile (they count as unimplemented)
+- `schema.py` — `CardDef`, `AbilityDef`, `EffectDef`, `ConditionDef`, `CostDef`
+- `interpreter.py` — `dispatch_event()`: matches abilities to engine events, runs them
+- `effect_types.py` / `condition_types.py` / `cost_types.py` — implementations
+  of every JSON `type` string; unknown type = load-time `ValueError`
+- `trigger_types.py` — JSON trigger name → engine event; `TRIGGER_EVENT_GATES`
+  for sugar triggers that filter a broader event's payload (e.g.
+  `ON_GOLD_CREATED` = `ON_TOKEN_CREATED` gated on `slug == "gold"`)
+- `__init__.py` — `dispatch(state, event_type, slug, …)`, the entry the engine bridges call
 
-### `card_effects/triggers.py` (3505 lines)
-**Does:** Trigger system. Maps cards to triggered effects via three tiers.
-**Tiers:**
-1. `KEYWORD_TRIGGERS` — auto-applied based on card keywords field (e.g. "Battleworn")
-2. `text_trigger_parser` — auto-generated from functional_text (standard patterns)
-3. `CARD_TRIGGERS` — manual per-card entries (highest priority, override parser)
-**Key class:** `TriggerDef(event, condition_fn, effect_fn, once_per_turn)`
-**Key function:** `get_triggers_for_card(card)` — returns all TriggerDefs for a card
-**Events:** start_of_game, start_of_turn, start_of_action_phase, start_of_end_phase,
-attacking, defend, combat_chain_close, damage_dealt, hit, on_play, card_destroyed,
-enters_arena, target_of_attack, card_pitched, card_banished
+### `json/` — **all card behavior lives here**
+One JSON per card under `json/<set>/`; tokens in `json/tokens/`.
+Docs: `DSL_REFERENCE.md` (schema), `IMPLEMENTATION_GUIDE.md` (workflow).
+`<set>_work_queue.json` files are authoring TODO lists (not card defs).
+Tooling: `python scripts/dsl_work_queue.py --status | --deck <file> | --set <code> [--write-queue]`.
 
-### `card_effects/card_triggers_extended.py` (5473 lines)
-**Does:** Houses the bulk of per-card `CARD_TRIGGERS` entries. Imported by triggers.py.
-**Pattern:** Add entries here for any card whose triggers can't be auto-parsed by text_trigger_parser.
+### `ability_keywords.py` (~1520 lines) — CR sections 8.3/8.4/8.6
+Keyword mechanic implementations fired from card-DB keywords: `battleworn,
+blade_break, temper, guardwell, dominate_check, overpower_check, piercing,
+phantasm_check, spectra_destroy, blood_debt, boost, heave, crank, fusion,
+arcane_barrier, spellvoid, ward, quell, crush_check, reprise_check,
+combo_check, surge_check, …` plus shared helpers (`_ask_player`, transform
+machinery for hero forms, `create_token_card`).
 
-### `card_effects/text_trigger_parser.py` (1172 lines)
-**Does:** Data-driven parser. Reads `card.functional_text`, recognises standard patterns
-(e.g. "When this hits, draw a card"), returns `TriggerDef` list without manual coding.
-**Skips:** Cards already in `CARD_TRIGGERS` (manual entries win).
-**Add patterns here** when you see many cards share the same text template.
+### `token_meta.py`
+Token-specific data: numbered keywords the card DB drops (`TOKEN_KEYWORDS`),
+ally token stats, per-token entry hooks (`TOKEN_ENTRY_HOOKS`, e.g. Zen State's
+text-based prevention), and fallback zone tables for card-DB-less test states.
 
-### `card_effects/effect_cost.py` (113 lines)
-**Registries:** `ALTERNATE_COSTS` (e.g. banish cost), `KEYWORD_COSTS` (e.g. Chi payment)
+### `replacement_abilities.py`
+Handlers for DSL `{"ability_type": "REPLACEMENT", "replacement": "<name>"}`
+abilities (e.g. `fail_clash_retry`). Registered per player at game start;
+consulted generically by keyword functions.
 
-### `card_effects/additional_conditions.py` / `additional_costs.py`
-**Currently minimal** — extension points for card-specific play conditions and costs.
+### `triggers/triggers.py` (~510 lines)
+Keyword-derived `TriggerDef`s only (`build_keyword_triggers`); registration
+queues triggered-layers on the stack (CR 6.6.5-6). `CARD_TRIGGERS` is empty
+by design — card triggers are DSL abilities.
 
-### `card_effects/db/`
-- `loader.py` — loads slug_index, builds CardDB
-- `db.py` — CardDB queries
-- `generate_seed.py` — seed data utilities
+### `registry.py` (95 lines)
+Structural hooks only: `STATIC_ABILITY_ZONES`, `KEYWORD_STATIC_ABILITIES`
+(e.g. piercing), plus legacy per-card registries that are all **empty** —
+do not repopulate them; author JSON instead.
 
----
+### `costs/`
+Mostly-empty registries for keyword costs (`effect_costs.py` KEYWORD_COSTS);
+card alternate costs are DSL `alternative_cost` entries now.
 
-## Adding a New Card — Quick Reference
+### `db/`
+`loader.py`/`db.py` — CardDB init helpers. `generate_seed.py` is legacy seed
+data (unused by the DSL path).
 
-1. **On-play effect** → add slug to `PLAY_ABILITIES` in registry.py
-2. **On-hit effect** → add slug to `HIT_EFFECTS`
-3. **Attack/Defense Reaction** → `ATTACK_REACTION_CONDITIONS` + `ATTACK_REACTION_POWER`/`DEFENSE_REACTION_BONUS`
-4. **Triggered effect** (standard pattern) → add pattern to `text_trigger_parser.py`
-5. **Triggered effect** (unique) → add `TriggerDef` to `card_triggers_extended.py`
-6. **Static ability** → `CARD_STATIC_ABILITIES` or `KEYWORD_STATIC_ABILITIES` in registry.py
-7. **Equipment activation** → `EQUIPMENT_ACTIVATION_CONDITIONS` + `EQUIPMENT_ACTIVATION_COST`
+## Known engine limitations (the remaining engine-side work)
+
+A full CR audit lives in `docs/cr_audit_2026-07.md` (findings + fix status —
+the open items there: attack-layer-on-stack representation, triggered-layer
+target declaration, defend compound events, chi end-of-turn policy).
+Additionally, each of these fails loudly or is harmless until a card needs it:
+
+1. **Per-ability activation choice** — a card with 2+ activated abilities
+   raises `NotImplementedError` in `play.py` (`_apply_activate`). The `Action`
+   object needs an ability index so the player can choose which to activate.
+2. **`CANT_GAIN` continuous modification** — currently a property flag; should
+   be modeled as a replacement effect (noted in `DSL_REFERENCE.md`).
+3. **`continuous_effects.py` legacy class** — fold into `effects.py`
+   `EffectManager`; do not build on the old class.
+4. **`actions.py` → `play.py` migration** — legal-action generation still
+   partially lives in `actions.py`.
+
+## Adding a New Card
+
+Do **not** touch this directory's Python for a card. Follow
+`card_effects/json/IMPLEMENTATION_GUIDE.md`:
+1. JSON definition in `json/<set>/<slug>.json` (schema: `DSL_REFERENCE.md`)
+2. Behavioral test in `tests/`
+3. If a genuinely new effect/condition/cost type is needed, add it
+   *generically* to `dsl/*_types.py` (composing `effect_keywords` primitives)
+   and document it in `DSL_REFERENCE.md`

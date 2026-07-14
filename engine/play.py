@@ -162,25 +162,15 @@ def _legality_check(state, card, player_id) -> bool:
         return True
     types = card.types or []
 
-    # Use card.types as authoritative source; fall back to text scanning for
-    # cards where the type string lives inside functional text only.
+    # card.types (parsed from the printed type line) is authoritative. Do NOT
+    # supplement with functional-text scans: rules text like "Target attack
+    # action card…" and the substring 'action' inside 'reaction' produce false
+    # type flags that make reactions illegal to play.
     _types_lower = {t.lower().replace(" ", "_") for t in types}
     is_ar  = "attackreaction" in _types_lower or "attack_reaction" in _types_lower
     is_dr  = "defensereaction" in _types_lower or "defense_reaction" in _types_lower
     is_act = "action" in _types_lower
     is_ins = "instant" in _types_lower
-
-    # Supplement with text scan for hybrid/multi-type cards
-    tb  = card.base_text_box or ""
-    ft  = card.base_functional_text or ""
-    if not is_act and ('action' in tb or 'action' in ft):
-        is_act = True
-    if not is_ar and ('attack_reaction' in tb or 'attack_reaction' in ft):
-        is_ar = True
-    if not is_dr and ('defense_reaction' in tb or 'defense_reaction' in ft):
-        is_dr = True
-    if not is_ins and ('instant' in tb or 'instant' in ft):
-        is_ins = True
 
     legal_flag = True
     if is_act:
@@ -422,7 +412,7 @@ def _attack_reaction_legal_check(state, card, player_id) -> bool:
     # 8.1.2a An attack reaction card/activated ability can only be played/activated by a player who controls the attack during the Reaction Step of combat
     if not hasattr(state, 'combat') or state.combat is None:
         return False
-    if state.step != 'combat_reaction':
+    if state.step != Step.COMBAT_REACTION:
         can_play_or_activate = False
     if player_id != state.combat.attacker_id:
         can_play_or_activate = False
@@ -435,21 +425,33 @@ def _attack_reaction_legal_check(state, card, player_id) -> bool:
 
 def _defense_reaction_legal_check(state, card, player_id) -> bool:
     # CR 8.1.3: Requirements for playing/activating a card with the "defense reaction" keyword
-    can_play_or_activate = True
-
     # 8.1.3a A defense reaction card/activated ability can only be played/activated by a player who controls a hero as an attack-target during the Reaction Step of combat.
     if not hasattr(state, 'combat') or state.combat is None:
         return False
-    if state.step != 'combat_reaction':
-        can_play_or_activate = False
-    attack_target = getattr(state.combat, 'attack_target', None)
-    if attack_target is None or state.players[player_id].hero.slug != attack_target.slug:
-        can_play_or_activate = False
-    
+    combat = state.combat
+    if state.step != Step.COMBAT_REACTION:
+        return False
+    if player_id == combat.attacker_id:
+        return False
+    # attack_target is None when the attack targets the defending hero (the
+    # default); otherwise it must be this player (or their hero) to allow DRs.
+    # (Engine code stores the Player; some tests store the hero Card.)
+    attack_target = getattr(combat, 'attack_target', None)
+    defender = state.players[player_id]
+    if (attack_target is not None and attack_target is not defender
+            and attack_target is not getattr(defender, 'hero', None)):
+        return False
+    # CR 7.4.2c: an effect may prevent defense reactions this chain link.
+    if getattr(combat, 'no_defense_reactions', False):
+        return False
+    # CR 8.3.4b: Dominate — once a hand card has defended, DRs can't be played from hand.
+    if ("Dominate" in combat.keywords and combat.defender_used_hand_card
+            and card in state.players[player_id].hand.cards):
+        return False
+
     # 8.1.3b When a defense reaction card resolves as a layer on the stack, it becomes a defending card on the active chain link.
     # 8.1.3c A defense reaction card/activated ability is considered to be a reaction card/ability.
-
-    return can_play_or_activate
+    return True
 
 def _instant_legal_check(state, card, player_id) -> bool:
     # CR 8.1.6: Requirements for playing/activating a card with the "instant" keyword
@@ -485,6 +487,11 @@ def apply_action(state: GameState, action: Action) -> None:
     elif action.type == ActionType.CHOOSE:
         pass  # Choice is conveyed by selection of this Action object; no state mutation needed
 
+    # Observability: recorders see every successfully applied action.
+    if getattr(state, 'recorders', None):
+        from engine.recorder import notify as _rec_notify
+        _rec_notify(state, 'on_action_applied', action)
+
 
 def _apply_play_card(state: GameState, action: Action) -> None:
     """Play a card from hand: pitch for cost, place on stack."""
@@ -498,6 +505,7 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # Resource cost already deducted by evaluate_play_cost in apply_action.
     # Remove from the card's current zone (hand normally; arsenal or banished for
     # cards played from those zones, e.g. trap_door's "play from banished").
+    _from_hand = (getattr(card, 'zone', None) or 'hand') == 'hand'
     _src_zone = player.zone_by_name(getattr(card, 'zone', None) or 'hand')
     if _src_zone is not None and card in _src_zone.cards:
         _src_zone.remove(card)
@@ -541,8 +549,39 @@ def _apply_play_card(state: GameState, action: Action) -> None:
         _meld_effs = MELD_EFFECT_REGISTRY.get(_slug_base, {})
         entry.meld_effect_bottom = _meld_effs.get('bottom')
         entry.meld_effect_top = _meld_effs.get('top')
+
+    # CR 5.3.4: the card's resolution abilities generate their effects when the
+    # card-layer RESOLVES on the stack (both players have passed priority) —
+    # not at announce. Attacks are the exception: their resolution abilities
+    # fire at the Attack Step (CR 7.2.3, dispatched by engine._attack_step).
+    if not entry.is_attack:
+        _play_event = Event(type='on_play', card=card.slug,
+                            data={'card': card, 'meld_side': _meld_side,
+                                  'target': action.target})
+
+        def _resolve_card_layer(c, gs, _event=_play_event, _hand=_from_hand):
+            from engine.card_effects.dsl import dispatch as _dsl_dispatch
+            _dsl_dispatch(gs, "ON_PLAY", c.slug, card=c, event=_event)
+            # CR 5.3.6b / 8.1.3b / 7.4.2d: a resolved defense reaction card
+            # becomes a defending card on the active chain link.
+            if c.is_defense_reaction and gs.combat is not None:
+                from engine.effect_keywords import add_defend
+                if _hand:
+                    # CR 8.3.4b: track hand-card defense for Dominate/Reprise
+                    # (the card left the hand at announce, so add_defend can't see it).
+                    gs.combat.defender_used_hand_card = True
+                # Leave the stack zone (add_defend can't resolve the shared
+                # 'stack' zone); resolve_stack then sees it moved and does not
+                # clear it to the graveyard.
+                gs.stack.remove(c)
+                add_defend(gs, c)
+
+        entry.effect_fn = _resolve_card_layer
+
     state.stack_entries.append(entry)
     player.cards_played_this_turn.append(card)
+    # "When a player plays a card" triggers fire at announce (CR 5.1.2a); the
+    # card's own resolution abilities do NOT ride this event (see effect_fn).
     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'meld_side': _meld_side, 'target': action.target}), state)
 
 def _apply_activate(state: GameState, action: Action) -> None:

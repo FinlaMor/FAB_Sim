@@ -370,7 +370,8 @@ class Card:
 
     @property
     def is_defense_reaction(self) -> bool:
-        return "Defense Reaction" in (self.types or [])
+        # Card DB stores "DefenseReaction"; older code used "Defense Reaction".
+        return any(t.replace(" ", "") == "DefenseReaction" for t in (self.types or []))
 
     @property
     def has_go_again(self) -> bool:

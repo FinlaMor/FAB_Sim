@@ -27,6 +27,7 @@ def new_game(
         p1_seed: Optional[int] = None,
         p2_seed: Optional[int] = None,
     max_turns: int = 200,
+    recorders: Optional[list] = None,
 ) -> GameState:
     """Create a new game state with the given deck paths and card database."""
     agents = {1: p1_agent, 2: p2_agent}
@@ -93,6 +94,13 @@ def new_game(
         combat=None,
         winner=None
         )
+
+    # Observability: attach recorders BEFORE any setup so they see everything —
+    # the coin-flip decision, start-of-game event, opening draws, every step.
+    if recorders:
+        from engine.recorder import attach as _attach_recorder
+        for _rec in recorders:
+            _attach_recorder(state, _rec)
 
     # Register a single dispatcher for keyword static abilities (e.g. Piercing).
     # One permanent listener is cheaper than registering/deregistering per combat.
@@ -168,6 +176,9 @@ def new_game(
 
     event_mngr.register('hit', _clear_marked_on_hit)
 
+    from engine.recorder import notify as _rec_notify
+    _rec_notify(state, 'on_game_start')
+
     # Run the game loop
     _game_loop(state)
 
@@ -226,6 +237,10 @@ def _game_loop(state: GameState) -> None:
             _end_phase_iter(state)
         else:
             break
+
+    if state.done and getattr(state, 'recorders', None):
+        from engine.recorder import notify as _rec_notify
+        _rec_notify(state, 'on_game_end')
 
 # ---------------------------------------------------------------------------
 # State-based actions (checked continuously)
@@ -437,7 +452,30 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
 
     state.step = Step.COMBAT_ATTACK
 
+    # CR 7.2.2: at least one declared attack-target must still be legal,
+    # otherwise the Attack Step ends and the Close Step begins. No declared
+    # target means the attack targets the defending hero, which always exists.
+    _declared = list(getattr(entry, 'declared_targets', None) or []) if entry else []
+    _resolved_target = None
+    if _declared:
+        _target_slug = _declared[0]
+        _defender = state.players[3 - state.active_player]
+        _resolved_target = _defender.permanents.find(_target_slug)
+        if _resolved_target is None:
+            # Also check attacker's own permanents (edge cases like self-targeting)
+            _resolved_target = state.players[state.active_player].permanents.find(_target_slug)
+        if _resolved_target is None:
+            # Declared target left the arena — CR 7.7.3: the attack on the
+            # stack is put into its owner's graveyard and the chain closes.
+            state.stack.remove(attack_card)
+            _owner = state.players.get(attack_card.owner)
+            if _owner is not None and not attack_card.is_weapon:
+                _owner.graveyard.add(attack_card, is_public=True)
+            _close_step(state)
+            return
+
     # 7.2.3: attack moves to combat chain as chain link
+    state.stack.remove(attack_card)  # leaves the stack zone (CR 3.15.6)
     state.combat_chain.add(attack_card)
     state.combat = CombatState(
         attacker_id=state.active_player,
@@ -450,17 +488,10 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
         pitched_for_attack=list(getattr(entry, 'pitched_for_attack', None) or []) if entry else [],
     )
 
-    # Resolve card target from declared_targets (e.g. attack targeting a Spectra aura).
-    if entry and entry.declared_targets:
-        target_slug = entry.declared_targets[0]
-        defender = state.players[3 - state.active_player]
-        target_card = defender.permanents.find(target_slug)
-        if target_card is None:
-            # Also check attacker's own permanents (edge cases like self-targeting)
-            target_card = state.players[state.active_player].permanents.find(target_slug)
-        if target_card is not None:
-            state.combat.attack_target_card = target_card
-            state.combat.attack_target = defender
+    # Card target resolved from declared_targets above (e.g. a Spectra aura).
+    if _resolved_target is not None:
+        state.combat.attack_target_card = _resolved_target
+        state.combat.attack_target = state.players[3 - state.active_player]
 
     # Apply pending turn effects to this attack (may append to attack_card.effects)
     _apply_turn_attack_effects(state, attack_card)
@@ -472,6 +503,16 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
     # Attack action cards are not public at game start so their triggers are not registered
     # at new_game time. Register them now when the card enters combat so keyword triggers fire.
     register_card_triggers(attack_card, state.event_manager)
+
+    # CR 7.2.3: the attack's resolution abilities (its PLAY-typed DSL abilities)
+    # generate their effects as the attack resolves onto the combat chain.
+    from engine.card_effects.dsl import dispatch as _dsl_dispatch
+    _dsl_dispatch(state, "ON_PLAY", attack_card.slug, card=attack_card,
+                  event=Event(type='on_play', card=attack_card.slug,
+                              data={'card': attack_card,
+                                    'meld_side': getattr(attack_card, 'meld_side', None),
+                                    'target': (entry.declared_targets[0]
+                                               if entry and entry.declared_targets else None)}))
 
     # 7.2.4: "attack" event — triggers (e.g. Big Bully, Mocking Blow, on_attack_power_bonus)
     # are now queued as StackEntry objects. They resolve during priority_loop below.
@@ -710,13 +751,13 @@ def _end_phase_iter(state: GameState) -> None:
     # 4.4.3: end-of-turn cleanup (no priority — CR 4.4.3)
     state.step = Step.END_PHASE_CLEANUP
 
-    # 4.4.3a: ally life totals reset (CR 4.4.3a)
-    # Reset each ally's current life to its printed life value at end of turn
-    for ally_card in player.allies.cards:
-        if hasattr(ally_card, 'base_life') and ally_card.base_life is not None:
-            ally_card.current_life = ally_card.base_life
-        elif hasattr(ally_card, 'life') and ally_card.life is not None:
-            ally_card.current_life = ally_card.life
+    # 4.4.3a: ALL allies' life totals reset to base (CR 4.4.3a — every player's allies)
+    for _pid in state.players:
+        for ally_card in state.players[_pid].allies.cards:
+            if hasattr(ally_card, 'base_life') and ally_card.base_life is not None:
+                ally_card.current_life = ally_card.base_life
+            elif hasattr(ally_card, 'life') and ally_card.life is not None:
+                ally_card.current_life = ally_card.life
 
     # 4.4.3b: turn player may arsenal a card from hand
     if player.hand.cards and hasattr(player, 'arsenal') and len(player.arsenal.cards) < player.arsenal_limit:
@@ -1085,10 +1126,10 @@ def _setup_dsl_listeners(state: GameState) -> None:
             for card in list(zone.cards):
                 dispatch(game_state, "END_OF_TURN", card.slug, card=card)
 
-    def _dsl_on_play_listener(event, game_state: GameState) -> None:
-        slug = event.card
-        card_obj = event.data.get('card') if isinstance(event.data, dict) else None
-        dispatch(game_state, "ON_PLAY", slug, card=card_obj, event=event)
+    # NOTE: there is deliberately no 'on_play' → dispatch("ON_PLAY") listener.
+    # A card's own resolution abilities run when its layer resolves (CR 5.3.4):
+    # play.py sets StackEntry.effect_fn for non-attack card layers, and
+    # _attack_step dispatches ON_PLAY for attacks (CR 7.2.3).
 
     def _dsl_attacking_listener(event, game_state: GameState) -> None:
         combat = game_state.combat
@@ -1121,14 +1162,15 @@ def _setup_dsl_listeners(state: GameState) -> None:
         if hero is not None:
             dispatch(game_state, "ON_BOO", hero.slug, card=hero, event=event)
 
-    def _dsl_gold_created_listener(event, game_state: GameState) -> None:
-        # "The first time each turn you create a Gold token" — Victor draws.
+    def _dsl_token_created_listener(event, game_state: GameState) -> None:
+        # "When you create a <token>" — dispatched to the creator's hero; the
+        # DSL gates on the token slug in event.data (see TRIGGER_EVENT_GATES).
         pid = event.data.get('player_id') if isinstance(event.data, dict) else None
         if pid is None:
             return
         hero = game_state.players[pid].hero
         if hero is not None:
-            dispatch(game_state, "ON_GOLD_CREATED", hero.slug, card=hero, event=event)
+            dispatch(game_state, "ON_TOKEN_CREATED", hero.slug, card=hero, event=event)
 
     def _dsl_clash_resolved_listener(event, game_state: GameState) -> None:
         # "When you win a clash revealing this" — dispatch to the winner's
@@ -1163,14 +1205,13 @@ def _setup_dsl_listeners(state: GameState) -> None:
             dispatch(game_state, "RECALC_ATTACK_POWER", c.slug, card=c, event=event)
 
     state.event_manager.register('hit', _dsl_hit_listener)
-    state.event_manager.register('on_play', _dsl_on_play_listener)
     state.event_manager.register('attacking', _dsl_attacking_listener)
     state.event_manager.register('start_of_turn', _dsl_start_of_turn_listener)
     state.event_manager.register('end_of_turn', _dsl_end_of_turn_listener)
     state.event_manager.register('card_pitched', _dsl_pitch_listener)
     state.event_manager.register('defend', _dsl_defend_listener)
     state.event_manager.register('crowd_boos', _dsl_boo_listener)
-    state.event_manager.register('gold_created', _dsl_gold_created_listener)
+    state.event_manager.register('token_created', _dsl_token_created_listener)
     state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)
     state.event_manager.register('recalculate_attack_power', _dsl_recalc_listener)
 
@@ -1306,18 +1347,34 @@ def _resolve_damage(state: GameState) -> None:
     # 7.5.2: net damage = attack power - total defense (min 0)
     net_damage = max(0, combat.attack_power - total_defense)
 
+    # CR 7.5.2: damage is dealt to the attack-target. A declared card target
+    # (Spectra aura, ally, …) takes the damage instead of the defending hero.
+    target_card = combat.attack_target_card
+    if target_card is not None:
+        if not getattr(target_card, 'is_in_arena', False):
+            # CR 7.5.2b: the attack-target ceased to exist or is illegal when
+            # damage is calculated — no damage is dealt, no hit-event occurs.
+            net_damage = 0
+        elif getattr(target_card, 'current_life', None) is None:
+            # CR 8.5.3c: a non-living object cannot be dealt damage.
+            net_damage = 0
+
     # Apply prevention/replacement effects
     damage_event = {"type": "damage", "amount": net_damage, "target_player_id": defender_id, "damage_type": "physical"}
     damage_event = state.effect_manager.apply_replacements(damage_event, state)
     net_damage = damage_event.get("amount", 0)
 
     if net_damage > 0:
-        defender.health -= net_damage
+        if target_card is not None:
+            # Living card target (e.g. an ally): CR 7.5.2 / 8.5.3a.
+            target_card.current_life -= net_damage
+        else:
+            defender.health -= net_damage
         # 7.5.5: hit event (physical damage from attack)
-        # 'hit' fires for any hit (hero or ally — ally-hit path to be added).
-        # 'hit_hero' fires only when the hit target is the hero (current _resolve_damage always targets the hero).
+        # 'hit_hero' fires only when the hit target is the defending hero.
         state.event_manager.emit(Event(type='hit', card=combat.attack_card.slug, data={'damage': net_damage}), state)
-        state.event_manager.emit(Event(type='hit_hero', card=combat.attack_card.slug, data={'damage': net_damage}), state)
+        if target_card is None:
+            state.event_manager.emit(Event(type='hit_hero', card=combat.attack_card.slug, data={'damage': net_damage}), state)
         state.event_manager.emit(Event(type='damage_dealt', data={'damage': net_damage, 'target': defender_id}), state)
         combat.hit = True
     else:
@@ -1458,11 +1515,21 @@ def resolve_stack(game_state: GameState) -> None:
                 else:
                     entry.meld_effect_top(entry.card, game_state)
             if entry.card is not None:
+                _was_on_stack = (entry.card in game_state.stack.cards
+                                 and entry.card.zone == 'stack')
                 game_state.stack.remove(entry.card)  # CR 3.0.1: card leaves stack zone on resolution
+                # CR 5.3.7 / 3.0.12: clear the resolved card-layer to its owner's graveyard.
+                if _was_on_stack:
+                    _owner = game_state.players.get(entry.card.owner)
+                    if _owner is not None:
+                        _owner.graveyard.add(entry.card, is_public=True)
             game_state.process_cease_to_exist(entry.card)
             card = entry.card
             if card and not entry.is_attack and card.has_go_again:
                 game_state.players[entry.player_id].action_points += 1
+            if getattr(game_state, 'recorders', None):
+                from engine.recorder import notify as _rec_notify
+                _rec_notify(game_state, 'on_layer_resolved', entry)
             game_state.priority_player = game_state.active_player
             game_state.consecutive_passes = 0
             game_state.last_acted_player = None
@@ -1489,17 +1556,28 @@ def resolve_stack(game_state: GameState) -> None:
     _is_landmark = (entry.layer_type == 'card' and card is not None
                     and ("Landmark" in _card_types or "Landmark" in _card_subtypes))
 
-    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura \
-            and not _is_ally and not _is_landmark:
-        game_state.stack.remove(card)  # CR 3.0.1: card leaves stack zone on resolution
-        game_state.process_cease_to_exist(card)
-
     if entry.effect_fn:
+        # CR 5.3.4: layer effects generate while the layer is still on the stack.
         result = entry.effect_fn(card, game_state)  # call once — not twice
 
         if environ.get('debug') == 'True':
             with open(environ['debug_file'], 'a') as f:
                 f.write(f'stack {entry} resolves: {result}\n')
+
+    # CR 5.3.6-5.3.7: after the layer effects, the layer leaves the stack. A
+    # plain card-layer still on the stack is cleared to its owner's graveyard
+    # (CR 3.0.12). A card the effects already moved elsewhere (a defense
+    # reaction that became defending, a card reloaded to arsenal, put to the
+    # bottom of the deck, …) only has its stale stack reference dropped.
+    if entry.layer_type == 'card' and card and not _is_figment and not _is_aura \
+            and not _is_ally and not _is_landmark:
+        _still_on_stack = card in game_state.stack.cards and card.zone == 'stack'
+        game_state.stack.remove(card)  # CR 3.0.1: card leaves stack zone on resolution
+        game_state.process_cease_to_exist(card)
+        if _still_on_stack and not entry.is_attack:
+            _owner = game_state.players.get(card.owner)
+            if _owner is not None:
+                _owner.graveyard.add(card, is_public=True)
 
     # Figments, Auras, Allies, and Landmarks enter the arena as permanents instead of ceasing to exist.
     if _is_figment or _is_aura or _is_ally or _is_landmark:
@@ -1556,6 +1634,10 @@ def resolve_stack(game_state: GameState) -> None:
         if (has_effective_go_again and entry.player_id == game_state.active_player
                 and "cant_go_again" not in game_state.players[entry.player_id].current_turn_effects):
             game_state.players[entry.player_id].action_points += 1
+
+    if getattr(game_state, 'recorders', None):
+        from engine.recorder import notify as _rec_notify
+        _rec_notify(game_state, 'on_layer_resolved', entry)
 
     game_state.priority_player = game_state.active_player
     game_state.consecutive_passes = 0
