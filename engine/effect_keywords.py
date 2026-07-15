@@ -3800,6 +3800,9 @@ def add_defend(state: GameState, card: Card,
     if in_hand:
         combat.defender_used_hand_card = True
 
+    # CR 1.3.1b: a defending card enters the combat chain (arena) under the
+    # control of the defender who added it.
+    c.controller = defender_id
     # Add to defending cards and credit defense value
     combat.defending_cards.append(c)
     defense_val = c.defense or 0

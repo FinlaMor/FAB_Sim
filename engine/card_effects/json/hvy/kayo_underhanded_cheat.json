@@ -16,10 +16,9 @@
         {"type": "TAP_SELF"}
       ],
       "target": {
+        "_comment": "Target attack action card you control — the active attack OR a card you're defending with (defending with an attack action card counts as controlling it).",
         "filter": [
-          {"type": "ATTACK_CONTROLLED_BY_YOU"},
-          {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
-          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          {"type": "CONTROLS_ATTACK_ACTION"}
         ]
       },
       "effects": [

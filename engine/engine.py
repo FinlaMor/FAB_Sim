@@ -475,6 +475,9 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
             return
 
     # 7.2.3: attack moves to combat chain as chain link
+    # CR 1.3.1b / 7.0.3c: the attacker controls the active attack (covers weapon
+    # attack-proxies, whose card was never "played" from hand).
+    attack_card.controller = state.active_player
     state.stack.remove(attack_card)  # leaves the stack zone (CR 3.15.6)
     state.combat_chain.add(attack_card)
     state.combat = CombatState(
@@ -1325,7 +1328,19 @@ def _recalculate_attack_power(state: GameState) -> None:
 
     # Stages 7-8: recalculate effective power via staged effects
     base_power = card.base_power or 0
-    combat.attack_power = mgr.recalculate(state, card, 'power', base_power)
+    power = mgr.recalculate(state, card, 'power', base_power)
+
+    # Stage-8 per-attack power modifiers from triggered/played effects this
+    # chain link (e.g. Reckless Arithmetic "+X{p}"). Re-applied on every
+    # recalculation so the buff persists through later combat steps.
+    for mod, amount in combat.power_mods:
+        if mod == "set":
+            power = amount
+        elif mod == "multiply":
+            power = (power or 0) * amount
+        else:  # add
+            power = (power or 0) + amount
+    combat.attack_power = power
 
     # Fire the static ability event so CARD_STATIC_ABILITIES and
     # KEYWORD_STATIC_ABILITIES can also apply (they modify combat.attack_power

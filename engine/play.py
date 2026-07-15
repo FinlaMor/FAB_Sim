@@ -105,57 +105,77 @@ def _add_weapon_attacks(state, player_id, affordable_actions) -> None:
 
 
 def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
-    """Offer the hero's DSL activated abilities as ACTIVATE_CARD actions.
+    """Offer DSL activated abilities (ACTIVATE / INSTANT / ATTACK_REACTION) of
+    the hero AND every arena permanent (equipment, weapons, items, auras,
+    allies) as ACTIVATE_CARD actions.
 
     Timing per ability type:
       * INSTANT          — any priority window
       * ACTIVATE         — action phase, action point, empty stack
       * ATTACK_REACTION  — combat reaction step, with a legal attack to target
     An ability is offered only when its DSL costs, ability conditions (e.g. a
-    "once per turn" NOT-FLAG_SET gate), and target filter all pass.
+    "once per turn" NOT-FLAG_SET gate), per-turn activation limit, target
+    filter, and resource affordability all pass. Abilities whose effect is an
+    attack are offered via the weapon-attack path, not here.
     """
     from engine.card_effects.dsl.loader import get_card as _dsl_get_card
     player = state.players[player_id]
-    hero = player.hero
-    if hero is None:
-        return
-    cd = _dsl_get_card(hero.slug)
-    if cd is None:
-        return
 
     in_action_phase = state.step == Step.ACTION and len(state.stack_entries) == 0
     in_reaction_step = state.step == Step.COMBAT_REACTION and state.combat is not None
-    for ability in cd.abilities:
-        atype = ability.ability_type.upper()
-        if atype not in ("ACTIVATE", "INSTANT", "ATTACK_REACTION"):
+
+    # Every source of activated abilities the player controls.
+    sources = []
+    if player.hero is not None:
+        sources.append(player.hero)
+    for zone in (player.head, player.chest, player.arms, player.legs,
+                 player.weapon1, player.weapon2, player.items, player.auras,
+                 player.allies, player.permanents):
+        sources.extend(zone.cards)
+
+    seen: set[int] = set()
+    for card in sources:
+        if id(card) in seen:
+            continue  # a 2H weapon occupies both zones as the same object
+        seen.add(id(card))
+        cd = _dsl_get_card(card.slug)
+        if cd is None:
             continue
-        if atype == "ACTIVATE" and not (in_action_phase and player.action_points > 0):
-            continue
-        if atype == "ATTACK_REACTION" and not in_reaction_step:
-            continue
-        # Ability conditions (e.g. once-per-turn NOT FLAG_SET) must hold.
-        if any(cond.fn is not None and not cond.fn(hero, None, state)
-               for cond in getattr(ability, 'conditions', [])):
-            continue
-        # Ability's own DSL costs (TAP_SELF, discard-an-Assassin) must be payable.
-        payable = True
-        for cost in getattr(ability, 'costs', []):
-            if cost.check_fn is not None and not cost.check_fn(hero, None, state):
-                payable = False
-                break
-        if not payable:
-            continue
-        # Target filter (CR 1.8.5): only offer if a legal target exists.
-        if any(cond.fn is not None and not cond.fn(hero, None, state)
-               for cond in getattr(ability, 'target_filter', [])):
-            continue
-        # Resource affordability (activation_cost) via the shared cost gate.
-        target = state.combat.attack_card if state.combat else None
-        action = Action(type=ActionType.ACTIVATE_CARD, player_id=player_id,
-                        card=hero, target=target)
-        can_activate, action = _cost_check(state, hero, player_id, action, playable=False)
-        if can_activate:
-            affordable_actions.append(action)
+        for ability in cd.abilities:
+            atype = ability.ability_type.upper()
+            if atype not in ("ACTIVATE", "INSTANT", "ATTACK_REACTION"):
+                continue
+            # Attack activations are handled by _add_weapon_attacks (they must
+            # create an attack-proxy on the chain, not dispatch ON_ACTIVATE).
+            if any(getattr(e, 'effect_type', '').upper() in ("ATTACK", "ATTACKING")
+                   for e in getattr(ability, 'effects', [])):
+                continue
+            if atype == "ACTIVATE" and not (in_action_phase and player.action_points > 0):
+                continue
+            if atype == "ATTACK_REACTION" and not in_reaction_step:
+                continue
+            # CR 4.4.3d: per-turn activation limit (e.g. "Once per Turn Action").
+            if getattr(card, 'has_per_turn_limit', False) and (getattr(card, 'activations', 0) or 0) <= 0:
+                continue
+            # Ability conditions (e.g. once-per-turn NOT FLAG_SET) must hold.
+            if any(cond.fn is not None and not cond.fn(card, None, state)
+                   for cond in getattr(ability, 'conditions', [])):
+                continue
+            # Ability's own DSL costs (TAP_SELF, remove counters, …) payable.
+            if any(cost.check_fn is not None and not cost.check_fn(card, None, state)
+                   for cost in getattr(ability, 'costs', [])):
+                continue
+            # Target filter (CR 1.8.5): only offer if a legal target exists.
+            if any(cond.fn is not None and not cond.fn(card, None, state)
+                   for cond in getattr(ability, 'target_filter', [])):
+                continue
+            # Resource affordability (activation_cost) via the shared cost gate.
+            target = state.combat.attack_card if state.combat else None
+            action = Action(type=ActionType.ACTIVATE_CARD, player_id=player_id,
+                            card=card, target=target)
+            can_activate, action = _cost_check(state, card, player_id, action, playable=False)
+            if can_activate:
+                affordable_actions.append(action)
 
 def _legality_check(state, card, player_id) -> bool:
     if card is None:
@@ -523,6 +543,12 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # Remove from the card's current zone (hand normally; arsenal or banished for
     # cards played from those zones, e.g. trap_door's "play from banished").
     _from_hand = (getattr(card, 'zone', None) or 'hand') == 'hand'
+    # CR 1.3.1b: the controller of a card is the player who played it. Set it
+    # here so conditions that read card.controller directly (e.g. "attack action
+    # card you control") see the right player — including a card that goes on to
+    # defend on a chain link.
+    card.controller = action.player_id
+
     _src_zone = player.zone_by_name(getattr(card, 'zone', None) or 'hand')
     if _src_zone is not None and card in _src_zone.cards:
         _src_zone.remove(card)
@@ -687,6 +713,9 @@ def _apply_defend(state: GameState, action: Action) -> None:
             defender.hand.remove(card)
             # CR 8.3.4b: track that a hand card has been used to defend (Dominate/Reprise)
             combat.defender_used_hand_card = True
+        # CR 1.3.1b / 7.0.5a: a defending card enters the combat chain (arena)
+        # under its controller — the defender who declared it.
+        card.controller = defender.player_id
         combat.defending_cards.append(card)
         defense_val = card.defense or 0
         combat.total_defense += defense_val

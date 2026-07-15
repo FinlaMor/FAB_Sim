@@ -729,26 +729,32 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "SET_BASE_POWER":
         # "Target attack action card you control has N base {p}" (e.g. Kayo).
-        # Target: the current combat's attack card, if it is an attack action
-        # controlled by this card's controller. Sets base power and refreshes
-        # the live combat power. Only attack ACTION cards qualify (no weapons).
+        # The target is an attack action card the controller controls in the
+        # current combat — the active attack OR a card they're defending with.
+        # If several qualify, the controller chooses. Only attack ACTION cards
+        # qualify (no weapons).
         amount = params.get("amount", 0)
         def _fn(card, event, state, _amt=amount):
-            from engine.card_effects.ability_keywords import _controller_id
-            if not state.combat or not state.combat.attack_card:
+            from engine.card_effects.ability_keywords import (
+                _controller_id, controlled_attack_action_cards, _ask_player)
+            if not state.combat:
                 return
-            target = state.combat.attack_card
             cid = _controller_id(card)
-            types = [t.lower() for t in (target.types or [])]
-            subs = [s.lower() for s in (target.subtypes or [])]
-            is_attack_action = ("action" in types and "attack" in subs)
-            if getattr(target, 'controller', None) != cid or not is_attack_action:
+            candidates = controlled_attack_action_cards(state, cid)
+            if not candidates:
                 return
+            if len(candidates) == 1:
+                target = candidates[0]
+            else:
+                pick = _ask_player(state, cid, [c.slug for c in candidates],
+                                   context="Choose the attack action card to set to "
+                                           f"{_amt} base power")
+                target = next((c for c in candidates if c.slug == pick), candidates[0])
             target.base_power = _amt
-            state.combat.base_attack_power = _amt
-            # Re-derive live power so the change is visible immediately; staged
-            # effects reapply on the next recalculation.
-            state.combat.attack_power = _amt
+            # Refresh live combat power only when the target is the active attack.
+            if target is state.combat.attack_card:
+                state.combat.base_attack_power = _amt
+                state.combat.attack_power = _amt
         return _fn
 
     if etype == "MODIFY_ATTACK":
@@ -758,12 +764,30 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             if not state.combat:
                 return
             val = _resolve_amount(_a, state)
-            if _mod == "add":
-                state.combat.attack_power = (state.combat.attack_power or 0) + val
-            elif _mod == "set":
+            # WHILE_STATIC abilities re-run this on every _recalculate_attack_power
+            # (event type 'recalculate_attack_power'); those must apply transiently
+            # in the stage-8 window and NOT accumulate on power_mods.
+            if getattr(event, "type", None) == "recalculate_attack_power":
+                if _mod == "set":
+                    state.combat.attack_power = val
+                elif _mod == "multiply":
+                    state.combat.attack_power = (state.combat.attack_power or 0) * val
+                else:
+                    state.combat.attack_power = (state.combat.attack_power or 0) + val
+                return
+            # One-shot trigger (e.g. Reckless Arithmetic's "when this attacks,
+            # +X{p}"): record on the CombatState so it is re-applied on every
+            # future recalculation and survives the defend/damage steps (the
+            # amount is fixed now, e.g. the rolled X), AND apply it to the live
+            # power now for immediate visibility. A later recalc re-derives from
+            # base + power_mods, so this immediate bump is not double-counted.
+            state.combat.power_mods.append((_mod, val))
+            if _mod == "set":
                 state.combat.attack_power = val
             elif _mod == "multiply":
                 state.combat.attack_power = (state.combat.attack_power or 0) * val
+            else:
+                state.combat.attack_power = (state.combat.attack_power or 0) + val
         return _fn
 
     if etype == "MODIFY_NEXT_ATTACK":
@@ -812,11 +836,22 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                              source_player_id=cid, target_player_id=cid)
             return _fn
         if keyword:
-            kw = keyword.lower()
+            # Canonicalise go-again spellings so the resolution-step check
+            # (which matches "go again") recognises it.
+            kw = "Go Again" if keyword.lower().replace("_", " ") == "go again" else keyword.lower()
             def _fn(card, event, state, _kw=kw):
                 if state.combat and _kw not in (state.combat.keywords or []):
                     state.combat.grant_keyword(_kw)
             return _fn
+
+    if etype == "GO_AGAIN":
+        # The attack gains go again (CR 8.3.5): its controller gains an action
+        # point when the chain link resolves. Used inside INJECT_TRIGGER ON_HIT
+        # (e.g. Blacktek Whisperers) and as a direct effect.
+        def _fn(card, event, state):
+            if state.combat and "Go Again" not in (state.combat.keywords or []):
+                state.combat.grant_keyword("Go Again")
+        return _fn
 
     if etype == "ROLL":
         faces = params.get("faces", 6)

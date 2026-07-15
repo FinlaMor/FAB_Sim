@@ -104,6 +104,34 @@ def _get_controller(state: GameState, card: Card) -> Player:
     return state.players[_controller_id(card)]
 
 
+def _is_attack_action_card(card: Card) -> bool:
+    t = [x.lower() for x in (card.types or [])]
+    s = [x.lower() for x in (card.subtypes or [])]
+    return "action" in t and "attack" in s
+
+
+def controlled_attack_action_cards(state: GameState, controller_id: int) -> list:
+    """CR: "attack action card you control" during combat. This is the active
+    attack if you control it, PLUS any card you control that is defending on the
+    chain with type Action + subtype Attack (defending with an attack action
+    card still counts as controlling that attack action card)."""
+    combat = getattr(state, "combat", None)
+    if not combat:
+        return []
+    out, seen = [], set()
+    ac = getattr(combat, "attack_card", None)
+    if (ac is not None and getattr(ac, "controller", None) == controller_id
+            and _is_attack_action_card(ac)):
+        out.append(ac)
+        seen.add(id(ac))
+    for d in (getattr(combat, "defending_cards", None) or []):
+        if id(d) in seen:
+            continue
+        if getattr(d, "controller", None) == controller_id and _is_attack_action_card(d):
+            out.append(d)
+    return out
+
+
 def _get_owner(state: GameState, card: Card) -> Player:
     return state.players[card.owner]
 

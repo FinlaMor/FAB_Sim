@@ -107,6 +107,16 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return getattr(s.combat.attack_card, 'controller', None) == _controller_id(c)
         return _acby
 
+    if ctype == "CONTROLS_ATTACK_ACTION":
+        # True if you control an attack action card in the current combat —
+        # the active attack you control OR a card you're defending with
+        # (CR: defending with an attack action card counts as controlling it).
+        def _caa(c, e, s):
+            from engine.card_effects.ability_keywords import (
+                _controller_id, controlled_attack_action_cards)
+            return bool(controlled_attack_action_cards(s, _controller_id(c)))
+        return _caa
+
     if ctype == "DEFENDER_USED_HAND_CARD":
         return lambda c, e, s: (s.combat is not None
                                  and getattr(s.combat, 'defender_used_hand_card', False))

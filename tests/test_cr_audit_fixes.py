@@ -207,3 +207,122 @@ def test_targeted_attack_reaction_requires_legal_target():
     acts = available_actions(st, 1)
     assert any(a.type == ActionType.PLAY_CARD and a.card is ar for a in acts), \
         "'Target attack with stealth' must be playable vs a stealth attack"
+
+
+# ---------------------------------------------------------------------------
+# CR 1.3.1b — controller is set on arena entry (incl. defending); activated
+# abilities of equipment/permanents and "attack action card you control"
+# targeting (attacking AND defending).
+# ---------------------------------------------------------------------------
+
+def test_controller_set_on_permanent_arena_entry():
+    st = _make_state()
+    st.card_db = DB
+    tok = _card("gold", 1)
+    tok.controller = None
+    st.players[1].items.add(tok)
+    assert tok.controller == 1  # CR 1.3.1b: owner as it enters the arena
+
+
+def test_controller_set_when_played():
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    card = _card("visit_goldmane_estate_blue", 1)
+    card.controller = None
+    st.players[1].hand.add(card)
+    st.players[1].action_points = 1; st.players[1].resources = 5
+    act = Action(type=ActionType.PLAY_CARD, card=card); act.player_id = 1
+    apply_action(st, act)
+    assert card.controller == 1
+
+
+def test_controller_set_on_defend():
+    from engine.play import _apply_defend
+    st = _reaction_state(dr_holder=2)  # p1 attacking p2
+    blk = _card("big_bully_red", 2)
+    blk.controller = None
+    st.players[2].hand.add(blk)
+    _apply_defend(st, Action(type=ActionType.DEFEND_CARDS, card_list=[blk]))
+    assert blk.controller == 2
+    assert blk in st.combat.defending_cards
+
+
+def test_equipment_activated_ability_offered():
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    scab = _card("scabskin_leathers", 1)
+    st.players[1].legs.add(scab)
+    st.players[1].action_points = 1
+    acts = available_actions(st, 1)
+    assert any(a.type == ActionType.ACTIVATE_CARD and a.card is scab for a in acts), \
+        "equipment activated ability (Scabskin Leathers) must be offered"
+
+
+def test_kayo_instant_offered_when_attacking_own_action_attack():
+    import copy
+    st = _make_state(); st.card_db = DB
+    kayo = copy.deepcopy(DB.get("kayo_underhanded_cheat")); kayo.owner = 1; kayo.controller = 1
+    st.players[1].hero = kayo
+    st.players[1].resources = 4
+    atk = _card("command_and_conquer_red", 1)  # an attack action card
+    atk.controller = 1
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=6,
+                            attack_card=atk, keywords=[])
+    st.step = Step.COMBAT_REACTION; st.active_player = 1; st.priority_player = 1
+    acts = available_actions(st, 1)
+    assert any(a.card is kayo for a in acts if a.type == ActionType.ACTIVATE_CARD)
+
+
+def test_kayo_instant_offered_and_targets_defending_action_attack():
+    import copy
+    from engine.play import _apply_defend
+    from engine.card_effects.dsl import dispatch
+    st = _make_state(); st.card_db = DB
+    kayo = copy.deepcopy(DB.get("kayo_underhanded_cheat")); kayo.owner = 2; kayo.controller = 2
+    st.players[2].hero = kayo
+    st.players[2].resources = 4
+    opp_atk = _card("mocking_blow_red", 1); opp_atk.controller = 1  # base power != 6
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=opp_atk.base_power or 0,
+                            attack_card=opp_atk, keywords=[])
+    opp_base_before = opp_atk.base_power
+    blk = _card("big_bully_red", 2)  # Kayo defends with an attack action card
+    st.players[2].hand.add(blk)
+    _apply_defend(st, Action(type=ActionType.DEFEND_CARDS, card_list=[blk]))
+    st.step = Step.COMBAT_REACTION; st.active_player = 1; st.priority_player = 2
+    acts = available_actions(st, 2)
+    assert any(a.card is kayo for a in acts if a.type == ActionType.ACTIVATE_CARD), \
+        "Kayo's instant must be offered when defending with an attack action card"
+    # Resolving sets the defending card's base power to 6 (not the opponent's attack).
+    dispatch(st, "ON_ACTIVATE", "kayo_underhanded_cheat", card=kayo)
+    assert blk.base_power == 6
+    assert opp_atk.base_power == opp_base_before  # opponent's attack untouched
+
+
+# ---------------------------------------------------------------------------
+# On-attack power buff (MODIFY_ATTACK) persists through later combat steps.
+# Reckless Arithmetic: "When this attacks, roll a d6. This gets +X{p}." The
+# buff was lost at the defend step because it was a transient bump that
+# _recalculate_attack_power overwrote (now recorded on combat.power_mods).
+# ---------------------------------------------------------------------------
+
+def test_modify_attack_buff_persists_through_recalculation():
+    import copy
+    from engine.state import CombatState
+    from engine.card_effects.dsl import dispatch
+    st = _make_state(); st.card_db = DB
+    atk = _card("reckless_arithmetic_blue", 1)
+    base = atk.base_power or 0
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=base,
+                            base_attack_power=base, attack_card=atk, keywords=[])
+    st.active_player = 1
+    dispatch(st, "ON_PLAY", "reckless_arithmetic_blue", card=atk,
+             event=type("E", (), {"type": "on_play", "data": {}})())
+    after_attack = st.combat.attack_power
+    assert after_attack > base, "roll buff must raise the attack's power"
+    assert st.combat.power_mods, "the buff must be recorded on combat.power_mods"
+
+    # Later combat steps recalculate power — the buff must survive.
+    E._recalculate_attack_power(st)   # defend step
+    assert st.combat.attack_power == after_attack
+    E._recalculate_attack_power(st)   # damage step
+    assert st.combat.attack_power == after_attack

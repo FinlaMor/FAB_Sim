@@ -6,6 +6,48 @@ Engine audited against `docs/ref/en-fab-cr-comprehensive-rules.txt` (sections 1,
 `card_effects/registry.py`. Findings are ordered by severity; each cites the
 CR clause and the code location.
 
+## Gameplay-review round 2 (2026-07-14)
+
+More bugs found reviewing recorded games, all fixed with coverage in
+`tests/test_cr_audit_fixes.py`:
+
+- **`card.controller` was never set** (stayed `None` from deck build). Most
+  logic tolerated it via `_controller_id`'s owner fallback, but conditions
+  reading `card.controller` directly did not — e.g. `ATTACK_CONTROLLED_BY_YOU`,
+  so **Kayo's instant ("target attack action card you control") was never
+  offered** even when attacking with an attack action card (12 affordable
+  windows missed in one game). CR 1.3.1b fix: set controller when a card is
+  played (`_apply_play_card`), when it becomes the active attack
+  (`_attack_step`, covers weapon proxies), when it defends
+  (`_apply_defend` / `add_defend`), and centrally on any arena entry
+  (`Zone.add`).
+- **Equipment/permanent activated abilities were never offered.** The generic
+  `activatable`-flag path was dead (`base_activatable` is never set True), so
+  Scabskin Leathers, Fyendal's Spring Tunic's instant, etc. could not be
+  activated. `_add_hero_dsl_activations` generalized to offer DSL
+  ACTIVATE/INSTANT/ATTACK_REACTION abilities of the hero AND every arena
+  permanent, with per-type timing, per-turn-limit, cost, and target-filter
+  gates (attack-effect abilities still routed through the weapon path).
+- **"Attack action card you control" now includes a defending attack action
+  card** (CR: defending with an attack action card counts as controlling it).
+  New `CONTROLS_ATTACK_ACTION` condition + `controlled_attack_action_cards`
+  helper; `SET_BASE_POWER` targets the controlled card (active attack or
+  defending card), asking the controller to choose when several qualify.
+- **`GO_AGAIN` effect type was unimplemented** (Blacktek Whisperers,
+  Enlightened Strike). Never reached before because equipment activated
+  abilities were never offered; the generalized activation path surfaced it.
+  Implemented: grants the attack "Go Again" (matched to the resolution-step
+  check). Also canonicalised the `GAIN` keyword form so `"GO_AGAIN"`/`"go_again"`
+  spellings are recognised at resolution.
+- **On-attack power buffs were lost at the defend step.** `MODIFY_ATTACK`
+  bumped `combat.attack_power` in place, which `_recalculate_attack_power`
+  (run at the defend and damage steps) overwrote from base — so Reckless
+  Arithmetic's rolled "+X{p}" vanished after the Attack Step. Fixed by
+  recording one-shot modifiers on a new per-`CombatState` `power_mods` list
+  that every recalculation re-applies (resets per attack, so no leak across
+  chain links/turns); WHILE_STATIC abilities still apply transiently each
+  recalc (they carry the `recalculate_attack_power` event).
+
 ## Fix status (updated 2026-07-14, same session)
 
 | Finding | Status |

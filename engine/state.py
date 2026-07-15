@@ -243,6 +243,12 @@ class Zone:
             card.reset_to_base_state()
         if (was_in_arena or was_on_stack) and not card.is_in_arena:
             card.reset_to_base_state()
+        # CR 1.3.1b: the controller of a card is its owner as it enters the
+        # arena. Set it here so conditions reading card.controller directly
+        # (e.g. "attack action card you control") see the right player. Only
+        # fill it when unset so a deliberately-assigned controller is preserved.
+        if card.is_in_arena and card.controller is None and card.owner is not None:
+            card.controller = card.owner
         card.is_public = next_is_public
         if not any(c is card for c in self.cards):
             self.cards.append(card)
@@ -1095,6 +1101,12 @@ class CombatState:
     # (e.g. Go Again from triggered abilities). Unioned into combat.keywords by
     # _recalculate_attack_power so all "X in combat.keywords" checks still work.
     keyword_effects: set = field(default_factory=set)
+    # Stage-8 power modifiers applied to THIS attack during the chain link
+    # (e.g. Reckless Arithmetic's "+X{p}"). Each is (mod, amount) with mod one of
+    # "add" / "multiply" / "set". Re-applied every _recalculate_attack_power so
+    # the buff survives later combat steps; resets per attack (CombatState is
+    # recreated per chain link), so it can't leak across attacks or turns.
+    power_mods: list = field(default_factory=list)
     # One-shot triggers created by INJECT_TRIGGER DSL effects (e.g. Pummel).
     # Iterated and consumed by the DSL hit listener after 'hit' fires.
     injected_triggers: list = field(default_factory=list)
