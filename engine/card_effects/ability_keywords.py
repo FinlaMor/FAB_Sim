@@ -154,9 +154,10 @@ def _apply_defense_counter(card: Card, state: GameState, count: int = 1) -> None
     controller = _get_controller(state, card)
     key = (card.slug, card.zone, "minus_defense")
     controller.counters[key] = controller.counters.get(key, 0) + count
-    # Remove stale counter effect, add fresh one
-    card.effects = [(tag, fn) for tag, fn in card.effects
-                    if not (tag == "base_defense" and getattr(fn, '_counter_key', None) == key)]
+    # Remove stale counter effect, add fresh one (card.effects holds CardEffect objects)
+    card.effects = [e for e in card.effects
+                    if not (getattr(e, 'prop', None) == "defense"
+                            and getattr(getattr(e, 'fn', None), '_counter_key', None) == key)]
     def _apply(base, k=key, p=controller):
         return base - p.counters.get(k, 0)
     _apply._counter_key = key
@@ -1303,8 +1304,8 @@ def _fire_on_discard(state, player_id: int, discarded_card=None) -> None:
     player = state.players[player_id]
     pairs = []
     for w_attr in ('weapon1', 'weapon2'):
-        w = getattr(player, w_attr, None)
-        if w:
+        wz = getattr(player, w_attr, None)  # weapon ZONE — iterate its cards
+        for w in list(getattr(wz, 'cards', None) or []):
             cd = _get_dsl_card(w.slug)
             if cd:
                 pairs.append((cd, w))

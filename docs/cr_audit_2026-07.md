@@ -14,7 +14,7 @@ CR clause and the code location.
 | H2 damage always to hero | **FIXED** — `_resolve_damage` deals to `combat.attack_target_card` when set (7.5.2b ceased-target and 8.5.3c non-living checks included); ally *targeting* still not offered in legal actions (deferred until ally decks) |
 | M1 target legality at Attack Step | **FIXED** — declared target gone → attack goes to owner's graveyard, chain closes (7.2.2/7.7.3) |
 | M2 attack not on stack during priority | open |
-| M3 triggered-layer target declaration | open |
+| M3 triggered-layer target declaration | **partially fixed** — DSL `target.filter` is now enforced at announce for card plays (CR 1.8.5: "Target attack with stealth" is unplayable without a stealth attack); resolution-time target recheck (5.3.2a) still open |
 | M4 SBA approximation | open |
 | L1 ally life reset (all players) | **FIXED** |
 | L2 chi cleared at end of turn | open — confirm intended policy |
@@ -37,6 +37,27 @@ Additional bugs found and fixed while implementing:
   DR legality also now enforces Dominate-from-hand (8.3.4b) and
   `no_defense_reactions` (7.4.2c). Regression coverage:
   `tests/test_cr_audit_fixes.py`.
+- **Every DB-built card had `pitch/cost/power/defense = None`** —
+  `CardDB.get` constructed the `Card` before assigning raw stats, so the
+  raw→base→current cascade in `__post_init__` ran on empty values (base_*
+  was later re-synced, current values were not). Consequences: nothing
+  could ever be pitched, all play costs were effectively zero, and no card
+  could ever block (`has_defense` False). One sync block in `card.py` fixed
+  pitching, paying, and blocking game-wide.
+- **`order_stack` reordered card-layers** — a card played in response to
+  another card triggered the CR 6.6.6b "who resolves first" prompt and let
+  players reorder the stack. Rewritten: only newly-created triggered-layers
+  are ordered (once); card-layers keep their LIFO positions (CR 3.15.4).
+- **Targeting authored as resolution `conditions`** — five attack reactions
+  (both Stains of the Redback, Take Up the Mantle, Shred, Blacktek
+  Whisperers) modeled "Target attack …" restrictions as ability `conditions`
+  (resolution-time no-op) instead of `target.filter`; combined with the
+  missing 1.8.5 gate they were playable against illegal targets.
+- **Temper/Battleworn counter bookkeeping crashed** (`_apply_defense_counter`
+  unpacked `card.effects` as tuples; they are `CardEffect` objects) — latent
+  until the stat fix made equipment blocks actually happen.
+- **`_fire_on_discard` called `.slug` on the weapon zone** instead of the
+  cards in it — crash whenever a discard trigger fired with a weapon equipped.
 - **Resolved cards leaked into stack-zone limbo**: resolved non-attack card
   layers were removed from the stack list but never cleared to the graveyard
   (CR 5.3.7/3.0.12) — played instants/actions were unreachable for

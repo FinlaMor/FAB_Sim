@@ -3,14 +3,27 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "conditions": [{"type": "ATTACK_CLASS_IN", "classes": ["assassin"]}],
       "effects": [
         {
           "type": "INJECT_TRIGGER",
           "trigger": "ON_HIT",
-          "effects": [{"type": "GO_AGAIN"}]
+          "effects": [
+            {
+              "type": "GO_AGAIN"
+            }
+          ]
         }
-      ]
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_CLASS_IN",
+            "classes": [
+              "assassin"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

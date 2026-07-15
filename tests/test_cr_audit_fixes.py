@@ -183,3 +183,27 @@ def test_attack_step_closes_chain_when_declared_target_gone():
     # CR 7.7.3: the attack on the stack is put into its owner's graveyard.
     assert atk in st.players[1].graveyard.cards
     assert atk not in st.stack.cards
+
+
+# ---------------------------------------------------------------------------
+# CR 1.8.5 — "Target attack with stealth": no legal target => illegal to play
+# ---------------------------------------------------------------------------
+
+def test_targeted_attack_reaction_requires_legal_target():
+    st = _reaction_state(dr_holder=2)
+    st.priority_player = 1  # attacker's reaction window
+    ar = _card("stains_of_the_redback_red", 1)
+    st.players[1].hand.add(ar)
+    st.players[1].resources = 5
+
+    # Hunter's Klaive-style attack WITHOUT stealth: Stains may not be played.
+    acts = available_actions(st, 1)
+    assert not any(a.type == ActionType.PLAY_CARD and a.card is ar for a in acts), \
+        "'Target attack with stealth' must be unplayable vs a non-stealth attack"
+
+    # The same attack WITH stealth: Stains becomes playable.
+    st.combat.keywords = ["Stealth"]
+    st.combat.attack_card.keywords = ["Stealth"]
+    acts = available_actions(st, 1)
+    assert any(a.type == ActionType.PLAY_CARD and a.card is ar for a in acts), \
+        "'Target attack with stealth' must be playable vs a stealth attack"

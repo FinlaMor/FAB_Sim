@@ -182,6 +182,23 @@ def _legality_check(state, card, player_id) -> bool:
     if is_ins:
         legal_flag &= _instant_legal_check(state, card, player_id)
 
+    # CR 1.8.5 / 5.1.4: a targeted ability is only legal to play if a legal
+    # target exists at announce. DSL `target.filter` conditions evaluate
+    # against the current state (AR/DR filters read state.combat — e.g.
+    # "Target attack with stealth" is unplayable against a non-stealth attack).
+    if legal_flag:
+        from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+        cd = _dsl_get_card(card.slug)
+        if cd is not None:
+            for ability in cd.abilities:
+                if ability.ability_type.upper() not in (
+                        "PLAY", "ACTION", "MODAL",
+                        "ATTACK_REACTION", "DEFENSE_REACTION"):
+                    continue
+                if any(cond.fn is not None and not cond.fn(card, None, state)
+                       for cond in getattr(ability, 'target_filter', None) or []):
+                    return False
+
     return legal_flag
 
 def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]:

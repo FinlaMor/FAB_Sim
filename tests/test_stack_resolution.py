@@ -116,3 +116,48 @@ def test_order_stack_called_when_new_trigger_arrives():
         f"order_stack was called {len(order_call_count)} times; expected 2 "
         "(initial ordering + one re-order when new trigger was generated)"
     )
+
+
+# ---------------------------------------------------------------------------
+# CR 3.15.4: card-layers keep their LIFO positions — only newly-created
+# triggered-layers are ordered (a DR played in response to an AR must NOT
+# produce a trigger-ordering prompt).
+# ---------------------------------------------------------------------------
+
+def test_card_layers_are_never_reordered():
+    state = _make_state()
+    ar = _make_card("some_attack_reaction")
+    dr = _make_card("some_defense_reaction")
+    e_ar = StackEntry(player_id=1, card=ar, layer_type='card')
+    e_dr = StackEntry(player_id=2, card=dr, layer_type='card')
+    state.stack_entries = [e_ar, e_dr]  # DR on top (played in response)
+
+    prompts = []
+    state.player_agents[1] = lambda s, opts, context=None, **k: prompts.append(context) or opts[0]
+    state.player_agents[2] = lambda s, opts, context=None, **k: prompts.append(context) or opts[0]
+
+    order_stack(state)
+
+    assert state.stack_entries == [e_ar, e_dr], "card layers must keep LIFO order"
+    assert not prompts, "no ordering prompt may fire for card layers"
+
+
+def test_new_triggers_ordered_on_top_of_card_layers():
+    state = _make_state()
+    card_layer = StackEntry(player_id=1, card=_make_card("played_card"), layer_type='card')
+    t1 = _make_triggered_entry(_make_card("trig_a"), player_id=1)
+    t2 = _make_triggered_entry(_make_card("trig_b"), player_id=1)
+    state.stack_entries = [t1, card_layer, t2]  # triggers created around a card layer
+
+    order_stack(state)
+
+    # Card layer keeps its relative position at the bottom; both triggers sit
+    # on top (end of list = resolves first) and are marked ordered.
+    assert state.stack_entries[0] is card_layer
+    assert {id(e) for e in state.stack_entries[1:]} == {id(t1), id(t2)}
+    assert all(getattr(e, '_ordered', False) for e in (t1, t2))
+
+    # A second order_stack call must not re-order or re-prompt.
+    before = list(state.stack_entries)
+    order_stack(state)
+    assert state.stack_entries == before

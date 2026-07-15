@@ -3,8 +3,22 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "conditions": [{"type": "ATTACK_CLASS_IN", "classes": ["assassin"]}],
-      "effects": [{"type": "MODIFY_DEFENSE_VALUE", "amount": -3}]
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": -3
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_CLASS_IN",
+            "classes": [
+              "assassin"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

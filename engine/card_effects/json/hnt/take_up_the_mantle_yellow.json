@@ -3,12 +3,6 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "conditions": [
-        {
-          "type": "ATTACK_HAS_KEYWORD",
-          "keyword": "stealth"
-        }
-      ],
       "effects": [
         {
           "type": "MODIFY_ATTACK",
@@ -25,7 +19,15 @@
           ],
           "mod": "add"
         }
-      ]
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_HAS_KEYWORD",
+            "keyword": "stealth"
+          }
+        ]
+      }
     }
   ]
 }

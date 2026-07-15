@@ -1644,32 +1644,46 @@ def resolve_stack(game_state: GameState) -> None:
     game_state.last_acted_player = None
 
 def order_stack(game_state: GameState) -> None:
-    """Order triggered abilities on the stack (6.6.6b).
-    ONLY orders — does NOT resolve. Called once when triggers first appear."""
-    if not game_state.stack_entries:
+    """Order NEWLY-CREATED triggered-layers on the stack (CR 6.6.6b).
+
+    ONLY simultaneous triggered-layers are ordered, exactly once, as they
+    enter the stack. Card-layers played by players (and previously ordered
+    triggers) keep their LIFO positions (CR 3.15.4) — a card played in
+    response to another card is NOT reorderable."""
+    new_triggers = [e for e in game_state.stack_entries
+                    if e.is_triggered and not getattr(e, '_ordered', False)]
+    if not new_triggers:
         return
 
     turn_player_id = game_state.active_player
     opponent_id = 3 - game_state.active_player
+    turn_fx = [e for e in new_triggers if e.player_id == turn_player_id]
+    opp_fx = [e for e in new_triggers if e.player_id == opponent_id]
 
-    turn_fx = [e for e in game_state.stack_entries if e.player_id == turn_player_id]
-    opp_fx = [e for e in game_state.stack_entries if e.player_id == opponent_id]
-
+    # 1.10.2d / 6.6.6b: the turn player picks who adds their triggers first
+    # (only meaningful when both players have pending triggers).
     if turn_fx and opp_fx:
         goes_first = get_turn_player_choice(game_state, 'Who resolves triggers first?')
-    elif turn_fx:
-        goes_first = turn_player_id
-    elif opp_fx:
-        goes_first = opponent_id
     else:
-        return
+        goes_first = turn_player_id if turn_fx else opponent_id
 
-    # Preserve attack entry separately (stays at bottom)
-    attack_entry = next((e for e in game_state.stack_entries if e.is_attack), None)
-    if attack_entry:
-        game_state.stack_entries.remove(attack_entry)
+    # Each player orders their own pending triggers.
+    if len(turn_fx) > 1:
+        game_state.priority_player = turn_player_id
+        turn_fx = get_player_order_decision(game_state, turn_player_id, turn_fx)
+    if len(opp_fx) > 1:
+        game_state.priority_player = opponent_id
+        opp_fx = get_player_order_decision(game_state, opponent_id, opp_fx)
 
-    order_fx(game_state, goes_first, attack=attack_entry)
+    # Remove the new triggers from their tentative positions; existing layers
+    # keep their order. LIFO: resolve_stack pops from the END, so the
+    # goes-first player's triggers go at the end (resolve first).
+    rest = [e for e in game_state.stack_entries
+            if not any(e is t for t in new_triggers)]
+    ordered = (opp_fx + turn_fx) if goes_first == turn_player_id else (turn_fx + opp_fx)
+    for e in ordered:
+        e._ordered = True
+    game_state.stack_entries = rest + ordered
 
 def order_fx(game_state: GameState, goes_first: int, attack=None) -> None:
     """Order triggered abilities by player priority (6.6.6b)."""

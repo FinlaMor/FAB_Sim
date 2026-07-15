@@ -642,6 +642,19 @@ class CardDB:
         card.base_functional_text = card.raw_functional_text
         card.base_type_text   = card.raw_type_text
 
+        # Sync CURRENT values from base (__post_init__ ran before raw_* were
+        # set, so its base→current copy saw only Nones). Without this every
+        # DB-built card has pitch/cost/power/defense = None: nothing can be
+        # pitched or paid for, and no card can ever block (has_defense False).
+        card.name      = card.base_name
+        card.pitch     = card.base_pitch
+        card.cost      = card.base_cost
+        card.power     = card.base_power
+        card.defense   = card.base_defense
+        card.life      = card.base_life
+        card.intellect = card.base_intellect
+        card.arcane    = card.base_arcane
+
         # Parse activation cost from abilities (e.g., "Once per Turn Action - {r}{r}" -> cost=2)
         functional_text = getattr(card, "raw_functional_text", "") or ""
         abilities_list = functional_text.split(r"\n\n")
