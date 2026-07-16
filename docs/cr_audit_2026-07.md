@@ -77,6 +77,18 @@ More bugs found reviewing recorded games, all fixed with coverage in
   including those same cards — so an aura token (e.g. Might) showed up twice
   in the replay. Fixed: `permanents` now excludes cards already in a typed
   view.
+- **Activated DEFENSE_REACTION abilities were never offered.** The activation
+  path handled ACTIVATE/INSTANT/ATTACK_REACTION but not DEFENSE_REACTION, and
+  Quickdodge Flexors had an empty JSON. So an equipment defense reaction
+  ("Defense Reaction - {r}: Add this to the active chain link as a defending
+  card…") was never presented. Fixed: `_add_hero_dsl_activations` now offers
+  DEFENSE_REACTION activations to the defender during the reaction step
+  (gated by 7.4.2c; Dominate is hand-scoped so it doesn't block an equipment
+  DR); new `ADD_DEFEND` effect (add self as a defender with N {d}); Quickdodge
+  JSON authored, including its "beginning of the end phase" self-destroy via a
+  new `BEGINNING_OF_END_PHASE` trigger that fires for both players' permanents
+  (it defends on the opponent's turn, so a turn-player-only END_OF_TURN would
+  miss it).
 
 ## Fix status (updated 2026-07-14, same session)
 

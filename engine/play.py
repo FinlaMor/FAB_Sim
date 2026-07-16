@@ -143,7 +143,7 @@ def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
             continue
         for ability in cd.abilities:
             atype = ability.ability_type.upper()
-            if atype not in ("ACTIVATE", "INSTANT", "ATTACK_REACTION"):
+            if atype not in ("ACTIVATE", "INSTANT", "ATTACK_REACTION", "DEFENSE_REACTION"):
                 continue
             # Attack activations are handled by _add_weapon_attacks (they must
             # create an attack-proxy on the chain, not dispatch ON_ACTIVATE).
@@ -152,8 +152,23 @@ def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
                 continue
             if atype == "ACTIVATE" and not (in_action_phase and player.action_points > 0):
                 continue
-            if atype == "ATTACK_REACTION" and not in_reaction_step:
-                continue
+            if atype == "ATTACK_REACTION":
+                # Only the attacker, in the reaction step (CR 8.1.2a).
+                if not in_reaction_step or player_id != state.combat.attacker_id:
+                    continue
+            if atype == "DEFENSE_REACTION":
+                # Only the defender (attack-target's controller), in the reaction
+                # step, when defense reactions aren't prevented (CR 8.1.3a/7.4.2c).
+                # An activated DR from equipment is not "from hand", so Dominate
+                # (8.3.4b, hand-scoped) does not block it.
+                if not in_reaction_step or player_id == state.combat.attacker_id:
+                    continue
+                if getattr(state.combat, 'no_defense_reactions', False):
+                    continue
+                _at = getattr(state.combat, 'attack_target', None)
+                if (_at is not None and _at is not player
+                        and _at is not getattr(player, 'hero', None)):
+                    continue
             # CR 4.4.3d: per-turn activation limit (e.g. "Once per Turn Action").
             if getattr(card, 'has_per_turn_limit', False) and (getattr(card, 'activations', 0) or 0) <= 0:
                 continue

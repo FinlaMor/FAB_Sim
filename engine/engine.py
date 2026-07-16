@@ -1129,6 +1129,16 @@ def _setup_dsl_listeners(state: GameState) -> None:
             for card in list(zone.cards):
                 dispatch(game_state, "END_OF_TURN", card.slug, card=card)
 
+    def _dsl_start_of_end_phase_listener(event, game_state: GameState) -> None:
+        # "At the beginning of the end phase" — fires for BOTH players' permanents
+        # (unlike END_OF_TURN, which is turn-player-scoped for "at end of your
+        # turn"). Needed for e.g. Quickdodge Flexors, which defends on the
+        # opponent's turn and destroys itself at that turn's end phase.
+        for pid in list(game_state.players):
+            for zone in _dsl_permanent_zones(game_state.players[pid]):
+                for card in list(zone.cards):
+                    dispatch(game_state, "BEGINNING_OF_END_PHASE", card.slug, card=card)
+
     # NOTE: there is deliberately no 'on_play' → dispatch("ON_PLAY") listener.
     # A card's own resolution abilities run when its layer resolves (CR 5.3.4):
     # play.py sets StackEntry.effect_fn for non-attack card layers, and
@@ -1211,6 +1221,7 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('attacking', _dsl_attacking_listener)
     state.event_manager.register('start_of_turn', _dsl_start_of_turn_listener)
     state.event_manager.register('end_of_turn', _dsl_end_of_turn_listener)
+    state.event_manager.register('start_of_end_phase', _dsl_start_of_end_phase_listener)
     state.event_manager.register('card_pitched', _dsl_pitch_listener)
     state.event_manager.register('defend', _dsl_defend_listener)
     state.event_manager.register('crowd_boos', _dsl_boo_listener)

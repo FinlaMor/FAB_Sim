@@ -447,6 +447,22 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 state.combat.total_defense = (getattr(state.combat, 'total_defense', 0) or 0) + _a
         return _fn
 
+    if etype == "ADD_DEFEND":
+        # Add the ability's source card to the active chain link as a defending
+        # card (e.g. Quickdodge Flexors activating from the legs zone). Optional
+        # `defense` sets its {d} for this chain link before it is credited to
+        # total defense.
+        defense = params.get("defense")
+        def _fn(card, event, state, _d=defense):
+            if not state.combat:
+                return
+            if _d is not None:
+                card.defense = _d
+                card.base_defense = _d
+            from engine.effect_keywords import add_defend
+            add_defend(state, card)
+        return _fn
+
     if etype == "RETURN_DR_FROM_GRAVEYARD":
         # Return a defense reaction card from any graveyard to its owner's hand.
         # Searches controller's graveyard first, then opponent's.

@@ -444,3 +444,52 @@ def test_instant_card_costs_zero_action_points():
     act = plays[0]; act.player_id = 1
     apply_action(st, act)
     assert st.players[1].action_points == 1, "an Instant costs 0 AP (CR 5.1.6b)"
+
+
+# ---------------------------------------------------------------------------
+# Quickdodge Flexors: legs equipment with an activated DEFENSE_REACTION
+# ("Defense Reaction - {r}: Add this to the active chain link as a defending
+# card. It has 2 base {d} this chain link."). Must be offered to the defender
+# during the reaction step and add itself as a defender.
+# ---------------------------------------------------------------------------
+
+def _quickdodge_reaction_state():
+    import copy
+    from engine.state import CombatState
+    st = _make_state(); st.card_db = DB
+    E._setup_dsl_listeners(st)
+    qd = copy.deepcopy(DB.get("quickdodge_flexors")); qd.owner = 2; qd.controller = 2
+    st.players[2].legs.add(qd)
+    st.players[2].resources = 1
+    opp = _card("mocking_blow_red", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            attack_card=opp, keywords=[])
+    st.step = Step.COMBAT_REACTION; st.active_player = 1; st.priority_player = 2
+    return st, qd
+
+
+def test_quickdodge_flexors_offered_to_defender_and_defends():
+    st, qd = _quickdodge_reaction_state()
+    acts = available_actions(st, 2)
+    plays = [a for a in acts
+             if getattr(a.card, "slug", None) == "quickdodge_flexors"
+             and a.type == ActionType.ACTIVATE_CARD]
+    assert plays, "Quickdodge's defense reaction must be offered to the defender"
+    # Not offered to the attacker.
+    assert not any(getattr(a.card, "slug", None) == "quickdodge_flexors"
+                   for a in available_actions(st, 1))
+    act = plays[0]; act.player_id = 2
+    apply_action(st, act)
+    assert qd in st.combat.defending_cards
+    assert qd.defense == 2
+    assert st.combat.total_defense >= 2
+    assert st.players[2].resources == 0  # paid {r}
+
+
+def test_quickdodge_flexors_self_destructs_at_end_phase_if_it_defended():
+    st, qd = _quickdodge_reaction_state()
+    st.players[2].current_turn_effects.append("quickdodge_defended")
+    st.event_manager.emit("start_of_end_phase", st)
+    E._resolve_all_triggers(st)
+    assert qd not in st.players[2].legs.cards
+    assert any(c.slug == "quickdodge_flexors" for c in st.players[2].graveyard.cards)

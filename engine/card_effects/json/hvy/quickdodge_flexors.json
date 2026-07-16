@@ -1,4 +1,20 @@
 {
   "slug": "quickdodge_flexors",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "_comment": "Defense Reaction - {r}: Add this to the active chain link as a defending card. It has 2 base {d} this chain link. The {r} is the activation_cost parsed from the type line; do not add a cost clause.",
+      "effects": [
+        {"type": "ADD_DEFEND", "defense": 2},
+        {"type": "SET_FLAG", "flag": "quickdodge_defended", "scope": "CURRENT"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "_comment": "At the beginning of the end phase, if this defended this turn, destroy it.",
+      "conditions": [{"type": "FLAG_SET", "flag": "quickdodge_defended"}],
+      "effects": [{"type": "DESTROY_SELF"}]
+    }
+  ]
 }

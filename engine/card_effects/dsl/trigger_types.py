@@ -9,6 +9,7 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "ON_DEFEND":                "ON_DEFEND",
     "ON_DEFEND_NONE":           "ON_DEFEND_NONE",
     "END_OF_TURN":              "END_OF_TURN",
+    "BEGINNING_OF_END_PHASE":   "BEGINNING_OF_END_PHASE",
     "START_OF_TURN":            "START_OF_TURN",
     "ON_ACTIVATE":              "ON_ACTIVATE",
     "ON_DEATH":                 "ON_DEATH",
