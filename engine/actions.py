@@ -841,7 +841,11 @@ def get_defendable_cards(state: GameState) -> list[Card]:
 
     defendable_cards = []
     for card in defender.hand.cards:
-        if 'Defense Reaction' in card.types:
+        # CR 7.3.2a: only NON-defense-reaction cards may be declared as blockers
+        # during the Defend Step. Defense reactions are played in the Reaction
+        # Step. (is_defense_reaction normalizes "DefenseReaction"/"Defense
+        # Reaction" — the card DB uses the no-space spelling.)
+        if card.is_defense_reaction:
             continue
         if not card.has_defense:
             continue

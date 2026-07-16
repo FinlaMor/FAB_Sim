@@ -77,6 +77,21 @@ More bugs found reviewing recorded games, all fixed with coverage in
   including those same cards — so an aura token (e.g. Might) showed up twice
   in the replay. Fixed: `permanents` now excludes cards already in a typed
   view.
+- **Defense reactions were declarable as blockers in the Defend Step.**
+  `get_defendable_cards` excluded cards whose type is `"Defense Reaction"`
+  (with a space), but the card DB stores `"DefenseReaction"` — so Sink Below
+  was offered as a blocker during the Defend Step (CR 7.3.2a: only
+  non-defense-reaction cards may be declared; DRs are played in the Reaction
+  Step). Fixed to use the normalized `is_defense_reaction`.
+- **Savage Claw buffed the opponent's attack.** Its "+1{p} if a 6+ card was
+  pitched to attack WITH THIS" was a `WHILE_STATIC` gated only by
+  `ATTACK_PITCH_POWER_GTE` — it didn't check that Savage Claw was the attack,
+  so it added +1 to any attack in combat (e.g. an opponent's Miller's
+  Grindstone). Added a `SOURCE_IS_ATTACK` condition so the self-buff applies
+  only to Savage Claw's own attack.
+- **Replay viewer: counters now shown.** `snapshot_state` carries per-card
+  counters (`{slug: {type: count}}`), and the viewer renders a badge on the
+  card (e.g. energy counters accumulating on Fyendal's Spring Tunic).
 - **Activated DEFENSE_REACTION abilities were never offered.** The activation
   path handled ACTIVATE/INSTANT/ATTACK_REACTION but not DEFENSE_REACTION, and
   Quickdodge Flexors had an empty JSON. So an equipment defense reaction

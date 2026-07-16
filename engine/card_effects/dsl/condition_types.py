@@ -98,6 +98,14 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return False
         return _appg
 
+    if ctype == "SOURCE_IS_ATTACK":
+        # True when the ability's source card IS the current active attack. Used
+        # by weapon self-buffs ("… to attack WITH THIS") so a WHILE_STATIC on the
+        # weapon only applies to its own attack, not any attack in combat.
+        def _sia(c, e, s):
+            return bool(s.combat and getattr(s.combat, 'attack_card', None) is c)
+        return _sia
+
     if ctype == "ATTACK_CONTROLLED_BY_YOU":
         # True if the current attack is controlled by this card's controller.
         def _acby(c, e, s):

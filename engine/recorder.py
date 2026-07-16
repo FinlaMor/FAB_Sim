@@ -121,6 +121,25 @@ def serialize_event(event: Any) -> dict:
     }
 
 
+def _counters_by_slug(player) -> dict:
+    """Aggregate a player's counters into {slug: {counter_type: count}}.
+
+    player.counters is keyed by (slug, zone, counter_type). Sums across zones
+    and drops entries that net to zero."""
+    out: dict = {}
+    for key, count in (getattr(player, "counters", None) or {}).items():
+        if not count:
+            continue
+        try:
+            slug, _zone, ctype = key
+        except (ValueError, TypeError):
+            continue
+        bucket = out.setdefault(str(slug), {})
+        bucket[str(ctype)] = bucket.get(str(ctype), 0) + count
+    return {s: {t: n for t, n in types.items() if n} for s, types in out.items()
+            if any(types.values())}
+
+
 def snapshot_state(state: "GameState") -> dict:
     """Full JSON-able snapshot of a GameState (all zones, stats, combat, stack)."""
     def zone_slugs(zone) -> list:
@@ -156,6 +175,10 @@ def snapshot_state(state: "GameState") -> dict:
                                        "weapon1", "weapon2")},
             "current_turn_effects": list(getattr(p, "current_turn_effects", []) or []),
             "class_counters": json_safe(getattr(p, "class_counters", {}) or {}),
+            # Counters on this player's cards, keyed by slug -> {type: count}
+            # (e.g. Fyendal's Spring Tunic energy counters). Aggregated across
+            # zones; zero/negative totals dropped.
+            "counters": _counters_by_slug(p),
         }
 
     combat = None

@@ -493,3 +493,63 @@ def test_quickdodge_flexors_self_destructs_at_end_phase_if_it_defended():
     E._resolve_all_triggers(st)
     assert qd not in st.players[2].legs.cards
     assert any(c.slug == "quickdodge_flexors" for c in st.players[2].graveyard.cards)
+
+
+# ---------------------------------------------------------------------------
+# Savage Claw: "If a card with 6+ {p} was pitched to attack WITH THIS, the
+# attack gets +1{p}." Must buff only Savage Claw's own attack, not any attack.
+# ---------------------------------------------------------------------------
+
+def _savage_claw_combat(attack_slug, pitched_power_slug):
+    import copy
+    from engine.state import CombatState
+    st = _make_state(); st.card_db = DB
+    E._setup_dsl_listeners(st)
+    sc = copy.deepcopy(DB.get("savage_claw")); sc.owner = 1; sc.controller = 1
+    st.players[1].weapon1.add(sc)
+    atk = copy.deepcopy(DB.get(attack_slug)); atk.owner = 1; atk.controller = 1
+    base = atk.power or 0
+    pitched = [copy.deepcopy(DB.get(pitched_power_slug))] if pitched_power_slug else []
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=base,
+                            base_attack_power=base, attack_card=atk, keywords=[],
+                            from_weapon=True, pitched_for_attack=pitched)
+    st.active_player = 1
+    E._recalculate_attack_power(st)
+    return st.combat.attack_power, base
+
+
+def test_savage_claw_buffs_only_its_own_attack():
+    # Savage Claw's own attack, 6-power card pitched -> +1
+    power, base = _savage_claw_combat("savage_claw", "command_and_conquer_red")
+    assert power == base + 1
+    # Savage Claw's own attack, low-power pitch -> no buff
+    power, base = _savage_claw_combat("savage_claw", "sink_below_red")
+    assert power == base
+    # A DIFFERENT weapon's attack (Miller's Grindstone) must NOT be buffed even
+    # with a 6-power card pitched — the buff is "to attack WITH THIS".
+    power, base = _savage_claw_combat("millers_grindstone", "command_and_conquer_red")
+    assert power == base, "Savage Claw must not buff another weapon's attack"
+
+
+# ---------------------------------------------------------------------------
+# CR 7.3.2a: defense reaction cards can't be declared as blockers during the
+# Defend Step (they're played in the Reaction Step). The card DB stores the
+# type as "DefenseReaction" (no space), which a space-sensitive check missed.
+# ---------------------------------------------------------------------------
+
+def test_defense_reaction_not_declarable_as_blocker():
+    import copy
+    from engine.state import CombatState
+    from engine.actions import get_defendable_cards
+    st = _make_state(); st.card_db = DB
+    opp = _card("mocking_blow_red", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            attack_card=opp, keywords=[])
+    st.active_player = 1
+    dr = copy.deepcopy(DB.get("sink_below_red")); dr.owner = 2
+    st.players[2].hand.add(dr)
+    normal = copy.deepcopy(DB.get("command_and_conquer_red")); normal.owner = 2
+    st.players[2].hand.add(normal)  # has defense, not a defense reaction
+    slugs = [c.slug for c in get_defendable_cards(st)]
+    assert "sink_below_red" not in slugs, "a defense reaction can't block in the Defend Step"
+    assert "command_and_conquer_red" in slugs
