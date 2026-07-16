@@ -656,19 +656,28 @@ class CardDB:
         card.arcane    = card.base_arcane
 
         # Parse activation cost from abilities (e.g., "Once per Turn Action - {r}{r}" -> cost=2)
-        functional_text = getattr(card, "raw_functional_text", "") or ""
-        abilities_list = functional_text.split(r"\n\n")
-        if abilities_list != '':
-            import re
-            for ability in abilities_list:
-                # Match patterns like "{r}", "{r}{r}", "{r}{r}{r}" for resource cost
-                match = re.search(r'\{([rR])\}', ability)
-                if match:
-                    # Count all {r} occurrences
-                    card.activation_cost = ability.count('{r}') + ability.count('{R}')
-                    break
-
         import re
+        functional_text = getattr(card, "raw_functional_text", "") or ""
+        # Activated abilities are "[LIMIT] TYPE - COST: EFFECTS". The resource
+        # cost is the {r} in the COST portion only — between the dash and the
+        # colon. Counting {r} across the whole ability wrongly charged for
+        # resource symbols in the EFFECT text (e.g. Fyendal's Spring Tunic
+        # "Remove 3 energy counters: Gain {r}" was read as costing 1).
+        for ability in functional_text.split("\n\n"):
+            if ':' not in ability:
+                continue  # no COST: structure — not an activated ability
+            cost_part = ability.split(':', 1)[0]
+            m = re.search(r'[-–—]\s*(.*)$', cost_part)
+            if not m:
+                continue  # no "TYPE - COST" dash — not an activated-ability cost
+            n = m.group(1).count('{r}') + m.group(1).count('{R}')
+            if n > 0:
+                card.activation_cost = n
+                break
+
+        # Downstream ability-flag parsing (unchanged): kept on the original
+        # split so its behavior is not altered by the cost-parsing fix above.
+        abilities_list = functional_text.split(r"\n\n")
         ability_flags = {
             'has_activated_ability': False,
             'has_per_turn_limit': False,

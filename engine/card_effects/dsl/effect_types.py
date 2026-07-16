@@ -751,10 +751,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                                            f"{_amt} base power")
                 target = next((c for c in candidates if c.slug == pick), candidates[0])
             target.base_power = _amt
-            # Refresh live combat power only when the target is the active attack.
+            # When the target is the active attack, recalculate rather than
+            # overwrite: setting BASE power (stage 7) must leave later "+{p}"
+            # modifiers (stage 8, e.g. Reckless Arithmetic's rolled +X on
+            # power_mods) applied on top. Base 6 + rolled 3 = 9, not 6.
             if target is state.combat.attack_card:
                 state.combat.base_attack_power = _amt
-                state.combat.attack_power = _amt
+                from engine import engine as _E
+                _E._recalculate_attack_power(state)
         return _fn
 
     if etype == "MODIFY_ATTACK":

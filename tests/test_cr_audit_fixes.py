@@ -326,3 +326,121 @@ def test_modify_attack_buff_persists_through_recalculation():
     assert st.combat.attack_power == after_attack
     E._recalculate_attack_power(st)   # damage step
     assert st.combat.attack_power == after_attack
+
+
+def test_set_base_power_stacks_with_roll_buff():
+    """Kayo sets BASE power to 6; Reckless Arithmetic's rolled +X{p} (a stage-8
+    modifier) must apply on top, not be overwritten. Base 6 + rolled X."""
+    import copy
+    from engine.state import CombatState
+    from engine.card_effects.dsl import dispatch
+    st = _make_state(); st.card_db = DB
+    kayo = copy.deepcopy(DB.get("kayo_underhanded_cheat")); kayo.owner = 1; kayo.controller = 1
+    st.players[1].hero = kayo
+    atk = _card("reckless_arithmetic_blue", 1)
+    base = atk.base_power or 0
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=base,
+                            base_attack_power=base, attack_card=atk, keywords=[])
+    st.active_player = 1
+    dispatch(st, "ON_PLAY", "reckless_arithmetic_blue", card=atk,
+             event=type("E", (), {"type": "on_play", "data": {}})())
+    roll = st.combat.power_mods[0][1]
+    dispatch(st, "ON_ACTIVATE", "kayo_underhanded_cheat", card=kayo)
+    assert atk.base_power == 6
+    assert st.combat.attack_power == 6 + roll, "base set to 6, roll buff on top"
+    E._recalculate_attack_power(st)  # defend step: still base 6 + roll
+    assert st.combat.attack_power == 6 + roll
+
+
+def test_activation_cost_ignores_resource_symbols_in_effect_text():
+    """The resource cost of an activated ability is the {r} in its COST portion
+    only (between the dash and the colon), not {r} in the EFFECT. Fyendal's
+    Spring Tunic ("Remove 3 energy counters: Gain {r}") costs 0 resources, not 1."""
+    assert DB.get("fyendals_spring_tunic").activation_cost in (None, 0)
+    assert DB.get("scabskin_leathers").activation_cost in (None, 0)  # cost is "0"
+    assert DB.get("kayo_underhanded_cheat").activation_cost == 4     # {r}{r}{r}{r}
+    assert DB.get("hunters_klaive").activation_cost == 2             # weapon attack {r}{r}
+
+
+def test_fyendals_spring_tunic_activates_for_zero_resources():
+    import copy
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    c = copy.deepcopy(DB.get("fyendals_spring_tunic")); c.owner = 1; c.controller = 1
+    st.players[1].chest.add(c)
+    st.players[1].counters[(c.slug, "chest", "energy")] = 3
+    st.players[1].resources = 0
+    acts = available_actions(st, 1)
+    tunic = [a for a in acts
+             if getattr(a.card, "slug", None) == "fyendals_spring_tunic"
+             and a.type == ActionType.ACTIVATE_CARD]
+    assert tunic, "Fyendal's Spring Tunic instant must be offered at 0 resources"
+    act = tunic[0]; act.player_id = 1
+    apply_action(st, act)
+    assert st.players[1].resources == 1                       # gained {r}
+    assert st.players[1].counters[(c.slug, "chest", "energy")] == 0  # paid 3 energy
+
+
+# ---------------------------------------------------------------------------
+# Apex Bonebreaker: "When this defends together with a card with 6+ {p}, create
+# a Might." Fires only with a 6+ power co-defender; exactly one Might.
+# ---------------------------------------------------------------------------
+
+def _n_might(p):
+    seen = set()
+    for z in (p.auras, p.items, p.permanents, p.tokens):
+        for c in z.cards:
+            if c.slug == "might":
+                seen.add(id(c))
+    return len(seen)
+
+
+def _apex_defense(codefender_slug):
+    import copy
+    from engine.state import CombatState
+    from engine.play import _apply_defend
+    st = _make_state(); st.card_db = DB
+    E._setup_dsl_listeners(st)
+    apex = copy.deepcopy(DB.get("apex_bonebreaker")); apex.owner = 2; apex.controller = 2
+    st.players[2].arms.add(apex)
+    cards = [apex]
+    if codefender_slug:
+        co = _card(codefender_slug, 2); co.zone = "hand"
+        st.players[2].hand.add(co); cards.append(co)
+    opp = _card("mocking_blow_red", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=8,
+                            attack_card=opp, keywords=[])
+    st.active_player = 1
+    _apply_defend(st, Action(type=ActionType.DEFEND_CARDS, card_list=cards))
+    return st
+
+
+def test_apex_bonebreaker_requires_6power_codefender():
+    assert _n_might(_apex_defense(None).players[2]) == 0            # alone
+    assert _n_might(_apex_defense("mocking_blow_red").players[2]) == 0  # 4-power co-defender
+    st = _apex_defense("command_and_conquer_red")                  # 6-power co-defender
+    assert _n_might(st.players[2]) == 1                            # exactly one Might
+
+
+def test_snapshot_does_not_double_list_typed_permanents():
+    from engine.recorder import snapshot_state
+    st = _apex_defense("command_and_conquer_red")
+    snap = snapshot_state(st)["players"][2]
+    assert "might" in snap["auras"]
+    assert "might" not in snap["permanents"], "aura token must not appear under permanents too"
+
+
+def test_instant_card_costs_zero_action_points():
+    import copy
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    sig = copy.deepcopy(DB.get("sigil_of_solace_red")); sig.owner = 1; sig.controller = 1; sig.zone = "hand"
+    st.players[1].hand.add(sig)
+    st.players[1].action_points = 1; st.players[1].resources = 5
+    plays = [a for a in available_actions(st, 1)
+             if getattr(a.card, "slug", None) == "sigil_of_solace_red"
+             and a.type == ActionType.PLAY_CARD]
+    assert plays, "instant must be playable"
+    act = plays[0]; act.player_id = 1
+    apply_action(st, act)
+    assert st.players[1].action_points == 1, "an Instant costs 0 AP (CR 5.1.6b)"

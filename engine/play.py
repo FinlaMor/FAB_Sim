@@ -708,6 +708,9 @@ def _apply_defend(state: GameState, action: Action) -> None:
     if action.type == ActionType.PASS:
         return
     defender = state.players[3 - combat.attacker_id]
+    # CR 7.3.2d: all declared cards become defending as a single compound event.
+    # Add them all first, then fire the 'defend' events — so "defends together
+    # with …" triggers (e.g. Apex Bonebreaker) can see every co-defender.
     for card in action.card_list:
         if card in defender.hand.cards:
             defender.hand.remove(card)
@@ -721,6 +724,7 @@ def _apply_defend(state: GameState, action: Action) -> None:
         combat.total_defense += defense_val
         if card.is_equipment:
             combat.defending_equipment_defense += defense_val
+    for card in action.card_list:
         # 7.0.5a: defend event (carry the defending card object for DSL ON_DEFEND)
         state.event_manager.emit(Event(type='defend', card=card.slug, data={'card': card}), state)
 
@@ -996,14 +1000,16 @@ def _pay_costs(state, player_id, action):
         life_cost = action.life_cost
         player.health -= life_cost
 
-    # CR 4.4.3: action-speed plays/activations consume 1 AP
+    # CR 5.1.6b: the action asset-cost is 1 only when the card has the type
+    # Action and is not played as an instant (0 otherwise). Instants, reactions,
+    # and action cards played as instants cost 0 AP.
     _meld_side = getattr(action, 'meld_side', None)
     if action.type == ActionType.PLAY_CARD:
+        _types = action.card.types or []
         if _meld_side in ('top', 'both'):
-            player.action_points -= 1
-        elif "Instant" not in (action.card.types or []):
-            player.action_points -= 1
-        elif not getattr(action, 'played_as_instant', False):
+            player.action_points -= 1  # melded / top side is action-speed
+        elif ("Action" in _types and "Instant" not in _types
+              and not getattr(action, 'played_as_instant', False)):
             player.action_points -= 1
     elif action.type == ActionType.ACTIVATE_CARD:
         if getattr(action, 'is_attack_proxy', False):

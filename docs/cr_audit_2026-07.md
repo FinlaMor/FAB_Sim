@@ -47,6 +47,36 @@ More bugs found reviewing recorded games, all fixed with coverage in
   that every recalculation re-applies (resets per attack, so no leak across
   chain links/turns); WHILE_STATIC abilities still apply transiently each
   recalc (they carry the `recalculate_attack_power` event).
+- **`SET_BASE_POWER` overwrote instead of restaging.** Kayo's "has 6 base {p}"
+  set `attack_power = 6` directly, wiping a stage-8 "+{p}" already applied
+  (Reckless Arithmetic rolled 3 → attacking for 4, then Kayo should make it
+  base 6 + 3 = 9, but it became 6). Fixed to set base power then recalculate,
+  so stage-8 modifiers (`power_mods`) reapply on top of the new base.
+- **Activation resource cost counted `{r}` in the effect text.** `card.py`
+  parsed the resource cost by counting every `{r}` in an ability, so Fyendal's
+  Spring Tunic ("Remove 3 energy counters: Gain {r}") was read as costing 1
+  resource instead of 0. Fixed to count `{r}` only in the cost portion
+  (between the type dash and the colon). (The old `split(r"\n\n")` never
+  actually split — the fix parses real ability blocks; the downstream
+  ability-flag parser is left on the original split to avoid behavior change.)
+- **Instants were charged 1 action point.** `_apply_play_card` deducted an AP
+  for any played card unless it was type Instant AND `played_as_instant` — so
+  Sigil of Solace (type Instant) cost 1 AP. Fixed to CR 5.1.6b: 1 AP only when
+  the card has type Action and is not played as an instant (instants and
+  reactions cost 0).
+- **Apex Bonebreaker triggered on every defend.** Its JSON was a bare
+  `ON_DEFEND` create-token with no condition, so it made a Might whenever it
+  defended (against any attack, alone, or with a weak co-defender). Added a
+  new `CODEFENDER_POWER_GTE` condition ("defends together with a card with
+  6+ {p}", CR 7.0.5e); also made `_apply_defend` add all blockers before
+  firing the `defend` events (CR 7.3.2d compound event) so "defends together"
+  triggers see every co-defender. (The "two Mights" the player saw was a
+  display artifact — see next.)
+- **Snapshot double-listed typed permanents.** `snapshot_state` listed
+  `items`/`auras`/`allies`/`tokens` and then `permanents` (the backing zone)
+  including those same cards — so an aura token (e.g. Might) showed up twice
+  in the replay. Fixed: `permanents` now excludes cards already in a typed
+  view.
 
 ## Fix status (updated 2026-07-14, same session)
 

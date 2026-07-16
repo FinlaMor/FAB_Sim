@@ -279,6 +279,22 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return (power or 0) >= _amt
         return _dcpg
 
+    if ctype == "CODEFENDER_POWER_GTE":
+        # True when the source defends together with ANOTHER card of >= N power
+        # (CR 7.0.5e). E.g. Apex Bonebreaker: "When this defends together with a
+        # card with 6 or more {p}, …".
+        min_power = params.get("min", params.get("power", params.get("amount", 6)))
+        def _cdp(c, e, s, _min=min_power):
+            if not s.combat:
+                return False
+            for d in (s.combat.defending_cards or []):
+                if d is c:
+                    continue
+                if (getattr(d, 'power', None) or 0) >= _min:
+                    return True
+            return False
+        return _cdp
+
     if ctype == "IS_BOOED":
         # True if the controller has been booed this turn.
         def _ib(c, e, s):

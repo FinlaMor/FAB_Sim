@@ -128,6 +128,11 @@ def snapshot_state(state: "GameState") -> dict:
 
     players = {}
     for pid, p in state.players.items():
+        # items / auras / allies / tokens are typed views over the permanent
+        # zone. List them separately, and give "permanents" only the cards NOT
+        # in a typed view so an aura/item token isn't shown twice.
+        typed_ids = {id(c) for view in (p.items, p.auras, p.allies, p.tokens)
+                     for c in view.cards}
         players[pid] = {
             "hero": getattr(p.hero, "slug", None),
             "life": getattr(p, "health", None),
@@ -141,7 +146,7 @@ def snapshot_state(state: "GameState") -> dict:
             "pitch": zone_slugs(p.pitch),
             "arsenal": zone_slugs(p.arsenal),
             "banished": zone_slugs(p.banished),
-            "permanents": zone_slugs(p.permanents),
+            "permanents": [c.slug for c in p.permanents.cards if id(c) not in typed_ids],
             "items": zone_slugs(p.items),
             "auras": zone_slugs(p.auras),
             "allies": zone_slugs(p.allies),

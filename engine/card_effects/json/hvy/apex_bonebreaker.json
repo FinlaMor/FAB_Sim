@@ -4,6 +4,7 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_DEFEND",
+      "conditions": [{"type": "CODEFENDER_POWER_GTE", "min": 6}],
       "effects": [{"type": "CREATE_TOKEN", "token": "might", "count": 1}]
     }
   ]
