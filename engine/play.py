@@ -184,13 +184,28 @@ def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
             if any(cond.fn is not None and not cond.fn(card, None, state)
                    for cond in getattr(ability, 'target_filter', [])):
                 continue
+            # Determine the ability's legal target(s). An ability that targets
+            # an "attack action card you control" (CONTROLS_ATTACK_ACTION)
+            # enumerates those specific cards (the active attack you control
+            # and/or attack action cards you're defending with) — one action
+            # per legal target. Other combat abilities default to the active
+            # attack; non-combat abilities have no target.
+            _uses_caa = any(getattr(c, 'condition_type', '') == 'CONTROLS_ATTACK_ACTION'
+                            for c in getattr(ability, 'target_filter', []))
+            if _uses_caa:
+                from engine.card_effects.ability_keywords import controlled_attack_action_cards
+                _targets = controlled_attack_action_cards(state, player_id)
+            elif state.combat is not None:
+                _targets = [state.combat.attack_card]
+            else:
+                _targets = [None]
             # Resource affordability (activation_cost) via the shared cost gate.
-            target = state.combat.attack_card if state.combat else None
-            action = Action(type=ActionType.ACTIVATE_CARD, player_id=player_id,
-                            card=card, target=target)
-            can_activate, action = _cost_check(state, card, player_id, action, playable=False)
-            if can_activate:
-                affordable_actions.append(action)
+            for _tgt in (_targets or [None]):
+                action = Action(type=ActionType.ACTIVATE_CARD, player_id=player_id,
+                                card=card, target=_tgt)
+                can_activate, action = _cost_check(state, card, player_id, action, playable=False)
+                if can_activate:
+                    affordable_actions.append(action)
 
 def _legality_check(state, card, player_id) -> bool:
     if card is None:
@@ -704,16 +719,21 @@ def _apply_activate(state: GameState, action: Action) -> None:
             if cost.pay_fn is not None:
                 cost.pay_fn(card, None, state)
     ability = activatable[0] if activatable else None
+    # Carry the target declared at activation (CR 5.1.4) so effects that act on
+    # a chosen target (e.g. Kayo's "target attack action card you control")
+    # apply to it rather than re-resolving.
+    _ev = Event(type='ON_ACTIVATE', card=card.slug, data={})
+    _ev.target = getattr(action, 'target', None)
     if ability is not None and ability.ability_type.upper() in (
             "ATTACK_REACTION", "DEFENSE_REACTION"):
         # Reaction abilities act on the current combat now — run the specific
         # ability (target filter + conditions + effects) directly rather than
         # broadcasting ON_ACTIVATE (which maps to ACTIVATE/INSTANT only).
         from engine.card_effects.dsl.interpreter import run_ability
-        run_ability(ability, card, None, state)
+        run_ability(ability, card, _ev, state)
     else:
         from engine.card_effects.dsl import dispatch as _dsl_dispatch
-        _dsl_dispatch(state, "ON_ACTIVATE", card.slug, card=card)
+        _dsl_dispatch(state, "ON_ACTIVATE", card.slug, card=card, event=_ev)
 
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""

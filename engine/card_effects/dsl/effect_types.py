@@ -759,13 +759,18 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             candidates = controlled_attack_action_cards(state, cid)
             if not candidates:
                 return
-            if len(candidates) == 1:
-                target = candidates[0]
-            else:
-                pick = _ask_player(state, cid, [c.slug for c in candidates],
-                                   context="Choose the attack action card to set to "
-                                           f"{_amt} base power")
-                target = next((c for c in candidates if c.slug == pick), candidates[0])
+            # Prefer the target declared at activation (CR 5.1.4) if it is a
+            # legal candidate; otherwise use the sole candidate or ask.
+            declared = getattr(event, 'target', None) if event is not None else None
+            target = next((c for c in candidates if c is declared), None)
+            if target is None:
+                if len(candidates) == 1:
+                    target = candidates[0]
+                else:
+                    pick = _ask_player(state, cid, [c.slug for c in candidates],
+                                       context="Choose the attack action card to set to "
+                                               f"{_amt} base power")
+                    target = next((c for c in candidates if c.slug == pick), candidates[0])
             target.base_power = _amt
             # When the target is the active attack, recalculate rather than
             # overwrite: setting BASE power (stage 7) must leave later "+{p}"

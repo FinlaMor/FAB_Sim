@@ -77,6 +77,17 @@ More bugs found reviewing recorded games, all fixed with coverage in
   including those same cards — so an aura token (e.g. Might) showed up twice
   in the replay. Fixed: `permanents` now excludes cards already in a typed
   view.
+- **Kayo's instant offered the wrong target.** The hero-activation offering set
+  the action's target to `combat.attack_card` (the active attack) for every
+  ability, so when Kayo defended with an attack action card, his "target attack
+  action card you control" was presented targeting the opponent's active
+  weapon (Miller's Grindstone — an illegal target), while the defending card he
+  could legally target wasn't listed. (The effect still resolved on the right
+  card via `controlled_attack_action_cards`, so it looked like "nothing
+  happened".) Fixed: the offering now enumerates the legal targets for a
+  CONTROLS_ATTACK_ACTION ability (one action per controlled attack action card),
+  and the declared target is threaded through to `SET_BASE_POWER` (CR 5.1.4)
+  instead of being re-resolved.
 - **Defense reactions were declarable as blockers in the Defend Step.**
   `get_defendable_cards` excluded cards whose type is `"Defense Reaction"`
   (with a space), but the card DB stores `"DefenseReaction"` — so Sink Below

@@ -553,3 +553,34 @@ def test_defense_reaction_not_declarable_as_blocker():
     slugs = [c.slug for c in get_defendable_cards(st)]
     assert "sink_below_red" not in slugs, "a defense reaction can't block in the Defend Step"
     assert "command_and_conquer_red" in slugs
+
+
+def test_kayo_instant_target_is_the_controlled_card_not_the_active_attack():
+    """When Kayo defends with an attack action card vs an opponent's weapon
+    attack, the instant must offer the DEFENDING card as the target — not the
+    opponent's active attack (a weapon, an illegal target)."""
+    import copy
+    from engine.state import CombatState
+    from engine.play import _apply_defend
+    st = _make_state(); st.card_db = DB
+    E._setup_dsl_listeners(st)
+    kayo = copy.deepcopy(DB.get("kayo_underhanded_cheat")); kayo.owner = 2; kayo.controller = 2
+    st.players[2].hero = kayo; st.players[2].resources = 4
+    miller = copy.deepcopy(DB.get("millers_grindstone")); miller.owner = 1; miller.controller = 1
+    st.players[1].weapon1.add(miller)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            attack_card=miller, keywords=[], from_weapon=True)
+    mb = copy.deepcopy(DB.get("mocking_blow_yellow")); mb.owner = 2; mb.zone = "hand"
+    st.players[2].hand.add(mb)
+    _apply_defend(st, Action(type=ActionType.DEFEND_CARDS, card_list=[mb]))
+    st.step = Step.COMBAT_REACTION; st.active_player = 1; st.priority_player = 2
+
+    kayo_acts = [a for a in available_actions(st, 2)
+                 if getattr(a.card, "slug", None) == "kayo_underhanded_cheat"]
+    targets = [getattr(a.target, "slug", None) for a in kayo_acts]
+    assert "mocking_blow_yellow" in targets, "defending attack action card must be a target"
+    assert "millers_grindstone" not in targets, "opponent's weapon must not be a target"
+
+    apply_action(st, kayo_acts[0])
+    assert mb.base_power == 6            # the declared target was set
+    assert miller.base_power != 6        # the opponent's weapon was untouched
