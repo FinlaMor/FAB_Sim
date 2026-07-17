@@ -430,6 +430,64 @@ def test_snarky_prick_reveals_red_top_destroys_and_pumps():
     assert red_top in st.players[2].deck.cards
 
 
+def test_ironfist_revelation_reveals_crush_card_and_powers_it():
+    # "When this defends, you may turn a face-down card with crush in your arsenal
+    # face-up. If you do, put a +1{p} counter on it." (Was unimplemented.)
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    iron = _card("ironfist_revelation", 1)
+    st.players[1].arms.add(iron)
+    crush = _card("batter_to_a_pulp_red", 1)   # has the Crush keyword
+    st.players[1].arsenal.add(crush)           # arsenal cards are hidden (face-down)
+    assert not crush.is_public
+
+    dispatch(st, "ON_DEFEND", "ironfist_revelation", card=iron, event=None)
+    assert crush.is_public, "crush card turned face-up"
+    assert crush.counters.get("power", 0) == 1, "+1{p} counter placed on it"
+
+    # The +1{p} counter adds to power when that card later attacks.
+    base = crush.base_power or 0
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=0,
+                            attack_card=crush, keywords=[])
+    E._recalculate_attack_power(st)
+    assert st.combat.attack_power == base + 1
+
+    # No eligible crush card in arsenal → nothing happens.
+    st2 = _make_state(); st2.card_db = DB
+    iron2 = _card("ironfist_revelation", 1); st2.players[1].arms.add(iron2)
+    plain = _card("sink_below_yellow", 1)      # no Crush
+    st2.players[1].arsenal.add(plain)
+    dispatch(st2, "ON_DEFEND", "ironfist_revelation", card=iron2, event=None)
+    assert plain.counters.get("power", 0) == 0
+
+
+def test_big_bully_doubles_base_when_booed():
+    # "If you've been booed this turn, this card's base {p} is doubled." Must
+    # double the CURRENT base (so Kayo setting base 6 → 12), not add a flat 4.
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def attack_power(base_power, booed):
+        st = _make_state(); st.card_db = DB
+        E._setup_dsl_listeners(st)
+        bully = _card("big_bully_red", 1)
+        bully.base_power = base_power           # e.g. 6 after Kayo's SET_BASE_POWER
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=base_power,
+                                attack_card=bully, keywords=[])
+        st.combat.base_attack_power = base_power
+        if booed:
+            st.players[1].current_turn_effects.append("crowd_booed")
+        E._recalculate_attack_power(st)
+        return st.combat.attack_power
+
+    assert attack_power(4, booed=True) == 8, "printed base 4, booed → doubled to 8"
+    assert attack_power(6, booed=True) == 12, "Kayo-set base 6, booed → doubled to 12"
+    assert attack_power(4, booed=False) == 4, "not booed → no doubling"
+
+
 def test_kayo_instant_offered_when_attacking_own_action_attack():
     import copy
     st = _make_state(); st.card_db = DB

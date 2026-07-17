@@ -3,26 +3,20 @@
   "abilities": [
     {
       "ability_type": "PLAY",
+      "_comment": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
       "effects": [
-        {
-          "type": "CROWD_BOO",
-          "player": "SELF",
-          "conditions": [
-            {
-              "type": "HEALTH_GT_OPP"
-            }
-          ]
-        },
-        {
-          "type": "MODIFY_ATTACK",
-          "amount": 4,
-          "conditions": [
-            {
-              "type": "IS_BOOED"
-            }
-          ],
-          "mod": "add"
-        }
+        {"type": "CROWD_BOO", "player": "SELF", "conditions": [{"type": "HEALTH_GT_OPP"}]}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "_comment": "If you've been booed this turn, this card's base {p} is doubled. Modeled as +base during recalc so it stacks on a SET-base effect (Kayo 6 -> 12). SOURCE_IS_ATTACK limits it to this card's own attack.",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "IS_BOOED"}
+      ],
+      "effects": [
+        {"type": "DOUBLE_BASE_POWER"}
       ]
     }
   ]

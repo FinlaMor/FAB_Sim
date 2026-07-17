@@ -1341,6 +1341,11 @@ def _recalculate_attack_power(state: GameState) -> None:
     base_power = card.base_power or 0
     power = mgr.recalculate(state, card, 'power', base_power)
 
+    # Permanent +1{p} power counters on the attacking card (e.g. a card given a
+    # power counter by Ironfist Revelation) add to its power whenever it attacks.
+    if getattr(card, 'counters', None):
+        power = (power or 0) + (card.counters.get('power', 0) or 0)
+
     # Stage-8 per-attack power modifiers from triggered/played effects this
     # chain link (e.g. Reckless Arithmetic "+X{p}"). Re-applied on every
     # recalculation so the buff persists through later combat steps.

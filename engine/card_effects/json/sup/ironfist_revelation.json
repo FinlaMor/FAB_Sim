@@ -1,4 +1,13 @@
 {
   "slug": "ironfist_revelation",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "_comment": "When this defends, you may turn a face-down card with crush in your arsenal face-up; if you do, put a +1{p} counter on it. Temper is an engine keyword (card DB).",
+      "effects": [
+        {"type": "REVEAL_CRUSH_ARSENAL_CARD", "counter_type": "power", "amount": 1}
+      ]
+    }
+  ]
 }

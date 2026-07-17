@@ -451,6 +451,34 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 combat.attack_power = (combat.attack_power or 0) + val
         return _fn
 
+    if etype == "REVEAL_CRUSH_ARSENAL_CARD":
+        # Ironfist Revelation: "you may turn a face-down card with crush in your
+        # arsenal face-up. If you do, put a +1{p} counter on it." Arsenal cards are
+        # hidden (is_public False); revealing one sets is_public True so it is not
+        # offered again, and the +1{p} counter goes on that revealed card.
+        counter_type = params.get("counter_type", "power")
+        amount = params.get("amount", 1)
+        def _fn(card, event, state, _ct=counter_type, _amt=amount):
+            from engine.card_effects.ability_keywords import (
+                _ask_player, _controller_id, effect_put_counter)
+            pid = _controller_id(card)
+            arsenal = state.players[pid].arsenal
+            eligible = [c for c in arsenal.cards
+                        if not getattr(c, 'is_public', False)
+                        and any(k.lower() == 'crush' for k in (c.keywords or []))]
+            if not eligible:
+                return
+            pick = _ask_player(state, pid, [c.slug for c in eligible] + ["decline"],
+                               context="Turn a face-down crush card in your arsenal face-up?")
+            if pick == "decline":
+                return
+            target = next((c for c in eligible if c.slug == pick), eligible[0])
+            target.face_down = False
+            target.is_public = True
+            for _ in range(_amt):
+                effect_put_counter(state, target, _ct)
+        return _fn
+
     if etype == "PUT_ARSENAL_BOTTOM":
         # Put the target player's arsenal card on the bottom of their deck.
         player_target = params.get("player", "OPPONENT")
@@ -863,6 +891,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 state.combat.attack_power = (state.combat.attack_power or 0) * val
             else:
                 state.combat.attack_power = (state.combat.attack_power or 0) + val
+        return _fn
+
+    if etype == "DOUBLE_BASE_POWER":
+        # "This card's base {p} is doubled." Modeled as adding the current base
+        # power to the attack (doubling base = +base to the total). Authored as a
+        # WHILE_STATIC so it re-applies on every recalculation and stacks on top of
+        # a SET-base effect in timestamp order — e.g. Kayo sets base 6, then this
+        # adds 6 → 12. Gate with SOURCE_IS_ATTACK so it only affects this card's
+        # own attack.
+        def _fn(card, event, state):
+            combat = state.combat
+            if not combat or not combat.attack_card:
+                return
+            base = combat.attack_card.base_power or 0
+            combat.attack_power = (combat.attack_power or 0) + base
         return _fn
 
     if etype == "MODIFY_NEXT_ATTACK":
