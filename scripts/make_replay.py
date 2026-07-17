@@ -227,6 +227,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
               overflow:hidden; display:none; }
   .card.noimg .nm { display:block; } .card.noimg img { display:none; }
   .card:hover { transform:scale(2.6); z-index:50; box-shadow:0 4px 18px #000c; }
+  .card .counters { position:absolute; left:1px; right:1px; bottom:1px; display:flex;
+                    flex-wrap:wrap; gap:1px; justify-content:center; pointer-events:none; }
+  .counter { background:#0b1220e6; color:#ffd27a; border:1px solid #e0a54c; border-radius:3px;
+             font-size:7px; line-height:1.2; padding:0 2px; font-weight:600; white-space:nowrap; }
   .pile { width:52px; height:72px; border-radius:4px; border:1px dashed var(--line); color:var(--dim);
           display:flex; align-items:center; justify-content:center; font-size:15px; flex:none; }
   .combat { border:1px solid #5c3a2c; border-radius:10px; background:#221a16; padding:8px 10px; }
@@ -277,6 +281,8 @@ const IMG_HOSTS = [
   "https://d2wlb52bya4y8z.cloudfront.net/media/cards/large/",
 ];
 
+// Counters for the side currently being rendered ({slug: {type: count}}).
+let SIDE_COUNTERS = {};
 function cardEl(slug){
   const d = document.createElement('div');
   d.className = 'card'; d.title = slug;
@@ -297,6 +303,18 @@ function cardEl(slug){
   }
   else d.classList.add('noimg');
   d.append(img, nm);
+  // Counter badges (e.g. energy counters on Fyendal's Spring Tunic).
+  const ctr = SIDE_COUNTERS[slug];
+  if (ctr){
+    const wrap = document.createElement('div'); wrap.className='counters';
+    for (const [type, n] of Object.entries(ctr)){
+      const b = document.createElement('span'); b.className='counter';
+      b.title = type + ' counter';
+      b.textContent = n + '× ' + type.replaceAll('_',' ');
+      wrap.append(b);
+    }
+    d.append(wrap);
+  }
   return d;
 }
 function zone(label, slugs, opts={}){
@@ -312,6 +330,7 @@ function zone(label, slugs, opts={}){
 }
 function renderSide(el, pid, p){
   el.innerHTML = '';
+  SIDE_COUNTERS = p.counters || {};   // used by cardEl for this side
   const h = document.createElement('h2');
   h.innerHTML = `P${pid} &mdash; ${(p.hero||'').replaceAll('_',' ')}
     <span class="stat">life <b>${p.life}</b></span>
