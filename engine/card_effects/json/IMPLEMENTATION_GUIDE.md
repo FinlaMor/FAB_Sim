@@ -58,6 +58,16 @@ JSON definition.
    as unimplemented. Grep an existing card for a similar wording first;
    consistency beats novelty.
 
+   **Pick `<set>` from the card's own data, never from its class.** Derive the
+   folder from the card's `sets` / `setIdentifiers` in `card_data/slug_index.json`
+   (e.g. `SUP092` → `sup`, `PEN297` → `pen` (Compendium of Rathe), `EVR002` →
+   `evr`, `SEA222` → `sea`). Do NOT infer the set from the card's class — a Brute
+   card is *not* automatically an Outsiders (`out`) card; most Brute staples are
+   actually SuperSlam (`sup`) or Compendium of Rathe (`pen`). Only file a card in
+   `out/` if `Outsiders`/an `OUT###` identifier is actually in its data. Foldering
+   is organizational only (the loader walks the tree and keys by slug), but a
+   wrong folder is misleading and gets audited later.
+
 5. **Validate it loads:**
    ```
    python -c "from engine.card_effects.dsl.loader import load_all_cards, LOAD_ERRORS; load_all_cards(); print(LOAD_ERRORS or 'OK')"
