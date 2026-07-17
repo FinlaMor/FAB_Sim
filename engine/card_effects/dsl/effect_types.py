@@ -196,6 +196,29 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                            position=None)
         return _fn
 
+    if etype == "LOOK_AT_TOP_MAY_BOTTOM":
+        # "Look at the top card of your deck. You may put it on the bottom."
+        # The longhand form of Opt 1 (CR 8.5.22), modeled literally rather than
+        # via the Opt keyword — e.g. Right Behind You, which predates the keyword.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import put_object
+            pid = _controller_id(card)
+            if pid is None:
+                return
+            deck = state.players[pid].deck
+            if not deck.cards:
+                return
+            top = deck.cards[0]
+            choice = _ask_player(state, pid, ["bottom", "keep"],
+                                 context=f"Look at the top card of your deck "
+                                         f"({top.slug}); put it on the bottom?")
+            if choice == "bottom":
+                # position=None → zone default (append = bottom, cards[-1])
+                put_object(state, top, "deck", destination_player_id=pid,
+                           source_player_id=pid, position=None)
+        return _fn
+
     if etype == "PUT_SELF_BOTTOM_DECK":
         # Remove this card from its current zone and put it on the bottom of its owner's deck.
         # Used for replacement effects like Drone of Brutality.

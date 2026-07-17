@@ -336,6 +336,63 @@ def test_gold_activation_does_not_double_charge_resources():
         "gold costs exactly {r}{r} = 2 (regression: was double-charged to 4)"
 
 
+def _rby_defend_state():
+    """Combat in the defend step: player 1 attacking player 2."""
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    E._setup_dsl_listeners(st)
+    atk = _attack_stub(1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            attack_card=atk, keywords=[], from_weapon=False)
+    st.step = Step.COMBAT_DEFEND; st.active_player = 1
+    return st
+
+
+def _defense_filler(slug, oid, owner=2):
+    c = Card(slug=slug, raw_name=slug, raw_types=["Action"])
+    c.subtypes = ["Attack"]; c.defense = 2; c.base_defense = 2
+    c.owner = owner; c.controller = owner; c.object_id = oid
+    return c
+
+
+def test_right_behind_you_triggers_only_with_another_hand_card():
+    # "When this defends together with ANOTHER card from hand, this gets +1{d}
+    # ..." — must NOT trigger on a lone block, nor when the co-defender is not
+    # from hand. (Regression: used to trigger on every defend, and used OPT.)
+    from engine.play import _apply_defend
+
+    def defend(card_list, setup):
+        st = _rby_defend_state()
+        for i in range(3):
+            st.players[2].deck.add(_defense_filler(f"deckcard{i}", 900 + i))
+        setup(st)
+        act = Action(type=ActionType.DEFEND_CARDS, card_list=card_list)
+        act.player_id = 2
+        _apply_defend(st, act)
+        return st
+
+    # Positive: RBY + another hand card → RBY(2) + other(2) + trigger(+1) = 5.
+    rby = _card("right_behind_you_blue", 2); rby.object_id = 10
+    other = _defense_filler("filler_hand", 11)
+    st = defend([rby, other], lambda s: (s.players[2].hand.add(rby),
+                                         s.players[2].hand.add(other)))
+    assert st.combat.total_defense == 5, "should get +1{d} with another hand co-defender"
+    assert len(st.players[2].deck.cards) == 3, "look/bottom keeps deck size"
+
+    # Negative: RBY alone (from hand) → no trigger, total = 2.
+    rby2 = _card("right_behind_you_blue", 2); rby2.object_id = 20
+    st = defend([rby2], lambda s: s.players[2].hand.add(rby2))
+    assert st.combat.total_defense == 2, "lone block must not trigger"
+
+    # Negative: RBY (hand) + a co-defender NOT from hand (arsenal) → no trigger.
+    rby3 = _card("right_behind_you_blue", 2); rby3.object_id = 30
+    ars = _defense_filler("arsenal_card", 31)
+    st = defend([rby3, ars], lambda s: (s.players[2].hand.add(rby3),
+                                        s.players[2].arsenal.add(ars)))
+    assert st.combat.total_defense == 4, "arsenal co-defender is not 'from hand'"
+
+
 def test_kayo_instant_offered_when_attacking_own_action_attack():
     import copy
     st = _make_state(); st.card_db = DB

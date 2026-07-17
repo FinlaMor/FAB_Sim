@@ -1,0 +1,17 @@
+{
+  "slug": "right_behind_you_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "_comment": "When this defends together with another card from hand, this gets +1{d} and you may look at the top card of your deck; you may put it on the bottom. No Opt keyword (card predates it); gated on a second hand-origin co-defender.",
+      "conditions": [
+        {"type": "DEFENDS_WITH_OTHER_HAND_CARD"}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE_VALUE", "amount": 1},
+        {"type": "LOOK_AT_TOP_MAY_BOTTOM"}
+      ]
+    }
+  ]
+}

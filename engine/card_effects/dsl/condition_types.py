@@ -129,6 +129,19 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return lambda c, e, s: (s.combat is not None
                                  and getattr(s.combat, 'defender_used_hand_card', False))
 
+    if ctype == "DEFENDS_WITH_OTHER_HAND_CARD":
+        # True if this card is defending together with ANOTHER card that came
+        # from the defender's hand (Right Behind You). The source card itself is
+        # excluded, so blocking with this card alone — even from hand — is not
+        # enough; a second hand card must also be defending.
+        def _dwohc(c, e, s):
+            if s.combat is None:
+                return False
+            hand_ids = getattr(s.combat, 'hand_defender_ids', None) or set()
+            return any(d is not c and getattr(d, 'object_id', None) in hand_ids
+                       for d in s.combat.defending_cards)
+        return _dwohc
+
     # ── keyword checks ─────────────────────────────────────────────────────
     if ctype == "REPRISE":
         def _reprise(c, e, s):

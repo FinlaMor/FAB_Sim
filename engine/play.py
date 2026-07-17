@@ -643,6 +643,7 @@ def _apply_play_card(state: GameState, action: Action) -> None:
                     # CR 8.3.4b: track hand-card defense for Dominate/Reprise
                     # (the card left the hand at announce, so add_defend can't see it).
                     gs.combat.defender_used_hand_card = True
+                    gs.combat.hand_defender_ids.add(c.object_id)
                 # Leave the stack zone (add_defend can't resolve the shared
                 # 'stack' zone); resolve_stack then sees it moved and does not
                 # clear it to the graveyard.
@@ -751,6 +752,9 @@ def _apply_defend(state: GameState, action: Action) -> None:
             defender.hand.remove(card)
             # CR 8.3.4b: track that a hand card has been used to defend (Dominate/Reprise)
             combat.defender_used_hand_card = True
+            # Per-card hand origin for "defends together with another card from
+            # hand" triggers (Right Behind You).
+            combat.hand_defender_ids.add(card.object_id)
         # CR 1.3.1b / 7.0.5a: a defending card enters the combat chain (arena)
         # under its controller — the defender who declared it.
         card.controller = defender.player_id

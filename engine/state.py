@@ -1090,6 +1090,9 @@ class CombatState:
     total_defense: int = 0
     defending_equipment_defense: int = 0
     defender_used_hand_card: bool = False
+    # object_ids of defending cards that came from the defender's hand (for
+    # "defends together with another card from hand" triggers, e.g. Right Behind You).
+    hand_defender_ids: set = field(default_factory=set)
     no_defense_reactions: bool = False
     defending_declared: bool = False
     defending_equipment_zones: list[str] = field(default_factory=list)
