@@ -393,6 +393,43 @@ def test_right_behind_you_triggers_only_with_another_hand_card():
     assert st.combat.total_defense == 4, "arsenal co-defender is not 'from hand'"
 
 
+def test_snarky_prick_reveals_red_top_destroys_and_pumps():
+    # "When this attacks a hero, look at the top card of their deck. If it's red,
+    # destroy it and this gets +4{p}." (Regression: was a PLAY-time banish.)
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def attack(top_slug, attack_target=None):
+        st = _make_state(); st.card_db = DB
+        snarky = _card("snarky_prick_red", 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                                attack_card=snarky, keywords=[])
+        st.combat.attack_target = attack_target
+        top = _card(top_slug, 2)
+        st.players[2].deck.add(top)
+        st.players[2].deck.add(_card("sink_below_yellow", 2))  # non-red beneath
+        dispatch(st, "ON_ATTACK", "snarky_prick_red", card=snarky, event=None)
+        return st, top
+
+    # Red top (pitch 1) → destroyed and attack pumped +4.
+    st, red_top = attack("command_and_conquer_red")
+    assert st.combat.attack_power == 7, "red top gives +4{p}"
+    assert red_top not in st.players[2].deck.cards, "red top destroyed"
+    assert red_top in st.players[2].graveyard.cards
+
+    # Non-red top (pitch 3) → nothing happens.
+    st, blue_top = attack("mocking_blow_blue")
+    assert st.combat.attack_power == 3, "non-red top: no pump"
+    assert blue_top in st.players[2].deck.cards, "non-red top not destroyed"
+
+    # Attacking a non-hero target (e.g. an ally/aura) → does not trigger.
+    dummy = _card("command_and_conquer_red", 2)
+    st, red_top = attack("command_and_conquer_red", attack_target=dummy)
+    assert st.combat.attack_power == 3, "only triggers when attacking a hero"
+    assert red_top in st.players[2].deck.cards
+
+
 def test_kayo_instant_offered_when_attacking_own_action_attack():
     import copy
     st = _make_state(); st.card_db = DB

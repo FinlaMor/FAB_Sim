@@ -424,6 +424,33 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     effect_gain_life(state, pid, _gl * matching)
         return _fn
 
+    if etype == "REVEAL_OPP_TOP_DESTROY_IF_RED":
+        # Snarky Prick: "When this attacks a hero, look at the top card of their
+        # deck. If it's red, destroy it and this gets +N{p}." Red = pitch 1.
+        power = params.get("power", 0)
+        def _fn(card, event, state, _p=power):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import destroy as _ek_destroy
+            combat = state.combat
+            if combat is None:
+                return
+            # "attacks a hero": attack must be resolving against a hero, not a
+            # permanent/ally target (attack_target is set only for those).
+            if getattr(combat, 'attack_target', None) is not None:
+                return
+            opp = state.players[3 - _controller_id(card)]
+            if not opp.deck.cards:
+                return
+            top = opp.deck.cards[0]
+            if (getattr(top, 'pitch', None) or 0) != 1:  # not red
+                return
+            _ek_destroy(state, top, card)
+            if _p:
+                val = _resolve_amount(_p, state)
+                combat.power_mods.append(("add", val))
+                combat.attack_power = (combat.attack_power or 0) + val
+        return _fn
+
     if etype == "PUT_ARSENAL_BOTTOM":
         # Put the target player's arsenal card on the bottom of their deck.
         player_target = params.get("player", "OPPONENT")
