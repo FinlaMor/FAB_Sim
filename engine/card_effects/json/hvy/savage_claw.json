@@ -1,5 +1,6 @@
 {
   "slug": "savage_claw",
+  "activation_cost": 2,
   "abilities": [
     {
       "ability_type": "WHILE_STATIC",

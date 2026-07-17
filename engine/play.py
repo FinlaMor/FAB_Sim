@@ -828,6 +828,33 @@ def _calculate_resource_cost(state: GameState, action: Action) -> int:
 
     return max(0, cost)  # CR 5.1.6a: floor at 0
 
+def _activation_is_action_speed(card) -> bool:
+    """True if *card*'s activated ability is action-speed and therefore costs an
+    action point (CR 5.1.6b). Per the DSL contract (DSL_REFERENCE §ability_type),
+    `ACTIVATE` is action-speed ("action phase, action point") while `INSTANT` and
+    the reaction types are instant-speed (0 AP). The DSL type is authoritative;
+    fall back to the printed-text "**… Action**" marker only when no DSL def
+    exists (activatable cards always have one under the DSL-only engine).
+
+    Note: cards with multiple distinct activated abilities of differing speed
+    are not yet supported (_apply_activate raises for them), so inspecting the
+    single activatable ability is sufficient today.
+    """
+    if card is None:
+        return False
+    from engine.card_effects.dsl.loader import get_card
+    cd = get_card(card.slug)
+    if cd is not None:
+        return any(
+            a.ability_type.upper() == "ACTIVATE"
+            for a in cd.abilities
+            if a.ability_type.upper() in
+            ("ACTIVATE", "INSTANT", "ATTACK_REACTION", "DEFENSE_REACTION")
+        )
+    text = getattr(card, 'functional_text', None) or ''
+    return bool(re.search(r'\*\*(?:[\w ]+ per \w+ )?[Aa]ction\*\*', text))
+
+
 def _get_base_resource_cost(state: GameState, action: Action) -> int:
     """Compute the base resource cost for an action before any modifiers.
 
@@ -1050,10 +1077,13 @@ def _pay_costs(state, player_id, action):
         if getattr(action, 'is_attack_proxy', False):
             # Weapon and ally attacks always cost 1 AP (CR 1.6.2b, CR 11.0)
             player.action_points -= 1
-        else:
-            _text = (action.card.functional_text or '') if action.card else ''
-            if re.search(r'\*\*(?:[\w ]+ per \w+ )?[Aa]ction\*\*', _text) and not getattr(action, 'played_as_instant', False):
-                player.action_points -= 1
+        elif (not getattr(action, 'played_as_instant', False)
+              and _activation_is_action_speed(action.card)):
+            # CR 5.1.6b: an *action*-speed activated ability (DSL ACTIVATE) costs
+            # 1 AP; instant-speed activated abilities (DSL INSTANT) and reactions
+            # cost 0. The DSL ability_type is authoritative — the printed
+            # functional_text is absent for many cards (e.g. Scabskin Leathers).
+            player.action_points -= 1
 
     # CR 1.6.2b / CR 11.0: exhaust weapon or ally as part of the attack activation cost
     if action.type == ActionType.ACTIVATE_CARD and getattr(action, 'is_attack_proxy', False):

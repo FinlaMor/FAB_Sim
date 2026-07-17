@@ -1,5 +1,6 @@
 {
   "slug": "kayo_underhanded_cheat",
+  "activation_cost": 4,
   "setup": {"weapon_zones": 1},
   "abilities": [
     {

@@ -1,5 +1,6 @@
 {
   "slug": "arakni_redback",
+  "per_turn": 1,
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",

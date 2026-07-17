@@ -258,6 +258,84 @@ def test_equipment_activated_ability_offered():
         "equipment activated ability (Scabskin Leathers) must be offered"
 
 
+def test_action_speed_activated_ability_costs_one_ap():
+    # CR 5.1.6b: Scabskin Leathers' "Once per turn Action" activated ability is
+    # action-speed, so activating it costs 1 action point — even though its
+    # printed functional_text is absent from the card DB (the DSL ability_type
+    # ACTIVATE is authoritative). Regression: previously charged 0 AP.
+    from engine.play import _pay_costs
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    scab = _card("scabskin_leathers", 1)
+    st.players[1].legs.add(scab)
+    st.players[1].action_points = 1
+    acts = [a for a in available_actions(st, 1)
+            if a.type == ActionType.ACTIVATE_CARD and a.card is scab]
+    assert acts, "Scabskin's activated ability must be offered"
+    act = acts[0]; act.player_id = 1
+    # Isolate the action-point *cost* from the ability's AP *gain*.
+    _pay_costs(st, 1, act)
+    assert st.players[1].action_points == 0, \
+        "an action-speed activated ability costs 1 AP (CR 5.1.6b)"
+
+
+def test_instant_speed_activated_ability_costs_zero_ap():
+    # Fyendal's Spring Tunic is an INSTANT-speed activated ability: 0 AP.
+    import copy
+    from engine.play import _pay_costs
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    tunic = copy.deepcopy(DB.get("fyendals_spring_tunic"))
+    tunic.owner = 1; tunic.controller = 1
+    st.players[1].items.add(tunic)
+    st.players[1].counters[(tunic.slug, tunic.zone, "energy")] = 3
+    st.players[1].action_points = 1
+    acts = [a for a in available_actions(st, 1)
+            if a.type == ActionType.ACTIVATE_CARD
+            and getattr(a.card, "slug", None) == "fyendals_spring_tunic"]
+    assert acts, "Fyendal's Spring Tunic instant must be offered"
+    act = acts[0]; act.player_id = 1
+    _pay_costs(st, 1, act)
+    assert st.players[1].action_points == 1, \
+        "an instant-speed activated ability costs 0 AP (CR 5.1.6b)"
+
+
+def test_activation_cost_and_per_turn_are_dsl_authoritative():
+    # CR 1.7.3a / 4.4.3d: for implemented cards, the resource cost to activate
+    # and the per-turn activation limit come from the DSL ('activation_cost' /
+    # 'per_turn'), not from parsing printed text.
+    cases = {
+        "hunters_klaive": (2, True, 1),
+        "millers_grindstone": (3, True, 1),
+        "kayo_underhanded_cheat": (4, False, None),
+        "scabskin_leathers": (0, True, 1),
+        "savage_claw": (2, False, None),
+    }
+    for slug, (ac, pt, acts) in cases.items():
+        c = _card(slug, 1)
+        assert c.activation_cost == ac, f"{slug} activation_cost"
+        assert c.has_per_turn_limit == pt, f"{slug} has_per_turn_limit"
+        assert c.activations == acts, f"{slug} activations"
+
+
+def test_gold_activation_does_not_double_charge_resources():
+    # gold: "Action - {r}{r}, destroy this: Draw a card." The {r}{r} is the
+    # DSL activation_cost; it must NOT also appear as a PAY_RESOURCES cost, or
+    # the ability charges 4 (paid once by _pay_costs, once by _apply_activate).
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    g = _card("gold", 1); st.players[1].permanents.add(g)
+    st.players[1].resources = 5; st.players[1].action_points = 1
+    acts = [a for a in available_actions(st, 1)
+            if a.type == ActionType.ACTIVATE_CARD
+            and getattr(a.card, "slug", None) == "gold"]
+    assert acts, "gold activation must be offered"
+    act = acts[0]; act.player_id = 1
+    apply_action(st, act)
+    assert st.players[1].resources == 3, \
+        "gold costs exactly {r}{r} = 2 (regression: was double-charged to 4)"
+
+
 def test_kayo_instant_offered_when_attacking_own_action_attack():
     import copy
     st = _make_state(); st.card_db = DB

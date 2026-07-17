@@ -1,5 +1,7 @@
 {
   "slug": "anothos",
+  "activation_cost": 3,
+  "per_turn": 1,
   "abilities": [
     {
       "ability_type": "WHILE_STATIC",

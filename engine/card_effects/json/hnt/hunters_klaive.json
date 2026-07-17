@@ -1,5 +1,7 @@
 {
   "slug": "hunters_klaive",
+  "activation_cost": 2,
+  "per_turn": 1,
   "abilities": [
     {
       "ability_type": "TRIGGERED",

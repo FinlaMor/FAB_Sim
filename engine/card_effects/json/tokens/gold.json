@@ -1,13 +1,11 @@
 {
   "slug": "gold",
+  "activation_cost": 2,
+  "_comment": "Action - {r}{r}, destroy this: Draw a card. Go again. The {r}{r} is the activation_cost (charged by the engine); do not also list PAY_RESOURCES here or it double-charges.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
       "cost": [
-        {
-          "type": "PAY_RESOURCES",
-          "amount": 2
-        },
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"

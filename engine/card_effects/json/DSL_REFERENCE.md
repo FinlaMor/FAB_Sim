@@ -19,6 +19,8 @@ costs must be spelled exactly as implemented in `dsl/effect_types.py`,
 ```json
 {
   "slug": "card_slug",
+  "activation_cost": 2,
+  "per_turn": 1,
   "cost": { ... },
   "conditions": { ... },
   "abilities": [ ... ]
@@ -28,9 +30,13 @@ costs must be spelled exactly as implemented in `dsl/effect_types.py`,
 | Field | Required | Description |
 |---|---|---|
 | `slug` | Yes | Unique card identifier |
+| `activation_cost` | No | Resource ({r}) cost to **activate** the ability or make the weapon/ally **attack**. DSL-authoritative: overrides the loader's printed-text heuristic. Set it whenever the card has an activated ability or attacks for a resource cost (use `0` for free abilities). Do **not** also model this {r} as a `PAY_RESOURCES` cost — that double-charges. |
+| `per_turn` | No | Activations allowed per turn (e.g. `1` for "Once per Turn"). DSL-authoritative; omit for no limit. |
 | `cost` | No | Additional cost to **play** the card (play-time only) |
 | `conditions` | No | Targeting or play restrictions (e.g. AR target must be Ninja) |
 | `abilities` | Yes | Array of ability objects |
+
+> `activation_cost` / `per_turn` are card-level because a weapon's attack cost isn't tied to a DSL ability (attacks are engine-offered). When omitted, the loader falls back to parsing the printed text — reliable, but prefer the explicit field for implemented cards. Non-resource activation costs (tap, destroy, discard, remove counters) still go in the ability-level `cost` array.
 
 ---
 

@@ -141,7 +141,10 @@ def compile_card(raw: dict[str, Any]) -> CardDef:
     if isinstance(raw_cost, dict):
         play_cost = _compile_cost(raw_cost)
     setup = raw.get("setup", {}) or {}
-    return CardDef(slug=slug, abilities=abilities, play_cost=play_cost, setup=setup)
+    activation_cost = raw.get("activation_cost")
+    per_turn = raw.get("per_turn")
+    return CardDef(slug=slug, abilities=abilities, play_cost=play_cost, setup=setup,
+                   activation_cost=activation_cost, per_turn=per_turn)
 
 
 def load_all_cards(json_dir: Path | None = None) -> int:

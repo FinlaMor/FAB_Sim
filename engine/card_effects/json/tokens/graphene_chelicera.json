@@ -1,5 +1,7 @@
 {
   "slug": "graphene_chelicera",
+  "activation_cost": 1,
+  "per_turn": 1,
   "_comment": "Weapon token: power 1, 'Once per Turn Action - {r}: Attack', Stealth — all inherited from the card DB template; attacks are offered by the engine weapon-attack path.",
   "abilities": [
     {

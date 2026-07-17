@@ -1,5 +1,6 @@
 {
   "slug": "quickdodge_flexors",
+  "activation_cost": 1,
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",

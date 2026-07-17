@@ -1,5 +1,7 @@
 {
   "slug": "flick_knives",
+  "activation_cost": 0,
+  "per_turn": 1,
   "abilities": [
     {
       "ability_type": "ACTIVATE",

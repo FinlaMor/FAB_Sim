@@ -1,4 +1,6 @@
 {
   "slug": "millers_grindstone",
+  "activation_cost": 3,
+  "per_turn": 1,
   "abilities": []
 }

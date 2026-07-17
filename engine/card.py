@@ -490,6 +490,38 @@ class Card:
             'name': self.name,
             'object_id': self.object_id,
         }
+
+
+def _apply_dsl_activation_overrides(card: "Card") -> None:
+    """Make a card's activation cost / per-turn limit DSL-authoritative.
+
+    For implemented cards the JSON declares `activation_cost` and/or `per_turn`
+    explicitly; when present these override the loader's printed-text heuristics
+    (CR 1.7.3a / 4.4.3d), which remain only as a fallback for not-yet-implemented
+    cards. Applied on every retrieval (not baked into the cached template) so it
+    is robust to whether the DSL was loaded before the first lookup.
+    """
+    try:
+        from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    except Exception:
+        return
+    cd = _dsl_get_card(card.slug)
+    if cd is None:
+        return
+    if getattr(cd, "activation_cost", None) is not None:
+        card.activation_cost = cd.activation_cost
+    if getattr(cd, "per_turn", None) is not None:
+        n = cd.per_turn
+        if n and n > 0:
+            card.has_per_turn_limit = True
+            card.base_activations = n
+            card.activations = n
+        else:
+            card.has_per_turn_limit = False
+            card.base_activations = None
+            card.activations = None
+
+
 class CardDB:
     """Wraps slug_index.msgpack for card lookups."""
 
@@ -556,6 +588,7 @@ class CardDB:
         if resolved in self._card_cache:
             c = copy(self._card_cache[resolved])
             c.object_id = next(_CARD_OBJECT_ID_COUNTER)  # CR 3.0.9: each retrieval is a new game object
+            _apply_dsl_activation_overrides(c)
             return c
         raw = self._by_slug[resolved]
         slug = resolved  # use canonical slug
@@ -654,6 +687,12 @@ class CardDB:
         card.life      = card.base_life
         card.intellect = card.base_intellect
         card.arcane    = card.base_arcane
+        # functional_text / type_text were likewise left None by __post_init__
+        # (it ran before raw_* were populated). Downstream keyword/reaction
+        # detection reads card.functional_text, so an unsynced None silently
+        # disabled it (e.g. Scabskin Leathers' printed text was invisible).
+        card.functional_text = card.base_functional_text
+        card.type_text       = card.base_type_text
 
         # Parse activation cost from abilities (e.g., "Once per Turn Action - {r}{r}" -> cost=2)
         import re
@@ -853,7 +892,9 @@ class CardDB:
         setattr(card, 'has_multiple_ability_types', ability_count >= 2)
 
         self._card_cache[resolved] = card
-        return copy(card)
+        out = copy(card)
+        _apply_dsl_activation_overrides(out)
+        return out
 
     def __contains__(self, slug: str) -> bool:
         return slug in self._by_slug
