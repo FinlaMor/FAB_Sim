@@ -28,6 +28,8 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "ON_CLASH_WIN_REVEALED":    "ON_CLASH_WIN_REVEALED",
     "RECALC_ATTACK_POWER":      "RECALC_ATTACK_POWER",
     "ON_BECOME":                "ON_BECOME",
+    "ON_COMBAT_CLOSE":          "ON_COMBAT_CLOSE",
+    "ON_EQUIP":                 "ON_EQUIP",
 }
 
 

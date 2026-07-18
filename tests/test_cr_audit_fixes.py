@@ -488,6 +488,189 @@ def test_big_bully_doubles_base_when_booed():
     assert attack_power(4, booed=False) == 4, "not booed → no doubling"
 
 
+def _pow_card(power, oid, owner=2):
+    c = Card(slug=f"pow{power}_{oid}", raw_name="x", raw_types=["Action"])
+    c.subtypes = ["Attack"]; c.power = power; c.base_power = power
+    c.defense = 2; c.base_defense = 2
+    c.owner = owner; c.controller = owner; c.object_id = oid
+    return c
+
+
+def _has_perm(player, slug):
+    return any(getattr(t, "slug", None) == slug for t in player.permanents.cards)
+
+
+def test_show_of_strength_minus_power_per_high_defender():
+    # "This gets -1{p} for each card with 6 or more {p} defending it."
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    E._setup_dsl_listeners(st)
+    sos = _card("show_of_strength_red", 1)
+    base = sos.base_power or 0
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=base,
+                            attack_card=sos, keywords=[])
+    st.combat.base_attack_power = base
+    st.combat.defending_cards = [_pow_card(6, 1), _pow_card(7, 2), _pow_card(3, 3)]
+    E._recalculate_attack_power(st)
+    assert st.combat.attack_power == base - 2, "two 6+{p} defenders → -2{p}"
+
+
+def test_millers_grindstone_clash_on_hit():
+    # "When this hits a hero, clash. If you win, destroy the top card of their
+    # deck. If they win, put a -1{p} counter on this." (Clash = highest top power.)
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    # You win → their top deck card destroyed.
+    st = _make_state(); st.card_db = DB
+    m = _card("millers_grindstone", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=0,
+                            attack_card=m, keywords=[])
+    st.players[1].deck.add(_pow_card(9, 1, owner=1))
+    their_top = _pow_card(1, 2, owner=2); st.players[2].deck.add(their_top)
+    dispatch(st, "ON_HIT", "millers_grindstone", card=m, event=None)
+    assert their_top not in st.players[2].deck.cards
+
+    # They win → -1{p} counter on Miller's.
+    st2 = _make_state(); st2.card_db = DB
+    m2 = _card("millers_grindstone", 1)
+    st2.combat = CombatState(attacker_id=1, link_id=1, attack_power=0,
+                             attack_card=m2, keywords=[])
+    st2.players[1].deck.add(_pow_card(1, 3, owner=1))
+    st2.players[2].deck.add(_pow_card(9, 4, owner=2))
+    dispatch(st2, "ON_HIT", "millers_grindstone", card=m2, event=None)
+    assert m2.counters.get("power", 0) == -1
+
+
+def test_schism_of_chaos_shuffles_and_arsenals_top_facedown():
+    # "When this is pitched, each hero shuffles, then puts the top card of their
+    # deck facedown into their arsenal."
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    schism = _card("schism_of_chaos_blue", 1)
+    for pid in (1, 2):
+        for i in range(3):
+            st.players[pid].deck.add(_pow_card(1, 100 * pid + i, owner=pid))
+    dispatch(st, "ON_PITCH", "schism_of_chaos_blue", card=schism, event=None)
+    for pid in (1, 2):
+        assert len(st.players[pid].arsenal.cards) == 1, f"P{pid} arsenal gets a card"
+        assert not st.players[pid].arsenal.cards[0].is_public, "facedown in arsenal"
+        assert len(st.players[pid].deck.cards) == 2, f"P{pid} deck down by 1"
+
+
+def test_swing_big_quicken_when_it_missed():
+    # "When the combat chain closes, if this didn't hit, the defending hero
+    # creates a Quicken token."
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    swing = _card("swing_big_red", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=0,
+                            attack_card=swing, keywords=[])
+    st.combat.hit = False
+    dispatch(st, "ON_COMBAT_CLOSE", "swing_big_red", card=swing, event=None)
+    assert _has_perm(st.players[2], "quicken"), "defender gets Quicken on a miss"
+
+    # If it hit, no token.
+    st2 = _make_state(); st2.card_db = DB
+    sw2 = _card("swing_big_red", 1)
+    st2.combat = CombatState(attacker_id=1, link_id=1, attack_power=0,
+                             attack_card=sw2, keywords=[])
+    st2.combat.hit = True
+    dispatch(st2, "ON_COMBAT_CLOSE", "swing_big_red", card=sw2, event=None)
+    assert not _has_perm(st2.players[2], "quicken")
+
+
+def test_crown_of_dominion_creates_gold_on_equip():
+    # "When you equip Crown of Dominion, create a Gold token."
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    crown = _card("crown_of_dominion", 1)
+    st.players[1].head.add(crown)
+    dispatch(st, "ON_EQUIP", "crown_of_dominion", card=crown, event=None)
+    assert _has_perm(st.players[1], "gold")
+
+
+def _equip(slot, defense, oid, owner=2):
+    c = Card(slug=f"eq_{slot}_{oid}", raw_name="eq", raw_types=["Equipment"])
+    c.subtypes = [slot.title()]; c.defense = defense; c.base_defense = defense
+    c.owner = owner; c.controller = owner; c.object_id = oid
+    return c
+
+
+def test_mask_of_deceit_transforms_on_defend():
+    # "When this defends, become a random Agent of Chaos. If the attacking hero
+    # is marked, instead choose the Agent of Chaos."
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.card_effects.ability_keywords import AGENT_OF_CHAOS_SLUGS
+    load_all_cards()
+
+    # Not marked → a (random) Agent of Chaos.
+    st = _make_state(); st.card_db = DB
+    st.players[1].hero = _card("arakni_marionette", 1)
+    mask = _card("mask_of_deceit", 1); st.players[1].arms.add(mask)
+    dispatch(st, "ON_DEFEND", "mask_of_deceit", card=mask, event=None)
+    assert st.players[1].hero.slug in AGENT_OF_CHAOS_SLUGS
+
+    # Attacking hero marked → choose (the mock agent takes the first option).
+    st2 = _make_state(); st2.card_db = DB
+    st2.players[1].hero = _card("arakni_marionette", 1)
+    st2.players[2].class_counters["marked"] = 1
+    mask2 = _card("mask_of_deceit", 1); st2.players[1].arms.add(mask2)
+    dispatch(st2, "ON_DEFEND", "mask_of_deceit", card=mask2, event=None)
+    assert st2.players[1].hero.slug == AGENT_OF_CHAOS_SLUGS[0]
+
+
+def test_headbutt_restriction_bonus_and_crush():
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.actions import get_defendable_cards
+    load_all_cards()
+
+    # Part 1: can't be defended by non-head equipment (hand cards unaffected).
+    st = _make_state(); st.card_db = DB; st.active_player = 1
+    hb = _card("headbutt_blue", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=hb.power or 0,
+                            attack_card=hb, keywords=[])
+    head_eq = _equip("head", 2, 1); chest_eq = _equip("chest", 2, 2)
+    st.players[2].head.add(head_eq); st.players[2].chest.add(chest_eq)
+    dispatch(st, "ON_ATTACK", "headbutt_blue", card=hb, event=None)
+    defendable = get_defendable_cards(st)
+    assert head_eq in defendable and chest_eq not in defendable
+
+    # Part 2: +1{p} when you have a head equipped and the defender doesn't.
+    st2 = _make_state(); st2.card_db = DB
+    E._setup_dsl_listeners(st2)
+    hb2 = _card("headbutt_blue", 1); base = hb2.base_power or 0
+    st2.combat = CombatState(attacker_id=1, link_id=1, attack_power=base,
+                             attack_card=hb2, keywords=[])
+    st2.combat.base_attack_power = base
+    st2.players[1].head.add(_equip("head", 1, 3, owner=1))   # you have a head
+    E._recalculate_attack_power(st2)
+    assert st2.combat.attack_power == base + 1
+
+    # Part 3: Crush destroys the defender's head equipment once its {d} hits 0.
+    st3 = _make_state(); st3.card_db = DB
+    hb3 = _card("headbutt_blue", 1)
+    st3.combat = CombatState(attacker_id=1, link_id=1, attack_power=0,
+                             attack_card=hb3, keywords=[])
+    survive = _equip("head", 2, 4, owner=2)  # 2{d} → 1{d}, survives
+    st3.players[2].head.add(survive)
+    dispatch(st3, "ON_CRUSH", "headbutt_blue", card=hb3, event=None)
+    assert survive in st3.players[2].head.cards and survive.defense == 1
+    dispatch(st3, "ON_CRUSH", "headbutt_blue", card=hb3, event=None)  # 1 → 0 → destroyed
+    assert survive not in st3.players[2].head.cards
+
+
 def test_kayo_instant_offered_when_attacking_own_action_attack():
     import copy
     st = _make_state(); st.card_db = DB

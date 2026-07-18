@@ -1,4 +1,35 @@
 {
   "slug": "headbutt_blue",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "_comment": "This can't be defended by non-head equipment.",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"}
+      ],
+      "effects": [
+        {"type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "_comment": "If you have a head equipped and the defending hero doesn't, this gets +1{p}.",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "HAS_HEAD_OPP_DOESNT"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "_comment": "Crush - When this deals 4 or more damage to a hero, put a -1{d} counter on a head they have equipped, then if it has 0{d}, destroy it.",
+      "effects": [
+        {"type": "CRUSH_MINUS_DEF_OPP_HEAD"}
+      ]
+    }
+  ]
 }

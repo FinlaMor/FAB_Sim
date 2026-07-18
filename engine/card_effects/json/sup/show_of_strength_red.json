@@ -1,4 +1,15 @@
 {
   "slug": "show_of_strength_red",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "_comment": "This gets -1{p} for each card with 6 or more {p} defending it. SOURCE_IS_ATTACK limits it to this card's own attack.",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK_PER_HIGH_DEFENDER", "amount": -1, "threshold": 6}
+      ]
+    }
+  ]
 }

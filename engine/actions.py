@@ -851,7 +851,12 @@ def get_defendable_cards(state: GameState) -> list[Card]:
             continue
         defendable_cards.append(card)
 
+    # Headbutt (CR 8.x): "can't be defended by non-head equipment" — only the
+    # head slot may contribute equipment (hand-card blockers are unaffected).
+    head_only = getattr(combat, 'head_equipment_only', False)
     for slot_name in ("head", "chest", "arms", "legs"):
+        if head_only and slot_name != "head":
+            continue
         equip_zone = defender.zone_by_name(slot_name)
         if not equip_zone or not equip_zone.cards:
             continue

@@ -1,4 +1,27 @@
 {
   "slug": "mask_of_deceit",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "_comment": "When this defends, if the attacking (opponent) hero is marked, choose the Agent of Chaos to become.",
+      "conditions": [
+        {"type": "OPPONENT_IS_MARKED"}
+      ],
+      "effects": [
+        {"type": "TRANSFORM_HERO", "mode": "random_agent_of_chaos", "choose": true}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "_comment": "Otherwise, become a random Agent of Chaos. Blade Break is an engine keyword.",
+      "conditions": [
+        {"type": "NOT", "inner_type": "OPPONENT_IS_MARKED"}
+      ],
+      "effects": [
+        {"type": "TRANSFORM_HERO", "mode": "random_agent_of_chaos"}
+      ]
+    }
+  ]
 }

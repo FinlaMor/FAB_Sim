@@ -1158,6 +1158,24 @@ def _setup_dsl_listeners(state: GameState) -> None:
             return
         dispatch(game_state, "ON_PITCH", card_obj.slug, card=card_obj, event=event)
 
+    def _dsl_start_of_game_listener(event, game_state: GameState) -> None:
+        # "When you equip …" for starting equipment fires as the game begins
+        # (CR 4.1.8). Dispatch ON_EQUIP to each player's equipped cards.
+        for player in game_state.players.values():
+            for zone in (player.head, player.chest, player.arms, player.legs,
+                         player.weapon1, player.weapon2):
+                for eq in list(zone.cards):
+                    dispatch(game_state, "ON_EQUIP", eq.slug, card=eq, event=event)
+
+    def _dsl_combat_close_listener(event, game_state: GameState) -> None:
+        # "When the combat chain closes …" — dispatch to the attack card (e.g.
+        # Swing Big). Fires while combat still exists so combat.hit is readable.
+        combat = game_state.combat
+        if combat is None or combat.attack_card is None:
+            return
+        dispatch(game_state, "ON_COMBAT_CLOSE", combat.attack_card.slug,
+                 card=combat.attack_card, event=event)
+
     def _dsl_defend_listener(event, game_state: GameState) -> None:
         # "When this defends" — dispatch to the actual defending card object
         # (e.g. Scowling Flesh Bag intimidates).
@@ -1224,6 +1242,8 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('start_of_end_phase', _dsl_start_of_end_phase_listener)
     state.event_manager.register('card_pitched', _dsl_pitch_listener)
     state.event_manager.register('defend', _dsl_defend_listener)
+    state.event_manager.register('combat_chain_close', _dsl_combat_close_listener)
+    state.event_manager.register('start_of_game', _dsl_start_of_game_listener)
     state.event_manager.register('crowd_boos', _dsl_boo_listener)
     state.event_manager.register('token_created', _dsl_token_created_listener)
     state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)

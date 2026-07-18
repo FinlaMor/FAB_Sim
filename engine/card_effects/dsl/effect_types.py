@@ -810,15 +810,18 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "TRANSFORM_HERO":
         # Arakni: "become a random Agent of Chaos" / "return to the brood".
+        # choose=true lets the controller pick the form (e.g. Mask of Deceit when
+        # the attacking hero is marked) instead of a random one.
         mode = params.get("mode", "random_agent_of_chaos").lower()
-        def _fn(card, event, state, _m=mode):
+        choose = params.get("choose", False)
+        def _fn(card, event, state, _m=mode, _ch=choose):
             from engine.card_effects.ability_keywords import (
                 _controller_id, become_agent_of_chaos, return_to_brood)
             pid = _controller_id(card)
             if _m == "return_to_brood":
                 return_to_brood(state, pid)
             else:
-                become_agent_of_chaos(state, pid)
+                become_agent_of_chaos(state, pid, choose=_ch)
         return _fn
 
     if etype == "SET_BASE_POWER":
@@ -906,6 +909,79 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 return
             base = combat.attack_card.base_power or 0
             combat.attack_power = (combat.attack_power or 0) + base
+        return _fn
+
+    if etype == "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT":
+        # Headbutt: "This can't be defended by non-head equipment." Set on the
+        # active combat while this card attacks; get_defendable_cards honours it.
+        def _fn(card, event, state):
+            if state.combat is not None:
+                state.combat.head_equipment_only = True
+        return _fn
+
+    if etype == "CRUSH_MINUS_DEF_OPP_HEAD":
+        # Headbutt's Crush: "put a -1{d} counter on a head they have equipped,
+        # then if it has 0{d}, destroy it." Applies to the defending hero's head.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import destroy as _destroy
+            opp = state.players[3 - _controller_id(card)]
+            head = opp.head.cards[0] if opp.head.cards else None
+            if head is None:
+                return
+            head.counters["minus_defense"] = head.counters.get("minus_defense", 0) + 1
+            head.defense = (head.defense or 0) - 1
+            head.base_defense = (head.base_defense or 0) - 1
+            if (head.defense or 0) <= 0:
+                _destroy(state, head, card)
+        return _fn
+
+    if etype == "MODIFY_ATTACK_PER_HIGH_DEFENDER":
+        # Show of Strength: "This gets -1{p} for each card with 6 or more {p}
+        # defending it." Authored as a WHILE_STATIC, so it re-evaluates each
+        # recalculation as defenders are declared. Gate with SOURCE_IS_ATTACK.
+        per = params.get("amount", -1)
+        threshold = params.get("threshold", 6)
+        def _fn(card, event, state, _per=per, _th=threshold):
+            combat = state.combat
+            if not combat:
+                return
+            n = sum(1 for d in combat.defending_cards if (d.power or 0) >= _th)
+            if n:
+                combat.attack_power = (combat.attack_power or 0) + _per * n
+        return _fn
+
+    if etype == "CLASH_DESTROY_TOP_OR_COUNTER":
+        # Miller's Grindstone: "When this hits a hero, clash with them. If you win,
+        # destroy the top card of their deck. If they win, put a -1{p} counter on
+        # this." (Miller's is the attacker; its controller clashes the defender.)
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import clash as _clash, destroy as _destroy
+            cid = _controller_id(card)
+            opp = 3 - cid
+            ev = _clash(state, cid, opp)
+            if ev.winner_id == cid:
+                deck = state.players[opp].deck
+                if deck.cards:
+                    _destroy(state, deck.cards[0], card)
+            elif ev.winner_id == opp:
+                card.counters["power"] = card.counters.get("power", 0) - 1
+        return _fn
+
+    if etype == "EACH_HERO_SHUFFLE_TOP_TO_ARSENAL":
+        # Schism of Chaos: "each hero shuffles, then puts the top card of their
+        # deck facedown into their arsenal."
+        def _fn(card, event, state):
+            from engine.effect_keywords import shuffle as _shuffle
+            for pid, player in state.players.items():
+                _shuffle(state, pid)
+                limit = getattr(player, 'arsenal_limit', 1)
+                if player.deck.cards and len(player.arsenal.cards) < limit:
+                    top = player.deck.cards.pop(0)
+                    player.arsenal.add(top)
+                    top.face_down = True
+                    top.is_public = False
         return _fn
 
     if etype == "MODIFY_NEXT_ATTACK":

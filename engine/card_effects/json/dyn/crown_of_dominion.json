@@ -1,4 +1,13 @@
 {
   "slug": "crown_of_dominion",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "_comment": "When you equip Crown of Dominion, create a Gold token. 'Your hero is Royal' is a type grant with no separate mechanical effect modeled here.",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "gold", "player": "SELF"}
+      ]
+    }
+  ]
 }

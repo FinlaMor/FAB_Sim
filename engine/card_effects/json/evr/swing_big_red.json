@@ -1,4 +1,17 @@
 {
   "slug": "swing_big_red",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_COMBAT_CLOSE",
+      "_comment": "When the combat chain closes, if this didn't hit, the defending hero creates a Quicken token.",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "DID_NOT_HIT"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "quicken", "player": "OPPONENT"}
+      ]
+    }
+  ]
 }

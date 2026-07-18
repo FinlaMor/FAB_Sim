@@ -125,6 +125,22 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return bool(controlled_attack_action_cards(s, _controller_id(c)))
         return _caa
 
+    if ctype == "HAS_HEAD_OPP_DOESNT":
+        # Headbutt: "if you have a head equipped and the defending hero doesn't".
+        def _hhod(c, e, s):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(c)
+            def has_head(p):
+                return bool(p.head.cards) and not getattr(p.head.cards[0], 'face_down', False)
+            return has_head(s.players[cid]) and not has_head(s.players[3 - cid])
+        return _hhod
+
+    if ctype == "DID_NOT_HIT":
+        # True when the current combat's attack did not hit (e.g. Swing Big's
+        # "when the combat chain closes, if this didn't hit …").
+        return lambda c, e, s: (s.combat is not None
+                                 and not getattr(s.combat, 'hit', False))
+
     if ctype == "DEFENDER_USED_HAND_CARD":
         return lambda c, e, s: (s.combat is not None
                                  and getattr(s.combat, 'defender_used_hand_card', False))

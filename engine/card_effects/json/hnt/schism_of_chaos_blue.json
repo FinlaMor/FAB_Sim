@@ -1,4 +1,13 @@
 {
   "slug": "schism_of_chaos_blue",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PITCH",
+      "_comment": "When this is pitched, each hero shuffles, then puts the top card of their deck facedown into their arsenal. Legendary is a deck-building keyword only.",
+      "effects": [
+        {"type": "EACH_HERO_SHUFFLE_TOP_TO_ARSENAL"}
+      ]
+    }
+  ]
 }

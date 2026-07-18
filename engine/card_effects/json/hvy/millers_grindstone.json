@@ -2,5 +2,14 @@
   "slug": "millers_grindstone",
   "activation_cost": 3,
   "per_turn": 1,
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "_comment": "When this hits a hero, clash with them. If you win, destroy the top card of their deck. If they win, put a -1{p} counter on this.",
+      "effects": [
+        {"type": "CLASH_DESTROY_TOP_OR_COUNTER"}
+      ]
+    }
+  ]
 }

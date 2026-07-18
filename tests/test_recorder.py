@@ -101,9 +101,14 @@ def test_jsonl_recorder_writes_parseable_lines(tmp_path):
     assert len(lines) > 50
     parsed = [json.loads(line) for line in lines]
     kinds = [p["kind"] for p in parsed]
-    # Pre-game decisions (the coin flip) are recorded before game_start —
-    # recorders attach before the start-of-game procedure on purpose.
-    assert "game_start" in kinds[:5]
+    # game_start is recorded after setup (the pre-game coin-flip decision and any
+    # start-of-game token creation, e.g. Crown of Dominion's Gold) but before the
+    # first turn's actions. Recorders attach before the start-of-game procedure.
+    assert "game_start" in kinds
+    gs = kinds.index("game_start")
+    assert "decision" in kinds[:gs]  # coin flip recorded before game_start
+    if "action_applied" in kinds:
+        assert gs < kinds.index("action_applied")  # game_start precedes gameplay
     assert kinds[-1] == "game_end"
 
 

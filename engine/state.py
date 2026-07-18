@@ -1094,6 +1094,9 @@ class CombatState:
     # "defends together with another card from hand" triggers, e.g. Right Behind You).
     hand_defender_ids: set = field(default_factory=set)
     no_defense_reactions: bool = False
+    # Headbutt: "this can't be defended by non-head equipment" — restricts which
+    # equipment may be declared as a blocker (hand cards are unaffected).
+    head_equipment_only: bool = False
     defending_declared: bool = False
     defending_equipment_zones: list[str] = field(default_factory=list)
     attack_target: Optional["Card"] = None  # Set when attack targets a specific card (e.g. Spectra aura, ally) instead of hero
