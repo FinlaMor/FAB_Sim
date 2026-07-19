@@ -3,18 +3,12 @@
   "abilities": [
     {
       "ability_type": "PLAY",
+      "_comment": "Each hero puts an attack action from graveyard facedown into arsenal; each hero that does discards a card. Create a Ponder (you) and a Frailty (each opponent). Go again.",
       "effects": [
-        {
-          "type": "CREATE_TOKEN",
-          "token": "frailty",
-          "count": 1,
-          "player": "OPPONENT"
-        },
-        {
-          "type": "GAIN",
-          "amount": 1,
-          "asset": "ACTION_POINTS"
-        }
+        {"type": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD", "source": "graveyard"},
+        {"type": "CREATE_TOKEN", "token": "ponder", "count": 1},
+        {"type": "CREATE_TOKEN", "token": "frailty", "count": 1, "player": "OPPONENT"},
+        {"type": "GAIN", "amount": 1, "asset": "ACTION_POINTS"}
       ]
     }
   ]

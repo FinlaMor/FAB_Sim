@@ -3,17 +3,11 @@
   "abilities": [
     {
       "ability_type": "PLAY",
+      "_comment": "Your next dagger attack this turn gets +4{p}. The next time you hit a marked hero with a dagger this turn, draw a card. Go again.",
       "effects": [
-        {
-          "type": "MODIFY_NEXT_ATTACK",
-          "amount": 4,
-          "mod": "add"
-        },
-        {
-          "type": "GAIN",
-          "amount": 1,
-          "asset": "ACTION_POINTS"
-        }
+        {"type": "MODIFY_NEXT_ATTACK", "amount": 4, "mod": "add", "filter": [{"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}]},
+        {"type": "QUEUE_NEXT_MARKED_DAGGER_HIT_DRAW", "amount": 1},
+        {"type": "GAIN", "amount": 1, "asset": "ACTION_POINTS"}
       ]
     }
   ]

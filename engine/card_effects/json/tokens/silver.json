@@ -1,0 +1,16 @@
+{
+  "slug": "silver",
+  "activation_cost": 3,
+  "_comment": "Action - {r}{r}{r}, destroy this: Draw a card. Go again. The {r}{r}{r} is the activation_cost (charged by the engine); do not also list PAY_RESOURCES here.",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_PERMANENT", "target": "self"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    }
+  ]
+}

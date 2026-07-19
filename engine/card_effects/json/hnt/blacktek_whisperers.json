@@ -2,26 +2,29 @@
   "slug": "blacktek_whisperers",
   "abilities": [
     {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "_comment": "While this is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip this.",
+      "effects": [
+        {"type": "MAY_DESTROY_SILVERS_TO_EQUIP", "amount": 2}
+      ]
+    },
+    {
       "ability_type": "ATTACK_REACTION",
+      "cost": [{"type": "DESTROY_SELF"}],
+      "_comment": "Attack Reaction - Destroy this: Target Assassin attack action card gains 'When this hits a hero, it gains go again.' Battleworn is an engine keyword.",
       "effects": [
         {
           "type": "INJECT_TRIGGER",
           "trigger": "ON_HIT",
           "effects": [
-            {
-              "type": "GO_AGAIN"
-            }
+            {"type": "GO_AGAIN"}
           ]
         }
       ],
       "target": {
         "filter": [
-          {
-            "type": "ATTACK_CLASS_IN",
-            "classes": [
-              "assassin"
-            ]
-          }
+          {"type": "ATTACK_CLASS_IN", "classes": ["assassin"]}
         ]
       }
     }

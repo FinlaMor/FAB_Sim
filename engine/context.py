@@ -31,6 +31,27 @@ def is_effect_context() -> bool:
     return getattr(_ctx, "depth", 0) > 0
 
 
+def push_effect_source(card) -> None:
+    """Record the card whose ability is currently executing (for effects that
+    need to know their source, e.g. Ripple Away gating on 'action card effect')."""
+    stack = getattr(_ctx, "source_stack", None)
+    if stack is None:
+        stack = _ctx.source_stack = []
+    stack.append(card)
+
+
+def pop_effect_source() -> None:
+    stack = getattr(_ctx, "source_stack", None)
+    if stack:
+        stack.pop()
+
+
+def current_effect_source():
+    """The card whose ability is currently executing, or None."""
+    stack = getattr(_ctx, "source_stack", None)
+    return stack[-1] if stack else None
+
+
 @contextmanager
 def effect_context():
     """Mark all Zone.add() calls within this block as effect-sourced (CR 3.0.11).

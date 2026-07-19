@@ -3,29 +3,15 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
+      "_comment": "Target stealth attack gets +2{p}. If attacking a marked hero, instead +3{p} and you may banish a stealth attack from your graveyard; if you do, the target becomes a copy of it.",
       "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "amount": 2,
-          "mod": "add"
-        },
-        {
-          "type": "MODIFY_ATTACK",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "OPPONENT_IS_MARKED"
-            }
-          ],
-          "mod": "add"
-        }
+        {"type": "MODIFY_ATTACK", "amount": 2, "mod": "add"},
+        {"type": "MODIFY_ATTACK", "amount": 1, "mod": "add", "conditions": [{"type": "OPPONENT_IS_MARKED"}]},
+        {"type": "COPY_BANISHED_STEALTH_ATTACK", "conditions": [{"type": "OPPONENT_IS_MARKED"}]}
       ],
       "target": {
         "filter": [
-          {
-            "type": "ATTACK_HAS_KEYWORD",
-            "keyword": "stealth"
-          }
+          {"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}
         ]
       }
     }

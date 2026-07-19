@@ -17,6 +17,16 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
 
     # ── mandatory additional costs ─────────────────────────────────────────
 
+    if ctype == "DESTROY_SELF":
+        # "Destroy <this>: …" — the activation cost is destroying the source card
+        # (e.g. Blacktek Whisperers' attack reaction).
+        def can_pay(card, event, state):
+            return True
+        def pay(card, event, state):
+            from engine.effect_keywords import destroy as _destroy
+            _destroy(state, card, card)
+        return can_pay, pay
+
     if ctype == "DISCARD_SELF":
         # "Instant - Discard this: …" — the activation cost is discarding this
         # card from hand. Marks the ability as a from-hand instant so the engine

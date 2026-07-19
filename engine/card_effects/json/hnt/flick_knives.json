@@ -4,8 +4,11 @@
   "per_turn": 1,
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "effects": [{"type": "DEAL_GENERIC", "amount": 1, "target": "OPPONENT"}]
+      "ability_type": "ATTACK_REACTION",
+      "_comment": "Attack Reaction - 0: Target dagger you control that isn't on the active chain link deals 1 damage to target hero. The dagger has hit; destroy the dagger. Blade Break is an engine keyword.",
+      "effects": [
+        {"type": "DAGGER_DEALS_DAMAGE_AND_DESTROY", "amount": 1}
+      ]
     }
   ]
 }

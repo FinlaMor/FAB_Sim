@@ -595,6 +595,89 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             effect_deal_damage(state, tid, _a, card, damage_type="generic")
         return _fn
 
+    if etype == "QUEUE_NEXT_MARKED_DAGGER_HIT_DRAW":
+        # Savor Bloodshed: "The next time you hit a marked hero with a dagger this
+        # turn, draw a card." Queued as a current-turn flag consumed at the attack
+        # step (engine handles next_marked_dagger_hit_draw_N).
+        amount = params.get("amount", 1)
+        def _fn(card, event, state, _n=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            state.players[_controller_id(card)].current_turn_effects.append(
+                f"next_marked_dagger_hit_draw_{_n}")
+        return _fn
+
+    if etype == "COPY_BANISHED_STEALTH_ATTACK":
+        # Take Up the Mantle (marked rider): "you may banish an attack action card
+        # with stealth from your graveyard. If you do, the target becomes a copy of
+        # the banished card" — copies the banished card's printed profile onto the
+        # current attack (name/base stats/keywords/abilities slug).
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import banish as _banish
+            cid = _controller_id(card)
+            controller = state.players[cid]
+            target = state.combat.attack_card if state.combat else None
+            if target is None:
+                return
+            stealth = [c for c in controller.graveyard.cards
+                       if 'attack' in [s.lower() for s in (c.subtypes or [])]
+                       and any(k.lower() == 'stealth' for k in (c.keywords or []))]
+            if not stealth:
+                return
+            pick = _ask_player(state, cid, [c.slug for c in stealth] + ["decline"],
+                               context="Banish a stealth attack from your graveyard to copy it?")
+            if pick == "decline":
+                return
+            src = next((c for c in stealth if c.slug == pick), None)
+            if src is None:
+                return
+            _banish(state, src, cid, origin_zone="graveyard")
+            # "becomes a copy": adopt the banished card's slug/name/profile so its
+            # DSL abilities and printed values apply to the attack.
+            target.slug = src.slug
+            target.name = src.name
+            target.base_power = src.base_power
+            target.power = src.power
+            target.base_defense = src.base_defense
+            target.defense = src.defense
+            target.types = list(src.types or [])
+            target.subtypes = list(src.subtypes or [])
+            target.keywords = list(src.keywords or [])
+            from engine.engine import _recalculate_attack_power
+            _recalculate_attack_power(state)
+        return _fn
+
+    if etype == "DAGGER_DEALS_DAMAGE_AND_DESTROY":
+        # Flick Knives: "Target dagger you control that isn't on the active chain
+        # link deals N damage to target hero. If damage is dealt this way, the
+        # dagger has hit. Destroy the dagger."
+        amount = params.get("amount", 1)
+        def _fn(card, event, state, _amt=amount):
+            from engine.card_effects.ability_keywords import (
+                _ask_player, _controller_id, effect_deal_damage)
+            from engine.effect_keywords import destroy as _destroy
+            from engine.card_effects.dsl import dispatch as _dsl_dispatch
+            cid = _controller_id(card)
+            player = state.players[cid]
+            active = state.combat.attack_card if state.combat else None
+            daggers = [d for zone in (player.weapon1, player.weapon2) for d in zone.cards
+                       if d is not active
+                       and 'dagger' in [s.lower() for s in (getattr(d, 'subtypes', None) or [])]]
+            if not daggers:
+                return
+            pick = _ask_player(state, cid, [d.slug for d in daggers] + ["decline"],
+                               context="Which dagger you control deals damage?")
+            if pick == "decline":
+                return
+            dagger = next((d for d in daggers if d.slug == pick), None)
+            if dagger is None:
+                return
+            effect_deal_damage(state, 3 - cid, _amt, dagger, damage_type="generic")
+            # "the dagger has hit" — fire its ON_HIT; then destroy it.
+            _dsl_dispatch(state, "ON_HIT", dagger.slug, card=dagger, event=None)
+            _destroy(state, dagger, card)
+        return _fn
+
     if etype == "STEAL_AURA_TOKEN":
         token_slug = params.get("token", "")
         def _fn(card, event, state, _slug=token_slug):
@@ -982,6 +1065,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             _banish(state, target, cid, origin_zone="graveyard")
             if target in controller.banished.cards:
                 controller.playable_from_banished.append(target)
+                # "if it would be put into the graveyard this turn, instead banish
+                # it" — engine._to_graveyard honours this per-card, turn-scoped flag.
+                controller.current_turn_effects.append(f"gy_to_banish_{target.object_id}")
         return _fn
 
     if etype == "REDUCE_TOKEN_CREATION_THIS_TURN":
@@ -997,15 +1083,51 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             if flag not in controller.current_turn_effects:
                 controller.current_turn_effects.append(flag)
             def _cond(ev, s, _cid=cid, _flag=flag):
-                return (isinstance(ev, dict) and 'target_player_id' in ev
+                if not (isinstance(ev, dict) and 'target_player_id' in ev
                         and (ev.get('number') or 0) >= 1
-                        and _flag in s.players[_cid].current_turn_effects)
+                        and _flag in s.players[_cid].current_turn_effects):
+                    return False
+                # Only "an action card effect" — check the card whose ability is
+                # currently creating the token.
+                from engine.context import current_effect_source
+                src = current_effect_source()
+                return src is not None and 'Action' in (getattr(src, 'types', None) or [])
             def _repl(ev, s):
                 ev['number'] = max(0, (ev.get('number') or 0) - 1)
                 return ev
             state.effect_manager.add_replacement(ReplacementEffect(
                 source_card=card, replacement_type=ReplacementType.STANDARD,
                 condition_fn=_cond, replace_fn=_repl, owner_id=cid))
+        return _fn
+
+    if etype == "MAY_DESTROY_SILVERS_TO_EQUIP":
+        # Blacktek Whisperers graveyard static: "you may destroy N Silvers you
+        # control. If you do, equip this (from the graveyard)."
+        amount = params.get("amount", 2)
+        def _fn(card, event, state, _n=amount):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import destroy as _destroy, equip as _equip
+            cid = _controller_id(card)
+            player = state.players[cid]
+            silvers = [t for zn in ('permanents', 'items', 'tokens')
+                       for t in getattr(player, zn, player.permanents).cards
+                       if getattr(t, 'slug', '') == 'silver']
+            # de-dupe (items can be a view of permanents)
+            seen, uniq = set(), []
+            for s in silvers:
+                if id(s) not in seen:
+                    seen.add(id(s)); uniq.append(s)
+            if len(uniq) < _n:
+                return
+            pick = _ask_player(state, cid, ["destroy", "decline"],
+                               context=f"Destroy {_n} Silvers to equip Blacktek Whisperers?")
+            if pick != "destroy":
+                return
+            for s in uniq[:_n]:
+                _destroy(state, s, card)
+            slot = next((sl for sl in ("head", "chest", "arms", "legs")
+                         if sl.title() in (card.subtypes or [])), "arms")
+            _equip(state, card, slot, cid)
         return _fn
 
     if etype == "GRANT_SUBTYPE":
@@ -1078,6 +1200,42 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     _destroy(state, deck.cards[0], card)
             elif ev.winner_id == opp:
                 card.counters["power"] = card.counters.get("power", 0) - 1
+        return _fn
+
+    if etype == "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD":
+        # Codex of Frailty / Inertia: "Each hero puts a card [from graveyard /
+        # top of deck] face down into their arsenal. Each hero that does, discards
+        # a card." source: "graveyard" (attack action cards) | "deck" (top card).
+        source = params.get("source", "deck")
+        def _fn(card, event, state, _src=source):
+            from engine.card_effects.ability_keywords import _ask_player, effect_discard
+            for pid, player in state.players.items():
+                if len(player.arsenal.cards) >= getattr(player, 'arsenal_limit', 1):
+                    continue
+                target = None
+                if _src == "graveyard":
+                    attacks = [c for c in player.graveyard.cards
+                               if 'attack' in [s.lower() for s in (c.subtypes or [])]]
+                    if not attacks:
+                        continue
+                    pick = _ask_player(state, pid, [c.slug for c in attacks] + ["decline"],
+                                       context="Put an attack action from your graveyard facedown into arsenal?")
+                    if pick == "decline":
+                        continue
+                    target = next((c for c in attacks if c.slug == pick), None)
+                    if target is not None:
+                        player.graveyard.remove(target)
+                else:  # top of deck
+                    if not player.deck.cards:
+                        continue
+                    target = player.deck.cards.pop(0)
+                if target is None:
+                    continue
+                player.arsenal.add(target)
+                target.face_down = True
+                target.is_public = False
+                if player.hand.cards:  # "each hero that does, discards a card"
+                    effect_discard(state, pid, 1, random_discard=True)
         return _fn
 
     if etype == "EACH_HERO_SHUFFLE_TOP_TO_ARSENAL":

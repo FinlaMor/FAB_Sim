@@ -937,6 +937,26 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
         state.combat.injected_triggers.append(td)
         player.current_turn_effects.remove(key)
 
+    # One-shot: "next_marked_dagger_hit_draw_N" — draw when the next dagger attack
+    # hits a marked hero this turn (Savor Bloodshed). Consumed only on a qualifying
+    # (dagger vs marked) attack.
+    for key in [k for k in player.current_turn_effects
+                if _re.match(r'^next_marked_dagger_hit_draw_(\d+)$', k)]:
+        is_dagger = 'dagger' in [s.lower() for s in (getattr(attack_card, 'subtypes', None) or [])]
+        defender = state.players[3 - state.active_player]
+        if is_dagger and defender.class_counters.get("marked", 0) > 0:
+            n = int(_re.match(r'^next_marked_dagger_hit_draw_(\d+)$', key).group(1))
+            from engine.card_effects.triggers import TriggerDef
+            def _md_hit_draw(c, ev, st, _n=n, _pid=pid):
+                from engine.card_effects.ability_keywords import effect_draw
+                effect_draw(st, _pid, _n)
+            td = TriggerDef(event_type="ON_HIT", condition_fn=None,
+                            effect_fn=_md_hit_draw, is_optional=False)
+            if not hasattr(state.combat, 'injected_triggers'):
+                state.combat.injected_triggers = []
+            state.combat.injected_triggers.append(td)
+            player.current_turn_effects.remove(key)
+
     # Persistent: "all_attacks_+N" — apply power bonus every attack, keep flag.
     from engine.card_effects.registry import CardEffect
     for key in player.current_turn_effects:
@@ -1143,6 +1163,11 @@ def _setup_dsl_listeners(state: GameState) -> None:
         for zone in _dsl_permanent_zones(player):
             for card in list(zone.cards):
                 dispatch(game_state, "START_OF_TURN", card.slug, card=card)
+        # "While this is in your graveyard, at the start of your turn …" — a
+        # separate event so only graveyard-static abilities respond (Blacktek
+        # Whisperers), never arena statics whose card happens to be in the yard.
+        for card in list(player.graveyard.cards):
+            dispatch(game_state, "START_OF_TURN_IN_GRAVEYARD", card.slug, card=card)
 
     def _dsl_end_of_turn_listener(event, game_state: GameState) -> None:
         # "At the end of your turn" — only the turn player's permanents/equipment fire.
@@ -1560,6 +1585,18 @@ def _close_combat_chain(state: GameState) -> None:
 # Stack and Priority
 # ---------------------------------------------------------------------------
 
+def _to_graveyard(owner_player, card, is_public: bool = True) -> None:
+    """Put *card* into *owner_player*'s graveyard, honouring a per-card,
+    turn-scoped "if it would be put into the graveyard this turn, instead banish
+    it" rider (Under the Trap-Door). The flag lives in current_turn_effects keyed
+    by object_id and expires with the turn."""
+    key = f"gy_to_banish_{getattr(card, 'object_id', None)}"
+    if key in owner_player.current_turn_effects:
+        owner_player.banished.add(card)
+    else:
+        owner_player.graveyard.add(card, is_public=is_public)
+
+
 def resolve_stack(game_state: GameState) -> None:
     """Resolve one stack entry from the top of the stack."""
 
@@ -1595,7 +1632,7 @@ def resolve_stack(game_state: GameState) -> None:
                 if _was_on_stack:
                     _owner = game_state.players.get(entry.card.owner)
                     if _owner is not None:
-                        _owner.graveyard.add(entry.card, is_public=True)
+                        _to_graveyard(_owner, entry.card, is_public=True)
             game_state.process_cease_to_exist(entry.card)
             card = entry.card
             if card and not entry.is_attack and card.has_go_again:
@@ -1650,7 +1687,7 @@ def resolve_stack(game_state: GameState) -> None:
         if _still_on_stack and not entry.is_attack:
             _owner = game_state.players.get(card.owner)
             if _owner is not None:
-                _owner.graveyard.add(card, is_public=True)
+                _to_graveyard(_owner, card, is_public=True)
 
     # Figments, Auras, Allies, and Landmarks enter the arena as permanents instead of ceasing to exist.
     if _is_figment or _is_aura or _is_ally or _is_landmark:

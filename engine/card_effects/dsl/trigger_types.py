@@ -30,6 +30,7 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "ON_BECOME":                "ON_BECOME",
     "ON_COMBAT_CLOSE":          "ON_COMBAT_CLOSE",
     "ON_EQUIP":                 "ON_EQUIP",
+    "START_OF_TURN_IN_GRAVEYARD": "START_OF_TURN_IN_GRAVEYARD",
 }
 
 

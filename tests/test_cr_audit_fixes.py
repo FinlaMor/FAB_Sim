@@ -732,6 +732,17 @@ def test_under_the_trap_door_banishes_trap_and_makes_it_playable():
     assert trap in st.players[1].banished.cards
     assert any(c is trap for c in st.players[1].playable_from_banished)
 
+    # Rider: "if it would be put into the graveyard this turn, instead banish it."
+    from engine.engine import _to_graveyard
+    st.players[1].banished.remove(trap)          # simulate the trap being played
+    _to_graveyard(st.players[1], trap)           # ... then heading to the graveyard
+    assert trap in st.players[1].banished.cards, "graveyard placement redirected to banish"
+    assert trap not in st.players[1].graveyard.cards
+    # A card without the rider goes to the graveyard normally.
+    plain = Card(slug="plain", raw_name="P", raw_types=["Action"]); plain.object_id = 556
+    _to_graveyard(st.players[1], plain)
+    assert plain in st.players[1].graveyard.cards
+
 
 def test_ripple_away_reduces_token_creation():
     # "Instant - Discard this: If an action card effect would create 1+ tokens
@@ -749,12 +760,28 @@ def test_ripple_away_reduces_token_creation():
     act = acts[0]; act.player_id = 1
     apply_action(st, act)
 
+    from engine.context import push_effect_source, pop_effect_source
+    action_src = Card(slug="act_src", raw_name="A", raw_types=["Action"])
+    action_src.types = ["Action"]
+    equip_src = Card(slug="eq_src", raw_name="E", raw_types=["Equipment"])
+    equip_src.types = ["Equipment"]
+
+    # An action card effect creating 3 tokens → 2; creating 1 → 0.
+    push_effect_source(action_src)
     create_token(st, target_player_id=1, token_slug="gold", number=3)
-    golds = sum(1 for t in st.players[1].permanents.cards if getattr(t, "slug", None) == "gold")
-    assert golds == 2, "3 tokens → 2"
     create_token(st, target_player_id=1, token_slug="might", number=1)
+    pop_effect_source()
+    golds = sum(1 for t in st.players[1].permanents.cards if getattr(t, "slug", None) == "gold")
     mights = sum(1 for t in st.players[1].permanents.cards if getattr(t, "slug", None) == "might")
-    assert mights == 0, "1 token → 0"
+    assert golds == 2, "action-card effect: 3 tokens → 2"
+    assert mights == 0, "action-card effect: 1 token → 0"
+
+    # A non-action-card effect is unaffected.
+    push_effect_source(equip_src)
+    create_token(st, target_player_id=1, token_slug="vigor", number=3)
+    pop_effect_source()
+    vigor = sum(1 for t in st.players[1].permanents.cards if getattr(t, "slug", None) == "vigor")
+    assert vigor == 3, "non-action source: not reduced"
 
 
 def test_outside_interference_reveals_reviled_from_inventory():
@@ -779,6 +806,139 @@ def test_outside_interference_reveals_reviled_from_inventory():
     assert oi in st.players[1].graveyard.cards
     assert len(st.players[1].inventory.cards) == 2, "one Reviled left the inventory"
     assert any(c.slug == "reviled" for c in st.players[1].hand.cards)
+
+
+def _attack_action(power, oid, owner=1, classes=None, keywords=None):
+    c = Card(slug=f"aa{oid}", raw_name="AA", raw_types=["Action"])
+    c.subtypes = ["Attack"]; c.power = power; c.base_power = power
+    c.owner = owner; c.controller = owner; c.object_id = oid
+    c.classes = classes or []; c.keywords = keywords or []
+    return c
+
+
+def test_codex_of_frailty_arsenal_discard_and_tokens():
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    for pid in (1, 2):
+        st.players[pid].graveyard.add(_attack_action(4, 700 + pid, owner=pid))
+        st.players[pid].hand.add(_pow_card(1, 800 + pid, owner=pid))
+    dispatch(st, "ON_PLAY", "codex_of_frailty_yellow", card=_card("codex_of_frailty_yellow", 1), event=None)
+    for pid in (1, 2):
+        assert len(st.players[pid].arsenal.cards) == 1, f"P{pid} attack → arsenal"
+        assert len(st.players[pid].hand.cards) == 0, f"P{pid} discarded"
+    assert _has_perm(st.players[1], "ponder") and _has_perm(st.players[2], "frailty")
+
+
+def test_codex_of_inertia_deck_to_arsenal_and_tokens():
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    for pid in (1, 2):
+        st.players[pid].deck.add(_pow_card(1, 900 + pid, owner=pid))
+        st.players[pid].hand.add(_pow_card(1, 950 + pid, owner=pid))
+    dispatch(st, "ON_PLAY", "codex_of_inertia_yellow", card=_card("codex_of_inertia_yellow", 1), event=None)
+    for pid in (1, 2):
+        assert len(st.players[pid].arsenal.cards) == 1 and len(st.players[pid].hand.cards) == 0
+    assert _has_perm(st.players[1], "ponder") and _has_perm(st.players[2], "inertia")
+
+
+def test_savor_bloodshed_queues_marked_dagger_draw():
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    dispatch(st, "ON_PLAY", "savor_bloodshed_red", card=_card("savor_bloodshed_red", 1), event=None)
+    assert any(k.startswith("next_marked_dagger_hit_draw_")
+               for k in st.players[1].current_turn_effects), "delayed draw queued"
+
+
+def test_flick_knives_dagger_deals_damage_and_destroys():
+    from engine.card_effects.dsl.loader import load_all_cards, get_card
+    from engine.card_effects.dsl.interpreter import run_ability
+    from engine.state import Event
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    flick = _card("flick_knives", 1)  # the reaction source
+    dagger = Card(slug="mydagger", raw_name="D", raw_types=["Weapon"])
+    dagger.subtypes = ["Dagger"]; dagger.owner = 1; dagger.controller = 1; dagger.object_id = 321
+    st.players[1].weapon2.add(dagger)
+    life0 = st.players[2].life
+    run_ability(get_card("flick_knives").abilities[0], flick, Event(type="ON_ACTIVATE"), st)
+    assert st.players[2].life == life0 - 1, "dagger dealt 1 damage to opposing hero"
+    assert dagger not in st.players[1].weapon2.cards, "dagger destroyed"
+
+
+def test_blacktek_reaction_destroys_self():
+    from engine.card_effects.dsl.loader import load_all_cards, get_card
+    from engine.card_effects.dsl.interpreter import run_ability
+    from engine.state import Event, CombatState
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    blacktek = _card("blacktek_whisperers", 1); st.players[1].arms.add(blacktek)
+    atk = _attack_action(6, 42, owner=1, classes=["Assassin"])
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=6, attack_card=atk, keywords=[])
+    ab = get_card("blacktek_whisperers").abilities[0]
+    ev = Event(type="ON_ACTIVATE")
+    for c in ab.costs:      # pay DESTROY_SELF (the reaction's cost)
+        c.pay_fn(blacktek, ev, st)
+    run_ability(ab, blacktek, ev, st)
+    assert blacktek not in st.players[1].arms.cards, "Blacktek destroyed as the reaction cost"
+
+
+def test_take_up_the_mantle_marked_copies_banished_stealth():
+    from engine.card_effects.dsl.loader import load_all_cards, get_card
+    from engine.card_effects.dsl.interpreter import run_ability
+    from engine.state import Event, CombatState
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    E._setup_dsl_listeners(st)
+    target = _attack_action(2, 50, owner=1, keywords=["Stealth"])
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=2, attack_card=target,
+                            keywords=["Stealth"])
+    st.combat.base_attack_power = 2
+    st.players[2].class_counters["marked"] = 1  # attacking a marked hero
+    banished_src = _attack_action(6, 51, owner=1, keywords=["Stealth"])
+    banished_src.slug = "big_stealth_attack"
+    st.players[1].graveyard.add(banished_src)
+    run_ability(get_card("take_up_the_mantle_yellow").abilities[0], _card("take_up_the_mantle_yellow", 1),
+                Event(type="ON_ACTIVATE", target=target), st)
+    assert st.combat.attack_card.slug == "big_stealth_attack", "target became a copy"
+    assert banished_src in st.players[1].banished.cards, "source banished"
+    # +3 (marked) on top of the copied base 6 = 9
+    assert st.combat.attack_power == 9
+
+
+def test_blacktek_graveyard_buyback_destroys_silvers_and_equips():
+    # "While this is in your graveyard, at the start of your turn, you may destroy
+    # 2 Silvers you control. If you do, equip this."
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.effect_keywords import create_token
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    blacktek = _card("blacktek_whisperers", 1); st.players[1].graveyard.add(blacktek)
+    create_token(st, target_player_id=1, token_slug="silver", number=2)
+    dispatch(st, "START_OF_TURN_IN_GRAVEYARD", "blacktek_whisperers", card=blacktek, event=None)
+    assert not any(t.slug == "silver" for t in st.players[1].permanents.cards), "2 Silvers destroyed"
+    assert blacktek not in st.players[1].graveyard.cards
+    assert blacktek in st.players[1].legs.cards, "Blacktek re-equipped"
+
+    # Fewer than 2 Silvers → stays in the graveyard.
+    st2 = _make_state(); st2.card_db = DB
+    b2 = _card("blacktek_whisperers", 1); st2.players[1].graveyard.add(b2)
+    create_token(st2, target_player_id=1, token_slug="silver", number=1)
+    dispatch(st2, "START_OF_TURN_IN_GRAVEYARD", "blacktek_whisperers", card=b2, event=None)
+    assert b2 in st2.players[1].graveyard.cards
+
+
+def test_silver_token_is_implemented():
+    from engine.card_effects.dsl.loader import load_all_cards, get_card
+    load_all_cards()
+    assert get_card("silver") is not None, "Silver token has a DSL definition"
 
 
 def test_kayo_instant_offered_when_attacking_own_action_attack():

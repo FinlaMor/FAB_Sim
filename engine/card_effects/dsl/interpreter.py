@@ -3,6 +3,17 @@ from __future__ import annotations
 
 
 def run_ability(ability, card, event, state) -> None:
+    """Execute a single AbilityDef, tracking *card* as the current effect source
+    (so effects can gate on their origin, e.g. Ripple Away's 'action card effect')."""
+    from engine.context import push_effect_source, pop_effect_source
+    push_effect_source(card)
+    try:
+        _run_ability(ability, card, event, state)
+    finally:
+        pop_effect_source()
+
+
+def _run_ability(ability, card, event, state) -> None:
     """Execute a single AbilityDef. Checks additional costs, conditions, then runs effects."""
     # Check target filter (CR 1.8.5 — if no legal target exists, ability cannot resolve)
     for cond in getattr(ability, 'target_filter', []):
