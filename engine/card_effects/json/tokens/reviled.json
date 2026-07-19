@@ -1,0 +1,5 @@
+{
+  "slug": "reviled",
+  "_comment": "Temporary Reviled attack action placed in each player's inventory at game start (0 power, 3 defense). Vanilla — no unique text.",
+  "abilities": []
+}

@@ -1,4 +1,13 @@
 {
   "slug": "outside_interference_blue",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [{"type": "DISCARD_SELF"}],
+      "_comment": "Instant - Discard this: You may reveal a Reviled attack action card from your inventory and put it into your hand.",
+      "effects": [
+        {"type": "REVEAL_REVILED_FROM_INVENTORY"}
+      ]
+    }
+  ]
 }

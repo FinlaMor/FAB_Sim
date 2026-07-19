@@ -1,4 +1,13 @@
 {
   "slug": "under_the_trap_door_blue",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [{"type": "DISCARD_SELF"}],
+      "_comment": "Instant - Discard this: Banish target trap from your graveyard. If you do, you may play it this turn. Stealth is an engine keyword; the graveyard->banish rider is not modeled.",
+      "effects": [
+        {"type": "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE"}
+      ]
+    }
+  ]
 }

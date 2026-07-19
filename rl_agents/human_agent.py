@@ -17,6 +17,7 @@ _ACTION_LABELS = {
     ActionType.STORE_ARSENAL: "Store in arsenal",
     ActionType.REACTION_PASS: "Pass (no reaction)",
     ActionType.ACTIVATE_CARD: "Activate card",
+    ActionType.DISCARD_ACTIVATE: "Discard for instant ability",
     ActionType.CHOOSE: "Choose",
     ActionType.PITCH_CARD: "Pitch card",
     ActionType.PITCH_TO_DECK: "Pitch to deck",

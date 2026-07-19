@@ -671,6 +671,116 @@ def test_headbutt_restriction_bonus_and_crush():
     assert survive not in st3.players[2].head.cards
 
 
+def test_aurum_aegis_counts_as_a_gold():
+    # "This counts as a Gold." — grants the Gold subtype on equip so gold-count
+    # checks (CONTROLS_TOKEN_TYPE) see it.
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.condition_types import compile_condition
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    aurum = _card("aurum_aegis", 1)
+    st.players[1].permanents.add(aurum)
+    assert "Gold" not in (aurum.subtypes or [])
+    dispatch(st, "ON_EQUIP", "aurum_aegis", card=aurum, event=None)
+    assert "Gold" in aurum.subtypes, "counts as a Gold (subtype granted)"
+    # A gold-count check now recognises it.
+    ctt = compile_condition("CONTROLS_TOKEN_TYPE", {"token": "gold"})
+    assert ctt(aurum, None, st) is True
+
+
+def test_visit_goldmane_counts_aurum_as_gold_for_might():
+    # "Create a Gold. Then if you control 3+ Gold, create that many Might."
+    # Aurum Aegis counts as a Gold, so aurum + 1 real gold + the created gold = 3.
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.effect_keywords import create_token
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    aurum = _card("aurum_aegis", 1)
+    st.players[1].permanents.add(aurum)
+    dispatch(st, "ON_EQUIP", "aurum_aegis", card=aurum, event=None)  # grant Gold subtype
+    create_token(st, target_player_id=1, token_slug="gold", number=1)
+
+    visit = _card("visit_goldmane_estate_blue", 1)
+    dispatch(st, "ON_PLAY", "visit_goldmane_estate_blue", card=visit, event=None)
+    mights = sum(1 for t in st.players[1].permanents.cards
+                 if getattr(t, "slug", None) == "might")
+    assert mights == 3, "aurum + 1 gold + created gold = 3 Golds → 3 Might"
+
+
+def test_under_the_trap_door_banishes_trap_and_makes_it_playable():
+    # "Instant - Discard this: Banish target trap from your graveyard. If you do,
+    # you may play it this turn." Exercises the from-hand instant-discard subsystem.
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    utd = _card("under_the_trap_door_blue", 1); utd.zone = "hand"
+    st.players[1].hand.add(utd)
+    trap = Card(slug="fake_trap", raw_name="Trap", raw_types=["Action"])
+    trap.subtypes = ["Trap"]; trap.owner = 1; trap.controller = 1; trap.object_id = 555
+    st.players[1].graveyard.add(trap)
+
+    acts = [a for a in available_actions(st, 1)
+            if a.type == ActionType.DISCARD_ACTIVATE and a.card is utd]
+    assert acts, "Under the Trap-Door offered as a from-hand instant"
+    act = acts[0]; act.player_id = 1
+    apply_action(st, act)
+    assert utd in st.players[1].graveyard.cards, "the card is discarded as the cost"
+    assert trap not in st.players[1].graveyard.cards
+    assert trap in st.players[1].banished.cards
+    assert any(c is trap for c in st.players[1].playable_from_banished)
+
+
+def test_ripple_away_reduces_token_creation():
+    # "Instant - Discard this: If an action card effect would create 1+ tokens
+    # this turn, instead it creates that many minus 1 of each of those tokens."
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.effect_keywords import create_token
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    ripple = _card("ripple_away_blue", 1); ripple.zone = "hand"
+    st.players[1].hand.add(ripple)
+    acts = [a for a in available_actions(st, 1)
+            if a.type == ActionType.DISCARD_ACTIVATE and a.card is ripple]
+    assert acts, "Ripple Away offered as a from-hand instant"
+    act = acts[0]; act.player_id = 1
+    apply_action(st, act)
+
+    create_token(st, target_player_id=1, token_slug="gold", number=3)
+    golds = sum(1 for t in st.players[1].permanents.cards if getattr(t, "slug", None) == "gold")
+    assert golds == 2, "3 tokens → 2"
+    create_token(st, target_player_id=1, token_slug="might", number=1)
+    mights = sum(1 for t in st.players[1].permanents.cards if getattr(t, "slug", None) == "might")
+    assert mights == 0, "1 token → 0"
+
+
+def test_outside_interference_reveals_reviled_from_inventory():
+    # "Instant - Discard this: You may reveal a Reviled attack action card from
+    # your inventory and put it into your hand." Needs the populated inventory.
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.engine import _populate_reviled_inventory
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    st.step = Step.ACTION; st.active_player = 1; st.priority_player = 1
+    _populate_reviled_inventory(st)
+    assert len(st.players[1].inventory.cards) == 3, "3 Reviled attacks in inventory"
+    assert all(c.power == 0 and c.defense == 3 for c in st.players[1].inventory.cards)
+
+    oi = _card("outside_interference_blue", 1); oi.zone = "hand"
+    st.players[1].hand.add(oi)
+    acts = [a for a in available_actions(st, 1)
+            if a.type == ActionType.DISCARD_ACTIVATE and a.card is oi]
+    assert acts, "Outside Interference offered as a from-hand instant"
+    act = acts[0]; act.player_id = 1
+    apply_action(st, act)
+    assert oi in st.players[1].graveyard.cards
+    assert len(st.players[1].inventory.cards) == 2, "one Reviled left the inventory"
+    assert any(c.slug == "reviled" for c in st.players[1].hand.cards)
+
+
 def test_kayo_instant_offered_when_attacking_own_action_attack():
     import copy
     st = _make_state(); st.card_db = DB

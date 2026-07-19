@@ -32,7 +32,7 @@ class ActionType(Enum):
     # ACTIVATE_EQUIPMENT = "activate_equipment"
     # ACTIVATE_WEAPON = "activate_weapon"
     # ACTIVATE_HERO = "activate_hero"
-    # DISCARD_ACTIVATE = "discard_activate"
+    DISCARD_ACTIVATE = "discard_activate"  # "Instant - Discard this:" hand ability
     # PLAY_BANISH = "play_banish"  # Play a card from the banish zone
     CHOOSE = "choose"              # Generic choice action for multi-option prompts (e.g. modal abilities, target selection)
     PITCH_CARD = "pitch_card"       # Pay for a cost by pitching a hand card

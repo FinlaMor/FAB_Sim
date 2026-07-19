@@ -1,4 +1,13 @@
 {
   "slug": "aurum_aegis",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "_comment": "This counts as a Gold (grant the Gold subtype so gold-count checks see it). Victor Specialization and Temper are engine keywords.",
+      "effects": [
+        {"type": "GRANT_SUBTYPE", "subtype": "Gold"}
+      ]
+    }
+  ]
 }

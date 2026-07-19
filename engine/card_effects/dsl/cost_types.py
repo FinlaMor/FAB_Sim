@@ -17,6 +17,22 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
 
     # ── mandatory additional costs ─────────────────────────────────────────
 
+    if ctype == "DISCARD_SELF":
+        # "Instant - Discard this: …" — the activation cost is discarding this
+        # card from hand. Marks the ability as a from-hand instant so the engine
+        # offers it (see play._add_hand_instant_activations).
+        def can_pay(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            pid = _controller_id(card)
+            return pid is not None and card in state.players[pid].hand.cards
+        def pay(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            pid = _controller_id(card)
+            if pid is not None and card in state.players[pid].hand.cards:
+                state.players[pid].hand.remove(card)
+                state.players[pid].graveyard.add(card)
+        return can_pay, pay
+
     if ctype == "DISCARD_RANDOM":
         # "As an additional cost to play X, discard a random card."
         amount = params.get("amount", 1)

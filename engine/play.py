@@ -60,6 +60,9 @@ def available_actions(state, player_id) -> list[Action]:
     # Hero activated/instant abilities defined in the DSL (e.g. Kayo's Instant).
     _add_hero_dsl_activations(state, player_id, affordable_actions)
 
+    # "Instant - Discard this:" abilities usable from hand (e.g. Ripple Away).
+    _add_hand_instant_activations(state, player_id, affordable_actions)
+
     affordable_actions.append(Action(ActionType.PASS)) #can always choose to pass
 
     return affordable_actions
@@ -206,6 +209,35 @@ def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
                 can_activate, action = _cost_check(state, card, player_id, action, playable=False)
                 if can_activate:
                     affordable_actions.append(action)
+
+def _add_hand_instant_activations(state, player_id, affordable_actions) -> None:
+    """Offer "Instant - Discard this:" abilities of cards in hand.
+
+    These are INSTANT abilities whose cost is DISCARD_SELF (the card is discarded
+    from hand as the activation cost). Instant speed, so no action point. Offered
+    when the ability's conditions and target filter are satisfied.
+    """
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    player = state.players[player_id]
+    for card in list(player.hand.cards):
+        cd = _dsl_get_card(card.slug)
+        if cd is None:
+            continue
+        for ability in cd.abilities:
+            if ability.ability_type.upper() != "INSTANT":
+                continue
+            if not any(getattr(c, 'cost_type', '') == "DISCARD_SELF"
+                       for c in getattr(ability, 'costs', [])):
+                continue
+            if any(cond.fn is not None and not cond.fn(card, None, state)
+                   for cond in getattr(ability, 'conditions', [])):
+                continue
+            if any(cond.fn is not None and not cond.fn(card, None, state)
+                   for cond in getattr(ability, 'target_filter', [])):
+                continue
+            action = Action(type=ActionType.DISCARD_ACTIVATE, player_id=player_id, card=card)
+            affordable_actions.append(action)
+            break  # one activation per card
 
 def _legality_check(state, card, player_id) -> bool:
     if card is None:
@@ -536,7 +568,8 @@ def apply_action(state: GameState, action: Action) -> None:
     """Apply a player action to the game state."""
     # Sequential pitch: ask model which cards to pitch before dispatching
     _no_pitch_types = (ActionType.PASS, ActionType.DEFEND_CARDS,
-                       ActionType.STORE_ARSENAL, ActionType.CHOOSE)
+                       ActionType.STORE_ARSENAL, ActionType.CHOOSE,
+                       ActionType.DISCARD_ACTIVATE)
     if action.type not in _no_pitch_types:
         # CR 5.1.5: Verify legality BEFORE any cost payment (declare → check → pay).
         if not _legality_check(state, action.card, action.player_id):
@@ -551,6 +584,8 @@ def apply_action(state: GameState, action: Action) -> None:
         _apply_activate(state, action)
     elif action.type == ActionType.DEFEND_CARDS:
         _apply_defend(state, action)
+    elif action.type == ActionType.DISCARD_ACTIVATE:
+        _apply_discard_activate(state, action)
     elif action.type == ActionType.CHOOSE:
         pass  # Choice is conveyed by selection of this Action object; no state mutation needed
 
@@ -735,6 +770,34 @@ def _apply_activate(state: GameState, action: Action) -> None:
     else:
         from engine.card_effects.dsl import dispatch as _dsl_dispatch
         _dsl_dispatch(state, "ON_ACTIVATE", card.slug, card=card, event=_ev)
+
+def _apply_discard_activate(state: GameState, action: Action) -> None:
+    """Resolve an "Instant - Discard this:" hand ability: pay the DISCARD_SELF
+    cost (discard the card from hand to the graveyard), then run the INSTANT
+    ability's effects."""
+    if action.player_id is None or action.card is None:
+        return
+    from engine.card_effects.dsl.loader import require_card
+    from engine.card_effects.dsl.interpreter import run_ability
+    card = action.card
+    cd = require_card(card.slug)
+    ability = next((a for a in cd.abilities
+                    if a.ability_type.upper() == "INSTANT"
+                    and any(getattr(c, 'cost_type', '') == "DISCARD_SELF"
+                            for c in getattr(a, 'costs', []))), None)
+    if ability is None:
+        return
+    _ev = Event(type='ON_ACTIVATE', card=card.slug, data={})
+    _ev.target = getattr(action, 'target', None)
+    # Pay the ability's own costs (DISCARD_SELF discards the card); run_ability
+    # only pays additional_costs, so the discard is paid here.
+    for cost in ability.costs:
+        if cost.check_fn is not None and not cost.check_fn(card, _ev, state):
+            return
+    for cost in ability.costs:
+        if cost.pay_fn is not None:
+            cost.pay_fn(card, _ev, state)
+    run_ability(ability, card, _ev, state)
 
 def _apply_defend(state: GameState, action: Action) -> None:
     """7.3.2: apply defend declaration — move chosen cards to defending_cards."""

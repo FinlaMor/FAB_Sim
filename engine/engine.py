@@ -154,6 +154,11 @@ def new_game(
 
     # CR 4.1.7: Decks presented to opponent for shuffling. Not applicable.
 
+    # Populate each player's inventory with temporary Reviled attack actions
+    # (0 power, 3 defense) so effects that reveal from inventory (e.g. Outside
+    # Interference) have targets. The sim does not yet sideboard from decks.
+    _populate_reviled_inventory(state)
+
     # CR 4.1.8: Cards are equipped. Any cards to be put in different zones are put there. "start of game" event fires.
     # Start of game event — no priority
     event_mngr.emit('start_of_game', state)
@@ -1059,6 +1064,23 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
             else:
                 remaining.append(mod)
         player.dsl_queued_attack_mods = remaining
+
+
+def _populate_reviled_inventory(state: GameState) -> None:
+    """Put three temporary Reviled attack actions (0 power, 3 defense) in each
+    player's inventory (CR 4.1.6) as targets for reveal-from-inventory effects
+    (e.g. Outside Interference). The sim does not yet sideboard from decks."""
+    from engine.card import Card
+    for pid, player in state.players.items():
+        for _ in range(3):
+            c = Card(slug="reviled", raw_name="Reviled",
+                     raw_types=["Action", "Reviled"], raw_power=0, raw_defense=3)
+            c.types = ["Action", "Reviled"]
+            c.subtypes = ["Attack"]
+            c.power = 0; c.base_power = 0
+            c.defense = 3; c.base_defense = 3
+            c.owner = pid; c.controller = pid
+            player.inventory.add(c)
 
 
 def _setup_dsl_listeners(state: GameState) -> None:

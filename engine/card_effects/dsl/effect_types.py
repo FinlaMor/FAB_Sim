@@ -911,6 +911,117 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             combat.attack_power = (combat.attack_power or 0) + base
         return _fn
 
+    if etype == "CREATE_MIGHT_PER_GOLD":
+        # Visit the Goldmane Estate: "if you control 3 or more Gold, create that
+        # many Might tokens." Counts real Gold tokens AND permanents that count as
+        # a Gold (subtype match, e.g. Aurum Aegis).
+        threshold = params.get("threshold", 3)
+        def _fn(card, event, state, _th=threshold):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import create_token as _ct
+            cid = _controller_id(card)
+            player = state.players[cid]
+            n = 0
+            for zn in ('permanents', 'head', 'chest', 'arms', 'legs',
+                       'weapon1', 'weapon2'):
+                z = getattr(player, zn, None)
+                if not z:
+                    continue
+                for t in z.cards:
+                    if (getattr(t, 'slug', '') == 'gold'
+                            or 'gold' in [s.lower() for s in (getattr(t, 'subtypes', None) or [])]):
+                        n += 1
+            if n >= _th:
+                _ct(state, target_player_id=cid, token_slug='might', number=n)
+        return _fn
+
+    if etype == "REVEAL_REVILED_FROM_INVENTORY":
+        # Outside Interference: "You may reveal a Reviled attack action card from
+        # your inventory and put it into your hand."
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            cid = _controller_id(card)
+            controller = state.players[cid]
+            inv = getattr(controller, 'inventory', None)
+            if inv is None:
+                return
+            reviled = [c for c in inv.cards
+                       if 'reviled' in [t.lower() for t in (c.types or [])]
+                       and 'attack' in [s.lower() for s in (c.subtypes or [])]]
+            if not reviled:
+                return
+            pick = _ask_player(state, cid, [c.slug for c in reviled] + ["decline"],
+                               context="Reveal a Reviled attack action from your inventory?")
+            if pick == "decline":
+                return
+            target = next((c for c in reviled if c.slug == pick), reviled[0])
+            inv.remove(target)
+            target.is_public = True
+            controller.hand.add(target)
+        return _fn
+
+    if etype == "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE":
+        # Under the Trap-Door: "Banish target trap from your graveyard. If you do,
+        # you may play it this turn." (The graveyard->banish rider is not modeled.)
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import banish as _banish
+            cid = _controller_id(card)
+            controller = state.players[cid]
+            traps = [c for c in controller.graveyard.cards
+                     if "trap" in [s.lower() for s in (c.subtypes or [])]]
+            if not traps:
+                return
+            pick = _ask_player(state, cid, [c.slug for c in traps] + ["decline"],
+                               context="Banish a trap from your graveyard to play it this turn?")
+            if pick == "decline":
+                return
+            target = next((c for c in traps if c.slug == pick), None)
+            if target is None:
+                return
+            _banish(state, target, cid, origin_zone="graveyard")
+            if target in controller.banished.cards:
+                controller.playable_from_banished.append(target)
+        return _fn
+
+    if etype == "REDUCE_TOKEN_CREATION_THIS_TURN":
+        # Ripple Away: "If an action card effect would create 1 or more tokens this
+        # turn, instead it creates that many minus 1 of each of those tokens."
+        # Registers a turn-scoped replacement that decrements CreateTokenEvent.number.
+        def _fn(card, event, state):
+            from engine.effects import ReplacementEffect, ReplacementType
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            controller = state.players[cid]
+            flag = "ripple_away_active"
+            if flag not in controller.current_turn_effects:
+                controller.current_turn_effects.append(flag)
+            def _cond(ev, s, _cid=cid, _flag=flag):
+                return (isinstance(ev, dict) and 'target_player_id' in ev
+                        and (ev.get('number') or 0) >= 1
+                        and _flag in s.players[_cid].current_turn_effects)
+            def _repl(ev, s):
+                ev['number'] = max(0, (ev.get('number') or 0) - 1)
+                return ev
+            state.effect_manager.add_replacement(ReplacementEffect(
+                source_card=card, replacement_type=ReplacementType.STANDARD,
+                condition_fn=_cond, replace_fn=_repl, owner_id=cid))
+        return _fn
+
+    if etype == "GRANT_SUBTYPE":
+        # "This counts as a <subtype>" (e.g. Aurum Aegis counts as a Gold). Adds
+        # the subtype to this card so subtype-aware checks (CONTROLS_TOKEN_TYPE)
+        # see it. Applied on equip; the subtype persists while the card is in play.
+        subtype = params.get("subtype", "")
+        def _fn(card, event, state, _sub=subtype):
+            if not _sub:
+                return
+            subs = list(card.subtypes or [])
+            if _sub not in subs:
+                subs.append(_sub)
+                card.subtypes = subs
+        return _fn
+
     if etype == "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT":
         # Headbutt: "This can't be defended by non-head equipment." Set on the
         # active combat while this card attacks; get_defendable_cards honours it.

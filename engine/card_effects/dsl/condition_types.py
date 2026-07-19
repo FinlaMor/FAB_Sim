@@ -348,9 +348,10 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _oim
 
     if ctype == "CONTROLS_TOKEN_TYPE":
-        # True if the controller has >= 1 permanent of the given slug. Searches
-        # all permanents (a Gold token is an Item sub-zone member, not the Token
-        # sub-zone) plus equipment/weapon slots.
+        # True if the controller has >= 1 permanent of the given slug OR a
+        # permanent that "counts as" that token (matched via subtype, e.g. Aurum
+        # Aegis counts as a Gold). Searches all permanents (a Gold token is an
+        # Item sub-zone member, not the Token sub-zone) plus equipment/weapon slots.
         token_slug = params.get("token", "")
         def _ctt(c, e, s, _slug=token_slug):
             from engine.card_effects.ability_keywords import _controller_id
@@ -358,7 +359,10 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             for zone_name in ('permanents', 'head', 'chest', 'arms', 'legs',
                               'weapon1', 'weapon2'):
                 zone = getattr(player, zone_name, None)
-                if zone and any(getattr(t, 'slug', '') == _slug for t in zone.cards):
+                if zone and any(
+                        getattr(t, 'slug', '') == _slug
+                        or _slug.lower() in [st.lower() for st in (getattr(t, 'subtypes', None) or [])]
+                        for t in zone.cards):
                     return True
             return False
         return _ctt

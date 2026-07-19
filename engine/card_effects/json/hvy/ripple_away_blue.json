@@ -1,4 +1,13 @@
 {
   "slug": "ripple_away_blue",
-  "abilities": []
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [{"type": "DISCARD_SELF"}],
+      "_comment": "Instant - Discard this: If an action card effect would create 1 or more tokens this turn, instead it creates that many minus 1 of each of those tokens.",
+      "effects": [
+        {"type": "REDUCE_TOKEN_CREATION_THIS_TURN"}
+      ]
+    }
+  ]
 }
