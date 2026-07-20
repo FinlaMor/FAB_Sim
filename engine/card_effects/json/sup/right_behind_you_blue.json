@@ -10,7 +10,12 @@
       ],
       "effects": [
         {"type": "MODIFY_DEFENSE_VALUE", "amount": 1},
-        {"type": "LOOK_AT_TOP_MAY_BOTTOM"}
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "SELF", "into": "seen"},
+        {"type": "MAY", "prompt": "Put the top card of your deck on the bottom?",
+         "conditions": [{"type": "REF_EXISTS", "ref": "seen"}],
+         "effects": [
+           {"type": "MOVE_REF", "ref": "seen", "to_zone": "deck", "position": "bottom", "player": "SELF"}
+         ]}
       ]
     }
   ]

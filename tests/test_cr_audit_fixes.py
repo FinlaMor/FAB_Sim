@@ -466,6 +466,33 @@ def test_ironfist_revelation_reveals_crush_card_and_powers_it():
     assert plain.counters.get("power", 0) == 0
 
 
+def test_ironfist_revelation_may_is_declinable():
+    """The "you may" is a real choice: declining leaves the eligible crush card
+    face-down and uncountered. Covers the MAY-block decline branch created by
+    the migration to composable primitives."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    iron = _card("ironfist_revelation", 1)
+    st.players[1].arms.add(iron)
+    crush = _card("batter_to_a_pulp_red", 1)
+    st.players[1].arsenal.add(crush)
+
+    def _decline(state, options, context="", **kw):
+        for negative in ("no", "decline", "fail_to_find"):
+            if negative in options:
+                return negative
+        return options[-1]
+    st.player_agents[1] = _decline
+
+    dispatch(st, "ON_DEFEND", "ironfist_revelation", card=iron, event=None)
+
+    assert not crush.is_public, "declined — crush card stays face-down"
+    assert crush.counters.get("power", 0) == 0, "declined — no counter placed"
+
+
 def test_big_bully_doubles_base_when_booed():
     # "If you've been booed this turn, this card's base {p} is doubled." Must
     # double the CURRENT base (so Kayo setting base 6 → 12), not add a flat 4.

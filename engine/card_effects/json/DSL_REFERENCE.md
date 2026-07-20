@@ -289,11 +289,14 @@ sentence like "look at the top card, and if it's red you may destroy it for
 
 | Type | Fields | Description |
 |---|---|---|
-| `LOOK_AT` | `zone` (DECK_TOP/ARSENAL/HAND), `player`, `amount`, `into` | Peek at cards **without moving them**; store under `into` (a single card unwrapped, multiple as a list) |
+| `LOOK_AT` | `zone` (DECK_TOP/ARSENAL/HAND), `player`, `amount` (int or "ALL"), `filter` ({keyword, subtype, face_down}), `into` | Peek at cards **without moving them**; store under `into` (a single card unwrapped, multiple/filtered as a list). A `filter` scans the whole zone |
 | `SELECT_FROM_REF` | `ref`, `mode` (SAME_NAME/ANY), `min`, `max`, `into`, `rest_into` | Choose a subset of a referenced list; `SAME_NAME` picks a name and takes all copies. `rest_into` stores the complement |
 | `DESTROY_REF` | `ref` | Destroy the referenced card(s) via the canonical `destroy` |
 | `BANISH_REF` | `ref`, `from_zone` (optional) | Banish referenced card(s); origin zone is derived from the card if not given |
+| `MOVE_REF` | `ref`, `to_zone`, `position` (top/bottom), `player` (SELF/OPPONENT/OWNER) | Move referenced card(s) to a zone |
 | `REORDER_REF` | `ref`, `player` | Let the controller order referenced cards back on top of the deck (first chosen ends up on top) |
+| `PUT_COUNTER_REF` | `ref`, `counter_type`, `amount` | Put counters on the referenced card(s) (vs `PUT_COUNTER`, which targets the ability's own source) |
+| `FLIP_REF` | `ref`, `face_up` | Turn referenced card(s) face-up or face-down (`is_public`) |
 | `MAY` | `prompt`, `conditions`, `effects` | "You may X. If you do, Y." — offers the block only when `conditions` hold; declining runs none of `effects`, so "if you do" needs no separate plumbing |
 
 Reference-reading conditions: `REF_PITCH_IS` (`ref`, `pitch` — 1 red / 2 yellow

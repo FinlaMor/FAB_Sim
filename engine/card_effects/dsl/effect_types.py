@@ -207,29 +207,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                            position=("top" if _top else None))
         return _fn
 
-    if etype == "LOOK_AT_TOP_MAY_BOTTOM":
-        # "Look at the top card of your deck. You may put it on the bottom."
-        # The longhand form of Opt 1 (CR 8.5.22), modeled literally rather than
-        # via the Opt keyword — e.g. Right Behind You, which predates the keyword.
-        def _fn(card, event, state):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
-            from engine.effect_keywords import put_object
-            pid = _controller_id(card)
-            if pid is None:
-                return
-            deck = state.players[pid].deck
-            if not deck.cards:
-                return
-            top = deck.cards[0]
-            choice = _ask_player(state, pid, ["bottom", "keep"],
-                                 context=f"Look at the top card of your deck "
-                                         f"({top.slug}); put it on the bottom?")
-            if choice == "bottom":
-                # position=None → zone default (append = bottom, cards[-1])
-                put_object(state, top, "deck", destination_player_id=pid,
-                           source_player_id=pid, position=None)
-        return _fn
-
     if etype == "PUT_SELF_BOTTOM_DECK":
         # Remove this card from its current zone and put it on the bottom of its owner's deck.
         # Used for replacement effects like Drone of Brutality.
@@ -433,35 +410,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                                if (getattr(c, 'cost', None) or 0) >= _cg)
                 if matching:
                     effect_gain_life(state, pid, _gl * matching)
-        return _fn
-
-    if etype == "REVEAL_CRUSH_ARSENAL_CARD":
-        # Ironfist Revelation: "you may turn a face-down card with crush in your
-        # arsenal face-up. If you do, put a +1{p} counter on it." Arsenal cards are
-        # hidden (is_public False); revealing one sets is_public True so it is not
-        # offered again, and the +1{p} counter goes on that revealed card.
-        counter_type = params.get("counter_type", "power")
-        amount = params.get("amount", 1)
-        def _fn(card, event, state, _ct=counter_type, _amt=amount):
-            from engine.card_effects.ability_keywords import (
-                _ask_player, _controller_id, effect_put_counter)
-            pid = _controller_id(card)
-            arsenal = state.players[pid].arsenal
-            eligible = [c for c in arsenal.cards
-                        if not getattr(c, 'is_public', False)
-                        and any(k.lower() == 'crush' for k in (c.keywords or []))]
-            if not eligible:
-                return
-            from engine.card_effects.ability_keywords import ask_optional
-            pick = ask_optional(state, pid, [c.slug for c in eligible],
-                                context="Turn a face-down crush card in your arsenal face-up?")
-            if pick is None:
-                return
-            target = next((c for c in eligible if c.slug == pick), eligible[0])
-            target.face_down = False
-            target.is_public = True
-            for _ in range(_amt):
-                effect_put_counter(state, target, _ct)
         return _fn
 
     if etype == "PUT_ARSENAL_BOTTOM":
@@ -821,26 +769,45 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # the deck — the card stays put until something acts on the ref.
         #   zone:   DECK_TOP (default) | ARSENAL | HAND
         #   player: OPPONENT (default) | SELF
-        #   amount: how many (default 1); a single card is stored unwrapped
+        #   amount: how many (default 1) or "ALL"; a single card (amount 1, no
+        #           filter) is stored unwrapped, otherwise a list
+        #   filter: optional {keyword, face_down, subtype} — a filter always
+        #           scans the whole zone and always stores a list
         zone = params.get("zone", "DECK_TOP").upper()
         who = params.get("player", "OPPONENT").upper()
         amount = params.get("amount", 1)
         into = params.get("into", "looked")
-        def _fn(card, event, state, _z=zone, _w=who, _n=amount, _into=into):
+        filt = params.get("filter") or {}
+        def _fn(card, event, state, _z=zone, _w=who, _n=amount, _into=into, _f=filt):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.context import set_ref
             cid = _controller_id(card)
             tid = (3 - cid) if _w in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
-            if _z == "DECK_TOP":
-                pool = list(player.deck.cards[:_n])
-            elif _z == "ARSENAL":
-                pool = list(getattr(player.arsenal, "cards", [])[:_n])
-            elif _z == "HAND":
-                pool = list(player.hand.cards[:_n])
+            zone_map = {"DECK_TOP": player.deck, "ARSENAL": getattr(player, "arsenal", None),
+                        "HAND": player.hand}
+            z = zone_map.get(_z)
+            source = list(getattr(z, "cards", []) if z is not None else [])
+            if _f:
+                # A filter examines the whole zone, not just the top slice.
+                kw = _f.get("keyword")
+                sub = _f.get("subtype")
+                want_fd = _f.get("face_down")
+                def _ok(c):
+                    if kw and not any(k.lower() == kw.lower() for k in (c.keywords or [])):
+                        return False
+                    if sub and sub.lower() not in [s.lower() for s in (c.subtypes or [])]:
+                        return False
+                    if want_fd is not None and bool(getattr(c, "is_public", False)) == bool(want_fd):
+                        return False
+                    return True
+                pool = [c for c in source if _ok(c)]
+                set_ref(_into, pool)
+            elif str(_n).upper() == "ALL":
+                set_ref(_into, source)
             else:
-                pool = []
-            set_ref(_into, pool[0] if _n == 1 else pool)
+                pool = source[:_n]
+                set_ref(_into, pool[0] if _n == 1 and pool else (pool if _n != 1 else None))
             set_ref(_into + "_owner", tid)
         return _fn
 
@@ -855,6 +822,69 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 return
             for obj in (target if isinstance(target, list) else [target]):
                 _ek_destroy(state, obj, card)
+        return _fn
+
+    if etype == "MOVE_REF":
+        # Move a referenced card to a zone.
+        #   ref:      what to move
+        #   to_zone:  destination zone name (e.g. "deck", "hand", "graveyard")
+        #   position: "top" | "bottom" (default) — only meaningful for the deck
+        #   player:   SELF | OPPONENT | OWNER (default) — whose zone
+        ref = params.get("ref", "looked")
+        to_zone = params.get("to_zone", "deck")
+        position = params.get("position", "bottom")
+        who = params.get("player", "OWNER").upper()
+        def _fn(card, event, state, _r=ref, _z=to_zone, _pos=position, _w=who):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import put_object
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if not target:
+                return
+            cid = _controller_id(card)
+            for obj in (target if isinstance(target, list) else [target]):
+                if _w == "OWNER":
+                    dest_pid = obj.owner
+                elif _w in ("OPPONENT", "DEFENDING", "DEFENDER"):
+                    dest_pid = 3 - cid
+                else:
+                    dest_pid = cid
+                put_object(state, obj, _z, destination_player_id=dest_pid,
+                           source_player_id=cid,
+                           position=("top" if str(_pos).lower() == "top" else None))
+        return _fn
+
+    if etype == "PUT_COUNTER_REF":
+        # Put counters on a referenced card (vs PUT_COUNTER, which targets the
+        # ability's own source).
+        ref = params.get("ref", "chosen")
+        counter_type = params.get("counter_type", "power")
+        amount = params.get("amount", 1)
+        def _fn(card, event, state, _r=ref, _ct=counter_type, _a=amount):
+            from engine.card_effects.ability_keywords import effect_put_counter
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if not target:
+                return
+            for obj in (target if isinstance(target, list) else [target]):
+                for _ in range(_a):
+                    effect_put_counter(state, obj, _ct)
+        return _fn
+
+    if etype == "FLIP_REF":
+        # Turn a referenced face-down card face-up (or vice versa). Arsenal and
+        # banished-face-down cards track visibility via is_public.
+        ref = params.get("ref", "chosen")
+        face_up = params.get("face_up", True)
+        def _fn(card, event, state, _r=ref, _up=face_up):
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if not target:
+                return
+            for obj in (target if isinstance(target, list) else [target]):
+                obj.is_public = bool(_up)
+                if hasattr(obj, "face_down"):
+                    obj.face_down = not bool(_up)
         return _fn
 
     if etype == "SELECT_FROM_REF":
