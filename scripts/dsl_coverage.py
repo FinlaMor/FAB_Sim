@@ -177,12 +177,18 @@ def main() -> int:
 
     reachable_dead: dict[str, list[str]] = {}
     unreachable: list[str] = []
+    token_only: list[str] = []
     for slug, types in sorted(auth.items()):
         missed = sorted(types - executed.get(slug, set()))
         if not missed:
             continue
         if slug in in_decks or slug in executed:
             reachable_dead[slug] = missed
+        elif "token" in (index.get(slug, {}).get("typeText") or "").lower():
+            # Tokens are created by effects and can never appear in a decklist,
+            # so "add a deck" is never the remedy — they need a card that
+            # creates them. Reporting them as deck-unreachable is misleading.
+            token_only.append(slug)
         else:
             unreachable.append(slug)
 
@@ -199,8 +205,12 @@ def main() -> int:
     for slug, missed in reachable_dead.items():
         print(f"  {slug}: {', '.join(missed)}")
     print(f"\n--- not reachable from the {len(decks)} test decks ({len(unreachable)} cards) ---")
-    print("    not evidence of a bug — no game could play them")
+    print("    not evidence of a bug — add a deck containing them to test")
     for slug in unreachable:
+        print(f"  {slug}")
+    print(f"\n--- tokens, never in a decklist ({len(token_only)}) ---")
+    print("    reachable only via a card that creates them, not by adding a deck")
+    for slug in token_only:
         print(f"  {slug}")
 
     if args.json_out:
@@ -210,6 +220,7 @@ def main() -> int:
             "coverage_pct": round(pct, 2),
             "reachable_never_executed": reachable_dead,
             "unreachable_from_test_decks": unreachable,
+            "tokens_not_in_any_decklist": token_only,
         }, indent=2), encoding="utf-8")
         print(f"\nwrote {args.json_out}", file=sys.stderr)
     return 0

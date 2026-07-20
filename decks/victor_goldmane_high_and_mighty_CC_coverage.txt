@@ -1,0 +1,37 @@
+Name: Victor Coverage Variant
+Hero: Victor Goldmane, High and Mighty
+Format: Classic Constructed
+
+Arena cards
+1x Aurum Aegis
+1x Crown of Dominion
+1x Fyendal's Spring Tunic
+1x Ironfist Revelation
+1x Anothos
+1x Quickdodge Flexors
+
+Deck cards
+3x Boulder Drop (red)
+3x Command and Conquer (red)
+2x Disable (red)
+3x Enlightened Strike (red)
+3x Pummel (red)
+3x Spinal Crush (red)
+3x Test of Iron Grip (red)
+3x Test of Strength (red)
+2x Trounce (red)
+1x Riches of Trōpal-Dhani (yellow)
+1x Righteous Cleansing (yellow)
+1x Debilitate (yellow)
+1x Disable (yellow)
+3x The Golden Son (yellow)
+1x Debilitate (blue)
+3x Cranial Crush (blue)
+3x Vigorous Windup (blue)
+3x Headbutt (blue)
+3x Macho Grande (blue)
+3x Right Behind You (blue)
+3x Ripple Away (blue)
+3x Thunder Quake (blue)
+3x Thunk (blue)
+3x Visit Goldmane Estate (blue)
