@@ -1699,5 +1699,469 @@
     "slug": "thunk_blue",
     "name": "Thunk",
     "text": "When you win a **clash** revealing this, create a Might token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends, **clash** with the attacking hero.",
+        "implemented_by": "CLASH",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Put the revealed cards on the bottom of their owner's deck, then **clash** again.",
+        "implemented_by": "CLASH",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If a hero wins both **clashes**, they create a Gold, Might, and Vigor token.",
+        "implemented_by": "CLASH",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "trounce_red",
+    "name": "Trounce",
+    "text": "When this defends, **clash** with the attacking hero. Put the revealed cards on the bottom of their owner's deck, then **clash** again.\n\nIf a hero wins both **clashes**, they create a Gold, Might, and Vigor token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "The first time each turn you create a Gold token from an effect you control, draw a card.",
+        "implemented_by": "STATIC_TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "The first time each turn you would fail to win a clash, instead you may destroy a Gold you control.",
+        "implemented_by": "REPLACEMENT",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you do, put 1 of the revealed cards on the bottom of its owner's deck, then clash again.",
+        "implemented_by": "REPLACEMENT",
+        "status": "MISMATCH",
+        "note": "The JSON replacement effect handles the 'may destroy a Gold' and 'clash again' parts but does not explicitly implement putting 1 revealed card on bottom of owner's deck. This is a semantic difference from the printed text."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "victor_goldmane_high_and_mighty",
+    "name": "Victor Goldmane, High and Mighty",
+    "text": "The first time each turn you create a Gold token from an effect you control, draw a card.\n\nThe first time each turn you would fail to win a **clash**, instead you may destroy a Gold you control. If you do, put 1 of the revealed cards on the bottom of its owner's deck, then **clash** again."
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Instant**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword is implemented by game engine"
+      },
+      {
+        "text": "Discard this",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No discard effect specified in JSON, only token creation"
+      },
+      {
+        "text": "Create a Vigor token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "Token creation is correctly implemented"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "vigorous_windup_blue",
+    "name": "Vigorous Windup",
+    "text": "**Instant** - Discard this: Create a Vigor token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "This can't be defended by non-head equipment.",
+        "implemented_by": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you have a head equipped and the defending hero doesn't, this gets +1{p}.",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on a head they have equipped, then if it has 0{d}, destroy it.",
+        "implemented_by": "CRUSH_MINUS_DEF_OPP_HEAD",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "headbutt_blue",
+    "name": "Headbutt",
+    "text": "This can't be defended by non-head equipment.\n\nIf you have a head equipped and the defending hero doesn't, this gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on a head they have equipped, then if it has 0{d}, destroy it."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends",
+        "implemented_by": "ON_DEFEND",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "clash with the attacking hero",
+        "implemented_by": "CLASH",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If there is a winner",
+        "implemented_by": "CLASH",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "the other hero discards a card",
+        "implemented_by": "discard",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "test_of_iron_grip_red",
+    "name": "Test of Iron Grip",
+    "text": "When this defends, **clash** with the attacking hero. If there is a winner, the other hero discards a card."
+  },
+  {
+    "clauses": [
+      {
+        "text": "You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion's {r} cost",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "JSON does not implement the conditional cost reduction mechanism involving removing counters from auras"
+      },
+      {
+        "text": "Ward 10",
+        "implemented_by": "WARD",
+        "status": "IMPLEMENTED",
+        "note": "The WARD ability with amount 10 is correctly implemented in the JSON"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "10000_year_reunion_red",
+    "name": "10,000 Year Reunion",
+    "text": "You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion's {r} cost.\n\n**Ward 10**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Stealth",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword is implemented by the game engine itself"
+      },
+      {
+        "text": "When this hits a hero, banish the top card of their deck",
+        "implemented_by": "BANISH",
+        "status": "IMPLEMENTED",
+        "note": "The BANISH effect with TOP_DECK from opponent's deck is present"
+      },
+      {
+        "text": "Whenever this banishes a red card, draw a card and gain 1{h}",
+        "implemented_by": "DRAW",
+        "status": "MISMATCH",
+        "note": "The JSON only implements the DRAW effect but does not specify that it only occurs when a red card is banished. The gain 1{h} part is completely missing."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "art_of_desire_body_red",
+    "name": "Art of Desire: Body",
+    "text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a red card, draw a card and gain 1{h}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Create a Gold token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Then if you control 3 or more Gold, create that many Might tokens",
+        "implemented_by": "CREATE_MIGHT_PER_GOLD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Go again",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "visit_goldmane_estate_blue",
+    "name": "Visit Goldmane Estate",
+    "text": "**Victor Specialization**\n\nCreate a Gold token. Then if you control 3 or more Gold, create that many Might tokens.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Each hero puts an attack action card from their graveyard face down into their arsenal.",
+        "implemented_by": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Each hero that does, discards a card.",
+        "implemented_by": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Create a Ponder token under your control and a Frailty token under each opponent's control.",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Go again",
+        "implemented_by": "GAIN",
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "codex_of_frailty_yellow",
+    "name": "Codex of Frailty",
+    "text": "Each hero puts an attack action card from their graveyard face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and a Frailty token under each opponent's control.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Each hero puts the top card of their deck face down into their arsenal.",
+        "implemented_by": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Each hero that does, discards a card.",
+        "implemented_by": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Create a Ponder token under your control and an Inertia token under each opponent's control.",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Go again",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "codex_of_inertia_yellow",
+    "name": "Codex of Inertia",
+    "text": "Each hero puts the top card of their deck face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and an Inertia token under each opponent's control.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Death Touch can't be played from hand",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "The JSON does not contain any restriction preventing the card from being played from hand"
+      },
+      {
+        "text": "When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "MISMATCH",
+        "note": "The JSON only creates a Frailty token, but the printed text requires choosing between Frailty, Inertia, or Bloodrot Pox tokens"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "death_touch_red",
+    "name": "Death Touch",
+    "text": "Death Touch can't be played from hand.\n\nWhen this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control."
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Once per Turn Attack Reaction** - 0: Target dagger you control that isn't on the active chain link deals 1 damage to target hero.",
+        "implemented_by": "DAGGER_DEALS_DAMAGE_AND_DESTROY",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If damage is dealt this way, the dagger has hit.",
+        "implemented_by": "DAGGER_DEALS_DAMAGE_AND_DESTROY",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Destroy the dagger.",
+        "implemented_by": "DAGGER_DEALS_DAMAGE_AND_DESTROY",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "**Blade Break**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Blade Break is a game engine keyword"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "flick_knives",
+    "name": "Flick Knives",
+    "text": "**Once per Turn Attack Reaction** - 0: Target dagger you control that isn't on the active chain link deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.\n\n**Blade Break**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends an attack with go again",
+        "implemented_by": "DEFENSE_REACTION",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "create a Frailty token under the attacking hero's control",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "frailty_trap_red",
+    "name": "Frailty Trap",
+    "text": "When this defends an attack with **go again**, create a Frailty token under the attacking hero's control."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control.",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "MISMATCH",
+        "note": "The printed text requires a condition that {p} (power) is greater than the base, but the JSON implementation lacks this conditional check. The JSON unconditionally creates a token, while the text implies the creation is dependent on the power being greater than base."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "inertia_trap_red",
+    "name": "Inertia Trap",
+    "text": "When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Stealth",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword is implemented by game engine"
+      },
+      {
+        "text": "When this hits a hero",
+        "implemented_by": "ON_HIT",
+        "status": "IMPLEMENTED",
+        "note": "Trigger condition matches"
+      },
+      {
+        "text": "banish the top card of their deck",
+        "implemented_by": "BANISH",
+        "status": "IMPLEMENTED",
+        "note": "Banish effect with TOP_DECK source matches"
+      },
+      {
+        "text": "You may play it until the end of your next turn",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "JSON does not implement the optional playing mechanic or duration restriction"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "infiltrate_red",
+    "name": "Infiltrate",
+    "text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck. You may play it until the end of your next turn."
+  },
+  {
+    "clauses": [
+      {
+        "text": "As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard.",
+        "implemented_by": "BANISH",
+        "status": "IMPLEMENTED",
+        "note": "The BANISH effect correctly implements the banishing of a card with 1{p} from the graveyard as an additional cost."
+      },
+      {
+        "text": "When you do, this gains +1{p} and **go again**.",
+        "implemented_by": "MODIFY_ATTACK,GAIN",
+        "status": "IMPLEMENTED",
+        "note": "The MODIFY_ATTACK effect adds +1{p} and the GAIN effect with keyword 'go again' implements the go again ability."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "looking_for_a_scrap_red",
+    "name": "Looking for a Scrap",
+    "text": "As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and **go again**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Create X Bloodrot Pox tokens under the defending hero's control, where X is the number of defending cards this chain link.",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "MISMATCH",
+        "note": "JSON creates only 1 token regardless of the number of defending cards, while the text specifies creating X tokens where X equals the number of defending cards."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "spreading_plague_yellow",
+    "name": "Spreading Plague",
+    "text": "Create X Bloodrot Pox tokens under the defending hero's control, where X is the number of defending cards this chain link."
+  },
+  {
+    "clauses": [
+      {
+        "text": "If this has 6 or more {p}, it gets **go again** and \"When this hits a hero, the next attack action card you play this turn has 6 base {p}.\"",
+        "implemented_by": "null",
+        "status": "MISSING",
+        "note": "The condition 'If this has 6 or more {p}' and the effects 'it gets go again' and 'the next attack action card you play this turn has 6 base {p}' are not implemented in the JSON."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "chain_of_brutality_red",
+    "name": "Chain of Brutality",
+    "text": "If this has 6 or more {p}, it gets **go again** and \"When this hits a hero, the next attack action card you play this turn has 6 base {p}.\""
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero",
+        "implemented_by": "PLAY",
+        "status": "IMPLEMENTED",
+        "note": "The PLAY ability type covers the attack trigger condition."
+      },
+      {
+        "text": "if you have more {h} than them",
+        "implemented_by": "HEALTH_GT_OPP",
+        "status": "IMPLEMENTED",
+        "note": "The HEALTH_GT_OPP condition correctly implements the health comparison requirement."
+      },
+      {
+        "text": "this gets **go again**",
+        "implemented_by": "go again",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is a keyword implemented by the game engine, not the card JSON."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "insult_to_injury_blue",
+    "name": "Insult to Injury",
+    "text": "When this attacks a hero, if you have more {h} than them, this gets **go again**."
   }
 ]

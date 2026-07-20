@@ -42,6 +42,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+# One model for every run, by default. ollama keeps a model resident for 30
+# minutes after use, so switching models mid-session pins both: qwen3-coder:30b
+# (19 GB) alongside qwen2.5-coder:14b (10 GB) exhausted a 31 GB machine and the
+# audit was killed three times before the cause was found. The 30b follows the
+# prompt more closely and can be selected with --model, but only run it when
+# nothing else needs the RAM.
+DEFAULT_MODEL = "qwen2.5-coder:14b"
+
 JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
 SLUG_INDEX = ROOT / "card_data" / "slug_index.json"
 
@@ -93,6 +101,11 @@ text says "you may", JSON does it unconditionally).
 These keywords are implemented by the game engine itself, never by card JSON. \
 Treat a bare keyword clause naming one of them as COVERED_BY_ENGINE, not MISSING:
 {engine_keywords}
+
+Activated abilities are declared by TOP-LEVEL fields, not by an effect. \
+`"activation_cost": 2` and `"per_turn": 1` together implement a clause like \
+"Once per Turn Action - {{r}}{{r}}: Attack." Treat such a clause as IMPLEMENTED \
+when those fields are present; do not report it MISSING for lack of an effect.
 
 Numeric modifiers in an effects list STACK — they are applied in sequence, not \
 chosen between. A card reading "gets +3{{p}}; if the hero is marked, instead it \
@@ -213,6 +226,19 @@ def _downgrade_engine_keyword_findings(result: dict) -> None:
 
 _SUBORDINATE = re.compile(r"^(if|when|whenever|then|and|or|instead)\b", re.I)
 
+# A note that affirms the implementation is correct contradicts its own
+# MISSING/MISMATCH label. Both local models do this: they reason correctly
+# ("+1 on top of +3 makes 4, this matches the printed text") and then attach
+# the wrong status. The prose is the reliable part, so a self-contradicting
+# finding is demoted rather than believed.
+_SELF_CONTRADICTING = re.compile(
+    r"\b(this )?(matches|is correct|correctly implement\w*|is implemented|"
+    r"which is correct|as (?:the )?(?:printed )?text)\b", re.I)
+
+
+def _note_contradicts_status(clause: dict) -> bool:
+    return bool(_SELF_CONTRADICTING.search(clause.get("note") or ""))
+
 
 def _is_fragment(text: str) -> bool:
     """True if a clause is too incomplete to be an instruction on its own.
@@ -244,8 +270,11 @@ def render(results: list[dict]) -> str:
             continue
         flagged = [c for c in r.get("clauses", [])
                    if c.get("status") in ("MISSING", "MISMATCH")]
-        bad = [c for c in flagged if not _is_fragment(c.get("text", ""))]
-        frags = [c for c in flagged if _is_fragment(c.get("text", ""))]
+        def _weak(c):
+            return _is_fragment(c.get("text", "")) or _note_contradicts_status(c)
+
+        bad = [c for c in flagged if not _weak(c)]
+        frags = [c for c in flagged if _weak(c)]
         if frags:
             weak.append((r, frags))
         (findings if bad else clean).append((r, bad))
@@ -301,7 +330,11 @@ def main() -> int:
     g.add_argument("--slug", help="audit a single card")
     g.add_argument("--all", action="store_true", help="audit every implemented card")
     ap.add_argument("--limit", type=int, help="stop after N cards")
-    ap.add_argument("--model", help="model override passed to claw-code")
+    ap.add_argument("--model", default=DEFAULT_MODEL,
+                    help=f"ollama model passed to claw-code (default: {DEFAULT_MODEL}). "
+                         "Keep every run on ONE model: ollama holds each loaded "
+                         "model for 30 minutes, so mixing models across runs pins "
+                         "both in RAM at once.")
     ap.add_argument("-o", "--out", help="write the markdown report here")
     ap.add_argument("--json", dest="json_out", help="also write raw results as JSON")
     ap.add_argument("--no-resume", action="store_true",

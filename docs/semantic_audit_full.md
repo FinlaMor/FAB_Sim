@@ -4,9 +4,9 @@ Model-generated *suspicions*, not verified defects. Each finding is a
 clause the auditor could not map to an implementing effect. Confirm
 against the card text and the CR before changing anything.
 
-- cards audited: 46
-- cards with at least one suspect clause: 9
-- cards clean: 37
+- cards audited: 65
+- cards with at least one suspect clause: 17
+- cards clean: 48
 - audit errors: 0
 
 ## Suspect clauses
@@ -80,6 +80,64 @@ against the card text and the CR before changing anything.
 - **MISSING** — 'if it would be put into the graveyard this turn, instead banish it'
   - JSON does not model the graveyard->banish rider effect
 
+### Victor Goldmane, High and Mighty (`victor_goldmane_high_and_mighty`)
+
+> The first time each turn you create a Gold token from an effect you control, draw a card.  The first time each turn you would fail to win a **clash**, instead you may destroy a Gold you control. If you do, put 1 of the revealed cards on the bottom of its owner's deck, then **clash** again.
+
+- **MISMATCH** — "If you do, put 1 of the revealed cards on the bottom of its owner's deck, then clash again."
+  - The JSON replacement effect handles the 'may destroy a Gold' and 'clash again' parts but does not explicitly implement putting 1 revealed card on bottom of owner's deck. This is a semantic difference from the printed text.
+
+### 10,000 Year Reunion (`10000_year_reunion_red`)
+
+> You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion's {r} cost.  **Ward 10**
+
+- **MISSING** — "You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion's {r} cost"
+  - JSON does not implement the conditional cost reduction mechanism involving removing counters from auras
+
+### Art of Desire: Body (`art_of_desire_body_red`)
+
+> **Stealth**  When this hits a hero, banish the top card of their deck.  Whenever this banishes a red card, draw a card and gain 1{h}.
+
+- **MISMATCH** — 'Whenever this banishes a red card, draw a card and gain 1{h}'
+  - The JSON only implements the DRAW effect but does not specify that it only occurs when a red card is banished. The gain 1{h} part is completely missing.
+
+### Death Touch (`death_touch_red`)
+
+> Death Touch can't be played from hand.  When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.
+
+- **MISSING** — "Death Touch can't be played from hand"
+  - The JSON does not contain any restriction preventing the card from being played from hand
+- **MISMATCH** — 'When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control'
+  - The JSON only creates a Frailty token, but the printed text requires choosing between Frailty, Inertia, or Bloodrot Pox tokens
+
+### Inertia Trap (`inertia_trap_red`)
+
+> When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control.
+
+- **MISMATCH** — "When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control."
+  - The printed text requires a condition that {p} (power) is greater than the base, but the JSON implementation lacks this conditional check. The JSON unconditionally creates a token, while the text implies the creation is dependent on the power being greater than base.
+
+### Infiltrate (`infiltrate_red`)
+
+> **Stealth**  When this hits a hero, banish the top card of their deck. You may play it until the end of your next turn.
+
+- **MISSING** — 'You may play it until the end of your next turn'
+  - JSON does not implement the optional playing mechanic or duration restriction
+
+### Spreading Plague (`spreading_plague_yellow`)
+
+> Create X Bloodrot Pox tokens under the defending hero's control, where X is the number of defending cards this chain link.
+
+- **MISMATCH** — "Create X Bloodrot Pox tokens under the defending hero's control, where X is the number of defending cards this chain link."
+  - JSON creates only 1 token regardless of the number of defending cards, while the text specifies creating X tokens where X equals the number of defending cards.
+
+### Chain of Brutality (`chain_of_brutality_red`)
+
+> If this has 6 or more {p}, it gets **go again** and "When this hits a hero, the next attack action card you play this turn has 6 base {p}."
+
+- **MISSING** — 'If this has 6 or more {p}, it gets **go again** and "When this hits a hero, the next attack action card you play this turn has 6 base {p}."'
+  - The condition 'If this has 6 or more {p}' and the effects 'it gets go again' and 'the next attack action card you play this turn has 6 base {p}' are not implemented in the JSON.
+
 ## Low confidence — probable clause fragments
 
 The auditor split a conditional and flagged half of it. Kept here
@@ -97,7 +155,8 @@ rather than dropped, but check the high-confidence list first.
 - `pain_in_the_backside_red` — MISSING: 'If damage is dealt this way'
 - `pick_up_the_point_red` — MISSING: 'When this attacks'
 - `scar_tissue_red` — MISSING: 'Target dagger attack'
+- `vigorous_windup_blue` — MISSING: 'Discard this'
 
 ## Clean
 
-`nights_embrace_blue`, `boulder_drop_red`, `command_and_conquer_red`, `righteous_cleansing_yellow`, `scowling_flesh_bag`, `blacktek_whisperers`, `crown_of_dominion`, `shred_yellow`, `macho_grande_blue`, `swing_big_red`, `thunder_quake_blue`, `arakni_black_widow`, `arakni_funnel_web`, `arakni_marionette`, `arakni_orb_weaver`, `arakni_redback`, `arakni_tarantula`, `hunters_klaive`, `kiss_of_death_red`, `lair_of_the_spider_red`, `mark_of_the_black_widow_red`, `mask_of_deceit`, `pick_up_the_point_red`, `quickdodge_flexors`, `savor_bloodshed_red`, `scar_tissue_red`, `schism_of_chaos_blue`, `take_up_the_mantle_yellow`, `to_the_point_red`, `up_sticks_and_run_red`, `apex_bonebreaker`, `aurum_aegis`, `millers_grindstone`, `ripple_away_blue`, `test_of_strength_red`, `the_golden_son_yellow`, `thunk_blue`
+`nights_embrace_blue`, `boulder_drop_red`, `command_and_conquer_red`, `righteous_cleansing_yellow`, `scowling_flesh_bag`, `blacktek_whisperers`, `crown_of_dominion`, `shred_yellow`, `macho_grande_blue`, `swing_big_red`, `thunder_quake_blue`, `arakni_black_widow`, `arakni_funnel_web`, `arakni_marionette`, `arakni_orb_weaver`, `arakni_redback`, `arakni_tarantula`, `hunters_klaive`, `kiss_of_death_red`, `lair_of_the_spider_red`, `mark_of_the_black_widow_red`, `mask_of_deceit`, `pick_up_the_point_red`, `quickdodge_flexors`, `savor_bloodshed_red`, `scar_tissue_red`, `schism_of_chaos_blue`, `take_up_the_mantle_yellow`, `to_the_point_red`, `up_sticks_and_run_red`, `apex_bonebreaker`, `aurum_aegis`, `millers_grindstone`, `ripple_away_blue`, `test_of_strength_red`, `the_golden_son_yellow`, `thunk_blue`, `trounce_red`, `vigorous_windup_blue`, `headbutt_blue`, `test_of_iron_grip_red`, `visit_goldmane_estate_blue`, `codex_of_frailty_yellow`, `codex_of_inertia_yellow`, `flick_knives`, `frailty_trap_red`, `looking_for_a_scrap_red`, `insult_to_injury_blue`
