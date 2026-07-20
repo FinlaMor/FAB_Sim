@@ -171,11 +171,19 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                        destination_player_id=cid, source_player_id=cid)
         return _fn
 
-    if etype == "PUT_HAND_CARD_BOTTOM":
-        # Choose a card from hand and put it on the bottom of the deck (no draw).
-        # player: "SELF" (default) | "OPPONENT" — whose hand is affected.
+    if etype in ("PUT_HAND_CARD_BOTTOM", "PUT_HAND_CARD_TOP"):
+        # Choose a card from hand and put it on the deck (no draw).
+        # player:   "SELF" (default) | "OPPONENT" — whose hand is affected.
+        # to:       "BOTTOM" (default) | "TOP" — where it lands. PUT_HAND_CARD_TOP
+        #           is sugar for to="TOP".
+        # optional: True (default) allows declining. Cards worded "they put a
+        #           card…" are mandatory (e.g. Boulder Drop) and must pass false,
+        #           or the affected player can simply refuse the effect.
         player_target = params.get("player", "SELF")
-        def _fn(card, event, state, _pt=player_target):
+        to_top = (etype == "PUT_HAND_CARD_TOP"
+                  or str(params.get("to", "BOTTOM")).upper() == "TOP")
+        optional = params.get("optional", True)
+        def _fn(card, event, state, _pt=player_target, _top=to_top, _opt=optional):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
             from engine.effect_keywords import put_object
             cid = _controller_id(card)
@@ -183,17 +191,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             player = state.players[tid]
             if not player.hand.cards:
                 return
-            options = [c.slug for c in player.hand.cards] + ["decline"]
+            where = "top" if _top else "bottom"
+            options = [c.slug for c in player.hand.cards]
+            if _opt:
+                options = options + ["decline"]
             choice = _ask_player(state, tid, options,
-                                 context="Choose a card to put on the bottom of your deck")
+                                 context=f"Choose a card to put on the {where} of your deck")
             if choice == "decline":
                 return
             target = player.hand.find(choice)
             if target:
-                # position=None → zone default (append = bottom, cards[-1])
+                # position "top" → cards[0]; None → zone default (bottom, cards[-1])
                 put_object(state, target, "deck",
                            destination_player_id=tid, source_player_id=tid,
-                           position=None)
+                           position=("top" if _top else None))
         return _fn
 
     if etype == "LOOK_AT_TOP_MAY_BOTTOM":

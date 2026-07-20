@@ -408,13 +408,16 @@ def _continue_action_phase(state: GameState) -> None:
 def _combat_phase_iter(state: GameState) -> None:
     """Full combat chain per rules 7.1-7.7. Handles multiple chain links."""
     attack_entry = next(e for e in state.stack_entries if e.is_attack)
-    state.stack_entries.remove(attack_entry)
     attack_card = attack_entry.card
 
     # --- 7.1 Layer Step ---
     state.step = Step.COMBAT_LAYER
-    # 7.1.2: turn player unconditionally gains priority in the Layer Step (CR 7.1.2).
-    # Players may play instants/reactions before the attack resolves regardless of stack state.
+    # CR 7.1.3: the attack REMAINS on the stack as the bottom layer during the
+    # Layer Step; the step ends when it is the top layer and all players pass.
+    # It is removed by _attack_step (7.2.3), not here, so effects that inspect
+    # the stack can see it. priority_loop's only_attack branch handles the case
+    # where it is the sole remaining layer.
+    # 7.1.2: turn player unconditionally gains priority in the Layer Step.
     if state.stack_entries:
         order_stack(state)
     state.priority_player = state.active_player
@@ -449,6 +452,23 @@ def _combat_phase_iter(state: GameState) -> None:
     if state.done:
         return
 
+def _consume_attack_entry(state: GameState, entry: Optional[StackEntry] = None) -> None:
+    """Take the attack layer off the stack (CR 3.15.6).
+
+    The attack stays on the stack as the bottom layer through the Layer Step so
+    it is visible to effects that inspect the stack (negate target attack,
+    layer counting) and new layers can be ordered above it (CR 7.1.3, 3.15.4-5).
+    It leaves when the Attack Step moves it to the combat chain, or when the
+    chain closes early — leaving it behind would send _continue_action_phase
+    straight back into the combat phase.
+    """
+    if entry is not None and entry in state.stack_entries:
+        state.stack_entries.remove(entry)
+        return
+    for e in [e for e in state.stack_entries if e.is_attack]:
+        state.stack_entries.remove(e)
+
+
 def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry] = None) -> None:
     """Attack Step (7.2)."""
 
@@ -472,6 +492,7 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
         if _resolved_target is None:
             # Declared target left the arena — CR 7.7.3: the attack on the
             # stack is put into its owner's graveyard and the chain closes.
+            _consume_attack_entry(state, entry)
             state.stack.remove(attack_card)
             _owner = state.players.get(attack_card.owner)
             if _owner is not None and not attack_card.is_weapon:
@@ -483,6 +504,7 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
     # CR 1.3.1b / 7.0.3c: the attacker controls the active attack (covers weapon
     # attack-proxies, whose card was never "played" from hand).
     attack_card.controller = state.active_player
+    _consume_attack_entry(state, entry)
     state.stack.remove(attack_card)  # leaves the stack zone (CR 3.15.6)
     state.combat_chain.add(attack_card)
     state.combat = CombatState(
@@ -685,10 +707,10 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
     # 7.6.3a: if attack added to stack during resolution → Layer Step (new chain link)
     if state.stack_entries and any(e.is_attack for e in state.stack_entries):
         attack_entry = next(e for e in state.stack_entries if e.is_attack)
-        state.stack_entries.remove(attack_entry)
         attack_card = attack_entry.card
 
-        # New chain link starts from Layer Step
+        # New chain link starts from Layer Step. As above (CR 7.1.3) the attack
+        # stays on the stack until _attack_step consumes it.
         state.step = Step.COMBAT_LAYER
         if state.stack_entries:
             order_stack(state)
@@ -721,6 +743,11 @@ def _resolution_step(state: GameState, _is_root: bool = True) -> None:
 def _close_step(state: GameState) -> None:
     """Close Step (7.7) — no priority (7.7.1)."""
     state.step = Step.COMBAT_CLOSE
+
+    # Safety net: the chain can close before the Attack Step consumes the
+    # attack layer (e.g. Phantasm during the Layer Step). A leftover attack
+    # entry would send _continue_action_phase straight back into combat.
+    _consume_attack_entry(state)
 
     # 7.7.3: combat chain closes event
     state.event_manager.emit('combat_chain_close', state)

@@ -123,7 +123,7 @@ More bugs found reviewing recorded games, all fixed with coverage in
 | H1 resolution-at-announce | **FIXED** — non-attack card layers carry their DSL dispatch in `StackEntry.effect_fn` (resolved by `resolve_stack` after priority); attacks dispatch `ON_PLAY` at the Attack Step (CR 7.2.3); the announce-time `on_play` event remains for "when a player plays" triggers only |
 | H2 damage always to hero | **FIXED** — `_resolve_damage` deals to `combat.attack_target_card` when set (7.5.2b ceased-target and 8.5.3c non-living checks included); ally *targeting* still not offered in legal actions (deferred until ally decks) |
 | M1 target legality at Attack Step | **FIXED** — declared target gone → attack goes to owner's graveyard, chain closes (7.2.2/7.7.3) |
-| M2 attack not on stack during priority | open |
+| M2 attack not on stack during priority | **FIXED** — the attack layer stays on the stack as the bottom layer through the Layer Step (CR 7.1.3) and is consumed by `_attack_step` (7.2.3); regression test `test_attack_layer_is_on_the_stack_during_layer_step` |
 | M3 triggered-layer target declaration | **partially fixed** — DSL `target.filter` is now enforced at announce for card plays (CR 1.8.5: "Target attack with stealth" is unplayable without a stealth attack); resolution-time target recheck (5.3.2a) still open |
 | M4 SBA approximation | open |
 | L1 ally life reset (all players) | **FIXED** — regression test `test_end_of_turn_resets_every_players_ally_life` |
@@ -221,15 +221,30 @@ the hero". An attack whose Spectra-aura target was destroyed during the Layer
 Step should close the chain; instead it retargets the hero. (7.5.2b damage-time
 legality is also unchecked, moot while H2 stands.)
 
-### M2. The attack layer is not on the stack during Layer/Resolution Step priority
+### M2. The attack layer stays on the stack during Layer Step priority
+*FIXED 2026-07-20.*
 **CR 7.1.3, 3.15.4-5** — the attack sits on the stack as the bottom layer; the
 Layer Step ends when it is the *top* layer and all players pass.
-**Engine** — `engine.py:_combat_phase_iter` and `_resolution_step` *remove* the
-attack `StackEntry` before running the priority window. Players do get the
-priority window (functionally close), but the attack is invisible to anything
-that inspects the stack (negate target attack, layer-counting effects), and
-new layers can't be ordered relative to it. `priority_loop`'s `only_attack`
-check papers over the same distinction.
+**Was** — `_combat_phase_iter` and the 7.6.3a new-chain-link path *removed* the
+attack `StackEntry` before the priority window, so the attack was invisible to
+anything inspecting the stack (negate target attack, layer counting) and new
+layers could not be ordered relative to it.
+**Now** — both sites leave the entry in place; `_attack_step` consumes it via
+`_consume_attack_entry` when the attack moves to the combat chain (7.2.3) or
+when a declared target is gone (7.7.3). `_close_step` calls the same helper as
+a safety net, because the chain can close before the Attack Step runs (e.g.
+Phantasm during the Layer Step) and a leftover entry would send
+`_continue_action_phase` straight back into the combat phase.
+
+Three properties made this safe, each verified before the change: `resolve_stack`
+pops from the *end*, so a bottom entry is never resolved as a normal layer;
+`order_stack` rebuilds the list as `rest + ordered`, preserving the attack's
+position; and `order_fx`, which partitions all entries by player and would have
+moved it, has no callers at all.
+
+`priority_loop`'s `only_attack` branch — previously described here as papering
+over the distinction — is now the correct terminating condition: it is what
+ends the Layer Step when the attack is the top (and only) layer.
 
 ### M3. Triggered-layer parameters are not declared when the layer is added
 **CR 6.6.6a, 5.3.2a-b** — when a triggered-layer goes on the stack, its

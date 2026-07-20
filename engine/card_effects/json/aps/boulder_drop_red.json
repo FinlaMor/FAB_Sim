@@ -4,8 +4,9 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
+      "_comment": "Crush - When this deals 4 or more damage to a hero, they put a card from their hand on TOP of their deck. Mandatory ('they put …'), so no decline.",
       "conditions": [{"type": "CRUSH"}],
-      "effects": [{"type": "PUT_HAND_CARD_BOTTOM", "player": "OPPONENT"}]
+      "effects": [{"type": "PUT_HAND_CARD_TOP", "player": "OPPONENT", "optional": false}]
     }
   ]
 }

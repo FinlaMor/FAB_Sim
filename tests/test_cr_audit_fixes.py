@@ -1327,3 +1327,79 @@ def test_end_of_turn_resets_every_players_ally_life():
 
     assert allies[1].current_life == 3, "turn player's ally was not reset"
     assert allies[2].current_life == 3, "non-turn player's ally was not reset"
+
+
+def test_boulder_drop_puts_card_on_top_of_deck_not_bottom():
+    """Boulder Drop's Crush clause reads 'on top of their deck'.
+
+    Found by scripts/dsl_semantic_audit.py: the JSON used
+    PUT_HAND_CARD_BOTTOM, which is the opposite end of the deck and a
+    meaningfully different effect (the opponent redraws it next turn).
+    Also mandatory — 'they put a card' allows no decline.
+    """
+    from engine.card_effects.dsl.effect_types import compile_effect
+
+    st = _make_state()
+    st.card_db = DB
+    src = _card("boulder_drop_red", 1)
+
+    known = _card("big_bully_red", 2)
+    st.players[2].hand.add(known)
+    marker = _card("show_of_strength_red", 2)
+    st.players[2].deck.add(marker)
+
+    fn = compile_effect("PUT_HAND_CARD_TOP", {"player": "OPPONENT", "optional": False})
+    fn(src, None, st)
+
+    assert known not in st.players[2].hand.cards, "card was not moved out of hand"
+    assert st.players[2].deck.cards[0] is known, (
+        f"expected the card on top of the deck, found {st.players[2].deck.cards[0].slug}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# M2 — the attack layer stays on the stack during the Layer Step
+# ---------------------------------------------------------------------------
+
+def test_attack_layer_is_on_the_stack_during_layer_step(monkeypatch):
+    """CR 7.1.3 / 3.15.4-5: the attack sits on the stack as the bottom layer
+    during the Layer Step, so effects that inspect the stack can see it and new
+    layers order above it.
+
+    Previously _combat_phase_iter removed the attack entry before the priority
+    window, making it invisible to stack-inspecting effects.
+    """
+    seen: list[bool] = []
+    real_priority_loop = E.priority_loop
+
+    def _spy(state, *a, **kw):
+        if state.step == Step.COMBAT_LAYER:
+            seen.append(any(e.is_attack for e in state.stack_entries))
+        return real_priority_loop(state, *a, **kw)
+
+    monkeypatch.setattr(E, "priority_loop", _spy)
+
+    st = _make_state()
+    st.card_db = DB
+    st.active_player = 1
+    st.priority_player = 1
+
+    atk = _attack_stub(1)
+    atk.keywords = []
+    atk.base_power = atk.power = 4
+    st.stack.add(atk)
+    entry = StackEntry(card=atk, player_id=1, layer_type='card')
+    assert entry.is_attack, "stub must register as an attack layer"
+    st.stack_entries.append(entry)
+
+    E._combat_phase_iter(st)
+
+    assert seen, "the Layer Step priority window never ran"
+    assert all(seen), (
+        "the attack layer was not on the stack during the Layer Step — "
+        "stack-inspecting effects cannot see it"
+    )
+    # And it must not leak: combat must not re-enter from a leftover entry.
+    assert not any(e.is_attack for e in st.stack_entries), (
+        "attack entry leaked past the Attack Step"
+    )

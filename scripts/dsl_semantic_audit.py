@@ -81,10 +81,15 @@ QUANTITATIVELY OR SEMANTICALLY DIFFERENT (e.g. text says "double its base \
 power", JSON adds a flat +4; text says "choose one", JSON picks at random; \
 text says "you may", JSON does it unconditionally).
 
-Some keywords are implemented by the game engine itself, not the card JSON \
-(Go again, Ward, Crush, Heave, Battleworn, Temper, Dominate, Intimidate, \
-Stealth, Reprise, Blade Break). Treat a bare keyword clause as COVERED_BY_ENGINE \
-rather than missing.
+These keywords are implemented by the game engine itself, never by card JSON. \
+Treat a bare keyword clause naming one of them as COVERED_BY_ENGINE, not MISSING:
+{engine_keywords}
+
+Numeric modifiers in an effects list STACK — they are applied in sequence, not \
+chosen between. A card reading "gets +3{{p}}; if the hero is marked, instead it \
+gets +4{{p}}" is CORRECTLY implemented as +3 unconditionally followed by a \
+further +1 conditional on marked, because 3+1=4. Add the modifiers up before \
+calling anything a MISMATCH.
 
 Reply with ONLY a JSON object, no prose, no markdown fences:
 {{
@@ -101,6 +106,28 @@ Reply with ONLY a JSON object, no prose, no markdown fences:
 def _slug_index() -> dict:
     raw = json.loads(SLUG_INDEX.read_text(encoding="utf-8"))
     return raw.get("by_slug", raw)
+
+
+def engine_keywords() -> list[str]:
+    """Keywords the engine implements, read from the code rather than hardcoded.
+
+    A hardcoded list drifts: the first version of this prompt omitted Piercing,
+    so the auditor reported Hunter's Klaive's "Piercing 1" as an unimplemented
+    clause when the engine handles it. Deriving the list keeps the prompt
+    honest as keywords are added.
+    """
+    found: set[str] = set()
+    trig = ROOT / "engine" / "card_effects" / "triggers" / "triggers.py"
+    if trig.exists():
+        found |= set(re.findall(r'kw_base == "([a-z ]+)"', trig.read_text(encoding="utf-8")))
+    try:
+        from engine.card_effects.registry import KEYWORD_STATIC_ABILITIES
+        found |= set(KEYWORD_STATIC_ABILITIES)
+    except Exception:
+        pass
+    # Always-on keywords handled in combat//play rather than the kw_base chain.
+    found |= {"go again", "dominate", "intimidate", "stealth", "ward", "overpower"}
+    return sorted(k.title() for k in found if k.strip())
 
 
 def card_files(set_code: str | None, slug: str | None) -> list[Path]:
@@ -131,6 +158,7 @@ def audit_card(path: Path, index: dict, claw, model: str | None,
         return None  # vanilla card, nothing to audit
 
     prompt = PROMPT.format(name=entry.get("name") or slug, slug=slug, text=text,
+                           engine_keywords=", ".join(engine_keywords()),
                            json_content=json.dumps(raw, indent=2, ensure_ascii=False))
     output = claw.run_claw(prompt, verbose=verbose, model=model)
     if output == "CLAW_TIMEOUT" or output.startswith("CLAW_ERROR"):
@@ -149,7 +177,29 @@ def audit_card(path: Path, index: dict, claw, model: str | None,
     result["slug"] = slug
     result["name"] = entry.get("name")
     result["text"] = text
+    _downgrade_engine_keyword_findings(result)
     return result
+
+
+def _downgrade_engine_keyword_findings(result: dict) -> None:
+    """Relabel bare-keyword clauses the model wrongly marked MISSING.
+
+    Both local models understand these keywords are engine-implemented — one
+    said so in the note while still marking the clause MISSING. The status
+    label is the unreliable part, and it is over a known finite set, so it is
+    computed here rather than trusted from the model.
+    """
+    keywords = {k.lower() for k in engine_keywords()}
+    for clause in result.get("clauses", []):
+        if clause.get("status") not in ("MISSING", "MISMATCH"):
+            continue
+        # Strip markdown, trailing reminder numbers ("Piercing 1"), punctuation.
+        bare = re.sub(r"[*_`]", "", clause.get("text") or "").strip()
+        bare = re.sub(r"\s*\d+\s*$", "", bare).strip(" .-—'\"").lower()
+        if bare in keywords:
+            was = clause["status"]
+            clause["status"] = "COVERED_BY_ENGINE"
+            clause["note"] = f"engine keyword (auto-corrected from {was})"
 
 
 def render(results: list[dict]) -> str:
@@ -207,6 +257,8 @@ def main() -> int:
     ap.add_argument("--model", help="model override passed to claw-code")
     ap.add_argument("-o", "--out", help="write the markdown report here")
     ap.add_argument("--json", dest="json_out", help="also write raw results as JSON")
+    ap.add_argument("--no-resume", action="store_true",
+                    help="ignore an existing --json cache and re-audit everything")
     ap.add_argument("--verbose", action="store_true")
     args = ap.parse_args()
 
@@ -217,14 +269,32 @@ def main() -> int:
         print("no matching cards", file=sys.stderr)
         return 1
 
+    # Resume: a 125-card run is long, and writing only at the end means a
+    # crash at card 124 loses everything. Results are appended to the JSON
+    # sidecar after each card and already-audited slugs are skipped.
+    cache_path = Path(args.json_out) if args.json_out else None
+    results: list[dict] = []
+    done: set[str] = set()
+    if cache_path and cache_path.exists() and not args.no_resume:
+        try:
+            results = json.loads(cache_path.read_text(encoding="utf-8"))
+            done = {r.get("slug") for r in results if not r.get("error")}
+            print(f"resuming: {len(done)} cards already audited", file=sys.stderr)
+        except json.JSONDecodeError:
+            print("cache unreadable, starting fresh", file=sys.stderr)
+
     claw = _auto_impl()
     index = _slug_index()
-    results = []
     for i, path in enumerate(paths, 1):
+        if path.stem in done:
+            continue
         print(f"[{i}/{len(paths)}] {path.stem}", file=sys.stderr)
         result = audit_card(path, index, claw, args.model, args.verbose)
         if result is not None:
             results.append(result)
+            if cache_path:
+                cache_path.write_text(json.dumps(results, indent=2, ensure_ascii=False),
+                                      encoding="utf-8")
 
     report = render(results)
     if args.out:
@@ -232,9 +302,6 @@ def main() -> int:
         print(f"wrote {args.out}", file=sys.stderr)
     else:
         print(report)
-    if args.json_out:
-        Path(args.json_out).write_text(json.dumps(results, indent=2, ensure_ascii=False),
-                                       encoding="utf-8")
     return 0
 
 
