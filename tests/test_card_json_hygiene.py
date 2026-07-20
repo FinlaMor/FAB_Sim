@@ -1,0 +1,174 @@
+"""Mechanical hygiene invariants for every DSL card JSON.
+
+These are the checks that catch the failure modes an AI card-author actually
+produces: JSON that is well-formed and loads cleanly, but is filed in the
+wrong set, registered under a slug nothing can look up, or authored with an
+ability that has no effects. None of these raise at load time, so without
+this file they reach the engine as silent no-ops.
+
+Deliberately mechanical and fast — no game is played here. Semantic review
+("does this JSON match the printed text?") is a separate, slower pass.
+"""
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+import pytest
+
+from engine.card_effects.dsl.loader import LOAD_ERRORS, load_all_cards
+
+ROOT = Path(__file__).resolve().parent.parent
+JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
+SLUG_INDEX = ROOT / "card_data" / "slug_index.json"
+
+# Ability types that legitimately carry no "effects" list: COST_MODIFIER only
+# adjusts a cost, and REPLACEMENT is wired in replacement_abilities.py with
+# the JSON entry acting as a declaration.
+NO_EFFECTS_REQUIRED = {"COST_MODIFIER", "REPLACEMENT"}
+
+# Bold runs are keyword markup (**Ward 1**, **Go again**). A card whose entire
+# functional text is keywords needs no DSL effects — the engine implements
+# them. Anything left over after stripping them is real text that must be
+# implemented.
+_BOLD = re.compile(r"\*\*.*?\*\*")
+
+
+def _card_files() -> list[Path]:
+    """Every JSON the loader would treat as a card definition."""
+    out = []
+    for path in sorted(JSON_ROOT.rglob("*.json")):
+        rel = path.relative_to(JSON_ROOT)
+        if path.stem.endswith("_work_queue"):
+            continue  # authoring TODO lists
+        if any(part.startswith(".") for part in rel.parts):
+            continue  # tooling state (.omc/), mirrors loader.load_all_cards
+        out.append(path)
+    return out
+
+
+def _slug_index() -> dict:
+    with open(SLUG_INDEX, encoding="utf-8") as f:
+        raw = json.load(f)
+    return raw.get("by_slug", raw)
+
+
+def _set_codes(entry: dict) -> set[str]:
+    """All set codes a card was printed in (HNT012 -> hnt). Reprints are common
+    — over 2000 cards list more than one, so any of them is a valid folder."""
+    return {
+        "".join(ch for ch in ident if ch.isalpha()).lower()
+        for ident in (entry.get("setIdentifiers") or [])
+    }
+
+
+CARD_FILES = _card_files()
+INDEX = _slug_index()
+
+
+def _ids(paths):
+    return [str(p.relative_to(JSON_ROOT)).replace("\\", "/") for p in paths]
+
+
+def test_all_card_json_loads_without_error():
+    """A file in LOAD_ERRORS is an unimplemented card that looks implemented."""
+    load_all_cards()
+    assert LOAD_ERRORS == {}, f"card JSON failed to compile: {LOAD_ERRORS}"
+
+
+@pytest.mark.parametrize("path", CARD_FILES, ids=_ids(CARD_FILES))
+def test_slug_field_matches_filename(path: Path):
+    """The loader registers cards under the JSON's own 'slug'. If it disagrees
+    with the filename, lookups by the real slug silently miss the card."""
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    assert raw.get("slug") == path.stem, (
+        f"{path.name}: 'slug' field is {raw.get('slug')!r} but filename stem is "
+        f"{path.stem!r} — the card would be registered under an unreachable slug"
+    )
+
+
+@pytest.mark.parametrize("path", CARD_FILES, ids=_ids(CARD_FILES))
+def test_slug_exists_in_card_index(path: Path):
+    """Tokens are engine-created and have no printing; every other card must
+    resolve in slug_index.json or it can never be drawn."""
+    if path.parent.name == "tokens":
+        pytest.skip("tokens have no printed card entry")
+    slug = json.loads(path.read_text(encoding="utf-8")).get("slug")
+    assert slug in INDEX, (
+        f"{path.name}: slug {slug!r} is not in slug_index.json — check for "
+        f"hyphens vs underscores, or a misspelled slug"
+    )
+
+
+@pytest.mark.parametrize("path", CARD_FILES, ids=_ids(CARD_FILES))
+def test_card_is_filed_under_a_set_it_was_printed_in(path: Path):
+    """Set folder must match the card's actual printing, not its class.
+
+    This is the guardrail for the recurring failure where an author infers the
+    set from the card's class (a Brute card is not automatically Outsiders).
+    """
+    folder = path.parent.name
+    if folder == "tokens":
+        pytest.skip("tokens are not a printed set")
+    slug = json.loads(path.read_text(encoding="utf-8")).get("slug")
+    entry = INDEX.get(slug)
+    if entry is None:
+        pytest.skip("slug not in index — covered by test_slug_exists_in_card_index")
+    codes = _set_codes(entry)
+    assert folder in codes, (
+        f"{slug} is filed in {folder}/ but was printed in {sorted(codes)}. "
+        f"Pick the set folder from the card's setIdentifiers, never its class."
+    )
+
+
+@pytest.mark.parametrize("path", CARD_FILES, ids=_ids(CARD_FILES))
+def test_card_with_functional_text_implements_something(path: Path):
+    """A card with non-keyword rules text must author at least one ability."""
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    slug = raw.get("slug")
+    entry = INDEX.get(slug)
+    if entry is None:
+        pytest.skip("no printed entry (token or unindexed slug)")
+    if raw.get("abilities") or raw.get("setup"):
+        return
+    prose = _BOLD.sub("", entry.get("functionalText") or "").strip(" \n\t-—,.")
+    assert not prose, (
+        f"{slug} has no abilities and no setup, but its text is not purely "
+        f"keywords — unimplemented remainder: {prose!r}"
+    )
+
+
+@pytest.mark.parametrize("path", CARD_FILES, ids=_ids(CARD_FILES))
+def test_replacement_abilities_resolve_to_a_handler(path: Path):
+    """A REPLACEMENT ability carries no effects — its behavior lives in
+    replacement_abilities.py, looked up by name. A typo'd or unregistered name
+    would otherwise be a card that declares an ability and never runs it, and
+    the empty-effects check deliberately exempts these."""
+    from engine.card_effects.replacement_abilities import REPLACEMENT_ABILITIES
+
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    for i, ability in enumerate(raw.get("abilities") or []):
+        if (ability.get("ability_type") or "").upper() != "REPLACEMENT":
+            continue
+        name = ability.get("replacement")
+        assert name, f"{raw.get('slug')} ability[{i}]: REPLACEMENT has no 'replacement' name"
+        assert name in REPLACEMENT_ABILITIES, (
+            f"{raw.get('slug')} ability[{i}]: replacement {name!r} is not registered "
+            f"in REPLACEMENT_ABILITIES — the ability would never fire"
+        )
+
+
+@pytest.mark.parametrize("path", CARD_FILES, ids=_ids(CARD_FILES))
+def test_every_ability_has_effects(path: Path):
+    """An ability with an empty effects list compiles fine and does nothing."""
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    slug = raw.get("slug")
+    for i, ability in enumerate(raw.get("abilities") or []):
+        atype = (ability.get("ability_type") or "").upper()
+        if atype in NO_EFFECTS_REQUIRED:
+            continue
+        assert ability.get("effects") or ability.get("modes") or ability.get("options"), (
+            f"{slug} ability[{i}] ({atype or 'no ability_type'}) has no effects, "
+            f"modes, or options — it will resolve as a no-op"
+        )

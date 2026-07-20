@@ -42,13 +42,20 @@ def _slug_index() -> dict:
     return raw.get("by_slug", raw)
 
 
-def _set_code(entry: dict) -> str | None:
-    """Lowercase set code from the first setIdentifier (e.g. HNT012 -> hnt)."""
-    idents = entry.get("setIdentifiers") or []
-    if not idents:
-        return None
-    code = "".join(ch for ch in idents[0] if ch.isalpha())
-    return code.lower() or None
+def _set_codes(entry: dict) -> set[str]:
+    """Every lowercase set code a card was printed in (HNT012 -> hnt).
+
+    Reprints are the norm, not the exception: over 2000 of the ~4600 cards
+    list more than one set. Reading only the first identifier hid 118 of the
+    265 Heavy Hitters cards (including Arakni) from `--set hnt`, so a set was
+    never actually finishable through this tool.
+    """
+    codes = set()
+    for ident in entry.get("setIdentifiers") or []:
+        code = "".join(ch for ch in ident if ch.isalpha()).lower()
+        if code:
+            codes.add(code)
+    return codes
 
 
 def _queue_entry(slug: str, entry: dict, status: str) -> dict:
@@ -126,7 +133,7 @@ def cmd_deck(paths: list[Path]) -> int:
 def cmd_set(set_code: str, write_queue: bool) -> None:
     load_all_cards()
     index = _slug_index()
-    in_set = {s: e for s, e in index.items() if _set_code(e) == set_code}
+    in_set = {s: e for s, e in index.items() if set_code in _set_codes(e)}
     if not in_set:
         print(f"No cards found for set code '{set_code}'.")
         return

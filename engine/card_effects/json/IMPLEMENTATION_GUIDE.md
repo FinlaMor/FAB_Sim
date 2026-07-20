@@ -156,6 +156,11 @@ Most cards compose from existing types. When one genuinely doesn't:
 
 ## Definition of done (per card)
 
+- [ ] `pytest tests/test_card_json_hygiene.py -p no:randomly` passes (<1s).
+      This catches the mechanical mistakes that otherwise load cleanly and
+      silently do nothing: wrong set folder, a `slug` that disagrees with the
+      filename, an ability with an empty `effects` list, rules text with no
+      implementation at all.
 - [ ] JSON loads with no entry in `LOAD_ERRORS`
 - [ ] Behavior matches `functionalText` and the CR (not your memory of the card)
 - [ ] Behavioral test(s) added and passing
