@@ -310,15 +310,12 @@ def main() -> int:
     args = ap.parse_args()
 
     paths = card_files(args.set_code, args.slug)
-    if args.limit:
-        paths = paths[: args.limit]
     if not paths:
         print("no matching cards", file=sys.stderr)
         return 1
 
-    # Resume: a 125-card run is long, and writing only at the end means a
-    # crash at card 124 loses everything. Results are appended to the JSON
-    # sidecar after each card and already-audited slugs are skipped.
+    # Resume: a long run that dies should not be lost. Results are appended to
+    # the JSON sidecar after each card and already-audited slugs are skipped.
     cache_path = Path(args.json_out) if args.json_out else None
     results: list[dict] = []
     done: set[str] = set()
@@ -330,12 +327,21 @@ def main() -> int:
         except json.JSONDecodeError:
             print("cache unreadable, starting fresh", file=sys.stderr)
 
-    claw = _auto_impl()
-    index = _slug_index()
-    for i, path in enumerate(paths, 1):
-        if path.stem in done:
-            continue
-        print(f"[{i}/{len(paths)}] {path.stem}", file=sys.stderr)
+    # --limit caps REMAINING work, not the raw file list. Applying it before
+    # the resume-skip made chunked runs useless: with 64 cards cached,
+    # `--limit 20` would consider only the first 20 files, find them all
+    # cached, and do nothing. Chunking is how a run survives a duration cap.
+    todo = [p for p in paths if p.stem not in done]
+    if args.limit:
+        todo = todo[: args.limit]
+    if not todo:
+        print(f"nothing to do: all {len(paths)} cards already audited", file=sys.stderr)
+
+    claw = _auto_impl() if todo else None
+    index = _slug_index() if todo else {}
+    for i, path in enumerate(todo, 1):
+        print(f"[{i}/{len(todo)}] {path.stem}  ({len(done) + i}/{len(paths)} overall)",
+              file=sys.stderr)
         result = audit_card(path, index, claw, args.model, args.verbose)
         if result is not None:
             results.append(result)
