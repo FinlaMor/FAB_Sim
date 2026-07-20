@@ -98,6 +98,13 @@ QUANTITATIVELY OR SEMANTICALLY DIFFERENT (e.g. text says "double its base \
 power", JSON adds a flat +4; text says "choose one", JSON picks at random; \
 text says "you may", JSON does it unconditionally).
 
+4. Check the TRIGGER, not just the effect. If a clause names more than one \
+trigger condition ("when this attacks OR DEFENDS", "whenever you gain or lose \
+life"), the JSON must cover every one of them; report MISMATCH if it covers \
+only some. Note that for an Action - Attack card, ability_type "PLAY" fires at \
+the Attack Step and correctly implements "when this attacks" — but it does NOT \
+implement "when this defends".
+
 These keywords are implemented by the game engine itself, never by card JSON. \
 Treat a bare keyword clause naming one of them as COVERED_BY_ENGINE, not MISSING:
 {engine_keywords}
@@ -141,7 +148,14 @@ def engine_keywords() -> list[str]:
     found: set[str] = set()
     trig = ROOT / "engine" / "card_effects" / "triggers" / "triggers.py"
     if trig.exists():
-        found |= set(re.findall(r'kw_base == "([a-z ]+)"', trig.read_text(encoding="utf-8")))
+        src = trig.read_text(encoding="utf-8")
+        found |= set(re.findall(r'kw_base == "([a-z ]+)"', src))
+        # Static keywords are matched by a tuple membership test rather than
+        # equality — `kw_base in ("dominate", "ambush", …)`. Missing that form
+        # left Ambush out of the prompt, so the auditor had no way to know the
+        # engine handles it.
+        for block in re.findall(r"kw_base in \(([^)]*)\)", src, re.S):
+            found |= set(re.findall(r'"([a-z ]+)"', block))
     try:
         from engine.card_effects.registry import KEYWORD_STATIC_ABILITIES
         found |= set(KEYWORD_STATIC_ABILITIES)
@@ -356,6 +370,13 @@ def main() -> int:
         try:
             results = json.loads(cache_path.read_text(encoding="utf-8"))
             done = {r.get("slug") for r in results if not r.get("error")}
+            # Re-apply the current post-processing rules to everything already
+            # cached. A long corpus is audited over several runs, and the rules
+            # improve between them — the engine-keyword list grew from 31 to 42
+            # mid-corpus — so cards audited early would otherwise keep findings
+            # that the current rules would have downgraded.
+            for r in results:
+                _downgrade_engine_keyword_findings(r)
             print(f"resuming: {len(done)} cards already audited", file=sys.stderr)
         except json.JSONDecodeError:
             print("cache unreadable, starting fresh", file=sys.stderr)

@@ -2163,5 +2163,911 @@
     "slug": "insult_to_injury_blue",
     "name": "Insult to Injury",
     "text": "When this attacks a hero, if you have more {h} than them, this gets **go again**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks, roll a 6 sided die.",
+        "implemented_by": "ROLL",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "This gets +X{p}, where X is the number rolled.",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "reckless_arithmetic_blue",
+    "name": "Reckless Arithmetic",
+    "text": "When this attacks, roll a 6 sided die. This gets +X{p}, where X is the number rolled."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Action - {r}{r}, {t}: Attack",
+        "implemented_by": null,
+        "status": "IMPLEMENTED",
+        "note": "activation_cost: 2 implements the {r}{r} cost and the {t} cost is implied by the action type"
+      },
+      {
+        "text": "If a card with 6 or more {p} was pitched to attack with this, the attack gets +1{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The condition ATTACK_PITCH_POWER_GTE with amount 6 and effect MODIFY_ATTACK with amount 1 correctly implements the clause"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "savage_claw",
+    "name": "Savage Claw",
+    "text": "**Action** - {r}{r}, {t}: **Attack**\n\nIf a card with 6 or more {p} was pitched to attack with this, the attack gets +1{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero",
+        "implemented_by": "ON_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The trigger 'ON_ATTACK' covers the condition of attacking a hero."
+      },
+      {
+        "text": "look at the top card of their deck",
+        "implemented_by": "REVEAL_OPP_TOP_DESTROY_IF_RED",
+        "status": "IMPLEMENTED",
+        "note": "The effect REVEAL_OPP_TOP_DESTROY_IF_RED includes revealing the top card of the opponent's deck."
+      },
+      {
+        "text": "If it's red",
+        "implemented_by": "REVEAL_OPP_TOP_DESTROY_IF_RED",
+        "status": "IMPLEMENTED",
+        "note": "The effect REVEAL_OPP_TOP_DESTROY_IF_RED handles the conditional destruction only if the card is red."
+      },
+      {
+        "text": "destroy it",
+        "implemented_by": "REVEAL_OPP_TOP_DESTROY_IF_RED",
+        "status": "IMPLEMENTED",
+        "note": "The effect REVEAL_OPP_TOP_DESTROY_IF_RED includes destroying the top card if it's red."
+      },
+      {
+        "text": "and this gets +4{p}",
+        "implemented_by": "REVEAL_OPP_TOP_DESTROY_IF_RED",
+        "status": "IMPLEMENTED",
+        "note": "The effect REVEAL_OPP_TOP_DESTROY_IF_RED includes the power boost of +4."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "snarky_prick_red",
+    "name": "Snarky Prick",
+    "text": "When this attacks a hero, look at the top card of their deck. If it's red, destroy it and this gets +4{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle.",
+        "implemented_by": "SEARCH_DECK",
+        "status": "MISMATCH",
+        "note": "The JSON only implements the search and reveal portion but does not specify that the card should be put into the hand or that the deck should be shuffled afterward. The full sequence of revealing, putting into hand, and shuffling is required by the printed text."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "nimby_blue",
+    "name": "Nimby",
+    "text": "When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Legendary",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword is implemented by the game engine itself, not by card JSON."
+      },
+      {
+        "text": "When this is pitched, create a Gold token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "The JSON correctly implements the triggered ability that creates a Gold token when the card is pitched."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "riches_of_tropal_dhani_yellow",
+    "name": "Riches of Trōpal-Dhani",
+    "text": "**Legendary**\n\nWhen this is pitched, create a Gold token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
+        "implemented_by": "CROWD_BOO",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you've been booed this turn, this card's base {p} is doubled.",
+        "implemented_by": "DOUBLE_BASE_POWER",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "big_bully_red",
+    "name": "Big Bully",
+    "text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this card's base {p} is doubled."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Go again",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "When this enters or leaves the arena",
+        "implemented_by": "CROWD_BOO",
+        "status": "IMPLEMENTED",
+        "note": "CROWD_BOO effect with player SELF covers the booing when entering/leaving"
+      },
+      {
+        "text": "the crowd boos you",
+        "implemented_by": "CROWD_BOO",
+        "status": "IMPLEMENTED",
+        "note": "CROWD_BOO effect with player SELF covers the booing"
+      },
+      {
+        "text": "At the start of your turn",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Trigger type START_OF_TURN implemented by game engine"
+      },
+      {
+        "text": "destroy this",
+        "implemented_by": "DESTROY_SELF",
+        "status": "IMPLEMENTED",
+        "note": "DESTROY_SELF effect covers destroying the card"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "booze_blue",
+    "name": "Booze!",
+    "text": "**Go again**\n\nWhen this enters or leaves the arena, **the crowd boos** you.\n\nAt the start of your turn, destroy this."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends, you may turn a face-down card with crush in your arsenal face-up.",
+        "implemented_by": "REVEAL_CRUSH_ARSENAL_CARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you do, put a +1{p} counter on it.",
+        "implemented_by": "REVEAL_CRUSH_ARSENAL_CARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Temper",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Temper is an engine keyword"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "ironfist_revelation",
+    "name": "Ironfist Revelation",
+    "text": "When this defends, you may turn a face-down card with crush in your arsenal face-up. If you do, put a +1{p} counter on it.\n\n**Temper**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "You start the game with 1 weapon zone.",
+        "implemented_by": "setup",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Instant - {r}{r}{r}{r}, {t}: Target attack action card you control has 6 base {p}.",
+        "implemented_by": "INSTANT",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Whenever the crowd boos you, create a Vigor token.",
+        "implemented_by": "STATIC_TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "kayo_underhanded_cheat",
+    "name": "Kayo, Underhanded Cheat",
+    "text": "You start the game with 1 weapon zone.\n\n**Instant** - {r}{r}{r}{r}, {t}: Target attack action card you control has 6 base {p}.\n\nWhenever the crowd boos you, create a Vigor token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
+        "implemented_by": "CROWD_BOO",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you've been booed this turn, this gets +2{p}.",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "mocking_blow_blue",
+    "name": "Mocking Blow",
+    "text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
+        "implemented_by": "CROWD_BOO",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you've been booed this turn, this gets +4{p}.",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "mocking_blow_red",
+    "name": "Mocking Blow",
+    "text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +4{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
+        "implemented_by": "CROWD_BOO",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you've been booed this turn, this gets +3{p}.",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "mocking_blow_yellow",
+    "name": "Mocking Blow",
+    "text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +3{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "If you control a Might or Vigor token, this gets +1{p}.",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "When this hits a hero, create a Might and a Vigor token.",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "offensive_behavior_blue",
+    "name": "Offensive Behavior",
+    "text": "If you control a Might or Vigor token, this gets +1{p}.\n\nWhen this hits a hero, create a Might and a Vigor token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Instant",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword 'Instant' is implemented by the game engine itself."
+      },
+      {
+        "text": "Discard this",
+        "implemented_by": "DISCARD_SELF",
+        "status": "IMPLEMENTED",
+        "note": "The cost includes DISCARD_SELF which implements discarding the card."
+      },
+      {
+        "text": "You may reveal a Reviled attack action card from your inventory and put it into your hand",
+        "implemented_by": "REVEAL_REVILED_FROM_INVENTORY",
+        "status": "IMPLEMENTED",
+        "note": "The effect REVEAL_REVILED_FROM_INVENTORY implements revealing a Reviled attack card and putting it into hand."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "outside_interference_blue",
+    "name": "Outside Interference",
+    "text": "**Instant** - Discard this: You may reveal a Reviled attack action card from your inventory and put it into your hand."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks or defends, it gets +1{p} +1{d} for each different name among aura tokens in the arena",
+        "implemented_by": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
+        "status": "MISMATCH",
+        "note": "The JSON implementation only specifies a flat +1{p} per unique aura, but the printed text indicates both +1{p} and +1{d} should be applied for each different name among aura tokens in the arena. The defense modifier is missing from the JSON."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "overcrowded_blue",
+    "name": "Overcrowded",
+    "text": "**Ambush**\n\nWhen this attacks or defends, it gets +1{p} +1{d} for each different name among aura tokens in the arena."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends together with another card from hand",
+        "implemented_by": "DEFENDS_WITH_OTHER_HAND_CARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "this gets +1{d}",
+        "implemented_by": "MODIFY_DEFENSE_VALUE",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "and you may look at the top card of your deck",
+        "implemented_by": "LOOK_AT_TOP_MAY_BOTTOM",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "you may put it on the bottom",
+        "implemented_by": "LOOK_AT_TOP_MAY_BOTTOM",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "right_behind_you_blue",
+    "name": "Right Behind You",
+    "text": "When this defends together with another card from hand, this gets +1{d} and you may look at the top card of your deck. You may put it on the bottom."
+  },
+  {
+    "clauses": [
+      {
+        "text": "This gets -1{p} for each card with 6 or more {p} defending it.",
+        "implemented_by": "MODIFY_ATTACK_PER_HIGH_DEFENDER",
+        "status": "IMPLEMENTED",
+        "note": "The JSON correctly implements the clause with the MODIFY_ATTACK_PER_HIGH_DEFENDER effect that reduces attack by 1 for each defender with 6 or more power."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "show_of_strength_red",
+    "name": "Show of Strength",
+    "text": "This gets -1{p} for each card with 6 or more {p} defending it."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends, steal an aura token the attacking hero controls.",
+        "implemented_by": "STEAL_AURA_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "The JSON correctly implements the triggered ability to steal an aura token when this card defends, as specified in the printed text."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "steal_victory_blue",
+    "name": "Steal Victory",
+    "text": "When this defends, **steal** an aura token the attacking hero controls."
+  },
+  {
+    "clauses": [
+      {
+        "text": "As an additional cost to play Alpha Rampage, discard a random card",
+        "implemented_by": "DISCARD_RANDOM",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "When you attack with Alpha Rampage, intimidate",
+        "implemented_by": "INTIMIDATE",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "alpha_rampage_red",
+    "name": "Alpha Rampage",
+    "text": "**Rhinar Specialization**\n\nAs an additional cost to play Alpha Rampage, discard a random card.\n\nWhen you attack with Alpha Rampage, **intimidate**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target Ninja attack action card gains +1{p}.",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Draw a card.",
+        "implemented_by": "DRAW",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "ancestral_empowerment_red",
+    "name": "Ancestral Empowerment",
+    "text": "Target Ninja attack action card gains +1{p}.\n\nDraw a card."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per turn Action - {r}{r}{r}: Attack",
+        "implemented_by": null,
+        "status": "IMPLEMENTED",
+        "note": "activation_cost and per_turn fields implement this clause"
+      },
+      {
+        "text": "While there are 2 or more cards with cost 3 or greater in your pitch zone, Anothos has +2{p}",
+        "implemented_by": "WHILE_STATIC",
+        "status": "IMPLEMENTED",
+        "note": "The while static ability correctly implements the condition and effect"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "anothos",
+    "name": "Anothos",
+    "text": "**Once per turn Action** - {r}{r}{r}: **Attack**\n\nWhile there are 2 or more cards with cost 3 or greater in your pitch zone, Anothos has +2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next Brute attack action card you play this turn gains +1{p}",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Intimidate",
+        "implemented_by": "INTIMIDATE",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Go again",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is implemented by the game engine, not card JSON"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "awakening_bellow_blue",
+    "name": "Awakening Bellow",
+    "text": "The next Brute attack action card you play this turn gains +1{p}.\n\n**Intimidate**\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next Brute attack action card you play this turn gains +3{p}",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Intimidate",
+        "implemented_by": "INTIMIDATE",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Go again",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is implemented by the game engine"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "awakening_bellow_red",
+    "name": "Awakening Bellow",
+    "text": "The next Brute attack action card you play this turn gains +3{p}.\n\n**Intimidate**\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next Brute attack action card you play this turn gains +2{p}",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Intimidate",
+        "implemented_by": "INTIMIDATE",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Go again",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "awakening_bellow_yellow",
+    "name": "Awakening Bellow",
+    "text": "The next Brute attack action card you play this turn gains +2{p}.\n\n**Intimidate**\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Instant**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword handled by game engine"
+      },
+      {
+        "text": "Destroy Barkbone Strapping",
+        "implemented_by": "DESTROY_PERMANENT",
+        "status": "IMPLEMENTED",
+        "note": "Matches the cost field in JSON"
+      },
+      {
+        "text": "Roll a 6 die",
+        "implemented_by": "ROLL",
+        "status": "IMPLEMENTED",
+        "note": "Roll effect with 6 faces present"
+      },
+      {
+        "text": "Gain {r} equal to half the number rolled, rounded down",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": "Correctly uses ROLL_NUMBER_HALF_ROUND_DOWN for amount"
+      },
+      {
+        "text": "**Battleworn**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword handled by game engine"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "barkbone_strapping",
+    "name": "Barkbone Strapping",
+    "text": "**Instant** - Destroy Barkbone Strapping: Roll a 6 die. Gain {r} equal to half the number rolled, rounded down.\n\n**Battleworn**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase",
+        "implemented_by": "SET_FLAG",
+        "status": "IMPLEMENTED",
+        "note": "The SET_FLAG effect with cant_draw flag and NEXT scope correctly implements the crush ability's effect of preventing card drawing during the opponent's next action phase."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "cranial_crush_blue",
+    "name": "Cranial Crush",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase"
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
+        "implemented_by": "SET_FLAG",
+        "status": "IMPLEMENTED",
+        "note": "The SET_FLAG effect with flag 'first_attack_-2p' and scope 'NEXT' implements the effect of reducing the opponent's first attack by 2{p} during their next turn."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "debilitate_blue",
+    "name": "Debilitate",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
+        "implemented_by": "SET_FLAG",
+        "status": "IMPLEMENTED",
+        "note": "The SET_FLAG effect with flag 'first_attack_-2p' for OPPONENT player and NEXT scope correctly implements the crush effect."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "debilitate_red",
+    "name": "Debilitate",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}",
+        "implemented_by": "SET_FLAG",
+        "status": "IMPLEMENTED",
+        "note": "The SET_FLAG effect with flag 'first_attack_-2p' for OPPONENT player and NEXT scope correctly implements the crush effect."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "debilitate_yellow",
+    "name": "Debilitate",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+        "implemented_by": "PUT_ARSENAL_BOTTOM",
+        "status": "MISMATCH",
+        "note": "The JSON implementation does not specify the condition that damage must be 4 or more, while the printed text requires this threshold."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "disable_blue",
+    "name": "Disable",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck."
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+        "implemented_by": "PUT_ARSENAL_BOTTOM",
+        "status": "MISMATCH",
+        "note": "The JSON implementation does not specify the condition that damage dealt must be 4 or more, which is a key part of the printed text."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "disable_red",
+    "name": "Disable",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+        "implemented_by": "PUT_ARSENAL_BOTTOM",
+        "status": "MISMATCH",
+        "note": "The JSON does not specify the condition that damage must be 4 or more, which is a key requirement in the printed text."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "disable_yellow",
+    "name": "Disable",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck."
+  },
+  {
+    "clauses": [
+      {
+        "text": "As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck",
+        "implemented_by": "PUT_HAND_CARD_BOTTOM",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Choose 1",
+        "implemented_by": null,
+        "status": "IMPLEMENTED",
+        "note": "Modal ability with choose 1 is implemented"
+      },
+      {
+        "text": "When you attack with Enlightened Strike, draw a card",
+        "implemented_by": "DRAW",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Enlightened Strike gains +2{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Enlightened Strike gains **go again**",
+        "implemented_by": "GO_AGAIN",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "enlightened_strike_red",
+    "name": "Enlightened Strike",
+    "text": "As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck.\n\nChoose 1;\n- When you attack with Enlightened Strike, draw a card.\n- Enlightened Strike gains +2{p}.\n- Enlightened Strike gains **go again**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it.",
+        "implemented_by": "STATIC_TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Instant - Remove 3 energy counters from this: Gain {r}",
+        "implemented_by": "INSTANT",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Blade Break",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "fyendals_spring_tunic",
+    "name": "Fyendal's Spring Tunic",
+    "text": "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it.\n\n**Instant** - Remove 3 energy counters from this: Gain {r}\n\n**Blade Break**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next attack action card with cost 1 or less you play this turn gains +1{p}.",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The JSON correctly implements modifying the next attack action card with cost 1 or less by adding +1{p}."
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is a keyword implemented by the game engine, not by JSON effects."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "nimblism_blue",
+    "name": "Nimblism",
+    "text": "The next attack action card with cost 1 or less you play this turn gains +1{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next attack action card with cost 1 or less you play this turn gains +3{p}.",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "nimblism_red",
+    "name": "Nimblism",
+    "text": "The next attack action card with cost 1 or less you play this turn gains +3{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next attack action card with cost 1 or less you play this turn gains +2{p}",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The JSON correctly implements modifying the next attack action card with cost 1 or less by adding 2{p}"
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is implemented by the game engine, not by card JSON"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "nimblism_yellow",
+    "name": "Nimblism",
+    "text": "The next attack action card with cost 1 or less you play this turn gains +2{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Choose 1",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword 'Choose 1' is implemented by the game engine, not by card JSON."
+      },
+      {
+        "text": "Target club or hammer weapon attack gains +4{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The MODIFY_ATTACK effect with amount 4 correctly implements the +4{p} modifier for weapon attacks."
+      },
+      {
+        "text": "Target attack action with cost 2 or greater gains +4{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The MODIFY_ATTACK effect with amount 4 correctly implements the +4{p} modifier for attack actions with cost 2 or greater."
+      },
+      {
+        "text": "If this hits a hero, they discard a card",
+        "implemented_by": "INJECT_TRIGGER",
+        "status": "MISMATCH",
+        "note": "The INJECT_TRIGGER only applies to non-weapon attacks (ATTACK_IS_NOT_WEAPON), but the printed text does not specify that restriction. The trigger should apply to all hits on heroes, not just non-weapons."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "pummel_red",
+    "name": "Pummel",
+    "text": "Choose 1;\n- Target club or hammer weapon attack gains +4{p}.\n- Target attack action with cost 2 or greater gains +4{p} and \"If this hits a hero, they discard a card.\""
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per turn Action - 0: Roll a 6 sided die. Gain action points equal to half the number rolled, rounded down.",
+        "implemented_by": "ROLL and GAIN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Battleworn",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "scabskin_leathers",
+    "name": "Scabskin Leathers",
+    "text": "**Once per turn Action** - 0: Roll a 6 sided die. Gain action points equal to half the number rolled, rounded down.\n\n**Battleworn**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Gain 3{h}",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": "The JSON correctly implements gaining 3 life points."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "sigil_of_solace_red",
+    "name": "Sigil of Solace",
+    "text": "Gain 3{h}"
+  },
+  {
+    "clauses": [
+      {
+        "text": "You may put a card from your hand on the bottom of your deck",
+        "implemented_by": "PUT_HAND_CARD_BOTTOM",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you do, draw a card",
+        "implemented_by": "DRAW",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "sink_below_red",
+    "name": "Sink Below",
+    "text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword 'Crush' is implemented by the game engine itself."
+      },
+      {
+        "text": "If Spinal Crush deals 4 or more damage to a hero, action cards, activated abilities, and attacks they control lose and can't gain go again during their next action phase",
+        "implemented_by": "SET_FLAG",
+        "status": "IMPLEMENTED",
+        "note": "The SET_FLAG effect with flag 'cant_go_again' and scope 'NEXT' correctly implements the clause's requirement that go again cannot be gained during the opponent's next action phase."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "spinal_crush_red",
+    "name": "Spinal Crush",
+    "text": "**Crush** - If Spinal Crush deals 4 or more damage to a hero, action cards, activated abilities, and attacks they control lose and can't gain **go again** during their next action phase."
   }
 ]

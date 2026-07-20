@@ -4,9 +4,9 @@ Model-generated *suspicions*, not verified defects. Each finding is a
 clause the auditor could not map to an implementing effect. Confirm
 against the card text and the CR before changing anything.
 
-- cards audited: 65
-- cards with at least one suspect clause: 17
-- cards clean: 48
+- cards audited: 107
+- cards with at least one suspect clause: 23
+- cards clean: 84
 - audit errors: 0
 
 ## Suspect clauses
@@ -138,6 +138,48 @@ against the card text and the CR before changing anything.
 - **MISSING** — 'If this has 6 or more {p}, it gets **go again** and "When this hits a hero, the next attack action card you play this turn has 6 base {p}."'
   - The condition 'If this has 6 or more {p}' and the effects 'it gets go again' and 'the next attack action card you play this turn has 6 base {p}' are not implemented in the JSON.
 
+### Nimby (`nimby_blue`)
+
+> When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle.
+
+- **MISMATCH** — 'When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle.'
+  - The JSON only implements the search and reveal portion but does not specify that the card should be put into the hand or that the deck should be shuffled afterward. The full sequence of revealing, putting into hand, and shuffling is required by the printed text.
+
+### Overcrowded (`overcrowded_blue`)
+
+> **Ambush**  When this attacks or defends, it gets +1{p} +1{d} for each different name among aura tokens in the arena.
+
+- **MISMATCH** — 'When this attacks or defends, it gets +1{p} +1{d} for each different name among aura tokens in the arena'
+  - The JSON implementation only specifies a flat +1{p} per unique aura, but the printed text indicates both +1{p} and +1{d} should be applied for each different name among aura tokens in the arena. The defense modifier is missing from the JSON.
+
+### Disable (`disable_blue`)
+
+> **Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.
+
+- **MISMATCH** — '**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.'
+  - The JSON implementation does not specify the condition that damage must be 4 or more, while the printed text requires this threshold.
+
+### Disable (`disable_red`)
+
+> **Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.
+
+- **MISMATCH** — '**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.'
+  - The JSON implementation does not specify the condition that damage dealt must be 4 or more, which is a key part of the printed text.
+
+### Disable (`disable_yellow`)
+
+> **Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.
+
+- **MISMATCH** — 'Crush - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.'
+  - The JSON does not specify the condition that damage must be 4 or more, which is a key requirement in the printed text.
+
+### Pummel (`pummel_red`)
+
+> Choose 1; - Target club or hammer weapon attack gains +4{p}. - Target attack action with cost 2 or greater gains +4{p} and "If this hits a hero, they discard a card."
+
+- **MISMATCH** — 'If this hits a hero, they discard a card'
+  - The INJECT_TRIGGER only applies to non-weapon attacks (ATTACK_IS_NOT_WEAPON), but the printed text does not specify that restriction. The trigger should apply to all hits on heroes, not just non-weapons.
+
 ## Low confidence — probable clause fragments
 
 The auditor split a conditional and flagged half of it. Kept here
@@ -159,4 +201,4 @@ rather than dropped, but check the high-confidence list first.
 
 ## Clean
 
-`nights_embrace_blue`, `boulder_drop_red`, `command_and_conquer_red`, `righteous_cleansing_yellow`, `scowling_flesh_bag`, `blacktek_whisperers`, `crown_of_dominion`, `shred_yellow`, `macho_grande_blue`, `swing_big_red`, `thunder_quake_blue`, `arakni_black_widow`, `arakni_funnel_web`, `arakni_marionette`, `arakni_orb_weaver`, `arakni_redback`, `arakni_tarantula`, `hunters_klaive`, `kiss_of_death_red`, `lair_of_the_spider_red`, `mark_of_the_black_widow_red`, `mask_of_deceit`, `pick_up_the_point_red`, `quickdodge_flexors`, `savor_bloodshed_red`, `scar_tissue_red`, `schism_of_chaos_blue`, `take_up_the_mantle_yellow`, `to_the_point_red`, `up_sticks_and_run_red`, `apex_bonebreaker`, `aurum_aegis`, `millers_grindstone`, `ripple_away_blue`, `test_of_strength_red`, `the_golden_son_yellow`, `thunk_blue`, `trounce_red`, `vigorous_windup_blue`, `headbutt_blue`, `test_of_iron_grip_red`, `visit_goldmane_estate_blue`, `codex_of_frailty_yellow`, `codex_of_inertia_yellow`, `flick_knives`, `frailty_trap_red`, `looking_for_a_scrap_red`, `insult_to_injury_blue`
+`nights_embrace_blue`, `boulder_drop_red`, `command_and_conquer_red`, `righteous_cleansing_yellow`, `scowling_flesh_bag`, `blacktek_whisperers`, `crown_of_dominion`, `shred_yellow`, `macho_grande_blue`, `swing_big_red`, `thunder_quake_blue`, `arakni_black_widow`, `arakni_funnel_web`, `arakni_marionette`, `arakni_orb_weaver`, `arakni_redback`, `arakni_tarantula`, `hunters_klaive`, `kiss_of_death_red`, `lair_of_the_spider_red`, `mark_of_the_black_widow_red`, `mask_of_deceit`, `pick_up_the_point_red`, `quickdodge_flexors`, `savor_bloodshed_red`, `scar_tissue_red`, `schism_of_chaos_blue`, `take_up_the_mantle_yellow`, `to_the_point_red`, `up_sticks_and_run_red`, `apex_bonebreaker`, `aurum_aegis`, `millers_grindstone`, `ripple_away_blue`, `test_of_strength_red`, `the_golden_son_yellow`, `thunk_blue`, `trounce_red`, `vigorous_windup_blue`, `headbutt_blue`, `test_of_iron_grip_red`, `visit_goldmane_estate_blue`, `codex_of_frailty_yellow`, `codex_of_inertia_yellow`, `flick_knives`, `frailty_trap_red`, `looking_for_a_scrap_red`, `insult_to_injury_blue`, `reckless_arithmetic_blue`, `savage_claw`, `snarky_prick_red`, `riches_of_tropal_dhani_yellow`, `big_bully_red`, `booze_blue`, `ironfist_revelation`, `kayo_underhanded_cheat`, `mocking_blow_blue`, `mocking_blow_red`, `mocking_blow_yellow`, `offensive_behavior_blue`, `outside_interference_blue`, `right_behind_you_blue`, `show_of_strength_red`, `steal_victory_blue`, `alpha_rampage_red`, `ancestral_empowerment_red`, `anothos`, `awakening_bellow_blue`, `awakening_bellow_red`, `awakening_bellow_yellow`, `barkbone_strapping`, `cranial_crush_blue`, `debilitate_blue`, `debilitate_red`, `debilitate_yellow`, `enlightened_strike_red`, `fyendals_spring_tunic`, `nimblism_blue`, `nimblism_red`, `nimblism_yellow`, `scabskin_leathers`, `sigil_of_solace_red`, `sink_below_red`, `spinal_crush_red`
