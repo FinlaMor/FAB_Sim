@@ -6,14 +6,36 @@ Cards in the slug_index that are NOT in index.ts are left untouched.
 
 Field names match index.ts exactly (e.g. 'life', 'intellect', not 'health'/'intelligence').
 
+The card definitions come from the fabrary/cards repo, which publishes two
+TypeScript sources in the same format:
+
+    packages/cards/latest-set/index.ts   ~80 KB   the newest set only
+    packages/cards/src/index.ts          ~12 MB   every card ever printed
+
+--fetch pulls the latest set, which is the cheap common case: this script
+UPSERTS, so a new set's cards are added and everything already in the index is
+left alone. --fetch-full re-pulls the whole catalogue when older cards need
+refreshing too.
+
+A fetch never overwrites card_data/index.ts. The download is cached beside it
+under its own name so the local full copy stays intact and the fetched text can
+be inspected after a surprising diff.
+
 Usage:
-    python scripts/build_slug_index.py [--dry-run]
+    python scripts/build_slug_index.py                  # parse local index.ts
+    python scripts/build_slug_index.py --fetch          # pull + parse latest set
+    python scripts/build_slug_index.py --fetch --dry-run
+    python scripts/build_slug_index.py --fetch-full     # pull + parse everything
+    python scripts/build_slug_index.py --source path/to/index.ts
 """
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 try:
@@ -27,7 +49,62 @@ INDEX_TS = ROOT / "card_data" / "index.ts"
 SLUG_JSON = ROOT / "card_data" / "slug_index.json"
 SLUG_MSGPACK = ROOT / "card_data" / "slug_index.msgpack"
 
+
+# Upstream card definitions. Same format for both paths, so one parser serves
+# each; they differ only in how much of the catalogue they carry.
+FABRARY_REPO = "fabrary/cards"
+FABRARY_REF = "main"
+FABRARY_SOURCES = {
+    "latest-set": "packages/cards/latest-set/index.ts",
+    "full": "packages/cards/src/index.ts",
+}
+RAW_URL = "https://raw.githubusercontent.com/{repo}/{ref}/{path}"
+
+# A fetched file lands here rather than on card_data/index.ts, which holds the
+# full local catalogue and must survive a latest-set pull.
+FETCH_CACHE = {
+    "latest-set": ROOT / "card_data" / "latest_set_index.ts",
+    "full": ROOT / "card_data" / "full_index.ts",
+}
+
 DRY_RUN = "--dry-run" in sys.argv
+
+
+def fetch_index_ts(which: str, ref: str = FABRARY_REF) -> Path:
+    """Download a fabrary/cards index.ts and return the local cache path.
+
+    Verifies the payload actually looks like the expected TypeScript module
+    before writing. A 404 or an HTML error page written straight to disk would
+    otherwise parse to zero cards and silently report "0 new, 0 updated".
+    """
+    path = FABRARY_SOURCES[which]
+    url = RAW_URL.format(repo=FABRARY_REPO, ref=ref, path=path)
+    dest = FETCH_CACHE[which]
+
+    print(f"Fetching {which} from {FABRARY_REPO}@{ref}")
+    print(f"  {url}")
+    try:
+        with urllib.request.urlopen(url, timeout=120) as resp:
+            payload = resp.read().decode("utf-8")
+    except urllib.error.HTTPError as exc:
+        raise SystemExit(
+            f"fetch failed: HTTP {exc.code} for {url}\n"
+            f"The upstream layout may have changed — check "
+            f"https://github.com/{FABRARY_REPO}/tree/{ref}/{Path(path).parent.as_posix()}"
+        ) from exc
+    except urllib.error.URLError as exc:
+        raise SystemExit(f"fetch failed: {exc.reason} for {url}") from exc
+
+    if "Card[]" not in payload or "@flesh-and-blood/types" not in payload:
+        raise SystemExit(
+            f"fetch returned {len(payload)} bytes that do not look like a cards "
+            f"index.ts (no 'Card[]' / '@flesh-and-blood/types'). Refusing to "
+            f"write {dest.name}; the URL or upstream format likely changed."
+        )
+
+    dest.write_text(payload, encoding="utf-8")
+    print(f"  wrote {dest.relative_to(ROOT)} ({len(payload):,} bytes)")
+    return dest
 
 
 # ---------------------------------------------------------------------------
@@ -243,8 +320,48 @@ def parse_card(card_identifier: str, block: str) -> dict:
 # Main
 # ---------------------------------------------------------------------------
 
+def _parse_args(argv=None):
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    g = ap.add_mutually_exclusive_group()
+    g.add_argument("--fetch", action="store_true",
+                   help="download the latest set from fabrary/cards and parse it")
+    g.add_argument("--fetch-full", action="store_true",
+                   help="download the complete catalogue (~12 MB) and parse it")
+    g.add_argument("--source", type=Path,
+                   help="parse a specific local index.ts instead of card_data/index.ts")
+    ap.add_argument("--ref", default=FABRARY_REF,
+                    help=f"branch or tag to fetch from (default: {FABRARY_REF})")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="parse and report, writing no index files")
+    return ap.parse_args(argv)
+
+
+def resolve_source(args) -> Path:
+    """Pick the index.ts to parse, downloading it first when asked."""
+    if args.fetch:
+        return fetch_index_ts("latest-set", args.ref)
+    if args.fetch_full:
+        return fetch_index_ts("full", args.ref)
+    if args.source:
+        if not args.source.exists():
+            raise SystemExit(f"source not found: {args.source}")
+        return args.source
+    if not INDEX_TS.exists():
+        raise SystemExit(
+            f"{INDEX_TS.relative_to(ROOT)} not found — run with --fetch to pull "
+            f"the latest set, or --fetch-full for the whole catalogue.")
+    return INDEX_TS
+
+
 def main():
-    source = INDEX_TS.read_text(encoding="utf-8")
+    args = _parse_args()
+    global DRY_RUN
+    DRY_RUN = args.dry_run
+
+    src_path = resolve_source(args)
+    print(f"Parsing {src_path.relative_to(ROOT) if src_path.is_relative_to(ROOT) else src_path}")
+    source = src_path.read_text(encoding="utf-8")
     blocks = _extract_card_blocks(source)
     print(f"Parsed {len(blocks)} cards from index.ts")
 
