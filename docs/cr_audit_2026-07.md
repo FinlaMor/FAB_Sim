@@ -126,9 +126,9 @@ More bugs found reviewing recorded games, all fixed with coverage in
 | M2 attack not on stack during priority | open |
 | M3 triggered-layer target declaration | **partially fixed** — DSL `target.filter` is now enforced at announce for card plays (CR 1.8.5: "Target attack with stealth" is unplayable without a stealth attack); resolution-time target recheck (5.3.2a) still open |
 | M4 SBA approximation | open |
-| L1 ally life reset (all players) | **FIXED** |
-| L2 chi cleared at end of turn | open — confirm intended policy |
-| L3 defend compound event | open |
+| L1 ally life reset (all players) | **FIXED** — regression test `test_end_of_turn_resets_every_players_ally_life` |
+| L2 chi cleared at end of turn | **NOT A DEVIATION** — leftover chi converts to generic resources, so CR 4.4.3e clears it too; zeroing `chi` reaches the correct end state (see below) |
+| L3 defend compound event | **FIXED** — `_apply_defend` adds every declared card to `combat.defending_cards` before emitting any `defend` event (CR 7.3.2d), so "defends together with …" triggers see all co-defenders; regression test `test_defend_declarations_are_one_compound_event` |
 | L4 DR resolution timing | **FIXED** — a DR card-layer becomes a defending card via `add_defend` when its layer resolves (7.4.2d/8.1.3b) |
 | L5–L8 | open (L5/L6 by design) |
 
@@ -258,15 +258,25 @@ where CR says cleared — verify per-card as ally cards get implemented).
 - **L1. Ally life reset covers only the turn-player's allies** — CR 4.4.3a
   resets *all* allies' life at the end-of-turn procedure; `engine.py:715`
   iterates `player.allies` (turn player) only.
-- **L2. Chi is cleared at end of turn** — CR 4.4.3e clears only action and
-  resource points; `engine.py:770-773` also zeroes `chi`. Confirm intended
-  behavior (official rulings on chi persistence may differ from the CR text
-  snapshot in this repo; the doc as written says chi persists).
-- **L3. Defend declarations are not a single compound event** — CR 7.3.2d puts
-  all declared cards on the chain link as one compound event ("defend
-  together"); `_defend_step`/`_apply_defend` add cards and emit `defend`
-  events sequentially. "Defends together/alone" triggers (e.g. Bastion of
-  Unity) would mis-evaluate.
+- **L2. Chi cleared at end of turn** — *NOT A DEVIATION (resolved 2026-07-19).*
+  CR 4.4.3e names only action and resource points, but leftover chi converts to
+  generic resources, so it is cleared by that same rule — nothing carries over
+  either way. `engine.py:822` zeroing `chi` reaches the correct end state.
+
+  The engine gets there by a different route than the rule describes: rather
+  than converting, it keeps `player.chi` as a parallel pool that counts toward
+  payment (`actions.py:251`, `effective_resources = resources + chi`) and
+  zeroes both at end of turn. Outcome-equivalent. It would only diverge for a
+  card that reads the chi count as distinct from resources at a timing where
+  the conversion had already happened; no such card is implemented.
+- **L3. Defend declarations are a single compound event** — *FIXED (verified
+  2026-07-19).* CR 7.3.2d puts all declared cards on the chain link as one
+  compound event ("defend together"). `_defend_step` already collects the
+  declaration into one `DEFEND_CARDS` action, and `_apply_defend` runs two
+  passes — every card joins `combat.defending_cards` before any `defend` event
+  is emitted — so "defends together/alone" triggers see all co-defenders.
+  Locked in by `test_defend_declarations_are_one_compound_event`, which was
+  mutation-tested by interleaving the two passes.
 - **L4. Reaction-step DRs become defending cards immediately** — CR 7.4.2d has
   a DR become a defending card when its layer *resolves* (and it can fail to
   resolve, e.g. vs Dominate with a hand card already defending). The engine

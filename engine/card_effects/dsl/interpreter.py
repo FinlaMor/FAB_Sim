@@ -1,6 +1,23 @@
 """Runtime interpreter: given a CardDef and event, execute matching abilities."""
 from __future__ import annotations
 
+from engine.card_effects.dsl import coverage as _coverage
+
+
+def _track_effect(card, effect_type: str) -> None:
+    """Record that an effect actually executed (no-op unless coverage is on)."""
+    tracker = _coverage.active()
+    if tracker is not None:
+        tracker.record_effect(getattr(card, "slug", "?"), effect_type)
+
+
+def _track_ability(card, ability) -> None:
+    """Record that an ability actually fired (no-op unless coverage is on)."""
+    tracker = _coverage.active()
+    if tracker is not None:
+        key = ability.trigger or ability.ability_type
+        tracker.record_ability(getattr(card, "slug", "?"), key)
+
 
 def run_ability(ability, card, event, state) -> None:
     """Execute a single AbilityDef, tracking *card* as the current effect source
@@ -34,6 +51,9 @@ def _run_ability(ability, card, event, state) -> None:
         if fn is not None and not fn(card, event, state):
             return
 
+    # Past every gate — this ability is genuinely resolving, not just matched.
+    _track_ability(card, ability)
+
     # MODAL abilities ("Choose N"): the controller picks modes, each of which
     # is a compiled EffectDef. Non-modal abilities run their effects in order.
     if getattr(ability, 'modes', None):
@@ -52,6 +72,7 @@ def _run_ability(ability, card, event, state) -> None:
         for idx in chosen:
             mode = ability.modes[idx]
             if mode.fn is not None:
+                _track_effect(card, mode.effect_type)
                 mode.fn(card, event, state)
 
     # Execute effects in order
@@ -64,6 +85,7 @@ def _run_ability(ability, card, event, state) -> None:
                 all_ok = False
                 break
         if all_ok and eff.fn is not None:
+            _track_effect(card, eff.effect_type)
             eff.fn(card, event, state)
 
 

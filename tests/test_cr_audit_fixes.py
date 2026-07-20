@@ -1267,3 +1267,63 @@ def test_kayo_instant_target_is_the_controlled_card_not_the_active_attack():
     apply_action(st, kayo_acts[0])
     assert mb.base_power == 6            # the declared target was set
     assert miller.base_power != 6        # the opponent's weapon was untouched
+
+
+# ---------------------------------------------------------------------------
+# L1 / L3 — CR behaviors that were implemented but never covered by a test.
+# The 2026-07 audit listed both as "open"; the code had moved ahead of the doc.
+# ---------------------------------------------------------------------------
+
+def test_defend_declarations_are_one_compound_event():
+    """CR 7.3.2d: all declared cards join the chain link as a single compound
+    event, so a 'defends together with …' trigger sees every co-defender.
+
+    If _apply_defend interleaved add/emit per card, the first card's defend
+    event would fire while later co-defenders were still absent.
+    """
+    from engine.play import _apply_defend
+
+    st = _reaction_state(dr_holder=2)  # p1 attacking p2
+    seen: list[int] = []
+
+    def _watch(event, state):
+        # Record how many cards were already defending when each event fired.
+        seen.append(len(state.combat.defending_cards))
+
+    st.event_manager.register("defend", _watch)
+
+    a = _card("big_bully_red", 2)
+    b = _card("show_of_strength_red", 2)
+    st.players[2].hand.add(a)
+    st.players[2].hand.add(b)
+
+    _apply_defend(st, Action(type=ActionType.DEFEND_CARDS, card_list=[a, b]))
+
+    assert st.combat.defending_cards == [a, b]
+    assert seen == [2, 2], (
+        f"expected both defenders present for every defend event, saw {seen} — "
+        f"declarations are being emitted sequentially, not as one compound event"
+    )
+
+
+def test_end_of_turn_resets_every_players_ally_life():
+    """CR 4.4.3a: the end-of-turn procedure resets *all* allies' life, not just
+    the turn player's."""
+    st = _make_state()
+    st.card_db = DB
+    st.active_player = 1
+
+    allies = {}
+    for pid in (1, 2):
+        ally = Card(slug=f"test_ally_{pid}", raw_name="Test Ally", raw_types=["Ally"])
+        ally.types = ["Ally"]
+        ally.owner = ally.controller = pid
+        ally.base_life = 3
+        ally.current_life = 1  # damaged this turn
+        st.players[pid].allies.add(ally)
+        allies[pid] = ally
+
+    E._end_phase_iter(st)
+
+    assert allies[1].current_life == 3, "turn player's ally was not reset"
+    assert allies[2].current_life == 3, "non-turn player's ally was not reset"

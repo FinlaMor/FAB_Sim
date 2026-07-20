@@ -167,3 +167,29 @@ Most cards compose from existing types. When one genuinely doesn't:
 - [ ] No engine file was edited (if one had to be, the change is generic and
       card-free, and `DSL_REFERENCE.md` documents any new type)
 - [ ] Work queue status refreshed
+
+## Verifying a batch of cards
+
+Three layers, each catching what the others structurally cannot. Run them in
+this order — each is slower and noisier than the last.
+
+1. **Mechanical** — `pytest tests/test_card_json_hygiene.py`. Sub-second, fully
+   deterministic, part of the suite. Proves the JSON is well-formed and filed
+   correctly. Cannot tell you whether it does the right thing, or anything.
+
+2. **Execution** — `python scripts/dsl_coverage.py --seeds 10`. Plays real
+   games and reports authored effects that never fired. An ability whose
+   trigger the engine never dispatches passes layer 1 and is inert; this is the
+   only layer that catches it. Read the two sections separately: cards in a
+   tested deck that never fired are real suspects, cards no deck can draw are
+   merely untested.
+
+3. **Semantic** — `python scripts/dsl_semantic_audit.py --set <code> -o report.md`.
+   Asks an LLM whether the JSON implements every clause of the printed text.
+   Slow, costs money, and produces suspicions rather than verdicts, so it is a
+   batch job you triage — never a test.
+
+   Two rules. It **never edits card JSON**, and neither should you wire it to:
+   a model that fixes its own work confirms its own misreadings. And run it in
+   a *different session* from the one that authored the cards, for the same
+   reason.
