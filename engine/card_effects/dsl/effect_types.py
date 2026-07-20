@@ -184,7 +184,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                   or str(params.get("to", "BOTTOM")).upper() == "TOP")
         optional = params.get("optional", True)
         def _fn(card, event, state, _pt=player_target, _top=to_top, _opt=optional):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id, DECLINE
             from engine.effect_keywords import put_object
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
@@ -194,10 +194,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             where = "top" if _top else "bottom"
             options = [c.slug for c in player.hand.cards]
             if _opt:
-                options = options + ["decline"]
+                options = options + [DECLINE]
             choice = _ask_player(state, tid, options,
                                  context=f"Choose a card to put on the {where} of your deck")
-            if choice == "decline":
+            if choice == DECLINE:
                 return
             target = player.hand.find(choice)
             if target:
@@ -253,10 +253,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             cid = _controller_id(card)
             controller = state.players[cid]
             eligible = list(controller.deck.cards)
-            options = [c.slug for c in eligible] + ["fail_to_find"]
-            pick = _ask_player(state, cid, options,
-                               context="Search your deck for a card to banish face-down (or fail to find)")
-            if pick != "fail_to_find":
+            from engine.card_effects.ability_keywords import ask_optional, FAIL_TO_FIND
+            pick = ask_optional(state, cid, [c.slug for c in eligible], sentinel=FAIL_TO_FIND,
+                                context="Search your deck for a card to banish face-down (or fail to find)")
+            if pick is not None:
                 target = next((c for c in eligible if c.slug == pick), None)
                 if target is not None:
                     _banish(state, target, cid, origin_zone="deck")
@@ -285,10 +285,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 eligible = [c for c in eligible if any(t in (c.types or []) for t in _ft)]
             if _fsc:
                 eligible = [c for c in eligible if _fsc in c.slug]
-            options = [c.slug for c in eligible] + ["fail_to_find"]
-            pick = _ask_player(state, cid, options,
-                               context="Search your deck for a card and put it into hand (or fail to find)")
-            if pick != "fail_to_find":
+            from engine.card_effects.ability_keywords import ask_optional, FAIL_TO_FIND
+            pick = ask_optional(state, cid, [c.slug for c in eligible], sentinel=FAIL_TO_FIND,
+                                context="Search your deck for a card and put it into hand (or fail to find)")
+            if pick is not None:
                 target = next((c for c in eligible if c.slug == pick), None)
                 if target:
                     from engine.effect_keywords import put_object
@@ -452,9 +452,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                         and any(k.lower() == 'crush' for k in (c.keywords or []))]
             if not eligible:
                 return
-            pick = _ask_player(state, pid, [c.slug for c in eligible] + ["decline"],
-                               context="Turn a face-down crush card in your arsenal face-up?")
-            if pick == "decline":
+            from engine.card_effects.ability_keywords import ask_optional
+            pick = ask_optional(state, pid, [c.slug for c in eligible],
+                                context="Turn a face-down crush card in your arsenal face-up?")
+            if pick is None:
                 return
             target = next((c for c in eligible if c.slug == pick), eligible[0])
             target.face_down = False
@@ -608,9 +609,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                        and any(k.lower() == 'stealth' for k in (c.keywords or []))]
             if not stealth:
                 return
-            pick = _ask_player(state, cid, [c.slug for c in stealth] + ["decline"],
-                               context="Banish a stealth attack from your graveyard to copy it?")
-            if pick == "decline":
+            from engine.card_effects.ability_keywords import ask_optional
+            pick = ask_optional(state, cid, [c.slug for c in stealth],
+                                context="Banish a stealth attack from your graveyard to copy it?")
+            if pick is None:
                 return
             src = next((c for c in stealth if c.slug == pick), None)
             if src is None:
@@ -649,9 +651,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                        and 'dagger' in [s.lower() for s in (getattr(d, 'subtypes', None) or [])]]
             if not daggers:
                 return
-            pick = _ask_player(state, cid, [d.slug for d in daggers] + ["decline"],
-                               context="Which dagger you control deals damage?")
-            if pick == "decline":
+            from engine.card_effects.ability_keywords import ask_optional
+            pick = ask_optional(state, cid, [d.slug for d in daggers],
+                                context="Which dagger you control deals damage?")
+            if pick is None:
                 return
             dagger = next((d for d in daggers if d.slug == pick), None)
             if dagger is None:
@@ -872,7 +875,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         rest_into = params.get("rest_into")
         def _fn(card, event, state, _r=ref, _m=mode, _min=want_min,
                 _max=want_max, _into=into, _rest=rest_into):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id, STOP
             from engine.context import get_ref, set_ref
             pool = get_ref(_r) or []
             if not isinstance(pool, list):
@@ -895,9 +898,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 while remaining and len(chosen) < limit:
                     options = [c.slug for c in remaining]
                     if len(chosen) >= _min:
-                        options = options + ["done"]
+                        options = options + [STOP]
                     pick = _ask_player(state, cid, options, context="Select a card")
-                    if pick == "done":
+                    if pick == STOP:
                         break
                     target = next((c for c in remaining if c.slug == pick), remaining[0])
                     remaining.remove(target)
@@ -988,10 +991,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             subs.append((compile_effect(spec.get("type", "").upper(), sub_params), gates))
 
         def _fn(card, event, state, _s=subs, _p=prompt):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.card_effects.ability_keywords import ask_yes_no, _controller_id
             cid = _controller_id(card)
-            choice = _ask_player(state, cid, ["yes", "no"], context=_p)
-            if str(choice) == "no":
+            if not ask_yes_no(state, cid, context=_p):
                 return
             for fn, gates in _s:
                 if fn is None:
@@ -1142,9 +1144,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                        and 'attack' in [s.lower() for s in (c.subtypes or [])]]
             if not reviled:
                 return
-            pick = _ask_player(state, cid, [c.slug for c in reviled] + ["decline"],
-                               context="Reveal a Reviled attack action from your inventory?")
-            if pick == "decline":
+            from engine.card_effects.ability_keywords import ask_optional
+            pick = ask_optional(state, cid, [c.slug for c in reviled],
+                                context="Reveal a Reviled attack action from your inventory?")
+            if pick is None:
                 return
             target = next((c for c in reviled if c.slug == pick), reviled[0])
             inv.remove(target)
@@ -1164,9 +1167,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                      if "trap" in [s.lower() for s in (c.subtypes or [])]]
             if not traps:
                 return
-            pick = _ask_player(state, cid, [c.slug for c in traps] + ["decline"],
-                               context="Banish a trap from your graveyard to play it this turn?")
-            if pick == "decline":
+            from engine.card_effects.ability_keywords import ask_optional
+            pick = ask_optional(state, cid, [c.slug for c in traps],
+                                context="Banish a trap from your graveyard to play it this turn?")
+            if pick is None:
                 return
             target = next((c for c in traps if c.slug == pick), None)
             if target is None:
@@ -1228,9 +1232,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     seen.add(id(s)); uniq.append(s)
             if len(uniq) < _n:
                 return
-            pick = _ask_player(state, cid, ["destroy", "decline"],
-                               context=f"Destroy {_n} Silvers to equip Blacktek Whisperers?")
-            if pick != "destroy":
+            from engine.card_effects.ability_keywords import ask_yes_no
+            if not ask_yes_no(state, cid,
+                              context=f"Destroy {_n} Silvers to equip Blacktek Whisperers?"):
                 return
             for s in uniq[:_n]:
                 _destroy(state, s, card)
@@ -1327,9 +1331,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                                if 'attack' in [s.lower() for s in (c.subtypes or [])]]
                     if not attacks:
                         continue
-                    pick = _ask_player(state, pid, [c.slug for c in attacks] + ["decline"],
-                                       context="Put an attack action from your graveyard facedown into arsenal?")
-                    if pick == "decline":
+                    from engine.card_effects.ability_keywords import ask_optional
+                    pick = ask_optional(state, pid, [c.slug for c in attacks],
+                                        context="Put an attack action from your graveyard facedown into arsenal?")
+                    if pick is None:
                         continue
                     target = next((c for c in attacks if c.slug == pick), None)
                     if target is not None:

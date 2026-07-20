@@ -151,6 +151,33 @@ def _ask_player(state: GameState, player_id: int, options, context: str = "") ->
     return state.player_agents[player_id](state, options, context=context)
 
 
+# --- Canonical decision vocabulary -------------------------------------------
+# One set of sentinel tokens for player decisions so agents, tests, and
+# decision records never have to know per-effect strings. Real options always
+# come BEFORE a sentinel, because default agents take the first option — so the
+# default is to act, not to opt out.
+YES, NO = "yes", "no"          # binary "you may" decisions
+DECLINE = "decline"            # opt out of an optional card choice
+FAIL_TO_FIND = "fail_to_find"  # CR 8.5.19 — declining to find on a search is a
+                               # distinct named game action, kept as its own
+                               # label so decision records stay rules-accurate
+STOP = "done"                  # stop after taking 1+ in a bounded multi-select
+
+
+def ask_yes_no(state: GameState, player_id: int, context: str = "") -> bool:
+    """A binary 'you may' decision. Returns True to act. `yes` is offered first
+    so a default agent acts."""
+    return str(_ask_player(state, player_id, [YES, NO], context=context)) == YES
+
+
+def ask_optional(state: GameState, player_id: int, options, context: str = "",
+                 sentinel: str = DECLINE):
+    """Choose one of *options* or opt out. Returns the chosen option, or None if
+    the player took the sentinel. Pass sentinel=FAIL_TO_FIND for searches."""
+    choice = _ask_player(state, player_id, list(options) + [sentinel], context=context)
+    return None if choice == sentinel else choice
+
+
 def _remove_from_current_zone(card: Card, state: GameState) -> bool:
     """Remove card from whatever zone it currently sits in.
     MUST be followed by a Zone.add() call to maintain zone tracking."""
