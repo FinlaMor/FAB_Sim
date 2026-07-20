@@ -395,7 +395,9 @@ def test_right_behind_you_triggers_only_with_another_hand_card():
 
 def test_snarky_prick_reveals_red_top_destroys_and_pumps():
     # "When this attacks a hero, look at the top card of their deck. If it's red,
-    # destroy it and this gets +4{p}." (Regression: was a PLAY-time banish.)
+    # you may destroy it. If you do, this gets +4{p}."
+    # (Regression: was a PLAY-time banish. Default agents take the first option,
+    # so this covers the accept branch; the decline branch is tested below.)
     from engine.card_effects.dsl import dispatch
     from engine.card_effects.dsl.loader import load_all_cards
     load_all_cards()
@@ -1402,4 +1404,39 @@ def test_attack_layer_is_on_the_stack_during_layer_step(monkeypatch):
     # And it must not leak: combat must not re-enter from a leftover entry.
     assert not any(e.is_attack for e in st.stack_entries), (
         "attack entry leaked past the Attack Step"
+    )
+
+
+def test_snarky_prick_destruction_is_optional_after_errata():
+    """Errata: "If it's red, **you may** destroy it. If you do, this gets +4{p}."
+
+    The card previously read "destroy it and this gets +4{p}" — mandatory — and
+    the implementation destroyed unconditionally. Declining must leave the card
+    on top of the deck AND give no power bonus, since the bonus is gated on
+    having destroyed it.
+    """
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    snarky = _card("snarky_prick_red", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            attack_card=snarky, keywords=[])
+    st.combat.attack_target = None
+    top = _card("command_and_conquer_red", 2)   # red (pitch 1)
+    st.players[2].deck.add(top)
+    st.players[2].deck.add(_card("sink_below_yellow", 2))
+
+    # Controller declines the optional destruction.
+    def _decline(state, options, context="", **kw):
+        return "decline" if "decline" in options else options[0]
+    st.player_agents[1] = _decline
+
+    dispatch(st, "ON_ATTACK", "snarky_prick_red", card=snarky, event=None)
+
+    assert top in st.players[2].deck.cards, "declined — top card must survive"
+    assert top not in st.players[2].graveyard.cards
+    assert st.combat.attack_power == 3, (
+        "declining must give no +4{p}; the bonus is gated on destroying"
     )

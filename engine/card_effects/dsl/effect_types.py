@@ -437,10 +437,17 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "REVEAL_OPP_TOP_DESTROY_IF_RED":
         # Snarky Prick: "When this attacks a hero, look at the top card of their
-        # deck. If it's red, destroy it and this gets +N{p}." Red = pitch 1.
+        # deck. If it's red, you may destroy it. If you do, this gets +N{p}."
+        # Red = pitch 1.
+        #
+        # The destruction is OPTIONAL (errata — the card previously read
+        # "destroy it and this gets +4{p}"), and the power bonus is gated on
+        # actually destroying: declining gives no bonus. `optional: false`
+        # restores the pre-errata mandatory wording if another card needs it.
         power = params.get("power", 0)
-        def _fn(card, event, state, _p=power):
-            from engine.card_effects.ability_keywords import _controller_id
+        optional = params.get("optional", True)
+        def _fn(card, event, state, _p=power, _opt=optional):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
             from engine.effect_keywords import destroy as _ek_destroy
             combat = state.combat
             if combat is None:
@@ -449,12 +456,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             # permanent/ally target (attack_target is set only for those).
             if getattr(combat, 'attack_target', None) is not None:
                 return
-            opp = state.players[3 - _controller_id(card)]
+            cid = _controller_id(card)
+            opp = state.players[3 - cid]
             if not opp.deck.cards:
                 return
             top = opp.deck.cards[0]
             if (getattr(top, 'pitch', None) or 0) != 1:  # not red
                 return
+            if _opt:
+                # "you may" — the choice belongs to this card's controller.
+                choice = _ask_player(state, cid, ["destroy", "decline"],
+                                     context=f"Destroy {top.slug} from the top of "
+                                             f"their deck for +{_p}{{p}}?")
+                if str(choice) == "decline":
+                    return
             _ek_destroy(state, top, card)
             if _p:
                 val = _resolve_amount(_p, state)

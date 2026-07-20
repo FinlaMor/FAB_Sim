@@ -12,20 +12,20 @@ TypeScript sources in the same format:
     packages/cards/latest-set/index.ts   ~80 KB   the newest set only
     packages/cards/src/index.ts          ~12 MB   every card ever printed
 
---fetch pulls the latest set, which is the cheap common case: this script
-UPSERTS, so a new set's cards are added and everything already in the index is
-left alone. --fetch-full re-pulls the whole catalogue when older cards need
-refreshing too.
+The full catalogue is fetched by default. This script UPSERTS, so parsing
+everything refreshes existing cards as well as adding new ones — a stale field
+anywhere gets corrected. --latest-set is the cheap alternative when only the
+newest set matters; it leaves every other card exactly as it was.
 
 A fetch never overwrites card_data/index.ts. The download is cached beside it
 under its own name so the local full copy stays intact and the fetched text can
 be inspected after a surprising diff.
 
 Usage:
-    python scripts/build_slug_index.py                  # parse local index.ts
-    python scripts/build_slug_index.py --fetch          # pull + parse latest set
-    python scripts/build_slug_index.py --fetch --dry-run
-    python scripts/build_slug_index.py --fetch-full     # pull + parse everything
+    python scripts/build_slug_index.py                  # fetch + parse everything
+    python scripts/build_slug_index.py --dry-run
+    python scripts/build_slug_index.py --latest-set     # newest set only
+    python scripts/build_slug_index.py --local          # no download
     python scripts/build_slug_index.py --source path/to/index.ts
 """
 from __future__ import annotations
@@ -68,6 +68,66 @@ FETCH_CACHE = {
 }
 
 DRY_RUN = "--dry-run" in sys.argv
+
+# Where card implementations live. A refresh that changes one of these cards'
+# rules text or stats can silently invalidate its JSON implementation.
+CARD_JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
+
+# Fields the engine and card implementations actually read. Everything else
+# upstream churns constantly — legalFormats, meta and image ids changed on
+# ~4,500 cards in a single refresh — and reporting those would bury the
+# handful of changes that matter.
+ENGINE_RELEVANT_FIELDS = (
+    "functionalText", "typeText", "power", "defense", "life", "intellect",
+    "arcane", "cost", "pitch", "types", "subtypes", "classes", "keywords",
+)
+
+
+def implemented_slugs() -> set[str]:
+    """Slugs with a DSL implementation under engine/card_effects/json/."""
+    if not CARD_JSON_ROOT.exists():
+        return set()
+    return {
+        p.stem for p in CARD_JSON_ROOT.rglob("*.json")
+        if not p.stem.endswith("_work_queue")
+        and not any(part.startswith(".") for part in p.relative_to(CARD_JSON_ROOT).parts)
+    }
+
+
+def engine_relevant_diff(old_rec: dict, new_rec: dict) -> dict:
+    """Changed fields that a card implementation could depend on."""
+    return {
+        field: (old_rec.get(field), new_rec.get(field))
+        for field in ENGINE_RELEVANT_FIELDS
+        if old_rec.get(field) != new_rec.get(field)
+    }
+
+
+def report_implementation_impact(impacted: dict[str, dict]) -> None:
+    """Print cards whose implementation may have been invalidated by a refresh.
+
+    This is the point of running the refresh at all. card_data/ is gitignored,
+    so `git diff` shows nothing after an update, and a rules-text errata will
+    otherwise sit undetected behind a passing test suite — the tests assert the
+    behaviour the card used to have. Snarky Prick went from "destroy it and
+    this gets +4{p}" to "you may destroy it", which turned a correct mandatory
+    implementation into a wrong one with no test failure anywhere.
+    """
+    if not impacted:
+        print("\nNo implemented card changed in an engine-relevant field.")
+        return
+
+    print(f"\n{'=' * 70}")
+    print(f"!! {len(impacted)} IMPLEMENTED CARD(S) CHANGED — review these implementations")
+    print(f"{'=' * 70}")
+    for slug, diff in sorted(impacted.items()):
+        print(f"\n  {slug}   ({', '.join(sorted(diff))})")
+        for field, (before, after) in sorted(diff.items()):
+            print(f"    {field}:")
+            print(f"      was: {str(before)[:200]}")
+            print(f"      now: {str(after)[:200]}")
+    print(f"\n  Re-read each card's JSON against its new text before trusting the")
+    print(f"  test suite: existing tests assert the OLD behaviour and will still pass.")
 
 
 def fetch_index_ts(which: str, ref: str = FABRARY_REF) -> Path:
@@ -324,12 +384,12 @@ def _parse_args(argv=None):
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     g = ap.add_mutually_exclusive_group()
-    g.add_argument("--fetch", action="store_true",
-                   help="download the latest set from fabrary/cards and parse it")
-    g.add_argument("--fetch-full", action="store_true",
-                   help="download the complete catalogue (~12 MB) and parse it")
+    g.add_argument("--latest-set", action="store_true",
+                   help="download only the newest set (~80 KB) instead of everything")
+    g.add_argument("--local", action="store_true",
+                   help="skip the download and parse the local card_data/index.ts")
     g.add_argument("--source", type=Path,
-                   help="parse a specific local index.ts instead of card_data/index.ts")
+                   help="parse a specific local index.ts")
     ap.add_argument("--ref", default=FABRARY_REF,
                     help=f"branch or tag to fetch from (default: {FABRARY_REF})")
     ap.add_argument("--dry-run", action="store_true",
@@ -338,20 +398,23 @@ def _parse_args(argv=None):
 
 
 def resolve_source(args) -> Path:
-    """Pick the index.ts to parse, downloading it first when asked."""
-    if args.fetch:
-        return fetch_index_ts("latest-set", args.ref)
-    if args.fetch_full:
-        return fetch_index_ts("full", args.ref)
+    """Pick the index.ts to parse. Defaults to fetching the full catalogue.
+
+    Fetching everything is the default because this script upserts: parsing the
+    whole catalogue refreshes existing cards as well as adding new ones, so a
+    stale field anywhere gets corrected. --latest-set only ever touches the
+    newest set's cards and leaves the rest as they were.
+    """
     if args.source:
         if not args.source.exists():
             raise SystemExit(f"source not found: {args.source}")
         return args.source
-    if not INDEX_TS.exists():
-        raise SystemExit(
-            f"{INDEX_TS.relative_to(ROOT)} not found — run with --fetch to pull "
-            f"the latest set, or --fetch-full for the whole catalogue.")
-    return INDEX_TS
+    if args.local:
+        if not INDEX_TS.exists():
+            raise SystemExit(
+                f"{INDEX_TS.relative_to(ROOT)} not found — drop --local to fetch it.")
+        return INDEX_TS
+    return fetch_index_ts("latest-set" if args.latest_set else "full", args.ref)
 
 
 def main():
@@ -372,6 +435,9 @@ def main():
     else:
         existing = {}
 
+    implemented = implemented_slugs()
+    impacted: dict[str, dict] = {}
+
     added = updated = 0
     for card_id, block in blocks:
         slug = _slug(card_id)
@@ -380,15 +446,21 @@ def main():
             added += 1
         else:
             updated += 1
+            # Capture the diff before the old record is overwritten — only for
+            # cards that actually have an implementation to invalidate.
+            if slug in implemented:
+                diff = engine_relevant_diff(existing[slug], record)
+                if diff:
+                    impacted[slug] = diff
         existing[slug] = record
 
     print(f"  {added} new, {updated} updated  (total {len(existing)})")
+    print(f"  {len(implemented)} implemented cards checked for engine-relevant changes")
+
+    report_implementation_impact(impacted)
 
     if DRY_RUN:
-        print("Dry run — no files written.")
-        for card_id, _ in blocks[:3]:
-            slug = _slug(card_id)
-            print(f"\n  {slug}:", json.dumps(existing[slug], indent=4, ensure_ascii=False)[:600])
+        print("\nDry run — no files written.")
         return
 
     out = {"by_slug": existing}
