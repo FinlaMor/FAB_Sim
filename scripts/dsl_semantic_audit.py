@@ -72,8 +72,17 @@ Its JSON implementation:
 
 Do this exactly:
 
-1. Split the printed text into atomic clauses. A clause is one independent \
-instruction or one keyword. Ignore pure reminder text in parentheses.
+1. Split the printed text into atomic clauses. A clause is one COMPLETE \
+instruction or one keyword — a full sentence or independent sub-sentence.
+
+   A condition and the effect it governs are ONE clause, never two. \
+"If this deals 4 or more damage to a hero, they discard a card" is a single \
+clause; do not emit "If this deals 4 or more damage to a hero" on its own. \
+Likewise never emit a bare fragment such as "If you do", "this combat chain", \
+"the attacking hero", "Attack", or "{{p}}" as a clause. If a fragment cannot \
+stand alone as an instruction, it belongs to the neighbouring clause.
+
+   Ignore pure reminder text in parentheses.
 2. For EACH clause, name the specific JSON effect(s)/ability that implement it, \
 or say NOTHING if no part of the JSON implements it.
 3. Separately flag any clause where the JSON does something related but \
@@ -202,15 +211,43 @@ def _downgrade_engine_keyword_findings(result: dict) -> None:
             clause["note"] = f"engine keyword (auto-corrected from {was})"
 
 
+_SUBORDINATE = re.compile(r"^(if|when|whenever|then|and|or|instead)\b", re.I)
+
+
+def _is_fragment(text: str) -> bool:
+    """True if a clause is too incomplete to be an instruction on its own.
+
+    The auditor over-splits conditionals, emitting halves like "If you do",
+    "this combat chain", or "{p}" as clauses and then reporting them as
+    unimplemented. These are sorted into a low-confidence bucket rather than
+    dropped — a suppressed real finding costs more than a noisy one.
+    """
+    bare = re.sub(r"[*_`]", "", text or "").strip()
+    words = bare.split()
+    if len(words) <= 3:
+        return True
+    # A dangling condition: opens with a subordinating word and never reaches
+    # the effect it governs. Every real finding observed so far carries the
+    # comma that separates condition from effect ("If the hero is marked, this
+    # costs {r} less"), so the missing comma is the tell regardless of length.
+    if _SUBORDINATE.match(bare) and "," not in bare:
+        return True
+    return False
+
+
 def render(results: list[dict]) -> str:
     today = _dt.date.today().isoformat()
-    findings, errors, clean = [], [], []
+    findings, errors, clean, weak = [], [], [], []
     for r in results:
         if r.get("error"):
             errors.append(r)
             continue
-        bad = [c for c in r.get("clauses", [])
-               if c.get("status") in ("MISSING", "MISMATCH")]
+        flagged = [c for c in r.get("clauses", [])
+                   if c.get("status") in ("MISSING", "MISMATCH")]
+        bad = [c for c in flagged if not _is_fragment(c.get("text", ""))]
+        frags = [c for c in flagged if _is_fragment(c.get("text", ""))]
+        if frags:
+            weak.append((r, frags))
         (findings if bad else clean).append((r, bad))
 
     lines = [f"# DSL semantic audit — {today}", "",
@@ -234,6 +271,16 @@ def render(results: list[dict]) -> str:
                 if c.get("note"):
                     lines.append(f"  - {c['note']}")
             lines.append("")
+
+    if weak:
+        lines += ["## Low confidence — probable clause fragments", "",
+                  "The auditor split a conditional and flagged half of it. Kept here",
+                  "rather than dropped, but check the high-confidence list first.", ""]
+        for r, frags in weak:
+            labels = ", ".join(f"{c.get('status')}: {(c.get('text') or '')[:40]!r}"
+                               for c in frags)
+            lines.append(f"- `{r['slug']}` — {labels}")
+        lines.append("")
 
     if errors:
         lines += ["## Audit errors", ""]

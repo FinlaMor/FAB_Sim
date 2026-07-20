@@ -1,0 +1,1703 @@
+[
+  {
+    "clauses": [
+      {
+        "text": "Your attacks with stealth get +1{p} this turn",
+        "implemented_by": "APPLY_CONTINUOUS",
+        "status": "IMPLEMENTED",
+        "note": "The JSON correctly implements the effect where attacks with stealth get +1{p} this turn"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "nights_embrace_blue",
+    "name": "Night's Embrace",
+    "text": "Your attacks with stealth get +1{p} this turn."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "When this deals 4 or more damage to a hero",
+        "implemented_by": "CRUSH condition",
+        "status": "IMPLEMENTED",
+        "note": "CRUSH condition covers the damage threshold and target requirements"
+      },
+      {
+        "text": "they put a card from their hand on top of their deck",
+        "implemented_by": "PUT_HAND_CARD_TOP effect",
+        "status": "IMPLEMENTED",
+        "note": "PUT_HAND_CARD_TOP correctly implements putting a hand card on top of deck for opponent"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "boulder_drop_red",
+    "name": "Boulder Drop",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Defense reaction cards can't be played this chain link",
+        "implemented_by": "SET_FLAG",
+        "status": "IMPLEMENTED",
+        "note": "The SET_FLAG effect with flag 'command_and_conquer_no_dr' implements the restriction on playing defense reaction cards."
+      },
+      {
+        "text": "When this hits a hero",
+        "implemented_by": "TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": "The ON_HIT trigger implements the condition when this card hits a hero."
+      },
+      {
+        "text": "destroy all cards in their arsenal",
+        "implemented_by": "DESTROY_ARSENAL",
+        "status": "IMPLEMENTED",
+        "note": "The DESTROY_ARSENAL effect with OPPONENT player implements destroying all cards in the opponent's arsenal."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "command_and_conquer_red",
+    "name": "Command and Conquer",
+    "text": "Defense reaction cards can't be played this chain link. When this hits a hero, destroy all cards in their arsenal."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "If Righteous Cleansing deals 4 or more damage to a hero",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "Damage condition not specified in JSON, only trigger type ON_CRUSH"
+      },
+      {
+        "text": "look at the top 5 cards of their deck",
+        "implemented_by": "LOOK",
+        "status": "IMPLEMENTED",
+        "note": "LOOK effect with amount 5 correctly implements this clause"
+      },
+      {
+        "text": "Banish 1 or more cards with the same name from among them",
+        "implemented_by": "BANISH_FROM_LOOKED",
+        "status": "IMPLEMENTED",
+        "note": "BANISH_FROM_LOOKED with same_name=true correctly implements this clause"
+      },
+      {
+        "text": "then put the rest on top of their deck in any order",
+        "implemented_by": "PUT_LOOKED_BACK",
+        "status": "IMPLEMENTED",
+        "note": "PUT_LOOKED_BACK with destination TOP_DECK and order AGENT_CHOICE correctly implements this clause"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "righteous_cleansing_yellow",
+    "name": "Righteous Cleansing",
+    "text": "**Crush** - If Righteous Cleansing deals 4 or more damage to a hero, look at the top 5 cards of their deck. Banish 1 or more cards with the same name from among them, then put the rest on top of their deck in any order."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends",
+        "implemented_by": "STATIC_TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "intimidate",
+        "implemented_by": "INTIMIDATE",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Blade Break",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Blade Break is a keyword implemented by the game engine"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "scowling_flesh_bag",
+    "name": "Scowling Flesh Bag",
+    "text": "When this defends, **intimidate**.\n\n**Blade Break**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "While Blacktek Whisperers is in your graveyard",
+        "implemented_by": "STATIC_TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "at the start of your turn",
+        "implemented_by": "START_OF_TURN_IN_GRAVEYARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "you may destroy 2 Silvers you control",
+        "implemented_by": "MAY_DESTROY_SILVERS_TO_EQUIP",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you do",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "The conditional logic of 'if you do' is not explicitly represented in the JSON - it's implied by the MAY_DESTROY_SILVERS_TO_EQUIP effect but not directly coded"
+      },
+      {
+        "text": "equip Blacktek Whisperers",
+        "implemented_by": "MAY_DESTROY_SILVERS_TO_EQUIP",
+        "status": "IMPLEMENTED",
+        "note": "The equip action is included in the MAY_DESTROY_SILVERS_TO_EQUIP effect"
+      },
+      {
+        "text": "Attack Reaction",
+        "implemented_by": "ATTACK_REACTION",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Destroy Blacktek Whisperers",
+        "implemented_by": "DESTROY_SELF",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Target Assassin attack action card",
+        "implemented_by": "ATTACK_CLASS_IN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "gains \"When this hits a hero, it gains **go again**\"",
+        "implemented_by": "INJECT_TRIGGER",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Battleworn",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Battleworn is an engine keyword"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "blacktek_whisperers",
+    "name": "Blacktek Whisperers",
+    "text": "While Blacktek Whisperers is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip Blacktek Whisperers.\n\n**Attack Reaction** - Destroy Blacktek Whisperers: Target Assassin attack action card gains \"When this hits a hero, it gains **go again**.\"\n\n**Battleworn**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Your hero is Royal",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Royal is a keyword implemented by the game engine itself"
+      },
+      {
+        "text": "When you equip Crown of Dominion",
+        "implemented_by": "TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": "ON_EQUIP trigger is correctly implemented"
+      },
+      {
+        "text": "create a Gold token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "Gold token creation is correctly implemented"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "crown_of_dominion",
+    "name": "Crown of Dominion",
+    "text": "Your hero is Royal.\n\nWhen you equip Crown of Dominion, create a Gold token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Contract",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "You are contracted to banish opponents' red cards",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No JSON effect implements the contract objective of banningishing opponents' red cards"
+      },
+      {
+        "text": "Whenever you complete this contract",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No JSON effect implements the contract completion trigger"
+      },
+      {
+        "text": "create a Silver token",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No JSON effect creates a Silver token"
+      },
+      {
+        "text": "When this hits a hero",
+        "implemented_by": "ON_HIT",
+        "status": "IMPLEMENTED",
+        "note": "JSON has ON_HIT trigger"
+      },
+      {
+        "text": "banish the top card of their deck",
+        "implemented_by": "BANISH",
+        "status": "IMPLEMENTED",
+        "note": "JSON has BANISH from TOP_DECK"
+      },
+      {
+        "text": "and up to 1 card in their arsenal",
+        "implemented_by": "DESTROY_ARSENAL",
+        "status": "IMPLEMENTED",
+        "note": "JSON has DESTROY_ARSENAL for opponent"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "leave_no_witnesses_red",
+    "name": "Leave No Witnesses",
+    "text": "**Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck and up to 1 card in their arsenal."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target card",
+        "implemented_by": "MODIFY_DEFENSE_VALUE",
+        "status": "IMPLEMENTED",
+        "note": "The target card is modified as specified."
+      },
+      {
+        "text": "defending an Assassin attack",
+        "implemented_by": "ATTACK_CLASS_IN",
+        "status": "IMPLEMENTED",
+        "note": "The targeting filter checks for attacks from assassin class."
+      },
+      {
+        "text": "gets -3{d}",
+        "implemented_by": "MODIFY_DEFENSE_VALUE",
+        "status": "IMPLEMENTED",
+        "note": "The defense value is reduced by 3."
+      },
+      {
+        "text": "this combat chain",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "The JSON does not specify that the effect applies only during the current combat chain."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "shred_yellow",
+    "name": "Shred",
+    "text": "Target card defending an Assassin attack gets -3{d} this combat chain."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Dominate",
+        "implemented_by": "DOMINATE",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Dominate is a keyword implemented by the game engine itself"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "macho_grande_blue",
+    "name": "Macho Grande",
+    "text": "**Dominate**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When the combat chain closes",
+        "implemented_by": "TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": "ON_COMBAT_CLOSE trigger is correctly implemented"
+      },
+      {
+        "text": "if this didn't hit",
+        "implemented_by": "DID_NOT_HIT",
+        "status": "IMPLEMENTED",
+        "note": "DID_NOT_HIT condition is correctly implemented"
+      },
+      {
+        "text": "the defending hero creates a Quicken token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "CREATE_TOKEN effect with opponent player is correctly implemented"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "swing_big_red",
+    "name": "Swing Big",
+    "text": "When the combat chain closes, if this didn't hit, the defending hero creates a Quicken token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Heave 3",
+        "implemented_by": "Heave",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Heave is a keyword implemented by the game engine itself"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "thunder_quake_blue",
+    "name": "Thunder Quake",
+    "text": "**Heave 3**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Attack Reaction",
+        "implemented_by": "ATTACK_REACTION",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Discard an Assassin card",
+        "implemented_by": "DISCARD_CARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Target Assassin attack gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If it has stealth",
+        "implemented_by": "ATTACK_HAS_KEYWORD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "it gets When this hits a hero, they banish a card from their hand",
+        "implemented_by": "INJECT_TRIGGER",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "At the beginning of your end phase",
+        "implemented_by": "END_OF_TURN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "return to the brood",
+        "implemented_by": "TRANSFORM_HERO",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "arakni_black_widow",
+    "name": "Arakni, Black Widow",
+    "text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets \"When this hits a hero, they banish a card from their hand.\"\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Attack Reaction",
+        "implemented_by": "ATTACK_REACTION",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Discard an Assassin card",
+        "implemented_by": "DISCARD_CARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Target Assassin attack gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If it has stealth",
+        "implemented_by": "ATTACK_HAS_KEYWORD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "it gets When this hits a hero, banish a card in their arsenal",
+        "implemented_by": "INJECT_TRIGGER",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "At the beginning of your end phase",
+        "implemented_by": "END_OF_TURN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "return to the brood",
+        "implemented_by": "TRANSFORM_HERO",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "arakni_funnel_web",
+    "name": "Arakni, Funnel Web",
+    "text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets \"When this hits a hero, banish a card in their arsenal.\"\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Your attacks with **stealth**",
+        "implemented_by": "ATTACK_HAS_KEYWORD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "that are attacking a **marked** hero",
+        "implemented_by": "OPPONENT_IS_MARKED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "get +1{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "and \"When this hits, this gets **go again**\"",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "At the beginning of your end phase",
+        "implemented_by": "END_OF_TURN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "if an opponent is **marked**",
+        "implemented_by": "OPPONENT_IS_MARKED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "you become a random Agent of Chaos",
+        "implemented_by": "TRANSFORM_HERO",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "arakni_marionette",
+    "name": "Arakni, Marionette",
+    "text": "Your attacks with **stealth** that are attacking a **marked** hero get +1{p} and \"When this hits, this gets **go again**.\"\n\nAt the beginning of your end phase, if an opponent is **marked**, you become a random Agent of Chaos."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Graphene Chelicerae cost you {r} less to activate.",
+        "implemented_by": "COST_MODIFIER",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Once per Turn Instant",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      },
+      {
+        "text": "Discard an Assassin card",
+        "implemented_by": "DISCARD_CARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Equip a Graphene Chelicera token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Your next attack with stealth this turn gets +3{p}",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "At the beginning of your end phase",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      },
+      {
+        "text": "return to the brood",
+        "implemented_by": "TRANSFORM_HERO",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "arakni_orb_weaver",
+    "name": "Arakni, Orb-Weaver",
+    "text": "Graphene Chelicerae cost you {r} less to activate.\n\n**Once per Turn Instant** - Discard an Assassin card: Equip a Graphene Chelicera token. Your next attack with **stealth** this turn gets +3{p}.\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Attack Reaction",
+        "implemented_by": "ATTACK_REACTION",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Discard an Assassin card",
+        "implemented_by": "DISCARD_CARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Target Assassin attack gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If it has stealth",
+        "implemented_by": "ATTACK_HAS_KEYWORD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "it gets go again",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "At the beginning of your end phase",
+        "implemented_by": "END_OF_TURN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "return to the brood",
+        "implemented_by": "return_to_brood",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "arakni_redback",
+    "name": "Arakni, Redback",
+    "text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets **go again**.\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Whenever a dagger you own hits a hero, they lose 1{h}.",
+        "implemented_by": "LOSE_LIFE",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Once per Turn Attack Reaction",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      },
+      {
+        "text": "Discard an Assassin card",
+        "implemented_by": "DISCARD_CARD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Target dagger attack gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "At the beginning of your end phase",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      },
+      {
+        "text": "return to the brood",
+        "implemented_by": "TRANSFORM_HERO",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "arakni_tarantula",
+    "name": "Arakni, Tarantula",
+    "text": "Whenever a dagger you own hits a hero, they lose 1{h}.\n\n**Once per Turn Attack Reaction** - Discard an Assassin card: Target dagger attack gets +3{p}.\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When you become this",
+        "implemented_by": "STATIC_TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "you may search your deck for a card",
+        "implemented_by": "SEARCH_BANISH_FACE_DOWN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "banish it face-down",
+        "implemented_by": "SEARCH_BANISH_FACE_DOWN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "then shuffle",
+        "implemented_by": "SEARCH_BANISH_FACE_DOWN",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If it's a trap",
+        "implemented_by": "SEARCH_BANISH_FACE_DOWN",
+        "status": "MISMATCH",
+        "note": "JSON does not implement conditional logic based on card type (trap). The search/banish effect is unconditional."
+      },
+      {
+        "text": "you may play it until the start of your next turn",
+        "implemented_by": "SEARCH_BANISH_FACE_DOWN",
+        "status": "MISMATCH",
+        "note": "JSON does not implement playing a banished trap card. The effect only bansishes, but does not allow playing."
+      },
+      {
+        "text": "At the beginning of your end phase",
+        "implemented_by": "STATIC_TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "return to the brood",
+        "implemented_by": "TRANSFORM_HERO",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "arakni_trap_door",
+    "name": "Arakni, Trap-Door",
+    "text": "When you become this, you may search your deck for a card, banish it face-down, then shuffle. If it's a trap, you may play it until the start of your next turn.\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target opposing hero reveals their hand",
+        "implemented_by": "REVEAL_HAND",
+        "status": "MISSING",
+        "note": "No effect in JSON implements hand revealing"
+      },
+      {
+        "text": "If an attack reaction card is revealed this way",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No conditional check for attack reaction card in JSON"
+      },
+      {
+        "text": "mark",
+        "implemented_by": "MARK",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Mark is a keyword implemented by the game engine"
+      },
+      {
+        "text": "Your next dagger attack this turn gets +4{p}",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "JSON includes MODIFY_NEXT_ATTACK with amount 4"
+      },
+      {
+        "text": "Go again",
+        "implemented_by": "GO_AGAIN",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is a keyword implemented by the game engine"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "cut_from_the_same_cloth_red",
+    "name": "Cut from the Same Cloth",
+    "text": "Target opposing hero reveals their hand. If an attack reaction card is revealed this way, **mark** them.\n\nYour next dagger attack this turn gets +4{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Action",
+        "implemented_by": "per_turn",
+        "status": "IMPLEMENTED",
+        "note": "The per_turn field in the JSON correctly implements the 'Once per Turn Action' clause."
+      },
+      {
+        "text": "{r}{r}",
+        "implemented_by": "activation_cost",
+        "status": "IMPLEMENTED",
+        "note": "The activation_cost field correctly implements the cost of {r}{r} (2 red energy)."
+      },
+      {
+        "text": "Attack",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "There is no explicit 'attack' effect in the JSON, though this is likely covered by the engine since it's a weapon card."
+      },
+      {
+        "text": "Go again",
+        "implemented_by": "Go Again",
+        "status": "COVERED_BY_ENGINE",
+        "note": "'Go again' is a keyword implemented by the game engine itself."
+      },
+      {
+        "text": "When this hits a hero",
+        "implemented_by": "ON_HIT trigger",
+        "status": "IMPLEMENTED",
+        "note": "The ON_HIT trigger correctly implements the condition of when this hits a hero."
+      },
+      {
+        "text": "mark",
+        "implemented_by": "MARK",
+        "status": "IMPLEMENTED",
+        "note": "The MARK effect correctly implements the marking of the hero."
+      },
+      {
+        "text": "Piercing 1",
+        "implemented_by": "Piercing",
+        "status": "COVERED_BY_ENGINE",
+        "note": "'Piercing' is a keyword implemented by the game engine itself."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "hunters_klaive",
+    "name": "Hunter's Klaive",
+    "text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this hits a hero, **mark** them.\n\n**Piercing 1**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Stealth",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword 'Stealth' is implemented by the game engine itself, not by card JSON."
+      },
+      {
+        "text": "When this hits a hero",
+        "implemented_by": "ON_HIT",
+        "status": "IMPLEMENTED",
+        "note": "The trigger 'ON_HIT' implements the condition of hitting a hero."
+      },
+      {
+        "text": "they lose 1",
+        "implemented_by": "DEAL_GENERIC",
+        "status": "IMPLEMENTED",
+        "note": "The DEAL_GENERIC effect with amount 1 implements the loss of 1 health."
+      },
+      {
+        "text": "{h}",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "The {h} symbol indicates health and is handled by the game engine."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "kiss_of_death_red",
+    "name": "Kiss of Death",
+    "text": "**Stealth**\n\nWhen this hits a hero, they lose 1{h}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends an attack with",
+        "implemented_by": "DEFENSE_REACTION",
+        "status": "IMPLEMENTED",
+        "note": "The ability type DEFENSE_REACTION correctly implements the defensive condition"
+      },
+      {
+        "text": "go again",
+        "implemented_by": "ATTACK_HAS_KEYWORD",
+        "status": "IMPLEMENTED",
+        "note": "The ATTACK_HAS_KEYWORD condition with keyword 'go_again' correctly implements this requirement"
+      },
+      {
+        "text": "mark",
+        "implemented_by": "MARK",
+        "status": "IMPLEMENTED",
+        "note": "The MARK effect correctly implements the marking action"
+      },
+      {
+        "text": "the attacking hero",
+        "implemented_by": "null",
+        "status": "MISSING",
+        "note": "The JSON does not specify that the mark is applied to the attacking hero specifically - it just marks without specifying target"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "lair_of_the_spider_red",
+    "name": "Lair of the Spider",
+    "text": "When this defends an attack with **go again**, **mark** the attacking hero."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Stealth",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "When this hits a",
+        "implemented_by": "ON_HIT",
+        "status": "IMPLEMENTED",
+        "note": "Trigger condition matches"
+      },
+      {
+        "text": "marked hero",
+        "implemented_by": "OPPONENT_IS_MARKED",
+        "status": "IMPLEMENTED",
+        "note": "Condition for marked opponent matches"
+      },
+      {
+        "text": "they banish a card from their hand",
+        "implemented_by": "BANISH",
+        "status": "IMPLEMENTED",
+        "note": "Banish effect with correct zone and player matches"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "mark_of_the_black_widow_red",
+    "name": "Mark of the Black Widow",
+    "text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Arakni Specialization",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword is implemented by engine, not card JSON"
+      },
+      {
+        "text": "When this defends",
+        "implemented_by": "TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": "Both abilities have ON_DEFEND trigger"
+      },
+      {
+        "text": "become a random Agent of Chaos",
+        "implemented_by": "TRANSFORM_HERO",
+        "status": "IMPLEMENTED",
+        "note": "Both abilities use TRANSFORM_HERO with mode random_agent_of_chaos"
+      },
+      {
+        "text": "If the attacking hero is marked",
+        "implemented_by": "OPPONENT_IS_MARKED",
+        "status": "IMPLEMENTED",
+        "note": "Condition correctly checks if opponent is marked"
+      },
+      {
+        "text": "instead choose the Agent of Chaos",
+        "implemented_by": "TRANSFORM_HERO",
+        "status": "IMPLEMENTED",
+        "note": "The choose=true in the first ability implements this choice behavior"
+      },
+      {
+        "text": "Blade Break",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword is implemented by engine, not card JSON"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "mask_of_deceit",
+    "name": "Mask of Deceit",
+    "text": "**Arakni Specialization**\n\nWhen this defends, become a random Agent of Chaos. If the attacking hero is **marked**, instead choose the Agent of Chaos.\n\n**Blade Break**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Equip a Graphene Chelicera token",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No JSON effect for equipping a token"
+      },
+      {
+        "text": "Your next attack with",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No JSON effect for specifying next attack with stealth"
+      },
+      {
+        "text": "stealth",
+        "implemented_by": "STEALTH",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Stealth is a keyword implemented by the game engine"
+      },
+      {
+        "text": "this turn gets +3",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "JSON implements modifying next attack with +3"
+      },
+      {
+        "text": "{p}",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No JSON effect for specifying power modifier"
+      },
+      {
+        "text": "Go again",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": "JSON implements gaining an action point which enables go again"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "orb_weaver_spinneret_red",
+    "name": "Orb-Weaver Spinneret",
+    "text": "Equip a Graphene Chelicera token.\n\nYour next attack with **stealth** this turn gets +3{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this hits a hero",
+        "implemented_by": "ON_HIT trigger",
+        "status": "IMPLEMENTED",
+        "note": "The ON_HIT trigger is present in the JSON"
+      },
+      {
+        "text": "target dagger you control deals 1 damage to them",
+        "implemented_by": "DEAL_GENERIC effect",
+        "status": "MISMATCH",
+        "note": "The JSON deals damage to opponent but doesn't specify targeting a dagger, and doesn't use the correct target type for a dagger"
+      },
+      {
+        "text": "If damage is dealt this way",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No conditional logic based on damage being dealt is present in the JSON"
+      },
+      {
+        "text": "the dagger has hit",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No effect indicating the dagger has hit is present in the JSON"
+      },
+      {
+        "text": "Go again",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is a keyword implemented by the game engine"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "pain_in_the_backside_red",
+    "name": "Pain in the Backside",
+    "text": "When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No attack trigger condition specified in JSON"
+      },
+      {
+        "text": "you may **retrieve** a dagger from your graveyard",
+        "implemented_by": "RETRIEVE_DAGGER",
+        "status": "IMPLEMENTED",
+        "note": "RETRIEVE_DAGGER effect matches the printed text"
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is a keyword implemented by game engine"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "pick_up_the_point_red",
+    "name": "Pick Up the Point",
+    "text": "When this attacks, you may **retrieve** a dagger from your graveyard.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Defense Reaction",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "{r}",
+        "implemented_by": "activation_cost",
+        "status": "IMPLEMENTED",
+        "note": "Activation cost parsed from type line as specified in comment"
+      },
+      {
+        "text": "Add this to the active chain link as a defending card",
+        "implemented_by": "ADD_DEFEND",
+        "status": "IMPLEMENTED",
+        "note": "ADD_DEFEND effect correctly implements adding to active chain link as defending card"
+      },
+      {
+        "text": "It has 2 base {d} this chain link",
+        "implemented_by": "ADD_DEFEND",
+        "status": "IMPLEMENTED",
+        "note": "ADD_DEFEND with defense value of 2 correctly implements base defense"
+      },
+      {
+        "text": "At the beginning of the end phase",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Trigger timing handled by game engine"
+      },
+      {
+        "text": "if this defended this turn",
+        "implemented_by": "FLAG_SET",
+        "status": "IMPLEMENTED",
+        "note": "FLAG_SET condition correctly checks if defended this turn via quickdodge_defended flag"
+      },
+      {
+        "text": "destroy it",
+        "implemented_by": "DESTROY_SELF",
+        "status": "IMPLEMENTED",
+        "note": "DESTROY_SELF effect correctly implements destruction of card"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "quickdodge_flexors",
+    "name": "Quickdodge Flexors",
+    "text": "**Defense Reaction** - {r}: Add this to the active chain link as a defending card. It has 2 base {d} this chain link.\n\nAt the beginning of the end phase, if this defendend this turn, destroy it."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Your next dagger attack this turn gets +4{p}.",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "The next time you hit a **marked** hero with a dagger this turn, draw a card.",
+        "implemented_by": "QUEUE_NEXT_MARKED_DAGGER_HIT_DRAW",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Go again",
+        "implemented_by": "GAIN",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is implemented by the game engine, not card JSON"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "savor_bloodshed_red",
+    "name": "Savor Bloodshed",
+    "text": "Your next dagger attack this turn gets +4{p}.\n\nThe next time you hit a **marked** hero with a dagger this turn, draw a card.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target dagger attack",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "JSON does not specify that this ability only applies to dagger attacks"
+      },
+      {
+        "text": "gets +3",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "{p}",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE"
+      },
+      {
+        "text": "When this hits a hero",
+        "implemented_by": "INJECT_TRIGGER",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "mark",
+        "implemented_by": "MARK",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "them",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "scar_tissue_red",
+    "name": "Scar Tissue",
+    "text": "Target dagger attack gets +3{p} and \"When this hits a hero, **mark** them.\""
+  },
+  {
+    "clauses": [
+      {
+        "text": "Legendary",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Legendary is a deck-building keyword implemented by the game engine"
+      },
+      {
+        "text": "When this is pitched",
+        "implemented_by": "ON_PITCH",
+        "status": "IMPLEMENTED",
+        "note": "Trigger condition correctly implemented"
+      },
+      {
+        "text": "each hero shuffles",
+        "implemented_by": "EACH_HERO_SHUFFLE_TOP_TO_ARSENAL",
+        "status": "IMPLEMENTED",
+        "note": "Effect correctly implements shuffling and moving top card to arsenal"
+      },
+      {
+        "text": "then puts the top card of their deck facedown into their arsenal",
+        "implemented_by": "EACH_HERO_SHUFFLE_TOP_TO_ARSENAL",
+        "status": "IMPLEMENTED",
+        "note": "Effect correctly implements putting top card facedown into arsenal"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "schism_of_chaos_blue",
+    "name": "Schism of Chaos",
+    "text": "**Legendary**\n\nWhen this is pitched, each hero shuffles, then puts the top card of their deck facedown into their arsenal."
+  },
+  {
+    "clauses": [
+      {
+        "text": "If the defending hero is **marked**, this costs {r} less to play.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "The JSON does not implement any cost reduction effect based on the defending hero being marked."
+      },
+      {
+        "text": "Target attack with **stealth** gets +1{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The JSON includes a MODIFY_ATTACK effect that adds 1 power to the target attack."
+      },
+      {
+        "text": "**go again**",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": "The JSON includes a GAIN keyword effect for 'go again'."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "stains_of_the_redback_blue",
+    "name": "Stains of the Redback",
+    "text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +1{p} and **go again**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "If the defending hero is **marked**, this costs {r} less to play.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "The JSON does not implement any cost reduction effect based on the defending hero being marked."
+      },
+      {
+        "text": "Target attack with **stealth**",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The JSON targets attacks with stealth keyword and modifies them."
+      },
+      {
+        "text": "**stealth**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Stealth is a keyword implemented by the game engine itself."
+      },
+      {
+        "text": "gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The JSON applies a +3 power modifier to the attack."
+      },
+      {
+        "text": "**go again**",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": "The JSON grants the 'go again' keyword to the attack."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "stains_of_the_redback_red",
+    "name": "Stains of the Redback",
+    "text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +3{p} and **go again**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target attack action card with **stealth**",
+        "implemented_by": "ATTACK_HAS_KEYWORD",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "gets +2{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If it's attacking a **marked** hero",
+        "implemented_by": "OPPONENT_IS_MARKED",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "instead it gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "and you may banish an attack action card with **stealth** from your graveyard",
+        "implemented_by": "COPY_BANISHED_STEALTH_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "If you do",
+        "implemented_by": "COPY_BANISHED_STEALTH_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "the target becomes a copy of the banished card",
+        "implemented_by": "COPY_BANISHED_STEALTH_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "take_up_the_mantle_yellow",
+    "name": "Take Up the Mantle",
+    "text": "Target attack action card with **stealth** gets +2{p}. If it's attacking a **marked** hero, instead it gets +3{p} and you may banish an attack action card with **stealth** from your graveyard. If you do, the target becomes a copy of the banished card."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Choose 1 or both",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword handled by game engine"
+      },
+      {
+        "text": "Target dagger attack gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "JSON implements the attack modification correctly"
+      },
+      {
+        "text": "Target card defending an attack with stealth gets -3{d} this turn",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No effect in JSON for modifying defense of cards with stealth"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "tarantula_toxin_red",
+    "name": "Tarantula Toxin",
+    "text": "Choose 1 or both;\n\n* Target dagger attack gets +3{p}.\n* Target card defending an attack with stealth gets -3{d} this turn."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target dagger attack gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The first MODIFY_ATTACK effect with amount 3 correctly implements this clause."
+      },
+      {
+        "text": "If the defending hero is **marked**",
+        "implemented_by": "OPPONENT_IS_MARKED",
+        "status": "IMPLEMENTED",
+        "note": "The condition OPPONENT_IS_MARKED correctly implements this clause."
+      },
+      {
+        "text": "instead it gets +4{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "The second MODIFY_ATTACK effect with amount 1 (totaling 4 when added to the first) correctly implements this clause."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "to_the_point_red",
+    "name": "To the Point",
+    "text": "Target dagger attack gets +3{p}. If the defending hero is **marked**, instead it gets +4{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Stealth",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "Instant",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "Discard this",
+        "implemented_by": "DISCARD_SELF",
+        "status": "IMPLEMENTED",
+        "note": "JSON has matching cost"
+      },
+      {
+        "text": "Banish target trap from your graveyard",
+        "implemented_by": "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE",
+        "status": "IMPLEMENTED",
+        "note": "JSON implements the core effect"
+      },
+      {
+        "text": "If you do, you may play it this turn",
+        "implemented_by": "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE",
+        "status": "IMPLEMENTED",
+        "note": "JSON includes playable flag in effect"
+      },
+      {
+        "text": "if it would be put into the graveyard this turn, instead banish it",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "JSON does not model the graveyard->banish rider effect"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "under_the_trap_door_blue",
+    "name": "Under the Trap-Door",
+    "text": "**Stealth**\n\n**Instant** - Discard this: Banish target trap from your graveyard. If you do, you may play it this turn and if it would be put into the graveyard this turn, instead banish it."
+  },
+  {
+    "clauses": [
+      {
+        "text": "You may **retrieve** a dagger from your graveyard.",
+        "implemented_by": "RETRIEVE_DAGGER",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Your next dagger attack this turn gets +4{p}.",
+        "implemented_by": "MODIFY_NEXT_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": "GAIN",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is implemented by the game engine, not card JSON"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "up_sticks_and_run_red",
+    "name": "Up Sticks and Run",
+    "text": "You may **retrieve** a dagger from your graveyard.\n\nYour next dagger attack this turn gets +4{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends together with a card with 6 or more {p}",
+        "implemented_by": "TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": "The ON_DEFEND trigger with CODEFENDER_POWER_GTE condition correctly implements the clause"
+      },
+      {
+        "text": "create a Might token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "The CREATE_TOKEN effect correctly implements creating a might token"
+      },
+      {
+        "text": "Temper",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Temper is a keyword implemented by the game engine itself"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "apex_bonebreaker",
+    "name": "Apex Bonebreaker",
+    "text": "When this defends together with a card with 6 or more {p}, create a Might token.\n\n**Temper**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Victor Specialization",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      },
+      {
+        "text": "This counts as a Gold",
+        "implemented_by": "GRANT_SUBTYPE",
+        "status": "IMPLEMENTED",
+        "note": null
+      },
+      {
+        "text": "Temper",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": null
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "aurum_aegis",
+    "name": "Aurum Aegis",
+    "text": "**Victor Specialization**\n\nThis counts as a Gold.\n\n**Temper**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Action",
+        "implemented_by": "TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": "per_turn field set to 1 and activation_cost set to 3 matches the cost of 3 red symbols"
+      },
+      {
+        "text": "{r}{r}{r}",
+        "implemented_by": "TRIGGERED",
+        "status": "IMPLEMENTED",
+        "note": "activation_cost is set to 3 which represents the 3 red symbols required"
+      },
+      {
+        "text": "Attack",
+        "implemented_by": "TRIGGERED",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Attack is a keyword handled by engine"
+      },
+      {
+        "text": "When this hits a hero",
+        "implemented_by": "ON_HIT",
+        "status": "IMPLEMENTED",
+        "note": "trigger field set to ON_HIT"
+      },
+      {
+        "text": "clash",
+        "implemented_by": "CLASH_DESTROY_TOP_OR_COUNTER",
+        "status": "COVERED_BY_ENGINE",
+        "note": "Clash is a keyword handled by engine"
+      },
+      {
+        "text": "If you win",
+        "implemented_by": "CLASH_DESTROY_TOP_OR_COUNTER",
+        "status": "IMPLEMENTED",
+        "note": "The effect type CLASH_DESTROY_TOP_OR_COUNTER handles both win/lose conditions"
+      },
+      {
+        "text": "destroy the top card of their deck",
+        "implemented_by": "CLASH_DESTROY_TOP_OR_COUNTER",
+        "status": "IMPLEMENTED",
+        "note": "The effect type CLASH_DESTROY_TOP_OR_COUNTER handles destroying top card when you win"
+      },
+      {
+        "text": "If they win",
+        "implemented_by": "CLASH_DESTROY_TOP_OR_COUNTER",
+        "status": "IMPLEMENTED",
+        "note": "The effect type CLASH_DESTROY_TOP_OR_COUNTER handles both win/lose conditions"
+      },
+      {
+        "text": "put a -1{p} counter on this",
+        "implemented_by": "CLASH_DESTROY_TOP_OR_COUNTER",
+        "status": "IMPLEMENTED",
+        "note": "The effect type CLASH_DESTROY_TOP_OR_COUNTER handles putting counter when they win"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "millers_grindstone",
+    "name": "Miller's Grindstone",
+    "text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nWhen this hits a hero, **clash** with them. If you win, destroy the top card of their deck. If they win, put a -1{p} counter on this."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Instant",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword implemented by game engine"
+      },
+      {
+        "text": "Discard this",
+        "implemented_by": "DISCARD_SELF",
+        "status": "IMPLEMENTED",
+        "note": "Cost correctly implemented with DISCARD_SELF"
+      },
+      {
+        "text": "If an action card effect would create 1 or more tokens this turn",
+        "implemented_by": "REDUCE_TOKEN_CREATION_THIS_TURN",
+        "status": "IMPLEMENTED",
+        "note": "Effect correctly implements the conditional token creation reduction"
+      },
+      {
+        "text": "instead it creates that many minus 1 of each of those tokens",
+        "implemented_by": "REDUCE_TOKEN_CREATION_THIS_TURN",
+        "status": "IMPLEMENTED",
+        "note": "Effect correctly implements reducing token creation by 1 per token type"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "ripple_away_blue",
+    "name": "Ripple Away",
+    "text": "**Instant** - Discard this: If an action card effect would create 1 or more tokens this turn, instead it creates that many minus 1 of each of those tokens."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends",
+        "implemented_by": "ON_DEFEND",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "clash",
+        "implemented_by": "CLASH",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "with the attacking hero",
+        "implemented_by": "ATTACKING_HERO",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "The winner creates a Gold token",
+        "implemented_by": "create_token",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "test_of_strength_red",
+    "name": "Test of Strength",
+    "text": "When this defends, **clash** with the attacking hero. The winner creates a Gold token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Victor Specialization",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword listed in engine implementation"
+      },
+      {
+        "text": "As an additional cost to play this",
+        "implemented_by": "CHOOSE",
+        "status": "IMPLEMENTED",
+        "note": "JSON implements optional additional cost via CHOOSE effect"
+      },
+      {
+        "text": "you may destroy a Gold you control",
+        "implemented_by": "DESTROY_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "JSON includes destroying a gold token as part of the CHOOSE option"
+      },
+      {
+        "text": "If you do",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Conditional logic handled by engine in CHOOSE effect"
+      },
+      {
+        "text": "this gets +3{p}",
+        "implemented_by": "MODIFY_ATTACK",
+        "status": "IMPLEMENTED",
+        "note": "JSON applies +3 power modifier"
+      },
+      {
+        "text": "and",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Logical connector, not implemented in JSON"
+      },
+      {
+        "text": "overpower",
+        "implemented_by": "GAIN",
+        "status": "IMPLEMENTED",
+        "note": "JSON grants the overpower keyword"
+      },
+      {
+        "text": "When you win a clash revealing this",
+        "implemented_by": "ON_CLASH_WIN_REVEALED",
+        "status": "IMPLEMENTED",
+        "note": "JSON implements static triggered ability for clash win with reveal"
+      },
+      {
+        "text": "create a Gold token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "JSON creates a gold token as effect"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "the_golden_son_yellow",
+    "name": "The Golden Son",
+    "text": "**Victor Specialization**\n\nAs an additional cost to play this, you may destroy a Gold you control. If you do, this gets +3{p} and **overpower**.\n\nWhen you win a **clash** revealing this, create a Gold token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When you win a",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword 'Clash' is implemented by the game engine itself"
+      },
+      {
+        "text": "clash",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword 'Clash' is implemented by the game engine itself"
+      },
+      {
+        "text": "revealing this",
+        "implemented_by": "ON_CLASH_WIN_REVEALED",
+        "status": "IMPLEMENTED",
+        "note": "The trigger 'ON_CLASH_WIN_REVEALED' implements the condition of revealing this card during a clash win"
+      },
+      {
+        "text": "create a Might token",
+        "implemented_by": "CREATE_TOKEN",
+        "status": "IMPLEMENTED",
+        "note": "The effect 'CREATE_TOKEN' with token type 'might' implements creating the Might token"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "thunk_blue",
+    "name": "Thunk",
+    "text": "When you win a **clash** revealing this, create a Might token."
+  }
+]
