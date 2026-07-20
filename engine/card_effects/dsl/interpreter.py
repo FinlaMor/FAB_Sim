@@ -22,11 +22,17 @@ def _track_ability(card, ability) -> None:
 def run_ability(ability, card, event, state) -> None:
     """Execute a single AbilityDef, tracking *card* as the current effect source
     (so effects can gate on their origin, e.g. Ripple Away's 'action card effect')."""
-    from engine.context import push_effect_source, pop_effect_source
+    from engine.context import (push_effect_source, pop_effect_source,
+                                push_refs, pop_refs)
     push_effect_source(card)
+    # One reference scope per ability execution, so "look at a card … destroy
+    # it" can share that card between effects without a bespoke function, and
+    # a nested ability cannot clobber an outer one's names.
+    push_refs()
     try:
         _run_ability(ability, card, event, state)
     finally:
+        pop_refs()
         pop_effect_source()
 
 

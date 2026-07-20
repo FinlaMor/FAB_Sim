@@ -1430,7 +1430,12 @@ def test_snarky_prick_destruction_is_optional_after_errata():
 
     # Controller declines the optional destruction.
     def _decline(state, options, context="", **kw):
-        return "decline" if "decline" in options else options[0]
+        # Decline whatever the negative option is called — effects use "no"
+        # (MAY blocks), "decline", or "fail_to_find" depending on the prompt.
+        for negative in ("no", "decline", "fail_to_find"):
+            if negative in options:
+                return negative
+        return options[-1]
     st.player_agents[1] = _decline
 
     dispatch(st, "ON_ATTACK", "snarky_prick_red", card=snarky, event=None)

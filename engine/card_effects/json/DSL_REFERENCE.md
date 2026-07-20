@@ -279,6 +279,39 @@ Opponent banishes a random card from hand face-down; returned at end phase (CR 8
 
 Player chooses `amount` options at resolution time. Distinct from `MODAL` (which chooses at play time).
 
+### Composable primitives (references + optional blocks)
+
+Prefer these over writing a new single-card effect type. Effects in one ability
+share objects through named references scoped to that ability's execution: an
+effect stores with `"into"`, a later one reads with `"ref"`. This lets a card
+sentence like "look at the top card, and if it's red you may destroy it for
++4{p}" be assembled in JSON instead of compiled into one bespoke function.
+
+| Type | Fields | Description |
+|---|---|---|
+| `LOOK_AT` | `zone` (DECK_TOP/ARSENAL/HAND), `player`, `amount`, `into` | Peek at cards **without moving them**; store under `into` (a single card unwrapped, multiple as a list) |
+| `SELECT_FROM_REF` | `ref`, `mode` (SAME_NAME/ANY), `min`, `max`, `into`, `rest_into` | Choose a subset of a referenced list; `SAME_NAME` picks a name and takes all copies. `rest_into` stores the complement |
+| `DESTROY_REF` | `ref` | Destroy the referenced card(s) via the canonical `destroy` |
+| `BANISH_REF` | `ref`, `from_zone` (optional) | Banish referenced card(s); origin zone is derived from the card if not given |
+| `REORDER_REF` | `ref`, `player` | Let the controller order referenced cards back on top of the deck (first chosen ends up on top) |
+| `MAY` | `prompt`, `conditions`, `effects` | "You may X. If you do, Y." — offers the block only when `conditions` hold; declining runs none of `effects`, so "if you do" needs no separate plumbing |
+
+Reference-reading conditions: `REF_PITCH_IS` (`ref`, `pitch` — 1 red / 2 yellow
+/ 3 blue), `REF_EXISTS` (`ref`), and `ATTACK_TARGET_IS_HERO` (the attack was
+declared at a hero, not a permanent or ally).
+
+```json
+"effects": [
+  {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "into": "seen"},
+  {"type": "MAY",
+   "conditions": [{"type": "REF_PITCH_IS", "ref": "seen", "pitch": 1}],
+   "effects": [
+     {"type": "DESTROY_REF", "ref": "seen"},
+     {"type": "MODIFY_ATTACK", "amount": 4, "mod": "add"}
+   ]}
+]
+```
+
 ### Inject Trigger
 
 ```json

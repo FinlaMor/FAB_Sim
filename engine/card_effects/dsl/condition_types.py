@@ -390,6 +390,38 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return all((fn is None or fn(c, e, s)) for fn in _subs)
         return _and
 
+    if ctype == "ATTACK_TARGET_IS_HERO":
+        # "When this attacks A HERO" — false when the attack was declared
+        # against a permanent or ally. combat.attack_target is set only for
+        # those, so a hero attack leaves it None.
+        def _atk_hero(c, e, s):
+            combat = s.combat
+            return combat is not None and getattr(combat, "attack_target", None) is None
+        return _atk_hero
+
+    if ctype == "REF_PITCH_IS":
+        # Test the pitch value of a card a previous effect stored under "ref".
+        # Pitch 1 = red, 2 = yellow, 3 = blue — so "if it's red" becomes a
+        # condition on a referenced card rather than something baked into a
+        # card-specific effect.
+        ref = params.get("ref", "looked")
+        want = params.get("pitch", 1)
+        def _ref_pitch(c, e, s, _r=ref, _w=want):
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if target is None or isinstance(target, list):
+                return False
+            return (getattr(target, "pitch", None) or 0) == _w
+        return _ref_pitch
+
+    if ctype == "REF_EXISTS":
+        ref = params.get("ref", "looked")
+        def _ref_exists(c, e, s, _r=ref):
+            from engine.context import get_ref
+            target = get_ref(_r)
+            return bool(target) if not isinstance(target, list) else len(target) > 0
+        return _ref_exists
+
     if ctype == "NOT":
         inner = compile_condition(params.get("inner_type", params.get("type", "none")), params)
         def _not(c, e, s, _fn=inner):

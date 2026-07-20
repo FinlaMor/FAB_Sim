@@ -4,10 +4,13 @@
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_CRUSH",
+      "_comment": "Crush - look at the top 5 cards of their deck. Banish 1 or more cards with the same name from among them, then put the rest on top of their deck in any order. Composed from generic primitives: LOOK_AT peeks without moving cards, so 'the rest' never leave the deck and only need reordering.",
       "effects": [
-        {"type": "LOOK", "target": "OPP_DECK", "amount": 5},
-        {"type": "BANISH_FROM_LOOKED", "same_name": true, "min": 1},
-        {"type": "PUT_LOOKED_BACK", "destination": "TOP_DECK", "order": "AGENT_CHOICE"}
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "amount": 5, "into": "seen"},
+        {"type": "SELECT_FROM_REF", "ref": "seen", "mode": "SAME_NAME", "min": 1,
+         "into": "chosen", "rest_into": "rest"},
+        {"type": "BANISH_REF", "ref": "chosen"},
+        {"type": "REORDER_REF", "ref": "rest", "player": "OPPONENT"}
       ]
     }
   ]

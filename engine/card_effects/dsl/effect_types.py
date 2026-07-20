@@ -435,48 +435,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     effect_gain_life(state, pid, _gl * matching)
         return _fn
 
-    if etype == "REVEAL_OPP_TOP_DESTROY_IF_RED":
-        # Snarky Prick: "When this attacks a hero, look at the top card of their
-        # deck. If it's red, you may destroy it. If you do, this gets +N{p}."
-        # Red = pitch 1.
-        #
-        # The destruction is OPTIONAL (errata — the card previously read
-        # "destroy it and this gets +4{p}"), and the power bonus is gated on
-        # actually destroying: declining gives no bonus. `optional: false`
-        # restores the pre-errata mandatory wording if another card needs it.
-        power = params.get("power", 0)
-        optional = params.get("optional", True)
-        def _fn(card, event, state, _p=power, _opt=optional):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
-            from engine.effect_keywords import destroy as _ek_destroy
-            combat = state.combat
-            if combat is None:
-                return
-            # "attacks a hero": attack must be resolving against a hero, not a
-            # permanent/ally target (attack_target is set only for those).
-            if getattr(combat, 'attack_target', None) is not None:
-                return
-            cid = _controller_id(card)
-            opp = state.players[3 - cid]
-            if not opp.deck.cards:
-                return
-            top = opp.deck.cards[0]
-            if (getattr(top, 'pitch', None) or 0) != 1:  # not red
-                return
-            if _opt:
-                # "you may" — the choice belongs to this card's controller.
-                choice = _ask_player(state, cid, ["destroy", "decline"],
-                                     context=f"Destroy {top.slug} from the top of "
-                                             f"their deck for +{_p}{{p}}?")
-                if str(choice) == "decline":
-                    return
-            _ek_destroy(state, top, card)
-            if _p:
-                val = _resolve_amount(_p, state)
-                combat.power_mods.append(("add", val))
-                combat.attack_power = (combat.attack_power or 0) + val
-        return _fn
-
     if etype == "REVEAL_CRUSH_ARSENAL_CARD":
         # Ironfist Revelation: "you may turn a face-down card with crush in your
         # arsenal face-up. If you do, put a +1{p} counter on it." Arsenal cards are
@@ -849,72 +807,197 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     player.deck.add_bottom(c)
         return _fn
 
-    if etype == "LOOK":
-        # "Look at the top N cards of a deck." Pops them aside into a
-        # dispatch-scoped buffer; BANISH_FROM_LOOKED / PUT_LOOKED_BACK consume it.
-        n = params.get("amount", 5)
-        target = params.get("target", "OPP_DECK").upper()
-        def _fn(card, event, state, _n=n, _t=target):
+    # ── composable primitives ──────────────────────────────────────────────
+    # These exist so a card sentence can be assembled in JSON instead of
+    # compiled into one Python function named after the card. See
+    # engine/context.py for how "into"/"ref" are scoped.
+
+    if etype == "LOOK_AT":
+        # Look at cards without moving them, storing them under "into" for a
+        # later effect to act on. Unlike LOOK this does NOT pop cards out of
+        # the deck — the card stays put until something acts on the ref.
+        #   zone:   DECK_TOP (default) | ARSENAL | HAND
+        #   player: OPPONENT (default) | SELF
+        #   amount: how many (default 1); a single card is stored unwrapped
+        zone = params.get("zone", "DECK_TOP").upper()
+        who = params.get("player", "OPPONENT").upper()
+        amount = params.get("amount", 1)
+        into = params.get("into", "looked")
+        def _fn(card, event, state, _z=zone, _w=who, _n=amount, _into=into):
             from engine.card_effects.ability_keywords import _controller_id
+            from engine.context import set_ref
             cid = _controller_id(card)
-            tid = (3 - cid) if "OPP" in _t else cid
+            tid = (3 - cid) if _w in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            player = state.players[tid]
+            if _z == "DECK_TOP":
+                pool = list(player.deck.cards[:_n])
+            elif _z == "ARSENAL":
+                pool = list(getattr(player.arsenal, "cards", [])[:_n])
+            elif _z == "HAND":
+                pool = list(player.hand.cards[:_n])
+            else:
+                pool = []
+            set_ref(_into, pool[0] if _n == 1 else pool)
+            set_ref(_into + "_owner", tid)
+        return _fn
+
+    if etype == "DESTROY_REF":
+        # Destroy whatever a previous effect stored under "ref".
+        ref = params.get("ref", "looked")
+        def _fn(card, event, state, _r=ref):
+            from engine.context import get_ref
+            from engine.effect_keywords import destroy as _ek_destroy
+            target = get_ref(_r)
+            if target is None:
+                return
+            for obj in (target if isinstance(target, list) else [target]):
+                _ek_destroy(state, obj, card)
+        return _fn
+
+    if etype == "SELECT_FROM_REF":
+        # Choose a subset of a referenced list of cards.
+        #   ref:       list to choose from
+        #   mode:      SAME_NAME — pick a name, take every copy of it (the
+        #              "banish 1 or more cards with the same name" pattern)
+        #              ANY       — pick individual cards, up to `max`
+        #   min/max:   how many to take (ANY mode)
+        #   into:      where the chosen cards go
+        #   rest_into: the complement, so a later effect can act on "the rest"
+        #              without recomputing the difference
+        ref = params.get("ref", "looked")
+        mode = params.get("mode", "ANY").upper()
+        want_min = params.get("min", 1)
+        want_max = params.get("max")
+        into = params.get("into", "chosen")
+        rest_into = params.get("rest_into")
+        def _fn(card, event, state, _r=ref, _m=mode, _min=want_min,
+                _max=want_max, _into=into, _rest=rest_into):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.context import get_ref, set_ref
+            pool = get_ref(_r) or []
+            if not isinstance(pool, list):
+                pool = [pool]
+            pool = list(pool)
+            cid = _controller_id(card)
+            chosen: list = []
+            if _m == "SAME_NAME":
+                groups: dict = {}
+                for c in pool:
+                    groups.setdefault(c.name, []).append(c)
+                if groups:
+                    options = list(groups)
+                    pick = _ask_player(state, cid, options,
+                                       context="Select all copies of which name?")
+                    chosen = list(groups[pick if pick in groups else options[0]])
+            else:
+                limit = _max if _max is not None else len(pool)
+                remaining = list(pool)
+                while remaining and len(chosen) < limit:
+                    options = [c.slug for c in remaining]
+                    if len(chosen) >= _min:
+                        options = options + ["done"]
+                    pick = _ask_player(state, cid, options, context="Select a card")
+                    if pick == "done":
+                        break
+                    target = next((c for c in remaining if c.slug == pick), remaining[0])
+                    remaining.remove(target)
+                    chosen.append(target)
+            set_ref(_into, chosen)
+            if _rest:
+                set_ref(_rest, [c for c in pool if c not in chosen])
+        return _fn
+
+    if etype == "BANISH_REF":
+        # Banish whatever a previous effect stored under "ref". Goes through the
+        # canonical banish keyword (CR 8.5.1) so the event fires and replacement
+        # effects can intercept it.
+        # origin_zone must be passed or banish() leaves the card in place: it
+        # only removes from the origin when told which one. LOOK_AT peeks
+        # without moving cards, so unlike the old LOOK-then-banish pairing the
+        # card is still in its zone when we get here.
+        ref = params.get("ref", "chosen")
+        origin = params.get("from_zone")
+        def _fn(card, event, state, _r=ref, _origin=origin):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.context import get_ref
+            from engine.effect_keywords import banish as _ek_banish
+            target = get_ref(_r)
+            if not target:
+                return
+            cid = _controller_id(card)
+            for obj in (target if isinstance(target, list) else [target]):
+                zone = _origin or getattr(obj, "zone", None)
+                _ek_banish(state, obj, cid, origin_zone=zone)
+        return _fn
+
+    if etype == "REORDER_REF":
+        # "Put the rest on top of their deck in any order." The controller
+        # orders the referenced cards; the first chosen ends up on top.
+        ref = params.get("ref", "rest")
+        who = params.get("player", "OPPONENT").upper()
+        def _fn(card, event, state, _r=ref, _w=who):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.context import get_ref
+            cards = get_ref(_r) or []
+            if not isinstance(cards, list) or len(cards) < 1:
+                return
+            cid = _controller_id(card)
+            tid = (3 - cid) if _w in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             deck = state.players[tid].deck
-            looked = []
-            for _ in range(min(_n, len(deck.cards))):
-                looked.append(deck.pop_top())
-            state.dsl_look_buffer = {"player_id": tid, "cards": looked}
-        return _fn
-
-    if etype == "BANISH_FROM_LOOKED":
-        # "Banish 1 or more cards with the same name from among them." The
-        # controller picks a name present in the look buffer; all copies of that
-        # name are banished. Mandatory (banish at least one) when a card exists.
-        def _fn(card, event, state):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
-            buf = getattr(state, "dsl_look_buffer", None)
-            if not buf or not buf["cards"]:
+            remaining = [c for c in cards if c in deck.cards]
+            if not remaining:
                 return
-            cid = _controller_id(card)
-            groups: dict = {}
-            for c in buf["cards"]:
-                groups.setdefault(c.name, []).append(c)
-            options = list(groups.keys())
-            pick = _ask_player(state, cid, options,
-                               context="Banish all copies of which name?")
-            chosen = pick if pick in groups else options[0]
-            tid = buf["player_id"]
-            for c in list(groups[chosen]):
-                buf["cards"].remove(c)
-                state.remember_last_known(c, overwrite=False)
-                state.players[tid].banished.add(c)
-        return _fn
-
-    if etype == "PUT_LOOKED_BACK":
-        # "Put the rest on top of their deck in any order." The controller orders
-        # the remaining look-buffer cards; the first chosen ends up on top.
-        def _fn(card, event, state):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
-            buf = getattr(state, "dsl_look_buffer", None)
-            if not buf:
-                return
-            cid = _controller_id(card)
-            remaining = list(buf["cards"])
-            deck = state.players[buf["player_id"]].deck
             ordered = []
             while remaining:
                 if len(remaining) == 1:
                     ordered.append(remaining.pop())
                     break
-                pick = _ask_player(state, cid, remaining,
+                pick = _ask_player(state, cid, [c.slug for c in remaining],
                                    context="Choose the next card to place on top")
-                chosen = pick if pick in remaining else remaining[0]
-                remaining.remove(chosen)
-                ordered.append(chosen)
-            # Insert so ordered[0] is on top: insert in reverse at index 0.
+                target = next((c for c in remaining if c.slug == pick), remaining[0])
+                remaining.remove(target)
+                ordered.append(target)
+            for c in ordered:
+                deck.cards.remove(c)
             for c in reversed(ordered):
                 c.zone = "deck"
                 deck.cards.insert(0, c)
-            state.dsl_look_buffer = None
+        return _fn
+
+    if etype == "MAY":
+        # "You may X. If you do, Y." — an optional block of sub-effects.
+        #
+        # Conditions gate whether the choice is offered at all; declining runs
+        # nothing in the block, which is what makes "if you do" fall out for
+        # free rather than needing its own conditional plumbing.
+        # A "conditions" list on the MAY itself is popped by the loader into
+        # EffectDef.conditions, so it already gates whether this effect runs at
+        # all — the prompt is not even offered when it fails. Sub-effects are
+        # compiled here, so their own "conditions" must be honoured explicitly;
+        # compiling them without this would silently drop the gate.
+        prompt = params.get("prompt", "Use this optional ability?")
+        sub_specs = params.get("effects", []) or []
+        from engine.card_effects.dsl.condition_types import compile_condition
+        subs = []
+        for spec in sub_specs:
+            sub_params = {k: v for k, v in spec.items() if k != "type"}
+            gate_specs = sub_params.pop("conditions", []) or []
+            gates = [compile_condition(g.get("type", "").upper(),
+                                       {k: v for k, v in g.items() if k != "type"})
+                     for g in gate_specs]
+            subs.append((compile_effect(spec.get("type", "").upper(), sub_params), gates))
+
+        def _fn(card, event, state, _s=subs, _p=prompt):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            cid = _controller_id(card)
+            choice = _ask_player(state, cid, ["yes", "no"], context=_p)
+            if str(choice) == "no":
+                return
+            for fn, gates in _s:
+                if fn is None:
+                    continue
+                if all(g is None or g(card, event, state) for g in gates):
+                    fn(card, event, state)
         return _fn
 
     if etype == "TRANSFORM_HERO":
