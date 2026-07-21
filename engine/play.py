@@ -893,6 +893,17 @@ def _calculate_resource_cost(state: GameState, action: Action) -> int:
                 cost -= int(m2.group(1))
                 break
 
+    # DSL conditional cost modifiers on the card itself (CR 5.1.6, e.g. Stains
+    # of the Redback: "if the defending hero is marked, this costs {r} less").
+    # Evaluated at play time so the reduction affects play legality, not an
+    # after-the-fact effect.
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    cd = _dsl_get_card(card.slug) if card is not None else None
+    for cm in (getattr(cd, "cost_modifiers", None) or []):
+        cond = cm.get("cond")
+        if cond is None or (cond.fn is not None and cond.fn(card, None, state)):
+            cost += cm.get("delta", 0)
+
     return max(0, cost)  # CR 5.1.6a: floor at 0
 
 def _activation_is_action_speed(card) -> bool:

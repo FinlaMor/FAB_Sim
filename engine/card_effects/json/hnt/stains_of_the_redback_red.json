@@ -21,7 +21,16 @@
             "keyword": "stealth"
           }
         ]
-      }
+      },
+      "_comment": "If the defending hero is marked, this costs {r} less to play (cost_modifiers). Target attack with stealth gets +N{p} and go again."
+    }
+  ],
+  "cost_modifiers": [
+    {
+      "condition": {
+        "type": "OPPONENT_IS_MARKED"
+      },
+      "delta": -1
     }
   ]
 }

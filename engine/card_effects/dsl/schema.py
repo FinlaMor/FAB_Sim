@@ -56,3 +56,7 @@ class CardDef:
     # printed-text heuristics for implemented cards (CR 1.7.3a / 4.4.3d).
     activation_cost: int | None = None  # resource cost to activate/attack ({r}); None = fall back to text
     per_turn: int | None = None         # activations allowed per turn; None = fall back to text (no limit)
+    # Conditional resource-cost modifiers evaluated when the card is played
+    # (CR 5.1.6, e.g. "if the defending hero is marked, this costs {r} less").
+    # Each: {"cond": ConditionDef | None, "delta": int}. cond None = always.
+    cost_modifiers: list = field(default_factory=list)

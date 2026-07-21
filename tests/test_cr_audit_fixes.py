@@ -1760,3 +1760,51 @@ def test_pain_in_the_backside_dagger_deals_the_damage():
     l0 = st.players[2].life
     dispatch(st, "ON_HIT", "pain_in_the_backside_red", card=pain, event=None)
     assert st.players[2].life - l0 == 0, "no dagger controlled → no damage"
+
+
+def test_stains_of_the_redback_costs_less_when_defender_marked():
+    """Text: "If the defending hero is marked, this costs {r} less to play."
+    A cost, so it must affect the resource cost (play legality), not be an
+    effect. Found by the semantic audit. Covers both colours via the shared
+    cost_modifiers subsystem."""
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.play import _calculate_resource_cost
+    from engine.actions import Action, ActionType
+    load_all_cards()
+
+    def cost(slug, marked):
+        st = _make_state(); st.card_db = DB
+        stains = _card(slug, 1)
+        st.players[1].hand.add(stains)
+        if marked:
+            st.players[2].class_counters["marked"] = 1
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                                attack_card=_card("kiss_of_death_red", 1),
+                                keywords=["Stealth"])
+        a = Action(type=ActionType.PLAY_CARD, card=stains); a.player_id = 1
+        return _calculate_resource_cost(st, a)
+
+    for slug in ("stains_of_the_redback_red", "stains_of_the_redback_blue"):
+        base = cost(slug, marked=False)
+        assert cost(slug, marked=True) == max(0, base - 1), \
+            f"{slug}: marked defender → 1 less resource cost"
+
+
+def test_arakni_trap_door_grants_trap_play_from_banish():
+    """Regression lock: the test-audit flagged "if it's a trap, you may play it"
+    as unimplemented, but SEARCH_BANISH_FACE_DOWN already banishes the trap and
+    marks it playable-from-banish — a false positive from effect-name blindness.
+    This asserts the working behavior so it stays working."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    arak = _card("arakni_trap_door", 1)
+    trap = _card("frailty_trap_red", 1)   # subtype Trap
+    st.players[1].deck.add(trap)
+    dispatch(st, "ON_BECOME", "arakni_trap_door", card=arak, event=None)
+
+    assert trap in st.players[1].banished.cards, "trap banished face-down"
+    assert any(trap is g for g in st.players[1].playable_from_banished), \
+        "a banished trap is playable from banish"
