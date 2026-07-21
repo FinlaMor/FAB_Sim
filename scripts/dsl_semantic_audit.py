@@ -24,10 +24,20 @@ Two hard rules:
    A model re-reading its own work in the same context re-derives its original
    misreading and confirms it.
 
+With --tests it audits the other direction: does each card's TEST cover its
+printed text? This catches a test that passes while asserting the wrong
+behaviour — exactly what a card errata produces (the Snarky Prick test kept
+passing while describing a card that no longer existed). Same two rules apply,
+and doubly so for tests: compare the test to the CARD TEXT, never just to the
+implementation, or a matched pair of bugs (impl does X, test asserts X, both
+contradict the card) rubber-stamps itself. Run it in a session separate from
+whoever wrote the tests.
+
 Usage:
   python scripts/dsl_semantic_audit.py --set hnt
   python scripts/dsl_semantic_audit.py --slug big_bully_red --verbose
   python scripts/dsl_semantic_audit.py --all --limit 25 -o docs/semantic_audit.md
+  python scripts/dsl_semantic_audit.py --tests --slug snarky_prick_red   # audit tests
 """
 from __future__ import annotations
 
@@ -52,6 +62,7 @@ DEFAULT_MODEL = "qwen2.5-coder:14b"
 
 JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
 SLUG_INDEX = ROOT / "card_data" / "slug_index.json"
+TESTS_DIR = ROOT / "tests"
 
 
 def _auto_impl():
@@ -166,6 +177,85 @@ def engine_keywords() -> list[str]:
     return sorted(k.title() for k in found if k.strip())
 
 
+import ast
+
+
+def find_tests_for_slug(slug: str) -> str:
+    """Return the source of every test function that mentions *slug*.
+
+    Card tests are scattered across tests/*.py by behaviour, not named per
+    slug, so the only reliable link is the slug string appearing in the test
+    body (e.g. _card("snarky_prick_red", ...)). Imperfect — a helper that wraps
+    the slug indirectly would be missed — but good enough to start, and a card
+    with zero matching tests is itself a finding.
+    """
+    chunks: list[str] = []
+    for tf in sorted(TESTS_DIR.glob("test_*.py")):
+        src = tf.read_text(encoding="utf-8")
+        if slug not in src:
+            continue
+        try:
+            tree = ast.parse(src)
+        except SyntaxError:
+            continue
+        lines = src.splitlines()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef) and node.name.startswith("test"):
+                seg = "\n".join(lines[node.lineno - 1: node.end_lineno])
+                if slug in seg:
+                    chunks.append(f"# --- {tf.name}::{node.name} ---\n{seg}")
+    return "\n\n".join(chunks)
+
+
+TEST_PROMPT = """\
+You are auditing whether the automated TESTS for a trading-card-game card \
+actually verify that the card behaves as its printed text says. You are NOT \
+checking the card's implementation, and NOT checking test style.
+
+Card: {name} ({slug})
+Printed text:
+\"\"\"
+{text}
+\"\"\"
+
+The card's JSON implementation (context only — do not audit it):
+```json
+{json_content}
+```
+
+Its tests:
+```python
+{tests}
+```
+
+Do this exactly:
+
+1. Split the printed text into atomic clauses (a full instruction or one \
+keyword; ignore reminder text in parentheses). Some keywords are implemented by \
+the game engine and need no card-specific test: {engine_keywords}.
+2. For EACH clause, find a test ASSERTION that would fail if that clause were \
+implemented wrongly. Status IMPLEMENTED if such an assertion exists, MISSING if \
+no test asserts an observable outcome for the clause.
+3. Flag status MISMATCH for any assertion whose expected value CONTRADICTS the \
+printed text (e.g. text says the attack gets +4 but the test asserts +1, or the \
+text says "you may" but no test covers declining).
+
+Judge only by observable game-state outcomes (life, zones, power, counters, \
+tokens). An assertion on an internal flag or queue does NOT count as covering a \
+clause.
+
+Reply with ONLY a JSON object, no prose, no fences:
+{{
+  "clauses": [
+    {{"text": "<clause>", "implemented_by": "<test name or null>",
+      "status": "IMPLEMENTED" | "MISSING" | "COVERED_BY_ENGINE" | "MISMATCH",
+      "note": "<why, only for MISSING or MISMATCH>"}}
+  ],
+  "verdict": "COMPLETE" | "INCOMPLETE"
+}}
+"""
+
+
 def card_files(set_code: str | None, slug: str | None) -> list[Path]:
     paths = []
     for path in sorted(JSON_ROOT.rglob("*.json")):
@@ -196,6 +286,55 @@ def audit_card(path: Path, index: dict, claw, model: str | None,
     prompt = PROMPT.format(name=entry.get("name") or slug, slug=slug, text=text,
                            engine_keywords=", ".join(engine_keywords()),
                            json_content=json.dumps(raw, indent=2, ensure_ascii=False))
+    output = claw.run_claw(prompt, verbose=verbose, model=model)
+    if output == "CLAW_TIMEOUT" or output.startswith("CLAW_ERROR"):
+        return {"slug": slug, "error": output}
+
+    cleaned = re.sub(r"```(?:json)?\s*", "", output)
+    cleaned = re.sub(r"```\s*", "", cleaned).strip()
+    match = re.search(r"\{[\s\S]+\}", cleaned)
+    if not match:
+        return {"slug": slug, "error": "no JSON in model output", "raw": cleaned[:400]}
+    try:
+        result = json.loads(match.group())
+    except json.JSONDecodeError as exc:
+        return {"slug": slug, "error": f"unparseable model output: {exc}",
+                "raw": cleaned[:400]}
+    result["slug"] = slug
+    result["name"] = entry.get("name")
+    result["text"] = text
+    _downgrade_engine_keyword_findings(result)
+    return result
+
+
+def audit_card_tests(path: Path, index: dict, claw, model: str | None,
+                     verbose: bool) -> dict | None:
+    """Audit whether a card's tests cover its printed text (vs its JSON)."""
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    slug = raw.get("slug") or path.stem
+    entry = index.get(slug)
+    if entry is None:
+        return None
+    text = (entry.get("functionalText") or "").strip()
+    if not text:
+        return None
+
+    tests = find_tests_for_slug(slug)
+    if not tests.strip():
+        # No test mentions this card at all — a finding on its own, and no
+        # point spending a model call to confirm emptiness.
+        # Phrase as a full sentence so the fragment filter (which demotes short
+        # or dangling clauses) keeps this as a high-confidence finding.
+        return {"slug": slug, "name": entry.get("name"), "text": text,
+                "clauses": [{"text": "This card has no automated test referencing its slug.",
+                             "status": "MISSING",
+                             "note": "no test references this card's slug"}],
+                "verdict": "INCOMPLETE"}
+
+    prompt = TEST_PROMPT.format(
+        name=entry.get("name") or slug, slug=slug, text=text,
+        engine_keywords=", ".join(engine_keywords()),
+        json_content=json.dumps(raw, indent=2, ensure_ascii=False), tests=tests)
     output = claw.run_claw(prompt, verbose=verbose, model=model)
     if output == "CLAW_TIMEOUT" or output.startswith("CLAW_ERROR"):
         return {"slug": slug, "error": output}
@@ -353,8 +492,13 @@ def main() -> int:
     ap.add_argument("--json", dest="json_out", help="also write raw results as JSON")
     ap.add_argument("--no-resume", action="store_true",
                     help="ignore an existing --json cache and re-audit everything")
+    ap.add_argument("--tests", action="store_true",
+                    help="audit whether each card's TESTS cover its text, "
+                         "instead of whether its JSON does")
     ap.add_argument("--verbose", action="store_true")
     args = ap.parse_args()
+
+    audit_fn = audit_card_tests if args.tests else audit_card
 
     paths = card_files(args.set_code, args.slug)
     if not paths:
@@ -396,7 +540,7 @@ def main() -> int:
     for i, path in enumerate(todo, 1):
         print(f"[{i}/{len(todo)}] {path.stem}  ({len(done) + i}/{len(paths)} overall)",
               file=sys.stderr)
-        result = audit_card(path, index, claw, args.model, args.verbose)
+        result = audit_fn(path, index, claw, args.model, args.verbose)
         if result is not None:
             results.append(result)
             if cache_path:
