@@ -13,14 +13,16 @@ Several real defects carry bugs the auditor did *not* report; those are marked
 
 ## Fix status (updated 2026-07-20)
 
-**Fixed (JSON-only, no engine change):**
-- `leave_no_witnesses_red` — banish up-to-1 arsenal, not destroy-all
-- `art_of_desire_body_red` — draw/gain gated on red banish
-- `death_touch_red` — token type is a choice
+**Fixed:**
+- `leave_no_witnesses_red` — banish up-to-1 arsenal, not destroy-all (JSON)
+- `art_of_desire_body_red` — draw/gain gated on red banish (JSON)
+- `death_touch_red` — token type is a choice (JSON)
+- `inertia_trap_red` — new condition `ATTACK_POWER_GT_BASE` gates the token
+- `spreading_plague_yellow` — `CREATE_TOKEN` count `DEFENDING_CARD_COUNT`
+
+Each fix ships with the regression test the test-audit flagged as missing.
 
 **Still open — grouped by the engine work each needs:**
-- *New condition* — `inertia_trap_red` (attack power > its base)
-- *Dynamic count* — `spreading_plague_yellow` (X = defending cards)
 - *Set-base-of-next-attack + power condition* — `chain_of_brutality_red`
 - *Per-count stat + or-defends trigger* — `overcrowded_blue`
 - *Type-restricted next-attack filter + missing clause* — `cut_from_the_same_cloth_red`, `orb_weaver_spinneret_red`, `tarantula_toxin_red`
