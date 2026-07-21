@@ -25,14 +25,14 @@ Several real defects carry bugs the auditor did *not* report; those are marked
 - `chain_of_brutality_red` — `SELF_ATTACK_POWER_GTE` gate, go again, set-base-6
 - `pain_in_the_backside_red` — `DAGGER_DEALS_DAMAGE` (dagger deals it, registers the hit)
 - `stains_of_the_redback_red` / `_blue` — new conditional-play-cost subsystem (`cost_modifiers`)
+- `10000_year_reunion_red` — alternative cost via existing `REMOVE_COUNTERS_FROM_AURAS` + `alternative_cost`
 
 **Reclassified as FALSE POSITIVE (verified correct, regression-locked):**
 - `arakni_trap_door` — `SEARCH_BANISH_FACE_DOWN` already banishes the trap and
   marks it playable-from-banish; the auditor flagged it via effect-name
   blindness (same class as `nimby_blue`). So 16 real, 7 false — 70% precision.
 
-**Still open (4) — genuine, grouped by the engine work each needs:**
-- *Alternative cost (pay by removing counters)* — `10000_year_reunion_red`
+**Still open (3) — genuine, grouped by the engine work each needs:**
 - *Modal choose-1-or-both + defense debuff* — `tarantula_toxin_red`
 - *Graveyard→banish replacement rider* (play-grant already works) — `under_the_trap_door_blue`
 - *Cross-player playable-from-banish* — `infiltrate_red`

@@ -1808,3 +1808,33 @@ def test_arakni_trap_door_grants_trap_play_from_banish():
     assert trap in st.players[1].banished.cards, "trap banished face-down"
     assert any(trap is g for g in st.players[1].playable_from_banished), \
         "a banished trap is playable from banish"
+
+
+def test_10000_year_reunion_alternative_cost_removes_three_counters():
+    """Text: "You may remove three +1{p} counters from among auras you control
+    rather than pay its {r} cost." An alternative cost — pay by removing
+    counters instead of resources. Was absent. Found by the semantic audit."""
+    from engine.card_effects.dsl.loader import load_all_cards, get_card
+    load_all_cards()
+
+    alt = get_card("10000_year_reunion_red").abilities[0].alternative_costs[0]
+
+    def payable(n):
+        st = _make_state(); st.card_db = DB
+        reunion = _card("10000_year_reunion_red", 1)
+        aura = _card("frailty", 1)
+        st.players[1].auras.add(aura)
+        st.players[1].counters[(aura.slug, getattr(aura, "zone", "auras"), "+1{p}")] = n
+        return alt.check_fn(reunion, None, st)
+
+    assert payable(3), "3 +1{p} counters → alternative cost is available"
+    assert not payable(2), "fewer than 3 → not available"
+
+    # paying removes exactly three
+    st = _make_state(); st.card_db = DB
+    reunion = _card("10000_year_reunion_red", 1)
+    aura = _card("frailty", 1); st.players[1].auras.add(aura)
+    key = (aura.slug, getattr(aura, "zone", "auras"), "+1{p}")
+    st.players[1].counters[key] = 5
+    alt.pay_fn(reunion, None, st)
+    assert st.players[1].counters.get(key) == 2, "exactly three counters removed"
