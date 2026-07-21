@@ -1,0 +1,2261 @@
+[
+  {
+    "slug": "nights_embrace_blue",
+    "name": "Night's Embrace",
+    "text": "Your attacks with stealth get +1{p} this turn.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush - When this deals 4 or more damage to a hero",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts that Boulder Drop deals at least 4 damage to a hero."
+      },
+      {
+        "text": "they put a card from their hand on top of their deck",
+        "implemented_by": "test_boulder_drop_puts_card_on_top_of_deck_not_bottom",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "boulder_drop_red",
+    "name": "Boulder Drop",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Defense reaction cards can't be played this chain link.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks that defense reaction cards are not playable in the same chain link."
+      },
+      {
+        "text": "When this hits a hero, destroy all cards in their arsenal.",
+        "implemented_by": "test_snarky_prick_reveals_red_top_destroys_and_pumps",
+        "status": "IMPLEMENTED",
+        "note": "The test asserts that the opponent's deck top card is destroyed when attacked by 'snarky_prick_red', which aligns with the clause."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "command_and_conquer_red",
+    "name": "Command and Conquer",
+    "text": "Defense reaction cards can't be played this chain link. When this hits a hero, destroy all cards in their arsenal."
+  },
+  {
+    "clauses": [
+      {
+        "text": "If Righteous Cleansing deals 4 or more damage to a hero",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card actually deals 4 or more damage."
+      },
+      {
+        "text": "look at the top 5 cards of their deck",
+        "implemented_by": "test_righteous_cleansing_banishes_same_name_keeps_rest",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Banish 1 or more cards with the same name from among them",
+        "implemented_by": "test_righteous_cleansing_banishes_same_name_keeps_rest",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "then put the rest on top of their deck in any order",
+        "implemented_by": "test_righteous_cleansing_banishes_same_name_keeps_rest",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "righteous_cleansing_yellow",
+    "name": "Righteous Cleansing",
+    "text": "**Crush** - If Righteous Cleansing deals 4 or more damage to a hero, look at the top 5 cards of their deck. Banish 1 or more cards with the same name from among them, then put the rest on top of their deck in any order."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends, **intimidate**.",
+        "implemented_by": "test_scowling_defend_intimidates_attacker",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Blade Break**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "scowling_flesh_bag",
+    "name": "Scowling Flesh Bag",
+    "text": "When this defends, **intimidate**.\n\n**Blade Break**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "While Blacktek Whisperers is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip Blacktek Whisperers.",
+        "implemented_by": "test_blacktek_graveyard_buyback_destroys_silvers_and_equips",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Attack Reaction** - Destroy Blacktek Whisperers: Target Assassin attack action card gains \"When this hits a hero, it gains **go again**.\"",
+        "implemented_by": "test_blacktek_reaction_destroys_self",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Battleworn**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "blacktek_whisperers",
+    "name": "Blacktek Whisperers",
+    "text": "While Blacktek Whisperers is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip Blacktek Whisperers.\n\n**Attack Reaction** - Destroy Blacktek Whisperers: Target Assassin attack action card gains \"When this hits a hero, it gains **go again**.\"\n\n**Battleworn**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Your hero is Royal.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts that the hero gains the 'Royal' status."
+      },
+      {
+        "text": "When you equip Crown of Dominion, create a Gold token.",
+        "implemented_by": "test_crown_of_dominion_creates_gold_on_equip",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "crown_of_dominion",
+    "name": "Crown of Dominion",
+    "text": "Your hero is Royal.\n\nWhen you equip Crown of Dominion, create a Gold token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "You are contracted to banish opponents' red cards.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card bansishes opponents' red cards."
+      },
+      {
+        "text": "Whenever you complete this contract, create a Silver token.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if a Silver token is created upon completing the contract."
+      },
+      {
+        "text": "When this hits a hero, banish the top card of their deck",
+        "implemented_by": "test_leave_no_witnesses_banishes_up_to_one_arsenal_not_all",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "and up to 1 card in their arsenal.",
+        "implemented_by": "test_leave_no_witnesses_banishes_up_to_one_arsenal_not_all",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "leave_no_witnesses_red",
+    "name": "Leave No Witnesses",
+    "text": "**Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck and up to 1 card in their arsenal."
+  },
+  {
+    "slug": "shred_yellow",
+    "name": "Shred",
+    "text": "Target card defending an Assassin attack gets -3{d} this combat chain.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "macho_grande_blue",
+    "name": "Macho Grande",
+    "text": "**Dominate**",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When the combat chain closes",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "if this didn't hit",
+        "implemented_by": "test_swing_big_quicken_when_it_missed",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "the defending hero creates a Quicken token",
+        "implemented_by": "test_swing_big_quicken_when_it_missed",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "swing_big_red",
+    "name": "Swing Big",
+    "text": "When the combat chain closes, if this didn't hit, the defending hero creates a Quicken token."
+  },
+  {
+    "slug": "thunder_quake_blue",
+    "name": "Thunder Quake",
+    "text": "**Heave 3**",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Attack Reaction - Discard an Assassin card",
+        "implemented_by": "test_black_widow_reaction_is_offered, test_once_per_turn_flag_blocks_second_use",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "Target Assassin attack gets +3{p}",
+        "implemented_by": "test_black_widow_reaction_buffs_and_discards",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "If it has stealth, it gets \"When this hits a hero, they banish a card from their hand.\"",
+        "implemented_by": "test_black_widow_stealth_injects_on_hit_banish, test_black_widow_no_rider_without_stealth, test_black_widow_on_hit_banishes_from_defender_hand",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "At the beginning of your end phase, return to the brood.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks the effect at the end of the turn."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "arakni_black_widow",
+    "name": "Arakni, Black Widow",
+    "text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets \"When this hits a hero, they banish a card from their hand.\"\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "slug": "arakni_funnel_web",
+    "name": "Arakni, Funnel Web",
+    "text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets \"When this hits a hero, banish a card in their arsenal.\"\n\nAt the beginning of your end phase, **return to the brood**.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Your attacks with stealth that are attacking a marked hero get +1{p}",
+        "implemented_by": "test_arakni_buff_applies_when_stealth_and_marked",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "When this hits, this gets go again",
+        "implemented_by": "test_arakni_hit_grants_go_again_when_stealth_and_marked",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "At the beginning of your end phase, if an opponent is marked, you become a random Agent of Chaos",
+        "implemented_by": "test_marionette_transforms_when_opponent_marked",
+        "status": "IMPLEMENTED"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "arakni_marionette",
+    "name": "Arakni, Marionette",
+    "text": "Your attacks with **stealth** that are attacking a **marked** hero get +1{p} and \"When this hits, this gets **go again**.\"\n\nAt the beginning of your end phase, if an opponent is **marked**, you become a random Agent of Chaos."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Graphene Chelicerae cost you {r} less to activate.",
+        "implemented_by": "test_orb_weaver_reduces_graphene_cost_to_zero",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "Once per Turn Instant - Discard an Assassin card: Equip a Graphene Chelicera token.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the token is equipped correctly."
+      },
+      {
+        "text": "Your next attack with stealth this turn gets +3{p}.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks the power modification for a stealth attack."
+      },
+      {
+        "text": "At the beginning of your end phase, return to the brood.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the hero returns to the brood at the end of the turn."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "arakni_orb_weaver",
+    "name": "Arakni, Orb-Weaver",
+    "text": "Graphene Chelicerae cost you {r} less to activate.\n\n**Once per Turn Instant** - Discard an Assassin card: Equip a Graphene Chelicera token. Your next attack with **stealth** this turn gets +3{p}.\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Attack Reaction",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks the 'once per turn' restriction."
+      },
+      {
+        "text": "Discard an Assassin card",
+        "implemented_by": "_activate_hero",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Target Assassin attack gets +3{p}",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks the attack power modification."
+      },
+      {
+        "text": "If it has stealth, it gets go again",
+        "implemented_by": "test_redback_stealth_grants_go_again",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "At the beginning of your end phase",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "This is covered by the game engine's turn structure."
+      },
+      {
+        "text": "return to the brood",
+        "implemented_by": "test_demi_hero_returns_to_brood",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "arakni_redback",
+    "name": "Arakni, Redback",
+    "text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target Assassin attack gets +3{p}. If it has **stealth**, it gets **go again**.\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Whenever a dagger you own hits a hero, they lose 1{h}.",
+        "implemented_by": "test_tarantula_dagger_hit_drains_opponent_life",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "**Once per Turn Attack Reaction** - Discard an Assassin card: Target dagger attack gets +3{p}.",
+        "implemented_by": "test_tarantula_reaction_buffs_dagger_attack",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "At the beginning of your end phase, **return to the brood**.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test covers the transformation at the end of turn."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "arakni_tarantula",
+    "name": "Arakni, Tarantula",
+    "text": "Whenever a dagger you own hits a hero, they lose 1{h}.\n\n**Once per Turn Attack Reaction** - Discard an Assassin card: Target dagger attack gets +3{p}.\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When you become this, you may search your deck for a card, banish it face-down, then shuffle.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts that the player can choose not to perform the action."
+      },
+      {
+        "text": "If it's a trap, you may play it until the start of your next turn.",
+        "implemented_by": "test_trap_door_banished_trap_is_playable_then_expires",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "At the beginning of your end phase, return to the brood.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts that the card returns to the brood at the beginning of the end phase."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "arakni_trap_door",
+    "name": "Arakni, Trap-Door",
+    "text": "When you become this, you may search your deck for a card, banish it face-down, then shuffle. If it's a trap, you may play it until the start of your next turn.\n\nAt the beginning of your end phase, **return to the brood**."
+  },
+  {
+    "slug": "cut_from_the_same_cloth_red",
+    "name": "Cut from the Same Cloth",
+    "text": "Target opposing hero reveals their hand. If an attack reaction card is revealed this way, **mark** them.\n\nYour next dagger attack this turn gets +4{p}.\n\n**Go again**",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Action - {r}{r}: Attack. Go again",
+        "implemented_by": "test_activation_cost_and_per_turn_are_dsl_authoritative",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "When this hits a hero, mark them.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts the marking of a hero."
+      },
+      {
+        "text": "Piercing 1",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "hunters_klaive",
+    "name": "Hunter's Klaive",
+    "text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this hits a hero, **mark** them.\n\n**Piercing 1**"
+  },
+  {
+    "slug": "kiss_of_death_red",
+    "name": "Kiss of Death",
+    "text": "**Stealth**\n\nWhen this hits a hero, they lose 1{h}.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "lair_of_the_spider_red",
+    "name": "Lair of the Spider",
+    "text": "When this defends an attack with **go again**, **mark** the attacking hero.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "mark_of_the_black_widow_red",
+    "name": "Mark of the Black Widow",
+    "text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends, become a random Agent of Chaos.",
+        "implemented_by": "test_mask_of_deceit_transforms_on_defend",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If the attacking hero is marked, instead choose the Agent of Chaos.",
+        "implemented_by": "test_mask_of_deceit_transforms_on_defend",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "mask_of_deceit",
+    "name": "Mask of Deceit",
+    "text": "**Arakni Specialization**\n\nWhen this defends, become a random Agent of Chaos. If the attacking hero is **marked**, instead choose the Agent of Chaos.\n\n**Blade Break**"
+  },
+  {
+    "slug": "orb_weaver_spinneret_red",
+    "name": "Orb-Weaver Spinneret",
+    "text": "Equip a Graphene Chelicera token.\n\nYour next attack with **stealth** this turn gets +3{p}.\n\n**Go again**",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "pain_in_the_backside_red",
+    "name": "Pain in the Backside",
+    "text": "When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit.\n\n**Go again**",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "pick_up_the_point_red",
+    "name": "Pick Up the Point",
+    "text": "When this attacks, you may **retrieve** a dagger from your graveyard.\n\n**Go again**",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Defense Reaction - {r}: Add this to the active chain link as a defending card.",
+        "implemented_by": "test_quickdodge_flexors_offered_to_defender_and_defends",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "It has 2 base {d} this chain link.",
+        "implemented_by": "test_quickdodge_flexors_offered_to_defender_and_defends",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "At the beginning of the end phase, if this defendend this turn, destroy it.",
+        "implemented_by": "test_quickdodge_flexors_self_destructs_at_end_phase_if_it_defended",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "quickdodge_flexors",
+    "name": "Quickdodge Flexors",
+    "text": "**Defense Reaction** - {r}: Add this to the active chain link as a defending card. It has 2 base {d} this chain link.\n\nAt the beginning of the end phase, if this defendend this turn, destroy it."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Your next dagger attack this turn gets +4{p}.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts an observable outcome for the attack power increase."
+      },
+      {
+        "text": "The next time you hit a marked hero with a dagger this turn, draw a card.",
+        "implemented_by": "test_savor_bloodshed_queues_marked_dagger_draw",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Go again",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Go Again is implemented by the game engine."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "savor_bloodshed_red",
+    "name": "Savor Bloodshed",
+    "text": "Your next dagger attack this turn gets +4{p}.\n\nThe next time you hit a **marked** hero with a dagger this turn, draw a card.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target dagger attack gets +3{p}",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts the attack power modification."
+      },
+      {
+        "text": "When this hits a hero, **mark** them.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts that the target hero is marked."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "scar_tissue_red",
+    "name": "Scar Tissue",
+    "text": "Target dagger attack gets +3{p} and \"When this hits a hero, **mark** them.\""
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this is pitched",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Triggered ability handling is covered by the game engine."
+      },
+      {
+        "text": "each hero shuffles",
+        "implemented_by": "test_schism_of_chaos_shuffles_and_arsenals_top_facedown",
+        "status": "IMPLEMENTED",
+        "note": "The test checks that each player's deck is shuffled after the card is pitched."
+      },
+      {
+        "text": "then puts the top card of their deck facedown into their arsenal",
+        "implemented_by": "test_schism_of_chaos_shuffles_and_arsenals_top_facedown",
+        "status": "IMPLEMENTED",
+        "note": "The test checks that each player's top card is moved to their arsenal facedown."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "schism_of_chaos_blue",
+    "name": "Schism of Chaos",
+    "text": "**Legendary**\n\nWhen this is pitched, each hero shuffles, then puts the top card of their deck facedown into their arsenal."
+  },
+  {
+    "slug": "stains_of_the_redback_blue",
+    "name": "Stains of the Redback",
+    "text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +1{p} and **go again**.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "If the defending hero is marked, this costs {r} less to play.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test covers the cost reduction when the defending hero is marked."
+      },
+      {
+        "text": "Target attack with stealth gets +3{p} and go again.",
+        "implemented_by": "test_targeted_attack_reaction_requires_legal_target",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "stains_of_the_redback_red",
+    "name": "Stains of the Redback",
+    "text": "If the defending hero is **marked**, this costs {r} less to play.\n\nTarget attack with **stealth** gets +3{p} and **go again**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target attack action card with stealth gets +2{p}.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts the attack power increase of +2 for a stealth attack."
+      },
+      {
+        "text": "If it's attacking a marked hero, instead it gets +3{p} and you may banish an attack action card with stealth from your graveyard.",
+        "implemented_by": "test_take_up_the_mantle_marked_copies_banished_stealth",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If you do, the target becomes a copy of the banished card.",
+        "implemented_by": "test_take_up_the_mantle_marked_copies_banished_stealth",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "take_up_the_mantle_yellow",
+    "name": "Take Up the Mantle",
+    "text": "Target attack action card with **stealth** gets +2{p}. If it's attacking a **marked** hero, instead it gets +3{p} and you may banish an attack action card with **stealth** from your graveyard. If you do, the target becomes a copy of the banished card."
+  },
+  {
+    "slug": "tarantula_toxin_red",
+    "name": "Tarantula Toxin",
+    "text": "Choose 1 or both;\n\n* Target dagger attack gets +3{p}.\n* Target card defending an attack with stealth gets -3{d} this turn.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "to_the_point_red",
+    "name": "To the Point",
+    "text": "Target dagger attack gets +3{p}. If the defending hero is **marked**, instead it gets +4{p}.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Stealth",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "Instant",
+        "implemented_by": "test_under_the_trap_door_banishes_trap_and_makes_it_playable",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Discard this",
+        "implemented_by": "test_under_the_trap_door_banishes_trap_and_makes_it_playable",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Banish target trap from your graveyard",
+        "implemented_by": "test_under_the_trap_door_banishes_trap_and_makes_it_playable",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If you do, you may play it this turn",
+        "implemented_by": "test_under_the_trap_door_banishes_trap_and_makes_it_playable",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "if it would be put into the graveyard this turn, instead banish it",
+        "implemented_by": "test_under_the_trap_door_banishes_trap_and_makes_it_playable",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "under_the_trap_door_blue",
+    "name": "Under the Trap-Door",
+    "text": "**Stealth**\n\n**Instant** - Discard this: Banish target trap from your graveyard. If you do, you may play it this turn and if it would be put into the graveyard this turn, instead banish it."
+  },
+  {
+    "slug": "up_sticks_and_run_red",
+    "name": "Up Sticks and Run",
+    "text": "You may **retrieve** a dagger from your graveyard.\n\nYour next dagger attack this turn gets +4{p}.\n\n**Go again**",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends together with a card with 6 or more {p}, create a Might token.",
+        "implemented_by": "test_apex_bonebreaker_requires_6power_codefender",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Temper",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "apex_bonebreaker",
+    "name": "Apex Bonebreaker",
+    "text": "When this defends together with a card with 6 or more {p}, create a Might token.\n\n**Temper**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "This counts as a Gold.",
+        "implemented_by": "test_aurum_aegis_counts_as_a_gold",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Temper",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "engine keyword (auto-corrected from MISSING)"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "aurum_aegis",
+    "name": "Aurum Aegis",
+    "text": "**Victor Specialization**\n\nThis counts as a Gold.\n\n**Temper**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Once per Turn Action** - {r}{r}{r}: **Attack**",
+        "implemented_by": "test_activation_cost_and_per_turn_are_dsl_authoritative",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "When this hits a hero, **clash** with them.",
+        "implemented_by": "test_millers_grindstone_clash_on_hit",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "If you win, destroy the top card of their deck.",
+        "implemented_by": "test_millers_grindstone_clash_on_hit",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "If they win, put a -1{p} counter on this.",
+        "implemented_by": "test_millers_grindstone_clash_on_hit",
+        "status": "IMPLEMENTED"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "millers_grindstone",
+    "name": "Miller's Grindstone",
+    "text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nWhen this hits a hero, **clash** with them. If you win, destroy the top card of their deck. If they win, put a -1{p} counter on this."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Instant - Discard this",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card is discarded when activated."
+      },
+      {
+        "text": "If an action card effect would create 1 or more tokens this turn",
+        "implemented_by": "test_ripple_away_reduces_token_creation",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "instead it creates that many minus 1 of each of those tokens",
+        "implemented_by": "test_ripple_away_reduces_token_creation",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "ripple_away_blue",
+    "name": "Ripple Away",
+    "text": "**Instant** - Discard this: If an action card effect would create 1 or more tokens this turn, instead it creates that many minus 1 of each of those tokens."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "clash with the attacking hero",
+        "implemented_by": "test_of_strength_winner_creates_gold",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "The winner creates a Gold token.",
+        "implemented_by": "test_of_strength_winner_creates_gold",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "test_of_strength_red",
+    "name": "Test of Strength",
+    "text": "When this defends, **clash** with the attacking hero. The winner creates a Gold token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "As an additional cost to play this, you may destroy a Gold you control.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test covers the option of not destroying a Gold."
+      },
+      {
+        "text": "If you do, this gets +3{p} and **overpower**.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card gains +3 power or overpower when a Gold is destroyed."
+      },
+      {
+        "text": "When you win a **clash** revealing this, create a Gold token.",
+        "implemented_by": "test_golden_son_revealed_in_winning_clash_creates_gold",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "the_golden_son_yellow",
+    "name": "The Golden Son",
+    "text": "**Victor Specialization**\n\nAs an additional cost to play this, you may destroy a Gold you control. If you do, this gets +3{p} and **overpower**.\n\nWhen you win a **clash** revealing this, create a Gold token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When you win a clash revealing this",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test directly asserts that winning a clash with Thunk revealed results in the specified effect."
+      },
+      {
+        "text": "create a Might token",
+        "implemented_by": "test_thunk_revealed_in_winning_clash_creates_might, test_clash_resolved_bridge_dispatches_to_winner_card",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "thunk_blue",
+    "name": "Thunk",
+    "text": "When you win a **clash** revealing this, create a Might token."
+  },
+  {
+    "slug": "trounce_red",
+    "name": "Trounce",
+    "text": "When this defends, **clash** with the attacking hero. Put the revealed cards on the bottom of their owner's deck, then **clash** again.\n\nIf a hero wins both **clashes**, they create a Gold, Might, and Vigor token.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The first time each turn you create a Gold token from an effect you control, draw a card.",
+        "implemented_by": "test_victor_first_gold_draws_once_per_turn",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "The first time each turn you would fail to win a clash, instead you may destroy a Gold you control.",
+        "implemented_by": "test_victor_fail_clash_retry_destroys_gold_and_reclashes",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If you do, put 1 of the revealed cards on the bottom of its owner's deck, then clash again.",
+        "implemented_by": "test_victor_fail_clash_retry_destroys_gold_and_reclashes",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "victor_goldmane_high_and_mighty",
+    "name": "Victor Goldmane, High and Mighty",
+    "text": "The first time each turn you create a Gold token from an effect you control, draw a card.\n\nThe first time each turn you would fail to win a **clash**, instead you may destroy a Gold you control. If you do, put 1 of the revealed cards on the bottom of its owner's deck, then **clash** again."
+  },
+  {
+    "slug": "vigorous_windup_blue",
+    "name": "Vigorous Windup",
+    "text": "**Instant** - Discard this: Create a Vigor token.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "This can't be defended by non-head equipment.",
+        "implemented_by": "test_headbutt_restriction_bonus_and_crush",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If you have a head equipped and the defending hero doesn't, this gets +1{p}.",
+        "implemented_by": "test_headbutt_restriction_bonus_and_crush",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on a head they have equipped, then if it has 0{d}, destroy it.",
+        "implemented_by": "test_headbutt_restriction_bonus_and_crush",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "headbutt_blue",
+    "name": "Headbutt",
+    "text": "This can't be defended by non-head equipment.\n\nIf you have a head equipped and the defending hero doesn't, this gets +1{p}.\n\n**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on a head they have equipped, then if it has 0{d}, destroy it."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "clash with the attacking hero",
+        "implemented_by": "test_of_iron_grip_loser_discards",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If there is a winner",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "the other hero discards a card",
+        "implemented_by": "test_of_iron_grip_loser_discards",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "test_of_iron_grip_red",
+    "name": "Test of Iron Grip",
+    "text": "When this defends, **clash** with the attacking hero. If there is a winner, the other hero discards a card."
+  },
+  {
+    "clauses": [
+      {
+        "text": "You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion's {r} cost.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test covers the ability to remove +1{p} counters instead of paying the cost."
+      },
+      {
+        "text": "**Ward 10**",
+        "implemented_by": "test_keywords_populated",
+        "status": "COVERED_BY_ENGINE",
+        "note": "The Ward keyword is implemented by the game engine, so no card-specific test is required."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "10000_year_reunion_red",
+    "name": "10,000 Year Reunion",
+    "text": "You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion's {r} cost.\n\n**Ward 10**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Stealth",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "When this hits a hero, banish the top card of their deck.",
+        "implemented_by": "test_art_of_desire_draws_and_gains_only_on_red_banish",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Whenever this banishes a red card, draw a card and gain 1{h}.",
+        "implemented_by": "test_art_of_desire_draws_and_gains_only_on_red_banish",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "art_of_desire_body_red",
+    "name": "Art of Desire: Body",
+    "text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a red card, draw a card and gain 1{h}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Create a Gold token.",
+        "implemented_by": "test_visit_goldmane_counts_aurum_as_gold_for_might",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Then if you control 3 or more Gold, create that many Might tokens.",
+        "implemented_by": "test_visit_goldmane_counts_aurum_as_gold_for_might",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": "test_play_effects_resolve_at_stack_resolution_not_announce",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "visit_goldmane_estate_blue",
+    "name": "Visit Goldmane Estate",
+    "text": "**Victor Specialization**\n\nCreate a Gold token. Then if you control 3 or more Gold, create that many Might tokens.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Each hero puts an attack action card from their graveyard face down into their arsenal.",
+        "implemented_by": "test_codex_of_frailty_arsenal_discard_and_tokens",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Each hero that does, discards a card.",
+        "implemented_by": "test_codex_of_frailty_arsenal_discard_and_tokens",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Create a Ponder token under your control and a Frailty token under each opponent's control.",
+        "implemented_by": "test_codex_of_frailty_arsenal_discard_and_tokens",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "engine keyword (auto-corrected from MISSING)"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "codex_of_frailty_yellow",
+    "name": "Codex of Frailty",
+    "text": "Each hero puts an attack action card from their graveyard face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and a Frailty token under each opponent's control.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Each hero puts the top card of their deck face down into their arsenal.",
+        "implemented_by": "test_codex_of_inertia_deck_to_arsenal_and_tokens",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Each hero that does, discards a card.",
+        "implemented_by": "test_codex_of_inertia_deck_to_arsenal_and_tokens",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Create a Ponder token under your control.",
+        "implemented_by": "test_codex_of_inertia_deck_to_arsenal_and_tokens",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "an Inertia token under each opponent's control.",
+        "implemented_by": "test_codex_of_inertia_deck_to_arsenal_and_tokens",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "codex_of_inertia_yellow",
+    "name": "Codex of Inertia",
+    "text": "Each hero puts the top card of their deck face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and an Inertia token under each opponent's control.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Death Touch can't be played from hand.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts that Death Touch cannot be played from hand."
+      },
+      {
+        "text": "When this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.",
+        "implemented_by": "test_death_touch_token_type_is_a_choice",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "death_touch_red",
+    "name": "Death Touch",
+    "text": "Death Touch can't be played from hand.\n\nWhen this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per Turn Attack Reaction - 0: Target dagger you control that isn't on the active chain link deals 1 damage to target hero.",
+        "implemented_by": "test_flick_knives_dagger_deals_damage_and_destroys",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If damage is dealt this way, the dagger has hit. Destroy the dagger.",
+        "implemented_by": "test_flick_knives_dagger_deals_damage_and_destroys",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "flick_knives",
+    "name": "Flick Knives",
+    "text": "**Once per Turn Attack Reaction** - 0: Target dagger you control that isn't on the active chain link deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.\n\n**Blade Break**"
+  },
+  {
+    "slug": "frailty_trap_red",
+    "name": "Frailty Trap",
+    "text": "When this defends an attack with **go again**, create a Frailty token under the attacking hero's control.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends an attack with {p} greater than its base",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card creates a token when defending against an attack with power greater than its base."
+      },
+      {
+        "text": "create an Inertia token under the attacking hero's control.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the created token is under the attacking hero's control."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "inertia_trap_red",
+    "name": "Inertia Trap",
+    "text": "When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control."
+  },
+  {
+    "slug": "infiltrate_red",
+    "name": "Infiltrate",
+    "text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck. You may play it until the end of your next turn.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "looking_for_a_scrap_red",
+    "name": "Looking for a Scrap",
+    "text": "As an additional cost to play Looking for a Scrap, you may banish a card with 1{p} from your graveyard. When you do, this gains +1{p} and **go again**.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "spreading_plague_yellow",
+    "name": "Spreading Plague",
+    "text": "Create X Bloodrot Pox tokens under the defending hero's control, where X is the number of defending cards this chain link.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "chain_of_brutality_red",
+    "name": "Chain of Brutality",
+    "text": "If this has 6 or more {p}, it gets **go again** and \"When this hits a hero, the next attack action card you play this turn has 6 base {p}.\"",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "slug": "insult_to_injury_blue",
+    "name": "Insult to Injury",
+    "text": "When this attacks a hero, if you have more {h} than them, this gets **go again**.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks, roll a 6 sided die.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test directly asserts that a 6-sided die is rolled."
+      },
+      {
+        "text": "This gets +X{p}, where X is the number rolled.",
+        "implemented_by": "test_modify_attack_buff_persists_through_recalculation, test_set_base_power_stacks_with_roll_buff",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "reckless_arithmetic_blue",
+    "name": "Reckless Arithmetic",
+    "text": "When this attacks, roll a 6 sided die. This gets +X{p}, where X is the number rolled."
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Action** - {r}{r}, {t}: **Attack**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "If a card with 6 or more {p} was pitched to attack with this, the attack gets +1{p}.",
+        "implemented_by": "test_savage_claw_bonus_when_6power_pitched_for_attack",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "savage_claw",
+    "name": "Savage Claw",
+    "text": "**Action** - {r}{r}, {t}: **Attack**\n\nIf a card with 6 or more {p} was pitched to attack with this, the attack gets +1{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "look at the top card of their deck",
+        "implemented_by": "test_snarky_prick_reveals_red_top_destroys_and_pumps",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If it's red, you may destroy it",
+        "implemented_by": "test_snarky_prick_reveals_red_top_destroys_and_pumps",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If you do, this gets +4{p}",
+        "implemented_by": "test_snarky_prick_reveals_red_top_destroys_and_pumps",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "snarky_prick_red",
+    "name": "Snarky Prick",
+    "text": "When this attacks a hero, look at the top card of their deck. If it's red, you may destroy it. If you do, this gets +4{p}."
+  },
+  {
+    "slug": "nimby_blue",
+    "name": "Nimby",
+    "text": "When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Legendary",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "When this is pitched, create a Gold token.",
+        "implemented_by": "test_riches_pitch_creates_gold",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "riches_of_tropal_dhani_yellow",
+    "name": "Riches of Trōpal-Dhani",
+    "text": "**Legendary**\n\nWhen this is pitched, create a Gold token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
+        "implemented_by": "test_big_bully_doubles_base_when_booed",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If you've been booed this turn, this card's base {p} is doubled.",
+        "implemented_by": "test_big_bully_doubles_base_when_booed",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "big_bully_red",
+    "name": "Big Bully",
+    "text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this card's base {p} is doubled."
+  },
+  {
+    "slug": "booze_blue",
+    "name": "Booze!",
+    "text": "**Go again**\n\nWhen this enters or leaves the arena, **the crowd boos** you.\n\nAt the start of your turn, destroy this.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends, you may turn a face-down card with crush in your arsenal face-up.",
+        "implemented_by": "test_ironfist_revelation_reveals_crush_card_and_powers_it",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "If you do, put a +1{p} counter on it.",
+        "implemented_by": "test_ironfist_revelation_reveals_crush_card_and_powers_it",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "Temper",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Temper is an engine keyword."
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "ironfist_revelation",
+    "name": "Ironfist Revelation",
+    "text": "When this defends, you may turn a face-down card with crush in your arsenal face-up. If you do, put a +1{p} counter on it.\n\n**Temper**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "You start the game with 1 weapon zone.",
+        "implemented_by": "test_kayo_starts_with_one_weapon_zone",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Instant** - {r}{r}{r}{r}, {t}: Target attack action card you control has 6 base {p}.",
+        "implemented_by": [
+          "test_kayo_instant_offered_when_attacking_own_action_attack",
+          "test_kayo_instant_offered_and_targets_defending_action_attack",
+          "test_set_base_power_stacks_with_roll_buff",
+          "test_kayo_instant_target_is_the_controlled_card_not_the_active_attack",
+          "test_hero_abilities_dsl.py::test_kayo_instant_sets_attack_action_to_6_base_power",
+          "test_hero_abilities_dsl.py::test_kayo_instant_ignores_weapon_attack",
+          "test_hero_abilities_dsl.py::test_kayo_instant_ignores_opponent_attack"
+        ],
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Whenever the crowd boos you, create a Vigor token.",
+        "implemented_by": [
+          "test_hero_abilities_dsl.py::test_kayo_boo_creates_vigor",
+          "test_phase1_bridges_dsl.py::test_kayo_boo_creates_vigor"
+        ],
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "kayo_underhanded_cheat",
+    "name": "Kayo, Underhanded Cheat",
+    "text": "You start the game with 1 weapon zone.\n\n**Instant** - {r}{r}{r}{r}, {t}: Target attack action card you control has 6 base {p}.\n\nWhenever the crowd boos you, create a Vigor token."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the crowd boos when attacking a hero with more health."
+      },
+      {
+        "text": "If you've been booed this turn, this gets +2{p}.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card gains +2 power after being booed."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "mocking_blow_blue",
+    "name": "Mocking Blow",
+    "text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the crowd actually boos when attacking a hero with more health."
+      },
+      {
+        "text": "If you've been booed this turn, this gets +4{p}.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card's power increases by 4 after being booed."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "mocking_blow_red",
+    "name": "Mocking Blow",
+    "text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +4{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this attacks a hero, if you have more {h} than them, the crowd boos you.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the crowd boos when attacking a hero with more health."
+      },
+      {
+        "text": "If you've been booed this turn, this gets +3{p}.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card gains +3 power after being booed."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "mocking_blow_yellow",
+    "name": "Mocking Blow",
+    "text": "When this attacks a hero, if you have more {h} than them, **the crowd boos** you.\n\nIf you've been booed this turn, this gets +3{p}."
+  },
+  {
+    "slug": "offensive_behavior_blue",
+    "name": "Offensive Behavior",
+    "text": "If you control a Might or Vigor token, this gets +1{p}.\n\nWhen this hits a hero, create a Might and a Vigor token.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Instant",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "Discard this",
+        "implemented_by": "test_outside_interference_reveals_reviled_from_inventory",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "You may reveal a Reviled attack action card from your inventory and put it into your hand.",
+        "implemented_by": "test_outside_interference_reveals_reviled_from_inventory",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "outside_interference_blue",
+    "name": "Outside Interference",
+    "text": "**Instant** - Discard this: You may reveal a Reviled attack action card from your inventory and put it into your hand."
+  },
+  {
+    "slug": "overcrowded_blue",
+    "name": "Overcrowded",
+    "text": "**Ambush**\n\nWhen this attacks or defends, it gets +1{p} +1{d} for each different name among aura tokens in the arena.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this defends together with another card from hand",
+        "implemented_by": "test_right_behind_you_triggers_only_with_another_hand_card",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "this gets +1{d}",
+        "implemented_by": "test_right_behind_you_triggers_only_with_another_hand_card",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "you may look at the top card of your deck",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No assertion checks if the player can look at the top card of their deck."
+      },
+      {
+        "text": "you may put it on the bottom",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No assertion checks if the player can put the top card of their deck on the bottom."
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "right_behind_you_blue",
+    "name": "Right Behind You",
+    "text": "When this defends together with another card from hand, this gets +1{d} and you may look at the top card of your deck. You may put it on the bottom."
+  },
+  {
+    "clauses": [
+      {
+        "text": "This gets -1{p} for each card with 6 or more {p} defending it.",
+        "implemented_by": "test_show_of_strength_minus_power_per_high_defender",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "show_of_strength_red",
+    "name": "Show of Strength",
+    "text": "This gets -1{p} for each card with 6 or more {p} defending it."
+  },
+  {
+    "slug": "steal_victory_blue",
+    "name": "Steal Victory",
+    "text": "When this defends, **steal** an aura token the attacking hero controls.",
+    "clauses": [
+      {
+        "text": "This card has no automated test referencing its slug.",
+        "status": "MISSING",
+        "note": "no test references this card's slug"
+      }
+    ],
+    "verdict": "INCOMPLETE"
+  },
+  {
+    "clauses": [
+      {
+        "text": "As an additional cost to play Alpha Rampage, discard a random card.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test asserts that a random card is discarded when playing the card."
+      },
+      {
+        "text": "When you attack with Alpha Rampage, intimidate.",
+        "implemented_by": "test_alpha_rampage_red_on_attack_intimidates_opponent",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "alpha_rampage_red",
+    "name": "Alpha Rampage",
+    "text": "**Rhinar Specialization**\n\nAs an additional cost to play Alpha Rampage, discard a random card.\n\nWhen you attack with Alpha Rampage, **intimidate**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Target Ninja attack action card gains +1{p}.",
+        "implemented_by": "test_ancestral_empowerment_red_ninja_attack_bonus",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Draw a card.",
+        "implemented_by": "test_ancestral_empowerment_red_ninja_attack_bonus",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "ancestral_empowerment_red",
+    "name": "Ancestral Empowerment",
+    "text": "Target Ninja attack action card gains +1{p}.\n\nDraw a card."
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Once per turn Action** - {r}{r}{r}: **Attack**",
+        "implemented_by": "test_weapon_attack_offered_in_action_phase, test_weapon_attack_not_offered_without_action_point, test_weapon_attack_not_offered_for_non_active_player, test_weapon_attack_not_offered_when_unaffordable, test_weapon_attack_gated_after_attacking",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "While there are 2 or more cards with cost 3 or greater in your pitch zone, Anothos has +2{p}.",
+        "implemented_by": "test_anothos_while_static_bonus_with_two_pitch_cards, test_anothos_while_static_no_bonus_with_one_pitch_card, test_anothos_static_applies_via_recalc_bridge",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "anothos",
+    "name": "Anothos",
+    "text": "**Once per turn Action** - {r}{r}{r}: **Attack**\n\nWhile there are 2 or more cards with cost 3 or greater in your pitch zone, Anothos has +2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next Brute attack action card you play this turn gains +1{p}.",
+        "implemented_by": "test_awakening_bellow_amounts_by_color",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Intimidate**",
+        "implemented_by": "test_awakening_bellow_blue_play_intimidates",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "engine keyword (auto-corrected from MISSING)"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "awakening_bellow_blue",
+    "name": "Awakening Bellow",
+    "text": "The next Brute attack action card you play this turn gains +1{p}.\n\n**Intimidate**\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next Brute attack action card you play this turn gains +3{p}.",
+        "implemented_by": "test_awakening_bellow_red_buffs_next_brute_attack, test_awakening_bellow_ignores_non_brute_attack, test_awakening_bellow_amounts_by_color",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Intimidate",
+        "implemented_by": "test_awakening_bellow_red_play_intimidates",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Go again",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "engine keyword (auto-corrected from MISSING)"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "awakening_bellow_red",
+    "name": "Awakening Bellow",
+    "text": "The next Brute attack action card you play this turn gains +3{p}.\n\n**Intimidate**\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next Brute attack action card you play this turn gains +2{p}.",
+        "implemented_by": "test_awakening_bellow_yellow_queues_next_attack_mod, test_awakening_bellow_amounts_by_color",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Intimidate",
+        "implemented_by": "test_awakening_bellow_yellow_play_intimidates",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Go again",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "engine keyword (auto-corrected from MISSING)"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "awakening_bellow_yellow",
+    "name": "Awakening Bellow",
+    "text": "The next Brute attack action card you play this turn gains +2{p}.\n\n**Intimidate**\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Instant",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "Keyword handled by game engine."
+      },
+      {
+        "text": "Destroy Barkbone Strapping",
+        "implemented_by": "test_barkbone_activate_destroys_self_and_gains_resource",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Roll a 6 die",
+        "implemented_by": "test_barkbone_strapping_activate_sets_roll_and_gains_resources",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Gain {r} equal to half the number rolled, rounded down",
+        "implemented_by": "test_barkbone_strapping_activate_sets_roll_and_gains_resources",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "barkbone_strapping",
+    "name": "Barkbone Strapping",
+    "text": "**Instant** - Destroy Barkbone Strapping: Roll a 6 die. Gain {r} equal to half the number rolled, rounded down.\n\n**Battleworn**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this deals 4 or more damage to a hero",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card deals 4 or more damage."
+      },
+      {
+        "text": "they can't draw cards during their next action phase",
+        "implemented_by": "test_cranial_crush_blue_on_crush_blocks_opponent_draw, test_wtr_crush_dsl.py::test_cranial_crush_blocks_opponent_action_phase_draw",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "cranial_crush_blue",
+    "name": "Cranial Crush",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
+        "implemented_by": "test_debilitate_blue_on_crush_debuffs_opponent_first_attack",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "debilitate_blue",
+    "name": "Debilitate",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this deals 4 or more damage to a hero",
+        "implemented_by": "test_debilitate_red_fires_on_crush",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "their first attack during their next turn gets -2{p}",
+        "implemented_by": "test_debilitate_reduces_first_attack_power",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "debilitate_red",
+    "name": "Debilitate",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "**Crush** - When this deals 4 or more damage to a hero",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "their first attack during their next turn gets -2{p}",
+        "implemented_by": "test_debilitate_yellow_fires_on_crush",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "debilitate_yellow",
+    "name": "Debilitate",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}."
+  },
+  {
+    "clauses": [
+      {
+        "text": "When this deals 4 or more damage to a hero",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test checks if the card deals 4 or more damage."
+      },
+      {
+        "text": "put a card from their arsenal on the bottom of their deck",
+        "implemented_by": "test_disable_blue_moves_opponent_arsenal_on_crush",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "disable_blue",
+    "name": "Disable",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+        "implemented_by": "test_disable_red_fires_on_crush",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "disable_red",
+    "name": "Disable",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck."
+  },
+  {
+    "clauses": [
+      {
+        "text": "Crush",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      },
+      {
+        "text": "When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+        "implemented_by": "test_disable_yellow_fires_on_crush",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "disable_yellow",
+    "name": "Disable",
+    "text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck."
+  },
+  {
+    "clauses": [
+      {
+        "text": "As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck.",
+        "implemented_by": "test_enlightened_strike_red_play_with_card_in_hand_runs",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "When you attack with Enlightened Strike, draw a card.",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test covers drawing a card when attacking with Enlightened Strike."
+      },
+      {
+        "text": "Enlightened Strike gains +2{p}.",
+        "implemented_by": "test_enlightened_strike_red_mode_power_bonus",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "text": "Enlightened Strike gains **go again**.",
+        "implemented_by": "test_enlightened_strike_red_mode_go_again",
+        "status": "IMPLEMENTED"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "enlightened_strike_red",
+    "name": "Enlightened Strike",
+    "text": "As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck.\n\nChoose 1;\n- When you attack with Enlightened Strike, draw a card.\n- Enlightened Strike gains +2{p}.\n- Enlightened Strike gains **go again**."
+  },
+  {
+    "clauses": [
+      {
+        "text": "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it.",
+        "implemented_by": "test_fyendals_start_of_turn_accrues_energy_capped_at_3",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Instant** - Remove 3 energy counters from this: Gain {r}",
+        "implemented_by": "test_fyendals_activate_spends_3_energy_for_resource",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "fyendals_spring_tunic",
+    "name": "Fyendal's Spring Tunic",
+    "text": "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it.\n\n**Instant** - Remove 3 energy counters from this: Gain {r}\n\n**Blade Break**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next attack action card with cost 1 or less you play this turn gains +1{p}.",
+        "implemented_by": "test_nimblism_amounts_by_color",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "engine keyword (auto-corrected from MISSING)"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "nimblism_blue",
+    "name": "Nimblism",
+    "text": "The next attack action card with cost 1 or less you play this turn gains +1{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next attack action card with cost 1 or less you play this turn gains +3{p}.",
+        "implemented_by": "test_nimblism_red_buffs_low_cost_attack, test_nimblism_ignores_high_cost_attack, test_nimblism_amounts_by_color",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "engine keyword (auto-corrected from MISSING)"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "nimblism_red",
+    "name": "Nimblism",
+    "text": "The next attack action card with cost 1 or less you play this turn gains +3{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "The next attack action card with cost 1 or less you play this turn gains +2{p}",
+        "implemented_by": "test_nimblism_yellow_queues_low_cost_bonus",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "**Go again**",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "engine keyword (auto-corrected from MISSING)"
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "nimblism_yellow",
+    "name": "Nimblism",
+    "text": "The next attack action card with cost 1 or less you play this turn gains +2{p}.\n\n**Go again**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Choose 1;",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": "The game engine handles the choice mechanism."
+      },
+      {
+        "text": "Target club or hammer weapon attack gains +4{p}.",
+        "implemented_by": "test_pummel_red_hammer_weapon_power_no_inject",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Target attack action card with cost 2 or more gets +4{p} and \"When this hits a hero, they discard a card.\"",
+        "implemented_by": "test_pummel_red_action_card_power_and_inject",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "pummel_red",
+    "name": "Pummel",
+    "text": "Choose 1;\n- Target club or hammer weapon attack gains +4{p}.\n- Target attack action card with cost 2 or more gets +4{p} and \"When this hits a hero, they discard a card.\""
+  },
+  {
+    "clauses": [
+      {
+        "text": "Once per turn Action - 0: Roll a 6 sided die. Gain action points equal to half the number rolled, rounded down.",
+        "implemented_by": "test_scabskin_leathers_activate_grants_action_points",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "Battleworn",
+        "implemented_by": null,
+        "status": "COVERED_BY_ENGINE",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "scabskin_leathers",
+    "name": "Scabskin Leathers",
+    "text": "**Once per turn Action** - 0: Roll a 6 sided die. Gain action points equal to half the number rolled, rounded down.\n\n**Battleworn**"
+  },
+  {
+    "clauses": [
+      {
+        "text": "Gain 3{h}",
+        "implemented_by": "test_sigil_of_solace_red_gains_3_life, test_wtr_generated.py::test_sigil_of_solace_red_play_gains_three_life",
+        "status": "IMPLEMENTED"
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "sigil_of_solace_red",
+    "name": "Sigil of Solace",
+    "text": "Gain 3{h}"
+  },
+  {
+    "clauses": [
+      {
+        "text": "You may put a card from your hand on the bottom of your deck.",
+        "implemented_by": "test_sink_below_red_dispatch",
+        "status": "IMPLEMENTED",
+        "note": ""
+      },
+      {
+        "text": "If you do, draw a card.",
+        "implemented_by": "test_sink_below_red_dispatch",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "COMPLETE",
+    "slug": "sink_below_red",
+    "name": "Sink Below",
+    "text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card."
+  },
+  {
+    "clauses": [
+      {
+        "text": "If Spinal Crush deals 4 or more damage to a hero",
+        "implemented_by": null,
+        "status": "MISSING",
+        "note": "No test directly checks if the card deals 4 or more damage."
+      },
+      {
+        "text": "action cards, activated abilities, and attacks they control lose and can't gain go again during their next action phase.",
+        "implemented_by": "test_spinal_crush_red_on_crush_suppresses_opponent_go_again",
+        "status": "IMPLEMENTED",
+        "note": ""
+      }
+    ],
+    "verdict": "INCOMPLETE",
+    "slug": "spinal_crush_red",
+    "name": "Spinal Crush",
+    "text": "**Crush** - If Spinal Crush deals 4 or more damage to a hero, action cards, activated abilities, and attacks they control lose and can't gain **go again** during their next action phase."
+  }
+]
