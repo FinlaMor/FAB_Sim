@@ -1604,3 +1604,54 @@ def test_spreading_plague_creates_x_tokens_per_defending_card():
     assert run(0) == 0, "no defenders → no tokens"
     assert run(1) == 1
     assert run(3) == 3, "X scales with the number of defending cards"
+
+
+def test_orb_weaver_equips_token_and_restricts_pump_to_stealth():
+    """Text: "Equip a Graphene Chelicera token. Your next attack with stealth
+    this turn gets +3{p}." The equip was missing and the +3 buffed any attack.
+    Found by the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    orb = _card("orb_weaver_spinneret_red", 1)
+    dispatch(st, "ON_PLAY", "orb_weaver_spinneret_red", card=orb, event=None)
+
+    weapons = {c.slug for c in st.players[1].weapon1.cards}
+    assert "graphene_chelicera" in weapons, "Graphene Chelicera token equipped"
+
+    queued = getattr(st.players[1], "dsl_queued_attack_mods", [])
+    assert queued, "the +3 next-attack bonus was queued"
+    filt = queued[0].get("filter") or []
+    assert any(f.get("keyword", "").lower() == "stealth" for f in filt), (
+        "the +3 must be restricted to attacks with stealth, not any attack"
+    )
+
+
+def test_cut_from_the_same_cloth_reveals_marks_and_dagger_filters():
+    """Text: "Target opposing hero reveals their hand. If an attack reaction
+    card is revealed this way, mark them. Your next dagger attack this turn
+    gets +4{p}." The reveal/mark clause was missing and the +4 buffed any
+    attack. Found by the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def run(hand):
+        st = _make_state(); st.card_db = DB
+        cut = _card("cut_from_the_same_cloth_red", 1)
+        for s in hand:
+            st.players[2].hand.add(_card(s, 2))
+        dispatch(st, "ON_PLAY", "cut_from_the_same_cloth_red", card=cut, event=None)
+        queued = getattr(st.players[1], "dsl_queued_attack_mods", [])
+        return st.players[2].class_counters.get("marked", 0), queued
+
+    marked, queued = run(["affirm_loyalty_red"])   # an Attack Reaction card
+    assert marked > 0, "attack reaction revealed → hero is marked"
+    assert queued and any("Dagger" in (f.get("subtypes") or [])
+                          for f in queued[0].get("filter", [])), \
+        "the +4 is restricted to dagger attacks"
+
+    marked, _ = run(["big_bully_red"])             # not an Attack Reaction
+    assert marked == 0, "no attack reaction revealed → no mark"

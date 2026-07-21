@@ -160,6 +160,22 @@ def test_replacement_abilities_resolve_to_a_handler(path: Path):
 
 
 @pytest.mark.parametrize("path", CARD_FILES, ids=_ids(CARD_FILES))
+def test_every_ability_declares_a_type(path: Path):
+    """A missing ability_type is silently defaulted to TRIGGERED by the loader.
+
+    A TRIGGERED ability with no matching trigger never fires, so a PLAY ability
+    that loses its ability_type (e.g. an edit that drops the key) becomes a dead
+    no-op that still loads cleanly and passes every other check.
+    """
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    for i, ability in enumerate(raw.get("abilities") or []):
+        assert ability.get("ability_type"), (
+            f"{raw.get('slug')} ability[{i}] has no 'ability_type' — the loader "
+            f"would default it to TRIGGERED and it would never fire"
+        )
+
+
+@pytest.mark.parametrize("path", CARD_FILES, ids=_ids(CARD_FILES))
 def test_every_ability_has_effects(path: Path):
     """An ability with an empty effects list compiles fine and does nothing."""
     raw = json.loads(path.read_text(encoding="utf-8"))

@@ -3,11 +3,18 @@
   "abilities": [
     {
       "ability_type": "PLAY",
+      "_comment": "Equip a Graphene Chelicera token (a Weapon-Dagger). Your next attack WITH STEALTH this turn gets +3{p}. Go again. Previously the +3 buffed any attack and the equip was missing.",
       "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "graphene_chelicera",
+          "destination": "weapon_slot"
+        },
         {
           "type": "MODIFY_NEXT_ATTACK",
           "amount": 3,
-          "mod": "add"
+          "mod": "add",
+          "filter": [{"type": "HAS_KEYWORD", "keyword": "Stealth"}]
         },
         {
           "type": "GAIN",

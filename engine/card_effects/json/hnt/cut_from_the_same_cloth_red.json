@@ -3,11 +3,17 @@
   "abilities": [
     {
       "ability_type": "PLAY",
+      "_comment": "Target opposing hero reveals their hand. If an attack reaction card is revealed, mark them. Your next DAGGER attack this turn gets +4{p}. Go again. Previously the reveal/mark clause was missing and the +4 buffed any attack.",
       "effects": [
+        {
+          "type": "REVEAL_HAND_MARK_IF_TYPE",
+          "card_type": "AttackReaction"
+        },
         {
           "type": "MODIFY_NEXT_ATTACK",
           "amount": 4,
-          "mod": "add"
+          "mod": "add",
+          "filter": [{"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}]
         },
         {
           "type": "GAIN",

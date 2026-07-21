@@ -293,6 +293,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             effect_mark(state, 3 - cid)
         return _fn
 
+    if etype == "REVEAL_HAND_MARK_IF_TYPE":
+        # "Target opposing hero reveals their hand. If a card of <card_type> is
+        # revealed this way, mark them." Revealing sets the cards public; the
+        # mark lands only when the named type is present.
+        want_type = params.get("card_type", "AttackReaction")
+        def _fn(card, event, state, _t=want_type):
+            from engine.card_effects.ability_keywords import effect_mark, _controller_id
+            cid = _controller_id(card)
+            opp = state.players[3 - cid]
+            for c in opp.hand.cards:
+                c.is_public = True
+            if any(_t in (getattr(c, "types", None) or []) for c in opp.hand.cards):
+                effect_mark(state, 3 - cid)
+        return _fn
+
     # ── tokens / permanents ────────────────────────────────────────────────
     if etype == "CREATE_TOKEN":
         token = params.get("token", "")
