@@ -520,17 +520,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA":
-        # +N power per distinct aura name the controller has in play (Overcrowded).
+        # +N per distinct aura name IN THE ARENA (both players' auras, not just
+        # the controller's — Overcrowded reads "among aura tokens in the
+        # arena"). stat: "power" (default) applies to attack power; "defense"
+        # applies to the defending total, for the "or defends" half.
         per = params.get("per", 1)
-        def _fn(card, event, state, _per=per):
-            from engine.card_effects.ability_keywords import _controller_id
-            pid = _controller_id(card)
-            auras = getattr(state.players[pid], 'auras', None)
-            if not auras:
+        stat = params.get("stat", "power")
+        def _fn(card, event, state, _per=per, _stat=stat):
+            names = set()
+            for pl in state.players.values():
+                auras = getattr(pl, "auras", None)
+                if auras:
+                    names |= {getattr(c, "slug", "") for c in auras.cards}
+            n = len(names)
+            if not n or state.combat is None:
                 return
-            distinct = len({getattr(c, 'slug', '') for c in auras.cards})
-            if distinct and state.combat:
-                state.combat.attack_power = (state.combat.attack_power or 0) + distinct * _per
+            if _stat == "defense":
+                state.combat.total_defense = (getattr(state.combat, "total_defense", 0) or 0) + n * _per
+            else:
+                state.combat.attack_power = (state.combat.attack_power or 0) + n * _per
         return _fn
 
     if etype == "CROWD_BOO":

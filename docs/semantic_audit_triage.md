@@ -13,19 +13,19 @@ Several real defects carry bugs the auditor did *not* report; those are marked
 
 ## Fix status (updated 2026-07-20)
 
-**Fixed:**
-- `leave_no_witnesses_red` — banish up-to-1 arsenal, not destroy-all (JSON)
-- `art_of_desire_body_red` — draw/gain gated on red banish (JSON)
-- `death_touch_red` — token type is a choice (JSON)
+**Fixed (9 of 17) — each ships with the test the test-audit flagged as missing:**
+- `leave_no_witnesses_red` — banish up-to-1 arsenal, not destroy-all
+- `art_of_desire_body_red` — draw/gain gated on red banish
+- `death_touch_red` — token type is a choice
 - `inertia_trap_red` — new condition `ATTACK_POWER_GT_BASE` gates the token
 - `spreading_plague_yellow` — `CREATE_TOKEN` count `DEFENDING_CARD_COUNT`
+- `orb_weaver_spinneret_red` — equip token + stealth-filtered pump
+- `cut_from_the_same_cloth_red` — `REVEAL_HAND_MARK_IF_TYPE` + dagger filter
+- `overcrowded_blue` — arena-wide aura count, power on attack / defense on defend
+- `chain_of_brutality_red` — `SELF_ATTACK_POWER_GTE` gate, go again, set-base-6
 
-Each fix ships with the regression test the test-audit flagged as missing.
-
-**Still open — grouped by the engine work each needs:**
-- *Set-base-of-next-attack + power condition* — `chain_of_brutality_red`
-- *Per-count stat + or-defends trigger* — `overcrowded_blue`
-- *Type-restricted next-attack filter + missing clause* — `cut_from_the_same_cloth_red`, `orb_weaver_spinneret_red`, `tarantula_toxin_red`
+**Still open (8) — grouped by the engine work each needs:**
+- *Modal choose-1-or-both + defense debuff* — `tarantula_toxin_red`
 - *Cost / play-legality machinery* — `stains_of_the_redback_red`, `stains_of_the_redback_blue`, `10000_year_reunion_red`
 - *Playable-from-zone tracking* — `under_the_trap_door_blue`, `infiltrate_red`, `arakni_trap_door`
 - *Dagger-hit registration* — `pain_in_the_backside_red`

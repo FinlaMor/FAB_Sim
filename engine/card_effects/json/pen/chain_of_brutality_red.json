@@ -3,14 +3,19 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "_comment": "If this has 6 or more {p}, it gets go again.",
+      "conditions": [{"type": "SELF_ATTACK_POWER_GTE", "amount": 6}],
+      "effects": [{"type": "GAIN", "keyword": "go again"}]
+    },
+    {
+      "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
-      "effects": [
-        {
-          "type": "MODIFY_NEXT_ATTACK",
-          "amount": 4,
-          "mod": "add"
-        }
-      ]
+      "_comment": "If this has 6 or more {p}: when this hits a hero, the next attack action card you play this turn has 6 BASE {p}. Was a flat +4 with no power condition and no go again.",
+      "conditions": [{"type": "SELF_ATTACK_POWER_GTE", "amount": 6}],
+      "effects": [{"type": "MODIFY_NEXT_ATTACK", "mod": "set_base", "amount": 6,
+                   "filter": [{"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+                              {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}]}]
     }
   ]
 }

@@ -1108,6 +1108,15 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                     CardEffect(prop="power", stage=7, substage=5,
                                fn=lambda val, _n=amt: val + _n))
                 # consumed — not re-added to remaining
+            elif matches and mod.get('mod') == 'set_base':
+                # "the next attack action card you play this turn has N base
+                # {p}" (Chain of Brutality). Setting base power leaves later
+                # +{p} modifiers to apply on top of it, same as SET_BASE_POWER.
+                amt = mod.get('amount', 0)
+                attack_card.base_power = amt
+                if state.combat is not None and attack_card is state.combat.attack_card:
+                    state.combat.base_attack_power = amt
+                # consumed
             else:
                 remaining.append(mod)
         player.dsl_queued_attack_mods = remaining

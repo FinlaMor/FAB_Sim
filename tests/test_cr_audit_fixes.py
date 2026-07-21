@@ -1655,3 +1655,79 @@ def test_cut_from_the_same_cloth_reveals_marks_and_dagger_filters():
 
     marked, _ = run(["big_bully_red"])             # not an Attack Reaction
     assert marked == 0, "no attack reaction revealed → no mark"
+
+
+def test_overcrowded_counts_arena_auras_and_boosts_attack_or_defend():
+    """Text: "When this attacks or defends, it gets +1{p} +1{d} for each
+    different name among aura tokens in the arena." Previously counted only the
+    controller's auras, added only power, and never fired on defend. Found by
+    the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def with_three_distinct_auras():
+        # 3 distinct names split across BOTH players (a dup counts once).
+        st = _make_state(); st.card_db = DB
+        st.players[1].auras.add(_card("frailty", 1))
+        st.players[1].auras.add(_card("frailty", 1))
+        st.players[2].auras.add(_card("inertia", 2))
+        st.players[2].auras.add(_card("bloodrot_pox", 2))
+        return st
+
+    st = with_three_distinct_auras()
+    oc = _card("overcrowded_blue", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=2,
+                            attack_card=oc, keywords=[])
+    dispatch(st, "ON_PLAY", "overcrowded_blue", card=oc, event=None)
+    assert st.combat.attack_power == 5, "attacking: +1 power per arena aura name (2+3)"
+
+    st = with_three_distinct_auras()
+    oc = _card("overcrowded_blue", 2)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=6,
+                            attack_card=_card("big_bully_red", 1), keywords=[])
+    st.combat.total_defense = 1
+    dispatch(st, "ON_DEFEND", "overcrowded_blue", card=oc, event=None)
+    assert st.combat.total_defense == 4, "defending: +1 defense per arena aura name (1+3)"
+
+
+def test_chain_of_brutality_six_power_gates_go_again_and_set_base():
+    """Text: "If this has 6 or more {p}, it gets go again and 'When this hits a
+    hero, the next attack action card you play this turn has 6 base {p}.'" Was a
+    flat +4 with no power gate and no go again — three bugs. Found by the
+    semantic audit (its worst finding)."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.engine import _apply_turn_attack_effects
+    load_all_cards()
+
+    def on_hit(power):
+        st = _make_state(); st.card_db = DB
+        cob = _card("chain_of_brutality_red", 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=power,
+                                base_attack_power=power, attack_card=cob, keywords=[])
+        dispatch(st, "ON_HIT", "chain_of_brutality_red", card=cob, event=None)
+        return getattr(st.players[1], "dsl_queued_attack_mods", [])
+
+    q6 = on_hit(6)
+    assert q6 and q6[0]["mod"] == "set_base" and q6[0]["amount"] == 6, \
+        "≥6 power → queue 'next attack action has 6 base power'"
+    assert not on_hit(4), "<6 power → no effect"
+
+    # go again is granted when it attacks with ≥6 power
+    st = _make_state(); st.card_db = DB
+    cob = _card("chain_of_brutality_red", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=6,
+                            base_attack_power=6, attack_card=cob, keywords=[])
+    dispatch(st, "ON_ATTACK", "chain_of_brutality_red", card=cob, event=None)
+    assert any(k.lower() == "go again" for k in (st.combat.keywords or [])), \
+        "≥6 power grants go again"
+
+    # the queued set_base sets a future attack ACTION's base to 6 (not a weapon)
+    st = _make_state(); st.card_db = DB
+    st.players[1].dsl_queued_attack_mods = list(q6)
+    nxt = _card("swing_big_red", 1); nxt.base_power = 3
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            base_attack_power=3, attack_card=nxt, keywords=[])
+    _apply_turn_attack_effects(st, nxt)
+    assert nxt.base_power == 6, "next attack action card set to 6 base power"

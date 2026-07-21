@@ -165,6 +165,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return reprise_check(s)
         return _reprise
 
+    if ctype == "SELF_ATTACK_POWER_GTE":
+        # "If this has N or more {p}" — the current attack's live power is at
+        # least N (e.g. Chain of Brutality's 6-power threshold).
+        amount = params.get("amount", 0)
+        def _self_pow_gte(c, e, s, _n=amount):
+            combat = s.combat
+            return combat is not None and (combat.attack_power or 0) >= _n
+        return _self_pow_gte
+
     if ctype == "ATTACK_POWER_GT_BASE":
         # "an attack with {p} greater than its base" — the current attack has
         # been pumped above its printed base power (e.g. Inertia Trap, which
