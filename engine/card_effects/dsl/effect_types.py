@@ -304,6 +304,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            # count may be a dynamic expression, e.g. Spreading Plague's
+            # "X = the number of defending cards this chain link".
+            if isinstance(_cnt, str):
+                n = 0
+                if _cnt.upper() == "DEFENDING_CARD_COUNT" and state.combat is not None:
+                    n = len(getattr(state.combat, "defending_cards", []) or [])
+                _cnt = n
+            if _cnt <= 0:
+                return
             _ek_create_token(state, tid, _tok, _cnt, destination=_dest)
         return _fn
 

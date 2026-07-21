@@ -3,6 +3,8 @@
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",
+      "_comment": "When this defends an attack with {p} greater than its base, create an Inertia token under the attacking hero's control. Previously fired on every defend; now gated on the attack being pumped above its base. OPPONENT (from the defender's view) = the attacking hero.",
+      "conditions": [{"type": "ATTACK_POWER_GT_BASE"}],
       "effects": [{"type": "CREATE_TOKEN", "token": "inertia", "count": 1, "player": "OPPONENT"}]
     }
   ]

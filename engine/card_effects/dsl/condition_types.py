@@ -165,6 +165,18 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return reprise_check(s)
         return _reprise
 
+    if ctype == "ATTACK_POWER_GT_BASE":
+        # "an attack with {p} greater than its base" — the current attack has
+        # been pumped above its printed base power (e.g. Inertia Trap, which
+        # reacts only to a boosted attack). Compares the live combat power to
+        # the base recorded when the attack was declared.
+        def _atk_gt_base(c, e, s):
+            combat = s.combat
+            if combat is None:
+                return False
+            return (combat.attack_power or 0) > (getattr(combat, "base_attack_power", 0) or 0)
+        return _atk_gt_base
+
     if ctype == "CRUSH":
         def _crush(c, e, s):
             from engine.card_effects.ability_keywords import crush_check

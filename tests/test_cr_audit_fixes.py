@@ -1561,3 +1561,46 @@ def test_death_touch_token_type_is_a_choice():
     def _pick_third(state, options, context="", **kw):
         return "2" if "2" in options else options[0]
     assert "bloodrot_pox" in run(_pick_third), "choosing option 2 creates Bloodrot Pox"
+
+
+def test_inertia_trap_fires_only_on_pumped_attack():
+    """Text: "When this defends an attack with {p} greater than its base,
+    create an Inertia token under the attacking hero's control." Previously
+    fired on every defend. Found by the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def run(power, base):
+        st = _make_state(); st.card_db = DB
+        trap = _card("inertia_trap_red", 2)
+        atk = _card("big_bully_red", 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=power,
+                                base_attack_power=base, attack_card=atk, keywords=[])
+        dispatch(st, "ON_PLAY", "inertia_trap_red", card=trap, event=None)
+        return {t.slug for t in st.players[1].permanents.cards}
+
+    assert "inertia" in run(8, 4), "pumped attack (8 > base 4) → Inertia token"
+    assert "inertia" not in run(4, 4), "unpumped attack (4 == base 4) → no token"
+
+
+def test_spreading_plague_creates_x_tokens_per_defending_card():
+    """Text: "Create X Bloodrot Pox tokens under the defending hero's control,
+    where X is the number of defending cards this chain link." Count was
+    hardcoded to 1. Found by the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def run(n_defenders):
+        st = _make_state(); st.card_db = DB
+        atk = _card("spreading_plague_yellow", 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                                attack_card=atk, keywords=[])
+        st.combat.defending_cards = [_card("big_bully_red", 2) for _ in range(n_defenders)]
+        dispatch(st, "ON_PLAY", "spreading_plague_yellow", card=atk, event=None)
+        return sum(1 for t in st.players[2].permanents.cards if t.slug == "bloodrot_pox")
+
+    assert run(0) == 0, "no defenders → no tokens"
+    assert run(1) == 1
+    assert run(3) == 3, "X scales with the number of defending cards"
