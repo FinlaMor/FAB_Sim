@@ -613,6 +613,35 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             _recalculate_attack_power(state)
         return _fn
 
+    if etype == "DAGGER_DEALS_DAMAGE":
+        # "Target dagger you control deals N damage to them. If damage is dealt
+        # this way, the dagger has hit." (Pain in the Backside — unlike Flick
+        # Knives the dagger is not destroyed, and the active attacking dagger
+        # is a legal target.) Registering the hit fires the dagger's own ON_HIT,
+        # which is what "the dagger has hit" enables (e.g. marked-dagger draws).
+        amount = params.get("amount", 1)
+        def _fn(card, event, state, _amt=amount):
+            from engine.card_effects.ability_keywords import (
+                _controller_id, effect_deal_damage, ask_optional)
+            from engine.card_effects.dsl import dispatch as _dsl_dispatch
+            cid = _controller_id(card)
+            player = state.players[cid]
+            daggers = [d for zone in (player.weapon1, player.weapon2) for d in zone.cards
+                       if 'dagger' in [s.lower() for s in (getattr(d, 'subtypes', None) or [])]]
+            if not daggers:
+                return
+            pick = ask_optional(state, cid, [d.slug for d in daggers],
+                                context="Which dagger you control deals damage?")
+            if pick is None:
+                return
+            dagger = next((d for d in daggers if d.slug == pick), None)
+            if dagger is None:
+                return
+            effect_deal_damage(state, 3 - cid, _amt, dagger, damage_type="generic")
+            # "the dagger has hit" — fire its ON_HIT (not destroyed).
+            _dsl_dispatch(state, "ON_HIT", dagger.slug, card=dagger, event=None)
+        return _fn
+
     if etype == "DAGGER_DEALS_DAMAGE_AND_DESTROY":
         # Flick Knives: "Target dagger you control that isn't on the active chain
         # link deals N damage to target hero. If damage is dealt this way, the

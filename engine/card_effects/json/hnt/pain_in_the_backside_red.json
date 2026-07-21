@@ -4,7 +4,10 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
-      "effects": [{"type": "DEAL_GENERIC", "amount": 1, "target": "OPPONENT"}]
+      "_comment": "When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit (fires the dagger's ON_HIT). Go again is an engine keyword (card DB). Previously dealt generic damage not attributed to a dagger and never registered the dagger hit.",
+      "effects": [
+        {"type": "DAGGER_DEALS_DAMAGE", "amount": 1}
+      ]
     }
   ]
 }

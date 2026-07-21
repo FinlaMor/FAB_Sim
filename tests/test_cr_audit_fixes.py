@@ -1731,3 +1731,32 @@ def test_chain_of_brutality_six_power_gates_go_again_and_set_base():
                             base_attack_power=3, attack_card=nxt, keywords=[])
     _apply_turn_attack_effects(st, nxt)
     assert nxt.base_power == 6, "next attack action card set to 6 base power"
+
+
+def test_pain_in_the_backside_dagger_deals_the_damage():
+    """Text: "When this hits a hero, target dagger you control deals 1 damage
+    to them. If damage is dealt this way, the dagger has hit." Previously dealt
+    generic damage not attributed to a dagger and never registered the dagger
+    hit. Found by the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    # controls a Dagger weapon → 1 damage dealt
+    st = _make_state(); st.card_db = DB
+    pain = _card("pain_in_the_backside_red", 1)
+    st.players[1].weapon1.add(_card("graphene_chelicera", 1))   # a Weapon-Dagger
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            attack_card=pain, keywords=[])
+    l0 = st.players[2].life
+    dispatch(st, "ON_HIT", "pain_in_the_backside_red", card=pain, event=None)
+    assert st.players[2].life - l0 == -1, "the dagger deals 1 damage"
+
+    # controls no dagger → nothing happens
+    st = _make_state(); st.card_db = DB
+    pain = _card("pain_in_the_backside_red", 1)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            attack_card=pain, keywords=[])
+    l0 = st.players[2].life
+    dispatch(st, "ON_HIT", "pain_in_the_backside_red", card=pain, event=None)
+    assert st.players[2].life - l0 == 0, "no dagger controlled → no damage"

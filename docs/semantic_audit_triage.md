@@ -23,8 +23,9 @@ Several real defects carry bugs the auditor did *not* report; those are marked
 - `cut_from_the_same_cloth_red` — `REVEAL_HAND_MARK_IF_TYPE` + dagger filter
 - `overcrowded_blue` — arena-wide aura count, power on attack / defense on defend
 - `chain_of_brutality_red` — `SELF_ATTACK_POWER_GTE` gate, go again, set-base-6
+- `pain_in_the_backside_red` — `DAGGER_DEALS_DAMAGE` (dagger deals it, registers the hit)
 
-**Still open (8) — grouped by the engine work each needs:**
+**Still open (7) — grouped by the engine work each needs:**
 - *Modal choose-1-or-both + defense debuff* — `tarantula_toxin_red`
 - *Cost / play-legality machinery* — `stains_of_the_redback_red`, `stains_of_the_redback_blue`, `10000_year_reunion_red`
 - *Playable-from-zone tracking* — `under_the_trap_door_blue`, `infiltrate_red`, `arakni_trap_door`
