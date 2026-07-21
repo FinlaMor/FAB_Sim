@@ -1472,3 +1472,92 @@ def test_snarky_prick_destruction_is_optional_after_errata():
     assert st.combat.attack_power == 3, (
         "declining must give no +4{p}; the bonus is gated on destroying"
     )
+
+
+def test_leave_no_witnesses_banishes_up_to_one_arsenal_not_all():
+    """CR text: hit → banish the top card of their deck AND *up to 1* card in
+    their arsenal. Was DESTROY_ARSENAL, which destroyed every arsenal card.
+    Three deviations fixed: destroy→banish, all→up-to-1, mandatory→optional.
+    Found by the semantic audit (docs/semantic_audit_triage.md)."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def run(decline):
+        st = _make_state(); st.card_db = DB
+        atk = _card("leave_no_witnesses_red", 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                                attack_card=atk, keywords=[])
+        ars = _card("big_bully_red", 2)
+        st.players[2].arsenal.add(ars)
+        st.players[2].deck.add(_card("sink_below_red", 2))
+        if decline:
+            def _dec(state, options, context="", **kw):
+                for n in ("no", "decline"):
+                    if n in options:
+                        return n
+                return options[-1]
+            st.player_agents[1] = _dec
+        dispatch(st, "ON_HIT", "leave_no_witnesses_red", card=atk, event=None)
+        return st, ars
+
+    st, ars = run(decline=False)
+    assert ars in st.players[2].banished.cards, "arsenal card banished, not destroyed"
+    assert ars not in st.players[2].graveyard.cards, "banish must not go to graveyard"
+
+    st, ars = run(decline=True)
+    assert ars in st.players[2].arsenal.cards, "'up to 1' declined → arsenal card survives"
+
+
+def test_art_of_desire_draws_and_gains_only_on_red_banish():
+    """Text: banish the top card of their deck; whenever this banishes a RED
+    card, draw a card and gain 1{h}. Both were unconditional and the life gain
+    was missing. Found by the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def run(top_slug):
+        st = _make_state(); st.card_db = DB
+        atk = _card("art_of_desire_body_red", 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                                attack_card=atk, keywords=[])
+        st.players[1].deck.add(_card("swing_big_red", 1))
+        top = _card(top_slug, 2)
+        st.players[2].deck.add(top)
+        st.players[2].deck.add(_card("mocking_blow_blue", 2))
+        h0, l0 = len(st.players[1].hand.cards), st.players[1].life
+        dispatch(st, "ON_HIT", "art_of_desire_body_red", card=atk, event=None)
+        return st, top, len(st.players[1].hand.cards) - h0, st.players[1].life - l0
+
+    st, top, drew, gained = run("command_and_conquer_red")   # red (pitch 1)
+    assert top in st.players[2].banished.cards
+    assert drew == 1 and gained == 1, "red banish → draw a card and gain 1 life"
+
+    st, top, drew, gained = run("mocking_blow_blue")          # blue (pitch 3)
+    assert top in st.players[2].banished.cards, "top card banished regardless of colour"
+    assert drew == 0 and gained == 0, "non-red banish → no draw, no life"
+
+
+def test_death_touch_token_type_is_a_choice():
+    """Text: create a Frailty, Inertia, OR Bloodrot Pox token — the controller
+    chooses. Was hardcoded to frailty. Found by the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def run(agent=None):
+        st = _make_state(); st.card_db = DB
+        atk = _card("death_touch_red", 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                                attack_card=atk, keywords=[])
+        if agent:
+            st.player_agents[1] = agent
+        dispatch(st, "ON_HIT", "death_touch_red", card=atk, event=None)
+        return {t.slug for t in st.players[2].permanents.cards}
+
+    assert "frailty" in run(), "default (option 0) creates Frailty"
+
+    def _pick_third(state, options, context="", **kw):
+        return "2" if "2" in options else options[0]
+    assert "bloodrot_pox" in run(_pick_third), "choosing option 2 creates Bloodrot Pox"

@@ -4,7 +4,14 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
-      "effects": [{"type": "CREATE_TOKEN", "token": "frailty", "count": 1, "player": "OPPONENT"}]
+      "_comment": "When this hits a hero, create a Frailty, Inertia, OR Bloodrot Pox token under their control — the controller chooses which. Was hardcoded to frailty. ('Death Touch can't be played from hand' is a play restriction, not modeled here.)",
+      "effects": [
+        {"type": "CHOOSE", "amount": 1, "options": [
+          [{"type": "CREATE_TOKEN", "token": "frailty", "count": 1, "player": "OPPONENT"}],
+          [{"type": "CREATE_TOKEN", "token": "inertia", "count": 1, "player": "OPPONENT"}],
+          [{"type": "CREATE_TOKEN", "token": "bloodrot_pox", "count": 1, "player": "OPPONENT"}]
+        ]}
+      ]
     }
   ]
 }

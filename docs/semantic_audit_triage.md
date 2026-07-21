@@ -11,6 +11,23 @@ false positives below.
 Several real defects carry bugs the auditor did *not* report; those are marked
 "missed by auditor" and were found by reading the JSON during triage.
 
+## Fix status (updated 2026-07-20)
+
+**Fixed (JSON-only, no engine change):**
+- `leave_no_witnesses_red` — banish up-to-1 arsenal, not destroy-all
+- `art_of_desire_body_red` — draw/gain gated on red banish
+- `death_touch_red` — token type is a choice
+
+**Still open — grouped by the engine work each needs:**
+- *New condition* — `inertia_trap_red` (attack power > its base)
+- *Dynamic count* — `spreading_plague_yellow` (X = defending cards)
+- *Set-base-of-next-attack + power condition* — `chain_of_brutality_red`
+- *Per-count stat + or-defends trigger* — `overcrowded_blue`
+- *Type-restricted next-attack filter + missing clause* — `cut_from_the_same_cloth_red`, `orb_weaver_spinneret_red`, `tarantula_toxin_red`
+- *Cost / play-legality machinery* — `stains_of_the_redback_red`, `stains_of_the_redback_blue`, `10000_year_reunion_red`
+- *Playable-from-zone tracking* — `under_the_trap_door_blue`, `infiltrate_red`, `arakni_trap_door`
+- *Dagger-hit registration* — `pain_in_the_backside_red`
+
 ---
 
 ## Real — wrong quantity or wrong mechanism
