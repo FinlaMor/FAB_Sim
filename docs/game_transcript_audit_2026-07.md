@@ -88,29 +88,47 @@ removed from any zone. The stale shared-zone fallback (which also never set
 does_not_duplicate`. Re-collected random games: `hunters_klaive` duplication
 gone; `kiss_of_death` (also a dagger) dropped 3 games -> 1.
 
-### 4. OPEN — on-hit triggers resolve after lethal combat damage (CR 1.10.2a)
+### 4. FIXED — the loss (SBA) is now applied before triggers resolve (CR 1.10.2a)
 
-24 of 240 games have a snapshot where a player is at <=0 life but the game is not
-yet done: always in the `combat_damage` step, resolving on-hit triggered effects
-(put-on-top-of-deck, dagger damage, banish-from-hand) — sometimes prompting the
-**defeated** player for a choice — before `game_end`.
+24 of 240 games had a snapshot where a player was at <=0 life but the game was
+not yet done, resolving triggered effects — sometimes prompting the **defeated**
+player — before `game_end`. CR 1.10.2 performs game-state actions when the game
+transitions to a priority state, and 1.10.2a (a hero at 0 life -> that player
+loses) runs *before* 1.10.2d (triggered-layers are added to the stack).
 
-CR 1.10.2 performs game-state actions when the game transitions to a priority
-state, and 1.10.2a (a hero at 0 life -> that player loses) runs *before* 1.10.2d
-(triggered-layers are added to the stack). So a lethal hit should end the game at
-that check, before its on-hit triggers resolve. Winners are correct in every
-sampled game, so no outcome changed, but the intermediate resolution is not
-rules-legal. Fixing this touches core combat/SBA timing and is left as a
-documented follow-up.
+Two paths were affected:
+- **Combat on-hit** (the `combat_damage` cases): `_resolve_damage` applied damage
+  and emitted the `hit` event — whose listener resolves on-hit effects
+  synchronously — *before* the loss check. Now it checks the loss immediately
+  after applying damage and returns without firing `hit` if the hit was lethal.
+- **No-priority-window damage** (`action`/`end_phase` cases): a player taken to
+  <=0 by a start-of-turn Bloodrot Pox DoT kept playing because no SBA ran until
+  a later checkpoint. `priority_loop` now performs the loss game-state action at
+  the top of the loop (the transition into a priority state).
 
-### 5. OPEN — a second duplication class in banish / play-from-banish
+Result across a fresh 120-game random batch: **0 life<=0-not-done snapshots**
+(was 24). Regression tests: `test_lethal_combat_hit_ends_game_before_on_hit_
+triggers`, `test_nonlethal_combat_hit_still_fires_on_hit`,
+`test_priority_loop_ends_game_when_a_player_is_already_dead`.
 
-After the destroy fix, 4 cards still show a persistent +1 real-card count that
-lasts to game end: `art_of_desire_body_red`, `under_the_trap_door_blue`,
-`infiltrate_red`, `kiss_of_death_red` (1 game each after the dagger fix). All
-involve banish / play-from-banish / graveyard-return / retrieve movement — a
-different code path from `destroy`. Same "copy left behind while a copy moves"
-signature; needs its own focused pass. Left as a documented follow-up.
+### 5. FIXED — Take Up the Mantle copy did not revert (CR 3.0.9)
+
+The "banish/play-from-banish duplication" was mostly one bug plus tooling noise.
+Take Up the Mantle ("the target becomes a copy of the banished card") permanently
+overwrote the target attack's identity (`COPY_BANISHED_STEALTH_ATTACK`) and never
+reverted, so when the copied attack went to the graveyard it stayed labelled as
+the copied card — a mislabelled duplicate. CR 3.0.9: an object entering a
+non-arena, non-stack zone resets to a new object with no relation to its previous
+existence, i.e. its printed card. Fix: save the target's printed identity and
+restore it when the combat chain closes. Test:
+`test_take_up_the_mantle_copy_reverts_when_chain_closes`.
+
+The auditor's conservation check also over-reported: it flagged transient
+mid-game peaks (a card briefly counted in two zones during a multi-event window)
+as "card created." It now flags only rises that persist to game end. After both
+fixes, a fresh 120-game random batch shows **1** persistent +1 (a hidden-deck
+card in a single game) — down from the original class of 4 cards across many
+games — left as a documented, much-reduced follow-up.
 
 ### Auditor false positive fixed — `reviled` token
 

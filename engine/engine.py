@@ -1535,18 +1535,26 @@ def _resolve_damage(state: GameState) -> None:
             target_card.current_life -= net_damage
         else:
             defender.health -= net_damage
+        combat.hit = True
+        # CR 1.10.2a: the 0-life loss is a game-state action applied when the game
+        # would transition to a priority state — BEFORE on-hit triggered-layers are
+        # added to the stack and resolve (1.10.2d). If this hit is lethal, the
+        # losing player loses now and the game ends; the on-hit triggers emitted
+        # below must NOT resolve (a defeated player was being prompted for them).
+        if check_state_based_actions(state):
+            return
         # 7.5.5: hit event (physical damage from attack)
         # 'hit_hero' fires only when the hit target is the defending hero.
         state.event_manager.emit(Event(type='hit', card=combat.attack_card.slug, data={'damage': net_damage}), state)
         if target_card is None:
             state.event_manager.emit(Event(type='hit_hero', card=combat.attack_card.slug, data={'damage': net_damage}), state)
         state.event_manager.emit(Event(type='damage_dealt', data={'damage': net_damage, 'target': defender_id}), state)
-        combat.hit = True
     else:
         combat.hit = False
 
-    # Check if damage killed someone
-    check_state_based_actions(state)
+    # Check if damage killed someone (ally deaths, and the no-hit path).
+    if check_state_based_actions(state):
+        return
 
     # Store chain link result
     link = ChainLink(
@@ -1923,6 +1931,12 @@ def priority_loop(state: GameState) -> None:
 
     while True:
         if state.done:
+            return
+        # CR 1.10.2: game-state actions (incl. the 0-life loss, 1.10.2a) are
+        # performed when the game transitions to a priority state. A player
+        # brought to <=0 in a no-priority window — e.g. a start-of-turn Bloodrot
+        # Pox DoT — loses here, before being granted priority to act.
+        if check_state_based_actions(state):
             return
         if state.step == Step.COMBAT_CLOSE:
             return  # A triggered ability closed the chain; exit immediately

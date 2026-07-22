@@ -599,7 +599,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 return
             _banish(state, src, cid, origin_zone="graveyard")
             # "becomes a copy": adopt the banished card's slug/name/profile so its
-            # DSL abilities and printed values apply to the attack.
+            # DSL abilities and printed values apply to the attack. Save the
+            # target's printed identity first so the copy can revert: CR 3.0.9 —
+            # when the attack leaves the combat chain (an arena zone) into the
+            # graveyard it resets to a new object with no relation to its previous
+            # existence, i.e. its original card, not the copied one. Without the
+            # revert the graveyard keeps a mislabelled duplicate of the copied card.
+            _COPY_ATTRS = ("slug", "name", "base_power", "power", "base_defense",
+                           "defense", "types", "subtypes", "keywords")
+            _orig = {a: getattr(target, a, None) for a in _COPY_ATTRS}
             target.slug = src.slug
             target.name = src.name
             target.base_power = src.base_power
@@ -609,6 +617,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             target.types = list(src.types or [])
             target.subtypes = list(src.subtypes or [])
             target.keywords = list(src.keywords or [])
+
+            def _revert_copy(ev, s, _t=target, _o=_orig):
+                for attr, val in _o.items():
+                    setattr(_t, attr, val)
+                s.event_manager.unregister("combat_chain_close", _revert_copy)
+            state.event_manager.register("combat_chain_close", _revert_copy)
+
             from engine.engine import _recalculate_attack_power
             _recalculate_attack_power(state)
         return _fn

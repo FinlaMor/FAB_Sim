@@ -146,9 +146,16 @@ def audit_game(path):
             if lives.get(str(winner), 0) <= 0:
                 findings.append((-1, f"winner P{winner} has life {lives.get(str(winner))}<=0"))
 
-    # card creation is a real violation; dips below opening are in-flight cards
-    if max_total is not None and max_total > opening_total:
-        findings.append((-1, f"real-card total rose {opening_total}->{max_total} (card created from nothing)"))
+    # A card created from nothing persists to game end. A transient mid-game peak
+    # (a card briefly counted in two zones during a multi-event window, or moving
+    # through an in-flight zone the counter doesn't track) resolves by game end
+    # and is only informational — decision-snapshot granularity is too coarse to
+    # treat it as a real violation.
+    end_total = real_total(end_rec["snapshot"]) if end_rec else max_total
+    if end_total is not None and opening_total is not None and end_total > opening_total:
+        findings.append((-1, f"real-card total rose {opening_total}->{end_total} at game end (card created from nothing)"))
+    elif max_total is not None and max_total > opening_total:
+        info.append(f"card total transiently peaked at {max_total} (opening {opening_total}), resolved by end - informational")
     if min_total is not None and min_total < opening_total:
         info.append(f"card total dipped to {min_total} (opening {opening_total}) - cards in flight, informational")
 

@@ -649,6 +649,93 @@ def test_destroying_weapon2_card_with_generic_zone_does_not_duplicate():
     assert len(p.weapon1.cards) == 1, "the other equipped weapon is untouched"
 
 
+def test_priority_loop_ends_game_when_a_player_is_already_dead():
+    # CR 1.10.2a: a player brought to <=0 life in a no-priority window (e.g. a
+    # start-of-turn Bloodrot Pox DoT) loses when the game transitions to a
+    # priority state — before being granted priority to act.
+    from engine.engine import priority_loop
+    st = _make_state()
+    st.players[2].health = -5
+    st.priority_player = 1
+    priority_loop(st)
+    assert st.done is True
+    assert st.winner == 1
+
+
+def test_lethal_combat_hit_ends_game_before_on_hit_triggers():
+    # CR 1.10.2a: the 0-life loss is applied before on-hit triggered-layers
+    # resolve. A lethal hit must end the game without firing the 'hit' event
+    # (which is what drives on-hit effects and was prompting the defeated player).
+    from engine.engine import _resolve_damage
+    from engine.state import CombatState
+    st = _make_state()
+    st.players[2].health = 10
+    atk = _attack_stub(1); atk.base_power = 50; atk.power = 50
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=50,
+                            attack_card=atk, keywords=[])
+    fired = []
+    st.event_manager.register("hit", lambda ev, s: fired.append(True))
+    _resolve_damage(st)
+    assert st.done is True and st.winner == 1
+    assert fired == [], "on-hit ('hit') must not fire on a lethal hit (game already over)"
+
+
+def test_nonlethal_combat_hit_still_fires_on_hit():
+    # Guard against over-suppression: a non-lethal hit fires 'hit' as normal.
+    from engine.engine import _resolve_damage
+    from engine.state import CombatState
+    st = _make_state()
+    st.players[2].health = 40
+    atk = _attack_stub(1); atk.base_power = 4; atk.power = 4
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            attack_card=atk, keywords=[])
+    fired = []
+    st.event_manager.register("hit", lambda ev, s: fired.append(True))
+    _resolve_damage(st)
+    assert st.done is False
+    assert fired == [True], "a non-lethal hit still fires on-hit triggers"
+
+
+def test_take_up_the_mantle_copy_reverts_when_chain_closes():
+    # CR 3.0.9: when the copied attack leaves the combat chain (an arena zone)
+    # into the graveyard it resets to a new object — its original card, not the
+    # copied one. Take Up the Mantle overwrote the target's identity permanently,
+    # leaving a mislabelled duplicate of the copied card in the graveyard.
+    from engine.card_effects.dsl.effect_types import compile_effect
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.state import CombatState, Event
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+
+    target = Card(slug="orig_attack", raw_name="Orig", raw_types=["Action"])
+    target.subtypes = ["Attack"]; target.keywords = ["stealth"]
+    target.base_power = 2; target.power = 2; target.types = ["Action"]
+    target.owner = target.controller = 1
+
+    src = Card(slug="copied_stealth_attack", raw_name="Src", raw_types=["Action"])
+    src.subtypes = ["Attack"]; src.keywords = ["stealth"]
+    src.base_power = 6; src.power = 6; src.types = ["Action"]
+    src.owner = src.controller = 1
+    st.players[1].graveyard.add(src)
+
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=2,
+                            attack_card=target, keywords=["stealth"])
+
+    hero = _card("arakni_marionette", 1)
+    fn = compile_effect("COPY_BANISHED_STEALTH_ATTACK", {})
+    fn(hero, None, st)
+
+    # The target became a copy, and the original was banished from the graveyard.
+    assert target.slug == "copied_stealth_attack", "target becomes a copy"
+    assert st.players[1].banished.find("copied_stealth_attack") is not None
+    assert st.players[1].graveyard.find("copied_stealth_attack") is None
+
+    # When the chain closes and the attack leaves the arena, it reverts (CR 3.0.9)
+    st.event_manager.emit(Event(type="combat_chain_close"), st)
+    assert target.slug == "orig_attack", "copy reverts on leaving the chain"
+    assert target.base_power == 2
+
+
 def _victor_gold_state():
     """Victor as p1 with a stocked deck so his gold-draw is observable."""
     from engine.card_effects.dsl.loader import load_all_cards
