@@ -54,10 +54,68 @@ trigger reachable at setup in these three decks, but any future card whose
 trigger is limited to "each turn" / "during your turn" needs the same
 `DURING_TURN` guard (or a general engine implementation of 4.1.8b).
 
-### 2. No other violations
+### 2. No other violations (9-game sample)
 
-Life totals, win conditions (loser reaches <=0, SBA ends the game, winner
-alive), arsenal-size, resource, and deck-count invariants all held across every
-game. Real-card conservation held exactly: totals only dipped while cards were
-mid-resolution (on the stack / in combat) and never exceeded the opening count,
-so no card was created or destroyed illegitimately.
+Life totals, win conditions, arsenal-size, resource, and deck-count invariants
+all held. Real-card conservation held exactly.
+
+---
+
+## Larger batch — 2026-07-22 (240 games)
+
+Re-ran with 120 heuristic + 120 random games (both seatings, `--games 20
+--both-seatings` each). Random games are longer and exercise far more card
+interactions, and surfaced two more findings plus one auditor false positive.
+
+### 3. CONFIRMED BUG — destroying an equipped weapon could duplicate it
+
+Flick Knives ("Target dagger you control ... deals 1 damage ... Destroy the
+dagger") destroying one of two equipped Hunter's Klaive daggers — while the
+other was the active attacking weapon — left the destroyed dagger **both**
+equipped in its slot **and** added a copy to the graveyard. The phantom copy
+persisted to game end (3 Klaive where the deck has 2).
+
+Root cause in `engine/effect_keywords.py::destroy`: removal was keyed off
+`destroy_target.zone` (a name). A weapon sitting in the weapon2 slot but whose
+`.zone` is the generic `"weapon"` (which `zone_by_name` maps to weapon1) was not
+found, so `Zone.remove` failed — but the function added it to the graveyard
+anyway, materialising a duplicate.
+
+**Fix:** `destroy` now falls back to an identity sweep across every zone when the
+name lookup fails, and refuses to add a graveyard copy if the target was never
+removed from any zone. The stale shared-zone fallback (which also never set
+`removed`) was corrected. Test: `test_destroying_weapon2_card_with_generic_zone_
+does_not_duplicate`. Re-collected random games: `hunters_klaive` duplication
+gone; `kiss_of_death` (also a dagger) dropped 3 games -> 1.
+
+### 4. OPEN — on-hit triggers resolve after lethal combat damage (CR 1.10.2a)
+
+24 of 240 games have a snapshot where a player is at <=0 life but the game is not
+yet done: always in the `combat_damage` step, resolving on-hit triggered effects
+(put-on-top-of-deck, dagger damage, banish-from-hand) — sometimes prompting the
+**defeated** player for a choice — before `game_end`.
+
+CR 1.10.2 performs game-state actions when the game transitions to a priority
+state, and 1.10.2a (a hero at 0 life -> that player loses) runs *before* 1.10.2d
+(triggered-layers are added to the stack). So a lethal hit should end the game at
+that check, before its on-hit triggers resolve. Winners are correct in every
+sampled game, so no outcome changed, but the intermediate resolution is not
+rules-legal. Fixing this touches core combat/SBA timing and is left as a
+documented follow-up.
+
+### 5. OPEN — a second duplication class in banish / play-from-banish
+
+After the destroy fix, 4 cards still show a persistent +1 real-card count that
+lasts to game end: `art_of_desire_body_red`, `under_the_trap_door_blue`,
+`infiltrate_red`, `kiss_of_death_red` (1 game each after the dagger fix). All
+involve banish / play-from-banish / graveyard-return / retrieve movement — a
+different code path from `destroy`. Same "copy left behind while a copy moves"
+signature; needs its own focused pass. Left as a documented follow-up.
+
+### Auditor false positive fixed — `reviled` token
+
+The conservation check first reported ~64 random-game "card created" flags, 50 of
+them the `reviled` token, whose `slug_index` entry has no type metadata so the
+typeText heuristic missed it. `scripts/game_transcript_audit.py` now treats every
+`engine/card_effects/json/tokens/*.json` stem as a token (authoritative), which
+removed those false positives.

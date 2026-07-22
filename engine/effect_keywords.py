@@ -548,6 +548,22 @@ def destroy(state: GameState, destroy_target: Card, destroy_source: Optional[Car
     if not removed:
         for shared in (getattr(state, 'combat_chain', None), getattr(state, 'stack', None)):
             if shared is not None and hasattr(shared, 'remove') and shared.remove(destroy_target):
+                removed = True
+                break
+    if not removed:
+        # Name-based lookup can miss the target when its .zone attribute is stale
+        # or generic — e.g. an equipped weapon whose .zone is "weapon" (which maps
+        # to the weapon1 slot) while it actually sits in weapon2. Fall back to an
+        # identity sweep across every zone so the card is removed from wherever it
+        # really is; without this the graveyard add below would DUPLICATE it
+        # (leaving the original in its slot). CR 8.5.4.
+        for player in state.players.values():
+            for z in (player.all_zones() + [player.items, player.auras,
+                                            player.allies, player.tokens, player.soul]):
+                if destroy_target in z.cards and z.remove(destroy_target):
+                    removed = True
+                    break
+            if removed:
                 break
 
     # CR 8.3.21 Ephemeral: ceases to exist instead of entering the graveyard
@@ -561,6 +577,12 @@ def destroy(state: GameState, destroy_target: Card, destroy_source: Optional[Car
                 Event(type='leaves_arena', data={'card': destroy_target}), state)
         state.event_manager.emit(
             Event(type='card_ceased_to_exist', data={'card': destroy_target}), state)
+        return event
+
+    if not removed:
+        # The target could not be located in any zone — it is already gone.
+        # Adding it to the graveyard now would materialise a phantom copy, so
+        # stop here rather than duplicate the card.
         return event
 
     # Move to owner's graveyard

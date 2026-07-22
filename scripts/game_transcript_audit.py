@@ -50,9 +50,13 @@ def load_hero_stats() -> dict[str, tuple[int, int]]:
 
 
 def load_token_slugs() -> set[str]:
+    # Authoritative source: every card with a JSON under json/tokens/ is a token.
+    # The slug_index typeText heuristic alone misses tokens whose index entry has
+    # no type metadata (e.g. 'reviled'), which would then be miscounted as real
+    # cards and inflate the conservation total.
+    toks = {p.stem for p in (ROOT / "engine" / "card_effects" / "json" / "tokens").glob("*.json")}
     idx = json.loads((ROOT / "card_data" / "slug_index.json").read_text(encoding="utf-8"))
     idx = idx.get("by_slug", idx)
-    toks = set()
     for slug, e in idx.items():
         blob = (e.get("typeText") or "") + " " + " ".join(e.get("types") or [])
         if "token" in blob.lower():

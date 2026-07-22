@@ -628,6 +628,27 @@ def test_crown_of_dominion_creates_gold_on_equip():
     assert _has_perm(st.players[1], "gold")
 
 
+def test_destroying_weapon2_card_with_generic_zone_does_not_duplicate():
+    # Regression: destroying a card that sits in weapon2 but whose .zone is the
+    # generic "weapon" (which maps to the weapon1 slot) must still remove it from
+    # weapon2 — not leave it equipped AND add a copy to the graveyard. Surfaced
+    # by Flick Knives destroying one of two equipped Hunter's Klaive (daggers)
+    # while the other was the active attacking weapon. CR 8.5.4.
+    from engine.effect_keywords import destroy
+    st = _make_state(); st.card_db = DB
+    p = st.players[1]
+    k1 = _card("hunters_klaive", 1); k2 = _card("hunters_klaive", 1)
+    p.weapon1.add(k1); p.weapon2.add(k2)
+    k2.zone = "weapon"  # stale/generic zone name from the weapon-attack path
+    before = len(p.weapon1.cards) + len(p.weapon2.cards) + len(p.graveyard.cards)
+    destroy(st, k2, None)
+    after = len(p.weapon1.cards) + len(p.weapon2.cards) + len(p.graveyard.cards)
+    assert after == before, "destroy must not create a phantom graveyard copy"
+    assert k2 not in p.weapon2.cards, "destroyed weapon must leave its slot"
+    assert p.graveyard.find("hunters_klaive") is not None, "it goes to the graveyard"
+    assert len(p.weapon1.cards) == 1, "the other equipped weapon is untouched"
+
+
 def _victor_gold_state():
     """Victor as p1 with a stocked deck so his gold-draw is observable."""
     from engine.card_effects.dsl.loader import load_all_cards
