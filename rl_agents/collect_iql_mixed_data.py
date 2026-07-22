@@ -1,7 +1,12 @@
-"""Collect replay embeddings for a Kayo mirror IQL dataset.
+"""Collect replay embeddings for a three-deck IQL dataset.
 
-Default matchup by game count:
-- Kayo vs Kayo only
+Plays a round-robin of the Victor / Kayo / Arakni CC test decks and records
+per-transition state+action embeddings into a ReplayDB, optionally emitting the
+merged (s, a, r, s', done) tensors. Both seats are driven by the same policy
+(``--agent heuristic`` by default; ``--agent random`` for exploratory data).
+
+For full-fidelity JSON game transcripts (rather than IQL tensors) see
+scripts/collect_sample_games.py.
 """
 
 from __future__ import annotations
@@ -30,6 +35,8 @@ from rl_agents.game_backends import GameRunRequest, add_game_backend_args, build
 
 DECK_BY_HERO = {
     "kayo_underhanded_cheat": "kayo_underhanded_cheat_CC_lite.txt",
+    "victor_goldmane_high_and_mighty": "victor_goldmane_high_and_mighty_CC_lite.txt",
+    "arakni_marionette": "arakni_marionette_CC_lite.txt",
     "oscillio_constella_intelligence": "oscillio_constella_intelligence_CC_lite.txt",
 }
 
@@ -40,11 +47,37 @@ def _resolve_base_seed(seed: int | None) -> int:
     return random.SystemRandom().randrange(1, 2_147_483_647)
 
 
+def _build_policy(kind: str, seed: int):
+    """Action-selection policy delegated to by the recorder agent.
+
+    'random' returns None so the recorder agent uses its own seeded random
+    selection (with the Sink Below anti-loop guard); 'heuristic' returns a
+    HeuristicBot that greedily maximises damage.
+    """
+    if kind == "random":
+        return None
+    if kind == "heuristic":
+        from rl_agents.heuristic_bot import HeuristicBot
+        return HeuristicBot(seed=seed)
+    raise ValueError(f"unknown agent kind: {kind}")
+
+
+# The three functional test decks, round-robin (each distinct cross pairing).
 MATCHUP_SPECS = [
     {
-        "name": "kayo_vs_kayo",
-        "p1_hero": "kayo_underhanded_cheat",
+        "name": "victor_vs_kayo",
+        "p1_hero": "victor_goldmane_high_and_mighty",
         "p2_hero": "kayo_underhanded_cheat",
+    },
+    {
+        "name": "victor_vs_arakni",
+        "p1_hero": "victor_goldmane_high_and_mighty",
+        "p2_hero": "arakni_marionette",
+    },
+    {
+        "name": "kayo_vs_arakni",
+        "p1_hero": "kayo_underhanded_cheat",
+        "p2_hero": "arakni_marionette",
     },
 ]
 
@@ -93,7 +126,13 @@ def _serialise_action(action: Action) -> dict:
 
 
 class RandomEmbedderRecorderAgent:
-    """Random policy agent that records transitions + embeddings."""
+    """Policy agent that records transitions + embeddings.
+
+    The action *choice* is delegated to ``policy`` when one is supplied (e.g. a
+    HeuristicBot) — recording is independent of how the action is picked. When
+    ``policy`` is None the agent uses its own random selection with the Sink
+    Below anti-loop guard.
+    """
 
     def __init__(
         self,
@@ -106,6 +145,7 @@ class RandomEmbedderRecorderAgent:
         state_embedder: GameStateEmbedder,
         max_decisions_per_game: int,
         max_sink_below_per_window: int,
+        policy=None,
     ):
         self.player_id = player_id
         self.rng = random.Random(seed)
@@ -116,6 +156,7 @@ class RandomEmbedderRecorderAgent:
         self.state_embedder = state_embedder
         self.max_decisions_per_game = max_decisions_per_game
         self.max_sink_below_per_window = max_sink_below_per_window
+        self.policy = policy
         self._sink_counts_by_window: dict[tuple[int, int, int], int] = {}
 
     @staticmethod
@@ -174,7 +215,10 @@ class RandomEmbedderRecorderAgent:
 
         is_action_choice = isinstance(options[0], Action)
         if is_action_choice:
-            choice = self._choose_action(state, list(options))
+            if self.policy is not None:
+                choice = self.policy(state, list(options), context)
+            else:
+                choice = self._choose_action(state, list(options))
         else:
             choice = self.rng.choice(list(options))
 
@@ -263,6 +307,12 @@ def _parse_args() -> argparse.Namespace:
         default=3,
         help="Max Sink Below defense-reaction plays per player per chain link before forcing non-Sink actions",
     )
+    parser.add_argument(
+        "--agent",
+        choices=["heuristic", "random"],
+        default="heuristic",
+        help="Action-selection policy for both seats (recording is identical either way)",
+    )
     add_game_backend_args(parser)
     return parser.parse_args()
 
@@ -311,8 +361,10 @@ def main() -> int:
     global_game_idx = 0
 
     print("=" * 72)
-    print("KAYO MIRROR IQL DATA COLLECTION")
+    print("THREE-DECK IQL DATA COLLECTION")
     print("=" * 72)
+    print(f"agent             : {args.agent}")
+    print(f"matchups          : {', '.join(s['name'] for s in MATCHUP_SPECS)}")
     print(f"games_per_matchup : {args.games_per_matchup}")
     print(f"total_games       : {args.games_per_matchup * len(MATCHUP_SPECS)}")
     print(f"decision_cap/game : {args.max_decisions_per_game}")
@@ -333,6 +385,8 @@ def main() -> int:
             step_counter = [0]
 
             seed_offset = base_seed + global_game_idx * 10
+            p1_policy = _build_policy(args.agent, seed_offset + 5)
+            p2_policy = _build_policy(args.agent, seed_offset + 6)
             p1_agent = RandomEmbedderRecorderAgent(
                 player_id=1,
                 seed=seed_offset + 1,
@@ -343,6 +397,7 @@ def main() -> int:
                 state_embedder=state_embedder,
                 max_decisions_per_game=args.max_decisions_per_game,
                 max_sink_below_per_window=args.max_sink_below_per_window,
+                policy=p1_policy,
             )
             p2_agent = RandomEmbedderRecorderAgent(
                 player_id=2,
@@ -354,6 +409,7 @@ def main() -> int:
                 state_embedder=state_embedder,
                 max_decisions_per_game=args.max_decisions_per_game,
                 max_sink_below_per_window=args.max_sink_below_per_window,
+                policy=p2_policy,
             )
 
             final_state = game_backend.run_game(
