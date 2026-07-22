@@ -192,6 +192,7 @@ def test_clash_resolved_bridge_dispatches_to_winner_card():
 
 def test_victor_first_gold_draws_once_per_turn():
     st = _state(p1_hero="victor_goldmane_high_and_mighty")
+    st.individual_turns = 1  # a turn is underway (CR 4.1.8b: the draw is turn-only)
     st.players[1].deck.add(_deck_card("d0", 1))
     st.players[1].deck.add(_deck_card("d1", 1))
     hero = st.players[1].hero

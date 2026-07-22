@@ -17,6 +17,14 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
     if ctype in ("none", "NONE", ""):
         return None
 
+    # ── game phase ─────────────────────────────────────────────────────────
+    if ctype == "DURING_TURN":
+        # CR 4.1.8b: an effect that would only trigger during a player's turn
+        # does not trigger during the start-of-game procedure. individual_turns
+        # is 0 all through setup and becomes >=1 once the first turn begins, so
+        # this gates a turn-restricted trigger out of start-of-game.
+        return lambda c, e, s: getattr(s, "individual_turns", 0) >= 1
+
     # ── combat presence ────────────────────────────────────────────────────
     if ctype == "IN_COMBAT":
         return lambda c, e, s: s.combat is not None

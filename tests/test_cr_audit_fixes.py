@@ -628,6 +628,49 @@ def test_crown_of_dominion_creates_gold_on_equip():
     assert _has_perm(st.players[1], "gold")
 
 
+def _victor_gold_state():
+    """Victor as p1 with a stocked deck so his gold-draw is observable."""
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+    st = _make_state(); st.card_db = DB
+    hero = _card("victor_goldmane_high_and_mighty", 1)
+    st.players[1].hero = hero
+    for i in range(3):
+        filler = Card(slug=f"filler_{i}", raw_name="Filler", raw_types=["Action"])
+        filler.owner = filler.controller = 1
+        st.players[1].deck.add(filler)  # non-token, so it stays in the deck
+    return st, hero
+
+
+def test_victor_gold_draw_not_during_start_of_game():
+    # CR 4.1.8b + its Victor example: "The first time each turn you create a Gold
+    # token from an effect you control, draw a card." A Gold created during the
+    # start-of-game procedure must NOT draw, because it is not during a turn.
+    from engine.card_effects.dsl import dispatch
+    st, hero = _victor_gold_state()
+    st.individual_turns = 0  # start-of-game procedure
+    before = len(st.players[1].hand.cards)
+    dispatch(st, "ON_TOKEN_CREATED", "victor_goldmane_high_and_mighty",
+             card=hero, event={"slug": "gold"})
+    assert len(st.players[1].hand.cards) == before, \
+        "Victor must not draw from a Gold created during start-of-game (CR 4.1.8b)"
+
+
+def test_victor_gold_draw_fires_once_per_turn_during_a_turn():
+    # During an actual turn the trigger fires — and only the first time each turn.
+    from engine.card_effects.dsl import dispatch
+    st, hero = _victor_gold_state()
+    st.individual_turns = 1  # a real turn is underway
+    before = len(st.players[1].hand.cards)
+    dispatch(st, "ON_TOKEN_CREATED", "victor_goldmane_high_and_mighty",
+             card=hero, event={"slug": "gold"})
+    assert len(st.players[1].hand.cards) == before + 1, "first Gold this turn draws"
+    # Second Gold same turn: 'first time each turn' — no further draw.
+    dispatch(st, "ON_TOKEN_CREATED", "victor_goldmane_high_and_mighty",
+             card=hero, event={"slug": "gold"})
+    assert len(st.players[1].hand.cards) == before + 1, "only the first Gold each turn draws"
+
+
 def _equip(slot, defense, oid, owner=2):
     c = Card(slug=f"eq_{slot}_{oid}", raw_name="eq", raw_types=["Equipment"])
     c.subtypes = [slot.title()]; c.defense = defense; c.base_defense = defense

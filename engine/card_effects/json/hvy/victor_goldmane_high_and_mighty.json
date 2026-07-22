@@ -5,8 +5,10 @@
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_GOLD_CREATED",
       "conditions": [
+        {"type": "DURING_TURN"},
         {"type": "NOT", "inner_type": "FLAG_SET", "flag": "victor_gold_draw_used"}
       ],
+      "_comment": "'first time each turn' — CR 4.1.8b: does not trigger during the start-of-game procedure (Crown of Dominion's Gold), so gated on DURING_TURN.",
       "effects": [
         {"type": "DRAW", "amount": 1},
         {"type": "SET_FLAG", "flag": "victor_gold_draw_used", "scope": "CURRENT"}
