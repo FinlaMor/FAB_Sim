@@ -27,15 +27,22 @@ Several real defects carry bugs the auditor did *not* report; those are marked
 - `stains_of_the_redback_red` / `_blue` — new conditional-play-cost subsystem (`cost_modifiers`)
 - `10000_year_reunion_red` — alternative cost via existing `REMOVE_COUNTERS_FROM_AURAS` + `alternative_cost`
 
-**Reclassified as FALSE POSITIVE (verified correct, regression-locked):**
+**Reclassified as FALSE POSITIVE (verified correct against the real
+implementation, regression-locked):**
 - `arakni_trap_door` — `SEARCH_BANISH_FACE_DOWN` already banishes the trap and
-  marks it playable-from-banish; the auditor flagged it via effect-name
-  blindness (same class as `nimby_blue`). So 16 real, 7 false — 70% precision.
+  marks it playable-from-banish.
+- `under_the_trap_door_blue` — already grants play-from-banish AND sets the
+  graveyard→banish rider (`gy_to_banish_<id>`, honoured by `_to_graveyard`). My
+  earlier triage wrongly called this open, misled by a stale code comment that
+  said the rider "is not modeled"; the comment was wrong and is now fixed.
 
-**Still open (3) — genuine, grouped by the engine work each needs:**
-- *Modal choose-1-or-both + defense debuff* — `tarantula_toxin_red`
-- *Graveyard→banish replacement rider* (play-grant already works) — `under_the_trap_door_blue`
+Both were flagged through effect-name blindness (same class as `nimby_blue`):
+the auditor reads effect names, not their Python. Revised precision: 15 real,
+8 false (~65%).
+
+**Still open (2) — genuine, grouped by the engine work each needs:**
 - *Cross-player playable-from-banish* — `infiltrate_red`
+- *Modal choose-1-or-both + defense debuff* — `tarantula_toxin_red`
 
 ---
 

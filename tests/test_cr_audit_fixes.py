@@ -1838,3 +1838,30 @@ def test_10000_year_reunion_alternative_cost_removes_three_counters():
     st.players[1].counters[key] = 5
     alt.pay_fn(reunion, None, st)
     assert st.players[1].counters.get(key) == 2, "exactly three counters removed"
+
+
+def test_under_the_trap_door_grants_play_and_graveyard_to_banish_rider():
+    """Regression lock: another test-audit false positive. The card banishes a
+    trap, marks it playable-from-banish, AND sets the "if it would be put into
+    the graveyard this turn, instead banish it" rider — all already implemented
+    (a stale code comment claimed the rider was missing)."""
+    from engine.card_effects.dsl.loader import load_all_cards, get_card
+    from engine.card_effects.dsl.interpreter import run_ability
+    from engine.engine import _to_graveyard
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    utd = _card("under_the_trap_door_blue", 1)
+    trap = _card("frailty_trap_red", 1)   # subtype Trap
+    st.players[1].graveyard.add(trap)
+
+    run_ability(get_card("under_the_trap_door_blue").abilities[0], utd, None, st)
+    assert trap in st.players[1].banished.cards, "trap banished from graveyard"
+    assert any(trap is g for g in st.players[1].playable_from_banished), \
+        "banished trap is playable this turn"
+
+    # the rider: if it would go to the graveyard this turn, it banishes instead
+    st.players[1].banished.remove(trap)
+    _to_graveyard(st.players[1], trap, is_public=True)
+    assert trap in st.players[1].banished.cards, "graveyard→banish rider redirects it"
+    assert trap not in st.players[1].graveyard.cards

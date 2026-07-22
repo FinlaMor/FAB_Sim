@@ -1248,7 +1248,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE":
         # Under the Trap-Door: "Banish target trap from your graveyard. If you do,
-        # you may play it this turn." (The graveyard->banish rider is not modeled.)
+        # you may play it this turn, and if it would be put into the graveyard
+        # this turn, instead banish it." The graveyard->banish rider IS modeled
+        # below via the gy_to_banish_<object_id> flag that engine._to_graveyard
+        # honours (an earlier version of this comment wrongly said it was not).
         def _fn(card, event, state):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
             from engine.effect_keywords import banish as _banish
