@@ -1892,3 +1892,37 @@ def test_infiltrate_banishes_opponent_top_and_lets_you_play_it():
     st.combat = None
     recalculate_playable(st, 1)
     assert top.playable is True, "the opponent's banished card is playable by you"
+
+
+def test_tarantula_toxin_choose_one_or_both_modes():
+    """Text: "Choose 1 or both; * Target dagger attack gets +3{p}. * Target
+    card defending an attack with stealth gets -3{d} this turn." Was a single
+    unconditional +3. Found by the semantic audit. Exercises the MODAL
+    choose/choose_max range and per-mode conditions."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def run(picks, attack_slug, keywords):
+        st = _make_state(); st.card_db = DB
+        tar = _card("tarantula_toxin_red", 1)
+        atk = _card(attack_slug, 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=5,
+                                base_attack_power=5, attack_card=atk, keywords=keywords)
+        st.combat.total_defense = 6
+        seq = iter(picks)
+        def agent(state, options, context="", **kw):
+            try:
+                return next(seq)
+            except StopIteration:
+                return options[0]
+        st.player_agents[1] = agent
+        dispatch(st, "ON_PLAY", "tarantula_toxin_red", card=tar, event=None)
+        return st.combat.attack_power, st.combat.total_defense
+
+    # mode 0 only (dagger +3), decline the second
+    assert run(["0", "done"], "kiss_of_death_red", ["Stealth"]) == (8, 6)
+    # both modes: +3 power and -3 defense
+    assert run(["0", "1"], "kiss_of_death_red", ["Stealth"]) == (8, 3)
+    # mode 0 on a non-dagger attack → the +3 is gated off
+    assert run(["0", "done"], "big_bully_red", ["Stealth"]) == (5, 6)

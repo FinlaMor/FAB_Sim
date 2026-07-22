@@ -3,12 +3,14 @@
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "amount": 3,
-          "mod": "add"
-        }
+      "choose": 1,
+      "choose_max": 2,
+      "_comment": "Choose 1 or both; * Target dagger attack gets +3{p}. * Target card defending an attack with stealth gets -3{d} this turn. Was a single unconditional +3.",
+      "modes": [
+        {"type": "MODIFY_ATTACK", "amount": 3, "mod": "add",
+         "conditions": [{"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}]},
+        {"type": "MODIFY_DEFENSE_VALUE", "amount": -3,
+         "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}]}
       ]
     }
   ]

@@ -41,7 +41,8 @@ class AbilityDef:
     alternative_costs: list[CostDef] = field(default_factory=list)
     is_optional: bool = False
     target_filter: list[ConditionDef] = field(default_factory=list)  # CR 1.8.5 targeting
-    choose: int = 0                                                   # MODAL: modes to select
+    choose: int = 0                                                   # MODAL: minimum modes to select
+    choose_max: int = 0                                               # MODAL: maximum modes ("choose 1 or both" → choose 1, choose_max 2); 0 = exactly `choose`
     modes: list[EffectDef] = field(default_factory=list)             # MODAL: available modes
     params: dict[str, Any] = field(default_factory=dict)             # ability-level extras (e.g. REPLACEMENT kind)
 

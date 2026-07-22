@@ -106,13 +106,14 @@ def _compile_ability(raw: dict[str, Any]) -> AbilityDef:
     target_filter = [_compile_condition(c) for c in target_raw.get("filter", [])]
 
     choose = raw.get("choose", 0)
+    choose_max = raw.get("choose_max", 0)
     modes = [_compile_effect(m) for m in raw.get("modes", [])]
 
     # Ability-level extras not captured by structured fields (e.g. a REPLACEMENT
     # ability's "replacement" kind). Keep raw scalars for engine-side lookup.
     _structured = {"ability_type", "trigger", "optional", "conditions", "effects",
                    "cost", "additional_cost", "alternative_cost", "target",
-                   "choose", "modes"}
+                   "choose", "choose_max", "modes"}
     ab_params = {k: v for k, v in raw.items()
                  if k not in _structured and not k.startswith("_")}
 
@@ -127,6 +128,7 @@ def _compile_ability(raw: dict[str, Any]) -> AbilityDef:
         is_optional=is_optional,
         target_filter=target_filter,
         choose=choose,
+        choose_max=choose_max,
         modes=modes,
         params=ab_params,
     )

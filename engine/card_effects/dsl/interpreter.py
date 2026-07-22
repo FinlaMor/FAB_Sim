@@ -63,21 +63,36 @@ def _run_ability(ability, card, event, state) -> None:
     # MODAL abilities ("Choose N"): the controller picks modes, each of which
     # is a compiled EffectDef. Non-modal abilities run their effects in order.
     if getattr(ability, 'modes', None):
-        from engine.card_effects.ability_keywords import _ask_player, _controller_id
-        n_choices = ability.choose or 1
+        from engine.card_effects.ability_keywords import _ask_player, _controller_id, STOP
         cid = _controller_id(card)
+        # `choose` is the minimum number of modes; `choose_max` (if > choose)
+        # allows more, up to that many, for "choose 1 or both". Once the minimum
+        # is met, a STOP sentinel is offered so the player can pick fewer than
+        # the max.
+        n_min = ability.choose or 1
+        n_max = ability.choose_max if ability.choose_max and ability.choose_max > n_min else n_min
         remaining = list(range(len(ability.modes)))
         chosen = []
-        for _ in range(min(n_choices, len(remaining))):
+        while remaining and len(chosen) < min(n_max, len(ability.modes)):
             labels = [str(i) for i in remaining]
+            if len(chosen) >= n_min:
+                labels = labels + [STOP]
             pick = _ask_player(state, cid, labels, context="Choose a mode")
+            if pick == STOP:
+                break
             idx = (int(pick) if isinstance(pick, str) and pick.isdigit()
                    and int(pick) in remaining else remaining[0])
             chosen.append(idx)
             remaining.remove(idx)
         for idx in chosen:
             mode = ability.modes[idx]
-            if mode.fn is not None:
+            if mode.fn is None:
+                continue
+            # Honour a mode's own conditions (e.g. "+3 to a DAGGER attack") —
+            # the loader pops them onto the EffectDef, and unlike the regular
+            # effects loop they must be checked here explicitly.
+            if all(c.fn is None or c.fn(card, event, state)
+                   for c in getattr(mode, 'conditions', [])):
                 _track_effect(card, mode.effect_type)
                 mode.fn(card, event, state)
 
