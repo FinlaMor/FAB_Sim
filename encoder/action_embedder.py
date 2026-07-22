@@ -584,8 +584,10 @@ class ActionEmbedder(nn.Module):
             pitch_emb = torch.zeros(self.d_model)
         features.append(pitch_emb)
         
-        # 6. From arsenal flag (1-dim binary)
-        features.append(torch.tensor([float(action.from_arsenal)]))
+        # 6. From arsenal flag (1-dim binary). Coerce None → False: some
+        # action-generation paths leave from_arsenal unset (None) rather than
+        # its dataclass default, and float(None) raises.
+        features.append(torch.tensor([float(bool(action.from_arsenal))]))
         
         # 7. Slot (4-dim one-hot → 32-dim projection, zero if no slot)
         if action.slot is not None:

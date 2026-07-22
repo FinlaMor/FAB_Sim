@@ -127,7 +127,10 @@ class RandomEmbedderRecorderAgent:
 
     @staticmethod
     def _is_sink_below_defense_reaction(action: Action) -> bool:
-        if action.type != ActionType.PLAY_DEFENSE_REACTION:
+        # Defense reactions are no longer a distinct ActionType; the engine now
+        # plays them as PLAY_CARD during the defend/reaction step. Identify Sink
+        # Below by slug so the anti-loop guard below still fires.
+        if action.type != ActionType.PLAY_CARD:
             return False
         slug = _card_slug(action.card) or ""
         return slug.startswith("sink_below")
