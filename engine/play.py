@@ -452,8 +452,15 @@ def recalculate_playable(state, player_id):
             card.playable = True
 
     # Cards granted temporary play-from-banished (e.g. trap_door's trap).
-    # Identity comparison: the grant applies to that exact card object.
-    _banish_playable = [c for c in player.banished.cards
+    # Identity comparison: the grant applies to that exact card object. The
+    # grant may point at a card in ANOTHER player's banished zone — Infiltrate
+    # banishes the top of the opponent's deck and lets YOU play it — so scan
+    # every banished zone, not just this player's.
+    _all_banished = list(player.banished.cards)
+    for _other in state.players.values():
+        if _other is not player:
+            _all_banished += list(_other.banished.cards)
+    _banish_playable = [c for c in _all_banished
                         if any(c is g for g in player.playable_from_banished)
                         and c.raw_cost is not None]
     for card in _banish_playable:

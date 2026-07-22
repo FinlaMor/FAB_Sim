@@ -1246,6 +1246,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             controller.hand.add(target)
         return _fn
 
+    if etype == "BANISH_OPP_TOP_GRANT_PLAY":
+        # Infiltrate: "banish the top card of their deck. You may play it until
+        # the end of your next turn." The banished card is the opponent's; the
+        # attacker (this card's controller) may play it from banish. The exact
+        # two-turn deadline is approximated by the start-of-turn clear of
+        # playable_from_banished.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import banish as _banish
+            cid = _controller_id(card)
+            opp = state.players[3 - cid]
+            if not opp.deck.cards:
+                return
+            top = opp.deck.cards[0]
+            _banish(state, top, cid, origin_zone="deck")
+            if top in opp.banished.cards:
+                state.players[cid].playable_from_banished.append(top)
+        return _fn
+
     if etype == "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE":
         # Under the Trap-Door: "Banish target trap from your graveyard. If you do,
         # you may play it this turn, and if it would be put into the graveyard

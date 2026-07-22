@@ -4,7 +4,10 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
-      "effects": [{"type": "BANISH", "from_zone": "TOP_DECK", "player": "OPPONENT", "amount": 1}]
+      "_comment": "Stealth. When this hits a hero, banish the top card of their deck. You may play it (from banish) until the end of your next turn. Previously only banished; the play-grant was absent.",
+      "effects": [
+        {"type": "BANISH_OPP_TOP_GRANT_PLAY"}
+      ]
     }
   ]
 }

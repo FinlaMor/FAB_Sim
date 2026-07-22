@@ -1865,3 +1865,30 @@ def test_under_the_trap_door_grants_play_and_graveyard_to_banish_rider():
     _to_graveyard(st.players[1], trap, is_public=True)
     assert trap in st.players[1].banished.cards, "graveyard→banish rider redirects it"
     assert trap not in st.players[1].graveyard.cards
+
+
+def test_infiltrate_banishes_opponent_top_and_lets_you_play_it():
+    """Text: "When this hits a hero, banish the top card of their deck. You may
+    play it until the end of your next turn." Previously only banished; the
+    cross-player play-grant was absent. Found by the semantic audit."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.play import recalculate_playable
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    inf = _card("infiltrate_red", 1)
+    top = _card("mocking_blow_red", 2)   # the opponent's top card
+    st.players[2].deck.add(top)
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            attack_card=inf, keywords=[])
+    dispatch(st, "ON_HIT", "infiltrate_red", card=inf, event=None)
+
+    assert top in st.players[2].banished.cards, "opponent's top card is banished"
+    assert any(top is g for g in st.players[1].playable_from_banished), \
+        "attacker is granted play of it"
+
+    # and it is actually offered as playable to the attacker (cross-zone)
+    st.combat = None
+    recalculate_playable(st, 1)
+    assert top.playable is True, "the opponent's banished card is playable by you"
