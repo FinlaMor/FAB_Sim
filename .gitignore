@@ -58,6 +58,7 @@ card_data/ability_analysis_output.txt
 debug.txt
 dml_warnings.txt
 complexity_assessment.json
+tests_cov.json
 decks/generated/
 
 # --- Local analysis reports ---

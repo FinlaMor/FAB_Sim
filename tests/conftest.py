@@ -10,6 +10,37 @@ from engine.card import Card
 from engine.state import CombatState, GameState, Player, Step, Zone
 
 
+# ---------------------------------------------------------------------------
+# Opt-in DSL execution-coverage capture during the test run
+# ---------------------------------------------------------------------------
+# scripts/dsl_coverage.py plays random games and flags any authored effect that
+# never fired. On its own that is a *weak* signal: an effect a unit test drives
+# but no random game happens to reach reads as "never executed". Set
+# FAB_DSL_COVERAGE_OUT=<path> to record every (slug, effect_type) the *test
+# suite* executes into that JSON file; `dsl_coverage.py --merge-tests <path>`
+# then folds it in, so only genuinely-dead effects remain flagged.
+#
+# Disabled unless the env var is set — no overhead on a normal run.
+
+def pytest_sessionstart(session):
+    out = os.environ.get("FAB_DSL_COVERAGE_OUT")
+    if not out:
+        return
+    from engine.card_effects.dsl import coverage
+    coverage.start()
+
+
+def pytest_sessionfinish(session, exitstatus):
+    out = os.environ.get("FAB_DSL_COVERAGE_OUT")
+    if not out:
+        return
+    from engine.card_effects.dsl import coverage
+    tracker = coverage.stop()
+    effects = sorted(tracker.effects) if tracker else []
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump({"effects": effects}, f, indent=2)
+
+
 @pytest.fixture(autouse=True, scope="module")
 def _restore_dsl_registry():
     """Keep the full DSL card registry loaded around each test module.

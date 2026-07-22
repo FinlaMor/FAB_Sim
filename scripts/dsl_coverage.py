@@ -10,10 +10,21 @@ Anything authored-but-never-executed is one of: a dead trigger, an unreachable
 condition, or simply a line the random agents never happened to take. The
 report separates the cases it can distinguish; the rest needs a human.
 
+The random agents only reach a fraction of what a card can do, so an effect a
+unit test exercises but no random game happens to hit reads as "never executed"
+here — a false alarm. To fold in what the *test suite* runs, capture it first:
+
+    FAB_DSL_COVERAGE_OUT=tests_cov.json pytest -q -p no:randomly
+    python scripts/dsl_coverage.py --merge-tests tests_cov.json
+
+Anything still flagged after the merge is genuinely-dead: no game and no test
+executes it.
+
 Usage:
   python scripts/dsl_coverage.py                    # all deck pairs, 5 seeds
   python scripts/dsl_coverage.py --seeds 25         # more games, better coverage
   python scripts/dsl_coverage.py --json out.json    # machine-readable
+  python scripts/dsl_coverage.py --merge-tests f    # + count test-suite executions
 """
 from __future__ import annotations
 
@@ -152,6 +163,8 @@ def main() -> int:
     ap.add_argument("--seeds", type=int, default=5, help="games per deck pair")
     ap.add_argument("--max-turns", type=int, default=60)
     ap.add_argument("--json", dest="json_out", help="write machine-readable report here")
+    ap.add_argument("--merge-tests", dest="merge_tests",
+                    help="also count effects executed in a FAB_DSL_COVERAGE_OUT run")
     args = ap.parse_args()
 
     load_all_cards()
@@ -167,6 +180,16 @@ def main() -> int:
     executed: dict[str, set[str]] = {}
     for slug, etype in tracker.effects:
         executed.setdefault(slug, set()).add(etype)
+
+    merged_from_tests = 0
+    if args.merge_tests:
+        data = json.loads(Path(args.merge_tests).read_text(encoding="utf-8"))
+        for slug, etype in data.get("effects", []):
+            if etype not in executed.get(slug, set()):
+                merged_from_tests += 1
+            executed.setdefault(slug, set()).add(etype)
+        print(f"merged {merged_from_tests} new (card, effect) pairs from "
+              f"{args.merge_tests}", file=sys.stderr)
 
     # A card no deck can draw is untested-by-corpus, not dead. Keep the two apart.
     index = json.loads((ROOT / "card_data" / "slug_index.json").read_text(encoding="utf-8"))
