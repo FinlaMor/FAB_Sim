@@ -68,9 +68,13 @@ class HeuristicBot:
         attack_actions: list[Action] = []
 
         for a in actions:
-            if a.type == ActionType.ATTACK_WEAPON:
+            # Weapon (and ally) attacks route through ACTIVATE_CARD with
+            # is_attack_proxy=True. Card and arsenal attacks are PLAY_CARD
+            # (from_arsenal distinguishes the zone but both are attacks here);
+            # the old ATTACK_WEAPON / PLAY_ARSENAL action types are gone.
+            if a.type == ActionType.ACTIVATE_CARD and getattr(a, "is_attack_proxy", False):
                 attack_actions.append(a)
-            elif a.type in (ActionType.PLAY_CARD, ActionType.PLAY_ARSENAL):
+            elif a.type == ActionType.PLAY_CARD:
                 card = a.card
                 if card and card.is_attack and (card.power or 0) > 0:
                     attack_actions.append(a)
@@ -153,20 +157,19 @@ class HeuristicBot:
     # ------------------------------------------------------------------
 
     def _pick_reaction_phase(self, state: GameState, actions: list[Action]) -> Optional[Action]:
-        # Attack reactions: pick highest power boost
-        attack_reactions = [
+        # Attack and defense reactions are no longer distinct action types; both
+        # are PLAY_CARD in the reaction window (the old PLAY_ATTACK_REACTION /
+        # PLAY_DEFENSE_REACTION types are gone). Whether we're attacking or
+        # defending, greedily play the reaction that adds the most — rank by
+        # power first (attacker's pump), then defense (defender's block).
+        reaction_plays = [
             a for a in actions
-            if a.type == ActionType.PLAY_ATTACK_REACTION and a.card
+            if a.type == ActionType.PLAY_CARD and a.card
         ]
-        if attack_reactions:
-            return max(attack_reactions, key=lambda a: a.card.power or 0)
-
-        # Defense reactions: pick highest defense
-        defense_reactions = [
-            a for a in actions
-            if a.type == ActionType.PLAY_DEFENSE_REACTION and a.card
-        ]
-        if defense_reactions:
-            return max(defense_reactions, key=lambda a: a.card.defense or 0)
+        if reaction_plays:
+            return max(
+                reaction_plays,
+                key=lambda a: ((a.card.power or 0), (a.card.defense or 0)),
+            )
 
         return None  # fallback will pick REACTION_PASS
