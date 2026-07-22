@@ -3,8 +3,18 @@
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",
-      "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "go_again"}],
-      "effects": [{"type": "MARK"}]
+      "conditions": [
+        {
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "go again"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MARK"
+        }
+      ],
+      "_comment": "When this defends an attack with go again, mark the attacking hero."
     }
   ]
 }

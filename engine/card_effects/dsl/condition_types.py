@@ -389,11 +389,17 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _ctt
 
     if ctype == "ATTACK_HAS_KEYWORD":
-        kw = params.get("keyword", "").lower()
+        # Normalise separators so "go_again", "go again" and "Go Again" all
+        # match — combat.keywords stores the title-cased form ("Go Again") while
+        # JSON often writes the snake_case token. Lair of the Spider never fired
+        # because "go_again" != "go again" under a plain lower() comparison.
+        def _norm(k):
+            return k.lower().replace("_", "").replace(" ", "")
+        kw = _norm(params.get("keyword", ""))
         def _ahk(c, e, s, _kw=kw):
             if not s.combat:
                 return False
-            return _kw in [k.lower() for k in (s.combat.keywords or [])]
+            return _kw in [_norm(k) for k in (s.combat.keywords or [])]
         return _ahk
 
     # ── boolean combinators ────────────────────────────────────────────────

@@ -868,6 +868,10 @@ def _end_phase_iter(state: GameState) -> None:
     # Unused "next attack this turn" power mods (MODIFY_NEXT_ATTACK) expire.
     if hasattr(player, 'dsl_queued_attack_mods'):
         player.dsl_queued_attack_mods = []
+    # "this turn" DSL continuous effects (APPLY_CONTINUOUS, e.g. Night's Embrace).
+    if getattr(player, 'dsl_continuous_effects', None):
+        player.dsl_continuous_effects = [
+            ce for ce in player.dsl_continuous_effects if ce.get('span') != 'THIS_TURN']
     state.effect_manager.clear_turn_effects()  # CR 4.4.4 / CR 6.2.2a: remove end_of_turn ContinuousEffects
     state.continuous_effect_manager.clear_transient()  # CR 6.3: remove non-persistent staged effects
     state.continuous_effect_manager.clear_cost_modifiers(state.active_player)  # CR 5.1.6a: turn-scoped cost effects
@@ -1459,6 +1463,33 @@ def _recalculate_attack_power(state: GameState) -> None:
             power = (power or 0) * amount
         else:  # add
             power = (power or 0) + amount
+
+    # DSL continuous effects (APPLY_CONTINUOUS, e.g. Night's Embrace: "your
+    # attacks with stealth get +1{p} this turn"). Applied to the attacker's own
+    # attacks that match the effect's filter. Registered on the player and
+    # cleared at end of turn.
+    attacker = state.players.get(combat.attacker_id)
+    for ce in (getattr(attacker, "dsl_continuous_effects", None) or []):
+        if ce.get("target") != "PLAYER_ATTACKS":
+            continue
+        filt = ce.get("filter")
+        if filt is not None:
+            from engine.card_effects.dsl.condition_types import compile_condition
+            fn = compile_condition(filt.get("type", "none"),
+                                   {k: v for k, v in filt.items() if k != "type"})
+            if fn is not None and not fn(card, None, state):
+                continue
+        for m in ce.get("modifications", []):
+            if m.get("type") != "MODIFY_ATTACK":
+                continue
+            mod, amt = m.get("mod", "add"), m.get("amount", 0)
+            if mod == "set":
+                power = amt
+            elif mod == "multiply":
+                power = (power or 0) * amt
+            else:
+                power = (power or 0) + amt
+
     combat.attack_power = power
 
     # Fire the static ability event so CARD_STATIC_ABILITIES and

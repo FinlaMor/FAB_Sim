@@ -1926,3 +1926,94 @@ def test_tarantula_toxin_choose_one_or_both_modes():
     assert run(["0", "1"], "kiss_of_death_red", ["Stealth"]) == (8, 3)
     # mode 0 on a non-dagger attack → the +3 is gated off
     assert run(["0", "done"], "big_bully_red", ["Stealth"]) == (5, 6)
+
+
+# ---------------------------------------------------------------------------
+# Coverage-driven fixes: cards whose effects never executed in audit games.
+# Two were genuine dead bugs; two worked and only lacked a test.
+# ---------------------------------------------------------------------------
+
+def test_lair_of_the_spider_marks_attacker_with_go_again():
+    """BUG: the condition used the token "go_again" but combat stores "Go
+    Again", so this never fired in a real game. Now normalised."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    def marked_when(keywords):
+        st = _make_state(); st.card_db = DB
+        lair = _card("lair_of_the_spider_red", 2)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                                attack_card=_card("big_bully_red", 1), keywords=keywords)
+        dispatch(st, "ON_PLAY", "lair_of_the_spider_red", card=lair, event=None)
+        return st.players[1].class_counters.get("marked", 0)
+
+    assert marked_when(["Go Again"]) == 1, "defending a go-again attack marks the attacker"
+    assert marked_when([]) == 0, "no go again → no mark"
+
+
+def test_nights_embrace_continuous_buffs_only_stealth_attacks():
+    """BUG: APPLY_CONTINUOUS registered the effect but nothing read
+    dsl_continuous_effects, so it never applied. Now applied during recalc."""
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    from engine.engine import _recalculate_attack_power
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB; st.active_player = 1
+    dispatch(st, "ON_PLAY", "nights_embrace_blue", card=_card("nights_embrace_blue", 1), event=None)
+
+    def power(attack_slug, kw):
+        atk = _card(attack_slug, 1); atk.keywords = kw
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=0,
+                                base_attack_power=atk.base_power or 0,
+                                attack_card=atk, keywords=list(kw))
+        _recalculate_attack_power(st)
+        return atk.base_power, st.combat.attack_power
+
+    b, p = power("kiss_of_death_red", ["Stealth"])
+    assert p == b + 1, "attacks with stealth get +1{p}"
+    b, p = power("big_bully_red", [])
+    assert p == b, "attacks without stealth are unaffected"
+
+
+def test_booze_destroys_itself_at_start_of_turn():
+    """Verified-working card that only lacked coverage: "At the start of your
+    turn, destroy this." """
+    from engine.card_effects.dsl import dispatch
+    from engine.card_effects.dsl.loader import load_all_cards
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    booze = _card("booze_blue", 1)
+    st.players[1].permanents.add(booze)
+    dispatch(st, "START_OF_TURN", "booze_blue", card=booze, event=None)
+    assert booze not in st.players[1].permanents.cards, "booze destroys itself at start of turn"
+
+
+def test_arakni_funnel_web_stealth_attack_banishes_arsenal_on_hit():
+    """Verified-working card that only lacked coverage: the +3 to an Assassin
+    attack, and if it has stealth, an injected 'when this hits, banish a card
+    in their arsenal'."""
+    from engine.card_effects.dsl.loader import load_all_cards, get_card
+    from engine.card_effects.dsl.interpreter import run_ability
+    from engine.state import Event
+    load_all_cards()
+
+    st = _make_state(); st.card_db = DB
+    fw = _card("arakni_funnel_web", 1)
+    atk = _card("kiss_of_death_red", 1); atk.keywords = ["Stealth"]
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=4,
+                            base_attack_power=4, attack_card=atk, keywords=["Stealth"])
+    opp_ars = _card("big_bully_red", 2)
+    st.players[2].arsenal.add(opp_ars)
+
+    run_ability(get_card("arakni_funnel_web").abilities[0], fw, None, st)
+    assert st.combat.attack_power == 7, "target Assassin attack gets +3{p}"
+
+    ev = Event(type="ON_HIT", data={"damage": 7})
+    for td in list(getattr(st.combat, "injected_triggers", [])):
+        if td.event_type == "ON_HIT" and (td.condition_fn is None or td.condition_fn(atk, ev, st)):
+            td.effect_fn(atk, ev, st)
+    assert opp_ars in st.players[2].banished.cards, \
+        "a stealth-buffed attack banishes a card from their arsenal on hit"
