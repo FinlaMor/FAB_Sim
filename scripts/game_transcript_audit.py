@@ -32,7 +32,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 REAL_CARD_ZONES = ("hand", "graveyard", "pitch", "arsenal", "banished",
-                   "permanents", "items", "auras", "allies")
+                   "permanents", "items", "auras", "allies", "inventory")
 EQUIP_SLOTS = ("head", "chest", "arms", "legs", "weapon1", "weapon2")
 
 
@@ -61,6 +61,10 @@ def load_token_slugs() -> set[str]:
         blob = (e.get("typeText") or "") + " " + " ".join(e.get("types") or [])
         if "token" in blob.lower():
             toks.add(slug)
+    # 'reviled' has a json/tokens entry but the engine seeds it as a normal card
+    # in each player's inventory (3 per player) that moves through graveyard/deck
+    # like any other card — count it as real so it stays conserved.
+    toks.discard("reviled")
     return toks
 
 
@@ -119,10 +123,16 @@ def audit_game(path):
                 findings.append((turn, f"p{pid} life {pl['life']}<=0 but game not done"))
 
         t = real_total(snap)
-        if opening_total is None:
-            opening_total = max_total = min_total = t
+        if max_total is None:
+            max_total = min_total = t
         max_total = max(max_total, t)
         min_total = min(min_total, t)
+
+    # Baseline conservation off the game_start snapshot (after setup, all zones
+    # populated). The very first record can be the pre-setup "who goes first?"
+    # decision, whose inventory is not yet seeded — using it would understate the
+    # opening count by the starting Reviled inventory.
+    opening_total = real_total(start_snap) if start_snap else max_total
 
     if start_snap:
         for pid, pl in start_snap["players"].items():

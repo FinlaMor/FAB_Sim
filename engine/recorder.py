@@ -161,6 +161,9 @@ def snapshot_state(state: "GameState") -> dict:
             "intellect": getattr(p, "intellect", None),
             "hand": zone_slugs(p.hand),
             "deck_count": len(p.deck.cards),
+            # Reviled placeholders start here (CR 4.1.6); recording it lets a
+            # conservation audit track cards that begin outside deck/hand.
+            "inventory": zone_slugs(p.inventory),
             "graveyard": zone_slugs(p.graveyard),
             "pitch": zone_slugs(p.pitch),
             "arsenal": zone_slugs(p.arsenal),

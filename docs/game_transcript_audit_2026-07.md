@@ -125,15 +125,29 @@ restore it when the combat chain closes. Test:
 
 The auditor's conservation check also over-reported: it flagged transient
 mid-game peaks (a card briefly counted in two zones during a multi-event window)
-as "card created." It now flags only rises that persist to game end. After both
-fixes, a fresh 120-game random batch shows **1** persistent +1 (a hidden-deck
-card in a single game) — down from the original class of 4 cards across many
-games — left as a documented, much-reduced follow-up.
+as "card created." It now flags only rises that persist to game end.
 
-### Auditor false positive fixed — `reviled` token
+### The last "persistent +1" was a `reviled` accounting gap — resolved
 
-The conservation check first reported ~64 random-game "card created" flags, 50 of
-them the `reviled` token, whose `slug_index` entry has no type metadata so the
-typeText heuristic missed it. `scripts/game_transcript_audit.py` now treats every
-`engine/card_effects/json/tokens/*.json` stem as a token (authoritative), which
-removed those false positives.
+One case survived: a persistent +1 in a hidden deck. Per-event instrumentation
+of that game showed the **live game state is perfectly conserved** — no card is
+created. The +1 was a `reviled` placeholder: `_populate_reviled_inventory` seeds
+each player 3 Reviled cards *in inventory* as normal (non-token) cards, but
+`reviled.json` lives under `json/tokens/`, so the auditor excluded it from
+visible zones while still counting it via the hidden `deck_count` — so a Reviled
+moving inventory -> deck read as a created card. Two auditor fixes make it exact:
+1. `engine/recorder.py` snapshots now include the `inventory` zone.
+2. `scripts/game_transcript_audit.py` counts `inventory`, treats `reviled` as the
+   real card the engine models, and baselines conservation off the `game_start`
+   snapshot (the first record can be the pre-setup "who goes first?" decision,
+   before inventory is seeded).
+
+Result: **0 violations across a fresh 240-game batch** (120 random + 120
+heuristic) — life/winner integrity, arsenal, resources, and card conservation all
+hold.
+
+### Earlier auditor false positive — `reviled` mis-typed
+
+An earlier pass had ~64 "card created" flags, 50 of them `reviled`, whose
+`slug_index` entry has no type metadata so the typeText heuristic missed it; the
+auditor now treats every `json/tokens/*.json` stem as a token (authoritative).
