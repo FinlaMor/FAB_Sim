@@ -690,6 +690,54 @@ STRUCTURAL_RULES = """
 === END RULES ==="""
 
 
+# Real, verified-passing tests (each confirmed under the gate's own harness),
+# keyed by ability_type. Injected into the test prompt so the auditor copies a
+# working pattern for THIS card's kind of ability — correct trigger event, real
+# attribute names, real zones — instead of guessing.
+GOLD_TESTS = {
+    "ACTIVATE": '''def test_blossom_of_spring_activate():
+    # "Action - Destroy this: Gain {r}. Go again" — activated ability fires on ON_ACTIVATE
+    st = _make_state(); st.card_db = DB
+    card = _card("blossom_of_spring")
+    st.players[1].chest.add(card)
+    before = st.players[1].resources
+    dispatch(st, "ON_ACTIVATE", "blossom_of_spring", card=card, event=None)
+    assert st.players[1].resources == before + 1''',
+    "PLAY": '''def test_vigorous_windup_blue_play():
+    # A play ability fires on ON_PLAY; assert the observable result (here a token in play)
+    st = _make_state(); st.card_db = DB
+    card = _card("vigorous_windup_blue")
+    st.players[1].permanents.add(card)
+    n0 = len(st.players[1].permanents.cards)
+    dispatch(st, "ON_PLAY", "vigorous_windup_blue", card=card, event=None)
+    assert len(st.players[1].permanents.cards) >= n0''',
+    "TRIGGERED": '''def test_crown_of_dominion_on_equip():
+    # "When you equip this, create a Gold token" — a TRIGGERED ability fires on its trigger
+    st = _make_state(); st.card_db = DB
+    card = _card("crown_of_dominion")
+    st.players[1].head.add(card)
+    dispatch(st, "ON_EQUIP", "crown_of_dominion", card=card, event=None)
+    assert any(c.slug == "gold" for c in st.players[1].permanents.cards)''',
+}
+
+_GOLD_BY_ABILITY = {
+    "ACTIVATE": "ACTIVATE", "ACTION": "ACTIVATE",
+    "PLAY": "PLAY", "INSTANT": "PLAY",
+    "ATTACK_REACTION": "PLAY", "DEFENSE_REACTION": "PLAY",
+    "TRIGGERED": "TRIGGERED", "STATIC_TRIGGERED": "TRIGGERED",
+    "STATIC": "TRIGGERED", "WHILE_STATIC": "TRIGGERED", "MODAL": "PLAY",
+}
+
+
+def _gold_test_for(json_content: str) -> str:
+    """Pick the verified gold test whose ability_type matches the generated card."""
+    try:
+        at = (json.loads(json_content).get("abilities") or [{}])[0].get("ability_type", "")
+    except Exception:
+        at = ""
+    return GOLD_TESTS[_GOLD_BY_ABILITY.get(at, "TRIGGERED")]
+
+
 def build_implementation_prompt(card: dict, dsl_ref: str, queue: list[dict] | None = None,
                                 embed_model: str = "qwen3-embedding:4b") -> str:
     card_block = json.dumps({k: v for k, v in card.items() if k != "status"}, indent=2, ensure_ascii=False)
@@ -716,6 +764,7 @@ Output the JSON now:
 
 
 def build_test_prompt(card: dict, json_content: str) -> str:
+    gold = _gold_test_for(json_content)
     return f"""\
 You are writing pytest unit tests for a Flesh and Blood card simulator.
 
@@ -728,39 +777,15 @@ The card being tested is:
 The JSON effect definition is:
 {json_content}
 
-Write 1-3 pytest test functions that verify this card's effects. Follow this
-WORKING pattern EXACTLY — it uses the real engine API. Do NOT invent a mock state
-dict; build a real GameState with _make_state() and dispatch with the real
-signature `dispatch(state, EVENT_TYPE, slug, card=<card>, event=None)`.
+Below is a REAL, PASSING test for another card of the SAME kind of ability.
+Write your test(s) the same way, adapted to {card["slug"]}: build a real state
+with _make_state(), dispatch with the real signature
+`dispatch(state, EVENT_TYPE, slug, card=<card>, event=None)`, and assert an
+OBSERVABLE outcome. Do NOT invent a mock state dict. The harness already
+provides _make_state, _card, DB, dispatch, get_card — do NOT redefine them.
 
-```python
-import copy, sys
-from pathlib import Path
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
-from engine.card import CardDB
-from engine.card_effects.dsl import dispatch
-from engine.card_effects.dsl.loader import load_all_cards
-from tests.conftest import _make_state
-
-load_all_cards()
-DB = CardDB()
-
-def _card(slug, owner=1):
-    c = copy.deepcopy(DB.get(slug)); c.owner = c.controller = owner
-    return c
-
-def test_{card["slug"]}_example():
-    st = _make_state(); st.card_db = DB
-    card = _card("{card["slug"]}")
-    # Put the card where it lives (arms/chest/weapon1 for equipment; arena/hand as needed),
-    # set up any preconditions, then fire the ability's trigger:
-    st.players[1].arms.add(card)
-    dispatch(st, "ON_HIT", "{card["slug"]}", card=card, event=None)
-    # Assert an OBSERVABLE GameState change (life, zone contents, counters) — the
-    # project asserts outcomes, never internal queues/flags:
-    assert st.players[2].health <= 40
-```
+REAL PASSING EXAMPLE (same ability_type):
+{gold}
 
 RULES:
 1. Every test name starts with `test_{card["slug"]}_`.
