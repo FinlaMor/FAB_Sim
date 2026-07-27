@@ -30,6 +30,7 @@ import sys
 import tempfile
 import textwrap
 import urllib.request
+import urllib.error
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -39,6 +40,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CLAW_DIR = Path(os.environ.get("CLAW_DIR", str(Path(__file__).resolve().parent.parent.parent / "claw-code")))
 CLAW_ENTRY = CLAW_DIR / "src" / "launch_claw.py"
+
+# LLM backend config (set in main()). BACKEND selects how prompts are run:
+#   "openai" -> POST to an OpenAI-compatible /chat/completions endpoint (llama.cpp
+#               llama-server, Ollama, LM Studio, etc.), model chosen per role.
+#   "claw"   -> shell out to claw-code (legacy).
+BACKEND = "openai"
+BASE_URL = os.environ.get("FAB_LLM_BASE_URL", "http://localhost:11434/v1")
+LLM_TIMEOUT = int(os.environ.get("FAB_LLM_TIMEOUT", "600"))
 
 SET_CODE = "wtr"
 WTR_DIR = ROOT / "engine" / "card_effects" / "json" / "wtr"
@@ -585,7 +594,7 @@ def run_verification_pass(card: dict, json_content: str, dsl_ref: str,
     """Run a second claw-code call to validate and optionally correct the JSON.
     Returns the final JSON string to write (may be same as input or corrected)."""
     prompt = build_verification_prompt(card, json_content, dsl_ref)
-    output = run_claw(prompt, verbose=verbose, model=model)
+    output = run_llm(prompt, verbose=verbose, model=model)
 
     if output in ("CLAW_TIMEOUT",) or output.startswith("CLAW_ERROR"):
         print(f"  [verify] claw-code failed, keeping original")
@@ -698,6 +707,62 @@ Output the test functions now:
 # ---------------------------------------------------------------------------
 # claw-code runner
 # ---------------------------------------------------------------------------
+
+def run_openai_chat(prompt: str, model: str, verbose: bool = False,
+                    retries: int = 2, temperature: float = 0.1) -> str:
+    """Run a prompt against an OpenAI-compatible /chat/completions endpoint.
+
+    Works with any server that speaks the OpenAI chat API — a standalone
+    llama.cpp llama-server, Ollama, LM Studio, etc. Returns the assistant text,
+    or a CLAW_TIMEOUT / CLAW_ERROR sentinel (shared with run_claw so the existing
+    output parsers handle failures identically).
+    """
+    url = BASE_URL.rstrip("/") + "/chat/completions"
+    body = json.dumps({
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": temperature,
+        "stream": False,
+    }).encode("utf-8")
+    last_error = ""
+    for attempt in range(1, retries + 2):
+        try:
+            if verbose:
+                print(f"  [llm] attempt {attempt} model={model} -> {url}", file=sys.stderr)
+            req = urllib.request.Request(
+                url, data=body,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=LLM_TIMEOUT) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            return data["choices"][0]["message"]["content"]
+        except urllib.error.URLError as e:
+            last_error = str(getattr(e, "reason", e))
+            if hasattr(e, "code") and getattr(e, "code", None):  # HTTP error, no point retrying fast-fail 4xx
+                last_error = f"HTTP {e.code}: {last_error}"
+            print(f"  [llm ERROR] attempt {attempt}: {last_error}", file=sys.stderr)
+            if attempt <= retries:
+                continue
+            return f"CLAW_ERROR: {last_error}"
+        except (KeyError, IndexError, ValueError) as e:
+            return f"CLAW_ERROR: malformed response: {e}"
+        except Exception as e:  # includes socket.timeout
+            print(f"  [llm ERROR] attempt {attempt}: {e}", file=sys.stderr)
+            if attempt <= retries:
+                continue
+            return f"CLAW_ERROR: {e}"
+    return f"CLAW_ERROR: all attempts failed ({last_error})"
+
+
+def run_llm(prompt: str, verbose: bool = False, model: str | None = None) -> str:
+    """Dispatch a prompt to the configured backend (openai endpoint or claw-code)."""
+    if BACKEND == "openai":
+        if not model:
+            return "CLAW_ERROR: openai backend requires an explicit model"
+        return run_openai_chat(prompt, model=model, verbose=verbose)
+    return run_claw(prompt, verbose=verbose, model=model)
+
 
 def run_claw(prompt: str, verbose: bool = False, retries: int = 2,
              model: str | None = None) -> str:
@@ -901,6 +966,7 @@ def save_queue(queue: list[dict]) -> None:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    global BACKEND, BASE_URL, SET_CODE, WTR_DIR, QUEUE_PATH, REVIEW_DIR, TEST_OUTPUT
     parser = argparse.ArgumentParser(description="Batch-generate WTR JSON effect files via claw-code.")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print first 3 prompts without calling claw-code.")
@@ -918,18 +984,40 @@ def main() -> None:
                         help="Skip the verification pass after implementation.")
     parser.add_argument("--debug", action="store_true",
                         help="Print raw claw-code output for every card.")
+    parser.add_argument("--backend", choices=["openai", "claw"], default="openai",
+                        help="LLM backend: 'openai' = OpenAI-compatible /chat/completions "
+                             "endpoint (llama.cpp/Ollama/LM Studio); 'claw' = claw-code. Default: openai.")
+    parser.add_argument("--base-url", default=BASE_URL, dest="base_url",
+                        help=f"OpenAI-compatible API base URL (default: {BASE_URL}).")
     parser.add_argument("--model", default=None,
-                        help="Ollama model for implementation (e.g. qwen3-coder:30b).")
-    parser.add_argument("--verify-model", default=None, dest="verify_model",
-                        help="Ollama model for verification pass (e.g. fab-rules-ft:latest).")
+                        help="IMPLEMENTER model — writes the card JSON (e.g. fab-cards-ft:latest, qwen3-coder:30b).")
+    parser.add_argument("--verify-model", "--audit-model", default=None, dest="verify_model",
+                        help="AUDITOR model — verifies the JSON AND writes the test. MUST differ from "
+                             "--model (e.g. fab-rules-ft:latest).")
     parser.add_argument("--embed-model", default="qwen3-embedding:4b", dest="embed_model",
                         help="Ollama embedding model for dynamic example selection (default: qwen3-embedding:4b).")
     parser.add_argument("--set", default="wtr", dest="set_code",
                         help="Set code to process (e.g. wtr, arc, cru). Default: wtr.")
     args = parser.parse_args()
 
+    # Configure LLM backend
+    BACKEND = args.backend
+    BASE_URL = args.base_url
+    if BACKEND == "openai":
+        # Runnable defaults that honour the implementer/auditor split; override freely.
+        if not args.model:
+            args.model = "fab-cards-ft:latest"
+            print(f"[cfg] no --model given; implementer defaults to {args.model}")
+        if not args.verify_model:
+            args.verify_model = "fab-rules-ft:latest"
+            print(f"[cfg] no --audit-model given; auditor defaults to {args.verify_model}")
+        if args.verify_model == args.model:
+            print(f"[cfg] WARNING: auditor model == implementer model ({args.model}); "
+                  f"the design wants them separate so the auditor is an independent check.")
+        print(f"[cfg] backend=openai base_url={BASE_URL}")
+        print(f"[cfg] implementer={args.model}  auditor={args.verify_model}")
+
     # Remap paths based on --set
-    global SET_CODE, WTR_DIR, QUEUE_PATH, REVIEW_DIR, TEST_OUTPUT
     SET_CODE = args.set_code.lower()
     WTR_DIR = ROOT / "engine" / "card_effects" / "json" / SET_CODE
     QUEUE_PATH = WTR_DIR / f"{SET_CODE}_work_queue.json"
@@ -986,9 +1074,9 @@ def main() -> None:
             processed += 1
             continue
 
-        # Run implementation
-        print(f"  [impl] calling claw-code... (prompt {len(impl_prompt)} chars)")
-        impl_output = run_claw(impl_prompt, verbose=args.verbose, model=args.model)
+        # Run implementation (implementer model)
+        print(f"  [impl] generating via {BACKEND} model={args.model or 'default'}... (prompt {len(impl_prompt)} chars)")
+        impl_output = run_llm(impl_prompt, verbose=args.verbose, model=args.model)
         status, json_content = process_impl_output(slug, impl_output, debug=args.debug)
 
         # Run verification pass to catch structural errors
@@ -1006,11 +1094,14 @@ def main() -> None:
 
         print(f"  [{status.upper()}] {slug}")
 
-        # Run test generation if implementation succeeded
+        # Run test generation if implementation succeeded. The AUDITOR model
+        # writes the test (kept separate from the implementer per design), so
+        # the test is an independent check rather than the author grading itself.
         if status == "done" and not args.skip_tests:
-            print("  [test] calling claw-code for tests...")
+            audit_model = args.verify_model or args.model
+            print(f"  [test] auditor ({audit_model or 'default'}) writing test...")
             test_prompt = build_test_prompt(card, json_content)
-            test_output = run_claw(test_prompt, verbose=args.verbose, model=args.model)
+            test_output = run_llm(test_prompt, verbose=args.verbose, model=audit_model)
             process_test_output(slug, test_output)
 
         processed += 1
