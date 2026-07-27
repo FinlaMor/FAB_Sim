@@ -265,6 +265,38 @@ class ReplayDB:
             })
         return result
 
+    def load_life_potentials(self, game_ids: list[int]) -> dict[int, float]:
+        """Map transition_id -> potential Phi = (my_life - opp_life) from stored obs.
+
+        Used for potential-based reward shaping (Ng et al. 1999). Life is recorded
+        from the acting player's perspective at collection time. Transitions whose
+        obs predates the my_life/opp_life fields map to 0.0, so shaping degrades to
+        a no-op on old data rather than raising.
+        """
+        out: dict[int, float] = {}
+        if not game_ids:
+            return out
+        self.conn.execute("CREATE TEMP TABLE IF NOT EXISTS _pot_game_ids (game_id INTEGER PRIMARY KEY)")
+        self.conn.execute("DELETE FROM _pot_game_ids")
+        self.conn.executemany("INSERT OR IGNORE INTO _pot_game_ids VALUES (?)", [(g,) for g in game_ids])
+        rows = self.conn.execute(
+            "SELECT t.id AS id, t.obs AS obs FROM transitions t "
+            "JOIN _pot_game_ids g ON g.game_id = t.game_id"
+        )
+        for row in rows:
+            raw = row["obs"]
+            if not raw:
+                out[int(row["id"])] = 0.0
+                continue
+            try:
+                obs = json.loads(raw)
+                ml = obs.get("my_life")
+                ol = obs.get("opp_life")
+                out[int(row["id"])] = float(ml - ol) if ml is not None and ol is not None else 0.0
+            except (ValueError, TypeError):
+                out[int(row["id"])] = 0.0
+        return out
+
     def load_embeddings_bulk(
         self,
         game_ids: list[int],

@@ -110,6 +110,7 @@ def build_iql_tensors_from_replay_db(
     gamma: float = 0.99,
     filter_timeout: bool = False,
     normalize_rewards: bool = False,
+    shaping_scale: float = 0.025,
 ) -> dict:
     """Build IQL tensors from ReplayDB embeddings.
 
@@ -121,25 +122,32 @@ def build_iql_tensors_from_replay_db(
         reward_mode: ``'terminal'`` keeps only the final ±1 reward (sparse).
             ``'rtg'`` replaces each reward with discounted reward-to-go
             ``gamma^(steps_remaining) * outcome``, giving every transition a
-            non-zero training signal.
-        gamma: Discount factor used when ``reward_mode='rtg'``.
+            non-zero training signal. ``'shaped'`` keeps the terminal ±1 and adds
+            potential-based shaping ``gamma*Phi(s') - Phi(s)`` where
+            ``Phi = shaping_scale * (my_life - opp_life)`` (Ng et al. 1999 —
+            policy-invariant, so it densifies without changing the optimal policy).
+        gamma: Discount factor used when ``reward_mode='rtg'`` or ``'shaped'``.
         filter_timeout: If True, exclude games that ended on turn cap
             (``ended_on_turn_cap=1``). These games are often low-quality draws.
         normalize_rewards: If True, normalize rewards to zero mean and unit
-            variance after all other reward processing (RTG, etc.).
+            variance after all other reward processing (RTG, shaping, etc.).
+        shaping_scale: Multiplier on the life differential for ``reward_mode='shaped'``.
+            Default 1/40 keeps Phi within roughly [-1, 1] (starting life is ~40).
     """
     import numpy as np
 
     db = ReplayDB(db_path)
     try:
         # (P3-9) Fail-fast: validate reward_mode before loading any data
-        if reward_mode == "rtg" and not next_state_same_player:
+        if reward_mode in ("rtg", "shaped") and not next_state_same_player:
             raise ValueError(
-                "reward_mode='rtg' requires next_state_same_player=True. "
-                "Global trajectory mode mixes player perspectives, corrupting RTG signals."
+                f"reward_mode={reward_mode!r} requires next_state_same_player=True. "
+                "Global trajectory mode mixes player perspectives, corrupting the signal."
             )
-        if reward_mode not in ("terminal", "rtg"):
-            raise ValueError(f"Unknown reward_mode: {reward_mode!r}. Choose 'terminal' or 'rtg'.")
+        if reward_mode not in ("terminal", "rtg", "shaped"):
+            raise ValueError(
+                f"Unknown reward_mode: {reward_mode!r}. Choose 'terminal', 'rtg', or 'shaped'."
+            )
 
         selected_games = _resolve_game_ids(db_path, game_ids, filter_timeout=filter_timeout)
         if not selected_games:
@@ -230,6 +238,24 @@ def build_iql_tensors_from_replay_db(
             if nxt >= 0:
                 out_next_states[j] = raw_states[nxt]
             # else: stays as zeros (absorbing terminal)
+
+        if reward_mode == "shaped":
+            # Potential-based reward shaping (Ng et al. 1999): keep the terminal
+            # +/-1 and add gamma*Phi(s') - Phi(s), Phi = scale*(my_life-opp_life)
+            # from the acting player's perspective. Terminal s' is absorbing with
+            # Phi=0. Policy-invariant regardless of scale, so it densifies the
+            # signal without changing which policy is optimal.
+            transition_ids = bulk["transition_ids"]
+            pot_map = db.load_life_potentials(selected_games)
+            row_phi = np.array(
+                [shaping_scale * pot_map.get(int(tid), 0.0) for tid in transition_ids],
+                dtype=np.float32,
+            )
+            for j in range(n_out):
+                phi_s = row_phi[s_indices[j]]
+                nxt = s_next_indices[j]
+                phi_next = row_phi[nxt] if nxt >= 0 else 0.0
+                out_rewards[j] += gamma * phi_next - phi_s
 
         if reward_mode == "rtg":
             out_rewards = np.array(

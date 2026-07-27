@@ -131,9 +131,16 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--reward-mode",
         type=str,
-        choices=["terminal", "rtg"],
+        choices=["terminal", "rtg", "shaped"],
         default="terminal",
-        help="'terminal' = sparse ±1 at game end; 'rtg' = discounted reward-to-go for every transition",
+        help="'terminal' = sparse ±1 at game end; 'rtg' = discounted reward-to-go for every "
+             "transition; 'shaped' = terminal ±1 plus potential-based life-differential shaping",
+    )
+    parser.add_argument(
+        "--shaping-scale",
+        type=float,
+        default=0.025,
+        help="Life-differential multiplier for --reward-mode shaped (default 1/40 keeps Phi in ~[-1,1])",
     )
     parser.add_argument(
         "--filter-timeout",
@@ -199,6 +206,7 @@ def _load_payload(args: argparse.Namespace) -> dict:
             gamma=args.gamma,
             filter_timeout=args.filter_timeout,
             normalize_rewards=args.normalize_rewards,
+            shaping_scale=args.shaping_scale,
         )
 
     required = {"states", "actions", "rewards", "next_states", "dones", "state_dim", "action_dim"}

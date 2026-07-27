@@ -209,11 +209,18 @@ class RandomEmbedderRecorderAgent:
                 )
 
             phase = state.step.value if hasattr(state.step, "value") else str(state.step)
+            # Life totals from the ACTING player's perspective, for potential-based
+            # reward shaping (Phi = my_life - opp_life). Perspective must match
+            # player_id so the potential is consistent across a player's trajectory.
+            _me = state.players[self.player_id]
+            _opp = state.players[3 - self.player_id]
             obs = {
                 "turn": state.turn_number,
                 "step": phase,
                 "active_player": state.active_player,
                 "priority_player": state.priority_player,
+                "my_life": int(_me.health),
+                "opp_life": int(_opp.health),
                 "state_debug": gamestate_to_features(state),
                 "state_embedding_norm": float(torch.norm(state_emb).item()),
             }
