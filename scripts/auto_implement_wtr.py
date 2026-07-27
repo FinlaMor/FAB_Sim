@@ -569,10 +569,12 @@ def run_verification_pass(card: dict, json_content: str, dsl_ref: str,
         print(f"  [verify] claw-code failed, keeping original")
         return json_content
 
-    cleaned = re.sub(r'```(?:json)?\s*', '', output)
+    # Strip reasoning models' <think>...</think> before looking for the verdict/JSON.
+    cleaned = re.sub(r'<think>[\s\S]*?</think>', '', output, flags=re.IGNORECASE)
+    cleaned = re.sub(r'```(?:json)?\s*', '', cleaned)
     cleaned = re.sub(r'```\s*', '', cleaned).strip()
 
-    if cleaned.upper().startswith("LOOKS_GOOD"):
+    if "LOOKS_GOOD" in cleaned.upper()[:40]:
         print(f"  [verify] LOOKS_GOOD")
         return json_content
 
