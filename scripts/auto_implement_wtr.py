@@ -678,14 +678,39 @@ STRUCTURAL_RULES = """
    the EXAMPLES above. NEVER invent a type, trigger, or condition name. If a card
    truly cannot be expressed with the available types, output exactly:
    NEEDS_NEW_DSL: <one-sentence reason>  and STOP.
-3. Costs vs effects (the most common error):
-   - "As an additional cost to play X, ..." -> an "additional_cost" array on the
-     ability (NEVER an effect). The card is unplayable if the cost is unpayable.
-   - "Instead of paying its cost, you may ..." -> an "alternative_cost" array.
-   - "discard a card" with NO "additional cost" preamble -> a normal effect.
-4. "When/If this hits" -> a TRIGGERED ability with an ON_HIT trigger. "When this
-   attacks" -> ON_ATTACK. Match the wording to a real trigger; do not invent one.
-5. Slugs use underscores, never hyphens. Output ONLY the raw JSON object — no
+
+3. THE COLON SPLITS COST : EFFECT.  In an activated/action line
+   "[Prefix] - [costs]: [effect]", EVERYTHING BEFORE THE COLON (after an
+   "Action -" / "Instant -" prefix) is a COST; everything AFTER the colon is the
+   effect. Costs are NEVER effects.
+   - {r} resource cost, e.g. "Action - {r}{r}: ..."  ->  "activation_cost": N
+     (N = number of {r}). The engine charges it; do NOT also add a pay-resources effect.
+   - Non-resource costs before the colon (destroy this, discard, pay {h}, remove a
+     counter, ...) -> a "cost" array on the ability. "Destroy this" is
+     {"type": "DESTROY_PERMANENT", "target": "self"} in "cost" — NEVER an effect.
+   - The part AFTER the colon -> "effects".
+   Example — "Action - Destroy this: Gain {r}. Go again":
+     {"ability_type": "ACTIVATE", "activation_cost": 0,
+      "cost": [{"type": "DESTROY_PERMANENT", "target": "self"}],
+      "effects": [{"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1}, {"type": "GO_AGAIN"}]}
+
+4. ACTIVATED ability vs PLAY effect — decide by the card's type line:
+   - Permanent types (Equipment, Item, Weapon, Aura, token) with an activated line
+     "Action - ...:" / "Instant - ...:"  ->  "ability_type": "ACTIVATE". The card
+     STAYS in play and is activated; use "activation_cost" for {r} and a "cost"
+     array for other costs (rule 3).
+   - Action / Attack cards played from hand  ->  "ability_type": "PLAY". The text
+     is what happens WHEN PLAYED. Play-cost wording uses "additional_cost" /
+     "alternative_cost" (below), NOT a "cost" array.
+
+5. PLAY-cost wording (only for PLAY cards):
+   - "As an additional cost to play X, ..." -> "additional_cost" array (unplayable if unpayable).
+   - "Instead of paying its cost, you may ..." -> "alternative_cost" array.
+   - "discard a card" with NO cost preamble and NO colon -> a normal effect.
+
+6. "When/If this hits" -> a TRIGGERED ability with ON_HIT. "When this attacks" ->
+   ON_ATTACK. Match the wording to a real trigger; do not invent one.
+7. Slugs use underscores, never hyphens. Output ONLY the raw JSON object — no
    markdown fences, no prose. It must parse (no trailing commas; true/false).
 === END RULES ==="""
 
