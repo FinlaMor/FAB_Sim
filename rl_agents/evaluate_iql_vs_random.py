@@ -199,8 +199,11 @@ class IQLPolicyAgent:
 
         # ── Start-player choice: ('You', 'Opponent') ──────────────────────
         # Map each string to a PASS Action that differs only by player_id so
-        # the actor can discriminate based on who goes first.
-        if len(options) == 2 and set(options) == {'You', 'Opponent'}:
+        # the actor can discriminate based on who goes first. Guard on str first:
+        # Action options are unhashable, so set() would raise on a normal action
+        # decision that happens to present two options.
+        if (len(options) == 2 and isinstance(options[0], str)
+                and set(options) == {'You', 'Opponent'}):
             opp_id = 3 - self.player_id
             synthetic = [
                 Action(type=ActionType.PASS, player_id=self.player_id),  # 'You'

@@ -31,14 +31,7 @@ from encoder.gamestate_embedder import GameStateEmbedder, gamestate_to_features
 from rl_agents.dataset_adapter import build_iql_tensors_from_replay_db
 from rl_agents.embedder_bundle import BUNDLE_FILENAME, save_embedder_bundle
 from rl_agents.game_backends import GameRunRequest, add_game_backend_args, build_game_backend
-
-
-DECK_BY_HERO = {
-    "kayo_underhanded_cheat": "kayo_underhanded_cheat_CC_lite.txt",
-    "victor_goldmane_high_and_mighty": "victor_goldmane_high_and_mighty_CC_lite.txt",
-    "arakni_marionette": "arakni_marionette_CC_lite.txt",
-    "oscillio_constella_intelligence": "oscillio_constella_intelligence_CC_lite.txt",
-}
+from rl_agents.utils.matchups import DECK_BY_HERO, MATCHUP_SPECS
 
 
 def _resolve_base_seed(seed: int | None) -> int:
@@ -60,26 +53,6 @@ def _build_policy(kind: str, seed: int):
         from rl_agents.heuristic_bot import HeuristicBot
         return HeuristicBot(seed=seed)
     raise ValueError(f"unknown agent kind: {kind}")
-
-
-# The three functional test decks, round-robin (each distinct cross pairing).
-MATCHUP_SPECS = [
-    {
-        "name": "victor_vs_kayo",
-        "p1_hero": "victor_goldmane_high_and_mighty",
-        "p2_hero": "kayo_underhanded_cheat",
-    },
-    {
-        "name": "victor_vs_arakni",
-        "p1_hero": "victor_goldmane_high_and_mighty",
-        "p2_hero": "arakni_marionette",
-    },
-    {
-        "name": "kayo_vs_arakni",
-        "p1_hero": "kayo_underhanded_cheat",
-        "p2_hero": "arakni_marionette",
-    },
-]
 
 
 def _card_slug(card) -> Optional[str]:
