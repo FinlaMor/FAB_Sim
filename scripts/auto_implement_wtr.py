@@ -119,67 +119,34 @@ def build_dsl_reference() -> str:
         "    Use for: 'Instead of its resource cost, you may remove 3 counters...'",
         "    Card is legal if EITHER the resource cost OR the alt cost is payable.",
         "",
-        "ADDITIONAL COST EXAMPLES:",
-        "  DISCARD_RANDOM: {amount: 1}  -- 'discard a random card as additional cost'",
-        "  REVEAL_CARD_COST_GTE: {amount: 2}  -- 'reveal a card with cost 2 or greater'",
-        "  REVEAL_CARD_COST_LTE: {amount: 1}  -- 'reveal a card with cost 1 or less'",
-        "  BANISH_NAMED_GRAVEYARD_OPTIONAL: {slug_contains: 'nimblism', flag: 'banished_nimblism'}",
-        "    -- optional banish from graveyard; sets turn flag if banished (for conditional bonus)",
-        "  PUT_HAND_CARD_BOTTOM: {}  -- 'put a card from hand on bottom of deck'",
-        "",
-        "KEY EFFECT PARAMS:",
-        "  DRAW: {amount: int}",
-        "  DISCARD: {amount: int, player: SELF|OPPONENT, random: bool}",
-        "  MODIFY_ATTACK_POWER: {amount: int}",
-        "  GO_AGAIN: {}",
-        "  GAIN_LIFE: {amount: int}",
-        "  DEAL_DAMAGE: {amount: int, target: SELF|OPPONENT}",
-        "  DEAL_ARCANE: {amount: int, target: SELF|OPPONENT}",
-        "  CREATE_TOKEN: {token: str, count: int}",
-        "  GAIN_RESOURCES: {amount: int}",
-        "  NEXT_ATTACK_BONUS: {amount: int}",
-        "  NEXT_WEAPON_ATTACK_BONUS: {amount: int, go_again: bool, hit_go_again: bool}",
-        "  ALL_ATTACKS_BONUS: {amount: int}",
-        "  ALL_ATTACKS_HIT_DRAW: {amount: int}",
-        "  NEXT_ATTACK_HIT_DRAW: {amount: int}",
-        "  NEXT_LOW_COST_ATTACK_BONUS: {amount: int}  -- cost<=1 attacks",
-        "  NEXT_HIGH_COST_ATTACK_BONUS: {amount: int} -- cost>=2 attacks",
-        "  BANISH: {amount: int, from_zone: TOP_DECK}",
-        "  OPT: {amount: int}",
-        "  RELOAD: {}",
-        "  SEARCH_DECK: {filter_types: list, slug_contains: str}",
-        "  RETURN_TO_HAND: {}",
-        "  PUT_BOTTOM_DRAW: {}  -- put a hand card to bottom of deck, then draw",
-        "  PUT_COUNTER: {counter_type: str, amount: int}",
-        "  REMOVE_COUNTER: {counter_type: str, amount: int}",
-        "  INTIMIDATE: {}",
-        "  DOMINATE: {}",
-        "  GRANT_KEYWORD: {keyword: str}",
-        "  INJECT_TRIGGER: {trigger: str, conditions: [...], effects: [...]}",
-        "  SET_FLAG: {flag: str, scope: CURRENT|NEXT}",
-        "  GAIN_ACTION_POINTS: {amount: int}",
-        "  DISCARD_RANDOM_CONDITIONAL: {amount: int, power_gte: int, ap_gain: int, draw: int, go_again: bool}",
-        "  AMP: {amount: int}",
-        "",
-        "KEY CONDITION PARAMS:",
-        "  COMBO: {names: [str]}  -- last chain link slug matches one of names",
-        "  COMBO_CONTAINS: {substring: str}  -- last chain link slug contains substring",
-        "  WEAPON_SUBTYPE_IN: {values: [str]}  -- e.g. [Hammer, Sword, Dagger]",
-        "  ATTACK_COST_GTE: {amount: int}",
-        "  COUNTER_GTE: {counter_type: str, min: int}",
-        "  FLAG_SET: {flag: str}",
-        "  HAS_KEYWORD: {keyword: str}",
-        "  SURGE: {amount: int}",
-        "  ATTACK_CLASS_IN: {classes: [str]}  -- e.g. [Ninja, Guardian]; checks attack_card.classes",
-        "  OR: {any: [condition, ...]}",
-        "  AND: {all: [condition, ...]}",
-        "  NOT: {inner_type: str, ...params}",
+        "Use ONLY type names that appear in the lists above or in the EXAMPLES",
+        "below. The EXAMPLES are real cards and show correct params for each type.",
+        "Never invent a type, trigger, or condition name.",
         "",
         "CONDITIONS ON EFFECTS: an effect object may have a 'conditions' key (list) to gate only that effect.",
         "CONDITIONS ON ABILITIES: an ability may have a 'conditions' key (list) — ALL must pass or nothing fires.",
         "=== END DSL REFERENCE ===",
     ]
     return "\n".join(lines)
+
+
+def valid_type_names() -> set[str]:
+    """The names the DSL actually dispatches on — the ground truth for what a card
+    JSON may use. Covers both `etype == "X"` and `etype in ("X", "Y")` forms (and
+    the ctype equivalents), so param-requiring effects like GAIN aren't missed the
+    way an empty-params compile probe would miss them.
+    """
+    names: set[str] = set()
+    for fname, var in (("effect_types.py", "etype"), ("condition_types.py", "ctype"),
+                       ("cost_types.py", "ctype")):
+        text = (DSL_DIR / fname).read_text(encoding="utf-8") if (DSL_DIR / fname).exists() else ""
+        names |= set(re.findall(rf'{var} == "([A-Z_]+)"', text))
+        for grp in re.findall(rf'{var} in \(([^)]*)\)', text):
+            names |= set(re.findall(r'"([A-Z_]+)"', grp))
+    # Triggers + ability types are also written as "type"/"trigger" in card JSON.
+    names |= set(_extract_types_from_source(
+        DSL_DIR / "trigger_types.py", r'"(ON_[A-Z_]+|START_OF[A-Z_]+|END_OF[A-Z_]+)"'))
+    return names
 
 
 # ---------------------------------------------------------------------------
@@ -569,7 +536,7 @@ You are a strict validator for a card game DSL. Check this JSON against the DSL 
 
 {dsl_ref}
 
-{COMMON_MISTAKES}
+{STRUCTURAL_RULES}
 
 Card text:
   slug: {card["slug"]}
@@ -627,41 +594,120 @@ def run_verification_pass(card: dict, json_content: str, dsl_ref: str,
 # Prompt builders
 # ---------------------------------------------------------------------------
 
+def _card_text_index() -> dict[str, str]:
+    """slug -> printed functional text, from the canonical slug_index."""
+    try:
+        idx = json.loads((ROOT / "card_data" / "slug_index.json").read_text(encoding="utf-8"))
+        by = idx.get("by_slug", idx)
+        return {s: (e.get("functionalText") or "") for s, e in by.items()}
+    except Exception:
+        return {}
+
+
+def build_real_examples(n: int = 8) -> str:
+    """Few-shot examples drawn from REAL committed card JSONs.
+
+    Every committed card compiles, so every example uses valid, current type
+    names — unlike hand-written examples, which drift from the DSL and teach the
+    model non-loading types (the exact failure the load gate was catching). One
+    small (=simple) card per ability_type, for a spread of patterns.
+    """
+    from engine.card_effects.dsl.loader import compile_card
+    text_of = _card_text_index()
+    by_type: dict[str, list] = {}
+    json_root = ROOT / "engine" / "card_effects" / "json"
+    for path in sorted(json_root.rglob("*.json")):
+        rel = path.relative_to(json_root)
+        if path.stem.endswith("_work_queue") or any(p.startswith(".") for p in rel.parts):
+            continue
+        if "needs_review" in rel.parts or rel.parts[0] == "tokens":
+            continue
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        abilities = raw.get("abilities")
+        if not abilities or not isinstance(abilities, list):
+            continue
+        try:
+            compile_card(raw)  # only real, LOADING cards teach valid type usage
+        except Exception:
+            continue
+        at = abilities[0].get("ability_type", "?")
+        body = json.dumps(raw, ensure_ascii=False)
+        by_type.setdefault(at, []).append((len(body), raw.get("slug", path.stem), path))
+
+    order = ["TRIGGERED", "PLAY", "ATTACK_REACTION", "ACTIVATE", "STATIC_TRIGGERED",
+             "INSTANT", "DEFENSE_REACTION", "MODAL", "STATIC", "WHILE_STATIC"]
+    picks: list = []
+    for at in order:
+        for _sz, slug, path in sorted(by_type.get(at, []))[:1]:
+            picks.append((slug, path))
+        if len(picks) >= n:
+            break
+
+    lines = ["=== EXAMPLES — real implemented cards. Copy their structure and use "
+             "ONLY type names that appear here or in the reference above. ===", ""]
+    for slug, path in picks[:n]:
+        lines.append(f"Card text: {text_of.get(slug) or '(vanilla / no text)'}")
+        lines.append(path.read_text(encoding="utf-8").strip())
+        lines.append("")
+    lines.append("=== END EXAMPLES ===")
+    return "\n".join(lines)
+
+
+def validate_prompt_vocabulary(prompt: str) -> list[str]:
+    """Return "type" names used in the prompt that the DSL does not dispatch on —
+    i.e. names that would teach the model to emit non-loading JSON. A startup
+    self-check so prompt/DSL drift can never silently return.
+    """
+    valid = valid_type_names()
+    names = set(re.findall(r'"type":\s*"([A-Z_]+)"', prompt))
+    return sorted(nm for nm in names if nm not in valid)
+
+
+# Structural rules that name NO specific effect types (so they can't go stale).
+# Concrete type usage is taught by build_real_examples() and the DSL reference.
+STRUCTURAL_RULES = """
+=== RULES ===
+1. Only include abilities that DO something. A pure stat card (power/defense, no
+   effect text) or a Specialization-only card outputs: {"slug": "<slug>", "abilities": []}
+2. Use ONLY effect/condition/cost type names that appear in the DSL REFERENCE or
+   the EXAMPLES above. NEVER invent a type, trigger, or condition name. If a card
+   truly cannot be expressed with the available types, output exactly:
+   NEEDS_NEW_DSL: <one-sentence reason>  and STOP.
+3. Costs vs effects (the most common error):
+   - "As an additional cost to play X, ..." -> an "additional_cost" array on the
+     ability (NEVER an effect). The card is unplayable if the cost is unpayable.
+   - "Instead of paying its cost, you may ..." -> an "alternative_cost" array.
+   - "discard a card" with NO "additional cost" preamble -> a normal effect.
+4. "When/If this hits" -> a TRIGGERED ability with an ON_HIT trigger. "When this
+   attacks" -> ON_ATTACK. Match the wording to a real trigger; do not invent one.
+5. Slugs use underscores, never hyphens. Output ONLY the raw JSON object — no
+   markdown fences, no prose. It must parse (no trailing commas; true/false).
+=== END RULES ==="""
+
+
 def build_implementation_prompt(card: dict, dsl_ref: str, queue: list[dict] | None = None,
                                 embed_model: str = "qwen3-embedding:4b") -> str:
     card_block = json.dumps({k: v for k, v in card.items() if k != "status"}, indent=2, ensure_ascii=False)
     dynamic = build_dynamic_examples(card, queue or [], embed_model=embed_model) if queue else ""
     extra = f"\n{dynamic}\n" if dynamic else ""
+    real_examples = build_real_examples()
     return f"""\
 You are implementing a card effect JSON file for the Flesh and Blood trading card game simulator.
 
 {dsl_ref}
 
-{EXAMPLES}
+{real_examples}
 {extra}
-{COMMON_MISTAKES}
+{STRUCTURAL_RULES}
 
 === YOUR TASK ===
 
-Generate a JSON effect file for this card:
+Generate a JSON effect file for this card (follow the RULES and EXAMPLES above):
 
 {card_block}
-
-RULES:
-1. Only include abilities that actually DO something (trigger an effect, grant keywords, modify state).
-   - Pure stat cards (just power/defense, no effect text) should output: {{"slug": "{card["slug"]}", "abilities": []}}
-   - Cards that are "Specialization" only (restricted to a hero) but have no other effect also output empty abilities.
-2. Use ONLY effect/condition/cost types listed in the DSL REFERENCE above.
-3. CRITICAL — costs vs effects:
-   - "As an additional cost to play X, ..." -> use "additional_cost" array on the ability (NEVER model as an effect).
-     The card CANNOT be played if the cost is unsatisfiable (e.g. DISCARD_RANDOM when hand is empty).
-   - "Instead of paying its cost, you may ..." -> use "alternative_cost" array on the ability.
-   - If an effect says "discard a card" WITHOUT "as an additional cost", it IS an effect (use DISCARD effect type).
-4. If you believe a new DSL type is genuinely required (not expressible with existing types), output this line and STOP:
-   NEEDS_NEW_DSL: <brief reason>
-5. Slugs use underscores (e.g. "alpha_rampage_red"), never hyphens.
-6. Output ONLY the raw JSON object — no markdown fences, no explanation, no extra text.
-7. The JSON must parse cleanly (no trailing commas, valid booleans as true/false).
 
 Output the JSON now:
 """
@@ -680,27 +726,53 @@ The card being tested is:
 The JSON effect definition is:
 {json_content}
 
-Write 1-3 pytest test functions that verify this card's effects work correctly.
-Tests should import from engine modules and use the DSL dispatch system.
-Use this import pattern at the top:
+Write 1-3 pytest test functions that verify this card's effects. Follow this
+WORKING pattern EXACTLY — it uses the real engine API. Do NOT invent a mock state
+dict; build a real GameState with _make_state() and dispatch with the real
+signature `dispatch(state, EVENT_TYPE, slug, card=<card>, event=None)`.
 
 ```python
-import pytest, json, sys
+import copy, sys
 from pathlib import Path
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from engine.card_effects.dsl import dispatch, get_card
+from engine.card import CardDB
+from engine.card_effects.dsl import dispatch
+from engine.card_effects.dsl.loader import load_all_cards
+from tests.conftest import _make_state
+
+load_all_cards()
+DB = CardDB()
+
+def _card(slug, owner=1):
+    c = copy.deepcopy(DB.get(slug)); c.owner = c.controller = owner
+    return c
+
+def test_{card["slug"]}_example():
+    st = _make_state(); st.card_db = DB
+    card = _card("{card["slug"]}")
+    # Put the card where it lives (arms/chest/weapon1 for equipment; arena/hand as needed),
+    # set up any preconditions, then fire the ability's trigger:
+    st.players[1].arms.add(card)
+    dispatch(st, "ON_HIT", "{card["slug"]}", card=card, event=None)
+    # Assert an OBSERVABLE GameState change (life, zone contents, counters) — the
+    # project asserts outcomes, never internal queues/flags:
+    assert st.players[2].health <= 40
 ```
 
 RULES:
-1. Each test function name must start with `test_{card["slug"]}_`.
-2. Tests should be self-contained — create minimal mock state objects if needed.
-3. Focus on: ability fires on correct trigger, condition gates correctly, effect produces expected state change.
-4. If the card has empty abilities (no effects), write one smoke test that confirms get_card returns None or has no abilities.
-5. If you believe you cannot write a correct test without new infrastructure, output:
-   NEEDS_NEW_DSL: <brief reason>
-   and stop.
-6. Output ONLY valid Python — no markdown fences, no extra explanation.
+1. Every test name starts with `test_{card["slug"]}_`.
+2. Use the real API shown above: `_make_state()` for state (NOT a dict), the
+   real `dispatch(state, EVENT_TYPE, slug, card=..., event=None)` signature, and
+   the trigger from the card's JSON (ON_HIT, ON_PLAY, ON_ATTACK, ON_ACTIVATE, ...).
+3. Assert OBSERVABLE state: player.health / player.life, zone contents
+   (st.players[p].graveyard, .arsenal, .banished, .arena, .hand), or counters.
+   Do NOT assert on internal registries or flags.
+4. Life is `player.health`; damage/gain change it. Arsenal holds at most 1 card.
+5. If the card has empty abilities, write one smoke test asserting
+   `get_card("{card["slug"]}")` has no abilities (import get_card too).
+6. If you genuinely cannot write a correct test, output `NEEDS_NEW_DSL: <reason>` and stop.
+7. Output ONLY valid Python — no markdown fences, no prose.
 
 Output the test functions now:
 """
@@ -1102,6 +1174,18 @@ def main() -> None:
         print(f"Reset failed cards to pending.")
 
     dsl_ref = build_dsl_reference()
+
+    # Self-check: the assembled implementation prompt must not teach any type name
+    # that the DSL can't compile, or the model will faithfully emit non-loading
+    # JSON (the drift the load gate kept catching). Fail loudly rather than churn.
+    _sample_card = {"slug": "_probe", "name": "probe", "type_text": "", "functional_text": ""}
+    _stale = validate_prompt_vocabulary(build_implementation_prompt(_sample_card, dsl_ref))
+    if _stale:
+        print(f"[cfg] ERROR: prompt teaches {len(_stale)} type name(s) the DSL cannot "
+              f"compile: {', '.join(_stale)}")
+        print("[cfg] Fix the prompt/reference so it only uses real DSL types, then re-run.")
+        sys.exit(2)
+    print("[cfg] prompt vocabulary check: OK (all taught types compile)")
 
     pending = [c for c in queue if c["status"] == "pending"]
     if args.slug:
