@@ -38,6 +38,8 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))  # so the load gate can import engine.* in-process
 CLAW_DIR = Path(os.environ.get("CLAW_DIR", str(Path(__file__).resolve().parent.parent.parent / "claw-code")))
 CLAW_ENTRY = CLAW_DIR / "src" / "launch_claw.py"
 
@@ -764,6 +766,67 @@ def run_llm(prompt: str, verbose: bool = False, model: str | None = None) -> str
     return run_claw(prompt, verbose=verbose, model=model)
 
 
+# ---------------------------------------------------------------------------
+# Execution gate — deterministic checks that the generated card actually works,
+# so a card is only marked "done" if it loads and its test passes. This is the
+# real signal; the LLM verification pass is advisory and can miss invented types.
+# ---------------------------------------------------------------------------
+
+def validate_card_loads(json_content: str) -> tuple[bool, str]:
+    """Compile the generated JSON as the engine would at game start.
+
+    compile_card raises ValueError on any unknown effect/condition/trigger type
+    or malformed ability — exactly the invented-type errors an LLM produces
+    (e.g. MAY_DESTROY_SILVERS_TO_EQUIP). Returns (ok, error_message).
+    """
+    from engine.card_effects.dsl.loader import compile_card
+    try:
+        raw = json.loads(json_content)
+    except json.JSONDecodeError as e:
+        return False, f"JSON parse error: {e}"
+    try:
+        compile_card(raw)
+        return True, ""
+    except Exception as e:  # ValueError (unknown type) and any structural error
+        return False, f"{type(e).__name__}: {e}"
+
+
+def run_generated_test(slug: str, test_code: str, verbose: bool = False) -> tuple[bool, str]:
+    """Run the auditor's test in ISOLATION and report whether it passes.
+
+    Writing to a throwaway file (not the shared test_{set}_generated.py) means a
+    prior card's broken test cannot poison this card's gate, and only tests that
+    actually pass get appended to the committed file. Returns (passed, output).
+    """
+    header = (
+        "import json, sys\n"
+        "from pathlib import Path\n"
+        "ROOT = Path(__file__).resolve().parents[1]\n"
+        "sys.path.insert(0, str(ROOT))\n"
+        "from engine.card_effects.dsl import dispatch, get_card\n\n"
+    )
+    tmp = ROOT / "tests" / f"_gate_{slug}.py"
+    tmp.write_text(header + test_code + "\n", encoding="utf-8")
+    try:
+        result = subprocess.run(
+            [sys.executable, "-m", "pytest", str(tmp), "-q", "-p", "no:randomly", "-x"],
+            cwd=str(ROOT), capture_output=True, text=True, timeout=180, encoding="utf-8",
+        )
+        out = (result.stdout or "") + (result.stderr or "")
+        if verbose:
+            print(f"  [gate] pytest exit {result.returncode}", file=sys.stderr)
+        return result.returncode == 0, out[-3000:]
+    except subprocess.TimeoutExpired:
+        return False, "pytest timed out (possible infinite loop in generated test)"
+    except Exception as e:
+        return False, f"pytest run error: {e}"
+    finally:
+        try:
+            tmp.unlink()
+        except OSError:
+            pass
+
+
 def run_claw(prompt: str, verbose: bool = False, retries: int = 2,
              model: str | None = None) -> str:
     """Write prompt to a temp file and invoke claw-code one-shot. Returns stdout."""
@@ -895,35 +958,18 @@ def process_impl_output(slug: str, output: str, debug: bool = False) -> tuple[st
     return "done", json.dumps(data, indent=2, ensure_ascii=False)
 
 
-def process_test_output(slug: str, output: str) -> None:
-    """Append generated test functions to test_wtr_generated.py, or write review note."""
-    if output in ("CLAW_TIMEOUT", ) or output.startswith("CLAW_ERROR"):
-        print(f"  [TEST ERROR] claw-code failed for test generation: {output[:80]}")
-        return
-
-    if "NEEDS_NEW_DSL:" in output:
-        reason = output.split("NEEDS_NEW_DSL:", 1)[1].strip().splitlines()[0]
-        _write_review_note(slug, reason, output, label="test")
-        print(f"  [TEST REVIEW] {slug} -> needs_review/{slug}_test.md")
-        return
-
-    # Strip <think>...</think> blocks (qwen3 chain-of-thought)
+def extract_test_code(output: str) -> str:
+    """Pull the test function(s) out of an LLM response. '' if none found."""
+    # Strip <think>...</think> chain-of-thought and markdown fences.
     cleaned = re.sub(r'<think>[\s\S]*?</think>', '', output, flags=re.IGNORECASE).strip()
-
-    # Strip markdown fences if present
     cleaned = re.sub(r'```python\s*', '', cleaned)
-    cleaned = re.sub(r'```\s*', '', cleaned)
-    cleaned = cleaned.strip()
-
-    # Extract from first def test_ found anywhere in the output
+    cleaned = re.sub(r'```\s*', '', cleaned).strip()
     match = re.search(r'((?:^|\n)(def test_[\s\S]+))', cleaned)
-    code = match.group(2).strip() if match else ''
+    return match.group(2).strip() if match else ''
 
-    if not code:
-        print(f"  [TEST WARN] No recognisable test code for {slug}")
-        return
 
-    # Ensure output file has a header
+def append_test(slug: str, code: str) -> None:
+    """Append verified test code to the committed test_{set}_generated.py file."""
     if not TEST_OUTPUT.exists():
         TEST_OUTPUT.write_text(
             f'"""Auto-generated pytest tests for {SET_CODE.upper()} card DSL implementations.\n'
@@ -936,13 +982,29 @@ def process_test_output(slug: str, output: str) -> None:
             "from engine.card_effects.dsl import dispatch, get_card\n\n",
             encoding="utf-8",
         )
-
     with TEST_OUTPUT.open("a", encoding="utf-8") as f:
         f.write(f"\n# --- {slug} ---\n")
         f.write(code)
         f.write("\n")
 
-    print(f"  [TEST] tests appended -> tests/test_wtr_generated.py")
+
+def process_test_output(slug: str, output: str) -> None:
+    """Legacy (ungated) path: extract and append without running. Kept for the
+    claw backend / --no-gate use; the gated path in main() runs the test first."""
+    if output in ("CLAW_TIMEOUT", ) or output.startswith("CLAW_ERROR"):
+        print(f"  [TEST ERROR] test generation failed: {output[:80]}")
+        return
+    if "NEEDS_NEW_DSL:" in output:
+        reason = output.split("NEEDS_NEW_DSL:", 1)[1].strip().splitlines()[0]
+        _write_review_note(slug, reason, output, label="test")
+        print(f"  [TEST REVIEW] {slug} -> needs_review/{slug}_test.md")
+        return
+    code = extract_test_code(output)
+    if not code:
+        print(f"  [TEST WARN] No recognisable test code for {slug}")
+        return
+    append_test(slug, code)
+    print(f"  [TEST] tests appended -> tests/test_{SET_CODE}_generated.py")
 
 
 # ---------------------------------------------------------------------------
@@ -981,7 +1043,11 @@ def main() -> None:
     parser.add_argument("--skip-tests", action="store_true",
                         help="Skip the test generation step.")
     parser.add_argument("--skip-verify", action="store_true",
-                        help="Skip the verification pass after implementation.")
+                        help="Skip the LLM verification pass after implementation.")
+    parser.add_argument("--no-gate", action="store_true",
+                        help="Disable the execution gate (load check + running the generated "
+                             "test). By default a card is only marked 'done' if it compiles AND "
+                             "its test passes; failures become needs_review / test_failed.")
     parser.add_argument("--debug", action="store_true",
                         help="Print raw claw-code output for every card.")
     parser.add_argument("--backend", choices=["openai", "claw"], default="openai",
@@ -1006,7 +1072,7 @@ def main() -> None:
     if BACKEND == "openai":
         # Runnable defaults that honour the implementer/auditor split; override freely.
         if not args.model:
-            args.model = "fab-cards-ft:latest"
+            args.model = "qwen2.5-coder:14b"
             print(f"[cfg] no --model given; implementer defaults to {args.model}")
         if not args.verify_model:
             args.verify_model = "fab-rules-ft:latest"
@@ -1079,30 +1145,87 @@ def main() -> None:
         impl_output = run_llm(impl_prompt, verbose=args.verbose, model=args.model)
         status, json_content = process_impl_output(slug, impl_output, debug=args.debug)
 
-        # Run verification pass to catch structural errors
+        # Verification pass (auditor) — advisory LLM check for structural errors
         if status == "done" and not args.skip_verify:
             verify_model = args.verify_model or args.model
-            print(f"  [verify] checking JSON (model={verify_model or 'default'})...")
+            print(f"  [verify] auditor ({verify_model or 'default'}) checking JSON...")
             json_content = run_verification_pass(card, json_content, dsl_ref,
                                                  model=verify_model, verbose=args.verbose)
-            # Write the (possibly corrected) JSON back to disk
-            out_path = WTR_DIR / f"{slug}.json"
-            out_path.write_text(json_content, encoding="utf-8")
+            (WTR_DIR / f"{slug}.json").write_text(json_content, encoding="utf-8")
+
+        # --- Execution gate 1: the card must actually compile/load ---
+        # Deterministic: catches invented effect/condition/trigger types the LLM
+        # verification can miss. One corrective retry feeds the exact error back
+        # to the implementer before giving up.
+        if status == "done" and not args.no_gate:
+            ok, err = validate_card_loads(json_content)
+            if not ok:
+                print(f"  [gate] load FAILED: {err[:160]}")
+                fix_prompt = (
+                    impl_prompt
+                    + f"\n\nYOUR PREVIOUS ATTEMPT FAILED TO LOAD with this error:\n{err}\n"
+                      "Fix it using ONLY effect/condition/trigger types listed in the DSL "
+                      "REFERENCE above. Do NOT invent type names. Output ONLY the corrected JSON."
+                )
+                fix_out = run_llm(fix_prompt, verbose=args.verbose, model=args.model)
+                status, json_content = process_impl_output(slug, fix_out, debug=args.debug)
+                ok, err = validate_card_loads(json_content) if status == "done" else (False, err)
+                if ok and status == "done":
+                    print(f"  [gate] load OK after retry")
+                else:
+                    _write_review_note(slug, f"load gate failed after retry: {err}",
+                                       json_content or fix_out, label="loadgate")
+                    status = "needs_review"
+                    print(f"  [gate] load still failing -> needs_review")
+            else:
+                print(f"  [gate] load OK")
 
         card["status"] = status
         save_queue(queue)
-
         print(f"  [{status.upper()}] {slug}")
 
-        # Run test generation if implementation succeeded. The AUDITOR model
-        # writes the test (kept separate from the implementer per design), so
-        # the test is an independent check rather than the author grading itself.
+        # Test generation (auditor writes it — kept separate from the implementer)
+        # + Execution gate 2: RUN the test in isolation. When the gate is on, a
+        # card only KEEPS 'done' if a test was produced AND it passes — otherwise
+        # 'done' would mean "compiles but was never behaviourally checked", which
+        # defeats the gate. Downgrades: no/failed test generation -> needs_test;
+        # a test that runs but fails -> test_failed.
         if status == "done" and not args.skip_tests:
             audit_model = args.verify_model or args.model
             print(f"  [test] auditor ({audit_model or 'default'}) writing test...")
             test_prompt = build_test_prompt(card, json_content)
             test_output = run_llm(test_prompt, verbose=args.verbose, model=audit_model)
-            process_test_output(slug, test_output)
+
+            def _downgrade(new_status: str, msg: str) -> None:
+                if not args.no_gate:
+                    card["status"] = new_status
+                    save_queue(queue)
+                print(f"  {msg}")
+
+            if test_output in ("CLAW_TIMEOUT",) or test_output.startswith("CLAW_ERROR"):
+                _downgrade("needs_test", f"[test] generation failed ({test_output[:60]}) -> needs_test")
+            elif "NEEDS_NEW_DSL:" in test_output:
+                process_test_output(slug, test_output)  # writes a review note
+                _downgrade("needs_review", "[test] auditor flagged NEEDS_NEW_DSL -> needs_review")
+            else:
+                code = extract_test_code(test_output)
+                if not code:
+                    _downgrade("needs_test", "[test] no recognisable test code produced -> needs_test")
+                elif args.no_gate:
+                    append_test(slug, code)
+                    print(f"  [test] appended (gate disabled)")
+                else:
+                    passed, out = run_generated_test(slug, code, verbose=args.verbose)
+                    if passed:
+                        append_test(slug, code)
+                        print(f"  [gate] test PASSED -> appended; {slug} verified done")
+                    else:
+                        _write_review_note(slug, "generated test did not pass",
+                                           out + "\n\n--- TEST CODE ---\n" + code, label="testgate")
+                        card["status"] = "test_failed"
+                        save_queue(queue)
+                        print(f"  [gate] test FAILED -> status test_failed "
+                              f"(JSON kept for review; test not appended)")
 
         processed += 1
 
