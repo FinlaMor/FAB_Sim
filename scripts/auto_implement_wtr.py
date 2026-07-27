@@ -1180,37 +1180,41 @@ def main() -> None:
             else:
                 print(f"  [gate] load OK")
 
-        card["status"] = status
-        save_queue(queue)
-        print(f"  [{status.upper()}] {slug}")
+        # NOTE: the card's on-disk status is deliberately NOT written yet. It
+        # stays at its previous value ('pending') all through the test gate, so
+        # an interruption mid-gate leaves the card pending -> cleanly reprocessed
+        # on resume, never a premature 'done'. The single authoritative write
+        # happens once below, after the gate has decided the final status.
+        print(f"  [load] {slug} -> {status}")
 
         # Test generation (auditor writes it — kept separate from the implementer)
         # + Execution gate 2: RUN the test in isolation. When the gate is on, a
         # card only KEEPS 'done' if a test was produced AND it passes — otherwise
         # 'done' would mean "compiles but was never behaviourally checked", which
-        # defeats the gate. Downgrades: no/failed test generation -> needs_test;
-        # a test that runs but fails -> test_failed.
+        # defeats the gate. Downgrades (local only): no/failed test generation ->
+        # needs_test; NEEDS_NEW_DSL -> needs_review; a test that ran but failed ->
+        # test_failed.
         if status == "done" and not args.skip_tests:
             audit_model = args.verify_model or args.model
             print(f"  [test] auditor ({audit_model or 'default'}) writing test...")
             test_prompt = build_test_prompt(card, json_content)
             test_output = run_llm(test_prompt, verbose=args.verbose, model=audit_model)
 
-            def _downgrade(new_status: str, msg: str) -> None:
-                if not args.no_gate:
-                    card["status"] = new_status
-                    save_queue(queue)
-                print(f"  {msg}")
-
             if test_output in ("CLAW_TIMEOUT",) or test_output.startswith("CLAW_ERROR"):
-                _downgrade("needs_test", f"[test] generation failed ({test_output[:60]}) -> needs_test")
+                if not args.no_gate:
+                    status = "needs_test"
+                print(f"  [test] generation failed ({test_output[:60]}) -> {status}")
             elif "NEEDS_NEW_DSL:" in test_output:
                 process_test_output(slug, test_output)  # writes a review note
-                _downgrade("needs_review", "[test] auditor flagged NEEDS_NEW_DSL -> needs_review")
+                if not args.no_gate:
+                    status = "needs_review"
+                print(f"  [test] auditor flagged NEEDS_NEW_DSL -> {status}")
             else:
                 code = extract_test_code(test_output)
                 if not code:
-                    _downgrade("needs_test", "[test] no recognisable test code produced -> needs_test")
+                    if not args.no_gate:
+                        status = "needs_test"
+                    print(f"  [test] no recognisable test code produced -> {status}")
                 elif args.no_gate:
                     append_test(slug, code)
                     print(f"  [test] appended (gate disabled)")
@@ -1222,10 +1226,14 @@ def main() -> None:
                     else:
                         _write_review_note(slug, "generated test did not pass",
                                            out + "\n\n--- TEST CODE ---\n" + code, label="testgate")
-                        card["status"] = "test_failed"
-                        save_queue(queue)
+                        status = "test_failed"
                         print(f"  [gate] test FAILED -> status test_failed "
                               f"(JSON kept for review; test not appended)")
+
+        # Single authoritative status write for this card, after the gate decided.
+        card["status"] = status
+        save_queue(queue)
+        print(f"  [{status.upper()}] {slug}")
 
         processed += 1
 
