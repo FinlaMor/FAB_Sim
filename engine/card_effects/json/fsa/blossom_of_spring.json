@@ -1,0 +1,25 @@
+{
+  "slug": "blossom_of_spring",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}
