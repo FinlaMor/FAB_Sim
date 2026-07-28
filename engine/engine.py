@@ -1187,6 +1187,20 @@ def _setup_dsl_listeners(state: GameState) -> None:
         if attacker.hero is not None:
             dispatch(game_state, "ON_HIT", attacker.hero.slug,
                      card=attacker.hero, event=event)
+        # Equipment/permanents the attacker controls that react to "when an attack
+        # you control hits" (e.g. Aether Crackers: destroy this, deal 1 arcane).
+        # The attack card and hero fired above; dispatch to the rest so their
+        # ON_HIT abilities can trigger. dispatch() no-ops on cards without a
+        # matching ON_HIT ability, so this is safe to broadcast.
+        seen = {id(combat.attack_card)}
+        if attacker.hero is not None:
+            seen.add(id(attacker.hero))
+        for zone in _dsl_permanent_zones(attacker):
+            for perm in list(zone.cards):
+                if id(perm) in seen:
+                    continue
+                seen.add(id(perm))
+                dispatch(game_state, "ON_HIT", perm.slug, card=perm, event=event)
 
     def _dsl_permanent_zones(player):
         # Permanents plus equipment/weapon slot zones and the hero, so

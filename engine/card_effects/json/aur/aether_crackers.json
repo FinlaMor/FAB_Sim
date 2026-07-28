@@ -1,0 +1,14 @@
+{
+  "slug": "aether_crackers",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "optional": true,
+      "effects": [
+        {"type": "DESTROY_PERMANENT", "target": "self"},
+        {"type": "DEAL_ARCANE", "amount": 1, "target": "OPPONENT"}
+      ]
+    }
+  ]
+}

@@ -124,3 +124,32 @@ def test_fyendals_activate_spends_3_energy_for_resource():
     _activate(state, ft, "chest")
     assert state.players[1].resources == r0 + 1
     assert _energy(state) == 0   # 3 energy spent
+
+
+# --- aether_crackers ---------------------------------------------------------
+# Regression for the equipment-ON_HIT engine gap: "When an attack you control
+# hits a hero, you may destroy this. If you do, deal 1 arcane damage to them."
+# The hit listener must dispatch ON_HIT to the attacker's *equipment*, not only
+# to the attack card and hero, or this passive never fires in a real game.
+
+def test_aether_crackers_fires_on_controlled_attack_hit():
+    from engine.state import CombatState, Event
+    from engine.engine import _setup_dsl_listeners
+    state = _state()
+    _setup_dsl_listeners(state)                 # wire the real 'hit' listener
+    crackers = _equip(state, "aether_crackers", "arms", pid=1)
+    # A separate attack the controller owns lands the hit (NOT the crackers).
+    atk = Card(slug="hunters_klaive", name="klaive", types=["Weapon"])
+    atk.owner = atk.controller = 1
+    state.players[1].weapon1.cards.append(atk)
+    state.combat = CombatState(attacker_id=1, link_id=1, attack_power=2,
+                               keywords=[], attack_card=atk)
+    h0 = state.players[2].health
+    # Emit the REAL hit event (bypassing it via a direct dispatch would skip the
+    # very listener this test guards).
+    state.event_manager.emit(
+        Event(type="hit", card=atk.slug, data={"damage": 2}), state)
+    assert state.players[2].health == h0 - 1              # 1 arcane dealt
+    assert crackers not in state.players[1].arms.cards     # "destroy this" happened
+    assert any(c.slug == "aether_crackers"
+               for c in state.players[1].graveyard.cards)

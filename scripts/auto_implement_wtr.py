@@ -21,6 +21,7 @@ Queue state is saved after every card — re-running the script resumes automati
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import math
 import os
@@ -513,7 +514,7 @@ def build_dynamic_examples(card: dict, queue: list[dict], n: int = 3,
     lines = ["=== ADDITIONAL EXAMPLES (from approved cards) ===", ""]
     for c in ranked:
         slug = c["slug"]
-        json_path = WTR_DIR / f"{slug}.json"
+        json_path = _card_out_dir(slug) / f"{slug}.json"
         if not json_path.exists():
             continue
         lines.append(f"Card: {c['name']} ({slug})")
@@ -604,6 +605,40 @@ def _card_text_index() -> dict[str, str]:
         return {s: (e.get("functionalText") or "") for s, e in by.items()}
     except Exception:
         return {}
+
+
+@functools.lru_cache(maxsize=1)
+def _slug_index_by_slug() -> dict:
+    try:
+        idx = json.loads((ROOT / "card_data" / "slug_index.json").read_text(encoding="utf-8"))
+        return idx.get("by_slug", idx)
+    except Exception:
+        return {}
+
+
+def _card_set_folder(slug: str, default: str) -> str:
+    """The set folder a card must be filed under — one of its REAL printed set
+    codes (HNT012 -> hnt), matching tests/test_card_json_hygiene.py. A card's
+    print set is NOT its class or the work-queue's name (e.g. the "fsa" product
+    queue holds cards whose set code is AUR), so writing to json/<queue>/ files
+    them wrong. Prefer the active --set when the card was actually printed there
+    (keeps a set's own cards together); otherwise pick a deterministic printed
+    code. Falls back to `default` for unknown slugs (e.g. engine tokens)."""
+    entry = _slug_index_by_slug().get(slug) or {}
+    codes = sorted({
+        "".join(ch for ch in ident if ch.isalpha()).lower()
+        for ident in (entry.get("setIdentifiers") or [])
+    })
+    if not codes:
+        return default
+    return default if default in codes else codes[0]
+
+
+def _card_out_dir(slug: str) -> Path:
+    """Directory the card's JSON belongs in, created if needed."""
+    d = ROOT / "engine" / "card_effects" / "json" / _card_set_folder(slug, SET_CODE)
+    d.mkdir(parents=True, exist_ok=True)
+    return d
 
 
 def build_real_examples(n: int = 8) -> str:
@@ -710,7 +745,16 @@ STRUCTURAL_RULES = """
 
 6. "When/If this hits" -> a TRIGGERED ability with ON_HIT. "When this attacks" ->
    ON_ATTACK. Match the wording to a real trigger; do not invent one.
-7. Slugs use underscores, never hyphens. Output ONLY the raw JSON object — no
+7. IMPLEMENT EVERY CLAUSE. Each sentence/clause of the functional text must appear
+   as an effect (or cost). Do NOT stop after the first verb. Watch for CONSEQUENT
+   clauses joined by "If you do" / "then" / ". " — the payload after them is
+   usually the real effect and is the most commonly dropped part.
+   Example — "you may destroy this. If you do, deal 1 arcane damage to them":
+     BOTH must appear -> a DESTROY_PERMANENT (target self) AND a DEAL_ARCANE (or
+     the DSL's arcane-damage effect) to the opponent. Missing the damage clause
+     is WRONG. Count the distinct game actions in the text and match your effect
+     list to that count.
+8. Slugs use underscores, never hyphens. Output ONLY the raw JSON object — no
    markdown fences, no prose. It must parse (no trailing commas; true/false).
 === END RULES ==="""
 
@@ -765,17 +809,24 @@ _GOLD_BY_ABILITY = {
 }
 
 
-def _gold_test_for(json_content: str) -> str:
-    """Pick the verified gold test that best matches the generated card. Cards that
-    trigger from combat (ON_HIT/ON_ATTACK/ON_DEFEND) get the combat example, which
-    sets up a real attack; everything else keys off ability_type."""
+def _gold_test_for(json_content: str, card: dict | None = None) -> str:
+    """Pick the verified gold test that best matches the generated card. Anything
+    that resolves through combat gets the combat example (real attack + hit):
+    a combat trigger (ON_HIT/ON_ATTACK/ON_DEFEND) on ANY ability_type, or an
+    Attack card whose whole effect (e.g. a conditional power pump) is observed
+    mid-combat. Everything else keys off ability_type."""
     try:
         ab = (json.loads(json_content).get("abilities") or [{}])[0]
         at = ab.get("ability_type", "")
         trig = (ab.get("trigger") or "").upper()
     except Exception:
         at, trig = "", ""
-    if at == "TRIGGERED" and trig in ("ON_HIT", "ON_ATTACK", "ON_DEFEND"):
+    if trig in ("ON_HIT", "ON_ATTACK", "ON_DEFEND"):
+        return GOLD_TESTS["COMBAT"]
+    # An Attack action/weapon whose effect (often a STATIC/WHILE power pump) is
+    # only observable once it is attacking -> use the combat pattern.
+    type_text = ((card or {}).get("type_text") or "")
+    if "Attack" in type_text:
         return GOLD_TESTS["COMBAT"]
     return GOLD_TESTS[_GOLD_BY_ABILITY.get(at, "TRIGGERED")]
 
@@ -806,7 +857,7 @@ Output the JSON now:
 
 
 def build_test_prompt(card: dict, json_content: str) -> str:
-    gold = _gold_test_for(json_content)
+    gold = _gold_test_for(json_content, card)
     try:
         has_abilities = bool(json.loads(json_content).get("abilities"))
     except Exception:
@@ -852,6 +903,12 @@ RULES:
 2. Use the real API shown above: `_make_state()` for state (NOT a dict), the
    real `dispatch(state, EVENT_TYPE, slug, card=..., event=None)` signature, and
    the trigger from the card's JSON (ON_HIT, ON_PLAY, ON_ATTACK, ON_ACTIVATE, ...).
+   ONLY reference the card under test: the sole slug you may pass to `_card(...)`
+   or `get_card(...)` is "{card["slug"]}". Do NOT invent, name, or `_card()` any OTHER
+   card (no "lightning_strike", no helper attacks) — those slugs may not exist
+   and will raise. Set up any precondition by mutating state directly
+   (e.g. `st.players[1].lightning_played = 1`, add a card to a zone), not by
+   playing another card.
 3. Assert OBSERVABLE state using the REAL attribute names (these exact spellings):
    - life: `st.players[p].health`   (there is NO 'life'/'hp' attribute)
    - resources: `st.players[p].resources`   (NOT resource_points)
@@ -1154,7 +1211,7 @@ def process_impl_output(slug: str, output: str, debug: bool = False) -> tuple[st
         print(f"  [WARN] slug mismatch: expected {slug}, got {data.get('slug')}")
         data["slug"] = slug  # fix silently
 
-    out_path = WTR_DIR / f"{slug}.json"
+    out_path = _card_out_dir(slug) / f"{slug}.json"
     out_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
     # Check for unsupported flag
@@ -1400,7 +1457,7 @@ def main() -> None:
             print(f"  [verify] auditor ({verify_model or 'default'}) checking JSON...")
             json_content = run_verification_pass(card, json_content, dsl_ref,
                                                  model=verify_model, verbose=args.verbose)
-            (WTR_DIR / f"{slug}.json").write_text(json_content, encoding="utf-8")
+            (_card_out_dir(slug) / f"{slug}.json").write_text(json_content, encoding="utf-8")
 
         # --- Execution gate 1: the card must actually compile/load ---
         # Deterministic: catches invented effect/condition/trigger types the LLM
