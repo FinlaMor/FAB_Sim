@@ -887,7 +887,10 @@ with _make_state(), dispatch with the real signature
 `dispatch(state, EVENT_TYPE, slug, card=<card>, event=None)`, and assert an
 OBSERVABLE outcome. Do NOT invent a mock state dict. The harness already
 provides _make_state, _card, DB, dispatch, get_card, activate(state, card),
-attack(state, card) and hit(state) — do NOT redefine them.
+attack(state, card), hit(state), stock_deck(state, pid, n=20) and
+give_token(state, pid, slug, n=1) — do NOT redefine them. Use stock_deck before
+any "top of deck" effect (the deck starts EMPTY) and give_token for
+"if you control a X token" preconditions (slugs are lowercase: 'might', 'gold').
 
 REAL PASSING EXAMPLE (same ability_type):
 {gold}
@@ -906,9 +909,11 @@ RULES:
    ONLY reference the card under test: the sole slug you may pass to `_card(...)`
    or `get_card(...)` is "{card["slug"]}". Do NOT invent, name, or `_card()` any OTHER
    card (no "lightning_strike", no helper attacks) — those slugs may not exist
-   and will raise. Set up any precondition by mutating state directly
-   (e.g. `st.players[1].lightning_played = 1`, add a card to a zone), not by
-   playing another card.
+   and will raise. Set up preconditions ONLY with the provided helpers
+   (give_token, stock_deck) or by appending to a real zone (e.g.
+   `st.players[1].arsenal.cards.append(_card("{card["slug"]}"))`). NEVER invent a
+   Player/GameState attribute to set up state (no `might_token_count`, no
+   `st.tokens`, no `.max_health`) — that raises AttributeError and proves nothing.
 3. Assert OBSERVABLE state using the REAL attribute names (these exact spellings):
    - life: `st.players[p].health`   (there is NO 'life'/'hp' attribute)
    - resources: `st.players[p].resources`   (NOT resource_points)
@@ -917,6 +922,11 @@ RULES:
      `.arsenal.cards`, `.banished.cards`, `.hand.cards`, `.chest.cards`,
      `.arms.cards`, `.weapon1.cards`, `.permanents.cards`
    Do NOT assert on internal registries or flags. Do NOT invent attribute names.
+   ASSERT RELATIVE DELTAS, never absolute totals. Capture the observable BEFORE
+   firing, then assert the change: `before = st.players[2].health; ...;
+   assert st.players[2].health == before - 1`. Do NOT hardcode an absolute number
+   (`== 9`, `== 40`, deck `== 19`) — you do not know the starting value and the
+   assertion will be wrong even for a correct card.
 4. Fire the ability by its ability_type:
    - ACTIVATE / ACTION -> `activate(st, card)`. This runs the REAL activation
      flow, so it PAYS the card's cost array (e.g. "Destroy this") AND runs the
@@ -1070,7 +1080,23 @@ def run_generated_test(slug: str, test_code: str, verbose: bool = False) -> tupl
         "def hit(state):\n"
         "    # The current attack hits -> fires ON_HIT for the attacking card.\n"
         "    ac = state.combat.attack_card; state.combat.hit = True\n"
-        "    dispatch(state, 'ON_HIT', ac.slug, card=ac, event=None)\n\n"
+        "    dispatch(state, 'ON_HIT', ac.slug, card=ac, event=None)\n"
+        "def stock_deck(state, pid, n=20):\n"
+        "    # _make_state starts with an EMPTY deck. Call this before testing any\n"
+        "    # 'look at / banish / reveal the top card of the deck' effect, or the\n"
+        "    # effect has nothing to act on and the assertion is meaningless.\n"
+        "    from engine.card import Card\n"
+        "    for _ in range(n):\n"
+        "        c = Card(slug='dummy_card', name='dummy'); c.owner = c.controller = pid\n"
+        "        state.players[pid].deck.cards.append(c)\n"
+        "    return state.players[pid].deck.cards\n"
+        "def give_token(state, pid, slug, n=1):\n"
+        "    # Put n copies of a token under a player via the real create path, so\n"
+        "    # 'if you control a X token' conditions see them. Slugs are LOWERCASE\n"
+        "    # ('might', 'gold', 'seismic_surge'). Do NOT invent a *_token_count attr.\n"
+        "    if getattr(state, 'card_db', None) is None: state.card_db = DB\n"
+        "    from engine.effect_keywords import create_token\n"
+        "    create_token(state, pid, slug, n)\n\n"
     )
     tmp = ROOT / "tests" / f"_gate_{slug}.py"
     tmp.write_text(header + test_code + "\n", encoding="utf-8")
@@ -1369,11 +1395,16 @@ def main() -> None:
             args.model = "qwen2.5-coder:14b"
             print(f"[cfg] no --model given; implementer defaults to {args.model}")
         if not args.verify_model:
-            args.verify_model = "fab-rules-ft:latest"
+            args.verify_model = "qwen2.5-coder:14b"
             print(f"[cfg] no --audit-model given; auditor defaults to {args.verify_model}")
         if args.verify_model == args.model:
-            print(f"[cfg] WARNING: auditor model == implementer model ({args.model}); "
-                  f"the design wants them separate so the auditor is an independent check.")
+            # Same weights is allowed: each call is a stateless /chat/completions
+            # with no shared context, so the auditor is already a separate
+            # instance (the point of implementer/auditor separation). Identical
+            # weights only costs error DEcorrelation, which an A/B test found not
+            # worth chasing via persona/temperature (it added hallucinated attrs).
+            print(f"[cfg] NOTE: auditor == implementer ({args.model}); calls are still "
+                  f"independent (stateless), same weights though.")
         print(f"[cfg] backend=openai base_url={BASE_URL}")
         print(f"[cfg] implementer={args.model}  auditor={args.verify_model}")
 
