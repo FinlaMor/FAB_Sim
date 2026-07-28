@@ -790,6 +790,17 @@ Output the JSON now:
 
 def build_test_prompt(card: dict, json_content: str) -> str:
     gold = _gold_test_for(json_content)
+    try:
+        has_abilities = bool(json.loads(json_content).get("abilities"))
+    except Exception:
+        has_abilities = True
+    rule5 = (
+        '5. This card HAS abilities — test their effect(s). Do NOT write a '
+        '"no abilities" test and do NOT assert `not card.abilities`.'
+        if has_abilities else
+        '5. This card has EMPTY abilities. Write EXACTLY ONE smoke test:\n'
+        f'   assert get_card("{card["slug"]}").abilities == []'
+    )
     return f"""\
 You are writing pytest unit tests for a Flesh and Blood card simulator.
 
@@ -812,6 +823,12 @@ provides _make_state, _card, DB, dispatch, get_card — do NOT redefine them.
 REAL PASSING EXAMPLE (same ability_type):
 {gold}
 
+Write 1-2 FOCUSED tests on the card's PRIMARY, directly-observable effect (the
+resource/life/token/zone change). Every test you write MUST pass. Do NOT assert
+`GO_AGAIN` or other keyword grants (go again, dominate, intimidate): those apply
+during the resolution flow, not from a bare dispatch, so `action_points`/etc.
+will NOT change here — asserting them fails a correct card.
+
 RULES:
 1. Every test name starts with `test_{card["slug"]}_`.
 2. Use the real API shown above: `_make_state()` for state (NOT a dict), the
@@ -829,8 +846,7 @@ RULES:
    (ON_HIT/ON_ATTACK/ON_DEFEND/...); PLAY -> "ON_PLAY"; ACTIVATE/ACTION ->
    "ON_ACTIVATE"; DEFENSE_REACTION/ATTACK_REACTION -> "ON_PLAY". Match the
    card's JSON. Arsenal holds at most 1 card.
-5. If the card has empty abilities, write one smoke test asserting
-   `get_card("{card["slug"]}")` has no abilities (import get_card too).
+{rule5}
 6. If you genuinely cannot write a correct test, output `NEEDS_NEW_DSL: <reason>` and stop.
 7. Output ONLY valid Python — no markdown fences, no prose.
 
