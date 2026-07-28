@@ -745,6 +745,15 @@ GOLD_TESTS = {
     st.players[1].head.add(card)
     dispatch(st, "ON_EQUIP", "crown_of_dominion", card=card, event=None)
     assert any(c.slug == "gold" for c in st.players[1].permanents.cards)''',
+    "COMBAT": '''def test_hunters_klaive_on_hit_marks():
+    # "When this hits a hero, mark them." attack() sets up a REAL combat (this card
+    # attacking the opponent hero); hit() lands the hit so ON_HIT fires.
+    st = _make_state(); st.card_db = DB
+    card = _card("hunters_klaive")
+    st.players[1].weapon1.add(card)
+    attack(st, card)
+    hit(st)
+    assert st.players[2].class_counters.get("marked", 0) >= 1''',
 }
 
 _GOLD_BY_ABILITY = {
@@ -757,11 +766,17 @@ _GOLD_BY_ABILITY = {
 
 
 def _gold_test_for(json_content: str) -> str:
-    """Pick the verified gold test whose ability_type matches the generated card."""
+    """Pick the verified gold test that best matches the generated card. Cards that
+    trigger from combat (ON_HIT/ON_ATTACK/ON_DEFEND) get the combat example, which
+    sets up a real attack; everything else keys off ability_type."""
     try:
-        at = (json.loads(json_content).get("abilities") or [{}])[0].get("ability_type", "")
+        ab = (json.loads(json_content).get("abilities") or [{}])[0]
+        at = ab.get("ability_type", "")
+        trig = (ab.get("trigger") or "").upper()
     except Exception:
-        at = ""
+        at, trig = "", ""
+    if at == "TRIGGERED" and trig in ("ON_HIT", "ON_ATTACK", "ON_DEFEND"):
+        return GOLD_TESTS["COMBAT"]
     return GOLD_TESTS[_GOLD_BY_ABILITY.get(at, "TRIGGERED")]
 
 
@@ -820,8 +835,8 @@ Write your test(s) the same way, adapted to {card["slug"]}: build a real state
 with _make_state(), dispatch with the real signature
 `dispatch(state, EVENT_TYPE, slug, card=<card>, event=None)`, and assert an
 OBSERVABLE outcome. Do NOT invent a mock state dict. The harness already
-provides _make_state, _card, DB, dispatch, get_card, and activate(state, card)
-— do NOT redefine them.
+provides _make_state, _card, DB, dispatch, get_card, activate(state, card),
+attack(state, card) and hit(state) — do NOT redefine them.
 
 REAL PASSING EXAMPLE (same ability_type):
 {gold}
@@ -850,8 +865,12 @@ RULES:
      flow, so it PAYS the card's cost array (e.g. "Destroy this") AND runs the
      effects. You can assert BOTH (the effect, and that the cost happened, e.g.
      the card left its zone).
-   - TRIGGERED -> `dispatch(st, "<TRIGGER>", "<slug>", card=card, event=None)`
-     with the trigger from the JSON (ON_HIT / ON_ATTACK / ON_DEFEND / ...).
+   - TRIGGERED with a COMBAT trigger (ON_HIT / ON_ATTACK) -> set up a real attack:
+     `attack(st, card)` (the card attacks the opponent hero; returns st.combat,
+     assert `st.combat.attack_power` for pumps), then `hit(st)` to land the hit
+     so ON_HIT fires.
+   - Other TRIGGERED -> `dispatch(st, "<TRIGGER>", "<slug>", card=card, event=None)`
+     with the trigger from the JSON (ON_EQUIP / ON_ENTER_PLAY / START_OF_TURN / ...).
    - PLAY / INSTANT / ATTACK_REACTION / DEFENSE_REACTION -> `dispatch(st,
      "ON_PLAY", "<slug>", card=card, event=None)`.
    Arsenal holds at most 1 card.
@@ -979,7 +998,22 @@ def run_generated_test(slug: str, test_code: str, verbose: bool = False) -> tupl
         "    from engine.actions import Action, ActionType\n"
         "    from engine.play import apply_action\n"
         "    p = state.players[player_id]; p.action_points = max(1, p.action_points)\n"
-        "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n\n"
+        "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n"
+        "def attack(state, card, attacker=1):\n"
+        "    # Real combat: `card` attacks the opponent hero. Fires ON_ATTACK and\n"
+        "    # recomputes attack_power. Returns state.combat (assert .attack_power for pumps).\n"
+        "    from engine.state import CombatState\n"
+        "    import engine.engine as _E\n"
+        "    bp = getattr(card, 'power', None) or getattr(card, 'base_power', None) or 0\n"
+        "    state.combat = CombatState(attacker_id=attacker, link_id=1, attack_power=bp, attack_card=card, keywords=[])\n"
+        "    state.combat.base_attack_power = bp\n"
+        "    dispatch(state, 'ON_ATTACK', card.slug, card=card, event=None)\n"
+        "    _E._recalculate_attack_power(state)\n"
+        "    return state.combat\n"
+        "def hit(state):\n"
+        "    # The current attack hits -> fires ON_HIT for the attacking card.\n"
+        "    ac = state.combat.attack_card; state.combat.hit = True\n"
+        "    dispatch(state, 'ON_HIT', ac.slug, card=ac, event=None)\n\n"
     )
     tmp = ROOT / "tests" / f"_gate_{slug}.py"
     tmp.write_text(header + test_code + "\n", encoding="utf-8")
@@ -1170,7 +1204,19 @@ def append_test(slug: str, code: str) -> None:
             "    from engine.actions import Action, ActionType\n"
             "    from engine.play import apply_action\n"
             "    p = state.players[player_id]; p.action_points = max(1, p.action_points)\n"
-            "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n\n",
+            "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n"
+            "def attack(state, card, attacker=1):\n"
+            "    from engine.state import CombatState\n"
+            "    import engine.engine as _E\n"
+            "    bp = getattr(card, 'power', None) or getattr(card, 'base_power', None) or 0\n"
+            "    state.combat = CombatState(attacker_id=attacker, link_id=1, attack_power=bp, attack_card=card, keywords=[])\n"
+            "    state.combat.base_attack_power = bp\n"
+            "    dispatch(state, 'ON_ATTACK', card.slug, card=card, event=None)\n"
+            "    _E._recalculate_attack_power(state)\n"
+            "    return state.combat\n"
+            "def hit(state):\n"
+            "    ac = state.combat.attack_card; state.combat.hit = True\n"
+            "    dispatch(state, 'ON_HIT', ac.slug, card=ac, event=None)\n\n",
             encoding="utf-8",
         )
     with TEST_OUTPUT.open("a", encoding="utf-8") as f:
