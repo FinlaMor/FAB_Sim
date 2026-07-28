@@ -721,13 +721,15 @@ STRUCTURAL_RULES = """
 # attribute names, real zones — instead of guessing.
 GOLD_TESTS = {
     "ACTIVATE": '''def test_blossom_of_spring_activate():
-    # "Action - Destroy this: Gain {r}. Go again" — activated ability fires on ON_ACTIVATE
+    # "Action - Destroy this: Gain {r}. Go again" — activate() runs the REAL flow,
+    # so both the effect AND the "Destroy this" cost are checkable.
     st = _make_state(); st.card_db = DB
     card = _card("blossom_of_spring")
     st.players[1].chest.add(card)
     before = st.players[1].resources
-    dispatch(st, "ON_ACTIVATE", "blossom_of_spring", card=card, event=None)
-    assert st.players[1].resources == before + 1''',
+    activate(st, card)
+    assert st.players[1].resources == before + 1      # the effect (after the colon)
+    assert card not in st.players[1].chest.cards       # the "Destroy this" cost was paid''',
     "PLAY": '''def test_vigorous_windup_blue_play():
     # A play ability fires on ON_PLAY; assert the observable result (here a token in play)
     st = _make_state(); st.card_db = DB
@@ -818,7 +820,8 @@ Write your test(s) the same way, adapted to {card["slug"]}: build a real state
 with _make_state(), dispatch with the real signature
 `dispatch(state, EVENT_TYPE, slug, card=<card>, event=None)`, and assert an
 OBSERVABLE outcome. Do NOT invent a mock state dict. The harness already
-provides _make_state, _card, DB, dispatch, get_card — do NOT redefine them.
+provides _make_state, _card, DB, dispatch, get_card, and activate(state, card)
+— do NOT redefine them.
 
 REAL PASSING EXAMPLE (same ability_type):
 {gold}
@@ -842,10 +845,16 @@ RULES:
      `.arsenal.cards`, `.banished.cards`, `.hand.cards`, `.chest.cards`,
      `.arms.cards`, `.weapon1.cards`, `.permanents.cards`
    Do NOT assert on internal registries or flags. Do NOT invent attribute names.
-4. Fire the ability by its ability_type: TRIGGERED -> dispatch its trigger
-   (ON_HIT/ON_ATTACK/ON_DEFEND/...); PLAY -> "ON_PLAY"; ACTIVATE/ACTION ->
-   "ON_ACTIVATE"; DEFENSE_REACTION/ATTACK_REACTION -> "ON_PLAY". Match the
-   card's JSON. Arsenal holds at most 1 card.
+4. Fire the ability by its ability_type:
+   - ACTIVATE / ACTION -> `activate(st, card)`. This runs the REAL activation
+     flow, so it PAYS the card's cost array (e.g. "Destroy this") AND runs the
+     effects. You can assert BOTH (the effect, and that the cost happened, e.g.
+     the card left its zone).
+   - TRIGGERED -> `dispatch(st, "<TRIGGER>", "<slug>", card=card, event=None)`
+     with the trigger from the JSON (ON_HIT / ON_ATTACK / ON_DEFEND / ...).
+   - PLAY / INSTANT / ATTACK_REACTION / DEFENSE_REACTION -> `dispatch(st,
+     "ON_PLAY", "<slug>", card=card, event=None)`.
+   Arsenal holds at most 1 card.
 {rule5}
 6. If you genuinely cannot write a correct test, output `NEEDS_NEW_DSL: <reason>` and stop.
 7. Output ONLY valid Python — no markdown fences, no prose.
@@ -963,7 +972,14 @@ def run_generated_test(slug: str, test_code: str, verbose: bool = False) -> tupl
         "DB = CardDB()\n"
         "def _card(slug, owner=1):\n"
         "    c = copy.deepcopy(DB.get(slug)); c.owner = c.controller = owner\n"
-        "    return c\n\n"
+        "    return c\n"
+        "def activate(state, card, player_id=1):\n"
+        "    # Real activation flow: pays the ability's cost array (e.g. 'Destroy this')\n"
+        "    # AND runs its effects. Use this for ACTIVATE/ACTION cards.\n"
+        "    from engine.actions import Action, ActionType\n"
+        "    from engine.play import apply_action\n"
+        "    p = state.players[player_id]; p.action_points = max(1, p.action_points)\n"
+        "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n\n"
     )
     tmp = ROOT / "tests" / f"_gate_{slug}.py"
     tmp.write_text(header + test_code + "\n", encoding="utf-8")
@@ -1149,7 +1165,12 @@ def append_test(slug: str, code: str) -> None:
             "DB = CardDB()\n"
             "def _card(slug, owner=1):\n"
             "    c = copy.deepcopy(DB.get(slug)); c.owner = c.controller = owner\n"
-            "    return c\n\n",
+            "    return c\n"
+            "def activate(state, card, player_id=1):\n"
+            "    from engine.actions import Action, ActionType\n"
+            "    from engine.play import apply_action\n"
+            "    p = state.players[player_id]; p.action_points = max(1, p.action_points)\n"
+            "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n\n",
             encoding="utf-8",
         )
     with TEST_OUTPUT.open("a", encoding="utf-8") as f:
