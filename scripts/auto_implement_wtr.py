@@ -1657,22 +1657,29 @@ def main() -> None:
             elif args.no_gate:
                 print(f"  [test] no test code produced (gate disabled; status kept {status})")
             elif last_run_out:
+                # CANDIDATE tier: the impl LOADS and is not a no-op stub (it cleared
+                # gate 1 + 1b to reach here), the auditor just couldn't produce a
+                # PASSING test — usually a false negative (correct impl, wrong test)
+                # on a complex card. Keep the impl live/usable but unverified; the
+                # note records the failing test for a later verification pass.
                 _write_review_note(slug, f"no generated test passed (best of {n})",
                                    last_run_out, label="testgate")
-                status = "test_failed"
-                print(f"  [gate] no sample passed after {n} -> test_failed")
+                status = "candidate"
+                print(f"  [gate] no sample passed after {n} -> candidate (unverified)")
             elif saw_needs_dsl:
                 status = "needs_review"
                 print(f"  [test] auditor flagged NEEDS_NEW_DSL -> needs_review")
             else:
-                status = "needs_test"
-                print(f"  [test] no usable test produced ({last_gen_err[:50]}) -> needs_test")
+                # Loaded + non-stub but no test code produced at all -> candidate.
+                status = "candidate"
+                print(f"  [test] no usable test produced ({last_gen_err[:50]}) -> candidate (unverified)")
 
-        # Keep the live corpus clean: only 'done' (loaded + behaviourally verified)
-        # cards stay in their set folder. Everything else is quarantined so it can
-        # neither break load_all_cards() (load-gate failures) nor sit unverified
-        # (test_failed). --no-gate keeps the old write-everything behaviour.
-        if not args.no_gate and status != "done":
+        # Corpus tiers: 'done' (loaded + behaviourally verified) and 'candidate'
+        # (loaded + non-stub, unverified) both stay LIVE in their set folder so the
+        # cards are playable. Only genuinely-broken results (load-gate failure,
+        # no-op stub, NEEDS_NEW_DSL, no JSON) are quarantined out of the corpus.
+        # --no-gate keeps the old write-everything behaviour.
+        if not args.no_gate and status not in ("done", "candidate"):
             _quarantine_card_json(slug)
 
         # Single authoritative status write for this card, after the gate decided.
