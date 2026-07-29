@@ -856,8 +856,29 @@ Output the JSON now:
 """
 
 
+def _talishar_reference(slug: str) -> str:
+    """Talishar's own logic for this slug, as a prompt-ready 'second opinion' block
+    (empty if the local backend is absent or has no per-card logic). Grounds the
+    auditor's test in reference behaviour — e.g. reveals a persistent combat-chain
+    effect our impl modelled as a one-shot ON_HIT. Not authoritative (Talishar's
+    README disclaims it); a divergence is a review signal, not proof."""
+    try:
+        import talishar_reference as _T
+        return _T.reference_text(slug)
+    except Exception:
+        return ""
+
+
 def build_test_prompt(card: dict, json_content: str) -> str:
     gold = _gold_test_for(json_content, card)
+    tal = _talishar_reference(card["slug"])
+    tal_block = (
+        "\nTALISHAR REFERENCE — how the Talishar engine implements this card (a\n"
+        "SECOND OPINION on the intended behaviour; may have bugs, not authoritative).\n"
+        "Use it to assert the RIGHT observable outcome; if our JSON clearly\n"
+        "contradicts it, still test what the CARD TEXT says:\n"
+        f"{tal}\n"
+    ) if tal else ""
     try:
         has_abilities = bool(json.loads(json_content).get("abilities"))
     except Exception:
@@ -894,7 +915,7 @@ any "top of deck" effect (the deck starts EMPTY) and give_token for
 
 REAL PASSING EXAMPLE (same ability_type):
 {gold}
-
+{tal_block}
 Write 1-2 FOCUSED tests on the card's PRIMARY, directly-observable effect (the
 resource/life/token/zone change). Every test you write MUST pass. Do NOT assert
 `GO_AGAIN` or other keyword grants (go again, dominate, intimidate): those apply
