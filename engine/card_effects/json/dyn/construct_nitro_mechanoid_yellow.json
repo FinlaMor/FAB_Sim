@@ -1,0 +1,26 @@
+{
+  "slug": "construct_nitro_mechanoid_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "target": "Mechanologist",
+          "parts": [
+            "head",
+            "chest",
+            "arms",
+            "legs",
+            "weapon",
+            "3 Hyper Drivers"
+          ],
+          "transform_to": "Nitro Mechanoid"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

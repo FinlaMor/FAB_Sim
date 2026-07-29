@@ -1,0 +1,53 @@
+{
+  "slug": "polarity_reversal_script_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "cost": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "subtract",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Mechanologist"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

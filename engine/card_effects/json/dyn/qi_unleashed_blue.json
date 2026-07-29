@@ -1,0 +1,21 @@
+{
+  "slug": "qi_unleashed_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "COMBO_CONTAINS",
+          "card": "Crouching Tiger"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4
+        }
+      ]
+    }
+  ]
+}

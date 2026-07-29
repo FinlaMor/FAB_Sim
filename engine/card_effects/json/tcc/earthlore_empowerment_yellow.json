@@ -1,0 +1,41 @@
+{
+  "slug": "earthlore_empowerment_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_PLAY",
+            "conditions": [
+              {
+                "type": "ATTACK_CLASS_IN",
+                "classes": [
+                  "Guardian"
+                ]
+              }
+            ],
+            "effects": [
+              {
+                "type": "PAY_OR_DAMAGE",
+                "resource": "RESOURCE_POINTS",
+                "amount": 1
+              },
+              {
+                "type": "MODIFY_ATTACK",
+                "mod": "add",
+                "amount": 4
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

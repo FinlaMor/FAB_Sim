@@ -1,0 +1,14 @@
+{
+  "slug": "malign_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "ward_type": "UNPREVENTABLE"
+        }
+      ]
+    }
+  ]
+}

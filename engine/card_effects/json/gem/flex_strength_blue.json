@@ -1,0 +1,22 @@
+{
+  "slug": "flex_strength_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "COUNTER_GTE",
+          "counter": "power",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

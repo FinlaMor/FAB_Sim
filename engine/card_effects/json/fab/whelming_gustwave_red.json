@@ -1,0 +1,21 @@
+{
+  "slug": "whelming_gustwave_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SURGING_STRIKE_LAST_ATTACK"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

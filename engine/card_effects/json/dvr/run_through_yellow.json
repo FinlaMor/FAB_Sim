@@ -1,0 +1,39 @@
+{
+  "slug": "run_through_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "ATTACK_SUBTYPE_IN",
+          "subtype": "Sword"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "DURING_TURN"
+        },
+        {
+          "type": "ATTACK_SUBTYPE_IN",
+          "subtype": "Sword"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

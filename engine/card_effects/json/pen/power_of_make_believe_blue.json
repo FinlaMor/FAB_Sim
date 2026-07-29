@@ -1,0 +1,27 @@
+{
+  "slug": "power_of_make_believe_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "defending",
+              "conditions": [
+                {
+                  "type": "SELF_ATTACK_POWER_GTE",
+                  "amount": 6
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

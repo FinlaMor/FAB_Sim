@@ -1,0 +1,24 @@
+{
+  "slug": "pathing_helix_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "arsenal",
+          "amount": 0
+        }
+      ],
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "amount": 1,
+          "destination": "arsenal",
+          "face_down": true
+        }
+      ]
+    }
+  ]
+}

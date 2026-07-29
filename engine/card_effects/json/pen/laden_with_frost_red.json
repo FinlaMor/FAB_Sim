@@ -1,0 +1,36 @@
+{
+  "slug": "laden_with_frost_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "ICE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Frostbite",
+          "controller": "opponent"
+        }
+      ]
+    }
+  ]
+}

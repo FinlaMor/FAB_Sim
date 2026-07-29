@@ -1,0 +1,22 @@
+{
+  "slug": "honing_hood",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_DR_FROM_GRAVEYARD"
+        },
+        {
+          "type": "PUT_HAND_CARD_BOTTOM"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "metex_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "hand",
+              "cost": 0
+            }
+          ]
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "hand",
+              "cost": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

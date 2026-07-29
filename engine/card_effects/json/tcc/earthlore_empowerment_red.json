@@ -1,0 +1,42 @@
+{
+  "slug": "earthlore_empowerment_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_PLAY",
+            "conditions": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zone": "arsenal",
+                "card_type": "ACTION",
+                "classes": [
+                  "Guardian"
+                ]
+              }
+            ],
+            "effects": [
+              {
+                "type": "PAY_OR_DAMAGE",
+                "amount": 1
+              },
+              {
+                "type": "MODIFY_ATTACK",
+                "mod": "add",
+                "amount": 5
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

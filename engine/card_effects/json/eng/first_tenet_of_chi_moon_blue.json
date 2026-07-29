@@ -1,0 +1,40 @@
+{
+  "slug": "first_tenet_of_chi_moon_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        },
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Blue"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_ATTACK",
+          "effects": [
+            {
+              "type": "DRAW",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

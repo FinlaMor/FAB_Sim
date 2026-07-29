@@ -1,0 +1,33 @@
+{
+  "slug": "clench_the_upper_hand_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CROWD_BOO"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CROWD_BOO"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "wide_blue_yonder_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BLUE_PITCHED_THIS_TURN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

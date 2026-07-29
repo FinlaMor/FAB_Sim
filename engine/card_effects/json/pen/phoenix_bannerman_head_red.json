@@ -1,0 +1,26 @@
+{
+  "slug": "phoenix_bannerman_head_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "target": "Phoenix Flame",
+          "amount": 1,
+          "reveal": true,
+          "put_into_hand": true,
+          "shuffle": true
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ponder"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

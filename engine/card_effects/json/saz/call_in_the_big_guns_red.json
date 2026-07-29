@@ -1,0 +1,34 @@
+{
+  "slug": "call_in_the_big_guns_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "NEXT_ARROW_ATTACK"
+            }
+          ]
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "PUT_ARROW_IN_ARSENAL"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

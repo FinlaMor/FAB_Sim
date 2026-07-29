@@ -1,0 +1,23 @@
+{
+  "slug": "tentacular_toll_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "BANISH_OPP_TOP_GRANT_PLAY",
+          "amount": 3
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Gold",
+          "amount": 3
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

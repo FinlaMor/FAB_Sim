@@ -1,0 +1,31 @@
+{
+  "slug": "smelting_of_the_old_ones_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "class": "Guardian"
+        },
+        {
+          "type": "ATTACK_POWER_GT_BASE",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN",
+          "target": "equipment",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "equipment"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

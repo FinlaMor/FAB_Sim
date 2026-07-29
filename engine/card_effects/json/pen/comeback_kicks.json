@@ -1,0 +1,25 @@
+{
+  "slug": "comeback_kicks",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "GAIN",
+          "asset": "ACTION_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "slug": "mage_hunter_arrow_red",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_DEATH",
+            "conditions": [
+              {
+                "type": "FLAG_SET",
+                "flag": "MAGE_HUNTER_ARROW_ACTIVE"
+              }
+            ],
+            "effects": [
+              {
+                "type": "PAY_OR_DAMAGE",
+                "amount": 3,
+                "damage_type": "ARCANE"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO",
+              "hero_type": "Runeblade"
+            },
+            {
+              "type": "ATTACK_TARGET_IS_HERO",
+              "hero_type": "Wizard"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN",
+          "target": "opponent",
+          "token_type": "Aura"
+        }
+      ]
+    }
+  ]
+}

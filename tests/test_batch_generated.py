@@ -589,3 +589,62 @@ def test_twist_and_turn_blue_on_hit():
     n0 = len(st.players[1].arsenal.cards)
     dispatch(st, "ON_HIT", "twist_and_turn_blue", card=card, event=None)
     assert len(st.players[1].arsenal.cards) >= n0
+
+# --- comeback_kicks ---
+def test_comeback_kicks_on_cheer():
+    # "Whenever the crowd cheers you, if you have less {h} than each other hero, you may destroy this. If you do, gain 1 action point."
+    st = _make_state(); st.card_db = DB
+    card = _card("comeback_kicks")
+    st.players[1].arms.cards.append(card)
+    st.players[1].health = 10
+    st.players[2].health = 15
+
+    # Capture the initial action points
+    before_action_points = st.players[1].action_points
+
+    # Dispatch the ON_CLASH_WIN_REVEALED event
+    dispatch(st, "ON_CLASH_WIN_REVEALED", "comeback_kicks", card=card, event=None)
+
+    # Assert that the card is destroyed
+    assert card not in st.players[1].arms.cards
+
+    # Assert that the player gained 1 action point
+    assert st.players[1].action_points == before_action_points + 1
+
+def test_comeback_kicks_no_cheer():
+    # "Whenever the crowd cheers you, if you have less {h} than each other hero, you may destroy this. If you do, gain 1 action point."
+    st = _make_state(); st.card_db = DB
+    card = _card("comeback_kicks")
+    st.players[1].arms.cards.append(card)
+    st.players[1].health = 15
+    st.players[2].health = 10
+
+    # Capture the initial action points
+    before_action_points = st.players[1].action_points
+
+    # Dispatch the ON_CLASH_WIN_REVEALED event
+    dispatch(st, "ON_CLASH_WIN_REVEALED", "comeback_kicks", card=card, event=None)
+
+    # Assert that the card is not destroyed
+    assert card in st.players[1].arms.cards
+
+    # Assert that the player did not gain any action points
+    assert st.players[1].action_points == before_action_points
+
+# --- smash_with_big_tree_yellow ---
+def test_smash_with_big_tree_yellow_no_effect():
+    # This test checks that the card has no abilities, as defined in the JSON.
+    assert get_card("smash_with_big_tree_yellow").abilities == []
+
+def test_smash_with_big_tree_yellow_no_effect_in_combat():
+    # This test sets up a real combat scenario and checks that the card has no observable effect.
+    st = _make_state(); st.card_db = DB
+    card = _card("smash_with_big_tree_yellow")
+    st.players[1].weapon1.add(card)
+    attack(st, card)
+    hit(st)
+    # Since the card has no abilities, there should be no change in the opponent's health.
+    before_health = st.players[2].health
+    attack(st, card)
+    hit(st)
+    assert st.players[2].health == before_health

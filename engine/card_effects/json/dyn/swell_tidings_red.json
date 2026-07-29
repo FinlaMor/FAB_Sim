@@ -1,0 +1,23 @@
+{
+  "slug": "swell_tidings_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 5
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ponder",
+          "conditions": [
+            {
+              "type": "SURGE"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

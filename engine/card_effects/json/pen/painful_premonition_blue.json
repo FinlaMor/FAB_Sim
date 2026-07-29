@@ -1,0 +1,18 @@
+{
+  "slug": "painful_premonition_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Sigil of Fate"
+        }
+      ]
+    }
+  ]
+}

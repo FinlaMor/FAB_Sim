@@ -1,0 +1,18 @@
+{
+  "slug": "starlight_road_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "EMBODIMENT_OF_LIGHTNING"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "LIGHTNING_FLOW"
+        }
+      ]
+    }
+  ]
+}

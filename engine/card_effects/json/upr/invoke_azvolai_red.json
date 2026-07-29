@@ -1,0 +1,18 @@
+{
+  "slug": "invoke_azvolai_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "target": "Ash"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

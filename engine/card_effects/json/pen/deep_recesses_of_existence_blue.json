@@ -1,0 +1,21 @@
+{
+  "slug": "deep_recesses_of_existence_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_COMBAT_CLOSE",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "self",
+          "face_down": true
+        },
+        {
+          "type": "BANISH_REF",
+          "ref": "OPPONENTS_WITH_LOST_LIFE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

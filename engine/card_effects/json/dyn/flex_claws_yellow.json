@@ -1,0 +1,28 @@
+{
+  "slug": "flex_claws_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Crouching Tiger",
+          "zone": "banished"
+        },
+        {
+          "type": "BANISH_OPP_TOP_GRANT_PLAY",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

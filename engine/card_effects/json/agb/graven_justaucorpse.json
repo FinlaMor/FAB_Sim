@@ -1,0 +1,25 @@
+{
+  "slug": "graven_justaucorpse",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DISCARD_RANDOM"
+        },
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": "pitch_value"
+        }
+      ]
+    }
+  ]
+}

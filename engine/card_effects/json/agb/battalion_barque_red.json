@@ -1,0 +1,23 @@
+{
+  "slug": "battalion_barque_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "amount": 2,
+          "color": "blue"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

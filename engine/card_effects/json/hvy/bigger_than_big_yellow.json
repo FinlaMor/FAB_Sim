@@ -1,0 +1,42 @@
+{
+  "slug": "bigger_than_big_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Guardian"
+            }
+          ]
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_ATTACK",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Guardian"
+            }
+          ],
+          "effects": [
+            {
+              "type": "WAGER",
+              "token": "Might"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

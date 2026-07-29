@@ -1,0 +1,29 @@
+{
+  "slug": "codex_of_bloodrot_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD",
+          "zone": "hand",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ponder",
+          "controller": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Bloodrot Pox",
+          "controller": "opponent"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

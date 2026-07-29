@@ -1,0 +1,43 @@
+{
+  "slug": "pulsewave_harpoon_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BOOST_FLAG"
+        }
+      ],
+      "effects": [
+        {
+          "type": "REVEAL_HAND_MARK_IF_TYPE",
+          "amount": "BOOST_FLAG_COUNT",
+          "card_type": "ACTION"
+        },
+        {
+          "type": "SELECT_FROM_REF",
+          "ref": "REVEALED_CARDS",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "REVEALED_CARDS"
+            },
+            {
+              "type": "ATTACK_COST_LTE",
+              "amount": "BOOST_FLAG_COUNT"
+            }
+          ],
+          "effects": [
+            {
+              "type": "MOVE_REF",
+              "from": "REVEALED_CARDS",
+              "to": "DEFENDING_CARDS"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

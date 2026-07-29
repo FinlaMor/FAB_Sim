@@ -1,0 +1,21 @@
+{
+  "slug": "vantage_point_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "AURA_PLAYED_OR_CREATED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "OVERPOWER"
+        }
+      ]
+    }
+  ]
+}

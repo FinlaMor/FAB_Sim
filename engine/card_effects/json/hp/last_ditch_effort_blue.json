@@ -1,0 +1,24 @@
+{
+  "slug": "last_ditch_effort_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "DECK_EMPTY"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

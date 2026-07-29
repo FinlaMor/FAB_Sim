@@ -1,0 +1,46 @@
+{
+  "slug": "assembly_module_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ASSEMBLY_MODULE_STREAM_COUNTER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "REMOVE_COUNTER",
+          "counter": "STREAM"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "card_type": "HYPER_DRIVER",
+          "put_into": "arena"
+        },
+        {
+          "type": "REORDER_REF",
+          "ref": "deck"
+        }
+      ]
+    }
+  ]
+}

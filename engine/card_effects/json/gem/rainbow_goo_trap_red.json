@@ -1,0 +1,31 @@
+{
+  "slug": "rainbow_goo_trap_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "ATTACK_POWER_GT_BASE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DOMINATE"
+        },
+        {
+          "type": "GO_AGAIN"
+        },
+        {
+          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
+          "mod": "subtract",
+          "amount": 2
+        },
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter_type": "ABILITIES"
+        }
+      ]
+    }
+  ]
+}

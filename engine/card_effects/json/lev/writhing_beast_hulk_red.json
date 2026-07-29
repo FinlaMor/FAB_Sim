@@ -1,0 +1,34 @@
+{
+  "slug": "writhing_beast_hulk_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "BANISH_NAMED_GRAVEYARD_OPTIONAL",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "DOMINATE",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BLOOD_DEBT_FLAG"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "BLOOD_DEBT_FLAG"
+        }
+      ]
+    }
+  ]
+}

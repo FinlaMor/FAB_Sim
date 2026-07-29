@@ -1,0 +1,54 @@
+{
+  "slug": "fasting_carcass_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "FASTING_CARCASS_FLAG"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FASTING_CARCASS_FLAG"
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "HAND",
+          "card_class": "Blue",
+          "card_type": "Action"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "BLOOD_DEBT"
+        }
+      ]
+    }
+  ]
+}

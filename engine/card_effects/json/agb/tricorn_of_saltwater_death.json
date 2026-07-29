@@ -1,0 +1,38 @@
+{
+  "slug": "tricorn_of_saltwater_death",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "DISCARD",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "hand",
+              "keyword": "WATERY_GRAVE"
+            }
+          ]
+        },
+        {
+          "type": "DRAW",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "hand",
+              "keyword": "WATERY_GRAVE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

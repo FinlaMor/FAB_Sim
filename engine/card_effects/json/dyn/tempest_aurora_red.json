@@ -1,0 +1,42 @@
+{
+  "slug": "tempest_aurora_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "APPLY_CONTINUOUS",
+          "conditions": [
+            {
+              "type": "DURING_TURN"
+            },
+            {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "HAND",
+                  "cost_lte": 2,
+                  "effects": [
+                    {
+                      "type": "DEAL_ARCANE",
+                      "amount": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
