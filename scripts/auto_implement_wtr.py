@@ -960,21 +960,28 @@ Output the test functions now:
 # ---------------------------------------------------------------------------
 
 def run_openai_chat(prompt: str, model: str, verbose: bool = False,
-                    retries: int = 2, temperature: float = 0.1) -> str:
+                    retries: int = 2, temperature: float = 0.1,
+                    seed: int | None = None) -> str:
     """Run a prompt against an OpenAI-compatible /chat/completions endpoint.
 
     Works with any server that speaks the OpenAI chat API — a standalone
     llama.cpp llama-server, Ollama, LM Studio, etc. Returns the assistant text,
     or a CLAW_TIMEOUT / CLAW_ERROR sentinel (shared with run_claw so the existing
     output parsers handle failures identically).
+
+    `seed` pins sampling so best-of-N auditor attempts draw DIFFERENT candidates
+    (each attempt passes a distinct seed); omit it for a single non-pinned call.
     """
     url = BASE_URL.rstrip("/") + "/chat/completions"
-    body = json.dumps({
+    payload = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": temperature,
         "stream": False,
-    }).encode("utf-8")
+    }
+    if seed is not None:
+        payload["seed"] = seed
+    body = json.dumps(payload).encode("utf-8")
     last_error = ""
     for attempt in range(1, retries + 2):
         try:
@@ -1006,12 +1013,16 @@ def run_openai_chat(prompt: str, model: str, verbose: bool = False,
     return f"CLAW_ERROR: all attempts failed ({last_error})"
 
 
-def run_llm(prompt: str, verbose: bool = False, model: str | None = None) -> str:
-    """Dispatch a prompt to the configured backend (openai endpoint or claw-code)."""
+def run_llm(prompt: str, verbose: bool = False, model: str | None = None,
+            temperature: float = 0.1, seed: int | None = None) -> str:
+    """Dispatch a prompt to the configured backend (openai endpoint or claw-code).
+
+    `temperature`/`seed` only affect the openai backend; claw ignores them."""
     if BACKEND == "openai":
         if not model:
             return "CLAW_ERROR: openai backend requires an explicit model"
-        return run_openai_chat(prompt, model=model, verbose=verbose)
+        return run_openai_chat(prompt, model=model, verbose=verbose,
+                               temperature=temperature, seed=seed)
     return run_claw(prompt, verbose=verbose, model=model)
 
 
@@ -1073,13 +1084,16 @@ def run_generated_test(slug: str, test_code: str, verbose: bool = False) -> tupl
         "    p = state.players[player_id]; p.action_points = max(1, p.action_points)\n"
         "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n"
         "def attack(state, card, attacker=1):\n"
-        "    # Real combat: `card` attacks the opponent hero. Fires ON_ATTACK and\n"
-        "    # recomputes attack_power. Returns state.combat (assert .attack_power for pumps).\n"
+        "    # Real combat: `card` attacks the opponent HERO. Fires ON_ATTACK and\n"
+        "    # recomputes attack_power. Sets the defending player as attack_target so\n"
+        "    # 'the defending hero' effects (damage/banish/mark against them) resolve.\n"
+        "    # Returns state.combat (assert .attack_power for pumps).\n"
         "    from engine.state import CombatState\n"
         "    import engine.engine as _E\n"
         "    bp = getattr(card, 'power', None) or getattr(card, 'base_power', None) or 0\n"
         "    state.combat = CombatState(attacker_id=attacker, link_id=1, attack_power=bp, attack_card=card, keywords=[])\n"
         "    state.combat.base_attack_power = bp\n"
+        "    state.combat.attack_target = state.players[3 - attacker]\n"
         "    dispatch(state, 'ON_ATTACK', card.slug, card=card, event=None)\n"
         "    _E._recalculate_attack_power(state)\n"
         "    return state.combat\n"
@@ -1388,6 +1402,10 @@ def main() -> None:
                              "--model (e.g. fab-rules-ft:latest).")
     parser.add_argument("--embed-model", default="qwen3-embedding:4b", dest="embed_model",
                         help="Ollama embedding model for dynamic example selection (default: qwen3-embedding:4b).")
+    parser.add_argument("--auditor-samples", type=int, default=3, dest="auditor_samples",
+                        help="Best-of-N: the auditor gets up to N seeded attempts to write a "
+                             "passing test; the first that clears the gate wins (early-exit). "
+                             "Beats a stochastic 14B's run-to-run variance. Default: 3, set 1 to disable.")
     parser.add_argument("--set", default="wtr", dest="set_code",
                         help="Set code to process (e.g. wtr, arc, cru). Default: wtr.")
     args = parser.parse_args()
@@ -1539,39 +1557,70 @@ def main() -> None:
         # test_failed.
         if status == "done" and not args.skip_tests:
             audit_model = args.verify_model or args.model
-            print(f"  [test] auditor ({audit_model or 'default'}) writing test...")
             test_prompt = build_test_prompt(card, json_content)
-            test_output = run_llm(test_prompt, verbose=args.verbose, model=audit_model)
-
-            if test_output in ("CLAW_TIMEOUT",) or test_output.startswith("CLAW_ERROR"):
-                if not args.no_gate:
-                    status = "needs_test"
-                print(f"  [test] generation failed ({test_output[:60]}) -> {status}")
-            elif "NEEDS_NEW_DSL:" in test_output:
-                process_test_output(slug, test_output)  # writes a review note
-                if not args.no_gate:
-                    status = "needs_review"
-                print(f"  [test] auditor flagged NEEDS_NEW_DSL -> {status}")
-            else:
-                code = extract_test_code(test_output)
+            # Best-of-N: a stochastic 14B writes a correct test only some of the
+            # time (right trigger, right ordering, real attributes). Give it up to
+            # N SEEDED attempts and keep the FIRST that passes the gate — turning
+            # run-to-run variance into a reliable pass when ANY sample is correct.
+            # Early-exit means an easy card still costs one call.
+            #
+            # TEMPERATURE LADDER (measured): each successive attempt is WARMER.
+            # Attempt 0 runs CRISP (temp 0.1) so a card that passes near-greedily
+            # never regresses; each retry steps up (0.1 -> 0.45 -> 0.8 -> capped
+            # 1.0) for more diversity to rescue a variance card. A flat warm temp
+            # was tried and lost a reliably-passing card (aether_crackers), so
+            # quality-first-then-progressively-diversify beats uniform sampling.
+            n = max(1, args.auditor_samples)
+            passed_code = None
+            last_run_out = ""     # gate output of the last test we actually ran
+            saw_needs_dsl = False
+            last_gen_err = ""
+            for i in range(n):
+                temp = round(min(0.1 + 0.35 * i, 1.0), 2)
+                seed = (1000 + i) if n > 1 else None
+                tag = f" [{i + 1}/{n}]" if n > 1 else ""
+                print(f"  [test] auditor ({audit_model or 'default'}){tag} "
+                      f"writing test (t={temp})...")
+                out = run_llm(test_prompt, verbose=args.verbose, model=audit_model,
+                              temperature=temp, seed=seed)
+                if out == "CLAW_TIMEOUT" or out.startswith("CLAW_ERROR"):
+                    last_gen_err = out
+                    continue
+                if "NEEDS_NEW_DSL:" in out:
+                    saw_needs_dsl = True
+                    process_test_output(slug, out)  # writes a review note
+                    continue
+                code = extract_test_code(out)
                 if not code:
-                    if not args.no_gate:
-                        status = "needs_test"
-                    print(f"  [test] no recognisable test code produced -> {status}")
-                elif args.no_gate:
-                    append_test(slug, code)
-                    print(f"  [test] appended (gate disabled)")
-                else:
-                    passed, out = run_generated_test(slug, code, verbose=args.verbose)
-                    if passed:
-                        append_test(slug, code)
-                        print(f"  [gate] test PASSED -> appended; {slug} verified done")
-                    else:
-                        _write_review_note(slug, "generated test did not pass",
-                                           out + "\n\n--- TEST CODE ---\n" + code, label="testgate")
-                        status = "test_failed"
-                        print(f"  [gate] test FAILED -> status test_failed "
-                              f"(JSON kept for review; test not appended)")
+                    continue
+                if args.no_gate:
+                    passed_code = code
+                    break
+                passed, run_out = run_generated_test(slug, code, verbose=args.verbose)
+                if passed:
+                    passed_code = code
+                    break
+                last_run_out = run_out + "\n\n--- TEST CODE ---\n" + code
+                if i + 1 < n:
+                    print(f"  [gate]{tag} did not pass — retrying with a new sample")
+
+            if passed_code is not None:
+                append_test(slug, passed_code)
+                print(f"  [gate] test PASSED -> appended; {slug} verified done"
+                      if not args.no_gate else "  [test] appended (gate disabled)")
+            elif args.no_gate:
+                print(f"  [test] no test code produced (gate disabled; status kept {status})")
+            elif last_run_out:
+                _write_review_note(slug, f"no generated test passed (best of {n})",
+                                   last_run_out, label="testgate")
+                status = "test_failed"
+                print(f"  [gate] no sample passed after {n} -> test_failed")
+            elif saw_needs_dsl:
+                status = "needs_review"
+                print(f"  [test] auditor flagged NEEDS_NEW_DSL -> needs_review")
+            else:
+                status = "needs_test"
+                print(f"  [test] no usable test produced ({last_gen_err[:50]}) -> needs_test")
 
         # Single authoritative status write for this card, after the gate decided.
         card["status"] = status
