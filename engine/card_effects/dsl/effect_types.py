@@ -1620,6 +1620,41 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 eff_fn(card, event, state)
         return _fn
 
+    # ── attack / wager ─────────────────────────────────────────────────────
+    if etype in ("ATTACK", "ATTACKING"):
+        # "Action - [cost]: Attack" on a weapon/hero. The attack is represented by
+        # an ATTACK-PROXY on the stack (CR 1.6.2b / 11.0): an activated-layer
+        # StackEntry whose card is the source, which the engine's combat step
+        # (_combat_phase_iter -> _attack_step) resolves as a real attack — never a
+        # shortcut into combat. NOTE: a weapon with printed power + activation_cost
+        # is already offered its attack by play._add_weapon_attacks (which builds
+        # the same proxy), and play._add_hero_dsl_activations SKIPS abilities whose
+        # effect is ATTACK, so this _fn does not double-fire on weapon activation;
+        # it is the proxy-builder for any context that invokes the effect directly
+        # (e.g. a granted extra attack).
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.state import StackEntry
+            pid = _controller_id(card)
+            entry = StackEntry(
+                player_id=pid, card=card, layer_type='activated',
+                layer_position=len(state.stack_entries) + 1,
+            )
+            entry.pitched_for_attack = []
+            state.stack_entries.append(entry)
+        return _fn
+
+    if etype == "WAGER":
+        # CR 8.5.46: Wager — a continuous effect on the current attack. If the
+        # attack hits, the controller wins and creates the prize token; otherwise
+        # the opponent wins it. Resolves automatically at chain-link resolution
+        # (engine._resolve_wagers), so this only registers the wager + prize.
+        prize = params.get("prize") or params.get("token")
+        def _fn(card, event, state, _prize=prize):
+            from engine.card_effects.ability_keywords import add_wager, _controller_id
+            add_wager(state, _controller_id(card), _prize)
+        return _fn
+
     # Unknown effect types are authoring errors — fail at JSON load time
     # rather than silently no-opping (fail-open let bad JSON go unnoticed).
     raise ValueError(f"Unknown DSL effect type: {etype!r} (params: {params!r})")

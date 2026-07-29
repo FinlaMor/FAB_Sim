@@ -167,6 +167,24 @@ Modes are selected when the card is added to the stack (CR 1.7.5a). The chosen m
 
 All effects use `{"type": "EFFECT_TYPE", ...}`. Effects are always arrays.
 
+### Attack / Wager
+
+```json
+{"type": "ATTACK"}
+{"type": "WAGER", "prize": "gold"}
+```
+
+`ATTACK` — for a weapon/hero "Action - [cost]: Attack" ability. The attack is put
+on the stack as an attack PROXY (activated-layer, source = the card), which the
+engine resolves as a real attack per CR 1.6.2b — never a shortcut. A weapon with
+printed power + an activation cost is already offered its attack by the engine, so
+`ATTACK` mainly declares the ability (satisfies the "must implement something"
+check) and provides the proxy for a granted extra attack.
+
+`WAGER` — CR 8.5.46. Registers a wager on the current attack; if it hits, the
+controller wins and creates the `prize` token (else the opponent wins it). Resolves
+automatically at chain-link resolution.
+
 ### Attack Power
 
 ```json
@@ -520,6 +538,9 @@ effect whose option 0 is `[DESTROY_TOKEN{token}, ...buffs]` and option 1 is
 More vocabulary added for the Arakni demi-heroes:
 - Cost `DISCARD_CARD` `{class_filter|type_filter, amount}` — filtered discard;
   when filtered, the controller chooses which matching card.
+- Cost `PITCH` `{amount, pitch_value?}` — pitch N cards from hand as a cost (CR
+  8.5.44: to the pitch zone, gaining resources per pitch value). Optional
+  `pitch_value` (1=red, 2=yellow, 3=blue) filters which cards qualify.
 - `BANISH` `{from_zone}` now includes `ARSENAL` (and `HAND`, `DECK`, `GRAVEYARD`).
 - `CREATE_TOKEN` `{destination: "weapon_slot"}` equips a weapon token into a free
   weapon zone (respects `weapon_zone_count`); tokens inherit keywords from the

@@ -330,6 +330,39 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             state.players[_controller_id(card)].resources -= _a
         return can_pay, pay
 
+    if ctype == "PITCH":
+        # "pitch a card" / "pitch N" as an activation cost. The controller chooses
+        # which card(s) to pitch (CR 8.5.44: to the pitch zone, gaining resources
+        # equal to pitch value). Optional pitch-value filter (e.g. "pitch a red
+        # card" -> pitch_value 1). Payable iff enough matching cards are in hand.
+        amount = params.get("amount", 1)
+        pv_filter = params.get("pitch_value")  # 1=red, 2=yellow, 3=blue; None=any
+
+        def _matches(c, _pv=pv_filter):
+            if _pv is None:
+                return True
+            return (getattr(c, 'pitch', None) or getattr(c, 'raw_pitch', None) or 0) == _pv
+
+        def can_pay(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            hand = state.players[_controller_id(card)].hand
+            return len([c for c in hand.cards if _matches(c)]) >= _a
+
+        def pay(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import _controller_id, _ask_player
+            from engine.effect_keywords import pitch as _ek_pitch
+            cid = _controller_id(card)
+            for _ in range(_a):
+                hand = state.players[cid].hand
+                eligible = [c for c in hand.cards if _matches(c)]
+                if not eligible:
+                    break
+                pick = _ask_player(state, cid, [c.slug for c in eligible],
+                                   context="Choose a card to pitch as a cost")
+                chosen = next((c for c in eligible if c.slug == pick), eligible[0])
+                _ek_pitch(state, chosen, cid)
+        return can_pay, pay
+
     # Unknown cost types are authoring errors — fail at JSON load time rather
     # than treating the cost as free (fail-open let bad JSON go unnoticed).
     raise ValueError(f"Unknown DSL cost type: {ctype!r} (params: {params!r})")
