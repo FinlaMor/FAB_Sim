@@ -1,0 +1,26 @@
+{
+  "slug": "pass_over_blue",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "BANISH_FROM_GRAVEYARD",
+          "target": "opponent"
+        }
+      ],
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "color": "blue"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

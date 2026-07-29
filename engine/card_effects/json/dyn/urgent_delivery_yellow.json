@@ -1,0 +1,44 @@
+{
+  "slug": "urgent_delivery_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 1
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "hand"
+                ]
+              },
+              {
+                "type": "SUBTYPE_IN",
+                "subtypes": [
+                  "Item"
+                ]
+              },
+              {
+                "type": "CLASS_IN",
+                "classes": [
+                  "Mechanologist"
+                ]
+              },
+              {
+                "type": "COST_LTE",
+                "amount": "BOOST_COUNT"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

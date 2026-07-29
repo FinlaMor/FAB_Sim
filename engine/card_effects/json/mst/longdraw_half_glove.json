@@ -1,0 +1,33 @@
+{
+  "slug": "longdraw_half_glove",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "PUT_HAND_CARD_BOTTOM",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "conditions": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "arrow"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

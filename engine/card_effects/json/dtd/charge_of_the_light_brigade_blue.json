@@ -1,0 +1,28 @@
+{
+  "slug": "charge_of_the_light_brigade_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CHARGED_ATTACK"
+            }
+          ]
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "CHARGED_ATTACK"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

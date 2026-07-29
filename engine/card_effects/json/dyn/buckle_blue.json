@@ -1,0 +1,50 @@
+{
+  "slug": "buckle_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "DOMINATE"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Guardian"
+          ]
+        },
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "opponent_equipment",
+          "conditions": [
+            {
+              "type": "COUNTER_GTE",
+              "counter": "-1",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "slug": "mounting_anger_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zone": "HAND"
+              },
+              {
+                "type": "ATTACK_TYPE_IN",
+                "types": [
+                  "Attack"
+                ]
+              },
+              {
+                "type": "ATTACK_COST_LTE",
+                "amount": "DRACONIC_CHAIN_LINKS_CONTROLLED"
+              }
+            ]
+          }
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zone": "BANISHED"
+              },
+              {
+                "type": "ATTACK_TYPE_IN",
+                "types": [
+                  "Attack"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "CAN_PLAY_BANISHED_ATTACK",
+          "value": true,
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zone": "BANISHED"
+              },
+              {
+                "type": "ATTACK_TYPE_IN",
+                "types": [
+                  "Attack"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

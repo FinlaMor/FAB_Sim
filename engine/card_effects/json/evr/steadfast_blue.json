@@ -1,0 +1,43 @@
+{
+  "slug": "steadfast_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "STEADFAST_ACTIVE",
+          "duration": "END_OF_TURN"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_DAMAGE",
+            "conditions": [
+              {
+                "type": "FLAG_SET",
+                "flag": "STEADFAST_ACTIVE"
+              },
+              {
+                "type": "DURING_TURN"
+              },
+              {
+                "type": "ATTACKER_CONTROLLED_BY_YOU"
+              },
+              {
+                "type": "CHAIN_HIT_COUNT_GTE",
+                "amount": 4
+              }
+            ],
+            "effects": [
+              {
+                "type": "PREVENT_DAMAGE",
+                "amount": 4
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

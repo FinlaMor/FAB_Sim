@@ -1,0 +1,32 @@
+{
+  "slug": "trade_in_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "DISCARD",
+          "amount": 1
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

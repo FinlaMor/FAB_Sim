@@ -1,0 +1,29 @@
+{
+  "slug": "open_the_flood_gates_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "conditions": [
+        {
+          "type": "SURGE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

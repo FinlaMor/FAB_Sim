@@ -1,0 +1,24 @@
+{
+  "slug": "vexing_malice_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 2
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "CARD_IN_ZONE",
+            "zones": [
+              "hero"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

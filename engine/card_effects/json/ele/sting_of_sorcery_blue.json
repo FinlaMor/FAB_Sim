@@ -1,0 +1,37 @@
+{
+  "slug": "sting_of_sorcery_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_ATTACK",
+          "effects": [
+            {
+              "type": "DEAL_ARCANE",
+              "amount": 1
+            }
+          ],
+          "target": {
+            "filter": [
+              {
+                "type": "CONTROLS_ATTACK_ACTION"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

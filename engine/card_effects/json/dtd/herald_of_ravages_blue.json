@@ -1,0 +1,18 @@
+{
+  "slug": "herald_of_ravages_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "PUT_SELF_BOTTOM_DECK"
+        },
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

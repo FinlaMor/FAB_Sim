@@ -1,0 +1,49 @@
+{
+  "slug": "downswing_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "CLASH",
+          "target": "defending_hero"
+        },
+        {
+          "type": "LOSE_LIFE",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CLASH_WIN"
+            }
+          ]
+        },
+        {
+          "type": "LOSE_LIFE",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CLASH_LOSE"
+            }
+          ]
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "WEAPON_SUBTYPE_IN",
+            "subtypes": [
+              "sword"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

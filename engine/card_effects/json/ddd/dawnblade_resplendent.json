@@ -1,0 +1,23 @@
+{
+  "slug": "dawnblade_resplendent",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "per_turn": 1,
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CHAIN_HIT_COUNT_GTE",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "cut_to_the_chase_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
+          "type": "LOOK_AT",
+          "target": "defending_hero_deck_top"
+        },
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "PUT_CARDS_BOTTOM",
+              "target": "defending_hero_deck_top"
+            }
+          ]
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_CLASS_IN",
+            "classes": [
+              "assassin"
+            ]
+          },
+          {
+            "type": "HAS_KEYWORD",
+            "keywords": [
+              "contract"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

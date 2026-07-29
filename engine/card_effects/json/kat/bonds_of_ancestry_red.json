@@ -1,0 +1,79 @@
+{
+  "slug": "bonds_of_ancestry_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 2
+        }
+      ],
+      "conditions": [
+        {
+          "type": "COMBO_CONTAINS",
+          "card_name": "Gustwave"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 2
+        },
+        {
+          "type": "GO_AGAIN"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_ATTACK",
+          "effects": [
+            {
+              "type": "BANISH_REF",
+              "target": {
+                "filter": [
+                  {
+                    "type": "CARD_IN_ZONE",
+                    "zone": "GRAVEYARD"
+                  },
+                  {
+                    "type": "HAS_KEYWORD",
+                    "keyword": "COMBO"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "SEARCH_DECK",
+              "target": {
+                "filter": [
+                  {
+                    "type": "SAME_NAME",
+                    "card_name": "Gustwave"
+                  }
+                ]
+              },
+              "action": "BANISH",
+              "then": [
+                {
+                  "type": "SHUFFLE_DECK"
+                }
+              ]
+            },
+            {
+              "type": "PLAY_ACTIVATE_ATTACK",
+              "target": {
+                "filter": [
+                  {
+                    "type": "SAME_NAME",
+                    "card_name": "Gustwave"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

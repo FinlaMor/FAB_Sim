@@ -1,0 +1,34 @@
+{
+  "slug": "force_sight_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "PLAYED_FROM_ARSENAL",
+              "value": false
+            }
+          ]
+        },
+        {
+          "type": "OPT",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "PLAYED_FROM_ARSENAL",
+              "value": true
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

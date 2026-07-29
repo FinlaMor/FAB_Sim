@@ -1,0 +1,33 @@
+{
+  "slug": "pilfer_the_tomb_blue",
+  "abilities": [
+    {
+      "ability_type": "MODAL",
+      "choose": 1,
+      "modes": [
+        {
+          "type": "BANISH_REF",
+          "target": "opponent",
+          "zone": "GRAVEYARD",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "card_type": "INSTANT"
+            }
+          ]
+        },
+        {
+          "type": "BANISH_REF",
+          "target": "opponent",
+          "zone": "GRAVEYARD",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "card_type": "YELLOW"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "slug": "clash_of_agility_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CLASH",
+          "target": {
+            "filter": [
+              {
+                "type": "ATTACK_CLASS_IN",
+                "classes": [
+                  "hero"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Agility"
+        }
+      ]
+    }
+  ]
+}

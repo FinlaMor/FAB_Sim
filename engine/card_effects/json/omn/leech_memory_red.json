@@ -1,0 +1,56 @@
+{
+  "slug": "leech_memory_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_DEAL_DAMAGE",
+            "target": {
+              "filter": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zones": [
+                    "hero"
+                  ]
+                }
+              ]
+            },
+            "effects": [
+              {
+                "type": "PUT_CARDS_BOTTOM",
+                "amount": 1,
+                "source": "GRAVEYARD",
+                "conditions": [
+                  {
+                    "type": "MAY"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

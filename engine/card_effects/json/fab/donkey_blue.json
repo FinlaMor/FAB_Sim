@@ -1,0 +1,29 @@
+{
+  "slug": "donkey_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "CLASH",
+          "target": "defender"
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "WEAPON_SUBTYPE_IN",
+            "subtypes": [
+              "sword"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

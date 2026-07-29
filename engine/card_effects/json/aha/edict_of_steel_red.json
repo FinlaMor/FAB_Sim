@@ -1,0 +1,26 @@
+{
+  "slug": "edict_of_steel_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "STEAL_AURA_TOKEN"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Flurry",
+          "conditions": [
+            {
+              "type": "COUNTER_GTE",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

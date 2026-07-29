@@ -1,0 +1,21 @@
+{
+  "slug": "dustup_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ash"
+        },
+        {
+          "type": "TRANSFORM_HERO",
+          "from": "Ash",
+          "to": "Aether Ashwing",
+          "max_count": 1
+        }
+      ]
+    }
+  ]
+}

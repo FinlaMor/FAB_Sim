@@ -1,0 +1,25 @@
+{
+  "slug": "heavy_artillery_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "EvoUpgrade"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT",
+          "conditions": [
+            {
+              "type": "ATTACK_COST_LTE",
+              "amount": "EVO_COUNT"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

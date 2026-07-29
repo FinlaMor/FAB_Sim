@@ -1,0 +1,24 @@
+{
+  "slug": "new_horizon",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
+        {
+          "type": "DESTROY_REF",
+          "ref": "arsenal"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

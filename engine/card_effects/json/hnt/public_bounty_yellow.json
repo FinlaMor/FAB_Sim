@@ -1,0 +1,37 @@
+{
+  "slug": "public_bounty_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MARK",
+          "target": "opponent"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "TARGET_MARKED"
+        },
+        {
+          "type": "DURING_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

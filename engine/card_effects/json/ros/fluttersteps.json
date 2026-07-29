@@ -1,0 +1,24 @@
+{
+  "slug": "fluttersteps",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "PLAY_AURA_AS_INSTANT"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

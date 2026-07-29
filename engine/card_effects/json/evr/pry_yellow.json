@@ -1,0 +1,60 @@
+{
+  "slug": "pry_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "REVEAL_HAND_MARK_IF_TYPE",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "IS_ACTIVE_PLAYER",
+              "value": false
+            }
+          ]
+        },
+        {
+          "type": "REVEAL_HAND_MARK_IF_TYPE",
+          "amount": "ALL",
+          "conditions": [
+            {
+              "type": "IS_ACTIVE_PLAYER",
+              "value": true
+            }
+          ]
+        },
+        {
+          "type": "OPT",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "REF_EXISTS",
+              "ref": "REVEALED_CARDS"
+            }
+          ]
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "REF_EXISTS",
+              "ref": "SELECTED_CARD"
+            }
+          ]
+        },
+        {
+          "type": "DRAW",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "REF_EXISTS",
+              "ref": "SELECTED_CARD"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

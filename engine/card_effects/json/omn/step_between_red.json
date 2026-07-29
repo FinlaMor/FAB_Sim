@@ -1,0 +1,50 @@
+{
+  "slug": "step_between_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "IN_COMBAT",
+              "source": "self"
+            },
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "stack",
+              "card": "self"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT",
+          "opponent": true
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "TAP_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "WARD",
+          "duration": "combat_chain"
+        }
+      ]
+    }
+  ]
+}

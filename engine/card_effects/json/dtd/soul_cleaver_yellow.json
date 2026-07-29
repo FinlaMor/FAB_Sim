@@ -1,0 +1,22 @@
+{
+  "slug": "soul_cleaver_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "SOUL",
+          "amount": 1,
+          "comparison": "gte"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

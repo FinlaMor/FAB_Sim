@@ -1,0 +1,21 @@
+{
+  "slug": "bask_in_your_own_greatness_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "CREATE_MIGHT_PER_GOLD",
+          "amount": "PAY_AMOUNT"
+        }
+      ],
+      "additional_cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

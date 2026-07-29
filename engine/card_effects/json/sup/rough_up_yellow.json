@@ -1,0 +1,21 @@
+{
+  "slug": "rough_up_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "pitch_power_gte": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

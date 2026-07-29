@@ -1,0 +1,39 @@
+{
+  "slug": "deathmatch_arena",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "conditions": [
+        {
+          "type": "ATTACK_TYPE_IN",
+          "types": [
+            "hero"
+          ]
+        },
+        {
+          "type": "ATTACK_SUBTYPE_IN",
+          "subtypes": [
+            "hero"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Gold",
+          "amount": "STARTING_HERO_COUNT"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "slug": "moon_chakra_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_DEFEND",
+            "conditions": [
+              {
+                "type": "FLAG_SET",
+                "flag": "TRANSCEDED"
+              }
+            ],
+            "effects": [
+              {
+                "type": "PREVENT_DAMAGE",
+                "amount": 5
+              }
+            ]
+          }
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_DEFEND",
+            "conditions": [
+              {
+                "type": "NOT",
+                "condition": {
+                  "type": "FLAG_SET",
+                  "flag": "TRANSCEDED"
+                }
+              }
+            ],
+            "effects": [
+              {
+                "type": "PREVENT_DAMAGE",
+                "amount": 3
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "grains_of_bloodspill",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK",
+          "source": "self"
+        },
+        {
+          "type": "ATTACK_IS_WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "resource": "RESOURCE_POINTS",
+          "amount": 1,
+          "on_success": [
+            {
+              "type": "CREATE_TOKEN",
+              "token_type": "Vigor"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

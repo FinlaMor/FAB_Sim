@@ -1,0 +1,42 @@
+{
+  "slug": "shield_bash_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
+            },
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "off-hand"
+              ]
+            },
+            {
+              "type": "ATTACK_PITCH_POWER_GTE",
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "amount": 1,
+          "cost": [
+            {
+              "type": "DISCARD_CARD"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

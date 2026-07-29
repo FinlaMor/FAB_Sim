@@ -1,0 +1,35 @@
+{
+  "slug": "sharpening_sparks_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_HIT",
+          "effects": [
+            {
+              "type": "SET_FLAG",
+              "flag": "SHARPENED"
+            }
+          ]
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "WEAPON_SUBTYPE_IN",
+            "subtypes": [
+              "sword"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

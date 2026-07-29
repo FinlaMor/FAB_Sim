@@ -1,0 +1,16 @@
+{
+  "slug": "tripwire_trap_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "amount": 1,
+          "target": "attacker"
+        }
+      ]
+    }
+  ]
+}

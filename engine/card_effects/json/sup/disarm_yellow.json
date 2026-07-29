@@ -1,0 +1,38 @@
+{
+  "slug": "disarm_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CHEERED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "TOUGHNESS"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "COUNTER_GTE",
+          "counter": "DEFENSE",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_HAND_CARD_BOTTOM",
+          "target": "opponent"
+        }
+      ]
+    }
+  ]
+}

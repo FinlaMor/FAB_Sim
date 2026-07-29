@@ -1,0 +1,31 @@
+{
+  "slug": "break_ground_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "zone": "arsenal"
+        },
+        {
+          "type": "DRAW",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "PUT_CARDS_BOTTOM_FLAG"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "PUT_CARDS_BOTTOM_FLAG"
+        }
+      ]
+    }
+  ]
+}

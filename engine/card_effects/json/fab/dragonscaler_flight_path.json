@@ -1,0 +1,42 @@
+{
+  "slug": "dragonscaler_flight_path",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "OR",
+              "conditions": [
+                {
+                  "type": "ATTACK_IS_WEAPON"
+                },
+                {
+                  "type": "ATTACK_SUBTYPE_IN",
+                  "subtypes": [
+                    "ally"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "slug": "fools_gold_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DISCARD",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "GOLD"
+        }
+      ]
+    }
+  ]
+}

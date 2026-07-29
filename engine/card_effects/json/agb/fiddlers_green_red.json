@@ -1,0 +1,16 @@
+{
+  "slug": "fiddlers_green_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "HEALTH_POINTS",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "steel_on_steel_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "ATTACK_IS_WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

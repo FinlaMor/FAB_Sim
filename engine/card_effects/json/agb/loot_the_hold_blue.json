@@ -1,0 +1,55 @@
+{
+  "slug": "loot_the_hold_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "pirate"
+          ]
+        },
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "target": {
+              "filter": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zones": [
+                    "hero"
+                  ]
+                }
+              ]
+            },
+            "effects": [
+              {
+                "type": "DISCARD",
+                "amount": 1
+              },
+              {
+                "type": "CREATE_TOKEN",
+                "token_type": "Gold"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "slug": "bonebreaker_bellow_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BEAT_CHEST"
+            }
+          ]
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 5,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BEAT_CHEST"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

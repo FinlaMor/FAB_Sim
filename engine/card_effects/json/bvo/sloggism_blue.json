@@ -1,0 +1,36 @@
+{
+  "slug": "sloggism_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "APPLY_CONTINUOUS",
+          "duration": "END_OF_TURN",
+          "effects": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 4,
+              "conditions": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "HAND",
+                  "conditions": [
+                    {
+                      "type": "ATTACK_COST_GTE",
+                      "amount": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

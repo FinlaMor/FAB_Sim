@@ -1,0 +1,43 @@
+{
+  "slug": "clearwater_elixir_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
+          "target": {
+            "filter": [
+              {
+                "type": "CONTROLS_TOKEN_TYPE",
+                "token_types": [
+                  "Bloodrot Pox"
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "GAIN",
+              "asset": "HEALTH",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "slug": "aether_dart_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

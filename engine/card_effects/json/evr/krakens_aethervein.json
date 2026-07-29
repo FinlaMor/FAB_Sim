@@ -1,0 +1,28 @@
+{
+  "slug": "krakens_aethervein",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "per_turn": 1,
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        },
+        {
+          "type": "DRAW",
+          "amount": "DEAL_ARCANE_AMOUNT"
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_TARGET_IS_HERO",
+            "opponent": true
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "slug": "fletch_a_red_tail_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "conditions": [
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "APPLY_CONTINUOUS",
+          "effects": [
+            {
+              "type": "MODIFY_DEFENSE_VALUE",
+              "amount": -1,
+              "conditions": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zones": [
+                    "hand"
+                  ],
+                  "subtypes": [
+                    "red"
+                  ]
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "COUNTER_GTE",
+              "counter": "aim",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

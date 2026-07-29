@@ -1,0 +1,29 @@
+{
+  "slug": "grille_of_repentance",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH_REF",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "BANISHED",
+              "keywords": [
+                "blood_debt"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

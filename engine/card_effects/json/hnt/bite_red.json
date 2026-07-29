@@ -1,0 +1,29 @@
+{
+  "slug": "bite_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "DAGGER_DEALS_DAMAGE",
+              "amount": 1
+            },
+            {
+              "type": "DESTROY_REF",
+              "target": "DAGGER"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

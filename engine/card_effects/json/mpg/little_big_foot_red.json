@@ -1,0 +1,27 @@
+{
+  "slug": "little_big_foot_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "amount": 2,
+          "comparison": "gte",
+          "card_condition": {
+            "type": "COST_GTE",
+            "amount": 3
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 6
+        }
+      ]
+    }
+  ]
+}

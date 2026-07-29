@@ -1,0 +1,21 @@
+{
+  "slug": "humble_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "HERO_ABILITIES_DISABLED",
+          "duration": "END_OF_TURN"
+        }
+      ]
+    }
+  ]
+}

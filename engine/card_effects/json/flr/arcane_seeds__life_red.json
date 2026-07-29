@@ -1,0 +1,26 @@
+{
+  "slug": "arcane_seeds__life_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant"
+        },
+        {
+          "type": "GAIN",
+          "asset": "LIFE_POINTS",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

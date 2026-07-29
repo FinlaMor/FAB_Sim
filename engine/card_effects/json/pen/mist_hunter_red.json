@@ -1,0 +1,41 @@
+{
+  "slug": "mist_hunter_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "mystic"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "deck"
+                ],
+                "subtypes": [
+                  "Inner Chi"
+                ]
+              }
+            ]
+          },
+          "action": "BANISH"
+        },
+        {
+          "type": "REORDER_REF",
+          "ref": "deck",
+          "action": "SHUFFLE"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "double_trouble_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "CHAIN_HIT_COUNT_GTE",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

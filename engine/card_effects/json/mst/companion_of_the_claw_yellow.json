@@ -1,0 +1,30 @@
+{
+  "slug": "companion_of_the_claw_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "PITCHED_BLUE_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Crouching Tiger",
+          "zone": "HAND"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

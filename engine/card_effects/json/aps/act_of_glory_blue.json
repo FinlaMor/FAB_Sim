@@ -1,0 +1,21 @@
+{
+  "slug": "act_of_glory_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "conditions": [
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

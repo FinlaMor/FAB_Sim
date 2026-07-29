@@ -1,0 +1,20 @@
+{
+  "slug": "harness_lightning_red",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "LIGHTNING_PLAYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

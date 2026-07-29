@@ -1,0 +1,55 @@
+{
+  "slug": "auric_shards_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "FLAG_SET",
+                "flag": "HOLO_COUNTER"
+              }
+            }
+          ]
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "HOLO_COUNTER"
+            }
+          ]
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_TYPE_IN",
+            "types": [
+              "fragment"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

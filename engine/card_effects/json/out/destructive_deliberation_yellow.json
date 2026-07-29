@@ -1,0 +1,15 @@
+{
+  "slug": "destructive_deliberation_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ponder"
+        }
+      ]
+    }
+  ]
+}

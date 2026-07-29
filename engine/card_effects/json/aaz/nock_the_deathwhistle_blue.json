@@ -1,0 +1,39 @@
+{
+  "slug": "nock_the_deathwhistle_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "filter": {
+            "type": "CARD_IN_ZONE",
+            "zones": [
+              "deck"
+            ],
+            "subtypes": [
+              "arrow"
+            ]
+          },
+          "amount": 1,
+          "reveal": true,
+          "put_on_top": true
+        },
+        {
+          "type": "RELOAD"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_types": [
+            "Azalea"
+          ]
+        }
+      ]
+    }
+  ]
+}

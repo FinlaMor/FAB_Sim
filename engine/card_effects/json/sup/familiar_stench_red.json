@@ -1,0 +1,32 @@
+{
+  "slug": "familiar_stench_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "brute"
+              ]
+            },
+            {
+              "type": "CHAIN_HIT_COUNT_GTE",
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor"
+        }
+      ]
+    }
+  ]
+}

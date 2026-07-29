@@ -1,0 +1,30 @@
+{
+  "slug": "clash_of_might_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CLASH",
+          "target": {
+            "filter": [
+              {
+                "type": "ATTACK_CLASS_IN",
+                "classes": [
+                  "hero"
+                ]
+              }
+            ]
+          },
+          "on_win": [
+            {
+              "type": "CREATE_TOKEN",
+              "token_type": "Might"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "robe_of_repentance",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH_REF",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zone": "BANISHED",
+                "keywords": [
+                  "blood_debt"
+                ]
+              }
+            ]
+          },
+          "action": "FACE_DOWN"
+        }
+      ]
+    }
+  ]
+}

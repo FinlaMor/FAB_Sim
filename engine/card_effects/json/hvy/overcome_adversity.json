@@ -1,0 +1,19 @@
+{
+  "slug": "overcome_adversity",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "AGILITY_TOKEN_DESTROYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

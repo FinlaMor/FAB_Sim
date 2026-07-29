@@ -1,0 +1,13 @@
+{
+  "slug": "crouching_tiger",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "slug": "persuasive_prognosis_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": {
+            "type": "TOP_DECK",
+            "controller": "opponent"
+          }
+        },
+        {
+          "type": "LOOK_AT",
+          "target": {
+            "type": "HAND",
+            "controller": "opponent"
+          }
+        },
+        {
+          "type": "BANISH",
+          "target": {
+            "type": "HAND",
+            "controller": "opponent",
+            "filter": [
+              {
+                "type": "SAME_COLOR_AS",
+                "reference": "BANISHED_TOP_DECK"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BANISH",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zones": [
+            "BANISHED"
+          ],
+          "filter": [
+            {
+              "type": "SUBTYPE_IN",
+              "subtypes": [
+                "Action"
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "HEALTH_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

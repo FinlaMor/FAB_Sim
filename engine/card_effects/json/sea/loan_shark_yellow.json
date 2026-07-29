@@ -1,0 +1,49 @@
+{
+  "slug": "loan_shark_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Gold",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "NO_GOLD_CREATED_OR_STOLEN_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        },
+        {
+          "type": "LOSE_LIFE",
+          "amount": 2
+        }
+      ],
+      "additional_cost": [
+        {
+          "type": "DISCARD_CARD"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "scrap_prospector_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SCRAPPED_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

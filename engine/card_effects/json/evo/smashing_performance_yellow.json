@@ -1,0 +1,31 @@
+{
+  "slug": "smashing_performance_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD_RANDOM"
+        },
+        {
+          "type": "DESTROY_REF",
+          "conditions": [
+            {
+              "type": "DISCARDED_CARD_POWER_GTE",
+              "amount": 6
+            },
+            {
+              "type": "REF_EXISTS",
+              "ref": "ITEM"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

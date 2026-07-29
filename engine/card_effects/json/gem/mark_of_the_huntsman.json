@@ -1,0 +1,61 @@
+{
+  "slug": "mark_of_the_huntsman",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "effect": {
+            "type": "DESTROY_PERMANENT",
+            "target": "self"
+          }
+        },
+        {
+          "type": "MAY",
+          "effect": {
+            "type": "MARK",
+            "target": "ATTACK_TARGET"
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "MARKED"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

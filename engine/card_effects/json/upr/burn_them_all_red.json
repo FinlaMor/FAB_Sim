@@ -1,0 +1,68 @@
+{
+  "slug": "burn_them_all_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "dragon"
+          ]
+        },
+        {
+          "type": "CONTROLS_ATTACK_ACTION"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": {
+            "type": "OPPONENT_HERO"
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "RAZE",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_REF",
+          "target": "self",
+          "conditions": [
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE",
+                "color": "red",
+                "amount": "RAZE_COUNTERS"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

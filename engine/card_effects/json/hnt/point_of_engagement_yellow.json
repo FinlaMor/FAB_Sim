@@ -1,0 +1,48 @@
+{
+  "slug": "point_of_engagement_yellow",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "dagger"
+              ]
+            },
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO",
+              "conditions": [
+                {
+                  "type": "OPPONENT_IS_MARKED"
+                }
+              ]
+            },
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

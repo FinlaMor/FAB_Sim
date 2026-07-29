@@ -1,0 +1,23 @@
+{
+  "slug": "earthlore_surge_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "conditions": [
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

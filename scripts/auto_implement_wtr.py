@@ -1233,19 +1233,31 @@ _BOLD_KW = re.compile(r"\*\*.*?\*\*")
 
 
 def _is_noop_stub(card: dict, json_content: str) -> bool:
-    """True if the impl is an empty-abilities STUB for a card whose printed text
-    is not purely keywords — i.e. the implementer punted on a real effect. Mirrors
-    tests/test_card_json_hygiene.py::test_card_with_functional_text_implements_something
-    so such a stub is rejected by the gate instead of reaching a false 'done' with
-    a vacuous `assert abilities == []` test."""
+    """True if the impl is effectively a NO-OP the implementer punted on. Mirrors
+    the json-hygiene suite so such a card is rejected by the gate (never a false
+    'done' with a vacuous test, never a live 'candidate' that does nothing). Two
+    forms:
+      (1) empty abilities for a card whose text is not purely keywords
+          (test_card_with_functional_text_implements_something), and
+      (2) any ability with no effects/modes/options — a cost with no payload
+          (test_every_ability_has_effects). COST_MODIFIER/REPLACEMENT are exempt."""
     try:
         d = json.loads(json_content)
     except Exception:
         return False
-    if d.get("abilities") or d.get("setup"):
-        return False
-    prose = _BOLD_KW.sub("", card.get("functional_text") or "").strip(" \n\t-—,.")
-    return bool(prose)
+    abilities = d.get("abilities") or []
+    # (1) empty abilities but the card has real (non-keyword) rules text
+    if not abilities and not d.get("setup"):
+        prose = _BOLD_KW.sub("", card.get("functional_text") or "").strip(" \n\t-—,.")
+        return bool(prose)
+    # (2) an ability that resolves to nothing (only a cost, no effect)
+    for ab in abilities:
+        atype = (ab.get("ability_type") or "").upper()
+        if atype in ("COST_MODIFIER", "REPLACEMENT"):
+            continue
+        if not (ab.get("effects") or ab.get("modes") or ab.get("options")):
+            return True
+    return False
 
 
 def _quarantine_card_json(slug: str) -> None:

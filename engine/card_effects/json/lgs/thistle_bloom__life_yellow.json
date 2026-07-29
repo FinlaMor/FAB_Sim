@@ -1,0 +1,20 @@
+{
+  "slug": "thistle_bloom__life_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant",
+          "amount": "TOTAL_HEALTH_GAINED_THIS_TURN"
+        },
+        {
+          "type": "GAIN",
+          "asset": "HEALTH_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

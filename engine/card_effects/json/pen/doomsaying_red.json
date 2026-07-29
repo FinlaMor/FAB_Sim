@@ -1,0 +1,33 @@
+{
+  "slug": "doomsaying_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "doom"
+        },
+        {
+          "type": "DESTROY_TOKEN",
+          "amount": "doom"
+        }
+      ]
+    }
+  ]
+}

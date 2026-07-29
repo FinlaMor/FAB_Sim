@@ -1,0 +1,43 @@
+{
+  "slug": "sigil_of_cycles_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {
+          "type": "DISCARD",
+          "amount": 1
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

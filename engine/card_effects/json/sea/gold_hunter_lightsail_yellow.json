@@ -1,0 +1,21 @@
+{
+  "slug": "gold_hunter_lightsail_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Gold",
+          "comparison": "lt",
+          "opponent": true
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

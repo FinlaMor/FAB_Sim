@@ -1,0 +1,21 @@
+{
+  "slug": "mage_master_boots",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "MAGE_MASTER_BOOTS_FLAG"
+        }
+      ]
+    }
+  ]
+}

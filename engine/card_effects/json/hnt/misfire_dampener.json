@@ -1,0 +1,35 @@
+{
+  "slug": "misfire_dampener",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "MISFIRE_DAMPENER_PREVENT_ARCANE",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BOOSTED_THIS_TURN"
+        }
+      ],
+      "additional_effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "MISFIRE_DAMPENER_PREVENT_ARCANE",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

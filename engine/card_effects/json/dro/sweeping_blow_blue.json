@@ -1,0 +1,23 @@
+{
+  "slug": "sweeping_blow_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ash"
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

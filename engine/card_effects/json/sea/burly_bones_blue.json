@@ -1,0 +1,35 @@
+{
+  "slug": "burly_bones_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "DISCARD_RANDOM"
+        },
+        {
+          "type": "DESTROY_REF",
+          "target": {
+            "type": "TOP_CARD_OF_DECK"
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "pitch": "watery_grave"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "OVERPOWER"
+        }
+      ]
+    }
+  ]
+}

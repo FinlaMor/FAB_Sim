@@ -1,0 +1,21 @@
+{
+  "slug": "stormwind_sheath_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "pitch": "lightning"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "embodiment_of_lightning"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "hydraulic_press_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "Scrap"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "OVERPOWER"
+        }
+      ]
+    }
+  ]
+}

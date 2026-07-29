@@ -1,0 +1,32 @@
+{
+  "slug": "system_failure_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter": "steam",
+          "conditions": [
+            {
+              "type": "COUNTER_GTE",
+              "counter": "steam",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "COUNTER_GTE",
+              "counter": "steam",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

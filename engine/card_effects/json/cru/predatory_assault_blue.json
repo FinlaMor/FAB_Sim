@@ -1,0 +1,19 @@
+{
+  "slug": "predatory_assault_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "DISCARDED_CARD_POWER_GTE",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "DOMINATE"
+        }
+      ]
+    }
+  ]
+}

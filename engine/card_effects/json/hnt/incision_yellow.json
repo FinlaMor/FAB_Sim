@@ -1,0 +1,25 @@
+{
+  "slug": "incision_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_TYPE_IN",
+            "types": [
+              "dagger"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

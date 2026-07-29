@@ -1,0 +1,20 @@
+{
+  "slug": "buckwild_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "pitch_power_gte": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "GRANT_SUBTYPE",
+          "subtype": "GoAgain"
+        }
+      ]
+    }
+  ]
+}

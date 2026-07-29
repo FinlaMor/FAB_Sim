@@ -1,0 +1,52 @@
+{
+  "slug": "bonds_of_memory_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": {
+            "type": "TOP_DECK",
+            "controller": "opponent"
+          }
+        },
+        {
+          "type": "BANISH",
+          "target": {
+            "type": "GRAVEYARD",
+            "controller": "opponent"
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BANISH",
+      "conditions": [
+        {
+          "type": "REF_EXISTS",
+          "ref": "BANISHED_CARDS"
+        },
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "BANISHED_CARDS",
+          "pitch": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "HEALTH_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

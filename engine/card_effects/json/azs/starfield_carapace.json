@@ -1,0 +1,49 @@
+{
+  "slug": "starfield_carapace",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_ACTIVATE",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Aphrodias"
+            }
+          ],
+          "effects": [
+            {
+              "type": "PAY_OR_DAMAGE",
+              "amount": -1
+            },
+            {
+              "type": "INJECT_TRIGGER",
+              "trigger": "ON_DEAL_DAMAGE",
+              "conditions": [
+                {
+                  "type": "ATTACK_TARGET_IS_HERO",
+                  "opponent": true
+                }
+              ],
+              "effects": [
+                {
+                  "type": "CREATE_TOKEN",
+                  "token_type": "Lightning Flow"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

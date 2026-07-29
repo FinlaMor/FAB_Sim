@@ -1,0 +1,27 @@
+{
+  "slug": "runaways",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "HERO_TAKEN_DAMAGE_THIS_TURN"
+        }
+      ]
+    }
+  ]
+}

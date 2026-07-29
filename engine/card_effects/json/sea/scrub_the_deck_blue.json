@@ -1,0 +1,32 @@
+{
+  "slug": "scrub_the_deck_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DESTROY_REF",
+          "target": {
+            "type": "TOP_CARD",
+            "controller": "opponent"
+          }
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Gold",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "DECK",
+              "controller": "opponent",
+              "color": "yellow"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

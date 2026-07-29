@@ -1,0 +1,33 @@
+{
+  "slug": "absorb_in_aether_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_PLAY",
+            "conditions": [
+              {
+                "type": "DURING_TURN"
+              },
+              {
+                "type": "HAS_KEYWORD",
+                "keyword": "DEAL_ARCANE"
+              }
+            ],
+            "effects": [
+              {
+                "type": "MODIFY_ATTACK",
+                "mod": "add",
+                "amount": 2
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "soul_butcher_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "SOUL",
+          "amount": 1,
+          "player": "OPPONENT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

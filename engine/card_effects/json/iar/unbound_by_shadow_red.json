@@ -1,0 +1,20 @@
+{
+  "slug": "unbound_by_shadow_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Gate_to_iArathael"
+        }
+      ]
+    }
+  ]
+}

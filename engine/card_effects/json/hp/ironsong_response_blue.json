@@ -1,0 +1,30 @@
+{
+  "slug": "ironsong_response_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "DEFENDS_WITH_OTHER_HAND_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtypes": [
+              "weapon"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

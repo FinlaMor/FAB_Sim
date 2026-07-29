@@ -1,0 +1,65 @@
+{
+  "slug": "aether_flare_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "AETHER_FLARE_DEALT"
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "CARD_IN_ZONE",
+            "zones": [
+              "opponent"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "AETHER_FLARE_DEALT"
+        },
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "IS_ACTIVE_PLAYER"
+            },
+            {
+              "type": "OR",
+              "conditions": [
+                {
+                  "type": "ATTACK_HAS_KEYWORD",
+                  "keyword": "DEAL_ARCANE"
+                },
+                {
+                  "type": "ATTACK_HAS_KEYWORD",
+                  "keyword": "DEAL_GENERIC"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": "AETHER_FLARE_DAMAGE"
+        }
+      ]
+    }
+  ]
+}

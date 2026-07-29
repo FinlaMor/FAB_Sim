@@ -1,0 +1,39 @@
+{
+  "slug": "vela_flash_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "VELA_FLASH_FUSION_ACTIVE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_PLAY_ACTIVATE_ATTACK",
+            "conditions": [
+              {
+                "type": "NOT",
+                "condition": {
+                  "type": "ATTACK_SUBTYPE_IN",
+                  "subtypes": [
+                    "Attack"
+                  ]
+                }
+              }
+            ],
+            "effects": [
+              {
+                "type": "ACTIVATE",
+                "activation_cost": 0
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "slug": "condemn_to_slaughter_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "runeblade"
+              ]
+            },
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
+          "target": {
+            "filter": [
+              {
+                "type": "CONTROLS_TOKEN_TYPE",
+                "token_types": [
+                  "aura"
+                ]
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "DESTROY_TOKEN",
+              "target": {
+                "filter": [
+                  {
+                    "type": "CONTROLS_TOKEN_TYPE",
+                    "token_types": [
+                      "aura"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

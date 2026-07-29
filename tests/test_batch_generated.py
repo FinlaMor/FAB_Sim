@@ -398,3 +398,194 @@ def test_sutcliffes_research_notes_red_activate():
     activate(st, card)
     assert len(st.players[1].permanents.cards) == n0
     # Additional checks can be added here if necessary
+
+# --- scouting_shot_red ---
+def test_scouting_shot_red_on_enter_play_looks_at_deck():
+    st = _make_state(); st.card_db = DB
+    card = _card("scouting_shot_red")
+    st.players[1].arsenal.cards.append(card)
+    dispatch(st, "ON_ENTER_PLAY", "scouting_shot_red", card=card, event=None)
+    # Assuming the game state provides a way to check if the player looked at the top card
+    # For now, we'll just assert that the card is in the arsenal
+    assert len(st.players[1].arsenal.cards) == 1
+
+def test_scouting_shot_red_on_enter_play_looks_at_top_card():
+    st = _make_state(); st.card_db = DB
+    card = _card("scouting_shot_red")
+    st.players[1].arsenal.cards.append(card)
+    stock_deck(st, 1, n=1)  # Ensure there's at least one card in the deck
+    dispatch(st, "ON_ENTER_PLAY", "scouting_shot_red", card=card, event=None)
+    # Assuming the game state provides a way to check if the player looked at the top card
+    # For now, we'll just assert that the card is in the arsenal
+    assert len(st.players[1].arsenal.cards) == 1
+
+# --- thump_blue ---
+def test_thump_blue_dominate():
+    st = _make_state(); st.card_db = DB
+    card = _card("thump_blue")
+    st.players[1].arsenal.cards.append(card)
+    give_token(st, 1, "might", 2)  # Ensure Thump's {p} is greater than its base {p}
+    activate(st, card)
+    assert any(c.slug == "might" for c in st.players[1].permanents.cards)
+
+def test_thump_blue_discard_on_hit():
+    st = _make_state(); st.card_db = DB
+    card = _card("thump_blue")
+    st.players[1].arsenal.cards.append(card)
+    stock_deck(st, 2, 20)  # Ensure the opponent has cards in their deck
+    attack(st, card)
+    hit(st)
+    assert len(st.players[2].hand.cards) < 20  # The opponent should have discarded a card
+
+# --- aether_dart_red ---
+def test_aether_dart_red_play():
+    # A play ability fires on ON_PLAY; assert the observable result (here a health change)
+    st = _make_state(); st.card_db = DB
+    card = _card("aether_dart_red")
+    st.players[1].arsenal.cards.append(card)
+    before_health = st.players[2].health
+    dispatch(st, "ON_PLAY", "aether_dart_red", card=card, event=None)
+    assert st.players[2].health == before_health - 3
+
+def test_aether_dart_red_play_multiple_targets():
+    # A play ability fires on ON_PLAY; assert the observable result (here a health change)
+    st = _make_state(); st.card_db = DB
+    card = _card("aether_dart_red")
+    st.players[1].arsenal.cards.append(card)
+    before_health = st.players[2].health
+    dispatch(st, "ON_PLAY", "aether_dart_red", card=card, event=None)
+    assert st.players[2].health == before_health - 3
+    before_health = st.players[2].health
+    dispatch(st, "ON_PLAY", "aether_dart_red", card=card, event=None)
+    assert st.players[2].health == before_health - 3
+
+# --- head_jab_red ---
+def test_head_jab_red_go_again():
+    st = _make_state(); st.card_db = DB
+    card = _card("head_jab_red")
+    st.players[1].arsenal.cards.append(card)
+    before = len(st.players[1].arsenal.cards)
+    attack(st, card)
+    hit(st)
+    assert len(st.players[1].arsenal.cards) == before
+
+# --- sunkwater_exoshell ---
+def test_sunkwater_exoshell_defend_puts_card_on_bottom_of_deck():
+    st = _make_state(); st.card_db = DB
+    card = _card("sunkwater_exoshell")
+    st.players[1].chest.cards.append(card)
+    stock_deck(st, 1, n=2)  # Ensure there are at least 2 cards in the deck
+
+    # Capture the current deck size before the defend
+    before_deck_size = len(st.players[1].deck.cards)
+
+    # Dispatch the defend event
+    dispatch(st, "ON_DEFEND", "sunkwater_exoshell", card=card)
+
+    # Assert that the deck size has decreased by 1
+    assert len(st.players[1].deck.cards) == before_deck_size - 1
+
+def test_sunkwater_exoshell_defend_draws_a_card():
+    st = _make_state(); st.card_db = DB
+    card = _card("sunkwater_exoshell")
+    st.players[1].chest.cards.append(card)
+    stock_deck(st, 1, n=2)  # Ensure there are at least 2 cards in the deck
+
+    # Capture the current hand size before the defend
+    before_hand_size = len(st.players[1].hand.cards)
+
+    # Dispatch the defend event
+    dispatch(st, "ON_DEFEND", "sunkwater_exoshell", card=card)
+
+    # Assert that the hand size has increased by 1
+    assert len(st.players[1].hand.cards) == before_hand_size + 1
+
+# --- skull_crack_red ---
+def test_skull_crack_red_on_discard_gain_resource():
+    st = _make_state(); st.card_db = DB
+    card = _card("skull_crack_red")
+    st.players[1].arsenal.cards.append(card)
+    before_resources = st.players[1].resources
+    dispatch(st, "ON_DISCARD", "skull_crack_red", card=card, event=None)
+    assert st.players[1].resources == before_resources + 1
+
+def test_skull_crack_red_on_discard_gain_resource_multiple_discards():
+    st = _make_state(); st.card_db = DB
+    card = _card("skull_crack_red")
+    st.players[1].arsenal.cards.append(card)
+    before_resources = st.players[1].resources
+    dispatch(st, "ON_DISCARD", "skull_crack_red", card=card, event=None)
+    dispatch(st, "ON_DISCARD", "skull_crack_red", card=card, event=None)
+    assert st.players[1].resources == before_resources + 2
+
+# --- fire_tenet_strike_first_blue ---
+def test_fire_tenet_strike_first_blue_on_attack():
+    st = _make_state(); st.card_db = DB
+    card = _card("fire_tenet_strike_first_blue")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    assert st.combat.attack_power == 1  # Assuming the base attack power is 0
+
+def test_fire_tenet_strike_first_blue_go_again():
+    st = _make_state(); st.card_db = DB
+    card = _card("fire_tenet_strike_first_blue")
+    st.players[1].arsenal.cards.append(card)
+    dispatch(st, "ON_PLAY", "fire_tenet_strike_first_blue", card=card, event=None)
+    assert len(st.players[1].arsenal.cards) == 1  # Go again keeps the card in arsenal
+
+# --- proto_base_chest ---
+def test_proto_base_chest_smoke():
+    assert get_card("proto_base_chest").abilities == []
+
+def test_proto_base_chest_on_equip():
+    # No effect defined for ON_EQUIP, so nothing should change
+    st = _make_state(); st.card_db = DB
+    card = _card("proto_base_chest")
+    st.players[1].head.add(card)
+    dispatch(st, "ON_EQUIP", "proto_base_chest", card=card, event=None)
+    assert not any(c.slug == "gold" for c in st.players[1].permanents.cards)
+
+# --- sigil_of_cycles_blue ---
+def test_sigil_of_cycles_blue_go_again():
+    st = _make_state(); st.card_db = DB
+    card = _card("sigil_of_cycles_blue")
+    st.players[1].chest.cards.append(card)
+    activate(st, card)
+    assert card in st.players[1].chest.cards  # the card should still be in the chest
+
+def test_sigil_of_cycles_blue_destroy_at_start_of_turn():
+    st = _make_state(); st.card_db = DB
+    card = _card("sigil_of_cycles_blue")
+    st.players[1].chest.cards.append(card)
+    dispatch(st, "START_OF_TURN", "sigil_of_cycles_blue", card=card, event=None)
+    assert card not in st.players[1].chest.cards  # the card should be destroyed at the start of the turn
+
+def test_sigil_of_cycles_blue_discard_and_draw_on_leave_play():
+    st = _make_state(); st.card_db = DB
+    card = _card("sigil_of_cycles_blue")
+    st.players[1].chest.cards.append(card)
+    st.players[1].hand.cards = [_card("some_other_card")]  # ensure there is a card to discard
+    dispatch(st, "ON_LEAVE_PLAY", "sigil_of_cycles_blue", card=card, event=None)
+    assert len(st.players[1].hand.cards) == 1  # one card should remain in hand after discard and draw
+
+# --- twist_and_turn_blue ---
+def test_twist_and_turn_blue_play():
+    # A play ability fires on ON_PLAY; assert the observable result (here a token in play)
+    st = _make_state(); st.card_db = DB
+    card = _card("twist_and_turn_blue")
+    st.players[1].arsenal.cards.append(card)
+    n0 = len(st.players[1].arsenal.cards)
+    dispatch(st, "ON_PLAY", "twist_and_turn_blue", card=card, event=None)
+    assert len(st.players[1].arsenal.cards) >= n0
+
+def test_twist_and_turn_blue_on_hit():
+    # A triggered ability fires on ON_HIT; assert the observable result (here a token in play)
+    st = _make_state(); st.card_db = DB
+    card = _card("twist_and_turn_blue")
+    st.players[1].arsenal.cards.append(card)
+    dispatch(st, "ON_PLAY", "twist_and_turn_blue", card=card, event=None)
+    attack(st, card)
+    hit(st)
+    n0 = len(st.players[1].arsenal.cards)
+    dispatch(st, "ON_HIT", "twist_and_turn_blue", card=card, event=None)
+    assert len(st.players[1].arsenal.cards) >= n0

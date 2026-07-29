@@ -1,0 +1,39 @@
+{
+  "slug": "flex_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "resource_cost": 2,
+          "on_success": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "resource_cost": 2,
+          "on_success": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "blessing_of_occult_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "amount": 2,
+          "token_type": "Runechant"
+        }
+      ]
+    }
+  ]
+}

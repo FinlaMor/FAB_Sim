@@ -1,0 +1,21 @@
+{
+  "slug": "consuming_volition_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DEALT_ARCANE_DAMAGE_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DISCARD",
+          "target": "opponent"
+        }
+      ]
+    }
+  ]
+}

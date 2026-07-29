@@ -1,0 +1,21 @@
+{
+  "slug": "goblet_of_bloodrun_wine_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "subtype": "Agility"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "subtype": "Vigor"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

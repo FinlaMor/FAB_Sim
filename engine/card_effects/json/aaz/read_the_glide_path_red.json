@@ -1,0 +1,33 @@
+{
+  "slug": "read_the_glide_path_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "DURING_TURN"
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "arrow"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "OPT",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

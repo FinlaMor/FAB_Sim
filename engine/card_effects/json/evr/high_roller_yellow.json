@@ -1,0 +1,35 @@
+{
+  "slug": "high_roller_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ROLL_5_OR_6"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

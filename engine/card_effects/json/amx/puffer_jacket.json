@@ -1,0 +1,30 @@
+{
+  "slug": "puffer_jacket",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Hyper Driver"
+        },
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "TOKEN_TYPE_IN",
+            "token_types": [
+              "Token"
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

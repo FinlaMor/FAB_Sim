@@ -1,0 +1,32 @@
+{
+  "slug": "sunkwater_exoshell",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "PUT_ARSENAL_BOTTOM",
+          "amount": 1
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 1,
+          "duration": "END_OF_TURN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

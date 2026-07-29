@@ -1,0 +1,38 @@
+{
+  "slug": "hamstring_shot_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "START_OF_TURN",
+            "conditions": [
+              {
+                "type": "REF_PITCH_IS",
+                "ref": "ATTACKER",
+                "pitch": 1
+              }
+            ],
+            "effects": [
+              {
+                "type": "PAY_OR_DAMAGE",
+                "target": "ATTACKER",
+                "resource": "RESOURCE_POINTS",
+                "amount": 1,
+                "damage": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

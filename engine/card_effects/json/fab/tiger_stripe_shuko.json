@@ -1,0 +1,52 @@
+{
+  "slug": "tiger_stripe_shuko",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "DURING_TURN"
+            },
+            {
+              "type": "PLAYED_FROM_ARSENAL"
+            },
+            {
+              "type": "ATTACK_ACTION"
+            },
+            {
+              "type": "BASE_POWER_LTE",
+              "amount": 2
+            },
+            {
+              "type": "COMBO_CONTAINS",
+              "amount": 2,
+              "card": "tiger_stripe_shuko"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "WARD"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

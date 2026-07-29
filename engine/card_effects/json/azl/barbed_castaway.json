@@ -1,0 +1,87 @@
+{
+  "slug": "barbed_castaway",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "per_turn": 1,
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "hand"
+                ],
+                "subtypes": [
+                  "Arrow"
+                ]
+              }
+            ]
+          },
+          "destination": "arsenal",
+          "face_up": true
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "per_turn": 1,
+      "effects": [
+        {
+          "type": "FLIP_REF",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "arsenal"
+                ],
+                "subtypes": [
+                  "Arrow"
+                ],
+                "conditions": [
+                  {
+                    "type": "NOT",
+                    "condition": {
+                      "type": "REF_PITCH_IS",
+                      "pitch": "face_up"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "face_up": true
+        },
+        {
+          "type": "PUT_COUNTER",
+          "counter": "aim",
+          "amount": 1,
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "arsenal"
+                ],
+                "subtypes": [
+                  "Arrow"
+                ],
+                "conditions": [
+                  {
+                    "type": "REF_PITCH_IS",
+                    "pitch": "face_up"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

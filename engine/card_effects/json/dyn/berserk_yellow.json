@@ -1,0 +1,52 @@
+{
+  "slug": "berserk_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DISCARD",
+      "conditions": [
+        {
+          "type": "DISCARDED_CARD_POWER_GTE",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH"
+        },
+        {
+          "type": "REVEAL_TOP_DECK"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DISCARD",
+      "conditions": [
+        {
+          "type": "DISCARDED_CARD_POWER_GTE",
+          "amount": 6
+        },
+        {
+          "type": "REF_PITCH_IS",
+          "pitch": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

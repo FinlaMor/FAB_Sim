@@ -1,0 +1,29 @@
+{
+  "slug": "lightning_press_yellow",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_COST_LTE",
+            "amount": 1
+          }
+        ]
+      }
+    }
+  ]
+}

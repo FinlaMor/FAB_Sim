@@ -1,0 +1,40 @@
+{
+  "slug": "rushing_river_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "COMBO_CONTAINS",
+          "card": "torrent_of_tempo"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_HIT",
+          "effects": [
+            {
+              "type": "DRAW",
+              "amount": "CHAIN_HIT_COUNT"
+            },
+            {
+              "type": "REORDER_REF",
+              "ref": "HAND",
+              "amount": "CHAIN_HIT_COUNT"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

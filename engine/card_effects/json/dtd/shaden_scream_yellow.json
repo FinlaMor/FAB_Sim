@@ -1,0 +1,32 @@
+{
+  "slug": "shaden_scream_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "DISCARD_RANDOM"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "brute",
+                "shadow"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

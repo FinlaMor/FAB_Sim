@@ -1,0 +1,26 @@
+{
+  "slug": "comet_collision_red",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "STARFALL_FLAG"
+        }
+      ],
+      "alternative_effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 4
+        }
+      ]
+    }
+  ]
+}

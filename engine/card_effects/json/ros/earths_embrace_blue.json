@@ -1,0 +1,34 @@
+{
+  "slug": "earths_embrace_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Embodiment of Earth"
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BANISHED_EARTH_CARD"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "slug": "silver_palms",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "NOT",
+                  "condition": {
+                    "type": "IS_ACTIVE_PLAYER"
+                  }
+                },
+                {
+                  "type": "HEALTH_LT_OPP"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Silver"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

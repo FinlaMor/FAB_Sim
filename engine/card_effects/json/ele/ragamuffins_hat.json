@@ -1,0 +1,31 @@
+{
+  "slug": "ragamuffins_hat",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "HAND",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "PUT_HAND_CARD_BOTTOM"
+        }
+      ]
+    }
+  ]
+}

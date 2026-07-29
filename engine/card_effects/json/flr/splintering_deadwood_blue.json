@@ -1,0 +1,41 @@
+{
+  "slug": "splintering_deadwood_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant"
+        }
+      ]
+    }
+  ]
+}

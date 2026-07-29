@@ -1,0 +1,20 @@
+{
+  "slug": "sanctuary_of_aria",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self",
+          "trigger": "START_OF_TURN_IN_GRAVEYARD"
+        }
+      ]
+    }
+  ]
+}

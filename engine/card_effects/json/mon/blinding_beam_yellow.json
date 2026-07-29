@@ -1,0 +1,27 @@
+{
+  "slug": "blinding_beam_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "SHADOW"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "subtract",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

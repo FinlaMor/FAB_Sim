@@ -1,0 +1,30 @@
+{
+  "slug": "evo_magneto_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
+          "amount": 1
+        },
+        {
+          "type": "BANISH_REF",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "arsenal"
+                ],
+                "cost_gte": 0,
+                "cost_lte": 1,
+                "controlled_by": "opponent"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

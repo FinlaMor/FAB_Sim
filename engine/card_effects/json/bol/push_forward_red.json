@@ -1,0 +1,32 @@
+{
+  "slug": "push_forward_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        },
+        {
+          "type": "DOMINATE",
+          "conditions": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

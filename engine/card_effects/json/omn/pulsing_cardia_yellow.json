@@ -1,0 +1,22 @@
+{
+  "slug": "pulsing_cardia_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BECOME",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "Fragment"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

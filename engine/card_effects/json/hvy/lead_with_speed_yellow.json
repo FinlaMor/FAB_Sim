@@ -1,0 +1,34 @@
+{
+  "slug": "lead_with_speed_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "brute",
+                "warrior"
+              ]
+            },
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Agility"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

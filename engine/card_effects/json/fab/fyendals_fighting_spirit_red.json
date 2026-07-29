@@ -1,0 +1,37 @@
+{
+  "slug": "fyendals_fighting_spirit_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "LIFE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "LIFE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "slug": "pleiades",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 1
+        },
+        {
+          "type": "REMOVE_COUNTERS",
+          "target": "self",
+          "counter_type": "suspense",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "PUT_COUNTER",
+              "target": "self",
+              "counter_type": "suspense",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CROWD_CHEERS"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Confidence"
+        }
+      ]
+    }
+  ]
+}

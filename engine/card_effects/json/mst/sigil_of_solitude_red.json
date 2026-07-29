@@ -1,0 +1,25 @@
+{
+  "slug": "sigil_of_solitude_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_types": [
+            "Illusionist"
+          ],
+          "amount": "gt",
+          "value": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

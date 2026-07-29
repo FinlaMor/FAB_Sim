@@ -1,0 +1,23 @@
+{
+  "slug": "sack_the_shifty_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": {
+            "type": "TOP_CARD",
+            "controller": "opponent"
+          }
+        }
+      ]
+    }
+  ]
+}

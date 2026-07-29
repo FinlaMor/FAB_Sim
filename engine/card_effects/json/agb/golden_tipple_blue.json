@@ -1,0 +1,36 @@
+{
+  "slug": "golden_tipple_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "DISCARD",
+          "color": "yellow"
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Gold"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "DISCARDED_CARD_POWER_GTE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

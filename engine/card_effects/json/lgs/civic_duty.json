@@ -1,0 +1,15 @@
+{
+  "slug": "civic_duty",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor"
+        }
+      ]
+    }
+  ]
+}

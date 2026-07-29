@@ -1,0 +1,15 @@
+{
+  "slug": "dramatic_pause_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

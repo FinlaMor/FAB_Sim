@@ -1,0 +1,43 @@
+{
+  "slug": "emerging_dominance_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_REF",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        },
+        {
+          "type": "PLAYED_FROM_ARSENAL",
+          "card_type": "ACTION",
+          "card_class": "Guardian"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        },
+        {
+          "type": "DOMINATE"
+        }
+      ]
+    }
+  ]
+}

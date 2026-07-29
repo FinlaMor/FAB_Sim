@@ -1,0 +1,46 @@
+{
+  "slug": "art_of_the_dragon_blood_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "Draconic"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "DRACONIC_ATTACK_GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DRACONIC_ATTACK_GO_AGAIN"
+        },
+        {
+          "type": "DURING_TURN"
+        },
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "Draconic"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "amount": -1
+        }
+      ]
+    }
+  ]
+}

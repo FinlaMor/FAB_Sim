@@ -1,0 +1,40 @@
+{
+  "slug": "infuse_alloy_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "arsenal"
+                ],
+                "subtypes": [
+                  "Item"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "OPT_1_USED"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

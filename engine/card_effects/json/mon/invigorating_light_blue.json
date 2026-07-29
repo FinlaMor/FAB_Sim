@@ -1,0 +1,23 @@
+{
+  "slug": "invigorating_light_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "SOUL",
+          "amount": 0
+        }
+      ],
+      "effects": [
+        {
+          "type": "MOVE_REF",
+          "target": "self",
+          "destination": "SOUL"
+        }
+      ]
+    }
+  ]
+}

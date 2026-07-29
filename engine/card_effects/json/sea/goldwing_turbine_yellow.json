@@ -1,0 +1,30 @@
+{
+  "slug": "goldwing_turbine_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Mechanologist"
+              ]
+            },
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Golden Cog"
+        }
+      ]
+    }
+  ]
+}

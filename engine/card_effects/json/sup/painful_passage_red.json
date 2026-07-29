@@ -1,0 +1,33 @@
+{
+  "slug": "painful_passage_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "HAND",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "card_type": "ACTION"
+            }
+          ],
+          "additional_effects": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 3
+            },
+            {
+              "type": "GAIN",
+              "keyword": "GO_AGAIN",
+              "duration": "END_OF_TURN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

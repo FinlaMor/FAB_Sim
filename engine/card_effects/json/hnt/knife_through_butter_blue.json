@@ -1,0 +1,40 @@
+{
+  "slug": "knife_through_butter_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "dagger"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO",
+              "conditions": [
+                {
+                  "type": "OPPONENT_IS_MARKED"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

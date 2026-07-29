@@ -1,0 +1,39 @@
+{
+  "slug": "tide_chakra_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_CLASS_IN",
+            "classes": [
+              "assassin",
+              "mystic"
+            ]
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "TRANSCENDED"
+        }
+      ],
+      "additional_effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

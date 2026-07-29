@@ -1,0 +1,31 @@
+{
+  "slug": "blessing_of_qi_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "effects": [
+        {
+          "type": "DESTROY_REF",
+          "target": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Crouching Tiger",
+          "zone": "BANISHED",
+          "effects": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 3
+            },
+            {
+              "type": "SET_FLAG",
+              "flag": "PLAYABLE_THIS_TURN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

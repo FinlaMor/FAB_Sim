@@ -1,0 +1,18 @@
+{
+  "slug": "herald_of_protection_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "PUT_SELF_BOTTOM_DECK"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Spectral Shield"
+        }
+      ]
+    }
+  ]
+}

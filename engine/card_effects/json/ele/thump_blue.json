@@ -1,0 +1,35 @@
+{
+  "slug": "thump_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "SELF_ATTACK_POWER_GTE",
+          "amount": "BASE_ATTACK_POWER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DOMINATE"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "DISCARD"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

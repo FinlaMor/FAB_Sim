@@ -1,0 +1,33 @@
+{
+  "slug": "ram_raider_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "DISCARD_RANDOM"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "DISCARDED_CARD_POWER_GTE",
+              "amount": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "BLOOD_DEBT"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "slug": "phantasmal_haze_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Spectral Shield"
+        }
+      ]
+    }
+  ]
+}

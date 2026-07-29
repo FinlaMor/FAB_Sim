@@ -1,0 +1,48 @@
+{
+  "slug": "zane_broadly_beloved",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GRANT_SUBTYPE",
+          "subtype": "1H"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "WEAPON_SUBTYPE_IN",
+          "subtypes": [
+            "2H"
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "effects": [
+        {
+          "type": "CROWD_BOO",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CROWD_BOO"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "slug": "chokeslam_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {
+          "type": "DID_NOT_HIT",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "CRUSH_FLAG"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CRUSH_FLAG"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
+        }
+      ]
+    }
+  ]
+}

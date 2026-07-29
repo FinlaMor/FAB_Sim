@@ -1,0 +1,19 @@
+{
+  "slug": "foreboding_bolt_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 2,
+          "target": "hero"
+        },
+        {
+          "type": "OPT",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

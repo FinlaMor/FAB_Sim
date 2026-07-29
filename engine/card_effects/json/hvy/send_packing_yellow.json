@@ -1,0 +1,36 @@
+{
+  "slug": "send_packing_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": {
+            "zone": "arsenal",
+            "controller": "opponent"
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {
+          "type": "DID_NOT_HIT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_TO_HAND",
+          "target": {
+            "zone": "banish",
+            "controller": "opponent"
+          }
+        }
+      ]
+    }
+  ]
+}

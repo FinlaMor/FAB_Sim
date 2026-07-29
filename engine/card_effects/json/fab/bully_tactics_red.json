@@ -1,0 +1,26 @@
+{
+  "slug": "bully_tactics_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INTIMIDATE",
+          "amount": "PAYMENT_AMOUNT"
+        }
+      ],
+      "additional_cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": "UP_TO_3"
+        }
+      ]
+    }
+  ]
+}

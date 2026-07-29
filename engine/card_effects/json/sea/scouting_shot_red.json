@@ -1,0 +1,15 @@
+{
+  "slug": "scouting_shot_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

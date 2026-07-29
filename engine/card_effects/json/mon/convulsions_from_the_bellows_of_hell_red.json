@@ -1,0 +1,50 @@
+{
+  "slug": "convulsions_from_the_bellows_of_hell_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "BANISH_NAMED_GRAVEYARD_OPTIONAL",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "REF_EXISTS",
+                "ref": "banished_high_power_card"
+              }
+            },
+            {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "REF_EXISTS",
+                  "ref": "banished_high_power_card"
+                },
+                {
+                  "type": "MODIFY_ATTACK",
+                  "mod": "add",
+                  "amount": 3
+                },
+                {
+                  "type": "DOMINATE"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

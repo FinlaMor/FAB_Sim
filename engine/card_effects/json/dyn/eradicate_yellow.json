@@ -1,0 +1,20 @@
+{
+  "slug": "eradicate_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": "DAMAGE_AMOUNT"
+        }
+      ]
+    }
+  ]
+}

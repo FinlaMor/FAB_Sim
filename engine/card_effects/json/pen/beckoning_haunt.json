@@ -1,0 +1,21 @@
+{
+  "slug": "beckoning_haunt",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_DR_FROM_GRAVEYARD",
+          "cost": "X"
+        }
+      ]
+    }
+  ]
+}

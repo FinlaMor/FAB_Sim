@@ -1,0 +1,15 @@
+{
+  "slug": "volatile_fluxor_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Lightning Flow"
+        }
+      ]
+    }
+  ]
+}

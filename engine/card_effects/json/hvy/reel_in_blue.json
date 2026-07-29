@@ -1,0 +1,43 @@
+{
+  "slug": "reel_in_blue",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "REVEAL_CARD_COST_GTE",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "amount": "X+1"
+        },
+        {
+          "type": "SEARCH_DECK",
+          "amount": 4,
+          "filter": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zones": [
+                "deck"
+              ],
+              "subtypes": [
+                "trap"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "REVEAL_TOP_DECK",
+          "amount": "X+1"
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": "X+1"
+        }
+      ]
+    }
+  ]
+}

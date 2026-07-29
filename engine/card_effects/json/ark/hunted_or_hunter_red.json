@@ -1,0 +1,27 @@
+{
+  "slug": "hunted_or_hunter_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "assassin"
+          ]
+        },
+        {
+          "type": "FLAG_SET",
+          "flag": "ATTACK_REACTION_PLAYED_OR_ACTIVATED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOSE_LIFE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

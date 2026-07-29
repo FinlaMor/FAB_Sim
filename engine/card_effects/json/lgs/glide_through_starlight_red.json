@@ -1,0 +1,28 @@
+{
+  "slug": "glide_through_starlight_red",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Lightning Flow"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "imposing_visage_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "deck"
+                ],
+                "subtypes": [
+                  "Aura"
+                ],
+                "cost": {
+                  "type": "LTE",
+                  "amount": "X"
+                }
+              }
+            ]
+          },
+          "destination": "arena"
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": "SEARCHED_COUNT",
+          "zone": "deck"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

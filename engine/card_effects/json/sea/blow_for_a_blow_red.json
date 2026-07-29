@@ -1,0 +1,28 @@
+{
+  "slug": "blow_for_a_blow_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "HEALTH_LT_OPP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "skull_crack_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DISCARD",
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}
