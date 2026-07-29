@@ -1,0 +1,97 @@
+{
+  "slug": "lumina_ascension_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BOLTYN_SPECIALIZATION_ACTIVE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "target": "WEAPONS_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "TRIGGERED",
+            "trigger": "ON_HIT",
+            "effects": [
+              {
+                "type": "REVEAL_TOP_DECK",
+                "amount": 1
+              },
+              {
+                "type": "CONDITIONAL",
+                "conditions": [
+                  {
+                    "type": "CARD_IN_ZONE",
+                    "zone": "DECK",
+                    "card_type": "LIGHT"
+                  }
+                ],
+                "effects": [
+                  {
+                    "type": "PUT_SELF_BOTTOM_DECK",
+                    "target": "REVEALED_CARD"
+                  },
+                  {
+                    "type": "GAIN_LIFE",
+                    "amount": 1
+                  }
+                ]
+              },
+              {
+                "type": "CONDITIONAL",
+                "conditions": [
+                  {
+                    "type": "NOT",
+                    "condition": {
+                      "type": "CARD_IN_ZONE",
+                      "zone": "DECK",
+                      "card_type": "LIGHT"
+                    }
+                  }
+                ],
+                "effects": [
+                  {
+                    "type": "PUT_CARD_BOTTOM",
+                    "target": "REVEALED_CARD"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CHARGED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN",
+          "target": "WEAPONS_CONTROLLED_BY_YOU"
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

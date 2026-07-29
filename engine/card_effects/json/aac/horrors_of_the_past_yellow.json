@@ -1,0 +1,14 @@
+{
+  "slug": "horrors_of_the_past_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "COPY_BANISHED_STEALTH_ATTACK"
+        }
+      ]
+    }
+  ]
+}

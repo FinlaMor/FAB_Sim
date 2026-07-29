@@ -1,0 +1,71 @@
+{
+  "slug": "annihilator_engine_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Evo"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN",
+          "target": "defending"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Evo",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "subtract",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Evo",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "OVERPOWER"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Evo",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

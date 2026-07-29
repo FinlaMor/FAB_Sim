@@ -1,0 +1,28 @@
+{
+  "slug": "suraya_archangel_of_erudition",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "hero_soul"
+        },
+        {
+          "type": "DRAW",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "slug": "vengeance_never_rests_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "EDGE_OF_AUTUMN_LAST_ATTACK"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        },
+        {
+          "type": "BANISH",
+          "target": "hero"
+        },
+        {
+          "type": "BANISH_OPP_TOP_GRANT_PLAY",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

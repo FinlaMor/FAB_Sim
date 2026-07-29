@@ -1,0 +1,46 @@
+{
+  "slug": "tear_down_the_idols_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO",
+              "hero_type": "Revered"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO",
+              "hero_type": "Revered"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DISCARD",
+          "target": "opponent",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

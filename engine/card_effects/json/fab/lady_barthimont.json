@@ -1,0 +1,113 @@
+{
+  "slug": "lady_barthimont",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BARTHIMONT_FACE_DOWN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "START_OF_TURN",
+            "effects": [
+              {
+                "type": "MAY",
+                "effects": [
+                  {
+                    "type": "FLIP_REF",
+                    "ref": "lady_barthimont",
+                    "face_up": true
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BARTHIMONT_FACE_UP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_PLAY",
+            "conditions": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zone": "HAND",
+                "card_type": "ATTACK_ACTION"
+              }
+            ],
+            "effects": [
+              {
+                "type": "BANISH",
+                "target": "TOP_DECK"
+              },
+              {
+                "type": "CONDITIONAL",
+                "condition": {
+                  "type": "DISCARDED_CARD_POWER_GTE",
+                  "amount": 6
+                },
+                "effects": [
+                  {
+                    "type": "DOMINATE"
+                  },
+                  {
+                    "type": "PUT_COUNTER",
+                    "counter_type": "LESSON",
+                    "amount": 1
+                  },
+                  {
+                    "type": "CONDITIONAL",
+                    "condition": {
+                      "type": "COUNTER_GTE",
+                      "counter_type": "LESSON",
+                      "amount": 2
+                    },
+                    "effects": [
+                      {
+                        "type": "BANISH_REF",
+                        "ref": "lady_barthimont"
+                      },
+                      {
+                        "type": "SEARCH_DECK",
+                        "conditions": [
+                          {
+                            "type": "CARD_SUBTYPE_IN",
+                            "subtype": "SPECIALIZATION"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "type": "PUT_REF_BOTTOM_DECK",
+                            "ref": "searched_card"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "SHUFFLE_DECK"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

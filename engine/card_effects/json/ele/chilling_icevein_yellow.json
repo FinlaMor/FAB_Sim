@@ -1,0 +1,32 @@
+{
+  "slug": "chilling_icevein_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEAL_DAMAGE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FUSED"
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "resource": "RESOURCE_POINTS",
+          "amount": 1,
+          "on_failure": [
+            {
+              "type": "DISCARD",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

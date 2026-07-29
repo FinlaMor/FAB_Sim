@@ -1,0 +1,22 @@
+{
+  "slug": "teklonetic_force_field_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "OVERPOWER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

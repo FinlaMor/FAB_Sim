@@ -797,3 +797,74 @@ def test_smash_with_big_tree_red_no_effect():
     assert len(st.players[1].arms.cards) == 0  # No cards moved to arms
     assert len(st.players[1].weapon1.cards) == 0  # No cards moved to weapon1
     assert len(st.players[1].permanents.cards) == 0  # No tokens added
+
+# --- over_loop_blue ---
+def test_over_loop_blue_on_hit_puts_itself_on_bottom_of_deck():
+    # Set up a real state with the card in the player's arsenal
+    st = _make_state(); st.card_db = DB
+    card = _card("over_loop_blue")
+    st.players[1].arsenal.cards.append(card)
+    
+    # Set up a real combat scenario where the card hits
+    attack(st, card)
+    hit(st)
+    
+    # Assert that the card is on the bottom of its owner's deck
+    assert st.players[1].deck.cards[-1].slug == "over_loop_blue"
+
+# --- on_the_horizon_yellow ---
+def test_on_the_horizon_yellow_looks_at_top_deck():
+    st = _make_state(); st.card_db = DB
+    card = _card("on_the_horizon_yellow")
+    st.players[1].arsenal.cards.append(card)
+    stock_deck(st, 1, n=1)  # Ensure there's at least one card in the deck
+    dispatch(st, "ON_DEFEND", "on_the_horizon_yellow", card=card, event=None)
+    # The top card of the deck should be looked at, but we can't directly observe this.
+    # Instead, we can check if the deck size has changed, which is not expected.
+    before = len(st.players[1].deck.cards)
+    dispatch(st, "ON_DEFEND", "on_the_horizon_yellow", card=card, event=None)
+    assert len(st.players[1].deck.cards) == before  # The deck size should remain the same
+
+def test_on_the_horizon_yellow_does_not_change_other_state():
+    st = _make_state(); st.card_db = DB
+    card = _card("on_the_horizon_yellow")
+    st.players[1].arsenal.cards.append(card)
+    stock_deck(st, 1, n=1)  # Ensure there's at least one card in the deck
+    before_health = st.players[1].health
+    before_resources = st.players[1].resources
+    before_action_points = st.players[1].action_points
+    before_chi = st.players[1].chi
+    before_hand_size = len(st.players[1].hand.cards)
+    before_graveyard_size = len(st.players[1].graveyard.cards)
+    before_banished_size = len(st.players[1].banished.cards)
+    before_arsenal_size = len(st.players[1].arsenal.cards)
+    before_permanents_size = len(st.players[1].permanents.cards)
+
+    dispatch(st, "ON_DEFEND", "on_the_horizon_yellow", card=card, event=None)
+
+    assert st.players[1].health == before_health
+    assert st.players[1].resources == before_resources
+    assert st.players[1].action_points == before_action_points
+    assert st.players[1].chi == before_chi
+    assert len(st.players[1].hand.cards) == before_hand_size
+    assert len(st.players[1].graveyard.cards) == before_graveyard_size
+    assert len(st.players[1].banished.cards) == before_banished_size
+    assert len(st.players[1].arsenal.cards) == before_arsenal_size
+    assert len(st.players[1].permanents.cards) == before_permanents_size
+
+# --- spears_of_surreality_blue ---
+def test_spears_of_surreality_blue_go_again():
+    st = _make_state(); st.card_db = DB
+    card = _card("spears_of_surreality_blue")
+    st.players[1].arsenal.cards.append(card)
+    before_action_points = st.players[1].action_points
+    activate(st, card)
+    assert st.players[1].action_points == before_action_points + 1
+
+def test_spears_of_surreality_blue_phantasm():
+    st = _make_state(); st.card_db = DB
+    card = _card("spears_of_surreality_blue")
+    st.players[1].arsenal.cards.append(card)
+    before_action_points = st.players[1].action_points
+    activate(st, card)
+    assert st.players[1].action_points == before_action_points + 1

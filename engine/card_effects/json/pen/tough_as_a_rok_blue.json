@@ -1,0 +1,36 @@
+{
+  "slug": "tough_as_a_rok_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_BASE_POWER",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "HEALTH_LT_OPP"
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_BASE_POWER",
+          "amount": 0
+        }
+      ]
+    }
+  ]
+}

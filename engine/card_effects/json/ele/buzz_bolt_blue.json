@@ -1,0 +1,21 @@
+{
+  "slug": "buzz_bolt_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BUZZ_BOLT_FUSED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

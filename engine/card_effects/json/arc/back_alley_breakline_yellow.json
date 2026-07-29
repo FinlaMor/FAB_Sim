@@ -1,0 +1,22 @@
+{
+  "slug": "back_alley_breakline_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ACTIVATED_ABILITY_OR_ACTION_CARD_EFFECT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "ACTION_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

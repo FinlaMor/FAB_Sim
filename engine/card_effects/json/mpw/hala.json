@@ -1,0 +1,34 @@
+{
+  "slug": "hala",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "activation_cost": 3,
+      "cost": [
+        {
+          "type": "PITCH",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "WEAPON_SUBTYPE_IN",
+              "subtype": "Sword"
+            },
+            {
+              "type": "CONTROLS_ATTACK_ACTION"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

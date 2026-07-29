@@ -1,0 +1,60 @@
+{
+  "slug": "bait",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BAIT_IN_PLAY"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "CANNOT_PLAY_OR_ACTIVATE_OWN_CARDS"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "BAIT_DESTROYED"
+        }
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BAIT_IN_PLAY"
+        },
+        {
+          "type": "CHAIN_HIT_COUNT_GTE",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

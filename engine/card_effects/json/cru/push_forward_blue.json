@@ -1,0 +1,43 @@
+{
+  "slug": "push_forward_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "WEAPON_ATTACKED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DOMINATE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "NEXT_ATTACK_IS_WEAPON"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

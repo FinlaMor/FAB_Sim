@@ -1,0 +1,43 @@
+{
+  "slug": "blossoming_decay_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "GRAVEYARD",
+              "subtype": "Earth"
+            }
+          ]
+        },
+        {
+          "type": "BANISH",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "GRAVEYARD",
+              "subtype": "Action"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "asset": "HEALTH",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BANISHED_EARTH_ACTION"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

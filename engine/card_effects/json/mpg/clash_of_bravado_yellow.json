@@ -1,0 +1,29 @@
+{
+  "slug": "clash_of_bravado_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CLASH",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CLASH_ACTIVE"
+            }
+          ]
+        },
+        {
+          "type": "DESTROY_TOKEN",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CLASH_WIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

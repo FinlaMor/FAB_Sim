@@ -1,0 +1,26 @@
+{
+  "slug": "flurry",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ACTIVATE",
+      "conditions": [
+        {
+          "type": "ATTACK_TYPE_IN",
+          "attack_type": "WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

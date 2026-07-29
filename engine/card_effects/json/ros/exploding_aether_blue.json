@@ -1,0 +1,17 @@
+{
+  "slug": "exploding_aether_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "AMP",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

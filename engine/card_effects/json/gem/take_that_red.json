@@ -1,0 +1,20 @@
+{
+  "slug": "take_that_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_COMBAT_CLOSE",
+      "conditions": [
+        {
+          "type": "DID_NOT_HIT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Might"
+        }
+      ]
+    }
+  ]
+}

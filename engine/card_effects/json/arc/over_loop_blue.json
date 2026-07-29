@@ -1,0 +1,14 @@
+{
+  "slug": "over_loop_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "PUT_SELF_BOTTOM_DECK"
+        }
+      ]
+    }
+  ]
+}

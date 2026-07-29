@@ -1,0 +1,22 @@
+{
+  "slug": "unicycle",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "self",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

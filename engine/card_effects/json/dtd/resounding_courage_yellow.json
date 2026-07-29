@@ -1,0 +1,20 @@
+{
+  "slug": "resounding_courage_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CHARGED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Courage"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "slug": "riptide",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "effects": [
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "zone": "HAND",
+          "face_down": true,
+          "destination": "ARSenal"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_TRAP_TRIGGER",
+      "effects": [
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 1,
+          "target": "ATTACKER"
+        }
+      ]
+    }
+  ]
+}

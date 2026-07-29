@@ -1,0 +1,20 @@
+{
+  "slug": "photon_rush_red",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "LIGHTNING_PLAYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "slug": "vest_of_the_first_fist",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "CONTROLS_ATTACK_ACTION"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

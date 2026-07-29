@@ -1,0 +1,35 @@
+{
+  "slug": "aegis_archangel_of_protection",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "AEGIS_ATTACKED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "hero_soul"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Spectral Shield",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

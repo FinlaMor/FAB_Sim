@@ -1,0 +1,21 @@
+{
+  "slug": "riled_up_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DISCARDED_HIGH_POWER_CARD_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "slug": "beckon_steel_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "SHARPEN",
+          "amount": 1
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "COUNTER_GTE",
+                "counter": "SHARPEN",
+                "amount": 3
+              }
+            ],
+            "effects": [
+              {
+                "type": "ATTACK"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

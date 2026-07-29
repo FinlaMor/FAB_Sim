@@ -1,0 +1,49 @@
+{
+  "slug": "mutiny_on_the_swiftwater_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "STEAL_AURA_TOKEN",
+          "aura_type": "Gold",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Gold",
+              "opponent": true,
+              "greater_than": true
+            }
+          ]
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "MUTINY_STOLE_GOLD",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "STEAL_GOLD_SUCCESS"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "MUTINY_STOLE_GOLD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

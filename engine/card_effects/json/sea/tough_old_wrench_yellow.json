@@ -1,0 +1,24 @@
+{
+  "slug": "tough_old_wrench_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "Galvanize"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "controlled_item"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Golden Cog"
+        }
+      ]
+    }
+  ]
+}

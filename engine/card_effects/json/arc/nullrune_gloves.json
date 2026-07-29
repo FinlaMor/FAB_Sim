@@ -1,0 +1,14 @@
+{
+  "slug": "nullrune_gloves",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "ARCANE_BARRIER",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

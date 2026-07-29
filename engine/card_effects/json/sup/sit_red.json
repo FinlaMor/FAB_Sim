@@ -1,0 +1,22 @@
+{
+  "slug": "sit_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "class": "Brute"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

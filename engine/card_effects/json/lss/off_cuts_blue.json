@@ -1,0 +1,29 @@
+{
+  "slug": "off_cuts_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FRANKIE_SPECIALIZATION"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN",
+          "target": "equipment",
+          "controller": "opponent"
+        }
+      ]
+    }
+  ]
+}

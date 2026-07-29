@@ -1,0 +1,39 @@
+{
+  "slug": "testament_of_valahai",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Seismic Surge",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Seismic Surge",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 4
+        }
+      ]
+    }
+  ]
+}

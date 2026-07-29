@@ -1,0 +1,15 @@
+{
+  "slug": "oath_of_oak_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Embodiment of Earth",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "astral_etchings_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "power",
+          "amount": 1,
+          "target": "controlled_aura_with_ward"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Spectral Shield"
+        }
+      ]
+    }
+  ]
+}

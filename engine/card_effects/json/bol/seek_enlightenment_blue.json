@@ -1,0 +1,49 @@
+{
+  "slug": "seek_enlightenment_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "SEEK_ENLIGHTENMENT_ACTIVE"
+            }
+          ]
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {
+                "type": "PUT_REF",
+                "ref": "self",
+                "zone": "hero_soul"
+              }
+            ]
+          },
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "SEEK_ENLIGHTENMENT_ACTIVE"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

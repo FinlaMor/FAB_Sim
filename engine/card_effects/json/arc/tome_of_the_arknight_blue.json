@@ -1,0 +1,46 @@
+{
+  "slug": "tome_of_the_arknight_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK",
+          "amount": 2
+        },
+        {
+          "type": "SEARCH_DECK",
+          "conditions": [
+            {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "REVEALED",
+                  "card_type": "ATTACK_ACTION"
+                },
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "REVEALED",
+                  "card_type": "NON_ATTACK_ACTION"
+                }
+              ]
+            }
+          ],
+          "effects": [
+            {
+              "type": "PUT_SELF_BOTTOM_DECK"
+            },
+            {
+              "type": "RETURN_TO_HAND",
+              "target": "REVEALED"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

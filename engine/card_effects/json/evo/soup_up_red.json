@@ -1,0 +1,39 @@
+{
+  "slug": "soup_up_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ITEM_DESTROYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "target": "controlled_item"
+            },
+            {
+              "type": "MODIFY_DEFENSE_VALUE",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

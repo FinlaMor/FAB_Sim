@@ -1,0 +1,42 @@
+{
+  "slug": "driving_blade_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "DRIVING_BLADE_ACTIVE"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DRIVING_BLADE_ACTIVE"
+        },
+        {
+          "type": "IN_COMBAT"
+        },
+        {
+          "type": "ATTACK_IS_WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

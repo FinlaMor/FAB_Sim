@@ -1,0 +1,36 @@
+{
+  "slug": "comeback_kid_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "CROWD_CHEERS"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CROWD_CHEERS"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

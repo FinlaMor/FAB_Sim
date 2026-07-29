@@ -1,0 +1,27 @@
+{
+  "slug": "harvest_season_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "HEALTH",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

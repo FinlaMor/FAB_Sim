@@ -1,0 +1,39 @@
+{
+  "slug": "goon_tactics_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Aura",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "DESTROY_REF",
+                "ref": "OPPONENT_DECK_TOP"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

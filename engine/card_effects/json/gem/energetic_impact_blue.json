@@ -1,0 +1,28 @@
+{
+  "slug": "energetic_impact_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "DEFENDS_WITH_OTHER_HAND_CARD"
+            },
+            {
+              "type": "SELF_ATTACK_POWER_GTE",
+              "amount": 6
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor"
+        }
+      ]
+    }
+  ]
+}

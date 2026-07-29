@@ -1,0 +1,41 @@
+{
+  "slug": "jinglewood_smash_hit",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Might"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Quicken"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Copper"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

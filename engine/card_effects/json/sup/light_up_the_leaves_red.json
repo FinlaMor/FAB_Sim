@@ -1,0 +1,41 @@
+{
+  "slug": "light_up_the_leaves_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 6
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DISCARD_SELF"
+        },
+        {
+          "type": "DISCARD_CARD",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "subtypes": [
+                "Earth"
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "LIGHT_UP_THE_LEAVES_ACTIVE"
+        }
+      ]
+    }
+  ]
+}

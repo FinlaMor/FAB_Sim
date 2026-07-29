@@ -1,0 +1,34 @@
+{
+  "slug": "aether_icevein_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        },
+        {
+          "type": "PAY_OR_DAMAGE",
+          "pay_cost": {
+            "type": "PAY_RESOURCES",
+            "amount": 2
+          },
+          "damage_effect": {
+            "type": "DEAL_GENERIC",
+            "amount": 1
+          },
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "FUSED"
+            },
+            {
+              "type": "ATTACK_TARGET_IS_HERO"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

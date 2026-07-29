@@ -1,0 +1,49 @@
+{
+  "slug": "nerve_scalpel",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "NERVE_SCALPEL_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "NERVE_SCALPEL_ACTIVE"
+        },
+        {
+          "type": "DEFENDS_WITH_OTHER_HAND_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "subtract",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

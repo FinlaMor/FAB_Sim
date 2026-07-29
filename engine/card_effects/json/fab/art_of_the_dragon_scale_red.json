@@ -1,0 +1,51 @@
+{
+  "slug": "art_of_the_dragon_scale_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "Draconic"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "PUT_COUNTER",
+                "counter": "DEFENSE",
+                "mod": "subtract",
+                "amount": 1,
+                "target": "equipment"
+              },
+              {
+                "type": "CONDITIONAL",
+                "condition": {
+                  "type": "COUNTER_GTE",
+                  "counter": "DEFENSE",
+                  "amount": 0
+                },
+                "effects": [
+                  {
+                    "type": "DESTROY_REF",
+                    "target": "equipment"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

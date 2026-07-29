@@ -1,0 +1,81 @@
+{
+  "slug": "hunter_or_hunted_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK",
+          "target": "opponent"
+        },
+        {
+          "type": "BANISH",
+          "target": "opponent",
+          "conditions": [
+            {
+              "type": "REF_PITCH_IS",
+              "ref": "named_card"
+            }
+          ]
+        },
+        {
+          "type": "SEARCH_BANISH_FACE_DOWN",
+          "target": "opponent",
+          "zone": "hand",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "REF_PITCH_IS",
+              "ref": "named_card"
+            }
+          ]
+        },
+        {
+          "type": "SEARCH_BANISH_FACE_DOWN",
+          "target": "opponent",
+          "zone": "deck",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "REF_PITCH_IS",
+              "ref": "named_card"
+            }
+          ]
+        },
+        {
+          "type": "SEARCH_BANISH_FACE_DOWN",
+          "target": "opponent",
+          "zone": "arsenal",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "REF_PITCH_IS",
+              "ref": "named_card"
+            }
+          ]
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "target": "opponent",
+          "zone": "deck"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CONTRACT_ACTIVE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Silver"
+        }
+      ]
+    }
+  ]
+}

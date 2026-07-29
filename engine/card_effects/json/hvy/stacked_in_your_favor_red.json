@@ -1,0 +1,38 @@
+{
+  "slug": "stacked_in_your_favor_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 3
+        }
+      ],
+      "conditions": [
+        {
+          "type": "IN_COMBAT"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "PUT_HAND_CARD_BOTTOM",
+          "position": "top"
+        }
+      ]
+    }
+  ]
+}

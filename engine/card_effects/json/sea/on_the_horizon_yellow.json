@@ -1,0 +1,15 @@
+{
+  "slug": "on_the_horizon_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "top_deck"
+        }
+      ]
+    }
+  ]
+}

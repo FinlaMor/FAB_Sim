@@ -1,0 +1,21 @@
+{
+  "slug": "in_the_swing_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ATTACKED_WITH_WEAPON_TWICE_OR_MORE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "slug": "sigil_of_suffering_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "SIGIL_OF_SUFFERING_ARCANE_DEALT"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SIGIL_OF_SUFFERING_ARCANE_DEALT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

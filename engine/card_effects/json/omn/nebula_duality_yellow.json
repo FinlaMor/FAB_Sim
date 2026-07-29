@@ -1,0 +1,34 @@
+{
+  "slug": "nebula_duality_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Lightning Flow"
+        }
+      ]
+    }
+  ]
+}

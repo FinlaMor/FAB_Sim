@@ -1,0 +1,16 @@
+{
+  "slug": "expedition_to_azuro_keys_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "GOLD",
+          "target": "TREASURE_ISLAND"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "slug": "volzar_the_lightning_rod",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "AMP",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "LIGHTNING_PLAYED_THIS_TURN"
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 1,
+      "effects": [
+        {
+          "type": "AMP",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "LIGHTNING_PLAYED_THIS_TURN"
+        }
+      ]
+    }
+  ]
+}

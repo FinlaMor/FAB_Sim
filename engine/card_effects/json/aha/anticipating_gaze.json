@@ -1,0 +1,46 @@
+{
+  "slug": "anticipating_gaze",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Sword"
+            },
+            {
+              "type": "CONTROLS_ATTACK_ACTION"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTER",
+          "counter": "+1{p}"
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

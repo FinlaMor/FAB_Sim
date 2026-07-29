@@ -1,0 +1,30 @@
+{
+  "slug": "vigorous_engagement_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "class": "Warrior"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor",
+          "conditions": [
+            {
+              "type": "DEFENDS_WITH_OTHER_HAND_CARD"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
