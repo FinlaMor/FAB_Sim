@@ -1,0 +1,35 @@
+{
+  "slug": "laden_with_earth_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "pitch": "earth"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "embodiment_of_earth"
+        }
+      ]
+    }
+  ]
+}

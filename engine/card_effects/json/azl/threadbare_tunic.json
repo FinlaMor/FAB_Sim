@@ -1,0 +1,29 @@
+{
+  "slug": "threadbare_tunic",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "HAND",
+          "amount": 0
+        }
+      ],
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

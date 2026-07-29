@@ -1,0 +1,25 @@
+{
+  "slug": "helmsmans_peak",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": {
+            "type": "TOP_DECK"
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

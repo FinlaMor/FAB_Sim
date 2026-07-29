@@ -1051,6 +1051,87 @@ def validate_card_loads(json_content: str) -> tuple[bool, str]:
         return False, f"{type(e).__name__}: {e}"
 
 
+# The behavioural-test harness, shared verbatim by the execution gate
+# (run_generated_test) and the committed test file (append_test) so a test that
+# passes the gate passes identically once committed. Provides the exact names the
+# test-prompt example uses.
+GATE_HARNESS = (
+    "import copy, sys\n"
+    "from pathlib import Path\n"
+    "ROOT = Path(__file__).resolve().parents[1]\n"
+    "sys.path.insert(0, str(ROOT))\n"
+    "from engine.card import CardDB, Card\n"
+    "from engine.card_effects.dsl import dispatch, get_card\n"
+    "from engine.card_effects.dsl.loader import load_all_cards\n"
+    "from tests.conftest import _make_state as _base_make_state\n"
+    "load_all_cards()\n"
+    "DB = CardDB()\n"
+    "def _make_state(*a, **k):\n"
+    "    # Wrap the real _make_state to PRE-STOCK both decks — the base state\n"
+    "    # starts with EMPTY decks, so any 'draw a card' / 'banish the top card'\n"
+    "    # effect silently no-ops and a correct card fails its assertion. 20\n"
+    "    # dummy cards per deck make those effects observable by default.\n"
+    "    st = _base_make_state(*a, **k)\n"
+    "    st.card_db = DB\n"
+    "    for pid in (1, 2):\n"
+    "        if len(st.players[pid].deck.cards) == 0:\n"
+    "            for _ in range(20):\n"
+    "                c = Card(slug='dummy_card', name='dummy', types=['Action']); c.owner = c.controller = pid\n"
+    "                st.players[pid].deck.cards.append(c)\n"
+    "    return st\n"
+    "def _card(slug, owner=1):\n"
+    "    # Tolerate a slug that isn't a real card: the auditor sometimes builds a\n"
+    "    # generic setup/opponent card via _card('some_slug'). DB.get returns None\n"
+    "    # for those, and None.owner crashes the whole test (zero signal). Fall\n"
+    "    # back to a bare Card so the test can still exercise the card UNDER TEST.\n"
+    "    base = DB.get(slug)\n"
+    "    if base is None:\n"
+    "        return Card(slug=slug, name=slug, types=['Action'], owner=owner, controller=owner)\n"
+    "    c = copy.deepcopy(base); c.owner = c.controller = owner\n"
+    "    return c\n"
+    "def activate(state, card, player_id=1):\n"
+    "    # Real activation flow: pays the ability's cost array (e.g. 'Destroy this')\n"
+    "    # AND runs its effects. Use this for ACTIVATE/ACTION cards.\n"
+    "    from engine.actions import Action, ActionType\n"
+    "    from engine.play import apply_action\n"
+    "    p = state.players[player_id]; p.action_points = max(1, p.action_points)\n"
+    "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n"
+    "def attack(state, card, attacker=1):\n"
+    "    # Real combat: `card` attacks the opponent HERO. Fires ON_ATTACK and\n"
+    "    # recomputes attack_power. Returns state.combat (assert .attack_power for\n"
+    "    # pumps). NOTE: for a hero attack the engine leaves combat.attack_target\n"
+    "    # None (it is set only when the attack targets a permanent/ally); the\n"
+    "    # ATTACK_TARGET_IS_HERO condition relies on that, and 'defending hero'\n"
+    "    # effects resolve via the controller's opponent, not attack_target — so\n"
+    "    # do NOT set attack_target here.\n"
+    "    from engine.state import CombatState\n"
+    "    import engine.engine as _E\n"
+    "    bp = getattr(card, 'power', None) or getattr(card, 'base_power', None) or 0\n"
+    "    state.combat = CombatState(attacker_id=attacker, link_id=1, attack_power=bp, attack_card=card, keywords=[])\n"
+    "    state.combat.base_attack_power = bp\n"
+    "    dispatch(state, 'ON_ATTACK', card.slug, card=card, event=None)\n"
+    "    _E._recalculate_attack_power(state)\n"
+    "    return state.combat\n"
+    "def hit(state):\n"
+    "    # The current attack hits -> fires ON_HIT for the attacking card.\n"
+    "    ac = state.combat.attack_card; state.combat.hit = True\n"
+    "    dispatch(state, 'ON_HIT', ac.slug, card=ac, event=None)\n"
+    "def stock_deck(state, pid, n=20):\n"
+    "    # Add more dummy cards to a deck (decks are pre-stocked with 20 already).\n"
+    "    for _ in range(n):\n"
+    "        c = Card(slug='dummy_card', name='dummy', types=['Action']); c.owner = c.controller = pid\n"
+    "        state.players[pid].deck.cards.append(c)\n"
+    "    return state.players[pid].deck.cards\n"
+    "def give_token(state, pid, slug, n=1):\n"
+    "    # Put n copies of a token under a player via the real create path, so\n"
+    "    # 'if you control a X token' conditions see them. Slugs are LOWERCASE\n"
+    "    # ('might', 'gold', 'seismic_surge'). Do NOT invent a *_token_count attr.\n"
+    "    if getattr(state, 'card_db', None) is None: state.card_db = DB\n"
+    "    from engine.effect_keywords import create_token\n"
+    "    create_token(state, pid, slug, n)\n\n"
+)
+
+
 def run_generated_test(slug: str, test_code: str, verbose: bool = False) -> tuple[bool, str]:
     """Run the auditor's test in ISOLATION and report whether it passes.
 
@@ -1058,68 +1139,12 @@ def run_generated_test(slug: str, test_code: str, verbose: bool = False) -> tupl
     prior card's broken test cannot poison this card's gate, and only tests that
     actually pass get appended to the committed file. Returns (passed, output).
     """
-    # The header MUST provide exactly the names the test-prompt example uses
-    # (_make_state, _card, DB, dispatch, get_card) — extract_test_code strips the
-    # model's own header, so the gate supplies the harness. Keep in sync with
-    # build_test_prompt's example.
-    header = (
-        "import copy, sys\n"
-        "from pathlib import Path\n"
-        "ROOT = Path(__file__).resolve().parents[1]\n"
-        "sys.path.insert(0, str(ROOT))\n"
-        "from engine.card import CardDB\n"
-        "from engine.card_effects.dsl import dispatch, get_card\n"
-        "from engine.card_effects.dsl.loader import load_all_cards\n"
-        "from tests.conftest import _make_state\n"
-        "load_all_cards()\n"
-        "DB = CardDB()\n"
-        "def _card(slug, owner=1):\n"
-        "    c = copy.deepcopy(DB.get(slug)); c.owner = c.controller = owner\n"
-        "    return c\n"
-        "def activate(state, card, player_id=1):\n"
-        "    # Real activation flow: pays the ability's cost array (e.g. 'Destroy this')\n"
-        "    # AND runs its effects. Use this for ACTIVATE/ACTION cards.\n"
-        "    from engine.actions import Action, ActionType\n"
-        "    from engine.play import apply_action\n"
-        "    p = state.players[player_id]; p.action_points = max(1, p.action_points)\n"
-        "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n"
-        "def attack(state, card, attacker=1):\n"
-        "    # Real combat: `card` attacks the opponent HERO. Fires ON_ATTACK and\n"
-        "    # recomputes attack_power. Returns state.combat (assert .attack_power for\n"
-        "    # pumps). NOTE: for a hero attack the engine leaves combat.attack_target\n"
-        "    # None (it is set only when the attack targets a permanent/ally); the\n"
-        "    # ATTACK_TARGET_IS_HERO condition relies on that, and 'defending hero'\n"
-        "    # effects resolve via the controller's opponent, not attack_target — so\n"
-        "    # do NOT set attack_target here.\n"
-        "    from engine.state import CombatState\n"
-        "    import engine.engine as _E\n"
-        "    bp = getattr(card, 'power', None) or getattr(card, 'base_power', None) or 0\n"
-        "    state.combat = CombatState(attacker_id=attacker, link_id=1, attack_power=bp, attack_card=card, keywords=[])\n"
-        "    state.combat.base_attack_power = bp\n"
-        "    dispatch(state, 'ON_ATTACK', card.slug, card=card, event=None)\n"
-        "    _E._recalculate_attack_power(state)\n"
-        "    return state.combat\n"
-        "def hit(state):\n"
-        "    # The current attack hits -> fires ON_HIT for the attacking card.\n"
-        "    ac = state.combat.attack_card; state.combat.hit = True\n"
-        "    dispatch(state, 'ON_HIT', ac.slug, card=ac, event=None)\n"
-        "def stock_deck(state, pid, n=20):\n"
-        "    # _make_state starts with an EMPTY deck. Call this before testing any\n"
-        "    # 'look at / banish / reveal the top card of the deck' effect, or the\n"
-        "    # effect has nothing to act on and the assertion is meaningless.\n"
-        "    from engine.card import Card\n"
-        "    for _ in range(n):\n"
-        "        c = Card(slug='dummy_card', name='dummy'); c.owner = c.controller = pid\n"
-        "        state.players[pid].deck.cards.append(c)\n"
-        "    return state.players[pid].deck.cards\n"
-        "def give_token(state, pid, slug, n=1):\n"
-        "    # Put n copies of a token under a player via the real create path, so\n"
-        "    # 'if you control a X token' conditions see them. Slugs are LOWERCASE\n"
-        "    # ('might', 'gold', 'seismic_surge'). Do NOT invent a *_token_count attr.\n"
-        "    if getattr(state, 'card_db', None) is None: state.card_db = DB\n"
-        "    from engine.effect_keywords import create_token\n"
-        "    create_token(state, pid, slug, n)\n\n"
-    )
+    # GATE_HARNESS supplies exactly the names the test-prompt example uses
+    # (_make_state, _card, DB, dispatch, get_card, activate/attack/hit, ...) —
+    # extract_test_code strips the model's own header. The SAME constant is
+    # written to the committed test file (append_test), so a test that passes the
+    # gate passes identically there.
+    header = GATE_HARNESS
     tmp = ROOT / "tests" / f"_gate_{slug}.py"
     tmp.write_text(header + test_code + "\n", encoding="utf-8")
     try:
@@ -1203,6 +1228,44 @@ def run_claw(prompt: str, verbose: bool = False, retries: int = 2,
 # ---------------------------------------------------------------------------
 # Output parsing
 # ---------------------------------------------------------------------------
+
+_BOLD_KW = re.compile(r"\*\*.*?\*\*")
+
+
+def _is_noop_stub(card: dict, json_content: str) -> bool:
+    """True if the impl is an empty-abilities STUB for a card whose printed text
+    is not purely keywords — i.e. the implementer punted on a real effect. Mirrors
+    tests/test_card_json_hygiene.py::test_card_with_functional_text_implements_something
+    so such a stub is rejected by the gate instead of reaching a false 'done' with
+    a vacuous `assert abilities == []` test."""
+    try:
+        d = json.loads(json_content)
+    except Exception:
+        return False
+    if d.get("abilities") or d.get("setup"):
+        return False
+    prose = _BOLD_KW.sub("", card.get("functional_text") or "").strip(" \n\t-—,.")
+    return bool(prose)
+
+
+def _quarantine_card_json(slug: str) -> None:
+    """Move a non-'done' card's JSON OUT of the live corpus. The pipeline writes
+    the card JSON to its real set folder before the gate runs, so a card that
+    fails the load gate (won't compile) would break load_all_cards() and the
+    engine, and a test_failed card would sit in the corpus UNVERIFIED. Keep only
+    'done' cards live; park the rest as <slug>.json.quarantine next to the review
+    note (the loader globs *.json exactly, so .json.quarantine is ignored) so the
+    impl is preserved for a later fix/re-run without polluting anything."""
+    src = _card_out_dir(slug) / f"{slug}.json"
+    if not src.exists():
+        return
+    REVIEW_DIR.mkdir(parents=True, exist_ok=True)
+    dest = REVIEW_DIR / f"{slug}.json.quarantine"
+    try:
+        src.replace(dest)
+    except OSError:
+        src.unlink(missing_ok=True)
+
 
 def _write_review_note(slug: str, reason: str, raw_output: str, label: str = "") -> None:
     REVIEW_DIR.mkdir(parents=True, exist_ok=True)
@@ -1292,36 +1355,7 @@ def append_test(slug: str, code: str) -> None:
         TEST_OUTPUT.write_text(
             f'"""Auto-generated pytest tests for {SET_CODE.upper()} card DSL implementations.\n'
             'Generated by scripts/auto_implement_wtr.py — do not edit manually.\n"""\n'
-            "import copy, sys\n"
-            "from pathlib import Path\n"
-            "ROOT = Path(__file__).resolve().parent.parent\n"
-            "sys.path.insert(0, str(ROOT))\n"
-            "from engine.card import CardDB\n"
-            "from engine.card_effects.dsl import dispatch, get_card\n"
-            "from engine.card_effects.dsl.loader import load_all_cards\n"
-            "from tests.conftest import _make_state\n"
-            "load_all_cards()\n"
-            "DB = CardDB()\n"
-            "def _card(slug, owner=1):\n"
-            "    c = copy.deepcopy(DB.get(slug)); c.owner = c.controller = owner\n"
-            "    return c\n"
-            "def activate(state, card, player_id=1):\n"
-            "    from engine.actions import Action, ActionType\n"
-            "    from engine.play import apply_action\n"
-            "    p = state.players[player_id]; p.action_points = max(1, p.action_points)\n"
-            "    apply_action(state, Action(type=ActionType.ACTIVATE_CARD, player_id=player_id, card=card))\n"
-            "def attack(state, card, attacker=1):\n"
-            "    from engine.state import CombatState\n"
-            "    import engine.engine as _E\n"
-            "    bp = getattr(card, 'power', None) or getattr(card, 'base_power', None) or 0\n"
-            "    state.combat = CombatState(attacker_id=attacker, link_id=1, attack_power=bp, attack_card=card, keywords=[])\n"
-            "    state.combat.base_attack_power = bp\n"
-            "    dispatch(state, 'ON_ATTACK', card.slug, card=card, event=None)\n"
-            "    _E._recalculate_attack_power(state)\n"
-            "    return state.combat\n"
-            "def hit(state):\n"
-            "    ac = state.combat.attack_card; state.combat.hit = True\n"
-            "    dispatch(state, 'ON_HIT', ac.slug, card=ac, event=None)\n\n",
+            + GATE_HARNESS,
             encoding="utf-8",
         )
     with TEST_OUTPUT.open("a", encoding="utf-8") as f:
@@ -1543,6 +1577,16 @@ def main() -> None:
             else:
                 print(f"  [gate] load OK")
 
+        # --- Execution gate 1b: reject no-op stubs. A card with real (non-keyword)
+        # text but empty abilities compiles fine, but it implements NOTHING — the
+        # auditor then "verifies" it with a vacuous `assert abilities == []`. Catch
+        # it here (same rule as the json-hygiene suite) so it can't reach 'done'.
+        if status == "done" and not args.no_gate and _is_noop_stub(card, json_content):
+            _write_review_note(slug, "empty abilities but card has non-keyword text "
+                               "(implementer punted on the effect)", json_content, label="loadgate")
+            status = "needs_review"
+            print(f"  [gate] no-op stub (text unimplemented) -> needs_review")
+
         # NOTE: the card's on-disk status is deliberately NOT written yet. It
         # stays at its previous value ('pending') all through the test gate, so
         # an interruption mid-gate leaves the card pending -> cleanly reprocessed
@@ -1623,6 +1667,13 @@ def main() -> None:
             else:
                 status = "needs_test"
                 print(f"  [test] no usable test produced ({last_gen_err[:50]}) -> needs_test")
+
+        # Keep the live corpus clean: only 'done' (loaded + behaviourally verified)
+        # cards stay in their set folder. Everything else is quarantined so it can
+        # neither break load_all_cards() (load-gate failures) nor sit unverified
+        # (test_failed). --no-gate keeps the old write-everything behaviour.
+        if not args.no_gate and status != "done":
+            _quarantine_card_json(slug)
 
         # Single authoritative status write for this card, after the gate decided.
         card["status"] = status

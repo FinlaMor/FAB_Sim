@@ -1,0 +1,36 @@
+{
+  "slug": "blanch_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "BLANCH_FLAG"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BLANCH_FLAG"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "subtract",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

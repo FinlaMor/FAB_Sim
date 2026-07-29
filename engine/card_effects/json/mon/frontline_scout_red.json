@@ -1,0 +1,29 @@
+{
+  "slug": "frontline_scout_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "defending_hero_hand"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

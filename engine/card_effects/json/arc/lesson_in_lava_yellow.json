@@ -1,0 +1,56 @@
+{
+  "slug": "lesson_in_lava_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        },
+        {
+          "type": "SEARCH_DECK",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "DEAL_ARCANE"
+            }
+          ],
+          "target": {
+            "filter": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zones": [
+                  "deck"
+                ]
+              },
+              {
+                "type": "CLASS_IN",
+                "classes": [
+                  "Wizard"
+                ]
+              },
+              {
+                "type": "REVEAL_CARD_COST_LTE",
+                "amount": "DEAL_ARCANE_AMOUNT"
+              }
+            ]
+          },
+          "effects": [
+            {
+              "type": "REVEAL_TOP_DECK"
+            },
+            {
+              "type": "PUT_CARDS_BOTTOM",
+              "amount": 1
+            },
+            {
+              "type": "PUT_CARDS_TOP",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "slug": "arcane_twining_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "AMP",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}
