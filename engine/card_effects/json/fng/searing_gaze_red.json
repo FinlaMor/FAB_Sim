@@ -1,0 +1,31 @@
+{
+  "slug": "searing_gaze_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Draconic",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "MARK"
+        }
+      ]
+    }
+  ]
+}

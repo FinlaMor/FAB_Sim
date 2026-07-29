@@ -1,0 +1,48 @@
+{
+  "slug": "chromatic_refinement_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_REF",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CHROMATIC_REFINEMENT_FLAG"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "target": "next_blue_card_played",
+          "resource_cost": 1
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "target": "next_blue_card_played",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CHROMATIC_REFINEMENT_DEALT_DAMAGE"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

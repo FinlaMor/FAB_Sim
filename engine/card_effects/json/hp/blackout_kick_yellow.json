@@ -1,0 +1,21 @@
+{
+  "slug": "blackout_kick_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "RISING_KNEE_THRUST_LAST_ATTACK"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

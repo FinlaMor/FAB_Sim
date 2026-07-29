@@ -1,0 +1,33 @@
+{
+  "slug": "biting_blade_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DEFENDED_WITH_HAND_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "duration": "end_of_turn"
+        }
+      ]
+    }
+  ]
+}

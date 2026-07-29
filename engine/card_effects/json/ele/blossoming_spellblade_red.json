@@ -1,0 +1,60 @@
+{
+  "slug": "blossoming_spellblade_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEAL_DAMAGE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FUSED_FLAG"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "GRAVEYARD",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "GRAVEYARD",
+              "conditions": [
+                {
+                  "type": "NOT",
+                  "condition": {
+                    "type": "HAS_KEYWORD",
+                    "keyword": "Attack"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BANISHED_CARD_FLAG"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FUSED_FLAG"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

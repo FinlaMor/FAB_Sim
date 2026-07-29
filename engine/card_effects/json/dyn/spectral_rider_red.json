@@ -1,0 +1,20 @@
+{
+  "slug": "spectral_rider_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Spectral Shield"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GRANT_SUBTYPE",
+          "subtype": "Overpower"
+        }
+      ]
+    }
+  ]
+}

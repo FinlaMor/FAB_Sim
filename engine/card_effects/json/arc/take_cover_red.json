@@ -1,0 +1,13 @@
+{
+  "slug": "take_cover_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "RELOAD"
+        }
+      ]
+    }
+  ]
+}

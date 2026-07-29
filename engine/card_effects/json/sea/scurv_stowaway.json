@@ -1,0 +1,43 @@
+{
+  "slug": "scurv_stowaway",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "controlled",
+          "asset": "GOLD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Goldkiss Rum"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ACTIVATE",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Goldkiss Rum"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

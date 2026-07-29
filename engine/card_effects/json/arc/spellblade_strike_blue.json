@@ -1,0 +1,14 @@
+{
+  "slug": "spellblade_strike_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant"
+        }
+      ]
+    }
+  ]
+}

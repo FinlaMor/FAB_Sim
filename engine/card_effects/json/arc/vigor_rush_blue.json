@@ -1,0 +1,20 @@
+{
+  "slug": "vigor_rush_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "NON_ATTACK_ACTION_PLAYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "high_pitched_howl_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "pitch_zone",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor"
+        }
+      ]
+    }
+  ]
+}

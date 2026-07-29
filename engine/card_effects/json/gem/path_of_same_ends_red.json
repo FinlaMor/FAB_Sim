@@ -1,0 +1,34 @@
+{
+  "slug": "path_of_same_ends_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

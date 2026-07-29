@@ -1,0 +1,37 @@
+{
+  "slug": "carrion_crown",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DISCARD_RANDOM",
+          "target": "ALLY"
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

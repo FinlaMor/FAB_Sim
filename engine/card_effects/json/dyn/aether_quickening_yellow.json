@@ -1,0 +1,30 @@
+{
+  "slug": "aether_quickening_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "conditions": [
+        {
+          "type": "CHAIN_HIT_COUNT_GTE",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

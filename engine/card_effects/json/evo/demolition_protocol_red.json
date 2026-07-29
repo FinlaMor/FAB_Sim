@@ -1,0 +1,23 @@
+{
+  "slug": "demolition_protocol_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "EvoUpgrade"
+        }
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter_type": "steam",
+          "target": "opponent",
+          "amount": "X"
+        }
+      ]
+    }
+  ]
+}

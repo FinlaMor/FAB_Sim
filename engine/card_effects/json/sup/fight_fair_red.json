@@ -1,0 +1,38 @@
+{
+  "slug": "fight_fair_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "opponent",
+          "card_type": "Reviled"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "opponent",
+          "card_type": "Reviled"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_SELF_BOTTOM_DECK"
+        }
+      ]
+    }
+  ]
+}

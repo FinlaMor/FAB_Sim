@@ -1,0 +1,36 @@
+{
+  "slug": "corrupt_and_conquer_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "BANISHED",
+          "source": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "DEFENSE_REACTION_BLOCKED"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "OPPONENT_ARSENAL"
+        }
+      ]
+    }
+  ]
+}

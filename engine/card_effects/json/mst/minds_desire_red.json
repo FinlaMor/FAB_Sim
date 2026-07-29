@@ -1,0 +1,40 @@
+{
+  "slug": "minds_desire_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "OPPONENT_TOP_DECK"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BANISH",
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtype": "Attack"
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "HEALTH",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

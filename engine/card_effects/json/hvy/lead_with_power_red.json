@@ -1,0 +1,35 @@
+{
+  "slug": "lead_with_power_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "DURING_TURN",
+              "player": "self"
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Brute",
+                "Guardian"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Might"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

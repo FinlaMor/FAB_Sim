@@ -1,0 +1,20 @@
+{
+  "slug": "sharp_incline_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "plus_1_power",
+          "target": "SELECT_FROM_REF",
+          "ref": "swords",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

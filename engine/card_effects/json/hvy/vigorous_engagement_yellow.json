@@ -1,0 +1,25 @@
+{
+  "slug": "vigorous_engagement_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor",
+          "conditions": [
+            {
+              "type": "DURING_TURN",
+              "condition": "DEFENDED_BY_ATTACK_ACTION_CARD"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

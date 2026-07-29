@@ -1,0 +1,62 @@
+{
+  "slug": "prismatic_lens_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "REMOVE_COUNTER",
+          "counter": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK"
+        },
+        {
+          "type": "SEARCH_BANISH_FACE_DOWN",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "banished",
+              "subtype": "Item",
+              "class": "Mechanologist",
+              "color": "yellow"
+            }
+          ],
+          "effects": [
+            {
+              "type": "PUT_TOP_DECK",
+              "target": "searched_card"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

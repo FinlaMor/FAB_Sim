@@ -1,0 +1,19 @@
+{
+  "slug": "invoke_nekria_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "target": "ash",
+          "transform_to": "nekria"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

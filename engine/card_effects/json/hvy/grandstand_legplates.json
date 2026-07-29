@@ -1,0 +1,37 @@
+{
+  "slug": "grandstand_legplates",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": {
+            "type": "COUNT",
+            "condition": {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "opponent_heroes"
+                },
+                {
+                  "type": "HEALTH_GT_OPP"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

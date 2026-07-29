@@ -1,0 +1,20 @@
+{
+  "slug": "hard_knuckle",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

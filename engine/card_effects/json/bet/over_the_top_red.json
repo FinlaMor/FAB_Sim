@@ -1,0 +1,20 @@
+{
+  "slug": "over_the_top_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "SELF_ATTACK_POWER_GTE",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "OVERPOWER"
+        }
+      ]
+    }
+  ]
+}

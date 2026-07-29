@@ -1,0 +1,41 @@
+{
+  "slug": "briar",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK",
+          "source": "self"
+        },
+        {
+          "type": "FLAG_SET",
+          "flag": "FIRST_ATTACK_DAMAGE_DEALT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Embodiment of Earth"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SECOND_NON_ATTACK_PLAYED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Embodiment of Lightning"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "slug": "arakni_web_of_deceit",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "STEALTH"
+        },
+        {
+          "type": "OPPONENT_IS_MARKED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "STEALTH"
+        },
+        {
+          "type": "OPPONENT_IS_MARKED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "OPPONENT_IS_MARKED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "target": "RANDOM_AGENT_OF_CHAOS"
+        }
+      ]
+    }
+  ]
+}

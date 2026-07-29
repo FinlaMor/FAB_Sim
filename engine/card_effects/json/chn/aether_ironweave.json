@@ -1,0 +1,35 @@
+{
+  "slug": "aether_ironweave",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ATTACK_ACTION_PLAYED_THIS_TURN"
+        },
+        {
+          "type": "FLAG_SET",
+          "flag": "NON_ATTACK_ACTION_PLAYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 2
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

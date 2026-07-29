@@ -1,0 +1,14 @@
+{
+  "slug": "smash_instinct_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

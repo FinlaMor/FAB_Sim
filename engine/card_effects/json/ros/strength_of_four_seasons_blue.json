@@ -1,0 +1,23 @@
+{
+  "slug": "strength_of_four_seasons_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "BANISHED",
+          "amount": 4,
+          "card_class": "Earth"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4
+        }
+      ]
+    }
+  ]
+}

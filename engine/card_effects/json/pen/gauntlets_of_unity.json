@@ -1,0 +1,21 @@
+{
+  "slug": "gauntlets_of_unity",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "UNITY_FLAG"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 1,
+          "duration": "END_OF_TURN"
+        }
+      ]
+    }
+  ]
+}

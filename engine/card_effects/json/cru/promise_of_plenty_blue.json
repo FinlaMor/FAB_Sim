@@ -1,0 +1,39 @@
+{
+  "slug": "promise_of_plenty_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD",
+          "zone": "deck",
+          "amount": 1,
+          "condition": {
+            "type": "NOT",
+            "condition": {
+              "type": "CARD_IN_ZONE",
+              "zone": "arsenal",
+              "amount": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "slug": "old_favorite_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CHEERED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "TOUGHNESS"
+        }
+      ]
+    },
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "COUNTER_GTE",
+          "counter": "DEFENSE",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_SELF_BOTTOM_DECK"
+        }
+      ]
+    }
+  ]
+}

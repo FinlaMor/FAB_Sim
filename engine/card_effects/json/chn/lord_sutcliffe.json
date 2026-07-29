@@ -1,0 +1,108 @@
+{
+  "slug": "lord_sutcliffe",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FACE_DOWN_IN_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "START_OF_TURN",
+            "effects": [
+              {
+                "type": "MAY",
+                "effects": [
+                  {
+                    "type": "FLIP_REF",
+                    "target": "self"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FACE_UP_IN_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_PLAY",
+            "conditions": [
+              {
+                "type": "NOT",
+                "condition": {
+                  "type": "ATTACK_CLASS_IN",
+                  "classes": [
+                    "Attack"
+                  ]
+                }
+              }
+            ],
+            "effects": [
+              {
+                "type": "DEAL_ARCANE",
+                "amount": 1,
+                "target": "each_hero"
+              },
+              {
+                "type": "PUT_COUNTER",
+                "counter": "lesson",
+                "amount": 1,
+                "target": "self"
+              },
+              {
+                "type": "MAY",
+                "conditions": [
+                  {
+                    "type": "COUNTER_GTE",
+                    "counter": "lesson",
+                    "amount": 3
+                  }
+                ],
+                "effects": [
+                  {
+                    "type": "BANISH_REF",
+                    "target": "self"
+                  },
+                  {
+                    "type": "SEARCH_DECK",
+                    "conditions": [
+                      {
+                        "type": "HAS_KEYWORD",
+                        "keyword": "specialization"
+                      }
+                    ],
+                    "effects": [
+                      {
+                        "type": "PUT_REF_BOTTOM",
+                        "target": "arsenal"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SHUFFLE_DECK"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "victor_goldmane",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_GOLD_CREATED",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FIRST_GOLD_CREATED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FIRST_CLASH_FAIL_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN",
+          "token_type": "Gold"
+        },
+        {
+          "type": "PUT_SELF_BOTTOM_DECK",
+          "amount": 1
+        },
+        {
+          "type": "CLASH"
+        }
+      ]
+    }
+  ]
+}

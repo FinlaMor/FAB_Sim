@@ -1,0 +1,18 @@
+{
+  "slug": "phantasmal_symbiosis_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "PHANTASMAL_SYMBIOSIS_ACTIVE",
+          "params": {
+            "card_name": "NAMED_CARD"
+          }
+        }
+      ]
+    }
+  ]
+}

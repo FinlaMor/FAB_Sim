@@ -1,0 +1,25 @@
+{
+  "slug": "breakneck_battery_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "DISCARD_RANDOM"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "DISCARDED_CARD_POWER_GTE",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

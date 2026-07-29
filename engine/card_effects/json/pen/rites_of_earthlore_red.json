@@ -1,0 +1,44 @@
+{
+  "slug": "rites_of_earthlore_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_name": "Seismic Surge"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_PLAY",
+            "conditions": [
+              {
+                "type": "ATTACK_CLASS_IN",
+                "class": "Guardian"
+              }
+            ],
+            "effects": [
+              {
+                "type": "MODIFY_ATTACK",
+                "mod": "add",
+                "amount": 3
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

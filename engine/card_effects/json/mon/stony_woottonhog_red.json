@@ -1,0 +1,31 @@
+{
+  "slug": "stony_woottonhog_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "DURING_TURN",
+              "player": "self"
+            },
+            {
+              "type": "DEFENDER_USED_HAND_CARD",
+              "amount": 2,
+              "equipment": false
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

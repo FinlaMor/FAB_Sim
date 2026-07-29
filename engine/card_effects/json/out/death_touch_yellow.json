@@ -1,0 +1,23 @@
+{
+  "slug": "death_touch_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Frailty"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Inertia"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Bloodrot Pox"
+        }
+      ]
+    }
+  ]
+}

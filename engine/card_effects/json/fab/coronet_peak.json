@@ -1,0 +1,25 @@
+{
+  "slug": "coronet_peak",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "opponent",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

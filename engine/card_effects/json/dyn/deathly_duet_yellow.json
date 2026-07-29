@@ -1,0 +1,39 @@
+{
+  "slug": "deathly_duet_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "ATTACK_ACTION"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "NON_ATTACK_ACTION"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

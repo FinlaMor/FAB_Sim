@@ -1,0 +1,48 @@
+{
+  "slug": "beckoning_mistblade",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Assassin"
+            },
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtype": "Dagger"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Assassin"
+            },
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtype": "Dagger"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

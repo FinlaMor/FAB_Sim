@@ -1,0 +1,17 @@
+{
+  "slug": "erode_authority_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DOMINATE"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "FRAGMENT"
+        }
+      ]
+    }
+  ]
+}

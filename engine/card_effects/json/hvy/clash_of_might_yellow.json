@@ -1,0 +1,19 @@
+{
+  "slug": "clash_of_might_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CLASH",
+          "target": "attacker"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Might"
+        }
+      ]
+    }
+  ]
+}

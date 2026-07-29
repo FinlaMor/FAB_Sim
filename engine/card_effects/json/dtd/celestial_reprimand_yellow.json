@@ -1,0 +1,22 @@
+{
+  "slug": "celestial_reprimand_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "target": "opponent",
+          "amount": -2,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "defending",
+              "card_name": "Herald"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

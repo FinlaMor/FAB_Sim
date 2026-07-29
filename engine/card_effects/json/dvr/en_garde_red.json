@@ -1,0 +1,27 @@
+{
+  "slug": "en_garde_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "DURING_TURN",
+              "player": "self"
+            },
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

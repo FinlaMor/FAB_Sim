@@ -1,0 +1,29 @@
+{
+  "slug": "plume_of_evergrowth",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_TO_HAND",
+          "target": "CARD",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "GRAVEYARD",
+              "card_type": "ACTION",
+              "card_class": "Earth"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

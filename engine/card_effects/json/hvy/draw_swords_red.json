@@ -1,0 +1,32 @@
+{
+  "slug": "draw_swords_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "DURING_TURN",
+              "player": "self"
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Warrior"
+            }
+          ]
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

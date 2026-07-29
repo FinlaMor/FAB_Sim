@@ -1,0 +1,49 @@
+{
+  "slug": "cash_out_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "controlled",
+          "conditions": [
+            {
+              "type": "OR",
+              "conditions": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "arsenal",
+                  "subtype": "Weapon"
+                },
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "arsenal",
+                  "subtype": "Equipment"
+                },
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "arsenal",
+                  "subtype": "Item",
+                  "not": {
+                    "type": "TOKEN"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Silver",
+          "amount": "destroyed_permanents_count"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

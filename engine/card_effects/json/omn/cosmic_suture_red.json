@@ -1,0 +1,36 @@
+{
+  "slug": "cosmic_suture_red",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 2,
+      "cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "INSTANT_GRAVEYARD_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

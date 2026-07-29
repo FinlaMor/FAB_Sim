@@ -1,0 +1,40 @@
+{
+  "slug": "blessing_of_focus_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "OPT",
+          "amount": 3
+        },
+        {
+          "type": "REVEAL_TOP_DECK",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "deck",
+              "card_type": "arrow"
+            }
+          ],
+          "effects": [
+            {
+              "type": "PUT_ARSENAL_BOTTOM",
+              "card_type": "arrow",
+              "face_up": true
+            },
+            {
+              "type": "PUT_COUNTER",
+              "counter_type": "aim"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

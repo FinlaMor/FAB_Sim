@@ -1,0 +1,84 @@
+{
+  "slug": "evo_steel_soul_controller_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BECOME",
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "FLAG_SET",
+                  "flag": "TRANSFORM_FROM_EVO"
+                },
+                {
+                  "type": "NOT",
+                  "condition": {
+                    "type": "FLAG_SET",
+                    "flag": "SAME_NAME_EVO"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "FLAG_SET",
+                  "flag": "TRANSFORM_TO_EVO"
+                },
+                {
+                  "type": "NOT",
+                  "condition": {
+                    "type": "FLAG_SET",
+                    "flag": "SAME_NAME_EVO"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "target": "GRAVEYARD",
+          "conditions": [
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "FLAG_SET",
+                "flag": "EVO_IS_HERO"
+              }
+            }
+          ]
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "target": "GRAVEYARD",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "EVO_IS_HERO"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "TEMPER"
+        }
+      ]
+    }
+  ]
+}

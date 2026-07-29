@@ -1,0 +1,28 @@
+{
+  "slug": "shock_striker_red",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "DEAL_GENERIC",
+                "amount": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

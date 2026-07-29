@@ -1,0 +1,45 @@
+{
+  "slug": "warriors_valor_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "DURING_TURN"
+        },
+        {
+          "type": "ATTACK_TYPE_IN",
+          "values": [
+            "WEAPON"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_HIT",
+          "effects": [
+            {
+              "type": "GAIN",
+              "keyword": "GO_AGAIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

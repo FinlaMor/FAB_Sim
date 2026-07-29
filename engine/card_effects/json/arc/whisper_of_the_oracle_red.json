@@ -1,0 +1,18 @@
+{
+  "slug": "whisper_of_the_oracle_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 4
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

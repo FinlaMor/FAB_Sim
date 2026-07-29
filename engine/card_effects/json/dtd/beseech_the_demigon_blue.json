@@ -1,0 +1,26 @@
+{
+  "slug": "beseech_the_demigon_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "BANISHED",
+              "card_type": "ATTACK_ACTION"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

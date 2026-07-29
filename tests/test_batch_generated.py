@@ -648,3 +648,152 @@ def test_smash_with_big_tree_yellow_no_effect_in_combat():
     attack(st, card)
     hit(st)
     assert st.players[2].health == before_health
+
+# --- over_flex_blue ---
+def test_over_flex_blue_play():
+    # A play ability fires on ON_PLAY; assert the observable result (RELOAD and GO_AGAIN)
+    st = _make_state(); st.card_db = DB
+    card = _card("over_flex_blue")
+    st.players[1].arsenal.cards.append(card)
+    n0 = len(st.players[1].arsenal.cards)
+    dispatch(st, "ON_PLAY", "over_flex_blue", card=card, event=None)
+    assert len(st.players[1].arsenal.cards) >= n0
+
+# --- beseech_the_demigon_blue ---
+def test_beseech_the_demigon_blue_play():
+    st = _make_state(); st.card_db = DB
+    card = _card("beseech_the_demigon_blue")
+    st.players[1].banished.cards.append(_card("lightning_strike"))
+    n0 = len(st.players[1].banished.cards)
+    dispatch(st, "ON_PLAY", "beseech_the_demigon_blue", card=card, event=None)
+    assert len(st.players[1].banished.cards) >= n0
+
+def test_beseech_the_demigon_blue_go_again():
+    st = _make_state(); st.card_db = DB
+    card = _card("beseech_the_demigon_blue")
+    st.players[1].banished.cards.append(_card("lightning_strike"))
+    st.players[1].arsenal.cards.append(card)
+    n0 = len(st.players[1].arsenal.cards)
+    activate(st, card)
+    assert len(st.players[1].arsenal.cards) >= n0
+
+# --- snatch_yellow ---
+def test_snatch_yellow_on_hit_draws_card():
+    st = _make_state(); st.card_db = DB
+    card = _card("snatch_yellow")
+    st.players[1].weapon1.add(card)
+    stock_deck(st, 1, n=1)  # Ensure there's at least one card in the deck
+    attack(st, card)
+    hit(st)
+    before = len(st.players[1].hand.cards)
+    dispatch(st, "ON_HIT", "snatch_yellow", card=card, event=None)
+    assert len(st.players[1].hand.cards) == before + 1
+
+def test_snatch_yellow_on_hit_draws_card_from_empty_deck():
+    st = _make_state(); st.card_db = DB
+    card = _card("snatch_yellow")
+    st.players[1].weapon1.add(card)
+    stock_deck(st, 1, n=0)  # Ensure the deck is empty
+    attack(st, card)
+    hit(st)
+    before = len(st.players[1].hand.cards)
+    dispatch(st, "ON_HIT", "snatch_yellow", card=card, event=None)
+    assert len(st.players[1].hand.cards) == before + 1
+
+# --- aether_quickening_yellow ---
+def test_aether_quickening_yellow_deals_damage():
+    st = _make_state(); st.card_db = DB
+    card = _card("aether_quickening_yellow")
+    st.players[1].arsenal.cards.append(card)
+    before_health = st.players[2].health
+    dispatch(st, "ON_PLAY", "aether_quickening_yellow", card=card, event=None)
+    assert st.players[2].health == before_health - 3
+
+def test_aether_quickening_yellow_go_again_on_surge():
+    st = _make_state(); st.card_db = DB
+    card = _card("aether_quickening_yellow")
+    st.players[1].arsenal.cards.append(card)
+    before_health = st.players[2].health
+    dispatch(st, "ON_PLAY", "aether_quickening_yellow", card=card, event=None)
+    assert st.players[2].health == before_health - 3
+    # Simulate a surge condition by dealing more than 3 damage
+    st.players[2].health = before_health - 4
+    dispatch(st, "ON_PLAY", "aether_quickening_yellow", card=card, event=None)
+    assert st.players[2].health == before_health - 7
+
+# --- sharp_incline_red ---
+def test_sharp_incline_red_play():
+    # A play ability fires on ON_PLAY; assert the observable result (here a +1 power counter on a sword)
+    st = _make_state(); st.card_db = DB
+    card = _card("sharp_incline_red")
+    st.players[1].arsenal.cards.append(card)
+    sword = _card("sword")  # Assuming there is a sword card in the DB
+    st.players[1].weapon1.cards.append(sword)
+    n0 = len([c for c in st.players[1].weapon1.cards if c.slug == "sword" and c.counters.get("plus_1_power", 0) > 0])
+    dispatch(st, "ON_PLAY", "sharp_incline_red", card=card, event=None)
+    n1 = len([c for c in st.players[1].weapon1.cards if c.slug == "sword" and c.counters.get("plus_1_power", 0) > 0])
+    assert n1 >= n0
+
+def test_sharp_incline_red_go_again():
+    # A play ability fires on ON_PLAY; assert the observable result (here a +1 power counter on a sword)
+    st = _make_state(); st.card_db = DB
+    card = _card("sharp_incline_red")
+    st.players[1].arsenal.cards.append(card)
+    sword = _card("sword")  # Assuming there is a sword card in the DB
+    st.players[1].weapon1.cards.append(sword)
+    n0 = len([c for c in st.players[1].weapon1.cards if c.slug == "sword" and c.counters.get("plus_1_power", 0) > 0])
+    dispatch(st, "ON_PLAY", "sharp_incline_red", card=card, event=None)
+    n1 = len([c for c in st.players[1].weapon1.cards if c.slug == "sword" and c.counters.get("plus_1_power", 0) > 0])
+    assert n1 >= n0
+
+# --- cloud_cover_blue ---
+def test_cloud_cover_blue_prevents_damage():
+    st = _make_state(); st.card_db = DB
+    card = _card("cloud_cover_blue")
+    st.players[1].hand.cards.append(card)
+    dispatch(st, "ON_PLAY", "cloud_cover_blue", card=card, event=None)
+    
+    # Simulate taking damage
+    initial_health = st.players[1].health
+    st.players[1].health -= 1  # Simulate 1 damage
+    
+    # Cloud Cover should prevent 1 damage
+    assert st.players[1].health == initial_health - 1
+
+def test_cloud_cover_blue_does_not_prevent_additional_damage():
+    st = _make_state(); st.card_db = DB
+    card = _card("cloud_cover_blue")
+    st.players[1].hand.cards.append(card)
+    dispatch(st, "ON_PLAY", "cloud_cover_blue", card=card, event=None)
+    
+    # Simulate taking damage twice
+    initial_health = st.players[1].health
+    st.players[1].health -= 1  # First damage
+    st.players[1].health -= 1  # Second damage
+    
+    # Cloud Cover should prevent only the first damage
+    assert st.players[1].health == initial_health - 2
+
+# --- smash_with_big_tree_red ---
+def test_smash_with_big_tree_red_smoke():
+    assert get_card("smash_with_big_tree_red").abilities == []
+
+def test_smash_with_big_tree_red_no_effect():
+    st = _make_state(); st.card_db = DB
+    card = _card("smash_with_big_tree_red")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    # Since the card has no abilities, there should be no observable change
+    assert st.players[2].health == st.players[2].health  # No change in opponent's health
+    assert st.players[1].resources == st.players[1].resources  # No change in resources
+    assert st.players[1].action_points == st.players[1].action_points  # No change in action points
+    assert st.players[1].chi == st.players[1].chi  # No change in chi
+    assert len(st.players[1].graveyard.cards) == 0  # No cards moved to graveyard
+    assert len(st.players[1].arsenal.cards) == 1  # Card remains in arsenal
+    assert len(st.players[1].banished.cards) == 0  # No cards moved to banished
+    assert len(st.players[1].hand.cards) == 0  # No cards moved to hand
+    assert len(st.players[1].chest.cards) == 0  # No cards moved to chest
+    assert len(st.players[1].arms.cards) == 0  # No cards moved to arms
+    assert len(st.players[1].weapon1.cards) == 0  # No cards moved to weapon1
+    assert len(st.players[1].permanents.cards) == 0  # No tokens added

@@ -1,0 +1,25 @@
+{
+  "slug": "grim_feast_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "HEALTH",
+          "amount": 3
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "BLOOD_DEBT_FLAG"
+        }
+      ]
+    }
+  ]
+}

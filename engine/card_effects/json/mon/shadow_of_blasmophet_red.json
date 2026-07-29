@@ -1,0 +1,47 @@
+{
+  "slug": "shadow_of_blasmophet_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD_RANDOM"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DISCARD",
+      "conditions": [
+        {
+          "type": "DISCARDED_CARD_POWER_GTE",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "conditions": [
+            {
+              "type": "HAS_KEYWORD",
+              "keyword": "BloodDebt"
+            }
+          ],
+          "target": "single",
+          "effects": [
+            {
+              "type": "BANISH"
+            },
+            {
+              "type": "SHUFFLE_DECK"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

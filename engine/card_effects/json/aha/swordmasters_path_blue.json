@@ -1,0 +1,35 @@
+{
+  "slug": "swordmasters_path_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtype": "Sword"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "SHARPEN",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "SHARPEN_FLAG"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}
