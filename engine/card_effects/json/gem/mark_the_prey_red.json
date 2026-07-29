@@ -1,0 +1,19 @@
+{
+  "slug": "mark_the_prey_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MARK"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ]
+    }
+  ]
+}
