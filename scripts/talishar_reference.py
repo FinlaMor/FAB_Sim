@@ -23,8 +23,18 @@ import os, re, sys, json, functools
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TALISHAR = Path(os.environ.get(
-    "TALISHAR_DIR", r"C:\Users\Joseph\Desktop\FAB_Sim_Headless\talishar"))
+# Talishar backend to read card logic from — first that exists:
+#   1. $TALISHAR_DIR  2. the latest read-only extraction (git archive of origin/main)
+#   3. the user's live working copy (has local mods; may be months stale).
+# Empirically ~coverage-equivalent (357 vs 361 of 467 candidates), but 2 is a
+# clean, reproducible snapshot that doesn't depend on uncommitted working state.
+_TAL_CANDIDATES = [
+    os.environ.get("TALISHAR_DIR"),
+    r"C:\tools\talishar-latest",
+    r"C:\Users\Joseph\Desktop\FAB_Sim_Headless\talishar",
+]
+TALISHAR = Path(next((p for p in _TAL_CANDIDATES if p and Path(p).exists()),
+                     _TAL_CANDIDATES[-1]))
 
 _CASE_NEXT = re.compile(r'\s*(case\s+["\']|default\s*:)')
 _FUNC = re.compile(r'\s*(?:public\s+|private\s+|static\s+)*function\s+(\w+)')
