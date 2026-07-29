@@ -1,0 +1,41 @@
+{
+  "slug": "sutcliffes_research_notes_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK",
+          "amount": 3
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "REVEALED",
+              "card_type": "ACTION",
+              "classes": [
+                "Runeblade"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "REORDER_REF",
+          "ref": "REVEALED",
+          "zone": "DECK"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

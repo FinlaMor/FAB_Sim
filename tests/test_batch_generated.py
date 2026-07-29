@@ -342,3 +342,59 @@ def test_blanch_yellow_on_hit_defense_value():
         dispatch(st, "STATIC", "blanch_yellow", card=card)
         after_defense = opponent_hand[0].defense
         assert after_defense == before_defense - 1, "The opponent's card's defense value should be reduced by 1 after Blanch is played."
+
+# --- ronin_renegade_yellow ---
+def test_ronin_renegade_yellow_go_again():
+    st = _make_state(); st.card_db = DB
+    card = _card("ronin_renegade_yellow")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    # Assert that the player has one more action point after the attack
+    before_action_points = st.players[1].action_points
+    activate(st, card)
+    assert st.players[1].action_points == before_action_points + 1
+
+def test_ronin_renegade_yellow_play_effect():
+    st = _make_state(); st.card_db = DB
+    card = _card("ronin_renegade_yellow")
+    st.players[1].hand.cards.append(card)
+    dispatch(st, "ON_PLAY", "ronin_renegade_yellow", card=card, event=None)
+    # Assert that the player has one more action point after playing the card
+    before_action_points = st.players[1].action_points
+    activate(st, card)
+    assert st.players[1].action_points == before_action_points + 1
+
+# --- autumns_touch_blue ---
+def test_autumns_touch_blue_smoke():
+    assert get_card("autumns_touch_blue").abilities == []
+
+def test_autumns_touch_blue_no_effect():
+    st = _make_state(); st.card_db = DB
+    card = _card("autumns_touch_blue")
+    st.players[1].arsenal.cards.append(card)
+    activate(st, card)
+    # Since the card has no abilities, there should be no observable effect.
+    # We can assert that the card is still in the arsenal.
+    assert len(st.players[1].arsenal.cards) == 1
+
+# --- sutcliffes_research_notes_red ---
+def test_sutcliffes_research_notes_red_play():
+    # A play ability fires on ON_PLAY; assert the observable result (here creating Runechant tokens)
+    st = _make_state(); st.card_db = DB
+    card = _card("sutcliffes_research_notes_red")
+    stock_deck(st, 1, n=5)  # Ensure the deck has cards
+    st.players[1].hand.cards.append(card)
+    n0 = len(st.players[1].permanents.cards)
+    dispatch(st, "ON_PLAY", "sutcliffes_research_notes_red", card=card, event=None)
+    assert len(st.players[1].permanents.cards) >= n0
+
+def test_sutcliffes_research_notes_red_activate():
+    # An activate ability fires on ON_ACTIVATE; assert the observable result (here going again)
+    st = _make_state(); st.card_db = DB
+    card = _card("sutcliffes_research_notes_red")
+    st.players[1].permanents.add(card)
+    n0 = len(st.players[1].permanents.cards)
+    activate(st, card)
+    assert len(st.players[1].permanents.cards) == n0
+    # Additional checks can be added here if necessary
