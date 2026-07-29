@@ -921,12 +921,18 @@ RULES:
    - zones are objects; use `.cards`: `st.players[p].graveyard.cards`,
      `.arsenal.cards`, `.banished.cards`, `.hand.cards`, `.chest.cards`,
      `.arms.cards`, `.weapon1.cards`, `.permanents.cards`
+   - TOKENS (gold, might, seismic_surge, ...) live in `st.players[p].permanents.cards`
+     — check them there (`any(c.slug == "gold" for c in st.players[p].permanents.cards)`).
+     There is NO `st.tokens` / `st.players[p].tokens` count attribute.
    Do NOT assert on internal registries or flags. Do NOT invent attribute names.
-   ASSERT RELATIVE DELTAS, never absolute totals. Capture the observable BEFORE
-   firing, then assert the change: `before = st.players[2].health; ...;
-   assert st.players[2].health == before - 1`. Do NOT hardcode an absolute number
-   (`== 9`, `== 40`, deck `== 19`) — you do not know the starting value and the
-   assertion will be wrong even for a correct card.
+   ASSERT RELATIVE DELTAS, never absolute totals. Capture the observable value
+   FIRST, THEN fire the ability, THEN assert the change — order matters:
+     `before = len(st.players[2].deck.cards)`  # capture BEFORE firing
+     `attack(st, card); hit(st)`               # now fire
+     `assert len(st.players[2].deck.cards) == before - 1`
+   Capturing `before` AFTER the action makes the delta impossible to observe. Do
+   NOT hardcode an absolute number (`== 9`, `== 40`, deck `== 19`) — you do not
+   know the starting value and it will be wrong even for a correct card.
 4. Fire the ability by its ability_type:
    - ACTIVATE / ACTION -> `activate(st, card)`. This runs the REAL activation
      flow, so it PAYS the card's cost array (e.g. "Destroy this") AND runs the
