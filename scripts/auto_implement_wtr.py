@@ -34,6 +34,15 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
+# Windows redirects stdout as cp1252; printing a card name with a non-cp1252 char
+# (curly apostrophes, accents — common after a card-data refresh) then crashes the
+# whole run with UnicodeEncodeError. Force utf-8 with a safe fallback.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
