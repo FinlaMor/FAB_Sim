@@ -1,0 +1,21 @@
+{
+  "slug": "volzar_meteor_storm",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "INSTANT_PUT_IN_GRAVEYARD_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "AMP",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

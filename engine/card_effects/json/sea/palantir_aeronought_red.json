@@ -1,0 +1,48 @@
+{
+  "slug": "palantir_aeronought_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "IN_COMBAT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "PITCH",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ACTIVATION_COUNT",
+          "amount": 3
+        }
+      ],
+      "additional_effects": [
+        {
+          "type": "DESTROY_REF",
+          "target": "defending_card"
+        }
+      ]
+    }
+  ]
+}

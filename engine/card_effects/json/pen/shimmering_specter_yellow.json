@@ -1,0 +1,35 @@
+{
+  "slug": "shimmering_specter_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "IN_COMBAT",
+              "combat_role": "ATTACKER"
+            },
+            {
+              "type": "IN_COMBAT",
+              "combat_role": "DEFENDER"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_LEAVE_PLAY",
+          "effects": [
+            {
+              "type": "CREATE_TOKEN",
+              "token_type": "Spectral Shield"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

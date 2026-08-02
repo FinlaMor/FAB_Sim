@@ -1,0 +1,19 @@
+{
+  "slug": "steadfast_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "STEADFAST_ACTIVE"
+        },
+        {
+          "type": "PUT_COUNTER",
+          "counter": "STEADFAST",
+          "amount": 6
+        }
+      ]
+    }
+  ]
+}

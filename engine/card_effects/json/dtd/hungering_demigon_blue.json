@@ -1,0 +1,21 @@
+{
+  "slug": "hungering_demigon_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "opponent_soul",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

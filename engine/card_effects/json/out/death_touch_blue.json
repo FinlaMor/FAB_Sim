@@ -1,0 +1,28 @@
+{
+  "slug": "death_touch_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Frailty"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Inertia"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Bloodrot Pox"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "slug": "escalate_bloodshed_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DRAW",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "phase": "ACTION_PHASE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOSE_LIFE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "phase": "ACTION_PHASE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "phase": "END_PHASE"
+        },
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

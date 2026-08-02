@@ -1,0 +1,30 @@
+{
+  "slug": "put_em_in_their_place_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "player": "self"
+        },
+        {
+          "type": "ATTACK_CLASS_IN",
+          "class": "Hero"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DISCARD",
+          "target": "opponent",
+          "amount": "hand_size"
+        },
+        {
+          "type": "DRAW",
+          "amount": "hand_size"
+        }
+      ]
+    }
+  ]
+}

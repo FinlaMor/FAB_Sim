@@ -1,0 +1,22 @@
+{
+  "slug": "sirens_of_safe_harbor_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {
+          "type": "REF_EXISTS",
+          "ref": "GRAVEYARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "HEALTH",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

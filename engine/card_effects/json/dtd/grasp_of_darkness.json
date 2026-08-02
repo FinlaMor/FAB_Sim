@@ -1,0 +1,25 @@
+{
+  "slug": "grasp_of_darkness",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "player": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "self"
+        },
+        {
+          "type": "DEAL_ARCANE",
+          "target": "opponent",
+          "amount": -2
+        }
+      ]
+    }
+  ]
+}

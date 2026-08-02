@@ -1,0 +1,26 @@
+{
+  "slug": "memorial_ground_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "target": "GRAVEYARD",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "GRAVEYARD",
+              "conditions": [
+                {
+                  "type": "ATTACK_COST_LTE",
+                  "amount": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "timekeepers_whim_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        },
+        {
+          "type": "PUT_SELF_BOTTOM_DECK",
+          "conditions": [
+            {
+              "type": "IS_ACTIVE_PLAYER",
+              "value": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "slug": "maxx_nitro",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BOOSTED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Hyper Driver",
+          "counters": [
+            {
+              "type": "steam",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GRANT_SUBTYPE",
+          "subtype": "crank",
+          "target": "Hyper Driver"
+        }
+      ]
+    }
+  ]
+}

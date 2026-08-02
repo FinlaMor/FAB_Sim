@@ -1,0 +1,38 @@
+{
+  "slug": "haze_shelter_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "PITCHED_BLUE_CARD_THIS_TURN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 3
+        }
+      ],
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "FLAG_SET",
+            "flag": "PITCHED_BLUE_CARD_THIS_TURN"
+          }
+        }
+      ]
+    }
+  ]
+}

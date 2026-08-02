@@ -1,0 +1,30 @@
+{
+  "slug": "waning_vengeance_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "PITCHED_BLUE_CARD_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Spectral Shield"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "slug": "the_weakest_link_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO"
+            },
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "ATTACK_HAS_KEYWORD",
+                "keyword": "BASE_DEFENSE"
+              }
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "OPPONENT_HAND"
+        },
+        {
+          "type": "SELECT_FROM_REF",
+          "ref": "OPPONENT_HAND",
+          "conditions": [
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "CARD_IN_ZONE",
+                "zone": "OPPONENT_HAND",
+                "conditions": [
+                  {
+                    "type": "HAS_KEYWORD",
+                    "keyword": "BASE_DEFENSE"
+                  }
+                ]
+              }
+            }
+          ],
+          "effects": [
+            {
+              "type": "DISCARD",
+              "target": "SELECTED_CARD"
+            },
+            {
+              "type": "DRAW",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

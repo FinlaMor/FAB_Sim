@@ -1,0 +1,20 @@
+{
+  "slug": "scramble_pulse_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "subtract",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "IN_COMBAT"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

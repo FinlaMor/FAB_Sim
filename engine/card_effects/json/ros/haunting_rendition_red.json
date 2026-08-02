@@ -1,0 +1,31 @@
+{
+  "slug": "haunting_rendition_red",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "HAUNTING_RENDITION_ACTIVE"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "HAUNTING_RENDITION_ACTIVE"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

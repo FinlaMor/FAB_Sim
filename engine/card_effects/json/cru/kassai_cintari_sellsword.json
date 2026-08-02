@@ -1,0 +1,41 @@
+{
+  "slug": "kassai_cintari_sellsword",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "player": "self"
+        },
+        {
+          "type": "ATTACK_IS_WEAPON",
+          "attack_number": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ATTACKED_TWICE_WITH_WEAPONS"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Copper",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

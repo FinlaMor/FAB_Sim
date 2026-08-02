@@ -1,0 +1,48 @@
+{
+  "slug": "perch_grapplers",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "PERCH_GRAPPLERS_ACTIVE"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "PERCH_GRAPPLERS_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "PERCH_GRAPPLERS_ACTIVE"
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "arsenal",
+          "condition": "FACE_UP",
+          "card_type": "arrow"
+        }
+      ]
+    }
+  ]
+}

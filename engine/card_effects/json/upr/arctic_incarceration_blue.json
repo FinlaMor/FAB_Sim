@@ -1,0 +1,15 @@
+{
+  "slug": "arctic_incarceration_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_name": "Frostbite",
+          "controller": "target_hero"
+        }
+      ]
+    }
+  ]
+}

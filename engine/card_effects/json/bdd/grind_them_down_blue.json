@@ -1,0 +1,21 @@
+{
+  "slug": "grind_them_down_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {
+          "type": "DID_NOT_HIT",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_REF",
+          "target": "OPPONENT_TOP_DECK"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "malign_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "ward_type": "STEALTH"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "ARCANE_BARRIER",
+          "amount": 0
+        }
+      ]
+    }
+  ]
+}

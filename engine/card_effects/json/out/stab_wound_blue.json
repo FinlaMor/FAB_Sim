@@ -1,0 +1,31 @@
+{
+  "slug": "stab_wound_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO"
+            },
+            {
+              "type": "IN_COMBAT"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOSE_LIFE",
+          "amount": {
+            "type": "CHAIN_HIT_COUNT_GTE",
+            "value": 0
+          }
+        }
+      ]
+    }
+  ]
+}

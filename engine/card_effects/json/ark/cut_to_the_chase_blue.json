@@ -1,0 +1,35 @@
+{
+  "slug": "cut_to_the_chase_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "HAS_KEYWORD",
+              "keyword": "CONTRACT"
+            }
+          ]
+        },
+        {
+          "type": "LOOK_AT",
+          "target": "OPPONENT_DECK_TOP"
+        },
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "PUT_CARDS_BOTTOM",
+              "amount": 1,
+              "target": "OPPONENT_DECK_TOP"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

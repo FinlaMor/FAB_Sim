@@ -1,0 +1,39 @@
+{
+  "slug": "flowing_stormstrike_red",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FLOWING_STORMSTRIKE_ACTIVATED_THIS_TURN",
+          "count": 2,
+          "comparison": "lt"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "FLOWING_STORMSTRIKE_ACTIVATED_THIS_TURN",
+          "increment": true
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Lightning Flow"
+        }
+      ]
+    }
+  ]
+}

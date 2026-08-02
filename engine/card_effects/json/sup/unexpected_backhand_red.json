@@ -1,0 +1,15 @@
+{
+  "slug": "unexpected_backhand_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CLASH_WIN_REVEALED",
+      "effects": [
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

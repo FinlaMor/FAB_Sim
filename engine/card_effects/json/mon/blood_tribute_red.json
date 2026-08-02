@@ -1,0 +1,18 @@
+{
+  "slug": "blood_tribute_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 3
+        },
+        {
+          "type": "BANISH",
+          "target": "top_deck"
+        }
+      ]
+    }
+  ]
+}

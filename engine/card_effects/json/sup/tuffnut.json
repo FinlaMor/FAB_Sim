@@ -1,0 +1,44 @@
+{
+  "slug": "tuffnut",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "PITCH",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "CROWD_CHEERS"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "TOP_DECK",
+          "pitch_power_gte": 6
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BECOME",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "TOUGHNESS"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CROWD_CHEERS"
+        }
+      ]
+    }
+  ]
+}

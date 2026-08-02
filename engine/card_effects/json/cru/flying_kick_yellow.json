@@ -1,0 +1,21 @@
+{
+  "slug": "flying_kick_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "CHAIN_HIT_COUNT_GTE",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

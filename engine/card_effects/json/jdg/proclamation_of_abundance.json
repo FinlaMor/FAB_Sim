@@ -1,0 +1,21 @@
+{
+  "slug": "proclamation_of_abundance",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": "intellect"
+        }
+      ]
+    }
+  ]
+}

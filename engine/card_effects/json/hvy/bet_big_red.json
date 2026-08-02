@@ -1,0 +1,24 @@
+{
+  "slug": "bet_big_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WAGER",
+          "tokens": [
+            "Gold",
+            "Might",
+            "Vigor"
+          ]
+        }
+      ]
+    }
+  ]
+}

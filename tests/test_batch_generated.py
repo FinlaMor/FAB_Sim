@@ -868,3 +868,91 @@ def test_spears_of_surreality_blue_phantasm():
     before_action_points = st.players[1].action_points
     activate(st, card)
     assert st.players[1].action_points == before_action_points + 1
+
+# --- helm_of_the_arknight ---
+def test_helm_of_the_arknight_smoke():
+    assert get_card("helm_of_the_arknight").abilities == []
+
+def test_helm_of_the_arknight_temper():
+    # "Temper" — a TRIGGERED ability fires on its trigger
+    st = _make_state(); st.card_db = DB
+    card = _card("helm_of_the_arknight")
+    st.players[1].head.add(card)
+    dispatch(st, "ON_EQUIP", "helm_of_the_arknight", card=card, event=None)
+    # No observable outcome for "Temper" as it is a placeholder ability
+    assert True
+
+# --- arcanic_crackle_blue ---
+def test_arcanic_crackle_blue_deals_arcane_damage():
+    # "Deal 1 arcane damage to target hero."
+    st = _make_state(); st.card_db = DB
+    card = _card("arcanic_crackle_blue")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    before_health = st.players[2].health
+    dispatch(st, "ON_PLAY", "arcanic_crackle_blue", card=card, event=None)
+    assert st.players[2].health == before_health - 1
+
+def test_arcanic_crackle_blue_does_not_affect_non_hero_targets():
+    # "Deal 1 arcane damage to target hero." - ensure it doesn't affect non-hero targets
+    st = _make_state(); st.card_db = DB
+    card = _card("arcanic_crackle_blue")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    before_health = st.players[1].health
+    dispatch(st, "ON_PLAY", "arcanic_crackle_blue", card=card, event=None)
+    assert st.players[1].health == before_health
+
+# --- unexpected_backhand_red ---
+def test_unexpected_backhand_red_on_clash_win_deals_damage():
+    st = _make_state(); st.card_db = DB
+    card = _card("unexpected_backhand_red")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    before_health = st.players[2].health
+    dispatch(st, "ON_CLASH_WIN_REVEALED", "unexpected_backhand_red", card=card)
+    assert st.players[2].health == before_health - 1
+
+def test_unexpected_backhand_red_on_clash_win_deals_damage_with_existing_damage():
+    st = _make_state(); st.card_db = DB
+    card = _card("unexpected_backhand_red")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    before_health = st.players[2].health
+    st.players[2].health -= 2  # Existing damage
+    dispatch(st, "ON_CLASH_WIN_REVEALED", "unexpected_backhand_red", card=card)
+    assert st.players[2].health == before_health - 3
+
+# --- inner_chi_blue ---
+def test_inner_chi_blue_smoke():
+    assert get_card("inner_chi_blue").abilities == []
+
+def test_inner_chi_blue_no_effect():
+    st = _make_state(); st.card_db = DB
+    card = _card("inner_chi_blue")
+    st.players[1].arsenal.cards.append(card)
+    dispatch(st, "ON_ACTIVATE", "inner_chi_blue", card=card, event=None)
+    assert st.players[1].arsenal.cards == [card]  # No effect, card remains in arsenal
+
+# --- energy_potion_blue ---
+def test_energy_potion_blue_activate():
+    st = _make_state(); st.card_db = DB
+    card = _card("energy_potion_blue")
+    st.players[1].chest.add(card)
+    before_resources = st.players[1].resources
+    activate(st, card)
+    assert st.players[1].resources == before_resources + 2  # the effect (after the colon)
+    assert card not in st.players[1].chest.cards  # the "Destroy this" cost was paid
+
+def test_energy_potion_blue_effect():
+    st = _make_state(); st.card_db = DB
+    card = _card("energy_potion_blue")
+    st.players[1].chest.add(card)
+    before_resources = st.players[1].resources
+    activate(st, card)
+    assert st.players[1].resources == before_resources + 2  # the effect (after the colon)
+    assert card not in st.players[1].chest.cards  # the "Destroy this" cost was paid

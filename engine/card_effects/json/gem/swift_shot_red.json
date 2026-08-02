@@ -1,0 +1,22 @@
+{
+  "slug": "swift_shot_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "arsenal",
+          "card": "swift_shot_red"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}
