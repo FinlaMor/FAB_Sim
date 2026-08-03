@@ -1,0 +1,45 @@
+{
+  "slug": "leap_frog_vocal_sac",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ACTIVATE",
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "ON_PLAY_ACTIVATE_ATTACK"
+            },
+            {
+              "type": "ON_ACTIVATE",
+              "conditions": [
+                {
+                  "type": "ATTACK_REACTION"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "CONTROLS_ATTACK_ACTION",
+          "opponent": true
+        }
+      ],
+      "effects": [
+        {
+          "type": "ADD_DEFEND",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

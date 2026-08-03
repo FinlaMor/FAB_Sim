@@ -1,0 +1,25 @@
+{
+  "slug": "two_steps_ahead_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Confidence",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Might",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

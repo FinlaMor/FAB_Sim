@@ -1,0 +1,63 @@
+{
+  "slug": "mounting_anger_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "hand",
+          "conditions": [
+            {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "hand",
+                  "card_type": "attack"
+                },
+                {
+                  "type": "ATTACK_COST_LTE",
+                  "amount": {
+                    "type": "COUNT_CONTROLLERS",
+                    "controller_type": "draconic_chain_links"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BANISHED_ATTACK_ACTION"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BANISHED_ATTACK_ACTION"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

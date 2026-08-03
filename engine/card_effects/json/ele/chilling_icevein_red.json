@@ -1,0 +1,23 @@
+{
+  "slug": "chilling_icevein_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FUSED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "target": "hero",
+          "resource_cost": 1,
+          "damage_amount": 1
+        }
+      ]
+    }
+  ]
+}

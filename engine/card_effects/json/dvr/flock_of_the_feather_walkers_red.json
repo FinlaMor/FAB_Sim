@@ -1,0 +1,20 @@
+{
+  "slug": "flock_of_the_feather_walkers_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "REVEAL_CARD_COST_LTE",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Quicken"
+        }
+      ]
+    }
+  ]
+}

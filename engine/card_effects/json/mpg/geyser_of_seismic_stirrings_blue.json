@@ -1,0 +1,51 @@
+{
+  "slug": "geyser_of_seismic_stirrings_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "energy",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "COUNTER_GTE",
+          "counter": "energy",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTER",
+          "counter": "energy",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Seismic Surge"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "billowing_mirage_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "from": "ash",
+          "to": "aether_ashwing",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

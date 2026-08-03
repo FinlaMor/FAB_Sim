@@ -1,0 +1,26 @@
+{
+  "slug": "braveforge_bracers",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "WEAPON_HAS_HIT_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

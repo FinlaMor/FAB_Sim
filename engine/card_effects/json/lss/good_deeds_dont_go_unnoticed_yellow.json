@@ -1,0 +1,189 @@
+{
+  "slug": "good_deeds_dont_go_unnoticed_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DRAWN_FROM_AURA"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "DRAWN_FROM_AURA",
+          "value": false
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "GAINED_RESOURCE_FROM_AURA"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "GAINED_RESOURCE_FROM_AURA",
+          "value": false
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "GAINED_LIFE_FROM_AURA"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "LIFE",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "GAINED_LIFE_FROM_AURA",
+          "value": false
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "GAINED_ATTACK_FROM_AURA"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "GAINED_ATTACK_FROM_AURA",
+          "value": false
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DRAWN_FROM_AURA"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "DRAWN_FROM_AURA",
+          "value": false
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "GAINED_RESOURCE_FROM_AURA"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "GAINED_RESOURCE_FROM_AURA",
+          "value": false
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "GAINED_LIFE_FROM_AURA"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "LIFE",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "GAINED_LIFE_FROM_AURA",
+          "value": false
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "GAINED_ATTACK_FROM_AURA"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "GAINED_ATTACK_FROM_AURA",
+          "value": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "viserai_rune_blood",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "NON_ATTACK_ACTION_PLAYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant"
+        }
+      ]
+    }
+  ]
+}

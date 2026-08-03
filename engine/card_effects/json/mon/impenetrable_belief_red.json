@@ -1,0 +1,21 @@
+{
+  "slug": "impenetrable_belief_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "OPPONENT_BANISHED_3_OR_MORE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

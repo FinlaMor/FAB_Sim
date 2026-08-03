@@ -1,0 +1,51 @@
+{
+  "slug": "lead_with_heart_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "LEAD_WITH_HEART_ACTIVE"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "LEAD_WITH_HEART_ACTIVE"
+        },
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Guardian"
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Warrior"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

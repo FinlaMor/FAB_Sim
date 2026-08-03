@@ -1,0 +1,21 @@
+{
+  "slug": "shattering_flowtide_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BECOME",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "Fragment"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Lightning Flow"
+        }
+      ]
+    }
+  ]
+}

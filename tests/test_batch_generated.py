@@ -1160,3 +1160,74 @@ def test_pyroglyphic_protection_red_destroys_at_start_of_turn():
     
     # Assert that the card is destroyed at the start of the turn
     assert card not in st.players[1].permanents.cards
+
+# --- evasive_leap_yellow ---
+def test_evasive_leap_yellow_smoke():
+    assert get_card("evasive_leap_yellow").abilities == []
+
+def test_evasive_leap_yellow_defense_reaction():
+    # Evasive Leap is a Generic Defense Reaction, but it has no abilities.
+    # This test checks that the card can be dispatched without errors.
+    st = _make_state(); st.card_db = DB
+    card = _card("evasive_leap_yellow")
+    st.players[1].arsenal.cards.append(card)
+    dispatch(st, "ON_DEFENSE", "evasive_leap_yellow", card=card, event=None)
+    # Since there are no abilities, there is nothing to assert.
+
+# --- sic_em_shot_blue ---
+def test_sic_em_shot_blue_go_again():
+    st = _make_state(); st.card_db = DB
+    card = _card("sic_em_shot_blue")
+    st.players[1].arsenal.cards.append(card)
+    before_action_points = st.players[1].action_points
+    activate(st, card)
+    assert st.players[1].action_points == before_action_points + 1
+
+# --- pursue_to_the_edge_of_oblivion_red ---
+def test_pursue_to_the_edge_of_oblivion_red_marks_on_hit():
+    st = _make_state(); st.card_db = DB
+    card = _card("pursue_to_the_edge_of_oblivion_red")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    assert st.players[2].class_counters.get("marked", 0) >= 1
+
+def test_pursue_to_the_edge_of_oblivion_red_marks_on_direct_hit():
+    st = _make_state(); st.card_db = DB
+    card = _card("pursue_to_the_edge_of_oblivion_red")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    assert st.players[2].class_counters.get("marked", 0) >= 1
+
+# --- zero_to_fifty_yellow ---
+def test_zero_to_fifty_yellow_smoke_test():
+    assert get_card("zero_to_fifty_yellow").abilities == []
+
+def test_zero_to_fifty_yellow_no_effect():
+    st = _make_state(); st.card_db = DB
+    card = _card("zero_to_fifty_yellow")
+    st.players[1].arsenal.cards.append(card)
+    activate(st, card)
+    # No effect should be applied, as the card has no abilities
+    assert len(st.players[1].arsenal.cards) == 1
+
+# --- brimming_blade_red ---
+def test_brimming_blade_red_play():
+    st = _make_state(); st.card_db = DB
+    card = _card("brimming_blade_red")
+    st.players[1].arsenal.cards.append(card)
+    n0 = len(st.players[1].arsenal.cards)
+    dispatch(st, "ON_PLAY", "brimming_blade_red", card=card, event=None)
+    assert len(st.players[1].arsenal.cards) >= n0
+
+def test_brimming_blade_red_modify_attack():
+    st = _make_state(); st.card_db = DB
+    card = _card("brimming_blade_red")
+    sword = _card("sword")  # Assuming there is a sword card in the DB
+    st.players[1].arsenal.cards.append(sword)
+    st.players[1].arsenal.cards.append(card)
+    attack(st, sword)
+    before_power = st.combat.attack_power
+    dispatch(st, "ON_PLAY", "brimming_blade_red", card=card, event=None)
+    assert st.combat.attack_power == before_power + 2

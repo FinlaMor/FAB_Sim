@@ -1,0 +1,61 @@
+{
+  "slug": "vengeful_apparition_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "CONTROLS_TOKEN_TYPE",
+            "token_type": "Illusionist"
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "VENGEFUL_APPARITION_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "VENGEFUL_APPARITION_ACTIVE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "APPLY_CONTINUOUS",
+          "effect": {
+            "type": "PAY_OR_DAMAGE",
+            "amount": 1,
+            "damage_type": "ARCANE"
+          },
+          "target": {
+            "type": "TOKEN",
+            "token_type": "Aura",
+            "cost_lte": 1
+          }
+        },
+        {
+          "type": "APPLY_CONTINUOUS",
+          "effect": {
+            "type": "PUT_COUNTER",
+            "counter_type": "POWER",
+            "amount": 1
+          },
+          "target": {
+            "type": "TOKEN",
+            "token_type": "Aura",
+            "cost_lte": 1
+          }
+        }
+      ]
+    }
+  ]
+}

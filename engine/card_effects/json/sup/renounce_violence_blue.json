@@ -1,0 +1,20 @@
+{
+  "slug": "renounce_violence_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN",
+          "token_type": "Might",
+          "max_destroy": 3
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Toughness",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "hoist_em_up_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "MAY",
+          "cost": [
+            {
+              "type": "TAP_SELF",
+              "target": "ALLY"
+            }
+          ],
+          "effects": [
+            {
+              "type": "MODIFY_DEFENSE_VALUE",
+              "mod": "add",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

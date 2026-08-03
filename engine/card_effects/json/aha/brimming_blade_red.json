@@ -1,0 +1,31 @@
+{
+  "slug": "brimming_blade_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "arsenal",
+              "subtype": "Sword"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

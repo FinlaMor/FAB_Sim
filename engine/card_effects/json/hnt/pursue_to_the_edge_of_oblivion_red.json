@@ -1,0 +1,19 @@
+{
+  "slug": "pursue_to_the_edge_of_oblivion_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MARK"
+        }
+      ]
+    }
+  ]
+}

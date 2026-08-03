@@ -1,0 +1,34 @@
+{
+  "slug": "quickening_sand_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Quicken"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "GO_AGAIN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SELECT_FROM_REF",
+          "ref": "hero_or_ally",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

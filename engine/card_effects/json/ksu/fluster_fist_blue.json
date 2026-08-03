@@ -1,0 +1,24 @@
+{
+  "slug": "fluster_fist_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "OPEN_THE_CENTER_PLAYED_THIS_COMBAT"
+        },
+        {
+          "type": "COMBO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

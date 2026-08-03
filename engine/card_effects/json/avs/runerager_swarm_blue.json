@@ -1,0 +1,20 @@
+{
+  "slug": "runerager_swarm_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "AURA_PLAYED_OR_CREATED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

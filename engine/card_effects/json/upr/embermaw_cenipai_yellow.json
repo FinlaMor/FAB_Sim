@@ -1,0 +1,15 @@
+{
+  "slug": "embermaw_cenipai_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ash"
+        }
+      ]
+    }
+  ]
+}

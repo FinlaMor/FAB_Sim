@@ -1,0 +1,61 @@
+{
+  "slug": "king_shark_harpoon_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "REVEAL_HAND_MARK_IF_TYPE",
+          "card_type": "ATTACK_ACTION",
+          "on_true": [
+            {
+              "type": "DISCARD",
+              "target": "opponent"
+            },
+            {
+              "type": "CREATE_TOKEN",
+              "token_type": "Gold"
+            }
+          ],
+          "on_false": [
+            {
+              "type": "FLAG_SET",
+              "flag": "KING_SHARK_HARPOON_REVEAL"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ACTIVATE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "KING_SHARK_HARPOON_REVEAL"
+        },
+        {
+          "type": "FLAG_SET",
+          "flag": "CANNON_ACTIVATED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "opponent_hand"
+        },
+        {
+          "type": "SELECT_FROM_REF",
+          "ref": "opponent_hand",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

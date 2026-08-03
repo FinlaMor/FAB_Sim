@@ -1,0 +1,32 @@
+{
+  "slug": "evo_recall_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "effects": [
+        {
+          "type": "SEARCH_BANISH_FACE_DOWN",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "BANISHED",
+              "card_type": "ACTION",
+              "class": "Mechanologist"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "ARCANE_BARRIER",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

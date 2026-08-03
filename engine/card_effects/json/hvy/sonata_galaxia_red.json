@@ -1,0 +1,34 @@
+{
+  "slug": "sonata_galaxia_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "PAY_LIFE",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "SEARCH_DECK",
+          "target": "Runeblade Aura",
+          "cost": "X",
+          "max_cost": 2,
+          "put_into": "arena",
+          "shuffle": true
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "CHAIN_HIT_COUNT_GTE",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

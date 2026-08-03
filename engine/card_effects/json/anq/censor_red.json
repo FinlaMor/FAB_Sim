@@ -1,0 +1,21 @@
+{
+  "slug": "censor_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "CENSOR_ACTIVE",
+          "target": "opponent"
+        }
+      ]
+    }
+  ]
+}

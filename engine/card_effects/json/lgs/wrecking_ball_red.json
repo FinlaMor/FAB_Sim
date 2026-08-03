@@ -1,0 +1,27 @@
+{
+  "slug": "wrecking_ball_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD_RANDOM"
+        },
+        {
+          "type": "INTIMIDATE",
+          "conditions": [
+            {
+              "type": "DISCARDED_CARD_POWER_GTE",
+              "amount": 6
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

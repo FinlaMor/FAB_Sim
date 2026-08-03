@@ -1,0 +1,24 @@
+{
+  "slug": "smashing_ground_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "SELF_ATTACK_POWER_GTE",
+          "amount": 6
+        },
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_ARSENAL",
+          "target": "opponent"
+        }
+      ]
+    }
+  ]
+}

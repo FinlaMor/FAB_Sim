@@ -1,0 +1,22 @@
+{
+  "slug": "high_riser",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DRAWN_CARD_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

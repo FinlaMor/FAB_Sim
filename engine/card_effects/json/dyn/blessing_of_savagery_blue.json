@@ -1,0 +1,39 @@
+{
+  "slug": "blessing_of_savagery_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "BLESSING_OF_SAVAGERY_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BLESSING_OF_SAVAGERY_ACTIVE"
+        },
+        {
+          "type": "SELF_ATTACK_POWER_GTE",
+          "amount": 6
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

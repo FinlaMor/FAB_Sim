@@ -1,0 +1,20 @@
+{
+  "slug": "blessing_of_occult_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

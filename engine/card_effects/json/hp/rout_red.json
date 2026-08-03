@@ -1,0 +1,42 @@
+{
+  "slug": "rout_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "REPRISE_ACTIVE"
+        },
+        {
+          "type": "DEFENDS_WITH_OTHER_HAND_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_TO_HAND",
+          "target": "defending_card",
+          "conditions": [
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "HAS_KEYWORD",
+                "keyword": "EQUIPMENT"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

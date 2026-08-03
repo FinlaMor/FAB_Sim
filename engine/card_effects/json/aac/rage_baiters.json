@@ -1,0 +1,42 @@
+{
+  "slug": "rage_baiters",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 1
+        },
+        {
+          "type": "PITCH",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_HIT",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO"
+            }
+          ],
+          "effects": [
+            {
+              "type": "MARK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

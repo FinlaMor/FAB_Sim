@@ -1,0 +1,26 @@
+{
+  "slug": "big_bertha_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BECOME",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BOOSTED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "steam",
+          "target": {
+            "type": "CARD",
+            "subtype": "Hyper Driver",
+            "controller": "self"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "slug": "song_of_jack_be_quick_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Quicken"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "slug": "fasting_carcass_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "FASTING_CARCASS_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FASTING_CARCASS_ACTIVE"
+        },
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "card_type": "ACTION",
+              "color": "YELLOW"
+            },
+            {
+              "type": "DURING_TURN"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

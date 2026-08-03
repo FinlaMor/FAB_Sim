@@ -1,0 +1,18 @@
+{
+  "slug": "wage_gold_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WAGER"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "slug": "minnowism_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "DURING_TURN"
+        },
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        },
+        {
+          "type": "ATTACK_TYPE_IN",
+          "values": [
+            "Action"
+          ]
+        },
+        {
+          "type": "SELF_ATTACK_POWER_GTE",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

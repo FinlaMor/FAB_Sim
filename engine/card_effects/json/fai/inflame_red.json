@@ -1,0 +1,31 @@
+{
+  "slug": "inflame_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "RED_CARD_PLAYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_TO_HAND",
+          "target": "Phoenix Flame",
+          "zone": "GRAVEYARD"
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

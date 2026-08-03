@@ -1,0 +1,33 @@
+{
+  "slug": "arcanic_cunning_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "IN_COMBAT",
+              "combat_role": "ATTACKER"
+            },
+            {
+              "type": "IN_COMBAT",
+              "combat_role": "DEFENDER"
+            },
+            {
+              "type": "FLAG_SET",
+              "flag": "ON_STACK"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "WARD",
+          "ward_type": "ARCANE"
+        }
+      ]
+    }
+  ]
+}

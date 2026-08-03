@@ -1,0 +1,54 @@
+{
+  "slug": "rumble_grunting_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "DISCARD_CARD",
+          "conditions": [
+            {
+              "type": "DISCARDED_CARD_POWER_GTE",
+              "amount": 6
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "RUMBLE_GRUNTING_ACTIVE"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "RUMBLE_GRUNTING_ACTIVE"
+        },
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        },
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Brute"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

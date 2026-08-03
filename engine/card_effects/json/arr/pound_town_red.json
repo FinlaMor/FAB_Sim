@@ -1,0 +1,21 @@
+{
+  "slug": "pound_town_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BEAT_CHEST_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Might"
+        }
+      ]
+    }
+  ]
+}

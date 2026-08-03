@@ -1,0 +1,22 @@
+{
+  "slug": "tough_smashup_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CLASH"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "TOUGHNESS"
+        },
+        {
+          "type": "PUT_HAND_CARD_BOTTOM",
+          "target": "revealed"
+        }
+      ]
+    }
+  ]
+}

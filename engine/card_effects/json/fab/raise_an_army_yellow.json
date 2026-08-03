@@ -1,0 +1,27 @@
+{
+  "slug": "raise_an_army_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "controlled",
+          "asset": "GOLD",
+          "amount": "X"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Cintari Sellsword",
+          "amount": "X"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

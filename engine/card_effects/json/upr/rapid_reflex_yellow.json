@@ -1,0 +1,21 @@
+{
+  "slug": "rapid_reflex_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "ATTACK_COST_GTE",
+              "amount": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

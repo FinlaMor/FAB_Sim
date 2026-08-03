@@ -1,0 +1,34 @@
+{
+  "slug": "pour_the_mold_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BOOSTED_THIS_TURN"
+            }
+          ]
+        },
+        {
+          "type": "PUT_COUNTER",
+          "counter": "steam",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BOOSTED_THIS_TURN"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

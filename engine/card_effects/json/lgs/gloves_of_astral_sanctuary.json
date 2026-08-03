@@ -1,0 +1,21 @@
+{
+  "slug": "gloves_of_astral_sanctuary",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "ASTRAL_SANCTUARY_ACTIVE"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "slug": "be_like_water_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "amount": 1,
+          "on_success": [
+            {
+              "type": "CHOOSE",
+              "options": [
+                {
+                  "name": "Head Jab",
+                  "effects": [
+                    {
+                      "type": "MODIFY_ATTACK",
+                      "mod": "add",
+                      "amount": 1
+                    }
+                  ]
+                },
+                {
+                  "name": "Surging Strike",
+                  "effects": [
+                    {
+                      "type": "MODIFY_ATTACK",
+                      "mod": "add",
+                      "amount": 2
+                    }
+                  ]
+                },
+                {
+                  "name": "Twin Twisters",
+                  "effects": [
+                    {
+                      "type": "MODIFY_ATTACK",
+                      "mod": "add",
+                      "amount": 3
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

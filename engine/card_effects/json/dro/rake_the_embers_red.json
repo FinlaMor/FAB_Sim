@@ -1,0 +1,24 @@
+{
+  "slug": "rake_the_embers_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ash"
+        },
+        {
+          "type": "TRANSFORM_HERO",
+          "from": "Ash",
+          "to": "Aether Ashwings",
+          "max_count": 3
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

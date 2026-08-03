@@ -1,0 +1,36 @@
+{
+  "slug": "blessing_of_focus_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "OPT",
+          "amount": 1
+        },
+        {
+          "type": "REVEAL_TOP_DECK",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "deck",
+              "card_type": "arrow"
+            }
+          ],
+          "effects": [
+            {
+              "type": "PUT_ARSENAL_BOTTOM",
+              "card_type": "arrow",
+              "add_counter": "aim"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
