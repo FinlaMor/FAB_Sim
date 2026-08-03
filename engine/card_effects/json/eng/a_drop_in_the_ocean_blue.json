@@ -1,0 +1,32 @@
+{
+  "slug": "a_drop_in_the_ocean_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "subtract",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BLUE_CARD_PLAYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "TRANSFORM_HERO",
+          "hero": "Transcend"
+        }
+      ]
+    }
+  ]
+}

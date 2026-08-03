@@ -1,0 +1,19 @@
+{
+  "slug": "den_of_the_spider_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "ATTACK_POWER_GT_BASE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MARK"
+        }
+      ]
+    }
+  ]
+}

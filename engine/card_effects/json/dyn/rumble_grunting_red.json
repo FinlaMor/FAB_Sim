@@ -1,0 +1,46 @@
+{
+  "slug": "rumble_grunting_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "DISCARD_CARD",
+          "conditions": [
+            {
+              "type": "DISCARDED_CARD_POWER_GTE",
+              "amount": 6
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Brute"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4
+        }
+      ]
+    }
+  ]
+}

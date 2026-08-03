@@ -1,0 +1,22 @@
+{
+  "slug": "richter_scale",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Seismic Surge",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

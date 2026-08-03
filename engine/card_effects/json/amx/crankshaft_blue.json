@@ -1,0 +1,28 @@
+{
+  "slug": "crankshaft_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BOOSTED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "steam",
+          "target": "self",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Hyper Driver"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

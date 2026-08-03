@@ -1,0 +1,29 @@
+{
+  "slug": "terra",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "card_type": "Earth"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_DAMAGE",
+          "resource": "RESOURCE_POINTS",
+          "amount": 1,
+          "on_success": [
+            {
+              "type": "CREATE_TOKEN",
+              "token_type": "Might"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "stellar_glide_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
+          "target": "Lightning Flow",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Lightning Flow"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "DESTROYED_LIGHTNING_FLOW"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

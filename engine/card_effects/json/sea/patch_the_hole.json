@@ -1,0 +1,21 @@
+{
+  "slug": "patch_the_hole",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_TO_HAND",
+          "zone": "arsenal"
+        }
+      ]
+    }
+  ]
+}

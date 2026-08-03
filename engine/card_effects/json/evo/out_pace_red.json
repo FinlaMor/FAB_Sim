@@ -1,0 +1,13 @@
+{
+  "slug": "out_pace_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
+        }
+      ]
+    }
+  ]
+}

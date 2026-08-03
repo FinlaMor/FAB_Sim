@@ -1,0 +1,24 @@
+{
+  "slug": "one_two_punch_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "HEAD_JAB_LAST_ATTACK"
+        },
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

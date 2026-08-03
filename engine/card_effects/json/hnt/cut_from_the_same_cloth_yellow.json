@@ -1,0 +1,30 @@
+{
+  "slug": "cut_from_the_same_cloth_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "REVEAL_HAND_MARK_IF_TYPE",
+          "target": "opponent",
+          "mark_type": "MARK"
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "NEXT_DAGGER_ATTACK"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

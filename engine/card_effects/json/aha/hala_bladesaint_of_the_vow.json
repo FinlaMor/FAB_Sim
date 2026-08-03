@@ -1,0 +1,25 @@
+{
+  "slug": "hala_bladesaint_of_the_vow",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "cost": [
+        {
+          "type": "PITCH",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "SHARPEN"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

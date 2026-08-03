@@ -1,0 +1,16 @@
+{
+  "slug": "on_the_horizon_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "deck",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

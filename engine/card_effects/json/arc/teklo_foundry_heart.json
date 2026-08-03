@@ -1,0 +1,37 @@
+{
+  "slug": "teklo_foundry_heart",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BOOSTED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "amount": 2
+        },
+        {
+          "type": "GAIN",
+          "keyword": "RESOURCE_POINTS",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "BANISHED",
+              "card_class": "Mechanologist"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

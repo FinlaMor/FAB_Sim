@@ -1,0 +1,21 @@
+{
+  "slug": "flittering_forcefield_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "INSTANT_PLAYED_THIS_CHAIN_LINK"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

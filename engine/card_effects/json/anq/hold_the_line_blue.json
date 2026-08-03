@@ -1,0 +1,20 @@
+{
+  "slug": "hold_the_line_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ATTACKER_DRAWN_2_OR_MORE_CARDS"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

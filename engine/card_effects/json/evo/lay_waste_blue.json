@@ -1,0 +1,13 @@
+{
+  "slug": "lay_waste_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
+        }
+      ]
+    }
+  ]
+}

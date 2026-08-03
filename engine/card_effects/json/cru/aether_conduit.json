@@ -1,0 +1,16 @@
+{
+  "slug": "aether_conduit",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 2,
+          "target": "hero"
+        }
+      ]
+    }
+  ]
+}

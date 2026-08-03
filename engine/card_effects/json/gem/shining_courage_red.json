@@ -1,0 +1,21 @@
+{
+  "slug": "shining_courage_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 3,
+          "target": "defending_action_card",
+          "max_targets": 1
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "THE_CROWD_CHEERS"
+        }
+      ]
+    }
+  ]
+}

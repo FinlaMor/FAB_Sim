@@ -1,0 +1,31 @@
+{
+  "slug": "aurora_emissary_of_lightning",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "cost": [
+        {
+          "type": "PITCH",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Lightning Flow"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Embodiment of Lightning"
+        }
+      ]
+    }
+  ]
+}

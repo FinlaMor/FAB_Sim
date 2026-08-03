@@ -1,0 +1,37 @@
+{
+  "slug": "intoxicating_shot_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO"
+            },
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Courage"
+            },
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Quicken"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Courage"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Quicken"
+        }
+      ]
+    }
+  ]
+}

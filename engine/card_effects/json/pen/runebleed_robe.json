@@ -1,0 +1,46 @@
+{
+  "slug": "runebleed_robe",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "controlled",
+          "conditions": [
+            {
+              "type": "HAS_KEYWORD",
+              "keyword": "Runechant"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "RUNEBLEED_ROBE_ARCANE_BARRIER_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "ARCANE_BARRIER",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "RUNEBLEED_ROBE_ARCANE_BARRIER_ACTIVE"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

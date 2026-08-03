@@ -1,0 +1,42 @@
+{
+  "slug": "graven_call",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self",
+          "amount": 2,
+          "subtype": "Silver"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "target": "self",
+          "counter": {
+            "type": "add",
+            "amount": 1
+          }
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "IN_GRAVEYARD"
+        }
+      ]
+    }
+  ]
+}

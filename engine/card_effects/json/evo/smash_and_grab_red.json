@@ -1,0 +1,38 @@
+{
+  "slug": "smash_and_grab_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BOOSTED_TWICE_OR_MORE_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "STEAL_AURA_TOKEN",
+                "target": "item"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

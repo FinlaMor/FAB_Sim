@@ -1,0 +1,15 @@
+{
+  "slug": "figment_of_tenacity_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "DOMINATE_NEXT_ATTACK"
+        }
+      ]
+    }
+  ]
+}

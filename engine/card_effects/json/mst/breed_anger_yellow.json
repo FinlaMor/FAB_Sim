@@ -1,0 +1,30 @@
+{
+  "slug": "breed_anger_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CROUCHING_TIGER_LAST_ATTACK"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "CROUCHING_TIGER",
+          "zone": "BANISHED"
+        },
+        {
+          "type": "BANISH_OPP_TOP_GRANT_PLAY",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

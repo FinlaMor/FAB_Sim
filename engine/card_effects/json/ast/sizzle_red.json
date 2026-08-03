@@ -1,0 +1,43 @@
+{
+  "slug": "sizzle_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "DURING_TURN",
+              "player": "self"
+            },
+            {
+              "type": "OR",
+              "conditions": [
+                {
+                  "type": "ATTACK_CLASS_IN",
+                  "class": "Lightning"
+                },
+                {
+                  "type": "ATTACK_CLASS_IN",
+                  "class": "Elemental"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "herald_of_triumph_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "subtract",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "DEFENDING",
+              "card_type": "ATTACK_ACTION"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "PUT_SELF_BOTTOM_DECK",
+          "zone": "SOUL"
+        }
+      ]
+    }
+  ]
+}

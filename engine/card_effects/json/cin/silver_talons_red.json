@@ -1,0 +1,56 @@
+{
+  "slug": "silver_talons_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO"
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Draconic"
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "SELECT_FROM_REF",
+              "ref": "dagger",
+              "conditions": [
+                {
+                  "type": "CONTROLS_ATTACK_ACTION"
+                }
+              ],
+              "effects": [
+                {
+                  "type": "DEAL_GENERIC",
+                  "amount": 1,
+                  "target": "opponent"
+                },
+                {
+                  "type": "SET_FLAG",
+                  "flag": "DAGGER_HAS_HIT"
+                },
+                {
+                  "type": "DESTROY_REF",
+                  "ref": "dagger"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

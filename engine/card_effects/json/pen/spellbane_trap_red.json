@@ -1,0 +1,46 @@
+{
+  "slug": "spellbane_trap_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "SPELLBANE_TRAP_ACTIVATED"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_name": "Spellbane Aegis",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "OPPONENT_DEALT_ARCANE_DAMAGE"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

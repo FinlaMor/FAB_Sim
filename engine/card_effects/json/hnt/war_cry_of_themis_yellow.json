@@ -1,0 +1,57 @@
+{
+  "slug": "war_cry_of_themis_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "conditions": [
+            {
+              "type": "AND",
+              "conditions": [
+                {
+                  "type": "DURING_TURN"
+                },
+                {
+                  "type": "ATTACK_CLASS_IN",
+                  "class": "Angel"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "DISCARD_SELF"
+        },
+        {
+          "type": "BANISH_NAMED_GRAVEYARD_OPTIONAL",
+          "amount": "X"
+        }
+      ],
+      "effects": [
+        {
+          "type": "FLIP_REF",
+          "target": "X",
+          "zone": "BANISHED"
+        }
+      ]
+    }
+  ]
+}

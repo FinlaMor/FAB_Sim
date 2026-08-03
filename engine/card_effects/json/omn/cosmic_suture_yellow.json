@@ -1,0 +1,44 @@
+{
+  "slug": "cosmic_suture_yellow",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "COSMIC_SUTURE_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "COSMIC_SUTURE_ACTIVE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "STARFALL_TRIGGERED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

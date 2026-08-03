@@ -1,0 +1,35 @@
+{
+  "slug": "gloves_of_azure_waves",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "ARCANE_BARRIER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "self",
+          "color": "blue",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 3
+        },
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

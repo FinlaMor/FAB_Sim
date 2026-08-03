@@ -1,0 +1,24 @@
+{
+  "slug": "ominous_excavation_blue",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "effects": [
+        {
+          "type": "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE",
+          "card_type": "Instant"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ponder",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "AURA_DESTROYED_THIS_TURN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

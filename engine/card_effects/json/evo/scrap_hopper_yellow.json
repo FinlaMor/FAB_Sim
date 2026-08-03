@@ -1,0 +1,21 @@
+{
+  "slug": "scrap_hopper_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SCRAPPED_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Quicken"
+        }
+      ]
+    }
+  ]
+}

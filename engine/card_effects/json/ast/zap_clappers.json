@@ -1,0 +1,34 @@
+{
+  "slug": "zap_clappers",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "card_type": "INSTANT"
+            }
+          ]
+        },
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "ATTACKER"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

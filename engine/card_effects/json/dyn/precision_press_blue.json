@@ -1,0 +1,51 @@
+{
+  "slug": "precision_press_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "PRECISION_PRESS_ACTIVE"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "PRECISION_PRESS_ACTIVE"
+        },
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "attack_type": "Sword"
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "attack_type": "Dagger"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "PIERCING",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

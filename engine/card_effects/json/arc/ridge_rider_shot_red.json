@@ -1,0 +1,20 @@
+{
+  "slug": "ridge_rider_shot_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "RIDGE_RIDER_SHOT_IN_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

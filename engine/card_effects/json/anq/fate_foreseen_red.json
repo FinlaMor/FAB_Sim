@@ -1,0 +1,14 @@
+{
+  "slug": "fate_foreseen_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

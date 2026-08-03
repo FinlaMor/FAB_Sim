@@ -1,0 +1,34 @@
+{
+  "slug": "rift_bind_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "BANISH_FROM_GRAVEYARD",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": {
+            "type": "COUNT",
+            "condition": {
+              "type": "CARD_IN_ZONE",
+              "zone": "play",
+              "condition": {
+                "type": "NOT",
+                "condition": {
+                  "type": "HAS_KEYWORD",
+                  "keyword": "Attack"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "slug": "waxing_specter_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "PITCHED_BLUE_CARD_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "power",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

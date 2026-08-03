@@ -1,0 +1,22 @@
+{
+  "slug": "rotwood_reaper",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "AURA_PLAYED_OR_CREATED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

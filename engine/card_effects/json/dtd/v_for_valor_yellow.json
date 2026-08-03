@@ -1,0 +1,29 @@
+{
+  "slug": "v_for_valor_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CHARGE",
+          "target": "hero_soul"
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

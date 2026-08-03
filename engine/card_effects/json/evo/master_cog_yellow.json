@@ -1,0 +1,26 @@
+{
+  "slug": "master_cog_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PITCH",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "steam",
+          "target": {
+            "type": "CARD",
+            "zone": "arsenal",
+            "controller": "self",
+            "conditions": [
+              {
+                "type": "HAS_KEYWORD",
+                "keyword": "crank"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

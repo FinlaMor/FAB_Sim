@@ -1,0 +1,20 @@
+{
+  "slug": "humble_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "HUMBLE_ACTIVE"
+        }
+      ]
+    }
+  ]
+}

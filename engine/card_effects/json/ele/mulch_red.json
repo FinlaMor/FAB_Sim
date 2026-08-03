@@ -1,0 +1,26 @@
+{
+  "slug": "mulch_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "FUSED"
+        },
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "zone": "arsenal",
+          "target": "opponent"
+        }
+      ]
+    }
+  ]
+}

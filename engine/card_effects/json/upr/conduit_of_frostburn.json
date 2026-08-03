@@ -1,0 +1,44 @@
+{
+  "slug": "conduit_of_frostburn",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+          "conditions": [
+            {
+              "type": "HAS_KEYWORD",
+              "keyword": "DEAL_ARCANE"
+            }
+          ],
+          "effects": [
+            {
+              "type": "TRIGGERED",
+              "trigger": "ON_DEAL_ARCANE",
+              "effects": [
+                {
+                  "type": "DESTROY_TOKEN",
+                  "conditions": [
+                    {
+                      "type": "HAS_KEYWORD",
+                      "keyword": "FROZEN"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

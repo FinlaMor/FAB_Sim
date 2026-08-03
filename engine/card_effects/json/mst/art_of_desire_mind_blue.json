@@ -1,0 +1,41 @@
+{
+  "slug": "art_of_desire_mind_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "OPPONENT_TOP_DECK"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BANISH",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "pitch": "BLUE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "asset": "HEALTH",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

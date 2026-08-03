@@ -1,0 +1,16 @@
+{
+  "slug": "clearing_bellow_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}
