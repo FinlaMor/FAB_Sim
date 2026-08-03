@@ -1,0 +1,55 @@
+{
+  "slug": "templar_spellbane",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "TEMPLAR_SPELLBANE_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "TEMPLAR_SPELLBANE_ACTIVE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "ARCANE_BARRIER",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "TEMPLAR_SPELLBANE_ACTIVE"
+        },
+        {
+          "type": "FLAG_SET",
+          "flag": "WEAPON_ACTIVATED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "ARCANE_BARRIER",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

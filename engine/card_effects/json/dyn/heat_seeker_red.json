@@ -1,0 +1,23 @@
+{
+  "slug": "heat_seeker_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "END_OF_TURN",
+            "effects": [
+              {
+                "type": "PUT_TOP_DECK_BOTTOM",
+                "zone": "arsenal"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

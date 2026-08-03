@@ -1,0 +1,31 @@
+{
+  "slug": "captains_coat",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DRAWN_CARD_THIS_TURN"
+        }
+      ]
+    }
+  ]
+}

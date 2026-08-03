@@ -1,0 +1,32 @@
+{
+  "slug": "kayo_strong_arm",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 4,
+      "cost": [
+        {
+          "type": "PITCH",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_BASE_POWER",
+          "amount": 6,
+          "target": "attack_action"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BOO",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor"
+        }
+      ]
+    }
+  ]
+}

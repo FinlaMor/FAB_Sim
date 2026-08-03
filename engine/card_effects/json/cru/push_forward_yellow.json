@@ -1,0 +1,52 @@
+{
+  "slug": "push_forward_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "IN_COMBAT",
+          "condition": "ATTACK_IS_WEAPON"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "IN_COMBAT",
+          "condition": "ATTACK_IS_WEAPON"
+        },
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "HAS_ATTACKED_WITH_WEAPON"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DOMINATE"
+        }
+      ]
+    }
+  ]
+}

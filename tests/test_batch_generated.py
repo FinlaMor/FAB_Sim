@@ -1313,3 +1313,22 @@ def test_aether_spindle_blue_opt():
     n0 = len(st.players[2].permanents.cards)
     dispatch(st, "ON_PLAY", "aether_spindle_blue", card=card, event=None)
     assert len(st.players[2].permanents.cards) >= n0
+
+# --- blood_tribute_blue ---
+def test_blood_tribute_blue_play():
+    # A play ability fires on ON_PLAY; assert the observable result (here a card in the banished zone)
+    st = _make_state(); st.card_db = DB
+    card = _card("blood_tribute_blue")
+    st.players[1].hand.cards.append(card)
+    before_banished = len(st.players[1].banished.cards)
+    dispatch(st, "ON_PLAY", "blood_tribute_blue", card=card, event=None)
+    assert len(st.players[1].banished.cards) == before_banished + 1
+
+def test_blood_tribute_blue_opt_play():
+    # A play ability fires on ON_PLAY; assert the observable result (here a card in the banished zone)
+    st = _make_state(); st.card_db = DB
+    card = _card("blood_tribute_blue")
+    st.players[1].hand.cards.append(card)
+    before_banished = len(st.players[1].banished.cards)
+    dispatch(st, "ON_PLAY", "blood_tribute_blue", card=card, event=None)
+    assert len(st.players[1].banished.cards) == before_banished + 1

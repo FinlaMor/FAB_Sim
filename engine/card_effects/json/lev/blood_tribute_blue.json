@@ -1,0 +1,18 @@
+{
+  "slug": "blood_tribute_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 1
+        },
+        {
+          "type": "BANISH",
+          "target": "top_deck"
+        }
+      ]
+    }
+  ]
+}

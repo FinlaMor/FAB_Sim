@@ -22183,7 +22183,7 @@
     ],
     "specializations": [],
     "functional_text": "**Attack Reaction** - {r}, destroy this: Target attack action card gets **go again**. Activate this only if you've played a non-attack action card this turn.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "ebbing_arcstride_blue",
@@ -22207,7 +22207,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever this fragments, it gets **go again**.\n\n**Fragment**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "templar_spellbane",
@@ -22230,7 +22230,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn. If you've activated a weapon this turn, instead prevent the next 2.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "heat_seeker_red",
@@ -22252,7 +22252,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, at the beginning of your end phase, put the top card of your deck face up into your arsenal.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "hocus_pocus_blue",
@@ -22273,7 +22273,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, create a Runechant token.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "tectonic_crust",
@@ -22296,7 +22296,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends together with an Earth card, create a Seismic Surge token.\n\n**Temper**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bonds_of_memory_red",
@@ -22319,7 +22319,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same name, gain 1{h}.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "wallop_red",
@@ -22340,7 +22340,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a **clash** revealing this, create a Vigor token.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "kayo_strong_arm",
@@ -22361,7 +22361,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You start the game with 1 weapon zone.\n\n**Instant** - {r}{r}{r}{r}, {t}: Target attack action card you control has 6 base {p}.\n\nWhenever the crowd boos you, create a Vigor token.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "volcanic_vice",
@@ -22384,7 +22384,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've created a Seismic Surge this turn, this gets **spellvoid 3**.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "push_forward_yellow",
@@ -22408,7 +22408,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +2{p}.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains **dominate**.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "flex_strength_red",
@@ -22429,7 +22429,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this has 6 or more {p}, it gets +3{p}.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "captains_coat",
@@ -22452,7 +22452,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Gain {r}. Activate this only if you've drawn a card this turn. **Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "break_of_dawn_red",
@@ -22471,7 +22471,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next time a Shadow source would deal damage this turn, prevent 4 of that damage.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "figment_of_protection_yellow",
@@ -22494,7 +22494,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen this enters the arena, create a Spectral Shield token.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "crane_dance_blue",
@@ -22517,7 +22517,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Soulbead Strike was the last attack this combat chain, Crane Dance gains +1{p}, **go again**, and it can't be defended by attack action cards with base {p} greater than the number of chain links you control.",
-    "status": "pending"
+    "status": "failed"
   },
   {
     "slug": "blood_tribute_blue",
@@ -22538,6 +22538,6 @@
     ],
     "specializations": [],
     "functional_text": "**Opt 1**, then banish the top card of your deck.",
-    "status": "pending"
+    "status": "done"
   }
 ]

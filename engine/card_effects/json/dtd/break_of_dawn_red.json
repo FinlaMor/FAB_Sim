@@ -1,0 +1,14 @@
+{
+  "slug": "break_of_dawn_red",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "BREAK_OF_DAWN_ACTIVE"
+        }
+      ]
+    }
+  ]
+}

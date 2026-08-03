@@ -1,0 +1,27 @@
+{
+  "slug": "sutcliffes_suede_hides",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "NON_ATTACK_ACTION_PLAYED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

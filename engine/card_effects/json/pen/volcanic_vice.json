@@ -1,0 +1,21 @@
+{
+  "slug": "volcanic_vice",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SEISMIC_SURGE_CREATED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GRANT_SUBTYPE",
+          "subtype": "Spellvoid",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}
