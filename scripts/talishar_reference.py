@@ -194,31 +194,58 @@ def _candidates(n: int) -> list[str]:
     return cands[:n] if n else cands
 
 
+_BOLD = re.compile(r'\*\*[^*]+\*\*')
+
+
+def _is_keyword_only(text: str) -> bool:
+    """True if the card's whole text is just bolded keyword tokens (e.g.
+    "**Stealth**\\n\\n**Dominate**", "**Heave 2**", "**Go again**"). Such cards
+    correctly carry empty `abilities` — the keywords are handled generically by
+    the engine from the card's keyword metadata, not by per-card JSON."""
+    stripped = _BOLD.sub("", text or "")
+    return re.sub(r"[\s\W_]+", "", stripped) == ""
+
+
 def _flags(slug: str, blocks: list[dict]) -> list[str]:
     """Cheap structural divergence signals between Talishar's logic and our JSON,
     for triage. Not proof — just where to look first."""
     fl = []
-    oj = our_json(slug)
+    oj = our_json(slug) or ""
     try:
         abils = json.loads(oj).get("abilities", []) if oj else []
     except Exception:
         abils = []
-    triggers = {(a.get("trigger") or "").upper() for a in abils}
-    atypes = {(a.get("ability_type") or "").upper() for a in abils}
     funcs = " ".join(b["func"] for b in blocks)
     code = " ".join(b["code"] for b in blocks)
     if not blocks:
         return ["no-talishar-logic"]  # can't cross-check (vanilla or newer set)
+    # Keyword-only card (all text is engine-handled keywords) -> empty abilities is
+    # correct and there is nothing card-specific to cross-check. Checked first so it
+    # short-circuits the empty-abilities / hit-effect flags below.
+    if _is_keyword_only(card_text(slug)):
+        return ["keyword-only"]
+    # ON_HIT presence must be checked against the WHOLE json: the canonical pattern
+    # for "this attack gains: if it hits ..." nests the ON_HIT trigger inside an
+    # INJECT_TRIGGER effect, not as a top-level ability.trigger. (Checking only
+    # ability.trigger produced ~10 false positives.)
+    has_on_hit = "ON_HIT" in oj or "ON_ATTACK" in oj
     # High-precision structural flags only. A `PlayAbility` heuristic was tried and
     # dropped as noise: Talishar routes many on-play / current-turn effects through
     # PlayAbility that we correctly model as STATIC or TRIGGERED ON_PLAY, so its
     # presence does not discriminate real divergences.
-    if "HitEffect" in funcs and not ({"ON_HIT", "ON_ATTACK"} & triggers):
+    if "HitEffect" in funcs and not has_on_hit:
         fl.append("talishar-has-hit-effect/our-json-no-ON_HIT")
+    # Persistent turn-scoped combat effect ("whenever an attack ... this turn",
+    # "until start of your next turn"). Genuine divergence only if our impl does NOT
+    # register a turn/next-turn-scoped effect and instead models it as a one-shot
+    # self-trigger. If the json already uses a current/next-turn construct, aligned.
+    turn_scoped = any(m in oj for m in
+                      ("CURRENT_TURN", "NEXT_TURN", "current_turn", "TURN_EFFECT", "LASTING"))
     if "IsCombatEffectPersistent" in funcs and "return true" in code.lower() \
-            and not any(a.get("ability_type", "").upper() in ("STATIC", "WHILE_STATIC")
+            and not turn_scoped \
+            and not any((a.get("ability_type") or "").upper() in ("STATIC", "WHILE_STATIC")
                         or (a.get("trigger") or "").upper() in ("ON_ATTACK",) for a in abils):
-        fl.append("persistent-combat-chain-effect/verify-scope")
+        fl.append("persistent-combat-effect/verify-scope")
     if not abils:
         fl.append("our-json-empty-abilities")
     return fl or ["looks-aligned"]
