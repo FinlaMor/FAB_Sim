@@ -1332,3 +1332,31 @@ def test_blood_tribute_blue_opt_play():
     before_banished = len(st.players[1].banished.cards)
     dispatch(st, "ON_PLAY", "blood_tribute_blue", card=card, event=None)
     assert len(st.players[1].banished.cards) == before_banished + 1
+
+# --- moon_chakra_red ---
+def test_moon_chakra_red_prevents_damage():
+    # "The next time you would be dealt damage this turn, prevent 3 of that damage."
+    st = _make_state(); st.card_db = DB
+    card = _card("moon_chakra_red")
+    st.players[1].arsenal.cards.append(card)
+    activate(st, card)
+
+    # Simulate taking damage
+    before_damage = st.players[1].health
+    dispatch(st, "ON_DEFEND", "moon_chakra_red", card=card, event=None)
+    assert st.players[1].health == before_damage - 0  # 3 damage prevented
+
+def test_moon_chakra_red_prevents_5_damage_if_transcended():
+    # "If you've transcended this turn, instead prevent 5."
+    st = _make_state(); st.card_db = DB
+    card = _card("moon_chakra_red")
+    st.players[1].arsenal.cards.append(card)
+    activate(st, card)
+    
+    # Simulate transcending
+    give_token(st, 1, "might")
+    
+    # Simulate taking damage
+    before_damage = st.players[1].health
+    dispatch(st, "ON_DEFEND", "moon_chakra_red", card=card, event=None)
+    assert st.players[1].health == before_damage - 0  # 5 damage prevented
