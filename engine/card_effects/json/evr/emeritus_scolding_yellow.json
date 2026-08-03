@@ -1,0 +1,29 @@
+{
+  "slug": "emeritus_scolding_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER",
+          "value": false
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

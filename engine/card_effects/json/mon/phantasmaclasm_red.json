@@ -1,0 +1,29 @@
+{
+  "slug": "phantasmaclasm_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "OPPONENT_HAND"
+        },
+        {
+          "type": "SELECT_FROM_REF",
+          "ref": "OPPONENT_HAND",
+          "effects": [
+            {
+              "type": "PUT_CARDS_BOTTOM",
+              "amount": 1,
+              "target_ref": "SELECTED"
+            },
+            {
+              "type": "DRAW",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

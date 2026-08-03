@@ -1,0 +1,15 @@
+{
+  "slug": "inspire_lightning_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_FUSE",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

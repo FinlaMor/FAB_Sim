@@ -1,0 +1,21 @@
+{
+  "slug": "qi_unleashed_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CROUCHING_TIGER_LAST_ATTACK"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4
+        }
+      ]
+    }
+  ]
+}

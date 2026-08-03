@@ -1,0 +1,60 @@
+{
+  "slug": "jack_be_quick_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "Nimblism",
+          "zone": "GRAVEYARD",
+          "optional": true
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "NIMBLISM_BANISHED"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "NIMBLISM_BANISHED"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "ALLY",
+          "controller": "OPPONENT"
+        },
+        {
+          "type": "STEAL_AURA_TOKEN",
+          "target": "ALLY",
+          "controller": "OPPONENT",
+          "duration": "END_OF_ACTION_PHASE"
+        }
+      ]
+    }
+  ]
+}

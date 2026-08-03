@@ -1,0 +1,22 @@
+{
+  "slug": "potion_of_deja_vu_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "zone": "pitch",
+          "order": "any"
+        }
+      ]
+    }
+  ]
+}

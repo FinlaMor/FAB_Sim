@@ -1,0 +1,15 @@
+{
+  "slug": "creep_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "CREEP_STEALTH_GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

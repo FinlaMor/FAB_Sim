@@ -1,0 +1,21 @@
+{
+  "slug": "frosthaven_sheath_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "ICE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Frostbite",
+          "controller": "attacker"
+        }
+      ]
+    }
+  ]
+}

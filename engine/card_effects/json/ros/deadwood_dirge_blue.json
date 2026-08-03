@@ -1,0 +1,27 @@
+{
+  "slug": "deadwood_dirge_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN",
+          "target": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant"
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "slug": "starworld_warning_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Lightning Flow",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

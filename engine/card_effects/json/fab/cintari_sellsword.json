@@ -1,0 +1,21 @@
+{
+  "slug": "cintari_sellsword",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ATTACKED_WITH_WEAPON_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

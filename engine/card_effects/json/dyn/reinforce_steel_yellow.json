@@ -1,0 +1,31 @@
+{
+  "slug": "reinforce_steel_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "REMOVE_COUNTER",
+          "counter": "-1d",
+          "target": {
+            "type": "SELF",
+            "conditions": [
+              {
+                "type": "CONTROLS_TOKEN_TYPE",
+                "subtype": "Guardian"
+              },
+              {
+                "type": "HAS_KEYWORD",
+                "keyword": "Off-hand"
+              },
+              {
+                "type": "BASE_DEFENSE_LTE",
+                "amount": 2
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

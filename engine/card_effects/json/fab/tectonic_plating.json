@@ -1,0 +1,24 @@
+{
+  "slug": "tectonic_plating",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Seismic Surge"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "TECTONIC_PLATING_ACTION_USED_THIS_TURN"
+        }
+      ]
+    }
+  ]
+}

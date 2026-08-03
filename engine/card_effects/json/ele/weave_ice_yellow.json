@@ -1,0 +1,79 @@
+{
+  "slug": "weave_ice_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "WEAVE_ICE_ACTIVE"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "WEAVE_ICE_ACTIVE"
+        },
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Ice"
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Elemental"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "WEAVE_ICE_ACTIVE"
+        },
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Ice"
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Elemental"
+            }
+          ]
+        },
+        {
+          "type": "FLAG_SET",
+          "flag": "FUSED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "DOMINATE"
+        }
+      ]
+    }
+  ]
+}

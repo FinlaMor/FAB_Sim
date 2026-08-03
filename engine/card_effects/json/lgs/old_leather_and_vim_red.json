@@ -1,0 +1,53 @@
+{
+  "slug": "old_leather_and_vim_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Toughness"
+        },
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Toughness"
+            },
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Vigor"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Toughness"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Vigor"
+        }
+      ]
+    }
+  ]
+}

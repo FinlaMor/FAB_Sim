@@ -1,0 +1,25 @@
+{
+  "slug": "cosmic_duality_red",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DISCARD_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "target": "hero",
+          "amount": 1
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "Lightning Flow"
+        }
+      ]
+    }
+  ]
+}

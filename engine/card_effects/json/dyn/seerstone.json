@@ -1,0 +1,24 @@
+{
+  "slug": "seerstone",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "TOP_DECK"
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "amount": 1,
+          "optional": true
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ponder"
+        }
+      ]
+    }
+  ]
+}

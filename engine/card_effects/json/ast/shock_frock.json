@@ -1,0 +1,31 @@
+{
+  "slug": "shock_frock",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "LIGHTNING_PLAYED_THIS_TURN"
+        }
+      ],
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

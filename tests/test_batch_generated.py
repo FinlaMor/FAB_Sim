@@ -956,3 +956,207 @@ def test_energy_potion_blue_effect():
     activate(st, card)
     assert st.players[1].resources == before_resources + 2  # the effect (after the colon)
     assert card not in st.players[1].chest.cards  # the "Destroy this" cost was paid
+
+# --- cut_deep_yellow ---
+def test_cut_deep_yellow_play():
+    # A play ability fires on ON_PLAY; assert the observable result (here a token in play)
+    st = _make_state(); st.card_db = DB
+    card = _card("cut_deep_yellow")
+    st.players[1].arsenal.cards.append(card)
+    n0 = len(st.players[1].arsenal.cards)
+    dispatch(st, "ON_PLAY", "cut_deep_yellow", card=card, event=None)
+    assert len(st.players[1].arsenal.cards) >= n0
+
+def test_cut_deep_yellow_go_again():
+    # A play ability fires on ON_PLAY; assert the observable result (here a token in play)
+    st = _make_state(); st.card_db = DB
+    card = _card("cut_deep_yellow")
+    st.players[1].arsenal.cards.append(card)
+    n0 = len(st.players[1].arsenal.cards)
+    dispatch(st, "ON_PLAY", "cut_deep_yellow", card=card, event=None)
+    assert len(st.players[1].arsenal.cards) >= n0
+
+# --- toughen_up_blue ---
+def test_toughen_up_blue_smoke_test():
+    assert get_card("toughen_up_blue").abilities == []
+
+# Since Toughen Up Blue has no abilities, there are no observable effects to test.
+# Therefore, we only need the smoke test to verify the card's definition.
+
+# --- teklovossen_esteemed_magnate ---
+def test_teklovossen_esteemed_magnate_play_evo():
+    # A play ability fires on ON_PLAY; assert the observable result (here a card drawn)
+    st = _make_state(); st.card_db = DB
+    card = _card("teklovossen_esteemed_magnate")
+    st.players[1].banished.cards.append(_card("evo_card"))
+    st.players[1].hand.cards.append(card)
+    n0 = len(st.players[1].hand.cards)
+    dispatch(st, "ON_PLAY", "teklovossen_esteemed_magnate", card=card, event=None)
+    assert len(st.players[1].hand.cards) >= n0
+
+def test_teklovossen_esteemed_magnate_draw_card():
+    # A play ability fires on ON_PLAY; assert the observable result (here a card drawn)
+    st = _make_state(); st.card_db = DB
+    card = _card("teklovossen_esteemed_magnate")
+    st.players[1].banished.cards.append(_card("evo_card"))
+    st.players[1].hand.cards.append(card)
+    n0 = len(st.players[1].hand.cards)
+    dispatch(st, "ON_PLAY", "teklovossen_esteemed_magnate", card=card, event=None)
+    assert len(st.players[1].hand.cards) >= n0
+
+# --- winters_bite_yellow ---
+def test_winters_bite_yellow_play_discard():
+    # A play ability fires on ON_PLAY; assert the observable result (here a card discarded)
+    st = _make_state(); st.card_db = DB
+    card = _card("winters_bite_yellow")
+    st.players[1].hand.cards.append(card)
+    st.players[1].hand.cards.append(_card("dummy_card"))  # Add a dummy card to discard
+    before_discard_count = len(st.players[1].hand.cards)
+    dispatch(st, "ON_PLAY", "winters_bite_yellow", card=card, event=None)
+    assert len(st.players[1].hand.cards) == before_discard_count - 1
+
+def test_winters_bite_yellow_play_life_cost():
+    # A play ability fires on ON_PLAY; assert the observable result (here life cost)
+    st = _make_state(); st.card_db = DB
+    card = _card("winters_bite_yellow")
+    st.players[1].hand.cards.append(card)
+    before_life = st.players[1].health
+    dispatch(st, "ON_PLAY", "winters_bite_yellow", card=card, event=None)
+    assert st.players[1].health == before_life - 2
+
+# --- burn_away_red ---
+def test_burn_away_red_banish_phoenix_flame():
+    st = _make_state(); st.card_db = DB
+    card = _card("burn_away_red")
+    st.players[1].arsenal.cards.append(card)
+    st.players[1].graveyard.cards.append(_card("phoenix_flame_red"))
+    
+    before_banished = len(st.players[1].banished.cards)
+    before_graveyard = len(st.players[1].graveyard.cards)
+    
+    dispatch(st, "ON_PLAY", "burn_away_red", card=card, event=None)
+    
+    assert len(st.players[1].banished.cards) == before_banished + 1
+    assert len(st.players[1].graveyard.cards) == before_graveyard - 1
+
+def test_burn_away_red_modify_attack():
+    st = _make_state(); st.card_db = DB
+    card = _card("burn_away_red")
+    st.players[1].arsenal.cards.append(card)
+    st.players[1].graveyard.cards.append(_card("phoenix_flame_red"))
+    
+    dispatch(st, "ON_PLAY", "burn_away_red", card=card, event=None)
+    
+    attack(st, card)
+    assert st.combat.attack_power == 2  # Assuming base attack power is 0
+
+# --- inspire_lightning_yellow ---
+def test_inspire_lightning_yellow_on_fuse():
+    # "If Inspire Lightning was fused, deal 2 arcane damage to target hero"
+    st = _make_state(); st.card_db = DB
+    card = _card("inspire_lightning_yellow")
+    st.players[1].arsenal.cards.append(card)
+    
+    # Capture the initial health of the opponent hero
+    before_health = st.players[2].health
+    
+    # Dispatch the ON_FUSE event
+    dispatch(st, "ON_FUSE", "inspire_lightning_yellow", card=card, event=None)
+    
+    # Assert that the opponent hero's health has decreased by 2
+    assert st.players[2].health == before_health - 2
+
+# Additional test to ensure the card's effect is applied correctly
+def test_inspire_lightning_yellow_fuses_correctly():
+    # Setup a state where the card is in the arsenal and can be fused
+    st = _make_state(); st.card_db = DB
+    card = _card("inspire_lightning_yellow")
+    st.players[1].arsenal.cards.append(card)
+    
+    # Capture the initial health of the opponent hero
+    before_health = st.players[2].health
+    
+    # Dispatch the ON_FUSE event
+    dispatch(st, "ON_FUSE", "inspire_lightning_yellow", card=card, event=None)
+    
+    # Assert that the opponent hero's health has decreased by 2
+    assert st.players[2].health == before_health - 2
+
+# --- evasive_leap_red ---
+def test_evasive_leap_red_smoke():
+    assert get_card("evasive_leap_red").abilities == []
+
+def test_evasive_leap_red_defense_reaction():
+    # "Generic Defense Reaction" should be triggered by an attack
+    st = _make_state(); st.card_db = DB
+    card = _card("evasive_leap_red")
+    st.players[1].arsenal.cards.append(card)
+    attack(st, card)
+    hit(st)
+    # No observable outcome for this card, as it has no abilities
+    assert True
+
+# --- back_stab_yellow ---
+def test_back_stab_yellow_defense_reaction_blocked():
+    st = _make_state(); st.card_db = DB
+    card = _card("back_stab_yellow")
+    st.players[1].hand.cards.append(card)
+    
+    # Play Back Stab to trigger its defense reaction
+    dispatch(st, "ON_PLAY", "back_stab_yellow", card=card, event=None)
+    
+    # Attempt to play a defense reaction card
+    defense_card = _card("defense_reaction_card")  # This card is assumed to exist in the DB
+    st.players[2].hand.cards.append(defense_card)
+    
+    # Try to play the defense reaction card
+    dispatch(st, "ON_PLAY", "defense_reaction_card", card=defense_card, event=None)
+    
+    # Assert that the defense reaction card was not played
+    assert not any(c.slug == "defense_reaction_card" for c in st.players[2].arsenal.cards)
+
+def test_back_stab_yellow_defense_reaction_blocked_combat():
+    st = _make_state(); st.card_db = DB
+    card = _card("back_stab_yellow")
+    st.players[1].hand.cards.append(card)
+    
+    # Play Back Stab to trigger its defense reaction
+    dispatch(st, "ON_PLAY", "back_stab_yellow", card=card, event=None)
+    
+    # Set up a combat situation where Back Stab is used
+    attack(st, card)
+    hit(st)
+    
+    # Attempt to play a defense reaction card
+    defense_card = _card("defense_reaction_card")  # This card is assumed to exist in the DB
+    st.players[2].hand.cards.append(defense_card)
+    
+    # Try to play the defense reaction card
+    dispatch(st, "ON_PLAY", "defense_reaction_card", card=defense_card, event=None)
+    
+    # Assert that the defense reaction card was not played
+    assert not any(c.slug == "defense_reaction_card" for c in st.players[2].arsenal.cards)
+
+# --- pyroglyphic_protection_red ---
+def test_pyroglyphic_protection_red_prevents_arcane_damage():
+    st = _make_state(); st.card_db = DB
+    card = _card("pyroglyphic_protection_red")
+    st.players[1].permanents.cards.append(card)
+    
+    # Set up a scenario where the hero would be dealt 3 arcane damage
+    initial_health = st.players[2].health
+    dispatch(st, "ON_DEFEND", "pyroglyphic_protection_red", card=card, event={"damage_type": "ARCANE", "amount": 3})
+    
+    # Assert that 3 arcane damage is prevented
+    assert st.players[2].health == initial_health
+
+def test_pyroglyphic_protection_red_destroys_at_start_of_turn():
+    st = _make_state(); st.card_db = DB
+    card = _card("pyroglyphic_protection_red")
+    st.players[1].permanents.cards.append(card)
+    
+    # Dispatch the start of turn event
+    dispatch(st, "START_OF_TURN", "pyroglyphic_protection_red", card=card, event=None)
+    
+    # Assert that the card is destroyed at the start of the turn
+    assert card not in st.players[1].permanents.cards

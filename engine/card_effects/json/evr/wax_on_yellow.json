@@ -1,0 +1,30 @@
+{
+  "slug": "wax_on_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_COST_GTE",
+              "amount": 0
+            },
+            {
+              "type": "ATTACK_COST_LTE",
+              "amount": 0
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

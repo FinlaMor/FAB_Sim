@@ -1,0 +1,37 @@
+{
+  "slug": "oldhim",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "OLDHIM_DEFENSE_REACTION_USED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "OLDHIM_DEFENSE_REACTION_USED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_HAND_CARD_TOP",
+          "target": "opponent"
+        }
+      ]
+    }
+  ]
+}

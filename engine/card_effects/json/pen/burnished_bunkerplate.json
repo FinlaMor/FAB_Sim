@@ -1,0 +1,30 @@
+{
+  "slug": "burnished_bunkerplate",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "effect": {
+            "type": "PUT_REF_BOTTOM",
+            "ref": "arsenal",
+            "conditions": [
+              {
+                "type": "CARD_IN_ZONE",
+                "zone": "arsenal",
+                "card_type": "action"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

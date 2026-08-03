@@ -1,0 +1,39 @@
+{
+  "slug": "chart_a_course_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "turn": "second"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "gold",
+          "target": "Treasure Island"
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

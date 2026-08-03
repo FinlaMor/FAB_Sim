@@ -1,0 +1,14 @@
+{
+  "slug": "back_stab_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "DEFENSE_REACTION_BLOCKED"
+        }
+      ]
+    }
+  ]
+}

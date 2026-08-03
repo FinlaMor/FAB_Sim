@@ -1,0 +1,47 @@
+{
+  "slug": "dense_blue_mist_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
+          "mod": "subtract",
+          "amount": 1,
+          "aura_type": "DENSE_BLUE_MIST_AURA"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PITCH",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "ref": "CHI"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "CHI_PITCHED_FOR_DENSE_BLUE_MIST"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CHI_PITCHED_FOR_DENSE_BLUE_MIST"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WARD"
+        }
+      ]
+    }
+  ]
+}

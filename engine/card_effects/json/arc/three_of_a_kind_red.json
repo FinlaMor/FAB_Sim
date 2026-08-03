@@ -1,0 +1,39 @@
+{
+  "slug": "three_of_a_kind_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 3
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "ONLY_PLAY_FROM_ARSENAL"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "ONLY_PLAY_FROM_ARSENAL"
+        },
+        {
+          "type": "DURING_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
+        }
+      ]
+    }
+  ]
+}

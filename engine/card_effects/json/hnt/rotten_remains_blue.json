@@ -1,0 +1,31 @@
+{
+  "slug": "rotten_remains_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "hero_graveyard",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "hero_graveyard",
+              "power": 1
+            }
+          ]
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_ATTACK"
+        }
+      ]
+    }
+  ]
+}

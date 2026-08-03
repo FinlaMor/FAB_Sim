@@ -1,0 +1,55 @@
+{
+  "slug": "teklo_core_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "steam",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "COUNTER_GTE",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTER",
+          "counter_type": "steam",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "COUNTER_GTE",
+          "counter_type": "steam",
+          "amount": 0
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

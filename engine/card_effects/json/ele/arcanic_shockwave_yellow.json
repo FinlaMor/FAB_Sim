@@ -1,0 +1,20 @@
+{
+  "slug": "arcanic_shockwave_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "Fusion"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

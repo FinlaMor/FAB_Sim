@@ -1,0 +1,43 @@
+{
+  "slug": "ride_the_tailwind_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "TAILWIND_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "TAILWIND_ACTIVE"
+        },
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "attack_type": "Attack"
+            },
+            {
+              "type": "ATTACK_BASE_POWER_LTE",
+              "amount": 2
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

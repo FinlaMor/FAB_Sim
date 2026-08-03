@@ -1,0 +1,31 @@
+{
+  "slug": "haven_veil_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "HAVEN_VEIL_ACTIVE"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "HAVEN_VEIL_ACTIVE"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

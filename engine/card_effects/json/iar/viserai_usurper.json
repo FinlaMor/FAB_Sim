@@ -1,0 +1,36 @@
+{
+  "slug": "viserai_usurper",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BLOOD_DEBT_ATTACK_PLAYED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "GATE_TO_ARATHAEL_CREATED_OR_ACTIVATED_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "TRAVERSE"
+        }
+      ]
+    }
+  ]
+}

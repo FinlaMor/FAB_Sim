@@ -1,0 +1,35 @@
+{
+  "slug": "betsy_skin_in_the_game",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ACTIVATE",
+      "conditions": [
+        {
+          "type": "CONTROLS_ATTACK_ACTION"
+        },
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "WAGER"
+        }
+      ],
+      "cost": [
+        {
+          "type": "PAY_RESOURCES",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "keyword": "OVERPOWER"
+        }
+      ]
+    }
+  ]
+}

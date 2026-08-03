@@ -1,0 +1,45 @@
+{
+  "slug": "great_library_of_solana",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "color": "yellow",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "INTELLECT",
+          "amount": 1,
+          "duration": "end_of_turn"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "DISCARD_CARD",
+          "color": "yellow",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_REF",
+          "target": "self"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

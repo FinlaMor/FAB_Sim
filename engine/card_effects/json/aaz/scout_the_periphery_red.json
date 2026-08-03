@@ -1,0 +1,46 @@
+{
+  "slug": "scout_the_periphery_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "hero_deck"
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "SCOUT_THE_PERIPHERY_ACTIVE"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SCOUT_THE_PERIPHERY_ACTIVE"
+        },
+        {
+          "type": "DURING_TURN"
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "arsenal",
+          "card_type": "attack_action"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    }
+  ]
+}

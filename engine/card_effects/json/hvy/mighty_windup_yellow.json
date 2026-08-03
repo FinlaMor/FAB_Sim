@@ -1,0 +1,19 @@
+{
+  "slug": "mighty_windup_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "cost": [
+        {
+          "type": "DISCARD_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Might"
+        }
+      ]
+    }
+  ]
+}

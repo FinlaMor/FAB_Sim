@@ -1,0 +1,19 @@
+{
+  "slug": "teklovossen_esteemed_magnate",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 3,
+      "effects": [
+        {
+          "type": "BANISH_OPP_TOP_GRANT_PLAY",
+          "amount": 1
+        },
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

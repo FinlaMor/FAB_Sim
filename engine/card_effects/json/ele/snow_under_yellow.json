@@ -1,0 +1,25 @@
+{
+  "slug": "snow_under_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SNOW_UNDER_FUSED"
+        },
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Frostbite",
+          "controller": "opponent"
+        }
+      ]
+    }
+  ]
+}

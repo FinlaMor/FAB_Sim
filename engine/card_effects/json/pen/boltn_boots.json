@@ -1,0 +1,30 @@
+{
+  "slug": "boltn_boots",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TYPE_IN",
+          "attack_type": "ARROW"
+        },
+        {
+          "type": "ATTACK_POWER_GT_BASE"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "reckless_charge_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "ROLL",
+          "sides": 6,
+          "on_success": [
+            {
+              "type": "GAIN",
+              "keyword": "ACTION_POINTS",
+              "amount": {
+                "type": "HALF",
+                "value": {
+                  "type": "ROLL_RESULT"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "DIE_ROLLED_SIX"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DIE_ROLLED_SIX"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

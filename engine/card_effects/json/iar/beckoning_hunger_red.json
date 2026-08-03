@@ -1,0 +1,25 @@
+{
+  "slug": "beckoning_hunger_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "top_deck"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_name": "Blasmophet, the Insatiable Hunger"
+        }
+      ]
+    }
+  ]
+}

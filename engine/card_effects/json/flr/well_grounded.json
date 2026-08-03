@@ -1,0 +1,29 @@
+{
+  "slug": "well_grounded",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "BANISHED",
+          "card_type": "Earth",
+          "amount": 4
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "WELL_GROUNDED_ACTIVE"
+        }
+      ]
+    }
+  ]
+}

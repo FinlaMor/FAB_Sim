@@ -1,0 +1,28 @@
+{
+  "slug": "vow_of_vengeance",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MARK",
+          "target": "target Arakni"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

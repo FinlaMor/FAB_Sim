@@ -1,0 +1,30 @@
+{
+  "slug": "arc_ramp_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "AMP",
+          "amount": 3
+        },
+        {
+          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
+          "target": "Lightning Flow",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Lightning Flow"
+            }
+          ],
+          "effects_if_destroyed": [
+            {
+              "type": "GAIN",
+              "keyword": "GO_AGAIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

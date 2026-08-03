@@ -1,0 +1,40 @@
+{
+  "slug": "dampen_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 3,
+          "target": "any"
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "DAMPEN_DAMAGE_PREVENTED",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DAMPEN_DAMAGE_PREVENTED"
+        },
+        {
+          "type": "DURING_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 3,
+          "target": "hero"
+        }
+      ]
+    }
+  ]
+}

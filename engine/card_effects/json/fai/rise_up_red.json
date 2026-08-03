@@ -1,0 +1,65 @@
+{
+  "slug": "rise_up_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "OR",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Phoenix Flames"
+            },
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "CONTROLS_TOKEN_TYPE",
+                "token_type": "Phoenix Flames"
+              }
+            }
+          ]
+        },
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CHAIN_LINK_4_OR_HIGHER"
+            },
+            {
+              "type": "OR",
+              "conditions": [
+                {
+                  "type": "HAS_KEYWORD",
+                  "keyword": "Dromai"
+                },
+                {
+                  "type": "HAS_KEYWORD",
+                  "keyword": "Fai"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DOMINATE"
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": {
+            "type": "MULTIPLY",
+            "value": 2,
+            "multiplier": {
+              "type": "COUNT_TOKENS",
+              "token_type": "Phoenix Flames"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

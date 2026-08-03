@@ -1,0 +1,56 @@
+{
+  "slug": "bonds_of_attraction_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "OPPONENT_TOP_DECK"
+        },
+        {
+          "type": "BANISH",
+          "target": "OPPONENT_GRAVEYARD"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BANISH",
+      "conditions": [
+        {
+          "type": "REF_EXISTS",
+          "ref": "BANISHED_CARDS"
+        },
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "REF_PITCH_IS",
+              "ref": "BANISHED_CARDS",
+              "pitch": "SAME_COLOR"
+            },
+            {
+              "type": "REF_PITCH_IS",
+              "ref": "BANISHED_CARDS",
+              "pitch": "SAME_COLOR"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "HEALTH_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "slug": "song_of_sinew_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK",
+          "amount": 4
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": {
+            "type": "COUNT",
+            "condition": {
+              "type": "CARD_IN_ZONE",
+              "zone": "REVEALED",
+              "conditions": [
+                {
+                  "type": "ATTACK_POWER_GTE",
+                  "amount": 6
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "zone": "REVEALED"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

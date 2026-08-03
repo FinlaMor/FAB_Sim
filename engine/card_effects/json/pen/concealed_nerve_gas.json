@@ -1,0 +1,31 @@
+{
+  "slug": "concealed_nerve_gas",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CLOAKED"
+        },
+        {
+          "type": "HAS_KEYWORD",
+          "keyword": "GO_AGAIN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Frailty",
+          "amount": 1,
+          "target": "opponent"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "scrap_compactor_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "SCRAPPED_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "PLAY_EVO_AS_INSTANT"
+        }
+      ]
+    }
+  ]
+}

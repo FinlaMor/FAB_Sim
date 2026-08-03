@@ -1,0 +1,35 @@
+{
+  "slug": "funeral_moon_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "BANISH_FROM_GRAVEYARD",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Runechant"
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "HERO_LOST_LIFE_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "INSTANT_MODE"
+        }
+      ]
+    }
+  ]
+}

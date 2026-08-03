@@ -1,0 +1,75 @@
+{
+  "slug": "dissipation_shield_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "STEAM",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DISSIPATION_SHIELD_IN_GRAVEYARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN",
+          "token_type": "Dissipation Shield"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "DISSIPATION_SHIELD_IN_PLAY"
+        }
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTER",
+          "counter_type": "STEAM",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_TOKEN",
+          "token_type": "Dissipation Shield",
+          "conditions": [
+            {
+              "type": "COUNTER_GTE",
+              "counter_type": "STEAM",
+              "amount": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "DAMAGE_PREVENTION_ACTIVE"
+        }
+      ]
+    }
+  ]
+}

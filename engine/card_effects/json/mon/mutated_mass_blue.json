@@ -1,0 +1,26 @@
+{
+  "slug": "mutated_mass_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "BANISH_FROM_GRAVEYARD",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
+          "mod": "set",
+          "amount": 2
+        },
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "set",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

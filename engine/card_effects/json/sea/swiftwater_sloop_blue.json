@@ -1,0 +1,21 @@
+{
+  "slug": "swiftwater_sloop_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "REF_PITCH_IS",
+          "color": "blue",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "slug": "gravy_bones",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "controlled_gold"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BLUE_CARD_GRAVEYARD_THIS_TURN"
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "PLAY_WATERY_GRAVE_FROM_GRAVEYARD"
+        }
+      ]
+    }
+  ]
+}
