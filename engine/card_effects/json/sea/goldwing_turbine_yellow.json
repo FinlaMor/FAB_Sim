@@ -22,7 +22,7 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token": "Golden Cog"
+          "token": "golden_cog"
         }
       ]
     }

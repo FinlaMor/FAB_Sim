@@ -16,7 +16,7 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token": "Embodiment of Earth"
+          "token": "embodiment_of_earth"
         },
         {
           "type": "DESTROY_PERMANENT",

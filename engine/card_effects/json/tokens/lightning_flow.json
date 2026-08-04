@@ -1,0 +1,5 @@
+{
+  "slug": "lightning_flow",
+  "_comment": "Lightning Flow aura token has no printed functional text in the card DB; empty stub so cards that create it load and play.",
+  "abilities": []
+}

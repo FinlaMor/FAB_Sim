@@ -7,7 +7,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Lightning Flow",
-          "amount": 2
+          "amount": 2,
+          "token": "lightning_flow"
         }
       ]
     }

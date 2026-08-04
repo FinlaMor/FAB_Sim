@@ -20,7 +20,8 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Lightning Flow"
+          "token_type": "Lightning Flow",
+          "token": "lightning_flow"
         }
       ]
     }

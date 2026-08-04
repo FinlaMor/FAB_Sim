@@ -1,0 +1,15 @@
+{
+  "slug": "embodiment_of_earth",
+  "_comment": "'Non-attack action cards you control have +1{d} while defending' is a continuous static not yet expressible (see frailty for the same TODO). The self-destroy at the start of your action phase IS modeled.",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ]
+    }
+  ]
+}

@@ -14,7 +14,7 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token": "Goldkiss Rum"
+          "token": "goldkiss_rum"
         },
         {
           "type": "GAIN",

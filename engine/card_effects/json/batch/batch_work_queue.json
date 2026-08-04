@@ -42,8 +42,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, create a Golden Cog token.\n\n**Blade Break**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "rev_up_red",
@@ -246,8 +245,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your next Mechanologist attack this turn gets +2{p}.\n\nCreate a Golden Cog token.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "helmsmans_peak",
@@ -2544,8 +2542,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played an instant card this chain link, this gets +3{p}.\n\nWhen this hits, create a Lightning Flow token.\n\n**Go again**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "peace_of_mind_blue",
@@ -2835,8 +2832,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {r}, discard this: Prevent the next 1 damage that would be dealt to you this turn. If you prevent damage this way, create a Lightning Flow token.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "ironsong_response_blue",
@@ -3304,8 +3300,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Until end of turn, an Aphrodias you control costs {r} less to activate and gets \"Whenever this deals damage to an opposing hero, create a Lightning Flow token.\"\n\n**Blade Break**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "knife_through_butter_blue",
@@ -4912,7 +4907,7 @@
     "specializations": [],
     "functional_text": "When this attacks, if it was played from your banished zone, create a Gate to íArathael token.\n\n**Blood Debt**",
     "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "note": "creates 'Gate to i'Arathael' token which is not in the card DB (slug_index); needs the token added to card data before it can be implemented"
   },
   {
     "slug": "ghostly_visit_yellow",
@@ -6155,8 +6150,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your end phase, create an Embodiment of Earth token. Then, if you haven't banished an Earth card this turn, destroy this.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "proto_base_chest",
@@ -7807,8 +7801,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your next Mechanologist attack this turn gets +1{p}.\n\nCreate a Golden Cog token.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "last_ditch_effort_blue",
@@ -9337,8 +9330,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {t}, destroy a Gold you control: Create a Goldkiss Rum token. **Go again**\n\nWhenever you activate a Goldkiss Rum, gain {r}.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "swordmasters_path_blue",
@@ -9786,8 +9778,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target Lightning attack gets +1{p} and \"When this hits, create a Lightning Flow token.\"",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "fight_fair_red",
@@ -12010,8 +12001,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to any target.\n\n**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "crown_of_seeds",
@@ -12659,8 +12649,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, create a Golden Cog token.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "yinti_yanti_yellow",
@@ -13888,8 +13877,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Twice per Turn Instant** - {r}: This gets +1{p}.\n\nWhen this hits, create a Lightning Flow token.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "death_touch_blue",
@@ -14640,8 +14628,7 @@
     ],
     "specializations": [],
     "functional_text": "**Quickstrike** - If this has go again, it gets \"When this attacks a hero, deal 1 arcane damage to them.\"\n\nThe first time this deals damage to a hero, create a Lightning Flow token.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "sirens_of_safe_harbor_red",
@@ -15491,8 +15478,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, create a Lightning Flow token.\n\n**Ward 2**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "courageous_steelhand_red",
@@ -16232,8 +16218,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create 2 Lightning Flow tokens.",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "burn_away_red",
@@ -16979,8 +16964,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.\n\n**Fragment**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "pyroglyphic_protection_red",
@@ -19295,8 +19279,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever this fragments, create a Lightning Flow token.\n\n**Fragment**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "wage_gold_blue",

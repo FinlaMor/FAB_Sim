@@ -1,0 +1,15 @@
+{
+  "slug": "golden_cog",
+  "_comment": "Crank; enters with a steam counter; at the start of your turn, destroy this unless you remove a steam counter from it. The steam-counter delay (Crank + optional removal) is not modeled; the self-destroy at start of turn IS, so the token is transient rather than permanent.",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ]
+    }
+  ]
+}

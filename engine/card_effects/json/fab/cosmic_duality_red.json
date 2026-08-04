@@ -17,7 +17,7 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token": "Lightning Flow"
+          "token": "lightning_flow"
         }
       ]
     }
