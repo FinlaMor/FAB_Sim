@@ -2,23 +2,32 @@
   "slug": "poisoned_blade_blue",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "ATTACK_TYPE_IN",
-          "types": [
-            "dagger"
-          ]
-        },
-        {
-          "type": "ATTACK_TARGET_IS_HERO"
-        }
-      ],
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "LOSE_LIFE",
-          "amount": 1
+          "type": "INJECT_TRIGGER",
+          "scope": "CHAIN",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_SUBTYPE_IN",
+                "subtypes": [
+                  "dagger"
+                ]
+              },
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "LOSE_LIFE",
+                "amount": 1,
+                "player": "OPPONENT"
+              }
+            ]
+          }
         }
       ]
     },

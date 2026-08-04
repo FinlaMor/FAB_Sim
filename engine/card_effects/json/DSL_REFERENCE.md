@@ -362,7 +362,7 @@ when there may be no attack) and will not behave as a per-hit filter.
 | Field | Description |
 |---|---|
 | `trigger` | Nested `{trigger_type, conditions, effects}`; or a bare event string (e.g. `"ON_HIT"`) when there are no inner conditions. |
-| `scope` | `"COMBAT"` (default) fires once, on the current attack. `"TURN"` re-injects onto **every** attack for the rest of this turn. `"NEXT_TURN"` activates at the target player's next turn start and lasts that turn. |
+| `scope` | `"COMBAT"` (default) fires once, on the current attack. `"TURN"` re-injects onto **every** attack for the rest of this turn. `"NEXT_TURN"` activates at the target player's next turn start and lasts that turn. `"CHAIN"` re-injects onto every attack of the current combat chain and expires when the chain closes ("… this combat chain …"). |
 | `player` | `"SELF"` (default) or `"OPPONENT"` — whose turn the TURN/NEXT_TURN hook lives on. |
 
 Turn-scoped hooks are stored on `Player.turn_attack_hooks` / `next_turn_attack_hooks`

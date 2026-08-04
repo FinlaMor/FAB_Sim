@@ -36,8 +36,8 @@ def _setup():
     return st
 
 
-def _new_attack(st, pid, power=4):
-    atk = Card(slug="swing", name="swing", types=["Attack"])
+def _new_attack(st, pid, power=4, subtypes=None):
+    atk = Card(slug="swing", name="swing", types=["Attack"], subtypes=subtypes or [])
     atk.owner = atk.controller = pid
     atk.base_power = power
     atk.power = power
@@ -222,6 +222,55 @@ def test_turn_scoped_on_deal_damage_hook_fires_each_attack():
         _resolve_attack(st, atk)
         _emit_damage_dealt(st, opp)
     assert st.players[opp].health == start - 2
+
+
+def test_chain_scoped_hook_fires_across_links_then_clears_at_chain_close():
+    """A CHAIN-scoped hook fires on every attack link this combat chain, then
+    stops once the chain closes (engine._close_step clears chain_attack_hooks)."""
+    st = _setup()
+    pid = st.active_player
+    opp = 3 - pid
+    st.players[pid].chain_attack_hooks.append(
+        {"kind": "inject_trigger", "event": "ON_HIT",
+         "conditions": [{"type": "ATTACK_TARGET_IS_HERO"}],
+         "effects": [{"type": "LOSE_LIFE", "amount": 1, "player": "OPPONENT"}]})
+    start = st.players[opp].health
+    for _ in range(2):  # two links of the same chain
+        atk = _new_attack(st, pid)
+        _resolve_attack(st, atk)
+        _emit_hit(st, opp)
+    assert st.players[opp].health == start - 2
+    # Chain closes -> hooks expire (mirror engine._close_step).
+    for p in st.players.values():
+        p.chain_attack_hooks = []
+    atk = _new_attack(st, pid)
+    _resolve_attack(st, atk)
+    _emit_hit(st, opp)
+    assert st.players[opp].health == start - 2  # no further loss
+
+
+def test_poisoned_blade_blue_dagger_hits_lose_life_this_chain():
+    """poisoned_blade_blue: whenever a DAGGER you own hits a hero this combat
+    chain, they lose 1{h}. Applies to other dagger attacks in the chain; a
+    non-dagger attack does nothing."""
+    from engine.card_effects.dsl import dispatch
+    st = _setup()
+    pid = st.active_player
+    opp = 3 - pid
+    pb = st.card_db.get("poisoned_blade_blue")
+    pb.owner = pb.controller = pid
+    dispatch(st, "ON_PLAY", "poisoned_blade_blue", card=pb)
+    assert any(h.get("kind") == "inject_trigger"
+               for h in st.players[pid].chain_attack_hooks)
+    start = st.players[opp].health
+    dagger = _new_attack(st, pid, subtypes=["Dagger"])
+    _resolve_attack(st, dagger)
+    _emit_hit(st, opp)
+    assert st.players[opp].health == start - 1
+    non_dagger = _new_attack(st, pid)
+    _resolve_attack(st, non_dagger)
+    _emit_hit(st, opp)
+    assert st.players[opp].health == start - 1  # non-dagger: no effect
 
 
 def test_chilling_icevein_yellow_fused_discards_on_attack_damage():

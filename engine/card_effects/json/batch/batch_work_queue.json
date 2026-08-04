@@ -89,7 +89,8 @@
     ],
     "specializations": [],
     "functional_text": "Whenever a dagger you own hits a hero this combat chain, they lose 1{h}.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done",
+    "note": "chain-scoped INJECT_TRIGGER (scope=CHAIN); fixed dagger subtype condition; test in tests/test_turn_scoped_hooks.py"
   },
   {
     "slug": "bonds_of_memory_yellow",

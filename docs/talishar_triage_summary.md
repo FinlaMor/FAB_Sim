@@ -69,6 +69,11 @@ silently dropped — ~60 cards).
   generic `PAY_OR_ELSE` effect ("pay N or else …"). This also revives the other
   4 previously-dead ON_DEAL_DAMAGE cards.
 
-Still open (separate gap, not this feature):
-- **`poisoned_blade_blue`** — needs **combat-chain** scope (persist across a
-  chain's links, not the whole turn); a different lifecycle than TURN/NEXT_TURN.
+- **`poisoned_blade_blue`** → `done` (2026-08-04). Added an `INJECT_TRIGGER`
+  `"scope": "CHAIN"` (Player.chain_attack_hooks, re-applied per attack link,
+  cleared at chain close in `engine._close_step`) for "… this combat chain …".
+  Also fixed its condition (`ATTACK_SUBTYPE_IN ["dagger"]` — Dagger is a subtype,
+  the old `ATTACK_TYPE_IN` never matched).
+
+**All 4 genuine divergences from the triage are now resolved.** The candidate
+corpus cross-check is fully closed out.

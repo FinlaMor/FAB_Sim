@@ -435,10 +435,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                         eff_fn(c, ev, st)
                 return _one_shot
 
-            if _scope in ("TURN", "NEXT_TURN"):
-                # Persistent turn-scoped hook: a plain-dict spec that
+            if _scope in ("TURN", "NEXT_TURN", "CHAIN"):
+                # Persistent scoped hook: a plain-dict spec that
                 # engine._apply_turn_attack_effects re-injects into every attack for
                 # the duration. Raw (uncompiled) so snapshot_state stays serializable.
+                #   TURN      -> Player.turn_attack_hooks   (cleared end of turn)
+                #   NEXT_TURN -> Player.next_turn_attack_hooks (activates next turn)
+                #   CHAIN     -> Player.chain_attack_hooks   (cleared at chain close)
                 from engine.card_effects.ability_keywords import _controller_id
                 cid = _controller_id(card)
                 tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
@@ -448,7 +451,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 if _scope == "NEXT_TURN":
                     tgt.next_turn_attack_hooks.append(hook)
                 else:
-                    tgt.turn_attack_hooks.append(hook)
+                    (tgt.chain_attack_hooks if _scope == "CHAIN"
+                     else tgt.turn_attack_hooks).append(hook)
                     # Cover the current attack too (the source card's own hit): its
                     # _apply_turn_attack_effects already ran before this ON_PLAY, so
                     # inject directly for it.

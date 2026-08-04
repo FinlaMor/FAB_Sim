@@ -762,6 +762,10 @@ def _close_step(state: GameState) -> None:
     # 7.7.6: remaining objects on combat chain are cleared
     _close_combat_chain(state)
 
+    # Combat-chain-scoped attack hooks ("... this combat chain ...") expire now.
+    for _p in state.players.values():
+        _p.chain_attack_hooks = []
+
     state.combat = None
 
     if state.done:
@@ -872,6 +876,9 @@ def _end_phase_iter(state: GameState) -> None:
     # on next_turn_attack_hooks and are untouched here — they activate at the
     # target player's turn start above.)
     player.turn_attack_hooks = []
+    # Safety net: chain hooks normally clear at chain close; drop any that outlived
+    # an unclosed chain into this turn's end.
+    player.chain_attack_hooks = []
     # Unused "next attack this turn" power mods (MODIFY_NEXT_ATTACK) expire.
     if hasattr(player, 'dsl_queued_attack_mods'):
         player.dsl_queued_attack_mods = []
@@ -1137,7 +1144,8 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
     # consumed here — they expire via the end-of-turn clear / next-turn rotation in
     # begin_turn / end phase. Specs are plain dicts (see state.Player.turn_attack_hooks)
     # compiled on demand so snapshots stay serializable.
-    hooks = getattr(player, 'turn_attack_hooks', None)
+    hooks = (list(getattr(player, 'turn_attack_hooks', None) or [])
+             + list(getattr(player, 'chain_attack_hooks', None) or []))
     if hooks:
         from engine.card_effects.dsl.condition_types import compile_condition as _cc
         from engine.card_effects.dsl.effect_types import compile_effect as _ce

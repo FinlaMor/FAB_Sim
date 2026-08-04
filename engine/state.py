@@ -811,6 +811,11 @@ class Player:
         # snapshot_state stays serializable, mirroring current/next_turn_effects.
         self.turn_attack_hooks: list = []
         self.next_turn_attack_hooks: list = []
+        # Combat-chain-scoped attack hooks ("... this combat chain ..."): like
+        # turn_attack_hooks but cleared when the chain closes (engine._close_step),
+        # not at end of turn. Re-applied to every attack link by
+        # _apply_turn_attack_effects alongside turn_attack_hooks.
+        self.chain_attack_hooks: list = []
         self.weapon_exhausted: bool = False
         self.hero_power_exhausted: bool = False
 
@@ -980,6 +985,7 @@ class Player:
             "next_turn_effects":	self.next_turn_effects.copy(),
             "turn_attack_hooks":	[h.copy() for h in self.turn_attack_hooks],
             "next_turn_attack_hooks":	[h.copy() for h in self.next_turn_attack_hooks],
+            "chain_attack_hooks":	[h.copy() for h in self.chain_attack_hooks],
             "class_counters":	self.class_counters.copy(),
             "allies_exhausted":[x for x in  [ally.exhausted if hasattr(ally,'exhausted') else None 
                                             for ally in  getattr(self,'allies',[])] 
