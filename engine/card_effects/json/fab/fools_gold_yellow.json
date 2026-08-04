@@ -7,7 +7,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "GOLD"
+          "token_type": "GOLD",
+          "token": "gold"
         }
       ]
     }

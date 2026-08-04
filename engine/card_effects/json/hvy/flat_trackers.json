@@ -13,7 +13,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Agility"
+          "token_type": "Agility",
+          "token": "agility"
         },
         {
           "type": "GO_AGAIN"

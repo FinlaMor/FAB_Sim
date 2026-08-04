@@ -43,7 +43,7 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token": "Seismic Surge"
+          "token": "seismic_surge"
         }
       ]
     }

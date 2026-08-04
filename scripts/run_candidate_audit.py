@@ -27,7 +27,7 @@ from engine.recorder import JsonlRecorder
 from rl_agents.random_agent import RandomAgent
 import game_transcript_audit as audit
 
-GEN_DIR = ROOT / "decks" / "generated"
+GEN_DIR = ROOT / "decks" / "audit"
 HANDLES = ["victor", "kayo", "arakni"]
 
 

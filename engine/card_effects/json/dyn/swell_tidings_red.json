@@ -15,7 +15,8 @@
             {
               "type": "SURGE"
             }
-          ]
+          ],
+          "token": "ponder"
         }
       ]
     }

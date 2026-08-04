@@ -12,7 +12,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Runechant",
-          "amount": 3
+          "amount": 3,
+          "token": "runechant"
         }
       ]
     }

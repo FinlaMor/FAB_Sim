@@ -10,7 +10,8 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Spectral Shield"
+          "token_type": "Spectral Shield",
+          "token": "spectral_shield"
         }
       ]
     }

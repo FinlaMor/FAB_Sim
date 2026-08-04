@@ -14,17 +14,20 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Frailty",
-          "controller": "opponent"
+          "controller": "opponent",
+          "token": "frailty"
         },
         {
           "type": "CREATE_TOKEN",
           "token_type": "Inertia",
-          "controller": "opponent"
+          "controller": "opponent",
+          "token": "frailty"
         },
         {
           "type": "CREATE_TOKEN",
           "token_type": "Bloodrot Pox",
-          "controller": "opponent"
+          "controller": "opponent",
+          "token": "frailty"
         }
       ]
     }

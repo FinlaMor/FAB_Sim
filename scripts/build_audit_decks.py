@@ -26,7 +26,7 @@ from engine.card import CardDB
 from engine.deck import _parse_fabrary_card_line, _resolve_fabrary_slug
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 DECKS_DIR = ROOT / "decks"
-OUT_DIR = DECKS_DIR / "generated"
+OUT_DIR = DECKS_DIR / "audit"
 QUEUE = ROOT / "engine/card_effects/json/batch/batch_work_queue.json"
 SLUG_INDEX = ROOT / "card_data/slug_index.json"
 

@@ -16,7 +16,8 @@
               "type": "FLAG_SET",
               "flag": "AURA_DESTROYED_THIS_TURN"
             }
-          ]
+          ],
+          "token": "ponder"
         }
       ]
     }

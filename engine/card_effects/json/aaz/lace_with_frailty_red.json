@@ -30,7 +30,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Frailty"
+          "token_type": "Frailty",
+          "token": "frailty"
         }
       ]
     },

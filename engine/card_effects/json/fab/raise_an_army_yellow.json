@@ -14,7 +14,7 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token": "Cintari Sellsword",
+          "token": "cintari_sellsword",
           "amount": "X"
         },
         {

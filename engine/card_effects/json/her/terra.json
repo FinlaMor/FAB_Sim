@@ -19,7 +19,8 @@
           "on_success": [
             {
               "type": "CREATE_TOKEN",
-              "token_type": "Might"
+              "token_type": "Might",
+              "token": "might"
             }
           ]
         }

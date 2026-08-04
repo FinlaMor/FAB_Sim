@@ -23,7 +23,8 @@
               "type": "FLAG_SET",
               "flag": "HAUNTING_RENDITION_ACTIVE"
             }
-          ]
+          ],
+          "token": "runechant"
         }
       ]
     }

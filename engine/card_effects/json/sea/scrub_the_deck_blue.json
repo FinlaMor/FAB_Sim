@@ -21,7 +21,8 @@
               "controller": "opponent",
               "color": "yellow"
             }
-          ]
+          ],
+          "token": "gold"
         },
         {
           "type": "GO_AGAIN"

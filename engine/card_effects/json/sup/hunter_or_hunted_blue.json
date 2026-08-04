@@ -73,7 +73,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Silver"
+          "token_type": "Silver",
+          "token": "silver"
         }
       ]
     }

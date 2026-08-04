@@ -23,7 +23,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Courage"
+          "token_type": "Courage",
+          "token": "courage"
         }
       ]
     },

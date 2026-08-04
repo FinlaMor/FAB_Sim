@@ -13,7 +13,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Fealty"
+          "token_type": "Fealty",
+          "token": "fealty"
         }
       ]
     },

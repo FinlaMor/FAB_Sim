@@ -11,7 +11,7 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token": "Crouching Tiger",
+          "token": "crouching_tiger",
           "zone": "BANISHED",
           "effects": [
             {

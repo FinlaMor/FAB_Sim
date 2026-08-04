@@ -350,6 +350,10 @@ class MemoryRecorder(GameRecorder):
         self._add(state, "game_end", {
             "winner": state.winner,
             "individual_turns": state.individual_turns,
+            # True when the game stopped because it reached the turn cap rather
+            # than a decisive result; transcript audits use this to avoid flagging
+            # a capped game's winner-vs-live-loser as an invariant violation.
+            "ended_on_turn_cap": state.turn_number >= state.max_turns,
             "snapshot": snapshot_state(state),
         })
 

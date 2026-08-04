@@ -14,7 +14,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Seismic Surge",
-          "amount": 2
+          "amount": 2,
+          "token": "seismic_surge"
         }
       ]
     }

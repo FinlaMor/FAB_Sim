@@ -23,7 +23,8 @@
           "type": "CREATE_TOKEN",
           "token_type": "Frailty",
           "amount": 1,
-          "target": "opponent"
+          "target": "opponent",
+          "token": "frailty"
         }
       ]
     }

@@ -116,6 +116,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             fz = _fz.upper()
+            # amount may arrive as a dynamic token or a stray string; coerce to a
+            # non-negative int so it can index/slice a zone (bad values -> no-op,
+            # never a TypeError that aborts the game).
+            _a = _resolve_amount(_a, state)
+            try:
+                _a = max(0, int(_a))
+            except (TypeError, ValueError):
+                _a = 0
             if fz in ("TOP_DECK", "DECK"):
                 targets = state.players[tid].deck.cards[:_a]
                 for t in targets:

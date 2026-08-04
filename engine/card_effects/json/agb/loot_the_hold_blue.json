@@ -44,7 +44,8 @@
               },
               {
                 "type": "CREATE_TOKEN",
-                "token_type": "Gold"
+                "token_type": "Gold",
+                "token": "gold"
               }
             ]
           }

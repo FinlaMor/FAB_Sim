@@ -29,7 +29,7 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token": "Bloodrot Pox",
+          "token": "bloodrot_pox",
           "controller": "opponent"
         }
       ]

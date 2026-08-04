@@ -8,7 +8,8 @@
         {
           "type": "CREATE_TOKEN",
           "amount": 2,
-          "token_type": "Runechant"
+          "token_type": "Runechant",
+          "token": "runechant"
         }
       ]
     }

@@ -15,7 +15,8 @@
               "type": "COUNTER_GTE",
               "amount": 1
             }
-          ]
+          ],
+          "token": "flurry"
         },
         {
           "type": "GO_AGAIN"

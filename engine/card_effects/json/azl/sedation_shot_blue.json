@@ -31,7 +31,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Inertia"
+          "token_type": "Inertia",
+          "token": "inertia"
         }
       ]
     }

@@ -21,7 +21,8 @@
               "type": "FLAG_SET",
               "flag": "CRUSH_REVEALED"
             }
-          ]
+          ],
+          "token": "seismic_surge"
         }
       ]
     }

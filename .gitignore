@@ -104,5 +104,5 @@ engine/card_effects/json/batch/needs_review/
 *.json.quarantine
 
 # Generated audit decks + their transcripts (reproducible via scripts)
-decks/generated/
+decks/audit/
 data_collection/candidate_audit/

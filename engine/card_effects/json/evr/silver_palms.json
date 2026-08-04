@@ -32,7 +32,7 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token": "Silver"
+          "token": "silver"
         }
       ]
     },

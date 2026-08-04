@@ -7,7 +7,7 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token": "Spectral Shield"
+          "token": "spectral_shield"
         }
       ]
     }

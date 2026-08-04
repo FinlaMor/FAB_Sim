@@ -31,7 +31,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Gold",
-          "amount": "STARTING_HERO_COUNT"
+          "amount": "STARTING_HERO_COUNT",
+          "token": "gold"
         }
       ]
     }

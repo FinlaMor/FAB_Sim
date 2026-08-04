@@ -245,7 +245,15 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
     _src = source_player_id if source_player_id is not None else target_player_id
 
     # Tokens entering play must have a DSL definition, same as deck cards.
-    from engine.card_effects.dsl.loader import require_card
+    from engine.card_effects.dsl.loader import require_card, get_card
+    # Token slugs are canonical lowercase_underscore ("seismic_surge"); tolerate a
+    # display-cased / spaced value ("Seismic Surge", "Silver") by falling back to
+    # its slugified form. Pure fallback: a valid slug is never altered.
+    if token_slug and get_card(token_slug) is None:
+        import re as _re
+        alt = _re.sub(r"[^a-z0-9]+", "_", token_slug.strip().lower()).strip("_")
+        if alt and get_card(alt) is not None:
+            token_slug = alt
     require_card(token_slug)
 
     # card_db lookup provides a template slug; fresh Card objects are built per token below.

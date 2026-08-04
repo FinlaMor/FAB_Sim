@@ -15,7 +15,8 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Runechant"
+          "token_type": "Runechant",
+          "token": "runechant"
         }
       ]
     },
@@ -33,7 +34,8 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Runechant"
+          "token_type": "Runechant",
+          "token": "runechant"
         }
       ]
     }

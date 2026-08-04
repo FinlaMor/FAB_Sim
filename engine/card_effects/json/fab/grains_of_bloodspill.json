@@ -21,7 +21,8 @@
           "on_success": [
             {
               "type": "CREATE_TOKEN",
-              "token_type": "Vigor"
+              "token_type": "Vigor",
+              "token": "vigor"
             }
           ]
         }

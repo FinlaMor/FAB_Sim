@@ -13,7 +13,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Runechant"
+          "token_type": "Runechant",
+          "token": "runechant"
         }
       ]
     },
@@ -29,7 +30,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Runechant"
+          "token_type": "Runechant",
+          "token": "runechant"
         }
       ]
     },
@@ -39,7 +41,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Runechant"
+          "token_type": "Runechant",
+          "token": "runechant"
         }
       ]
     }

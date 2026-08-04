@@ -42,7 +42,8 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, create a Golden Cog token.\n\n**Blade Break**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "rev_up_red",
@@ -245,7 +246,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your next Mechanologist attack this turn gets +2{p}.\n\nCreate a Golden Cog token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "helmsmans_peak",
@@ -1617,7 +1619,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if you've been cheered this turn, create a Toughness token.\n\nWhen this defends, if it has 6 or more {d}, the attacking hero puts a card from their hand on the bottom of their deck.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "system_failure_yellow",
@@ -2541,7 +2544,8 @@
     ],
     "specializations": [],
     "functional_text": "If you've played an instant card this chain link, this gets +3{p}.\n\nWhen this hits, create a Lightning Flow token.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "peace_of_mind_blue",
@@ -2831,7 +2835,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {r}, discard this: Prevent the next 1 damage that would be dealt to you this turn. If you prevent damage this way, create a Lightning Flow token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "ironsong_response_blue",
@@ -3120,7 +3125,8 @@
     ],
     "specializations": [],
     "functional_text": "**Meld**\n\nCreate X Runechant tokens, where X is the total {h} you've gained this turn.\n\n//\n\nGain 1{h}",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "ronin_renegade_yellow",
@@ -3299,7 +3305,8 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Until end of turn, an Aphrodias you control costs {r} less to activate and gets \"Whenever this deals damage to an opposing hero, create a Lightning Flow token.\"\n\n**Blade Break**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "knife_through_butter_blue",
@@ -3345,7 +3352,8 @@
     ],
     "specializations": [],
     "functional_text": "Create an Agility and a Vigor token.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "autumns_touch_blue",
@@ -3726,7 +3734,8 @@
     ],
     "specializations": [],
     "functional_text": "When Dustup hits, create an Ash token, then **transform** up to 1 ash you control into an Aether Ashwing.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "earthlore_surge_yellow",
@@ -4168,7 +4177,8 @@
     ],
     "specializations": [],
     "functional_text": "**Quickstrike** - If this has go again, it gets +1{p} and \"When this attacks a hero, deal 1 arcane damage to them.\"\n\nThe first time this deals damage to a hero, create an Embodiment of Lightning token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "incision_yellow",
@@ -4902,7 +4912,8 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if it was played from your banished zone, create a Gate to íArathael token.\n\n**Blood Debt**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "ghostly_visit_yellow",
@@ -5467,7 +5478,8 @@
     ],
     "specializations": [],
     "functional_text": "When you attack with Sweeping Blow, create an Ash token.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "gold_hunter_lightsail_yellow",
@@ -5992,7 +6004,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {t}, remove a suspense counter from an aura you control: You may put a suspense counter on an aura of suspense you control.\n\nWhenever the crowd cheers you, create a Confidence token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "cut_to_the_chase_yellow",
@@ -6118,7 +6131,8 @@
     ],
     "specializations": [],
     "functional_text": "**Lightning Bond** - If a Lightning card was pitched to play this, create an Embodiment of Lightning token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "earths_embrace_blue",
@@ -6142,7 +6156,8 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your end phase, create an Embodiment of Earth token. Then, if you haven't banished an Earth card this turn, destroy this.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "proto_base_chest",
@@ -7443,7 +7458,8 @@
     ],
     "specializations": [],
     "functional_text": "**Dominate**\n\n**Fragment**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "spirit_of_christmas_blue",
@@ -7466,7 +7482,8 @@
     ],
     "specializations": [],
     "functional_text": "Each hero chooses another hero. The chosen hero creates an Agility, Might, Vigor, and Gold token.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "this_rounds_on_me_blue",
@@ -7677,7 +7694,8 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this turn gets +3{p}.\n\n**Ice Bond** - If an Ice card was pitched to play this, create a Frostbite token under target hero's control.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "hala_goldenhelm",
@@ -7790,7 +7808,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your next Mechanologist attack this turn gets +1{p}.\n\nCreate a Golden Cog token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "last_ditch_effort_blue",
@@ -8084,7 +8103,8 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "to_be_continued_blue",
@@ -8337,7 +8357,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to any target.\n\nIf this deals damage, create a Sigil of Fate token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "flex_strength_blue",
@@ -8492,7 +8513,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create an Embodiment of Lightning or Lightning Flow token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "teklovossen_the_mechropotent",
@@ -8655,7 +8677,8 @@
     ],
     "specializations": [],
     "functional_text": "Turn up to 3 ally cards in your graveyard face-down, then create that many Gold tokens.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "flex_claws_red",
@@ -8678,7 +8701,8 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "mage_hunter_arrow_red",
@@ -9086,7 +9110,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Death Touch can't be played from hand.\n\nWhen this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "glint_the_quicksilver_blue",
@@ -9268,7 +9293,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Frostbite token under each other hero's control.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "grandstand_legplates",
@@ -9315,7 +9341,8 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {t}, destroy a Gold you control: Create a Goldkiss Rum token. **Go again**\n\nWhenever you activate a Goldkiss Rum, gain {r}.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "swordmasters_path_blue",
@@ -9763,7 +9790,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target Lightning attack gets +1{p} and \"When this hits, create a Lightning Flow token.\"",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "fight_fair_red",
@@ -10200,7 +10228,8 @@
     ],
     "specializations": [],
     "functional_text": "**Essence of Earth and Lightning**\n\nThe first time an attack action card you control deals damage to an opposing hero, create an Embodiment of Earth token.\n\nWhenever you play your second 'non-attack' action card each turn, create an Embodiment of Lightning token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "grim_feast_red",
@@ -10515,7 +10544,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if you've been cheered this turn, create a Toughness token.\n\nWhen this defends, if it has 6 or more {d}, put it on the bottom of its owner's deck when the combat chain closes.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "shock_striker_red",
@@ -11221,7 +11251,8 @@
     ],
     "specializations": [],
     "functional_text": "**Arcane Shelter 1**\n\nWhen this leaves the arena, create an Embodiment of Earth token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "phantasmal_symbiosis_yellow",
@@ -11983,7 +12014,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to any target.\n\n**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "crown_of_seeds",
@@ -12167,7 +12199,8 @@
     ],
     "specializations": [],
     "functional_text": "Turn up to 2 ally cards in your graveyard face-down, then create that many Gold tokens.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "warriors_valor_blue",
@@ -12431,7 +12464,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create 2 Embodiment of Earth tokens.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "harvest_season_blue",
@@ -12630,7 +12664,8 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, create a Golden Cog token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "yinti_yanti_yellow",
@@ -12693,7 +12728,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Toughness token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "clash_of_bravado_yellow",
@@ -13099,7 +13135,8 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}{r}: Target opposing hero chooses and creates a Might, Quicken, or Vigor token. You create a Copper token. **Go again**\n\n**Action** - 0: **Attack**. When this hits, destroy it.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "zap_yellow",
@@ -13251,7 +13288,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {t}, remove a suspense counter from an aura you control: You may put a suspense counter on an aura of suspense you control.\n\nWhenever the crowd cheers you, create a Confidence token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "zyggy",
@@ -13651,7 +13689,8 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: Create a Hyper Driver token with 2 steam counters.  Activate this ability only if you've boosted this turn.\n\nHyper Drivers you control get **crank**.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "grind_them_down_blue",
@@ -13854,7 +13893,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Twice per Turn Instant** - {r}: This gets +1{p}.\n\nWhen this hits, create a Lightning Flow token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "death_touch_blue",
@@ -13876,7 +13916,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Death Touch can't be played from hand.\n\nWhen this hits a hero, create a Frailty, Inertia, or Bloodrot Pox token under their control.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "cut_to_the_chase_blue",
@@ -14120,7 +14161,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your second sword attack each turn costs {r} less.\n\nAt the beginning of your end phase, if you have attacked 2 or more times with weapons this turn, create a Copper token for each weapon attack that hit.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "scar_for_a_scar_red",
@@ -14603,7 +14645,8 @@
     ],
     "specializations": [],
     "functional_text": "**Quickstrike** - If this has go again, it gets \"When this attacks a hero, deal 1 arcane damage to them.\"\n\nThe first time this deals damage to a hero, create a Lightning Flow token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "sirens_of_safe_harbor_red",
@@ -14647,7 +14690,8 @@
     ],
     "specializations": [],
     "functional_text": "Whenever you **transcend**, you may gain {r}.\n\n**Instant** - {c}{c}{c}, destroy this: Create a Zen State token.\n\n**Blade Break**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "energy_potion_blue",
@@ -14959,7 +15003,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Frostbite token under target hero's control.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "teklo_base_chest",
@@ -15069,7 +15114,8 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {t}: Pitch the top card of your deck. If it has 6 or more {p}, **the crowd cheers** you.\n\nWhenever the crowd cheers you, create a Toughness token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "speed_demon_red",
@@ -15092,7 +15138,8 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nIf you control a Hyper Driver, this gets +1{p}.\n\nWhen this attacks, if it scrapped a Hyper Driver, create a Hyper Driver token with 2 steam counters.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "rise_above_blue",
@@ -15157,7 +15204,8 @@
     ],
     "specializations": [],
     "functional_text": "**Ice Fusion**\n\nIf Snow Under was **fused**, it gains \"If this hits a hero, create a Frostbite token under their control.\"",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "take_the_upper_hand_red",
@@ -15424,7 +15472,8 @@
     ],
     "specializations": [],
     "functional_text": "**Ice Bond** - If an Ice card was pitched to play this, create a Frostbite token under the attacking hero's control.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "circular_flowtide_yellow",
@@ -15447,7 +15496,8 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, create a Lightning Flow token.\n\n**Ward 2**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "courageous_steelhand_red",
@@ -16187,7 +16237,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create 2 Lightning Flow tokens.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "burn_away_red",
@@ -16933,7 +16984,8 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.\n\n**Fragment**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "pyroglyphic_protection_red",
@@ -17118,7 +17170,8 @@
     ],
     "specializations": [],
     "functional_text": "**Once per turn Action** - {r}: Create a Seismic Surge aura token. **Go again**\n\n**Battleworn**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "deadwood_dirge_blue",
@@ -17341,7 +17394,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you control an aura of suspense, create a Confidence token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "incision_red",
@@ -17517,7 +17571,8 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, banish the top card of your deck.\n\nWhen this hits, create a Blasmophet, the Insatiable Hunger token.\n\n**Blood Debt**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "mutated_mass_blue",
@@ -17648,7 +17703,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you control a Toughness or Vigor token, this gets +1{p}.\n\nWhen this hits a hero, create a Toughness and a Vigor token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "brand_with_cinderclaw_blue",
@@ -17718,7 +17774,8 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner's deck.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "fender_bender_yellow",
@@ -18074,7 +18131,8 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**\n\nWhen Embermaw Cenipai is destroyed, create an Ash token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "tiger_form_incantation_yellow",
@@ -18165,7 +18223,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then create a Confidence and 3 Might tokens.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "minnowism_red",
@@ -19218,7 +19277,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Destroy up to 3 Might tokens. Create a Toughness token for each token destroyed this way.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "shattering_flowtide_red",
@@ -19241,7 +19301,8 @@
     ],
     "specializations": [],
     "functional_text": "Whenever this fragments, create a Lightning Flow token.\n\n**Fragment**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "wage_gold_blue",
@@ -19518,7 +19579,8 @@
     ],
     "specializations": [],
     "functional_text": "Create an Ash token, then **transform** up to 3 ash you control into Aether Ashwings.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "rout_red",
@@ -20262,7 +20324,8 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "paddle_faster_red",
@@ -21733,7 +21796,8 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {t}: Pitch the top card of your deck. If it has 6 or more {p}, **the crowd cheers** you.\n\nWhenever the crowd cheers you, create a Toughness token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "spellbane_trap_red",
@@ -21757,7 +21821,8 @@
     ],
     "specializations": [],
     "functional_text": "Your next arrow attack this turn gets +3{p}.\n\n**Go again**\n\nWhen this defends and the attacking hero has dealt arcane damage this turn, create a Spellbane Aegis token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "aurora_emissary_of_lightning",
@@ -21778,7 +21843,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {r}{r}, {t}, destroy a Lightning Flow you control: Create an Embodiment of Lightning token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "hold_the_line_blue",
@@ -21888,7 +21954,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Icy Encounter hits a hero, create a Frostbite token under their control.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "hundred_winds_yellow",
@@ -22032,7 +22099,8 @@
       "Riptide"
     ],
     "functional_text": "**Riptide Specialization**\n\nWhen this hits a hero, they create a Courage and Quicken token.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
   },
   {
     "slug": "perennial_aetherbloom_red",

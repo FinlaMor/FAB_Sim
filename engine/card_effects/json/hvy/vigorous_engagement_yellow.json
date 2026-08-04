@@ -17,7 +17,8 @@
               "type": "DURING_TURN",
               "condition": "DEFENDED_BY_ATTACK_ACTION_CARD"
             }
-          ]
+          ],
+          "token": "vigor"
         }
       ]
     }

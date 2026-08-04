@@ -12,12 +12,14 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Ponder",
-          "controller": "self"
+          "controller": "self",
+          "token": "ponder"
         },
         {
           "type": "CREATE_TOKEN",
           "token_type": "Bloodrot Pox",
-          "controller": "opponent"
+          "controller": "opponent",
+          "token": "ponder"
         },
         {
           "type": "GAIN",

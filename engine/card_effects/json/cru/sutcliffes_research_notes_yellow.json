@@ -18,7 +18,8 @@
               "card_type": "attack_action",
               "card_class": "Runeblade"
             }
-          ]
+          ],
+          "token": "runechant"
         },
         {
           "type": "PUT_CARDS_BOTTOM",

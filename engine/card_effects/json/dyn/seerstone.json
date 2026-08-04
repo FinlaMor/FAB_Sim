@@ -16,7 +16,8 @@
         },
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Ponder"
+          "token_type": "Ponder",
+          "token": "ponder"
         }
       ]
     }

@@ -38,7 +38,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Silver",
-          "amount": "destroyed_permanents_count"
+          "amount": "destroyed_permanents_count",
+          "token": "silver"
         },
         {
           "type": "GO_AGAIN"
