@@ -2,29 +2,39 @@
   "slug": "chilling_icevein_yellow",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_DEAL_DAMAGE",
+      "ability_type": "PLAY",
       "conditions": [
         {
           "type": "FLAG_SET",
-          "flag": "FUSED"
-        },
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "HERO"
+          "flag": "fused_chilling_icevein_yellow"
         }
       ],
       "effects": [
         {
-          "type": "PAY_OR_DAMAGE",
-          "resource": "RESOURCE_POINTS",
-          "amount": 1,
-          "on_failure": [
-            {
-              "type": "DISCARD",
-              "amount": 1
-            }
-          ]
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "trigger": {
+            "trigger_type": "ON_DEAL_DAMAGE",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "PAY_OR_ELSE",
+                "player": "OPPONENT",
+                "resources": 1,
+                "on_failure": [
+                  {
+                    "type": "DISCARD",
+                    "player": "OPPONENT",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
     }

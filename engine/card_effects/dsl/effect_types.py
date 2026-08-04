@@ -896,6 +896,34 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 effect_deal_damage(state, cid, _d, card, damage_type="generic")
         return _fn
 
+    if etype == "PAY_OR_ELSE":
+        # "<player> discards a card unless they pay N" (generic: pay N resources or
+        # else run on_failure). `player` picks who pays/suffers (SELF default /
+        # OPPONENT). on_failure is a list of effect specs resolved when unpaid; their
+        # own `player` params are relative to the SAME source card, so e.g. a DISCARD
+        # with player=OPPONENT hits the same target that was asked to pay.
+        resources = params.get("resources", params.get("amount", 0))
+        player_target = (params.get("player") or "SELF").upper()
+        on_fail_specs = [((e.get("type") or "").upper(), e)
+                         for e in params.get("on_failure", [])]
+
+        def _fn(card, event, state, _r=resources, _pt=player_target, _fail=on_fail_specs):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            player = state.players[tid]
+            paid = False
+            if _r > 0 and player.resources >= _r:
+                choice = _ask_player(state, tid, ["pay", "decline"],
+                                     context=f"Pay {_r} to avoid the effect?")
+                if str(choice) == "pay":
+                    player.resources -= _r
+                    paid = True
+            if not paid:
+                for et, ep in _fail:
+                    compile_effect(et, ep)(card, event, state)
+        return _fn
+
     if etype == "PUT_CARDS_BOTTOM":
         # Put all cards from the given zones on the bottom of the controller's
         # deck (e.g. Inertia token: hand + arsenal → bottom of deck).

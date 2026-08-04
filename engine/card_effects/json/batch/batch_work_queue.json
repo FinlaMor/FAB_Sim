@@ -13206,7 +13206,8 @@
     ],
     "specializations": [],
     "functional_text": "**Ice Fusion**\n\nIf Chilling Icevein was **fused**, whenever an attack deals damage to a hero this turn, they discard a card unless they pay {r}.",
-    "status": "candidate"
+    "status": "done",
+    "note": "turn-scoped ON_DEAL_DAMAGE inject (needed the new damage_dealt dispatch); test in tests/test_turn_scoped_hooks.py"
   },
   {
     "slug": "aegis_archangel_of_protection",

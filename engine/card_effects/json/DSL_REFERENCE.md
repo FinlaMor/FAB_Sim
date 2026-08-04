@@ -201,6 +201,7 @@ automatically at chain-link resolution.
 | `MODIFY_ATTACK` | Modifies the current attack's power |
 | `MODIFY_NEXT_ATTACK` | Modifies the next qualifying attack's power |
 | `DESTROY_SELF` / `DESTROY_PERMANENT` | Destroys this card (canonical `destroy()` resolves its zone) |
+| `PAY_OR_ELSE` | `player` (SELF/OPPONENT) pays `resources` N, or else the `on_failure` effect list resolves (e.g. "discard a card unless you pay {r}"). on_failure effect `player` params are relative to the same source card. |
 
 `mod` values: `"add"` (subtraction uses negative `amount`). Future values: `"multiply"`, `"set"`.
 

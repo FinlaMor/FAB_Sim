@@ -62,9 +62,13 @@ silently dropped — ~60 cards).
 - **`this_rounds_on_me_blue`** → `done` (each hero draws; -1 to the opponent's
   hero attacks until your next turn).
 
-Still open (separate gaps, not this feature):
-- **`chilling_icevein_yellow`** — needs a base `ON_DEAL_DAMAGE` event dispatch,
-  which does not exist for **any** card yet (no `dispatch(…, "ON_DEAL_DAMAGE", …)`
-  in the engine); the turn-scoped mechanism already supports it once that lands.
+- **`chilling_icevein_yellow`** → `done` (2026-08-03). Needed a base
+  `ON_DEAL_DAMAGE` event dispatch, which existed for **no** card: added a
+  `_dsl_deal_damage_listener` on the combat `'damage_dealt'` event (fires
+  card-level ON_DEAL_DAMAGE + consumes injected ON_DEAL_DAMAGE triggers), plus a
+  generic `PAY_OR_ELSE` effect ("pay N or else …"). This also revives the other
+  4 previously-dead ON_DEAL_DAMAGE cards.
+
+Still open (separate gap, not this feature):
 - **`poisoned_blade_blue`** — needs **combat-chain** scope (persist across a
   chain's links, not the whole turn); a different lifecycle than TURN/NEXT_TURN.

@@ -64,6 +64,15 @@ def _emit_hit(st, defender_pid):
         game_state=st)
 
 
+def _emit_damage_dealt(st, defender_pid):
+    # Mirror engine._attack_step's combat-damage emission (engine.py ~1612).
+    st.combat.hit = True
+    st.event_manager.emit(
+        event=Event(type="damage_dealt",
+                    data={"damage": st.combat.attack_power, "target": defender_pid}),
+        game_state=st)
+
+
 def test_power_mod_hook_applies_to_every_attack_this_turn():
     """A turn-scoped -1 power mod reduces EACH attack this turn, not just one."""
     st = _setup()
@@ -195,3 +204,48 @@ def test_this_rounds_on_me_blue_reduces_opponent_hero_attacks_next_turn():
     atk = _new_attack(st, opp, power=4)
     _resolve_attack(st, atk)
     assert st.combat.attack_power == 3  # 4 - 1 vs the caster's hero
+
+
+def test_turn_scoped_on_deal_damage_hook_fires_each_attack():
+    """A turn-scoped ON_DEAL_DAMAGE hook fires when each attack deals combat
+    damage (the 'damage_dealt' path), for the whole turn."""
+    st = _setup()
+    pid = st.active_player
+    opp = 3 - pid
+    st.players[pid].turn_attack_hooks.append(
+        {"kind": "inject_trigger", "event": "ON_DEAL_DAMAGE",
+         "conditions": [{"type": "ATTACK_TARGET_IS_HERO"}],
+         "effects": [{"type": "LOSE_LIFE", "amount": 1, "player": "OPPONENT"}]})
+    start = st.players[opp].health
+    for _ in range(2):
+        atk = _new_attack(st, pid)
+        _resolve_attack(st, atk)
+        _emit_damage_dealt(st, opp)
+    assert st.players[opp].health == start - 2
+
+
+def test_chilling_icevein_yellow_fused_discards_on_attack_damage():
+    """chilling_icevein_yellow (fused): whenever an attack deals damage to a hero
+    this turn, they discard a card unless they pay {r}. Opponent with 0 resources
+    and a card in hand discards it."""
+    from engine.card_effects.dsl import dispatch
+    st = _setup()
+    pid = st.active_player
+    opp = 3 - pid
+    chill = st.card_db.get("chilling_icevein_yellow")
+    chill.owner = chill.controller = pid
+    st.players[pid].current_turn_effects.append("fused_chilling_icevein_yellow")
+    dispatch(st, "ON_PLAY", "chilling_icevein_yellow", card=chill)
+    assert any(h.get("kind") == "inject_trigger"
+               and h.get("event") == "ON_DEAL_DAMAGE"
+               for h in st.players[pid].turn_attack_hooks)
+    # Defender: 0 resources, one card in hand -> cannot pay, must discard it.
+    st.players[opp].resources = 0
+    victim = Card(slug="dummy_card", name="dummy", types=["Action"])
+    victim.owner = victim.controller = opp
+    st.players[opp].hand.cards.append(victim)
+    before = len(st.players[opp].hand.cards)
+    atk = _new_attack(st, pid)
+    _resolve_attack(st, atk)
+    _emit_damage_dealt(st, opp)
+    assert len(st.players[opp].hand.cards) == before - 1

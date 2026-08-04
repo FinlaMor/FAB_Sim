@@ -1383,7 +1383,32 @@ def _setup_dsl_listeners(state: GameState) -> None:
             seen.add(id(c))
             dispatch(game_state, "RECALC_ATTACK_POWER", c.slug, card=c, event=event)
 
+    def _dsl_deal_damage_listener(event, game_state: GameState) -> None:
+        # Combat physical damage (the 'damage_dealt' event, engine _attack_step):
+        # the attack card is the source. Fire its DSL ON_DEAL_DAMAGE abilities and
+        # any injected ON_DEAL_DAMAGE triggers — e.g. a turn-scoped "whenever an
+        # attack deals damage to a hero this turn, ..." hook (INJECT_TRIGGER
+        # scope=TURN, event ON_DEAL_DAMAGE). Non-combat/ability damage flows through
+        # effect_keywords.deal_damage (the 'damage' event) and is not covered here.
+        combat = game_state.combat
+        if not combat or not combat.attack_card:
+            return
+        slug = combat.attack_card.slug
+        dispatch(game_state, "ON_DEAL_DAMAGE", slug,
+                 card=combat.attack_card, event=event)
+        remaining = []
+        for td in combat.injected_triggers:
+            if td.event_type != "ON_DEAL_DAMAGE":
+                remaining.append(td)
+                continue
+            cond_ok = td.condition_fn is None or td.condition_fn(
+                combat.attack_card, event, game_state)
+            if cond_ok:
+                td.effect_fn(combat.attack_card, event, game_state)
+        combat.injected_triggers = remaining
+
     state.event_manager.register('hit', _dsl_hit_listener)
+    state.event_manager.register('damage_dealt', _dsl_deal_damage_listener)
     state.event_manager.register('attacking', _dsl_attacking_listener)
     state.event_manager.register('start_of_turn', _dsl_start_of_turn_listener)
     state.event_manager.register('end_of_turn', _dsl_end_of_turn_listener)
