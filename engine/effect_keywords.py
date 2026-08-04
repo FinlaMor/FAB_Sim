@@ -593,6 +593,17 @@ def destroy(state: GameState, destroy_target: Card, destroy_source: Optional[Car
         # stop here rather than duplicate the card.
         return event
 
+    # Card-specific 'if this would be put into a graveyard, instead remove it from
+    # the game' (e.g. Goldfin Harpoon) — like Ephemeral but declared per card via a
+    # REPLACEMENT ability rather than the keyword. Skip the graveyard add so it
+    # ceases to exist.
+    from engine.card_effects.replacement_abilities import card_has_replacement
+    if card_has_replacement(getattr(destroy_target, 'slug', ''),
+                            "remove_from_game_instead_of_graveyard"):
+        state.event_manager.emit(
+            Event(type='card_ceased_to_exist', data={'card': destroy_target}), state)
+        return event
+
     # Move to owner's graveyard
     state.players[destroy_target.owner].graveyard.add(destroy_target)
 

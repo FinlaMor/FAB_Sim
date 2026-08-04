@@ -170,6 +170,12 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
 
     if ctype == "PAY_LIFE":
         amount = params.get("amount", 1)
+        # Coerce a stray/dynamic string amount to an int so the life comparison and
+        # subtraction can't TypeError mid-game (a candidate authored it as a string).
+        try:
+            amount = max(0, int(amount))
+        except (TypeError, ValueError):
+            amount = 1
         def can_pay(card, event, state, _a=amount):
             from engine.card_effects.ability_keywords import _controller_id
             return state.players[_controller_id(card)].life > _a

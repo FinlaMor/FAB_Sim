@@ -1,0 +1,10 @@
+{
+  "slug": "goldfin_harpoon",
+  "_comment": "Arrow attack token created by Marlynn. 'If this would be put into a graveyard, instead remove it from the game' — a card-specific remove-from-game (functions like Ephemeral but is not the keyword), handled by the remove_from_game_instead_of_graveyard replacement consulted in effect_keywords.destroy.",
+  "abilities": [
+    {
+      "ability_type": "REPLACEMENT",
+      "replacement": "remove_from_game_instead_of_graveyard"
+    }
+  ]
+}

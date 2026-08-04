@@ -1,0 +1,5 @@
+Name: Vynnset Audit Base
+Hero: Vynnset, Iron Maiden
+Format: Classic Constructed
+
+Deck cards

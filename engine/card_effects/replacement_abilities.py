@@ -53,7 +53,32 @@ def fail_clash_retry(state: "GameState", pid: int, revealed: dict) -> bool:
     return True
 
 
+def remove_from_game_instead_of_graveyard(state: "GameState", card) -> bool:
+    """Goldfin Harpoon: 'if this would be put into a graveyard, instead remove it
+    from the game.' A card-specific effect (NOT the Ephemeral keyword — it just
+    functions similarly). effect_keywords.destroy consults this via
+    card_has_replacement and, when present, skips the graveyard add so the card
+    ceases to exist. Returns True = 'do not put into the graveyard'."""
+    return True
+
+
 #: replacement name (from card JSON) → handler
 REPLACEMENT_ABILITIES: dict[str, Callable] = {
     "fail_clash_retry": fail_clash_retry,
+    "remove_from_game_instead_of_graveyard": remove_from_game_instead_of_graveyard,
 }
+
+
+def card_has_replacement(slug: str, name: str) -> bool:
+    """True if the card's DSL def declares a REPLACEMENT ability with this name.
+    For per-CARD replacements (e.g. a token's own 'remove from game') as opposed to
+    the per-player replacements the engine records at game start."""
+    from engine.card_effects.dsl.loader import get_card
+    cd = get_card(slug)
+    if cd is None:
+        return False
+    for ab in getattr(cd, "abilities", []):
+        if (getattr(ab, "ability_type", "") or "").upper() == "REPLACEMENT" \
+                and (getattr(ab, "params", {}) or {}).get("replacement") == name:
+            return True
+    return False

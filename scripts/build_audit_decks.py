@@ -30,11 +30,13 @@ OUT_DIR = DECKS_DIR / "audit"
 QUEUE = ROOT / "engine/card_effects/json/batch/batch_work_queue.json"
 SLUG_INDEX = ROOT / "card_data/slug_index.json"
 
-# hero handle -> (base lite deck, class the hero can play)
+# hero handle -> (base deck, [classes the hero can play])
 HEROES = {
-    "victor": ("victor_goldmane_high_and_mighty_CC_lite.txt", "Warrior"),
-    "kayo": ("kayo_underhanded_cheat_CC_lite.txt", "Brute"),
-    "arakni": ("arakni_marionette_CC_lite.txt", "Assassin"),
+    "victor": ("victor_goldmane_high_and_mighty_CC_lite.txt", ["Warrior"]),
+    "kayo": ("kayo_underhanded_cheat_CC_lite.txt", ["Brute"]),
+    "arakni": ("arakni_marionette_CC_lite.txt", ["Assassin"]),
+    "marlynn": ("audit_base/marlynn_treasure_hunter_base.txt", ["Ranger", "Pirate"]),
+    "vynnset": ("audit_base/vynnset_iron_maiden_base.txt", ["Runeblade"]),
 }
 PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
 # Card types that belong in the DECK (not the arena/equipment) section.
@@ -110,7 +112,8 @@ def main() -> None:
         return rslug is not None and get_card(rslug) is not None
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    for handle, (base, hero_class) in HEROES.items():
+    for handle, (base, hero_classes) in HEROES.items():
+        playable = set(hero_classes) | {"Generic"}
         prefix = _base_prefix(DECKS_DIR / base)
         lines, used, dropped = [], 0, 0
         for slug in cands:
@@ -118,7 +121,7 @@ def main() -> None:
                 break
             d = db.get(slug, {})
             classes = d.get("classes", []) or []
-            if hero_class not in classes and "Generic" not in classes:
+            if not (playable & set(classes)):
                 continue
             if not (set(d.get("types", []) or []) & DECK_TYPES):
                 continue
@@ -133,7 +136,7 @@ def main() -> None:
             used += 1
         out_path = OUT_DIR / f"audit_{handle}.txt"
         out_path.write_text(prefix + "\n".join(lines) + "\n", encoding="utf-8")
-        print(f"{out_path.name}: {hero_class} hero + {used} candidate deck cards "
+        print(f"{out_path.name}: {'/'.join(hero_classes)} hero + {used} candidate deck cards "
               f"({dropped} dropped as unresolvable)")
 
 

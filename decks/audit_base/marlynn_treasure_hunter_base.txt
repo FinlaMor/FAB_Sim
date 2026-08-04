@@ -1,0 +1,5 @@
+Name: Marlynn Audit Base
+Hero: Marlynn, Treasure Hunter
+Format: Classic Constructed
+
+Deck cards

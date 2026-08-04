@@ -1,0 +1,25 @@
+{
+  "slug": "marlynn_treasure_hunter",
+  "_comment": "Ranger/Pirate hero. Second ability ('whenever you draw a card during your action phase, you may put an arrow from your hand face-up into your arsenal') is an optional value engine not yet modeled.",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "_comment": "Action - {t}, destroy a Gold you control: Create a Goldfin Harpoon in your hand. Go again. {t} = TAP_SELF; the 'destroy a Gold' additional cost is not modeled (no destroy-a-token cost type).",
+      "cost": [
+        {
+          "type": "TAP_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "goldfin_harpoon",
+          "destination": "hand"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}
