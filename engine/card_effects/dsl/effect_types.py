@@ -3,6 +3,18 @@ from __future__ import annotations
 from typing import Any, Callable
 
 
+def _track_injected_effect(slug: str, effect_type: str) -> None:
+    """Record a coverage hit for an effect that fires via an injected trigger
+    (INJECT_TRIGGER one-shots / turn / chain hooks). These run through the engine's
+    trigger machinery, not the interpreter's run_ability, so the interpreter's
+    _track_effect never sees them — without this they read as authored-but-dead in
+    scripts/dsl_coverage.py. No-op unless a coverage tracker is active."""
+    from engine.card_effects.dsl import coverage as _cov
+    tracker = _cov.active()
+    if tracker is not None:
+        tracker.record_effect(slug, effect_type)
+
+
 def _resolve_amount(amount: Any, state) -> int | float:
     """Resolve a string amount token (ROLL_NUMBER etc.) to a numeric value."""
     if isinstance(amount, str):
@@ -418,6 +430,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                        _effs_raw=inner_effects_raw):
             from engine.card_effects.triggers import TriggerDef
 
+            _src_slug = getattr(card, "slug", "?")
+
             def _make_one_shot():
                 # Compile inner conditions/effects now, not at module load: it avoids a
                 # circular import, and defers any unimplemented inner condition/effect
@@ -425,14 +439,16 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 # unknown INNER type still loads, matching the inner-effect deferral).
                 from engine.card_effects.dsl.condition_types import compile_condition as _cc
                 compiled_conds = [_cc(ct, cp) for ct, cp in _icond_specs]
-                compiled_effs = [compile_effect(et, ep) for et, ep in _ieff_specs]
+                compiled_effs = [(et, compile_effect(et, ep)) for et, ep in _ieff_specs]
 
-                def _one_shot(c, ev, st, _iconds=compiled_conds, _ieffs=compiled_effs):
+                def _one_shot(c, ev, st, _iconds=compiled_conds, _ieffs=compiled_effs,
+                              _src=_src_slug):
                     for cond_fn in _iconds:
                         if cond_fn is not None and not cond_fn(c, ev, st):
                             return
-                    for eff_fn in _ieffs:
+                    for et, eff_fn in _ieffs:
                         eff_fn(c, ev, st)
+                        _track_injected_effect(_src, et)
                 return _one_shot
 
             if _scope in ("TURN", "NEXT_TURN", "CHAIN"):
@@ -447,7 +463,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
                 tgt = state.players[tid]
                 hook = {"kind": "inject_trigger", "event": _trig,
-                        "conditions": _conds_raw, "effects": _effs_raw}
+                        "conditions": _conds_raw, "effects": _effs_raw,
+                        "source_slug": _src_slug}
                 if _scope == "NEXT_TURN":
                     tgt.next_turn_attack_hooks.append(hook)
                 else:

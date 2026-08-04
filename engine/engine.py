@@ -1163,16 +1163,20 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                                    fn=lambda val, _n=amt: val + _n))
             elif kind == 'inject_trigger' and state.combat is not None:
                 event_type = hook.get('event', 'ON_HIT')
+                src_slug = hook.get('source_slug', '?')
                 cond_fns = [_cc(c.get('type', 'none'), c) for c in cond_specs]
-                eff_fns = [_ce((e.get('type') or '').upper(), e)
+                eff_fns = [((e.get('type') or '').upper(),
+                            _ce((e.get('type') or '').upper(), e))
                            for e in hook.get('effects', [])]
 
-                def _hook_fire(c, ev, st, _cf=cond_fns, _ef=eff_fns):
+                def _hook_fire(c, ev, st, _cf=cond_fns, _ef=eff_fns, _src=src_slug):
+                    from engine.card_effects.dsl.effect_types import _track_injected_effect
                     for fn in _cf:
                         if fn is not None and not fn(c, ev, st):
                             return
-                    for ef in _ef:
+                    for et, ef in _ef:
                         ef(c, ev, st)
+                        _track_injected_effect(_src, et)
 
                 td = TriggerDef(event_type=event_type, condition_fn=None,
                                 effect_fn=_hook_fire, is_optional=False)
