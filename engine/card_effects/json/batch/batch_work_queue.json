@@ -3125,8 +3125,7 @@
     ],
     "specializations": [],
     "functional_text": "**Meld**\n\nCreate X Runechant tokens, where X is the total {h} you've gained this turn.\n\n//\n\nGain 1{h}",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "ronin_renegade_yellow",
@@ -8103,8 +8102,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "to_be_continued_blue",
@@ -8677,8 +8675,7 @@
     ],
     "specializations": [],
     "functional_text": "Turn up to 3 ally cards in your graveyard face-down, then create that many Gold tokens.\n\n**Go again**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "flex_claws_red",
@@ -8701,8 +8698,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "mage_hunter_arrow_red",
@@ -12199,8 +12195,7 @@
     ],
     "specializations": [],
     "functional_text": "Turn up to 2 ally cards in your graveyard face-down, then create that many Gold tokens.\n\n**Go again**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "warriors_valor_blue",
@@ -17170,8 +17165,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per turn Action** - {r}: Create a Seismic Surge aura token. **Go again**\n\n**Battleworn**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "deadwood_dirge_blue",
@@ -20324,8 +20318,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
-    "status": "needs_review",
-    "note": "malformed CREATE_TOKEN (empty or unimplemented token slug) -> crashes a live game; needs the token filled in or implemented"
+    "status": "candidate"
   },
   {
     "slug": "paddle_faster_red",

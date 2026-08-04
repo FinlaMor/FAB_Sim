@@ -7,7 +7,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Runechant",
-          "amount": "TOTAL_HEALTH_GAINED_THIS_TURN"
+          "amount": "TOTAL_HEALTH_GAINED_THIS_TURN",
+          "token": "runechant"
         },
         {
           "type": "GAIN",

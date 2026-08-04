@@ -8,7 +8,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Crouching Tiger",
-          "zone": "banished"
+          "zone": "banished",
+          "token": "crouching_tiger"
         },
         {
           "type": "BANISH_OPP_TOP_GRANT_PLAY",

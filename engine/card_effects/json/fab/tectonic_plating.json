@@ -7,7 +7,8 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Seismic Surge"
+          "token_type": "Seismic Surge",
+          "token": "seismic_surge"
         },
         {
           "type": "GO_AGAIN"

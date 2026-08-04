@@ -11,7 +11,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Gold",
-          "amount": 2
+          "amount": 2,
+          "token": "gold"
         },
         {
           "type": "GO_AGAIN"

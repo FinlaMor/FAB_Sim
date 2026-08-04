@@ -14,7 +14,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Crouching Tiger",
-          "zone": "HAND"
+          "zone": "HAND",
+          "token": "crouching_tiger"
         }
       ]
     },

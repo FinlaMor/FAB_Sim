@@ -11,7 +11,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Gold",
-          "amount": 3
+          "amount": 3,
+          "token": "gold"
         },
         {
           "type": "GAIN",
