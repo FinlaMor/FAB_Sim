@@ -102,3 +102,7 @@ engine/card_effects/json/batch/needs_review/
 
 # Pipeline: sidelined unloadable card JSON (kept locally, not committed)
 *.json.quarantine
+
+# Generated audit decks + their transcripts (reproducible via scripts)
+decks/generated/
+data_collection/candidate_audit/
