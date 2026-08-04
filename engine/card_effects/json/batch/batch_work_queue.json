@@ -7488,7 +7488,8 @@
     ],
     "specializations": [],
     "functional_text": "Each hero draws a card.\n\nUntil the start of your next turn, attacks that target you have -1{p}.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done",
+    "note": "turn-scoped attack hook (INJECT_TRIGGER scope=TURN / MODIFY_ATTACKS_THIS_TURN); behavioral test in tests/test_turn_scoped_hooks.py"
   },
   {
     "slug": "blood_of_the_dracai_red",
@@ -12978,7 +12979,8 @@
     ],
     "specializations": [],
     "functional_text": "**Lightning Fusion**\n\nIf Buzz Bolt was **fused**, whenever an attack hits a hero this turn, it deals 1 damage to them.",
-    "status": "candidate"
+    "status": "done",
+    "note": "turn-scoped attack hook (INJECT_TRIGGER scope=TURN / MODIFY_ATTACKS_THIS_TURN); behavioral test in tests/test_turn_scoped_hooks.py"
   },
   {
     "slug": "horrors_of_the_past_yellow",

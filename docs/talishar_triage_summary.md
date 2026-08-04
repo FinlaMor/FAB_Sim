@@ -48,12 +48,23 @@ turn / until the start of next turn**. That is precisely what these cards need.
 `SET_FLAG` with `scope: NEXT/CURRENT` registers a turn flag, but nothing reads it
 on each attack to re-apply a trigger/modifier.
 
-### Suggested fix (backlog item)
+### Fix — LANDED (2026-08-03)
 
-A turn-scoped variant of the inject mechanism, e.g. `INJECT_TRIGGER` with
-`"scope": "TURN" | "NEXT_TURN"`, stored on the **player/turn** (not `combat`) and
-re-registered into each new combat this turn (and a turn-scoped attack-power
-modifier for `this_rounds_on_me`-style cards). One feature fixes all 3 here +
-`poisoned_blade_blue`, and likely tightens a slice of the 598 "aligned" bucket
-that shares the "…this turn" wording. These 4 cards stay as `candidate`
-(loads + usable, known-imperfect scope) until it lands.
+Turn-scoped attack hooks were built: `INJECT_TRIGGER` with `"scope": "TURN" |
+"NEXT_TURN"` (+ `"player"`) and a new `MODIFY_ATTACKS_THIS_TURN` power modifier,
+stored on `Player.turn_attack_hooks` / `next_turn_attack_hooks` and re-applied to
+every attack by `engine._apply_turn_attack_effects`. See the commit and
+`DSL_REFERENCE.md`. Building it also fixed two latent DSL bugs (a nested `NOT`
+that was always-False; nested-`trigger` `INJECT_TRIGGER` inner effects that were
+silently dropped — ~60 cards).
+
+- **`buzz_bolt_blue`** → `done` (fused: 1 damage on every hero-hit this turn).
+- **`this_rounds_on_me_blue`** → `done` (each hero draws; -1 to the opponent's
+  hero attacks until your next turn).
+
+Still open (separate gaps, not this feature):
+- **`chilling_icevein_yellow`** — needs a base `ON_DEAL_DAMAGE` event dispatch,
+  which does not exist for **any** card yet (no `dispatch(…, "ON_DEAL_DAMAGE", …)`
+  in the engine); the turn-scoped mechanism already supports it once that lands.
+- **`poisoned_blade_blue`** — needs **combat-chain** scope (persist across a
+  chain's links, not the whole turn); a different lifecycle than TURN/NEXT_TURN.

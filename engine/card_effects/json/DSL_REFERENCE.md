@@ -234,9 +234,13 @@ Used in modal modes where the card gains a keyword as a base ability.
 
 ```json
 {"type": "DRAW", "amount": 1}
+{"type": "DRAW", "amount": 1, "player": "OPPONENT"}
 {"type": "DISCARD", "player": "DEFENDING", "amount": 1}
 {"type": "DISCARD_RANDOM", "amount": 1}
 ```
+
+`DRAW` and `DISCARD` default to `"SELF"`; pass `"player": "OPPONENT"` to target the
+other player (e.g. "each hero draws a card" = a SELF draw + an OPPONENT draw).
 
 ### Counters
 
@@ -335,26 +339,57 @@ declared at a hero, not a permanent or ally).
 
 ### Inject Trigger
 
+Grants a trigger to an attack — "this attack gains: if it hits, …" — or, with a
+scope, "whenever an attack … this turn, …". The inner trigger's `conditions` and
+`effects` MUST be nested under a `trigger` dict; a top-level `conditions` key is
+consumed by the loader as an effect-level gate (evaluated once at registration,
+when there may be no attack) and will not behave as a per-hit filter.
+
 ```json
 {
   "type": "INJECT_TRIGGER",
-  "object": "OPPONENT",
-  "trigger": "ON_PLAY_ACTIVATE_ATTACK",
-  "consume": true,
-  "span": "NEXT_TURN",
-  "conditions": [ ... ],
-  "effects": [ ... ]
+  "scope": "TURN",
+  "player": "SELF",
+  "trigger": {
+    "trigger_type": "ON_HIT",
+    "conditions": [ {"type": "ATTACK_TARGET_IS_HERO"} ],
+    "effects": [ {"type": "DEAL_GENERIC", "amount": 1} ]
+  }
 }
 ```
 
-Registers a deferred trigger on a player or object.
+| Field | Description |
+|---|---|
+| `trigger` | Nested `{trigger_type, conditions, effects}`; or a bare event string (e.g. `"ON_HIT"`) when there are no inner conditions. |
+| `scope` | `"COMBAT"` (default) fires once, on the current attack. `"TURN"` re-injects onto **every** attack for the rest of this turn. `"NEXT_TURN"` activates at the target player's next turn start and lasts that turn. |
+| `player` | `"SELF"` (default) or `"OPPONENT"` — whose turn the TURN/NEXT_TURN hook lives on. |
+
+Turn-scoped hooks are stored on `Player.turn_attack_hooks` / `next_turn_attack_hooks`
+and re-applied per attack by `engine._apply_turn_attack_effects`; a `TURN` hook also
+covers the source card's own attack.
+
+### Modify Attacks This Turn
+
+Turn-scoped attack-power modifier — "until the start of your next turn, attacks
+that target you have -1{p}"; "your attacks this turn get +N".
+
+```json
+{
+  "type": "MODIFY_ATTACKS_THIS_TURN",
+  "amount": 1,
+  "mod": "subtract",
+  "scope": "NEXT_TURN",
+  "player": "OPPONENT",
+  "filter": [ {"type": "ATTACK_TARGET_IS_HERO"} ]
+}
+```
 
 | Field | Description |
 |---|---|
-| `object` | Who the trigger is registered on (`"OPPONENT"`, `"PLAYER"`) |
-| `trigger` | The trigger event |
-| `consume` | If `true`, fires once then removes itself |
-| `span` | How long the trigger persists before expiring if unused |
+| `amount` / `mod` | Power delta; `mod` is `"add"` (default) or `"subtract"`. |
+| `scope` | `"TURN"` (default) or `"NEXT_TURN"`. |
+| `player` | `"SELF"` (default) or `"OPPONENT"` — whose attacks are modified. |
+| `filter` | Per-attack condition list selecting which attacks to modify. Use `filter`, **not** `conditions` (the loader pops `conditions`). |
 
 ### Inject Replacement
 
