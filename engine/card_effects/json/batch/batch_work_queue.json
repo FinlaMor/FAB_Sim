@@ -357,7 +357,8 @@
     ],
     "specializations": [],
     "functional_text": "Non-token Hyper Drivers you control enter the arena with an additional steam counter.\n\n**Temper**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "uses unimplemented condition type inside NOT (revealed once NOT compiler was fixed); needs the missing condition type implemented"
   },
   {
     "slug": "grow_claws_yellow",
@@ -4808,7 +4809,8 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nOnce per turn, when a dragon you control attacks, it deals 1 arcane damage to each opposing hero.\n\nAt the beginning of your end phase, put a raze counter on Burn Them All then destroy it unless you banish red card from your graveyard for each raze counter on it.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "uses unimplemented condition type inside NOT (revealed once NOT compiler was fixed); needs the missing condition type implemented"
   },
   {
     "slug": "chokeslam_yellow",
@@ -7530,7 +7532,8 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Heroes can't gain {h}.\n\nAt the beginning of your end phase, put a sand counter on this, then destroy it unless you banish a red card from your graveyard for each sand counter on it.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "uses unimplemented condition type inside NOT (revealed once NOT compiler was fixed); needs the missing condition type implemented"
   },
   {
     "slug": "fasting_carcass_blue",
@@ -20975,7 +20978,8 @@
     ],
     "specializations": [],
     "functional_text": "The first time you deal damage to an opposing hero each turn, draw a card.\n\n**Channel Lightning** - At the beginning of your end phase, put a flow counter on this, then destroy it unless you put a Lightning card from your pitch zone on the bottom of your deck for each flow counter on it.",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "uses unimplemented condition type inside NOT (revealed once NOT compiler was fixed); needs the missing condition type implemented"
   },
   {
     "slug": "evo_rapid_fire_blue",

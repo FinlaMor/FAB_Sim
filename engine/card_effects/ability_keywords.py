@@ -509,6 +509,12 @@ def fusion(card: Card, supertype: str, state: GameState) -> bool:
     revealed = controller.hand.find(reveal_choice)
     if revealed:
         state.set_card_visibility(revealed, True)
+    # Record that this card was fused this turn, so a "if <card> was fused"
+    # ability can gate on it (generic marker: any DSL ability may test
+    # FLAG_SET "fused_<slug>"). Cleared with current_turn_effects at end of turn.
+    marker = f"fused_{card.slug}"
+    if marker not in controller.current_turn_effects:
+        controller.current_turn_effects.append(marker)
     return True
 
 

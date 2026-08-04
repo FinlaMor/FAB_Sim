@@ -458,7 +458,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _ref_exists
 
     if ctype == "NOT":
-        inner = compile_condition(params.get("inner_type", params.get("type", "none")), params)
+        # Inner condition may be nested under "condition"/"inner" (a full spec dict)
+        # or flattened onto this dict via "inner_type". Never recurse with our own
+        # "NOT" type (params.get("type") would re-enter here forever).
+        inner_spec = params.get("condition") or params.get("inner")
+        if isinstance(inner_spec, dict):
+            inner = compile_condition(inner_spec.get("type", "none"), inner_spec)
+        else:
+            inner_t = params.get("inner_type")
+            inner = compile_condition(inner_t, params) if inner_t else None
         def _not(c, e, s, _fn=inner):
             return not (_fn is None or _fn(c, e, s))
         return _not

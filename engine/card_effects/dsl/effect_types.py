@@ -62,9 +62,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     # ── cards ──────────────────────────────────────────────────────────────
     if etype == "DRAW":
         amt = params.get("amount", 1)
-        def _fn(card, event, state, _a=amt):
+        player_target = params.get("player", "SELF")
+        def _fn(card, event, state, _a=amt, _pt=player_target):
             from engine.card_effects.ability_keywords import effect_draw, _controller_id
-            effect_draw(state, _controller_id(card), _a)
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            effect_draw(state, tid, _a)
         return _fn
 
     if etype == "DISCARD":
@@ -380,45 +383,120 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "INJECT_TRIGGER":
         # Compile inner effects/conditions at load time, create one-shot TriggerDef at runtime.
-        inner_trigger = params.get("trigger", "ON_HIT")
-        inner_conditions_raw = params.get("conditions", [])
-        inner_effects_raw = params.get("effects", [])
+        # The inner trigger may be given as a nested dict — {"trigger_type": ...,
+        # "conditions": [...], "effects": [...]} — which is REQUIRED when it has inner
+        # conditions: the loader pops a top-level "conditions" key and treats it as an
+        # effect-level gate (evaluated at registration, when there may be no attack),
+        # but a nested dict's "conditions" survive and are evaluated per-hit as intended.
+        trig_spec = params.get("trigger", "ON_HIT")
+        if isinstance(trig_spec, dict):
+            inner_trigger = (trig_spec.get("trigger_type")
+                             or trig_spec.get("trigger") or "ON_HIT")
+            inner_conditions_raw = trig_spec.get("conditions", [])
+            inner_effects_raw = trig_spec.get("effects", [])
+        else:
+            inner_trigger = trig_spec
+            inner_conditions_raw = params.get("conditions", [])
+            inner_effects_raw = params.get("effects", [])
+        # scope: COMBAT (default) = fire once, on the current attack ("this attack
+        # gains: if it hits ..."). TURN / NEXT_TURN = persistent turn-scoped hook that
+        # re-injects onto EVERY attack this turn ("whenever an attack hits a hero this
+        # turn ..."); NEXT_TURN activates at the target player's next turn start.
+        # player: SELF (default) / OPPONENT — which player's turn the hook lives on.
+        scope = (params.get("scope") or "COMBAT").upper()
+        player_target = (params.get("player") or "SELF").upper()
 
-        from engine.card_effects.dsl.condition_types import compile_condition as _cc
-
-        # Pre-compile inner conditions and effects (lazy inner effect compilation via closure)
-        inner_cond_fns = [_cc(ic.get("type", "none"), ic) for ic in inner_conditions_raw]
+        inner_cond_specs = [(ic.get("type", "none"), ic) for ic in inner_conditions_raw]
         inner_eff_specs = [(ie.get("type", "").upper(), ie) for ie in inner_effects_raw]
 
         def _inject_fn(card, event, state,
                        _trig=inner_trigger,
-                       _icond_fns=inner_cond_fns,
-                       _ieff_specs=inner_eff_specs):
+                       _icond_specs=inner_cond_specs,
+                       _ieff_specs=inner_eff_specs,
+                       _scope=scope, _pt=player_target,
+                       _conds_raw=inner_conditions_raw,
+                       _effs_raw=inner_effects_raw):
+            from engine.card_effects.triggers import TriggerDef
+
+            def _make_one_shot():
+                # Compile inner conditions/effects now, not at module load: it avoids a
+                # circular import, and defers any unimplemented inner condition/effect
+                # type to when the trigger actually fires (so an unrelated card with an
+                # unknown INNER type still loads, matching the inner-effect deferral).
+                from engine.card_effects.dsl.condition_types import compile_condition as _cc
+                compiled_conds = [_cc(ct, cp) for ct, cp in _icond_specs]
+                compiled_effs = [compile_effect(et, ep) for et, ep in _ieff_specs]
+
+                def _one_shot(c, ev, st, _iconds=compiled_conds, _ieffs=compiled_effs):
+                    for cond_fn in _iconds:
+                        if cond_fn is not None and not cond_fn(c, ev, st):
+                            return
+                    for eff_fn in _ieffs:
+                        eff_fn(c, ev, st)
+                return _one_shot
+
+            if _scope in ("TURN", "NEXT_TURN"):
+                # Persistent turn-scoped hook: a plain-dict spec that
+                # engine._apply_turn_attack_effects re-injects into every attack for
+                # the duration. Raw (uncompiled) so snapshot_state stays serializable.
+                from engine.card_effects.ability_keywords import _controller_id
+                cid = _controller_id(card)
+                tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+                tgt = state.players[tid]
+                hook = {"kind": "inject_trigger", "event": _trig,
+                        "conditions": _conds_raw, "effects": _effs_raw}
+                if _scope == "NEXT_TURN":
+                    tgt.next_turn_attack_hooks.append(hook)
+                else:
+                    tgt.turn_attack_hooks.append(hook)
+                    # Cover the current attack too (the source card's own hit): its
+                    # _apply_turn_attack_effects already ran before this ON_PLAY, so
+                    # inject directly for it.
+                    if state.combat is not None and tid == state.active_player:
+                        td = TriggerDef(event_type=_trig, condition_fn=None,
+                                        effect_fn=_make_one_shot(), is_optional=False)
+                        if not hasattr(state.combat, 'injected_triggers'):
+                            state.combat.injected_triggers = []
+                        state.combat.injected_triggers.append(td)
+                return
+
+            # Default COMBAT scope: one-shot into the current combat.
             if not state.combat:
                 return
-            from engine.card_effects.triggers import TriggerDef
-            # Compile inner effect fns now (avoids circular import at module load)
-            compiled_effs = [compile_effect(et, ep) for et, ep in _ieff_specs]
-
-            def _one_shot(c, ev, st,
-                          _iconds=_icond_fns,
-                          _ieffs=compiled_effs):
-                for cond_fn in _iconds:
-                    if cond_fn is not None and not cond_fn(c, ev, st):
-                        return
-                for eff_fn in _ieffs:
-                    eff_fn(c, ev, st)
-
-            td = TriggerDef(
-                event_type=_trig,
-                condition_fn=None,
-                effect_fn=_one_shot,
-                is_optional=False,
-            )
+            td = TriggerDef(event_type=_trig, condition_fn=None,
+                            effect_fn=_make_one_shot(), is_optional=False)
             if not hasattr(state.combat, 'injected_triggers'):
                 state.combat.injected_triggers = []
             state.combat.injected_triggers.append(td)
         return _inject_fn
+
+    if etype == "MODIFY_ATTACKS_THIS_TURN":
+        # Persistent turn-scoped attack-power modifier ("until start of your next
+        # turn, attacks that target you have -1{p}"; "your attacks this turn get
+        # +N"). Applies to every attack for the duration that matches `conditions`.
+        # scope: TURN (default) / NEXT_TURN. player: SELF (default) / OPPONENT.
+        amount = params.get("amount", 0)
+        mod = (params.get("mod") or "add").lower()
+        signed = -abs(amount) if mod in ("subtract", "sub", "minus") else amount
+        scope = (params.get("scope") or "TURN").upper()
+        player_target = (params.get("player") or "SELF").upper()
+        # Per-attack filter for WHICH attacks the modifier applies to. Uses "filter"
+        # (not "conditions") because the loader pops "conditions" and would evaluate
+        # it once at registration; this filter must run per attack.
+        conds_raw = params.get("filter", [])
+
+        def _fn(card, event, state, _amt=signed, _scope=scope,
+                _pt=player_target, _conds=conds_raw):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            tgt = state.players[tid]
+            hook = {"kind": "power_mod", "amount": _amt, "conditions": _conds}
+            if _scope == "NEXT_TURN":
+                tgt.next_turn_attack_hooks.append(hook)
+            else:
+                tgt.turn_attack_hooks.append(hook)
+        return _fn
 
     if etype == "REVEAL_TOP_DECK":
         # Reveal top N cards; gain gain_life{h} per card with cost >= cost_gte.

@@ -331,6 +331,9 @@ def _start_of_turn_phase(state: GameState) -> None:
     # Rotate turn effects
     player.current_turn_effects = player.next_turn_effects[:]
     player.next_turn_effects = []
+    # Rotate turn-scoped attack hooks (NEXT_TURN -> active this turn).
+    player.turn_attack_hooks = player.next_turn_attack_hooks[:]
+    player.next_turn_attack_hooks = []
 
     # Clear equipment-defended tracking (safety net)
     player.equipment_defended_this_turn = []
@@ -865,6 +868,10 @@ def _end_phase_iter(state: GameState) -> None:
 
     # 4.4.4: turn ends, effects that last "until end of turn" / "this turn" end
     player.current_turn_effects = []
+    # Turn-scoped attack hooks created this turn expire now. (NEXT_TURN hooks live
+    # on next_turn_attack_hooks and are untouched here — they activate at the
+    # target player's turn start above.)
+    player.turn_attack_hooks = []
     # Unused "next attack this turn" power mods (MODIFY_NEXT_ATTACK) expire.
     if hasattr(player, 'dsl_queued_attack_mods'):
         player.dsl_queued_attack_mods = []
@@ -1124,6 +1131,46 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
             else:
                 remaining.append(mod)
         player.dsl_queued_attack_mods = remaining
+
+    # Turn-scoped attack hooks (DSL INJECT_TRIGGER scope=TURN/NEXT_TURN, turn-scoped
+    # power mods). Re-applied to EVERY attack this turn; the hooks themselves are NOT
+    # consumed here — they expire via the end-of-turn clear / next-turn rotation in
+    # begin_turn / end phase. Specs are plain dicts (see state.Player.turn_attack_hooks)
+    # compiled on demand so snapshots stay serializable.
+    hooks = getattr(player, 'turn_attack_hooks', None)
+    if hooks:
+        from engine.card_effects.dsl.condition_types import compile_condition as _cc
+        from engine.card_effects.dsl.effect_types import compile_effect as _ce
+        from engine.card_effects.triggers import TriggerDef
+        for hook in hooks:
+            kind = hook.get('kind')
+            cond_specs = hook.get('conditions', [])
+            if kind == 'power_mod':
+                cond_fns = [_cc(c.get('type', 'none'), c) for c in cond_specs]
+                if all(fn is None or fn(attack_card, None, state) for fn in cond_fns):
+                    amt = hook.get('amount', 0)
+                    attack_card.effects = list(getattr(attack_card, 'effects', []))
+                    attack_card.effects.append(
+                        CardEffect(prop="power", stage=7, substage=5,
+                                   fn=lambda val, _n=amt: val + _n))
+            elif kind == 'inject_trigger' and state.combat is not None:
+                event_type = hook.get('event', 'ON_HIT')
+                cond_fns = [_cc(c.get('type', 'none'), c) for c in cond_specs]
+                eff_fns = [_ce((e.get('type') or '').upper(), e)
+                           for e in hook.get('effects', [])]
+
+                def _hook_fire(c, ev, st, _cf=cond_fns, _ef=eff_fns):
+                    for fn in _cf:
+                        if fn is not None and not fn(c, ev, st):
+                            return
+                    for ef in _ef:
+                        ef(c, ev, st)
+
+                td = TriggerDef(event_type=event_type, condition_fn=None,
+                                effect_fn=_hook_fire, is_optional=False)
+                if not hasattr(state.combat, 'injected_triggers'):
+                    state.combat.injected_triggers = []
+                state.combat.injected_triggers.append(td)
 
 
 def _populate_reviled_inventory(state: GameState) -> None:

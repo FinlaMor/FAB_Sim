@@ -803,6 +803,14 @@ class Player:
         # for that specific card object, not any equal copy.
         self.playable_from_banished: list = []
         self.current_turn_effects: list[str] = []
+        # Turn-scoped attack hooks (DSL INJECT_TRIGGER scope=TURN/NEXT_TURN, and
+        # turn-scoped power mods). Plain-dict specs re-applied to every attack this
+        # turn by _apply_turn_attack_effects. `turn_attack_hooks` = active this
+        # turn (cleared at end of turn); `next_turn_attack_hooks` = promoted into
+        # turn_attack_hooks at the owner's next turn start. Dicts (not lambdas) so
+        # snapshot_state stays serializable, mirroring current/next_turn_effects.
+        self.turn_attack_hooks: list = []
+        self.next_turn_attack_hooks: list = []
         self.weapon_exhausted: bool = False
         self.hero_power_exhausted: bool = False
 
@@ -970,6 +978,8 @@ class Player:
             "arsenal_limit":	self.arsenal_limit,
             "current_turn_effects":	self.current_turn_effects.copy(),
             "next_turn_effects":	self.next_turn_effects.copy(),
+            "turn_attack_hooks":	[h.copy() for h in self.turn_attack_hooks],
+            "next_turn_attack_hooks":	[h.copy() for h in self.next_turn_attack_hooks],
             "class_counters":	self.class_counters.copy(),
             "allies_exhausted":[x for x in  [ally.exhausted if hasattr(ally,'exhausted') else None 
                                             for ally in  getattr(self,'allies',[])] 

@@ -99,3 +99,6 @@ logs/security/
 .agents/
 .codex/
 engine/card_effects/json/batch/needs_review/
+
+# Pipeline: sidelined unloadable card JSON (kept locally, not committed)
+*.json.quarantine
