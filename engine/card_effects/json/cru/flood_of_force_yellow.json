@@ -1,0 +1,41 @@
+{
+  "slug": "flood_of_force_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "RUSHING_RIVER_OR_FLOOD_OF_FORCE_LAST_ATTACK"
+        }
+      ],
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK"
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "condition": {
+            "type": "HAS_KEYWORD",
+            "keyword": "Combo"
+          },
+          "effects": [
+            {
+              "type": "PUT_SELF_BOTTOM_DECK"
+            },
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 3
+            },
+            {
+              "type": "GAIN",
+              "keyword": "GO_AGAIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

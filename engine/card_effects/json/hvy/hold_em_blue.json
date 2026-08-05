@@ -1,0 +1,36 @@
+{
+  "slug": "hold_em_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "hero"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "WAGER",
+          "token": "Vigor"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "teklo_plasma_pistol",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "target": "self",
+          "counter": "steam"
+        }
+      ],
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "conditions": [
+        {
+          "type": "COUNTER_GTE",
+          "target": "self",
+          "counter": "steam",
+          "amount": 0
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "target": "self",
+          "counter": "steam",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

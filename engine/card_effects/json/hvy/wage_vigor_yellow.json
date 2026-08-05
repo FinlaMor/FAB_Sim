@@ -1,0 +1,20 @@
+{
+  "slug": "wage_vigor_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "WAGER",
+          "token": "Vigor"
+        }
+      ]
+    }
+  ]
+}

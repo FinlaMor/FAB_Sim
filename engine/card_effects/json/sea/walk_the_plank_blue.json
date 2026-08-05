@@ -1,0 +1,23 @@
+{
+  "slug": "walk_the_plank_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "pirate"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "TAP_REF",
+          "target": "ATTACKER"
+        }
+      ]
+    }
+  ]
+}

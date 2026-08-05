@@ -1,0 +1,41 @@
+{
+  "slug": "haunting_specter_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Spectral Shield"
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "condition": {
+            "type": "NOT",
+            "condition": {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Illusionist Aura"
+            }
+          },
+          "effects": [
+            {
+              "type": "PUT_COUNTER",
+              "counter": "+1{p}",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "WARD",
+          "amount": 4
+        }
+      ]
+    }
+  ]
+}

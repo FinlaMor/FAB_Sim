@@ -1,0 +1,42 @@
+{
+  "slug": "sigil_of_temporal_manipulation_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "top_deck"
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "condition": {
+            "type": "NOT",
+            "condition": {
+              "type": "CARD_IN_ZONE",
+              "zone": "top_deck",
+              "card_type": "attack_action"
+            }
+          },
+          "effects": [
+            {
+              "type": "BANISH_OPP_TOP_GRANT_PLAY",
+              "target": "top_deck"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

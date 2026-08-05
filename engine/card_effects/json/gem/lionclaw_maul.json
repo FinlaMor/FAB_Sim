@@ -1,0 +1,31 @@
+{
+  "slug": "lionclaw_maul",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "activation_cost": 2,
+      "cost": [
+        {
+          "type": "PITCH",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "SELF_ATTACK_POWER_GTE",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "type": "CROWD_BOO"
+        }
+      ]
+    }
+  ]
+}

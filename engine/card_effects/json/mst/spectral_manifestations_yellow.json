@@ -1,0 +1,36 @@
+{
+  "slug": "spectral_manifestations_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Spectral Shield"
+        },
+        {
+          "type": "CONDITIONAL",
+          "conditions": [
+            {
+              "type": "NOT",
+              "condition": {
+                "type": "CONTROLS_TOKEN_TYPE",
+                "token_type": "Illusionist Aura"
+              }
+            }
+          ],
+          "effects": [
+            {
+              "type": "PUT_COUNTER",
+              "counter_type": "+1{p}",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "slug": "graven_gloves",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "IN_GRAVEYARD"
+        },
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "IN_GRAVEYARD"
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "-1d",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "INTIMIDATE"
+        }
+      ]
+    }
+  ]
+}

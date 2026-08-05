@@ -1,0 +1,14 @@
+{
+  "slug": "sledge_of_anvilheim",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 4,
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    }
+  ]
+}

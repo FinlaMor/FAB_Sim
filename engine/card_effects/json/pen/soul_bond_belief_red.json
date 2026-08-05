@@ -1,0 +1,32 @@
+{
+  "slug": "soul_bond_belief_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK"
+        },
+        {
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_PITCH_IS",
+            "pitch": "yellow"
+          },
+          "effects": [
+            {
+              "type": "PUT_REF_IN_ZONE",
+              "zone": "SOUL"
+            },
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

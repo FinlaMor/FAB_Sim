@@ -1,0 +1,60 @@
+{
+  "slug": "teklovossen_the_mechropotent",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 3,
+      "cost": [
+        {
+          "type": "BANISH_FROM_GRAVEYARD",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DISCARD"
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "class": "Mechanologist"
+            }
+          ]
+        },
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 4,
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Evo"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

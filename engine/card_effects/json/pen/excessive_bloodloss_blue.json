@@ -1,0 +1,29 @@
+{
+  "slug": "excessive_bloodloss_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "OPPONENT_TOP_DECK"
+        },
+        {
+          "type": "IF",
+          "condition": {
+            "type": "CARD_IN_ZONE",
+            "zone": "OPPONENT_GRAVEYARD",
+            "card_type": "RED"
+          },
+          "effects": [
+            {
+              "type": "BANISH",
+              "target": "OPPONENT_TOP_DECK"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

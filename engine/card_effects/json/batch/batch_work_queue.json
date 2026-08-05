@@ -695,7 +695,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck. If it's red, repeat this process once.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "convulsions_from_the_bellows_of_hell_red",
@@ -1253,7 +1253,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}{r}{r}: **Attack**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "public_bounty_yellow",
@@ -1393,7 +1393,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}, {t}: Attack\n\n**Instant** - {t}, discard a card with watery grave: The next time an opponent draws one or more cards this action phase, they discard a card.\n\n**Watery Grave**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "blinding_beam_yellow",
@@ -1849,7 +1849,7 @@
     ],
     "specializations": [],
     "functional_text": "While this is in your graveyard, at the start of your turn, you may destroy 2 Silver you control. If you do, equip this.\n\nWhen this is equipped from anywhere other than your graveyard, put a -1{d} counter on it.\n\n**Blade Break**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "herald_of_ravages_blue",
@@ -1964,7 +1964,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Prevent the next 2 damage that would be dealt to target hero this turn by a source of your choice. If they have less life than each other hero, they may gain 1{h}.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "aftershock_red",
@@ -2006,7 +2006,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a Pirate hero, {t} them or an ally they control.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "enigma_chimera_blue",
@@ -2205,7 +2205,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nWhen Avalon attacks, you may banish a card from your hero's soul. If you do, put a yellow card from your graveyard on top of your deck.\n\n**Ward 4**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "mage_master_boots",
@@ -3030,7 +3030,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.\n\n**Ward 2**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "splintering_deadwood_blue",
@@ -3390,7 +3390,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Action** - {t}: **Attack**. Activate this only if you control a Lightning attack.\n\nWhen this hits a hero, deal 1 arcane damage to them.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "condemn_to_slaughter_yellow",
@@ -5705,7 +5705,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Warrior attack this turn gets +1{p} and \"When this attacks a hero, you may **wager** a Vigor token with them.\"\n\n**Go again**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "dawnblade_resplendent",
@@ -6854,7 +6854,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.\n\n**Ward 4**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "bigger_than_big_yellow",
@@ -6901,7 +6901,7 @@
     ],
     "specializations": [],
     "functional_text": "You may play this from your banished zone. If you do, it costs {r}{r} less to play.\n\nTarget hero banishes the top card of their deck. If it's blue, they lose 1{h}.\n\n**Blood Debt**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "shadow_of_ursur_blue",
@@ -6949,7 +6949,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, you may **wager** a Vigor token with them.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "sky_fire_lanterns_blue",
@@ -7638,7 +7638,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}, {t}: **Attack**\n\nIf this has {p} greater than its base, it gets +1{p}.\n\nWhen this hits a hero, **the crowd boos** you.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "fabric_of_spring_yellow",
@@ -8529,7 +8529,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}{r}, banish 2 cards from your soul: **Attack**\n\nWhenever this attacks a hero, they discard a card.\n\nYour Mechanologist attack action cards get **go again**.\n\nThis counts as having 4 Evos equipped.\n\n**Battleworn**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "wrecker_romp_red",
@@ -9381,7 +9381,7 @@
       "Betsy"
     ],
     "functional_text": "**Betsy Specialization**\n\n**Action** - {r}{r}{r}{r}, {t}: **Attack**\n\nWhen this attacks, you may **wager** a Gold token with the defending hero.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "surging_strike_yellow",
@@ -9586,7 +9586,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Remove a steam counter from Teklo Plasma Pistol: **Attack**\n\n**Action** - {r}: If there are no steam counters on Teklo Plasma Pistol, put a steam counter on it. **Go again**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "aether_quickening_yellow",
@@ -9891,7 +9891,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. If there is a winner, the other hero puts a -1{d} counter on an off-hand they have equipped. If they don't, they lose 1{h}.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "stonewall_confidence_yellow",
@@ -12847,7 +12847,7 @@
     ],
     "specializations": [],
     "functional_text": "Create a Spectral Shield token, then if you control no other Illusionist auras, put two +1{p} counters on it.\n\n**Go again**",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "in_the_swing_blue",
@@ -16374,7 +16374,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, reveal the top card of your deck. If it's yellow, put it into your soul and this gets +1{p}.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "dissipation_shield_yellow",
@@ -18434,7 +18434,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the beginning of your action phase, destroy this.\n\nWhen this leaves the arena, banish the top card of your deck. If it's a non-attack action card, you may play it this turn as though it were an instant.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "rapid_reflex_yellow",
@@ -19439,7 +19439,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rushing River or Flood of Force was the last attack this combat chain, when you attack with Flood of Force, reveal the top card of your deck. If it's a card with **combo,** put it into your hand then Flood of Force gains +3{p} and **go again**.",
-    "status": "needs_review"
+    "status": "candidate"
   },
   {
     "slug": "blessing_of_bellona_yellow",

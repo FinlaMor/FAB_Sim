@@ -1,0 +1,19 @@
+{
+  "slug": "pile_driver",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 4,
+      "cost": [
+        {
+          "type": "TAP_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    }
+  ]
+}

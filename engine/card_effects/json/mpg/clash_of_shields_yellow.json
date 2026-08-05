@@ -1,0 +1,58 @@
+{
+  "slug": "clash_of_shields_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "SOURCE_IS_ATTACK",
+              "class": "Guardian"
+            },
+            {
+              "type": "ATTACK_CONTROLLED_BY_YOU"
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "CLASH"
+        },
+        {
+          "type": "CONDITIONAL",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CLASH_WINNER"
+            }
+          ],
+          "effects": [
+            {
+              "type": "PUT_COUNTER",
+              "counter": "-1d",
+              "target": "opponent_off_hand"
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "CLASH_NO_WINNER"
+            }
+          ],
+          "effects": [
+            {
+              "type": "LOSE_LIFE",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

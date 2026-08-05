@@ -1,0 +1,36 @@
+{
+  "slug": "avalon_archangel_of_rebirth",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "AVALON_ATTACK_FLAG"
+        }
+      ],
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "hero_soul"
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "target": "graveyard",
+          "amount": 1,
+          "color": "yellow"
+        }
+      ]
+    }
+  ]
+}
