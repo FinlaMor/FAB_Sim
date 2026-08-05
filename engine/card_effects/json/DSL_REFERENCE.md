@@ -202,6 +202,15 @@ automatically at chain-link resolution.
 | `MODIFY_NEXT_ATTACK` | Modifies the next qualifying attack's power |
 | `DESTROY_SELF` / `DESTROY_PERMANENT` | Destroys this card (canonical `destroy()` resolves its zone) |
 | `PAY_OR_ELSE` | `player` (SELF/OPPONENT) pays `resources` N, or else the `on_failure` effect list resolves (e.g. "discard a card unless you pay {r}"). on_failure effect `player` params are relative to the same source card. |
+| `CONDITIONAL` (aliases `IF`, `CONDITIONAL_EFFECT`) | Branch: `{"when": [<conditions>], "then": [<effects>], "else": [<effects>]}`. Runs `then` if every `when` holds, else `else`. Use `when` for the test — NOT `conditions` (the loader pops that key into an effect-level gate, which would skip the whole branch). |
+
+**Ref family** — a "look at / choose a card, then act on it" register (set by `LOOK_AT`, `REVEAL_TOP_DECK`, `SELECT_FROM_REF`, …; read by these). The `ref` param names the register (default varies per effect).
+
+| Type | Description |
+|---|---|
+| `PUT_REF_BOTTOM` / `PUT_REF_TOP` | Put the referenced card(s) on the bottom/top of a deck. `player`: OWNER (default) / SELF / OPPONENT. Thin alias over `MOVE_REF`'s deck path. |
+| `TAP_REF` | Tap the referenced card(s) (`untap: true` to untap instead). |
+| `DESTROY_REF` / `BANISH_REF` / `MOVE_REF` / `FLIP_REF` / `PUT_COUNTER_REF` / `REORDER_REF` / `SELECT_FROM_REF` | Act on referenced card(s) — destroy / banish / move to a zone / turn face up-down / add counters / reorder / choose a subset. |
 
 `mod` values: `"add"` (subtraction uses negative `amount`). Future values: `"multiply"`, `"set"`.
 

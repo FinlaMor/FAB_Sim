@@ -194,6 +194,50 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return (combat.attack_power or 0) > (getattr(combat, "base_attack_power", 0) or 0)
         return _atk_gt_base
 
+    if ctype in ("ATTACK_BASE_POWER_LTE", "ATTACK_BASE_POWER_GTE"):
+        # The current attack's printed BASE power vs a threshold ("an attack with
+        # base {p} N or less/greater"). Reads the base recorded when the attack was
+        # declared, not the pumped live value.
+        amount = params.get("amount", 0)
+        lte = ctype == "ATTACK_BASE_POWER_LTE"
+        def _abp(c, e, s, _a=amount, _lte=lte):
+            combat = s.combat
+            if combat is None:
+                return False
+            base = getattr(combat, "base_attack_power", None)
+            if base is None:
+                base = getattr(getattr(combat, "attack_card", None), "base_power", 0) or 0
+            return base <= _a if _lte else base >= _a
+        return _abp
+
+    if ctype == "IN_GRAVEYARD":
+        # "if you have a <name>/<type> in your graveyard" — true when the controller's
+        # graveyard holds >= count cards matching an optional name / type filter.
+        want_name = (params.get("name") or "").lower()
+        want_types = [t.lower() for t in (params.get("types") or [])]
+        count_gte = params.get("count_gte", 1)
+        player_target = (params.get("player") or "SELF").upper()
+        def _ing(c, e, s, _n=want_name, _t=want_types, _cge=count_gte, _pt=player_target):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(c)
+            tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            gy = getattr(s.players[tid], "graveyard", None)
+            if gy is None:
+                return False
+            n = 0
+            for card in gy.cards:
+                if _n and (getattr(card, "name", "") or "").lower() != _n \
+                        and getattr(card, "slug", "") != _n:
+                    continue
+                if _t:
+                    cts = [x.lower() for x in (getattr(card, "types", None) or [])
+                           + (getattr(card, "subtypes", None) or [])]
+                    if not any(x in cts for x in _t):
+                        continue
+                n += 1
+            return n >= _cge
+        return _ing
+
     if ctype == "CRUSH":
         def _crush(c, e, s):
             from engine.card_effects.ability_keywords import crush_check

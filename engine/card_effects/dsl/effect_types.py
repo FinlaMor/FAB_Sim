@@ -1151,6 +1151,67 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 set_ref(_rest, [c for c in pool if c not in chosen])
         return _fn
 
+    if etype in ("PUT_REF_BOTTOM", "PUT_REF_TOP"):
+        # Put a referenced card (or list) on the bottom/top of a deck — the common
+        # "then put it on the bottom of your deck" rider after a look/reveal. A thin
+        # convenience over MOVE_REF's deck path (which many authors reach for by name).
+        ref = params.get("ref", "looked")
+        pos = "top" if etype == "PUT_REF_TOP" else "bottom"
+        who = params.get("player", "OWNER").upper()
+        def _fn(card, event, state, _r=ref, _pos=pos, _w=who):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import put_object
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if not target:
+                return
+            cid = _controller_id(card)
+            for obj in (target if isinstance(target, list) else [target]):
+                if _w == "OWNER":
+                    dest_pid = obj.owner
+                elif _w in ("OPPONENT", "DEFENDING", "DEFENDER"):
+                    dest_pid = 3 - cid
+                else:
+                    dest_pid = cid
+                put_object(state, obj, "deck", destination_player_id=dest_pid,
+                           source_player_id=cid,
+                           position=("top" if _pos == "top" else None))
+        return _fn
+
+    if etype == "TAP_REF":
+        # Tap (or, with untap:true, untap) a referenced card — "tap target ...".
+        ref = params.get("ref", "chosen")
+        untap = params.get("untap", False)
+        def _fn(card, event, state, _r=ref, _u=untap):
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if not target:
+                return
+            for obj in (target if isinstance(target, list) else [target]):
+                obj.tapped = not bool(_u)
+        return _fn
+
+    if etype in ("CONDITIONAL", "CONDITIONAL_EFFECT", "IF"):
+        # Branch: run `then` effects if every `when` condition holds, else `else`.
+        # Use "when" for the test (NOT "conditions" — the loader pops that key and
+        # turns it into an effect-level gate, which would skip the whole branch and
+        # never reach `else`). Inner specs are compiled lazily so an unimplemented
+        # inner type defers to fire-time rather than breaking load.
+        when_raw = params.get("when", params.get("if", []))
+        then_raw = params.get("then", params.get("effects", []))
+        else_raw = params.get("else", params.get("else_effects", []))
+        def _fn(card, event, state, _w=when_raw, _t=then_raw, _e=else_raw):
+            from engine.card_effects.dsl.condition_types import compile_condition as _cc
+            ok = True
+            for c in _w:
+                fn = _cc((c.get("type") or "none"), c)
+                if fn is not None and not fn(card, event, state):
+                    ok = False
+                    break
+            for spec in (_t if ok else _e):
+                compile_effect((spec.get("type") or "").upper(), spec)(card, event, state)
+        return _fn
+
     if etype == "BANISH_REF":
         # Banish whatever a previous effect stored under "ref". Goes through the
         # canonical banish keyword (CR 8.5.1) so the event fires and replacement
