@@ -1393,7 +1393,8 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}, {t}: Attack\n\n**Instant** - {t}, discard a card with watery grave: The next time an opponent draws one or more cards this action phase, they discard a card.\n\n**Watery Grave**",
-    "status": "candidate"
+    "status": "needs_review",
+    "note": "2 activated abilities; per-ability activation not supported by the engine yet"
   },
   {
     "slug": "blinding_beam_yellow",

@@ -1878,7 +1878,7 @@ def resolve_stack(game_state: GameState) -> None:
             if hasattr(card, 'base_health') and card.base_health is not None:
                 card.current_health = card.raw_health
             elif hasattr(card, 'life') and card.life is not None:
-                card.base_health = card.health
+                card.base_health = card.current_health = card.life
         elif _is_landmark:
             # Use SubZoneView.add so permanent_subtype="Landmark" is set (needed for filter)
             player.landmarks.add(card, is_public=True)

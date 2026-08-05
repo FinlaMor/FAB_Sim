@@ -39,6 +39,14 @@ def _is_noop_stub(j: dict) -> bool:
                for a in abils)
 
 
+def _unsupported_multi_activate(j: dict) -> bool:
+    """The engine can't yet route to one of several activated abilities on a card;
+    such a card compiles but raises NotImplementedError mid-game."""
+    activ = sum(1 for a in (j.get("abilities") or [])
+                if (a.get("ability_type") or "").upper() in ("ACTIVATE", "INSTANT", "ACTION"))
+    return activ > 1
+
+
 def _fails_hygiene(slug: str, j: dict, db: dict) -> bool:
     """Empty abilities + non-keyword printed text -> the hygiene suite rejects it."""
     if j.get("abilities") or j.get("setup"):
@@ -74,6 +82,9 @@ def main() -> None:
             continue
         if _is_noop_stub(raw):
             skipped.append((slug, "no-op stub"))
+            continue
+        if _unsupported_multi_activate(raw):
+            skipped.append((slug, "multi activated-ability (engine gap)"))
             continue
         if _fails_hygiene(slug, raw, db):
             skipped.append((slug, "empty abilities + prose (hygiene)"))
