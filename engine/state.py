@@ -811,6 +811,10 @@ class Player:
         # snapshot_state stays serializable, mirroring current/next_turn_effects.
         self.turn_attack_hooks: list = []
         self.next_turn_attack_hooks: list = []
+        # Count of attacks this player has made this turn (1 during the first
+        # attack, 2 during the second, …); reset each turn. Read by the
+        # ATTACK_ORDINAL_* conditions (e.g. Ira's "your second attack each turn").
+        self.attacks_this_turn: int = 0
         # Combat-chain-scoped attack hooks ("... this combat chain ..."): like
         # turn_attack_hooks but cleared when the chain closes (engine._close_step),
         # not at end of turn. Re-applied to every attack link by

@@ -1,0 +1,16 @@
+{
+  "slug": "prism_sculptor_of_arc_light",
+  "_comment": "Illusionist (Light) hero. Once per Turn Instant - {r}{r}, banish a card from Prism's soul: Create a Spectral Shield token. The banish-from-soul cost is stubbed; {r}{r}=activation_cost, the Spectral Shield create is modeled.",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 2,
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "spectral_shield"
+        }
+      ]
+    }
+  ]
+}

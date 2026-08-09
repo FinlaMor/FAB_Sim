@@ -1,0 +1,5 @@
+Name: oscilio Audit Base
+Hero: Oscilio, Constella Intelligence
+Format: Classic Constructed
+
+Deck cards

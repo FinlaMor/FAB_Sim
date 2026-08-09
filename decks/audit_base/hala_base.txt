@@ -1,0 +1,5 @@
+Name: hala Audit Base
+Hero: Hala, Bladesaint of the Vow
+Format: Classic Constructed
+
+Deck cards

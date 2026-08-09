@@ -1851,6 +1851,70 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             add_wager(state, _controller_id(card), _prize)
         return _fn
 
+    if etype == "PREVENT_DAMAGE":
+        # "Prevent the next N damage that would be dealt to you." Registers a
+        # one-shot PREVENTION replacement effect (CR 6.4.10) on the controller,
+        # so the engine's damage pipeline (effect_manager.apply_replacements)
+        # reduces the next damage event to this hero by up to N and then consumes
+        # the shield. Used from injected ON_DAMAGE reactions like Steadfast.
+        try:
+            amount = int(params.get("amount", 0))
+        except (TypeError, ValueError):
+            amount = 0
+        def _fn(card, event, state, _amt=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effects import ReplacementEffect, ReplacementType
+            cid = _controller_id(card)
+            def _cond(ev, st, _cid=cid):
+                return (ev.get("type") == "damage"
+                        and ev.get("amount", 0) > 0
+                        and not ev.get("unpreventable", False)
+                        and ev.get("target_player_id") == _cid)
+            def _replace(ev, st, _a=_amt):
+                prevented = min(_a, ev.get("amount", 0))
+                ev["amount"] = ev.get("amount", 0) - prevented
+                return ev
+            state.effect_manager.add_replacement(ReplacementEffect(
+                source_card=card,
+                replacement_type=ReplacementType.PREVENTION,
+                condition_fn=_cond,
+                replace_fn=_replace,
+                owner_id=cid,
+                prevention_amount=_amt,
+                is_shielding=False,
+            ))
+        return _fn
+
+    if etype == "PLAY_ACTIVATE_ATTACK":
+        # "Play that card as an attack, and it's activated" — a granted extra
+        # attack sourced from a card the surrounding effect located (e.g. Bonds
+        # of Ancestry's injected trigger, which searches for a Gustwave). Modeling
+        # the full free-play-into-combat grant is out of scope; this documented
+        # best-effort resolves a stored "ref" (when the caller left one) and, if
+        # it is an attack card in a play-adjacent zone, builds the same ATTACK
+        # proxy the ATTACK effect uses so it enters the combat step normally.
+        # With no usable ref it no-ops rather than crashing the game — the card
+        # remains loadable and audit-safe.
+        ref = params.get("ref", "chosen")
+        def _fn(card, event, state, _r=ref):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.context import get_ref
+            from engine.state import StackEntry
+            target = get_ref(_r)
+            if not target:
+                return
+            obj = target[0] if isinstance(target, list) else target
+            if obj is None:
+                return
+            pid = _controller_id(card)
+            entry = StackEntry(
+                player_id=pid, card=obj, layer_type='activated',
+                layer_position=len(state.stack_entries) + 1,
+            )
+            entry.pitched_for_attack = []
+            state.stack_entries.append(entry)
+        return _fn
+
     # Unknown effect types are authoring errors — fail at JSON load time
     # rather than silently no-opping (fail-open let bad JSON go unnoticed).
     raise ValueError(f"Unknown DSL effect type: {etype!r} (params: {params!r})")

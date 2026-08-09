@@ -1,0 +1,20 @@
+{
+  "slug": "malice_domina_of_the_dead",
+  "_comment": "Necromancer (Shadow) hero. Action - {r}, {t}: until end of turn you may play target zombie from your graveyard, go again. Plus: whenever a zombie you control dies, banish it face-down and create a Corrupted Corpse. The graveyard-zombie grant and the zombie-death trigger are stubbed; {r}=activation_cost, {t}=TAP_SELF, go again modeled.",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "TAP_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

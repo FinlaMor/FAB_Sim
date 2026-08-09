@@ -1,0 +1,5 @@
+Name: ira Audit Base
+Hero: Ira, Scarlet Revenger
+Format: Classic Constructed
+
+Deck cards

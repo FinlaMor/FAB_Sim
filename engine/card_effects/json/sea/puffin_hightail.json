@@ -1,0 +1,20 @@
+{
+  "slug": "puffin_hightail",
+  "_comment": "Mechanologist/Pirate hero. Action - {t}, destroy a Gold: Create a Golden Cog token. Second crank each turn draws. The destroy-a-Gold cost and the second-crank draw are stubbed; {t}=TAP_SELF, the Golden Cog create is modeled.",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "TAP_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "golden_cog"
+        }
+      ]
+    }
+  ]
+}

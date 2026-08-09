@@ -1,0 +1,5 @@
+Name: malice Audit Base
+Hero: Malice, Domina of the Dead
+Format: Classic Constructed
+
+Deck cards

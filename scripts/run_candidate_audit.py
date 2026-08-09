@@ -28,7 +28,8 @@ from rl_agents.random_agent import RandomAgent
 import game_transcript_audit as audit
 
 GEN_DIR = ROOT / "decks" / "audit"
-HANDLES = ["victor", "kayo", "arakni", "marlynn", "vynnset"]
+HANDLES = ["victor", "kayo", "arakni", "marlynn", "vynnset",
+           "hala", "puffin", "prism", "oscilio", "malice", "ira"]
 
 
 def _slugs_seen(path: Path) -> set[str]:

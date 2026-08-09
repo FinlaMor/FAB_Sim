@@ -1,0 +1,5 @@
+Name: puffin Audit Base
+Hero: Puffin, Hightail
+Format: Classic Constructed
+
+Deck cards

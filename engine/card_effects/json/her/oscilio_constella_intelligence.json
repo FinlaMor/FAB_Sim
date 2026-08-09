@@ -1,0 +1,21 @@
+{
+  "slug": "oscilio_constella_intelligence",
+  "_comment": "Wizard (Elemental/Lightning) hero. Once per Turn Instant - Discard an instant: Draw a card. Essence of Lightning is a keyword from metadata.",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "DISCARD_CARD",
+          "type_filter": "Instant"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

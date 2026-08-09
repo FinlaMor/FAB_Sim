@@ -114,7 +114,7 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return bool(s.combat and getattr(s.combat, 'attack_card', None) is c)
         return _sia
 
-    if ctype == "ATTACK_CONTROLLED_BY_YOU":
+    if ctype in ("ATTACK_CONTROLLED_BY_YOU", "ATTACKER_CONTROLLED_BY_YOU"):
         # True if the current attack is controlled by this card's controller.
         def _acby(c, e, s):
             from engine.card_effects.ability_keywords import _controller_id
@@ -176,7 +176,10 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
     if ctype == "SELF_ATTACK_POWER_GTE":
         # "If this has N or more {p}" — the current attack's live power is at
         # least N (e.g. Chain of Brutality's 6-power threshold).
-        amount = params.get("amount", 0)
+        try:
+            amount = int(params.get("amount", 0))
+        except (TypeError, ValueError):
+            amount = 0
         def _self_pow_gte(c, e, s, _n=amount):
             combat = s.combat
             return combat is not None and (combat.attack_power or 0) >= _n
@@ -209,6 +212,19 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                 base = getattr(getattr(combat, "attack_card", None), "base_power", 0) or 0
             return base <= _a if _lte else base >= _a
         return _abp
+
+    if ctype in ("ATTACK_ORDINAL_EQ", "ATTACK_ORDINAL_GTE"):
+        # The current attack's ordinal this turn ("your second attack each turn"):
+        # attacks_this_turn is 1 during the first attack, 2 during the second, …
+        amount = params.get("amount", 2)
+        eq = ctype == "ATTACK_ORDINAL_EQ"
+        def _ord(c, e, s, _a=amount, _eq=eq):
+            combat = s.combat
+            if combat is None:
+                return False
+            n = getattr(s.players[combat.attacker_id], "attacks_this_turn", 0)
+            return n == _a if _eq else n >= _a
+        return _ord
 
     if ctype == "IN_GRAVEYARD":
         # "if you have a <name>/<type> in your graveyard" — true when the controller's

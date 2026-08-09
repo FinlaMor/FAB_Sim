@@ -32,11 +32,17 @@ SLUG_INDEX = ROOT / "card_data/slug_index.json"
 
 # hero handle -> (base deck, [classes the hero can play])
 HEROES = {
-    "victor": ("victor_goldmane_high_and_mighty_CC_lite.txt", ["Warrior"]),
+    "victor": ("victor_goldmane_high_and_mighty_CC_lite.txt", ["Guardian"]),
     "kayo": ("kayo_underhanded_cheat_CC_lite.txt", ["Brute"]),
     "arakni": ("arakni_marionette_CC_lite.txt", ["Assassin"]),
     "marlynn": ("audit_base/marlynn_treasure_hunter_base.txt", ["Ranger", "Pirate"]),
     "vynnset": ("audit_base/vynnset_iron_maiden_base.txt", ["Runeblade"]),
+    "hala": ("audit_base/hala_base.txt", ["Warrior"]),
+    "puffin": ("audit_base/puffin_base.txt", ["Mechanologist", "Pirate"]),
+    "prism": ("audit_base/prism_base.txt", ["Illusionist"]),
+    "oscilio": ("audit_base/oscilio_base.txt", ["Wizard"]),
+    "malice": ("audit_base/malice_base.txt", ["Necromancer"]),
+    "ira": ("audit_base/ira_base.txt", ["Ninja"]),
 }
 PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
 # Card types that belong in the DECK (not the arena/equipment) section.

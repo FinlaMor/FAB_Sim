@@ -1,0 +1,22 @@
+{
+  "slug": "ira_scarlet_revenger",
+  "_comment": "Ninja hero. Your second attack each turn gets +1{p} — a continuous static gated on the attack-ordinal condition (attacks_this_turn == 2).",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "ATTACK_ORDINAL_EQ",
+          "amount": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

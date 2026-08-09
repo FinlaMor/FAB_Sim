@@ -334,6 +334,7 @@ def _start_of_turn_phase(state: GameState) -> None:
     # Rotate turn-scoped attack hooks (NEXT_TURN -> active this turn).
     player.turn_attack_hooks = player.next_turn_attack_hooks[:]
     player.next_turn_attack_hooks = []
+    player.attacks_this_turn = 0
 
     # Clear equipment-defended tracking (safety net)
     player.equipment_defended_this_turn = []
@@ -525,6 +526,9 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
     if _resolved_target is not None:
         state.combat.attack_target_card = _resolved_target
         state.combat.attack_target = state.players[3 - state.active_player]
+
+    # Count this attack for ordinal conditions ("your second attack each turn").
+    state.players[state.combat.attacker_id].attacks_this_turn += 1
 
     # Apply pending turn effects to this attack (may append to attack_card.effects)
     _apply_turn_attack_effects(state, attack_card)
@@ -1723,11 +1727,19 @@ def _close_combat_chain(state: GameState) -> None:
     # Attack card: weapons stay equipped, non-permanent attacks go to graveyard
     attack_card = combat.attack_card
     state.remember_last_known(attack_card)
+    # An ON_HIT effect may have already relocated the attack (e.g. Herald of
+    # Protection puts itself on the bottom of the deck, then creates a Spectral
+    # Shield). put_object() can't resolve the game-level combat-chain zone, so a
+    # relocated card is still listed in combat_chain.cards while its own .zone
+    # already points elsewhere — that stale membership is the reliable signal.
+    relocated = attack_card.zone != state.combat_chain.name
     if attack_card in state.combat_chain.cards:
         state.combat_chain.remove(attack_card)
     if combat.from_weapon:
         pass  # 7.7.5: weapon returns to equipped zone
-    else:
+    elif not relocated:
+        # Only send the attack to the graveyard if it wasn't relocated by an
+        # effect; adding it here too would duplicate it and break conservation.
         attacker.graveyard.add(attack_card)
         _apply_watery_grave(attack_card, state)
 
