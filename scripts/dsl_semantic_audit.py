@@ -52,13 +52,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-# One model for every run, by default. ollama keeps a model resident for 30
-# minutes after use, so switching models mid-session pins both: qwen3-coder:30b
-# (19 GB) alongside qwen2.5-coder:14b (10 GB) exhausted a 31 GB machine and the
-# audit was killed three times before the cause was found. The 30b follows the
-# prompt more closely and can be selected with --model, but only run it when
-# nothing else needs the RAM.
-DEFAULT_MODEL = "qwen2.5-coder:14b"
+# One model for every run, by default. qwen3-coder:30b is a 30B-A3B MoE (~18 GB,
+# only ~3B params active per token, so it is fast despite its size) and reasons
+# markedly better than the smaller coders: on the calibration card
+# put_em_in_their_place_red it flags the discard/draw mismatch that both
+# qwen2.5-coder:14b and a 4B distill call "clean". It fits a 31 GB machine ALONE
+# — do not also keep a second large model resident (ollama holds a model for 30
+# min after use; 30b + 14b together exhausted 31 GB and got the audit OOM-killed).
+DEFAULT_MODEL = "qwen3-coder:30b"
 
 JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
 SLUG_INDEX = ROOT / "card_data" / "slug_index.json"
@@ -286,7 +287,7 @@ def audit_card(path: Path, index: dict, claw, model: str | None,
     prompt = PROMPT.format(name=entry.get("name") or slug, slug=slug, text=text,
                            engine_keywords=", ".join(engine_keywords()),
                            json_content=json.dumps(raw, indent=2, ensure_ascii=False))
-    output = claw.run_claw(prompt, verbose=verbose, model=model)
+    output = claw.run_llm(prompt, verbose=verbose, model=model)
     if output == "CLAW_TIMEOUT" or output.startswith("CLAW_ERROR"):
         return {"slug": slug, "error": output}
 
@@ -335,7 +336,7 @@ def audit_card_tests(path: Path, index: dict, claw, model: str | None,
         name=entry.get("name") or slug, slug=slug, text=text,
         engine_keywords=", ".join(engine_keywords()),
         json_content=json.dumps(raw, indent=2, ensure_ascii=False), tests=tests)
-    output = claw.run_claw(prompt, verbose=verbose, model=model)
+    output = claw.run_llm(prompt, verbose=verbose, model=model)
     if output == "CLAW_TIMEOUT" or output.startswith("CLAW_ERROR"):
         return {"slug": slug, "error": output}
 
