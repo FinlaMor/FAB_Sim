@@ -106,3 +106,7 @@ engine/card_effects/json/batch/needs_review/
 # Generated audit decks + their transcripts (reproducible via scripts)
 decks/audit/
 data_collection/candidate_audit/
+
+# semantic-audit run artifacts (regenerated)
+docs/semantic_audit_all_candidates.jsonl
+docs/semantic_audit_all_candidates.md
