@@ -93,11 +93,28 @@ def real_total(snap) -> int:
     return total
 
 
+# The conservation baseline is taken over an opening WINDOW, not the single
+# game_start snapshot. real_total is a zone-selective slug count: it equals the
+# true card inventory N only when every real card sits in a counted zone, and
+# reads BELOW N whenever a card is mid-flight or briefly in a zone the counter
+# doesn't track. The game_start snapshot can itself be such a low sample — some
+# decks (e.g. a Ranger's, where a card settles into a counted zone only over the
+# first few turns) do not reach the stable N until a few turns in, which made a
+# spurious "rose game_start->end" finding even though object provenance is
+# perfectly conserved (0 cards created; verified by stamping every card object
+# and diffing start vs end). Using the opening-window MAX as the baseline reads
+# the settled inventory, and a genuine "created from nothing" card still trips
+# the check because it pushes the total ABOVE that settled baseline later in the
+# game (that is exactly how the real Herald-of-Protection duplication surfaced).
+OPENING_WINDOW_TURNS = 10
+
+
 def audit_game(path):
     findings, info = [], []
     start_snap = end_rec = None
     opening_total = None
     max_total = min_total = None
+    opening_window_max = None
 
     for line in open(path, encoding="utf-8"):
         d = json.loads(line)
@@ -127,12 +144,18 @@ def audit_game(path):
             max_total = min_total = t
         max_total = max(max_total, t)
         min_total = min(min_total, t)
+        if turn <= OPENING_WINDOW_TURNS:
+            opening_window_max = t if opening_window_max is None else max(opening_window_max, t)
 
-    # Baseline conservation off the game_start snapshot (after setup, all zones
-    # populated). The very first record can be the pre-setup "who goes first?"
-    # decision, whose inventory is not yet seeded — using it would understate the
-    # opening count by the starting Reviled inventory.
-    opening_total = real_total(start_snap) if start_snap else max_total
+    # Baseline = the settled inventory: the max real_total over the opening
+    # window (see the note above OPENING_WINDOW_TURNS). Fall back to the
+    # game_start snapshot, then to max_total, when a window value is missing.
+    start_total = real_total(start_snap) if start_snap else None
+    opening_total = opening_window_max
+    if opening_total is None:
+        opening_total = start_total if start_total is not None else max_total
+    elif start_total is not None:
+        opening_total = max(opening_total, start_total)
 
     if start_snap:
         for pid, pl in start_snap["players"].items():
