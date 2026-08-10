@@ -1,14 +1,9 @@
 {
   "slug": "drawn_to_the_dark_dimension_blue",
+  "_comment": "Draw a card. 'Costs {r} less to play for each Runechant you control' is a play-cost DISCOUNT, not a cost to pay; the prior JSON modeled it as an additional PAY_LIFE of the Runechant count, which is wrong (it would drain life). The dynamic self-discount isn't cleanly modeled, so it is omitted (card plays at full cost); the draw is the only real effect.",
   "abilities": [
     {
       "ability_type": "PLAY",
-      "additional_cost": [
-        {
-          "type": "PAY_LIFE",
-          "amount": "RUNECHANTS_CONTROLLED"
-        }
-      ],
       "effects": [
         {
           "type": "DRAW",
