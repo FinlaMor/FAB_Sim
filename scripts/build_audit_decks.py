@@ -30,19 +30,26 @@ OUT_DIR = DECKS_DIR / "audit"
 QUEUE = ROOT / "engine/card_effects/json/batch/batch_work_queue.json"
 SLUG_INDEX = ROOT / "card_data/slug_index.json"
 
-# hero handle -> (base deck, [classes the hero can play])
+# hero handle -> (base deck, [classes the hero can play], [talents the hero has])
+# A candidate is packable into a hero's deck when it shares a CLASS or a TALENT
+# with that hero (talent-only cards are classed "NotClassed" and are legal purely
+# by talent). Talents come from the hero card's own slug_index entry.
 HEROES = {
-    "victor": ("victor_goldmane_high_and_mighty_CC_lite.txt", ["Guardian"]),
-    "kayo": ("kayo_underhanded_cheat_CC_lite.txt", ["Brute"]),
-    "arakni": ("arakni_marionette_CC_lite.txt", ["Assassin"]),
-    "marlynn": ("audit_base/marlynn_treasure_hunter_base.txt", ["Ranger", "Pirate"]),
-    "vynnset": ("audit_base/vynnset_iron_maiden_base.txt", ["Runeblade"]),
-    "hala": ("audit_base/hala_base.txt", ["Warrior"]),
-    "puffin": ("audit_base/puffin_base.txt", ["Mechanologist", "Pirate"]),
-    "prism": ("audit_base/prism_base.txt", ["Illusionist"]),
-    "oscilio": ("audit_base/oscilio_base.txt", ["Wizard"]),
-    "malice": ("audit_base/malice_base.txt", ["Necromancer"]),
-    "ira": ("audit_base/ira_base.txt", ["Ninja"]),
+    "victor": ("victor_goldmane_high_and_mighty_CC_lite.txt", ["Guardian"], []),
+    "kayo": ("kayo_underhanded_cheat_CC_lite.txt", ["Brute"], ["Reviled"]),
+    "arakni": ("arakni_marionette_CC_lite.txt", ["Assassin"], ["Chaos"]),
+    "marlynn": ("audit_base/marlynn_treasure_hunter_base.txt", ["Ranger", "Pirate"], []),
+    "vynnset": ("audit_base/vynnset_iron_maiden_base.txt", ["Runeblade"], ["Shadow"]),
+    "hala": ("audit_base/hala_base.txt", ["Warrior"], []),
+    "puffin": ("audit_base/puffin_base.txt", ["Mechanologist", "Pirate"], []),
+    "prism": ("audit_base/prism_base.txt", ["Illusionist"], ["Light"]),
+    "oscilio": ("audit_base/oscilio_base.txt", ["Wizard"], ["Elemental", "Lightning"]),
+    "malice": ("audit_base/malice_base.txt", ["Necromancer"], ["Shadow"]),
+    "ira": ("audit_base/ira_base.txt", ["Ninja"], []),
+    "oldhim": ("audit_base/oldhim_base.txt", ["Guardian"], ["Earth", "Elemental", "Ice"]),
+    "fai": ("audit_base/fai_base.txt", ["Ninja"], ["Draconic"]),
+    "enigma": ("audit_base/enigma_base.txt", ["Illusionist"], ["Mystic"]),
+    "tuffnut": ("audit_base/tuffnut_base.txt", ["Brute"], ["Revered"]),
 }
 PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
 # Card types that belong in the DECK (not the arena/equipment) section.
@@ -118,8 +125,9 @@ def main() -> None:
         return rslug is not None and get_card(rslug) is not None
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    for handle, (base, hero_classes) in HEROES.items():
+    for handle, (base, hero_classes, hero_talents) in HEROES.items():
         playable = set(hero_classes) | {"Generic"}
+        playable_talents = set(hero_talents)
         prefix = _base_prefix(DECKS_DIR / base)
         lines, used, dropped = [], 0, 0
         for slug in cands:
@@ -127,7 +135,9 @@ def main() -> None:
                 break
             d = db.get(slug, {})
             classes = d.get("classes", []) or []
-            if not (playable & set(classes)):
+            talents = d.get("talents", []) or []
+            # Reachable if it shares a class OR a talent with the hero.
+            if not ((playable & set(classes)) or (playable_talents & set(talents))):
                 continue
             if not (set(d.get("types", []) or []) & DECK_TYPES):
                 continue

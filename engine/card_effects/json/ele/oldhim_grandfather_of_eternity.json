@@ -1,0 +1,16 @@
+{
+  "slug": "oldhim_grandfather_of_eternity",
+  "_comment": "Guardian (Earth/Ice/Elemental) hero. Once per Turn Defense Reaction - {r}{r}{r}: if an Earth card is pitched this way, prevent the next 2 damage that would be dealt to Oldhim this turn; if an Ice card is pitched this way, the attacking hero puts a card from hand on top of their deck. Modeled as the Earth branch (activation_cost 3 -> PREVENT_DAMAGE 2); the pitch-color branching and the Ice branch are simplified/omitted. NOTE: printing is Living Legend, used here as the Earth/Ice representative for card-testing coverage.",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 3,
+      "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

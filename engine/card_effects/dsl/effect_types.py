@@ -30,6 +30,16 @@ def _resolve_amount(amount: Any, state) -> int | float:
 def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     """Return a (card, event, state)->None callable."""
 
+    # Numeric "amount" authored as an integer-literal string ("2") crashes the
+    # arithmetic/range() in many branches (draw N, deal N, discard N). Coerce a
+    # pure-integer string to int once here; leave dynamic markers ("X",
+    # "DEFENDING_CARD_COUNT") untouched for the branches that interpret them.
+    if isinstance(params.get("amount"), str):
+        try:
+            params = {**params, "amount": int(params["amount"])}
+        except (TypeError, ValueError):
+            pass
+
     # ── life / damage ──────────────────────────────────────────────────────
     if etype == "GAIN_LIFE_PER_CARD_IN_HAND":
         def _fn(card, event, state):
@@ -79,7 +89,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             from engine.card_effects.ability_keywords import effect_draw, _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
-            effect_draw(state, tid, _a)
+            # Draw counts are usually ints, but candidate JSON authors dynamic
+            # markers ("intellect", "hand_size", "CHAIN_HIT_COUNT"). Resolve the
+            # ones we can; an unknown marker draws 0 rather than crashing draw().
+            n = _a
+            if isinstance(n, str):
+                marker = n.strip().upper()
+                if marker == "INTELLECT":
+                    n = getattr(state.players[tid], "intellect", 0)
+                elif marker == "HAND_SIZE":
+                    n = len(state.players[tid].hand.cards)
+                elif marker == "CHAIN_HIT_COUNT":
+                    n = len(getattr(state, "chain_links", []) or [])
+                else:
+                    try:
+                        n = int(n)
+                    except (TypeError, ValueError):
+                        n = 0
+            if isinstance(n, int) and n > 0:
+                effect_draw(state, tid, n)
         return _fn
 
     if etype == "DISCARD":
@@ -300,6 +328,44 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                                destination_player_id=cid, source_player_id=cid,
                                is_public=True)
             effect_shuffle(state, cid)
+        return _fn
+
+    if etype == "SEARCH_GRAVEYARD":
+        # Search your graveyard for a matching card and put it into hand (CR
+        # 8.5.19 "fail to find" allowed). Unlike SEARCH_DECK the graveyard is a
+        # public, ordered zone, so there is no shuffle afterward. Filters:
+        #   slug_contains / name_contains — substring match (case-insensitive);
+        #   filter_types — any of these card types.
+        filter_types = params.get("filter_types", None)
+        slug_contains = params.get("slug_contains", None)
+        name_contains = params.get("name_contains", None)
+        def _fn(card, event, state, _ft=filter_types, _sc=slug_contains, _nc=name_contains):
+            from engine.card_effects.ability_keywords import (
+                _controller_id, ask_optional, FAIL_TO_FIND)
+            from engine.effect_keywords import put_object
+            cid = _controller_id(card)
+            controller = state.players[cid]
+            eligible = list(controller.graveyard.cards)
+            if _ft:
+                eligible = [c for c in eligible if any(t in (c.types or []) for t in _ft)]
+            if _sc:
+                eligible = [c for c in eligible if _sc.lower() in c.slug.lower()]
+            if _nc:
+                eligible = [c for c in eligible
+                            if _nc.lower() in (getattr(c, "name", "") or "").lower()]
+            if not eligible:
+                return
+            pick = ask_optional(state, cid, [c.slug for c in eligible], sentinel=FAIL_TO_FIND,
+                                context="Search your graveyard for a card and put it into hand (or fail to find)")
+            if pick is None:
+                return
+            target = next((c for c in eligible if c.slug == pick), None)
+            if target is not None:
+                target.owner = cid
+                target.controller = cid
+                put_object(state, target, "hand",
+                           destination_player_id=cid, source_player_id=cid,
+                           is_public=True)
         return _fn
 
     if etype == "AMP":

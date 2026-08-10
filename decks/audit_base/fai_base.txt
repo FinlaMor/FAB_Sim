@@ -1,0 +1,5 @@
+Name: fai Audit Base
+Hero: Fai, Rising Rebellion
+Format: Classic Constructed
+
+Deck cards

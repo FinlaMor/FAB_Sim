@@ -1,0 +1,20 @@
+{
+  "slug": "tuffnut_bumbling_hulkster",
+  "_comment": "Brute (Revered) hero. Instant - {t}: Pitch the top card of your deck; if it has 6 or more {p}, the crowd cheers you. Whenever the crowd cheers you, create a Toughness token. Modeled as the payoff: activation cost TAP_SELF -> CREATE_TOKEN toughness; the pitch-top-card check and the crowd-cheer gating are simplified/omitted.",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "TAP_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "toughness"
+        }
+      ]
+    }
+  ]
+}

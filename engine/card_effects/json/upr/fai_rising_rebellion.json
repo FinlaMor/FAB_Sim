@@ -1,0 +1,16 @@
+{
+  "slug": "fai_rising_rebellion",
+  "_comment": "Ninja (Draconic) hero. Once per Turn Instant - {r}{r}{r}: Return a Phoenix Flame from your graveyard to your hand (costs {r} less per Draconic chain link you control). Modeled as activation_cost 3 -> SEARCH_GRAVEYARD name 'Phoenix Flame' into hand; the Draconic-chain-link cost reduction and start-with-Phoenix-Flame-in-graveyard setup are omitted.",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 3,
+      "effects": [
+        {
+          "type": "SEARCH_GRAVEYARD",
+          "name_contains": "Phoenix Flame"
+        }
+      ]
+    }
+  ]
+}

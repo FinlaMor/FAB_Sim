@@ -1,0 +1,15 @@
+{
+  "slug": "toughness",
+  "_comment": "Toughness aura token. Real text: at the start of your opponent's turn, destroy this, then the next action card you defend with this turn gets +1{d} this chain link. Modeled as the self-destroy (it expires at start of turn); the +1{d} defensive buff needs a defend-time hook and is omitted.",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ]
+    }
+  ]
+}

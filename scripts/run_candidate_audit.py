@@ -29,7 +29,8 @@ import game_transcript_audit as audit
 
 GEN_DIR = ROOT / "decks" / "audit"
 HANDLES = ["victor", "kayo", "arakni", "marlynn", "vynnset",
-           "hala", "puffin", "prism", "oscilio", "malice", "ira"]
+           "hala", "puffin", "prism", "oscilio", "malice", "ira",
+           "oldhim", "fai", "enigma", "tuffnut"]
 
 
 def _slugs_seen(path: Path) -> set[str]:

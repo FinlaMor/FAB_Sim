@@ -1,0 +1,16 @@
+{
+  "slug": "enigma_ledger_of_ancestry",
+  "_comment": "Illusionist (Mystic) hero. Once per Turn Instant - {c}{c}{c}: Create a Spectral Shield token with a +1{p} counter. Also: your first Spectral Shield attack each turn costs {r} less to activate. Modeled as activation_cost 3 -> CREATE_TOKEN spectral_shield; the +1{p} counter and the cost-reduction static are omitted. NOTE: no Mystic hero is Classic Constructed legal; used here as the Mystic representative for card-testing coverage.",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 3,
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "spectral_shield"
+        }
+      ]
+    }
+  ]
+}

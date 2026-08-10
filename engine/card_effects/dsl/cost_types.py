@@ -15,6 +15,19 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
     pay_fn(card, event, state) -> None    — deduct/resolve the cost
     """
 
+    # Cost amounts are always numeric (resources/life/cards to pay). Candidate
+    # JSON occasionally authors them as strings — either an integer literal
+    # ("2") or a dynamic marker ("UP_TO_3", "RUNECHANTS_CONTROLLED") that the
+    # simple cost branches here don't resolve. Both blow up in arithmetic/slicing
+    # (resources >= "2", cards[:"2"]). No cost branch interprets a marker, so
+    # coerce once: integer literal -> its int; any other string -> 0 (a
+    # trivially-payable cost) rather than crashing a live game.
+    if isinstance(params.get("amount"), str):
+        try:
+            params = {**params, "amount": int(params["amount"])}
+        except (TypeError, ValueError):
+            params = {**params, "amount": 0}
+
     # ── mandatory additional costs ─────────────────────────────────────────
 
     if ctype == "DESTROY_SELF":

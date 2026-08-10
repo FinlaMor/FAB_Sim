@@ -1,0 +1,5 @@
+Name: tuffnut Audit Base
+Hero: Tuffnut, Bumbling Hulkster
+Format: Classic Constructed
+
+Deck cards

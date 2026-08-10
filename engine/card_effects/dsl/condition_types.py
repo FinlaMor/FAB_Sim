@@ -17,6 +17,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
     if ctype in ("none", "NONE", ""):
         return None
 
+    # Threshold "amount" authored as an integer-literal string ("4") crashes the
+    # numeric comparisons in *_GTE/_LTE conditions. Coerce a pure-integer string
+    # to int once here; leave any non-numeric marker untouched.
+    if isinstance(params.get("amount"), str):
+        try:
+            params = {**params, "amount": int(params["amount"])}
+        except (TypeError, ValueError):
+            pass
+
     # ── game phase ─────────────────────────────────────────────────────────
     if ctype == "DURING_TURN":
         # CR 4.1.8b: an effect that would only trigger during a player's turn

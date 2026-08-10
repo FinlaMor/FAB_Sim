@@ -1,0 +1,5 @@
+Name: oldhim Audit Base
+Hero: Oldhim, Grandfather of Eternity
+Format: Classic Constructed
+
+Deck cards
