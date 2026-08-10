@@ -1,5 +1,6 @@
 {
   "slug": "emeritus_scolding_yellow",
+  "_comment": "Deal 3 arcane to target hero; if played during an opponent's turn, INSTEAD deal 5. The two PLAY abilities must be mutually exclusive on the active-player check, or both fire on the opponent's turn and deal 5+3=8 ('instead' means one or the other).",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -18,6 +19,12 @@
     },
     {
       "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER",
+          "value": true
+        }
+      ],
       "effects": [
         {
           "type": "DEAL_ARCANE",

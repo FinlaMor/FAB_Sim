@@ -1,30 +1,9 @@
 {
   "slug": "rejuvenate_blue",
+  "_comment": "Gain 1{h}. 'If you've fused this turn, you may play Rejuvenate as though it were an instant' is a play-timing permission, not a second effect; it is omitted (safe simplification). Prior JSON authored it as a duplicate GAIN-health PLAY ability with an alternative_cost of 0, which double-gained on fuse and drove the controller's resources negative.",
   "abilities": [
     {
       "ability_type": "PLAY",
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "HEALTH",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "PLAY",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "FUSED_THIS_TURN"
-        }
-      ],
-      "alternative_cost": [
-        {
-          "type": "PAY_RESOURCES",
-          "amount": 0
-        }
-      ],
       "effects": [
         {
           "type": "GAIN",

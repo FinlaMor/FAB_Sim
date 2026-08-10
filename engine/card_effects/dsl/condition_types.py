@@ -336,9 +336,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return lambda c, e, s: getattr(c, 'prev_zone', '').lower() == 'arsenal'
 
     if ctype == "IS_ACTIVE_PLAYER":
-        def _iap(c, e, s):
+        # `value` (default True) is the expected answer: value:false means "it is
+        # NOT your turn" (an opponent's turn). Previously the field was ignored,
+        # so every card that wrote value:false to mean "on an opponent's turn"
+        # (Emeritus Scolding, Pry, Timekeeper's Whim) silently fired on the wrong
+        # turn — honour it here.
+        want = bool(params.get("value", True))
+        def _iap(c, e, s, _want=want):
             from engine.card_effects.ability_keywords import _controller_id
-            return _controller_id(c) == s.active_player
+            return (_controller_id(c) == s.active_player) == _want
         return _iap
 
     # ── card / zone ────────────────────────────────────────────────────────

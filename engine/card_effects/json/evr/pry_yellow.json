@@ -10,7 +10,7 @@
           "conditions": [
             {
               "type": "IS_ACTIVE_PLAYER",
-              "value": false
+              "value": true
             }
           ]
         },
@@ -20,7 +20,7 @@
           "conditions": [
             {
               "type": "IS_ACTIVE_PLAYER",
-              "value": true
+              "value": false
             }
           ]
         },

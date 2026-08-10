@@ -1,5 +1,6 @@
 {
   "slug": "emeritus_scolding_red",
+  "_comment": "Deal 4 arcane to target hero; if played during an opponent's turn, INSTEAD deal 6. Both PLAY branches must be mutually exclusive on the active-player check, or on the opponent's turn both fire and deal 6+4=10.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -18,6 +19,12 @@
     },
     {
       "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER",
+          "value": true
+        }
+      ],
       "effects": [
         {
           "type": "DEAL_ARCANE",
