@@ -81,13 +81,18 @@ def main() -> int:
     queue = json.loads((ROOT / "engine/card_effects/json/batch/batch_work_queue.json").read_text(encoding="utf-8"))
     cands = [c["slug"] for c in queue if c["status"] == "candidate"]
 
+    # Resume: treat a card as done only if it was audited WITHOUT error. Cards
+    # whose record carries an error (e.g. the model server died from memory
+    # pressure) are retried on the next resume pass rather than skipped forever.
     done = set()
     if RESULTS.exists():
         for line in RESULTS.open(encoding="utf-8"):
             try:
-                done.add(json.loads(line)["slug"])
-            except (json.JSONDecodeError, KeyError):
+                rec = json.loads(line)
+            except json.JSONDecodeError:
                 continue
+            if rec.get("slug") and not rec.get("error"):
+                done.add(rec["slug"])
     todo = [s for s in cands if s not in done]
     if args.limit:
         todo = todo[:args.limit]
