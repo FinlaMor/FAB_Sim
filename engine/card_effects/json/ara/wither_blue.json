@@ -1,14 +1,20 @@
 {
   "slug": "wither_blue",
+  "_comment": "Stealth. When this hits a hero, create a Frailty token under THEIR control. Frailty is created under the opponent (the hit hero), so player:OPPONENT; prior JSON defaulted it to SELF and lacked the hits-a-hero gate.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Frailty",
-          "token": "frailty"
+          "token": "frailty",
+          "player": "OPPONENT"
         }
       ]
     }

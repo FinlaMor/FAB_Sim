@@ -1,32 +1,29 @@
 {
   "slug": "clearwater_elixir_red",
+  "_comment": "Your next attack this turn gets +3{p}. You may destroy a Bloodrot Pox token you control; if you do, gain 1{h}. Go again. Prior JSON used MODIFY_ATTACK (current attack, not next) and MAY_DESTROY_SILVERS_TO_EQUIP (a Mechanologist equip effect) instead of destroy-Bloodrot-Pox -> gain 1 life. Now MODIFY_NEXT_ATTACK + a MAY(gated on controlling a Bloodrot Pox) -> DESTROY_TOKEN + GAIN health.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3,
-          "conditions": [
-            {
-              "type": "DURING_TURN"
-            }
-          ]
+          "amount": 3
         },
         {
-          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
-          "target": {
-            "filter": [
-              {
-                "type": "CONTROLS_TOKEN_TYPE",
-                "token_types": [
-                  "Bloodrot Pox"
-                ]
-              }
-            ]
-          },
+          "type": "MAY",
+          "prompt": "Destroy a Bloodrot Pox token you control to gain 1 life?",
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "Bloodrot Pox"
+            }
+          ],
           "effects": [
+            {
+              "type": "DESTROY_TOKEN",
+              "token": "bloodrot_pox"
+            },
             {
               "type": "GAIN",
               "asset": "HEALTH",

@@ -1,5 +1,6 @@
 {
   "slug": "blessing_of_aether_blue",
+  "_comment": "At the start of your turn, destroy Blessing of Aether, then if the next card you play this turn has an arcane-damage effect, INSTEAD it deals that much +1. The 'next arcane damage +1' is the engine's Amp mechanic (CR 8.5.47). Modeled as START_OF_TURN -> DESTROY self + AMP 1. Prior JSON injected an ON_PLAY trigger with MODIFY_ATTACK (attack power, not arcane).",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -10,24 +11,8 @@
           "target": "self"
         },
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_PLAY",
-            "conditions": [
-              {
-                "type": "HAS_KEYWORD",
-                "keyword": "DEAL_ARCANE"
-              }
-            ],
-            "effects": [
-              {
-                "type": "MODIFY_EFFECT",
-                "effect_type": "DEAL_ARCANE",
-                "mod": "add",
-                "amount": 1
-              }
-            ]
-          }
+          "type": "AMP",
+          "amount": 1
         }
       ]
     }

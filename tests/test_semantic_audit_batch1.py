@@ -236,3 +236,49 @@ def test_controls_token_type_reads_token_type_key_and_honors_amount():
     assert cond(src, None, st) is False          # 2 < 3 (amount honored)
     add_tokens(1)
     assert cond(src, None, st) is True           # 3 >= 3 (token_type key read)
+
+
+# --------------------------------------------------- batch 3 (Opus re-audit finds)
+def test_wither_blue_creates_frailty_under_opponent():
+    from engine.card import CardDB
+    load_all_cards()
+    st = _make_state()
+    st.card_db = CardDB()
+    atk = _attack_combat(st, ["Assassin"])
+    # target is opponent hero
+    dsl.dispatch(st, "ON_HIT", "wither_blue", card=atk, event=None)
+    assert any(c.slug == "frailty" for c in st.players[2].permanents.cards), \
+        "frailty not under opponent's control"
+    assert not any(c.slug == "frailty" for c in st.players[1].permanents.cards)
+
+
+def test_clearwater_elixir_may_destroys_pox_and_gains_life():
+    from engine.card import CardDB
+    load_all_cards()
+    st = _make_state()
+    st.card_db = CardDB()
+    st.player_agents = {1: _accept_agent, 2: _accept_agent}
+    pox = _make_card(slug="bloodrot_pox", name="Bloodrot Pox",
+                     types=["Token"], subtypes=["Bloodrot Pox"])
+    pox.owner = pox.controller = 1
+    st.players[1].permanents.add(pox)
+    before = st.players[1].life
+    _play(st, "clearwater_elixir_red", types=["Action"])
+    assert st.players[1].life == before + 1
+    assert not any(c.slug == "bloodrot_pox" for c in st.players[1].permanents.cards)
+
+
+def test_blessing_of_aether_amps_next_arcane_at_turn_start():
+    load_all_cards()
+    st = _make_state()
+    _activate_start(st, "blessing_of_aether_blue")
+    assert _next_arcane(st, 1) == 2  # 1 + amp 1
+
+
+def _activate_start(st, slug, pid=1):
+    from engine.card import CardDB
+    st.card_db = CardDB()
+    card = _make_card(slug=slug, name=slug, types=["Item"])
+    card.owner = card.controller = pid
+    st.players[pid].permanents.add(card)
+    dsl.dispatch(st, "START_OF_TURN", slug, card=card, event=None)

@@ -1811,7 +1811,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 if _asset == "RESOURCE_POINTS":
                     from engine.card_effects.ability_keywords import effect_gain_resources
                     effect_gain_resources(state, cid, val)
-                elif _asset == "LIFE_POINTS":
+                elif _asset in ("LIFE_POINTS", "LIFE", "HEALTH", "HEALTH_POINTS"):
+                    # "gain N{h}" — cards author the life asset under several
+                    # names; all mean gain that much life. Only LIFE_POINTS was
+                    # handled before, so HEALTH/HEALTH_POINTS/LIFE (~19 cards)
+                    # silently gained nothing.
                     from engine.card_effects.ability_keywords import effect_gain_life
                     effect_gain_life(state, cid, val)
                 elif _asset == "ACTION_POINTS":
