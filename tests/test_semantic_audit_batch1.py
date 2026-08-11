@@ -350,3 +350,27 @@ def test_attack_type_in_reads_attack_type_key():
                             attack_card=atk, keywords=[])
     assert compile_condition("ATTACK_TYPE_IN", {"attack_type": "Attack"})(src, None, st) is True
     assert compile_condition("ATTACK_TYPE_IN", {"attack_type": "Instant"})(src, None, st) is False
+
+
+def test_create_token_reads_token_name_key():
+    from engine.card import CardDB
+    from engine.card_effects.dsl.effect_types import compile_effect
+    load_all_cards()
+    st = _make_state()
+    st.card_db = CardDB()
+    src = _make_card(slug="src", name="src")
+    src.owner = src.controller = 1
+    compile_effect("CREATE_TOKEN", {"token_name": "Frailty", "controller": "opponent"})(src, None, st)
+    assert any(x.slug == "frailty" for x in st.players[2].permanents.cards)
+
+
+def test_controls_token_type_reads_token_types_list():
+    from engine.card_effects.dsl.condition_types import compile_condition
+    st = _make_state()
+    src = _make_card(slug="src", name="src")
+    src.owner = src.controller = 1
+    gold = _make_card(slug="gold", name="Gold", types=["Token"], subtypes=["Gold"])
+    gold.owner = gold.controller = 1
+    st.players[1].permanents.add(gold)
+    cond = compile_condition("CONTROLS_TOKEN_TYPE", {"token_types": ["Seismic Surge", "Gold"]})
+    assert cond(src, None, st) is True

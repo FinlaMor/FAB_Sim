@@ -490,14 +490,19 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # display name like "Seismic Surge"); previously only "token" was read, so
         # every card using "token_type" (the large majority) had a permanently
         # false condition. Read both and normalise the display name to a slug.
-        raw = (params.get("token") or params.get("token_type") or "").strip()
-        want_slug = raw.lower().replace(" ", "_")
-        want_disp = raw.lower()
+        # Also accepts a "token_types" LIST (match ANY of them).
+        _raws = [params.get("token"), params.get("token_type")]
+        _raws += list(params.get("token_types") or [])
+        wants = []  # (slug, display) pairs
+        for r in _raws:
+            if r:
+                d = str(r).strip().lower()
+                wants.append((d.replace(" ", "_"), d))
         try:
             need = int(params.get("amount", 1))
         except (TypeError, ValueError):
             need = 1
-        def _ctt(c, e, s, _slug=want_slug, _disp=want_disp, _n=need):
+        def _ctt(c, e, s, _wants=wants, _n=need):
             from engine.card_effects.ability_keywords import _controller_id
             player = s.players[_controller_id(c)]
             count = 0
@@ -507,10 +512,11 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                 if not zone:
                     continue
                 for t in zone.cards:
+                    slug = getattr(t, 'slug', '')
                     subs = [st.lower() for st in (getattr(t, 'subtypes', None) or [])]
-                    if (getattr(t, 'slug', '') == _slug
-                            or _disp in subs
-                            or _slug in [st.replace(" ", "_") for st in subs]):
+                    subs_slug = [st.replace(" ", "_") for st in subs]
+                    if any(slug == ws or wd in subs or ws in subs_slug
+                           for ws, wd in _wants):
                         count += 1
             return count >= _n
         return _ctt

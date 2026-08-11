@@ -399,7 +399,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     # ── tokens / permanents ────────────────────────────────────────────────
     if etype == "CREATE_TOKEN":
-        token = params.get("token", "")
+        # The token to create: authored under "token" (a slug), "token_name", or
+        # "token_type" (a display name like "Seismic Surge"). Only "token" was
+        # read, so cards using the name keys created an empty token; create_token
+        # slugifies a display name, so pass whichever was given.
+        token = (params.get("token") or params.get("token_name")
+                 or params.get("token_type") or "")
         count = params.get("count", 1)
         # Whose control the token enters. Cards author it under "player" OR
         # "controller" (~13 usages used the latter, which was unread -> the token
@@ -1000,8 +1005,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "PAY_OR_DAMAGE":
         # "Deals N damage to you unless you pay {r}..." — the controller may pay
-        # the resources to avoid the damage (e.g. Bloodrot Pox).
-        resources = params.get("resources", 0)
+        # the resources to avoid the damage (e.g. Bloodrot Pox). Cards author the
+        # pay amount under "resources", "resource_cost", or "resource".
+        resources = (params.get("resources") if params.get("resources") is not None
+                     else params.get("resource_cost") if params.get("resource_cost") is not None
+                     else params.get("resource", 0))
         dmg = params.get("damage", 0)
         def _fn(card, event, state, _r=resources, _d=dmg):
             from engine.card_effects.ability_keywords import (
