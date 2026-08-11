@@ -278,11 +278,19 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _combo
 
     if ctype == "COMBO_CONTAINS":
-        # True if the last chain-link's base slug contains the given substring.
-        # "base slug" strips the color suffix (e.g. "whelming_gustwave_red" → "whelming_gustwave").
-        substring = params.get("substring", "")
+        # True if the last chain-link's base slug contains the given card name.
+        # "base slug" strips the color suffix (e.g. "whelming_gustwave_red" →
+        # "whelming_gustwave"). Cards author the name under "card"/"card_name"
+        # (a display name like "Crouching Tiger") or "substring"; only
+        # "substring" was read, so with the others unread it defaulted to "" and
+        # `"" in slug` matched EVERYTHING (the combo gate always fired). Read all
+        # three, normalise a display name to a slug fragment, and require a
+        # non-empty value.
+        raw = (params.get("substring") or params.get("card")
+               or params.get("card_name") or "").strip().lower()
+        substring = raw.replace(" ", "_")
         def _combo_contains(c, e, s, _sub=substring):
-            if not s.chain_links:
+            if not _sub or not s.chain_links:
                 return False
             import re
             last_slug = s.chain_links[-1].attack_slug

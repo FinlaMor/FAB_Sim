@@ -310,3 +310,17 @@ def test_card_in_zone_reads_zones_list_and_color():
         b.pitch = 3  # blue
         st.players[1].pitch.add(b)
     assert cond(src, None, st) is True
+
+
+def test_combo_contains_reads_card_name_and_rejects_empty():
+    from engine.card_effects.dsl.condition_types import compile_condition
+    st = _make_state()
+    src = _make_card(slug="src", name="src")
+    src.owner = src.controller = 1
+    st.chain_links.append(ChainLink(
+        chainlink_id=1, attacker_id=1, attack_slug="crouching_tiger",
+        attack_power=1, net_damage=1, keywords=[], from_weapon=False, hit=True))
+    assert compile_condition("COMBO_CONTAINS", {"card": "Crouching Tiger"})(src, None, st) is True
+    assert compile_condition("COMBO_CONTAINS", {"card_name": "Head Jab"})(src, None, st) is False
+    # empty no longer matches everything (was the always-true bug)
+    assert compile_condition("COMBO_CONTAINS", {})(src, None, st) is False
