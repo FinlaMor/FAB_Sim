@@ -21,18 +21,19 @@
       ],
       "effects": [
         {
+          "_comment": "\"you may choose to destroy this AND mark them\" — one choice doing both, not two independent prompts.",
           "type": "MAY",
-          "effect": {
-            "type": "DESTROY_PERMANENT",
-            "target": "self"
-          }
-        },
-        {
-          "type": "MAY",
-          "effect": {
-            "type": "MARK",
-            "target": "ATTACK_TARGET"
-          }
+          "prompt": "Destroy Mark of the Huntsman to mark the defending hero?",
+          "effects": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "target": "self"
+            },
+            {
+              "type": "MARK",
+              "target": "ATTACK_TARGET"
+            }
+          ]
         }
       ]
     },

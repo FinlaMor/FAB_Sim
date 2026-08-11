@@ -9,22 +9,21 @@
           "amount": 3
         },
         {
-          "type": "PAY_OR_DAMAGE",
-          "pay_cost": {
-            "type": "PAY_RESOURCES",
-            "amount": 2
-          },
-          "damage_effect": {
-            "type": "DEAL_GENERIC",
-            "amount": 1
-          },
+          "_comment": "\"they discard a card unless they pay {r}{r}\" — the OPPONENT pays or discards, so this is PAY_OR_ELSE against them, not PAY_OR_DAMAGE against us. The previous pay_cost/damage_effect keys were invented and silently ignored.",
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            {
+              "type": "DISCARD",
+              "player": "OPPONENT",
+              "amount": 1
+            }
+          ],
           "conditions": [
             {
               "type": "FLAG_SET",
               "flag": "FUSED"
-            },
-            {
-              "type": "ATTACK_TARGET_IS_HERO"
             }
           ]
         }

@@ -3,6 +3,35 @@ from __future__ import annotations
 from typing import Any, Callable
 
 
+def _norm(value: str) -> str:
+    """Fold a name to a comparable form.
+
+    Card JSON authors keywords and traits in loose styles ("blood_debt",
+    "Go Again") while card data stores them concatenated ("BloodDebt",
+    "GoAgain"), so exact string comparison misses. Strip everything that is not
+    alphanumeric and lowercase what remains.
+    """
+    return "".join(ch for ch in str(value) if ch.isalnum()).lower()
+
+
+def _card_traits(card) -> set[str]:
+    """Normalised classes + talents + color of a card, for `card_class` filters.
+
+    Cards author a single "card_class" filter for what the game splits across
+    class ("Guardian"), talent ("Earth"), and occasionally pitch color
+    ("Blue"), so all three are matched against the one field.
+    """
+    _PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
+    traits = set()
+    for attr in ("classes", "talents"):
+        for v in (getattr(card, attr, None) or []):
+            traits.add(_norm(v))
+    color = getattr(card, "color", None) or _PITCH_COLOR.get(getattr(card, "pitch", None))
+    if color:
+        traits.add(_norm(color))
+    return traits
+
+
 def _attack_card_cost(attack_card) -> int:
     """Printed resource cost of the attack card (0-cost cards stay 0)."""
     cost = getattr(attack_card, 'cost', None)
@@ -32,11 +61,57 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # does not trigger during the start-of-game procedure. individual_turns
         # is 0 all through setup and becomes >=1 once the first turn begins, so
         # this gates a turn-restricted trigger out of start-of-game.
-        return lambda c, e, s: getattr(s, "individual_turns", 0) >= 1
+        #
+        # An optional "phase" narrows it further ("during an action phase").
+        # Combat happens inside the action phase (CR 4.3), so the combat steps
+        # count as ACTION_PHASE.
+        phase = _norm(params.get("phase") or "")
+        if not phase:
+            return lambda c, e, s: getattr(s, "individual_turns", 0) >= 1
+        _PHASE_STEPS = {
+            "actionphase": {"action", "combat_layer", "combat_attack", "combat_defend",
+                            "combat_reaction", "combat_damage", "combat_resolution",
+                            "combat_close"},
+            "action": {"action", "combat_layer", "combat_attack", "combat_defend",
+                       "combat_reaction", "combat_damage", "combat_resolution",
+                       "combat_close"},
+            "endphase": {"end_phase_beginning", "end_phase_cleanup", "end_turn"},
+            "end": {"end_phase_beginning", "end_phase_cleanup", "end_turn"},
+            "startphase": {"start_phase"},
+            "start": {"start_phase"},
+        }
+        allowed = _PHASE_STEPS.get(phase)
+
+        def _during(c, e, s, _allowed=allowed):
+            if getattr(s, "individual_turns", 0) < 1:
+                return False
+            if _allowed is None:
+                return True
+            step = getattr(s, "step", None)
+            step = getattr(step, "value", step)
+            return str(step) in _allowed
+        return _during
 
     # ── combat presence ────────────────────────────────────────────────────
     if ctype == "IN_COMBAT":
-        return lambda c, e, s: s.combat is not None
+        # "combat_role" restricts to the side the controller is on ("while this
+        # is attacking" vs "defending"). Without it a card authored as two
+        # role-gated branches fired BOTH branches in every combat.
+        role = _norm(params.get("combat_role") or "")
+        if not role:
+            return lambda c, e, s: s.combat is not None
+
+        def _in_combat_role(c, e, s, _role=role):
+            from engine.card_effects.ability_keywords import _controller_id
+            if s.combat is None:
+                return False
+            is_attacker = _controller_id(c) == s.combat.attacker_id
+            if _role in ("attacker", "attacking"):
+                return is_attacker
+            if _role in ("defender", "defending"):
+                return not is_attacker
+            return True
+        return _in_combat_role
 
     if ctype == "ATTACK_IS_WEAPON":
         return lambda c, e, s: s.combat is not None and getattr(s.combat, 'from_weapon', False)
@@ -362,8 +437,24 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
 
     # ── card / zone ────────────────────────────────────────────────────────
     if ctype == "HAS_KEYWORD":
-        kw = params.get("keyword", "")
-        return lambda c, e, s, _kw=kw: bool(getattr(c, 'keywords', None)) and _kw in c.keywords
+        # Authored as "keyword" (singular) or "keywords" (a list — match any).
+        # The list form used to fall back to an empty keyword and be always
+        # false, killing the whole ability. Matching is normalised so
+        # "blood_debt" finds the stored "BloodDebt".
+        wanted = params.get("keywords")
+        if not wanted:
+            wanted = [params.get("keyword", "")]
+        wanted = [k for k in wanted if k]
+
+        def _has_kw(c, e, s, _w=wanted):
+            have = getattr(c, 'keywords', None) or []
+            if not have or not _w:
+                return False
+            if any(k in have for k in _w):
+                return True
+            have_n = {_norm(h) for h in have}
+            return any(_norm(k) in have_n for k in _w)
+        return _has_kw
 
     if ctype == "CARD_IN_ZONE":
         # Zones: cards author either "zone" (singular) or "zones" (a list, ~19
@@ -378,13 +469,19 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         cost_lte = params.get("cost_lte")
         filter_types = [t.lower() for t in params.get("filter_types", [])]
         color = (params.get("color") or "").lower()
+        # card_class: a class ("Guardian"), talent ("Earth") or color ("Blue")
+        # filter; keywords: match any (e.g. "blood_debt"). Both were ignored,
+        # making the condition too permissive.
+        card_class = _norm(params.get("card_class") or "")
+        want_kws = [k for k in (params.get("keywords") or []) if k]
         # count_gte: >= N cards match; "amount" is a legacy alias for count_gte
         count_gte = params.get("count_gte", params.get("amount"))
         count_eq  = params.get("count_eq")
         _PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
 
         def _ciz(c, e, s, _zs=zones, _cge=cost_gte, _cle=cost_lte, _ft=filter_types,
-                 _col=color, _nge=count_gte, _neq=count_eq):
+                 _col=color, _nge=count_gte, _neq=count_eq,
+                 _cc=card_class, _kws=want_kws):
             from engine.card_effects.ability_keywords import _controller_id
             player = s.players[_controller_id(c)]
             count = 0
@@ -407,6 +504,12 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                         card_color = (getattr(card, 'color', None)
                                       or _PITCH_COLOR.get(getattr(card, 'pitch', None)))
                         if (card_color or "").lower() != _col:
+                            continue
+                    if _cc and _cc not in _card_traits(card):
+                        continue
+                    if _kws:
+                        have = {_norm(k) for k in (getattr(card, 'keywords', None) or [])}
+                        if not any(_norm(k) in have for k in _kws):
                             continue
                     count += 1
             if _neq is not None:
@@ -502,9 +605,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             need = int(params.get("amount", 1))
         except (TypeError, ValueError):
             need = 1
-        def _ctt(c, e, s, _wants=wants, _n=need):
-            from engine.card_effects.ability_keywords import _controller_id
-            player = s.players[_controller_id(c)]
+        # "if you control LESS Gold than an opponent" compares the two players'
+        # counts instead of a fixed threshold: `opponent` switches to that
+        # comparison and `comparison` picks the operator. Both were ignored, so
+        # such a card fired whenever it controlled any of the token at all —
+        # roughly the opposite of what it says.
+        comparison = _norm(params.get("comparison") or "gte")
+        vs_opponent = bool(params.get("opponent"))
+
+        def _count_for(player, _wants):
             count = 0
             for zone_name in ('permanents', 'head', 'chest', 'arms', 'legs',
                               'weapon1', 'weapon2'):
@@ -518,7 +627,20 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                     if any(slug == ws or wd in subs or ws in subs_slug
                            for ws, wd in _wants):
                         count += 1
-            return count >= _n
+            return count
+
+        _OPS = {
+            "gte": lambda a, b: a >= b, "gt": lambda a, b: a > b,
+            "lte": lambda a, b: a <= b, "lt": lambda a, b: a < b,
+            "eq": lambda a, b: a == b, "neq": lambda a, b: a != b,
+        }
+
+        def _ctt(c, e, s, _wants=wants, _n=need, _cmp=comparison, _vs=vs_opponent):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(c)
+            mine = _count_for(s.players[cid], _wants)
+            other = _count_for(s.players[3 - cid], _wants) if _vs else _n
+            return _OPS.get(_cmp, _OPS["gte"])(mine, other)
         return _ctt
 
     if ctype in ("CONTROLS_CHAIN_LINKS", "CHAIN_LINKS_CONTROLLED_GTE"):
@@ -569,8 +691,6 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # match — combat.keywords stores the title-cased form ("Go Again") while
         # JSON often writes the snake_case token. Lair of the Spider never fired
         # because "go_again" != "go again" under a plain lower() comparison.
-        def _norm(k):
-            return k.lower().replace("_", "").replace(" ", "")
         kw = _norm(params.get("keyword", ""))
         def _ahk(c, e, s, _kw=kw):
             if not s.combat:
@@ -597,9 +717,19 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # "When this attacks A HERO" — false when the attack was declared
         # against a permanent or ally. combat.attack_target is set only for
         # those, so a hero attack leaves it None.
-        def _atk_hero(c, e, s):
+        # "hero_type" narrows it to a hero of a given class or talent ("when
+        # this attacks a Revered hero"); ignoring it fired against any hero.
+        hero_type = _norm(params.get("hero_type") or "")
+
+        def _atk_hero(c, e, s, _ht=hero_type):
             combat = s.combat
-            return combat is not None and getattr(combat, "attack_target", None) is None
+            if combat is None or getattr(combat, "attack_target", None) is not None:
+                return False
+            if not _ht:
+                return True
+            defender = s.players.get(3 - combat.attacker_id)
+            hero = getattr(defender, "hero", None)
+            return hero is not None and _ht in _card_traits(hero)
         return _atk_hero
 
     if ctype == "REF_PITCH_IS":

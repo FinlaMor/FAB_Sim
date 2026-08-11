@@ -16,13 +16,28 @@ def _track_injected_effect(slug: str, effect_type: str) -> None:
 
 
 def _resolve_amount(amount: Any, state) -> int | float:
-    """Resolve a string amount token (ROLL_NUMBER etc.) to a numeric value."""
+    """Resolve a dynamic amount token to a numeric value.
+
+    Two authoring forms are accepted: a bare string token ("ROLL_NUMBER") and a
+    nested expression dict ({"type": "HALF", "value": {"type": "ROLL_RESULT"}}).
+    Both appear in card JSON; an unresolved dict used to flow through as a dict
+    and blow up the arithmetic in the calling effect.
+    """
+    roll = getattr(state, '_roll_result', 0) or 0
     if isinstance(amount, str):
-        roll = getattr(state, '_roll_result', 0) or 0
-        if amount == "ROLL_NUMBER":
+        if amount in ("ROLL_NUMBER", "ROLL_RESULT"):
             return roll
         if amount == "ROLL_NUMBER_HALF_ROUND_DOWN":
             return roll // 2
+        return 0
+    if isinstance(amount, dict):
+        atype = (amount.get("type") or "").upper()
+        if atype in ("ROLL_NUMBER", "ROLL_RESULT"):
+            return roll
+        if atype in ("HALF", "HALF_ROUND_DOWN"):
+            return int(_resolve_amount(amount.get("value", 0), state)) // 2
+        if atype in ("VALUE", "CONSTANT", "LITERAL"):
+            return _resolve_amount(amount.get("value", 0), state)
         return 0
     return amount
 
@@ -1005,17 +1020,42 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "PAY_OR_DAMAGE":
         # "Deals N damage to you unless you pay {r}..." — the controller may pay
-        # the resources to avoid the damage (e.g. Bloodrot Pox). Cards author the
-        # pay amount under "resources", "resource_cost", or "resource".
-        resources = (params.get("resources") if params.get("resources") is not None
-                     else params.get("resource_cost") if params.get("resource_cost") is not None
-                     else params.get("resource", 0))
+        # the resources to avoid the damage (e.g. Bloodrot Pox). Also models the
+        # payoff form "you may pay {r}. If you do, X" (damage 0 + on_success).
+        #
+        # The pay amount is authored under "resources", "resource_cost",
+        # "resource", or "amount". "resource" is sometimes a resource *name*
+        # ("RESOURCE_POINTS") rather than a quantity, in which case the quantity
+        # lives in "amount" — taking the name as the amount raised a TypeError
+        # on the `>=` below, so only numeric values are accepted as the cost.
+        def _first_num(*keys):
+            for k in keys:
+                v = params.get(k)
+                if isinstance(v, bool):
+                    continue
+                if isinstance(v, int) or isinstance(v, float):
+                    return v
+                if isinstance(v, str):
+                    try:
+                        return int(v)
+                    except ValueError:
+                        continue
+            return 0
+        resources = _first_num("resources", "resource_cost", "resource", "amount")
         dmg = params.get("damage", 0)
-        def _fn(card, event, state, _r=resources, _d=dmg):
+        if not isinstance(dmg, (int, float)) or isinstance(dmg, bool):
+            dmg = 0
+        on_success = [((e.get("type") or "").upper(), e)
+                      for e in (params.get("on_success") or [])]
+        def _fn(card, event, state, _r=resources, _d=dmg, _win=on_success):
             from engine.card_effects.ability_keywords import (
                 _ask_player, _controller_id, effect_deal_damage)
             cid = _controller_id(card)
             player = state.players[cid]
+            # Paying buys nothing when there is no damage to avoid and no
+            # payoff — don't offer a prompt that can only waste resources.
+            if _d <= 0 and not _win:
+                return
             paid = False
             if player.resources >= _r:
                 choice = _ask_player(state, cid, ["pay", "take_damage"],
@@ -1023,7 +1063,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 if str(choice) == "pay":
                     player.resources -= _r
                     paid = True
-            if not paid:
+            if paid:
+                for et, ep in _win:
+                    fn = compile_effect(et, {k: v for k, v in ep.items() if k != "type"})
+                    if fn is not None:
+                        fn(card, event, state)
+            else:
                 effect_deal_damage(state, cid, _d, card, damage_type="generic")
         return _fn
 
@@ -1383,7 +1428,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # compiled here, so their own "conditions" must be honoured explicitly;
         # compiling them without this would silently drop the gate.
         prompt = params.get("prompt", "Use this optional ability?")
-        sub_specs = params.get("effects", []) or []
+        # A single sub-effect is often authored as "effect": {...} instead of
+        # the list form; without this the block compiled empty and accepting
+        # the prompt did nothing at all.
+        sub_specs = params.get("effects") or []
+        if not sub_specs and isinstance(params.get("effect"), dict):
+            sub_specs = [params["effect"]]
         from engine.card_effects.dsl.condition_types import compile_condition
         subs = []
         for spec in sub_specs:
@@ -1861,16 +1911,38 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "ROLL":
-        faces = params.get("faces", 6)
-        def _fn(card, event, state, _f=faces):
+        # Cards author the die size as "faces" or "sides". Effects that consume
+        # the result ("gain action points equal to half the number rolled") are
+        # authored under "on_success" and run after the roll — they read the
+        # result through _resolve_amount's ROLL_RESULT/HALF tokens.
+        faces = params.get("faces", params.get("sides", 6))
+        after = [((e.get("type") or "").upper(), e)
+                 for e in (params.get("on_success") or [])]
+        def _fn(card, event, state, _f=faces, _after=after):
             from engine.card_effects.ability_keywords import roll_die, _controller_id
-            result = roll_die(state, _controller_id(card), faces=_f)
+            cid = _controller_id(card)
+            result = roll_die(state, cid, faces=_f)
             state._roll_result = result
+            # "If you've rolled a 6 on a die this turn" (a recurring Kayo
+            # template) reads back across every roll in the turn, not just this
+            # one — record it turn-scoped so any later card can check the flag.
+            if result == 6:
+                player = state.players[cid]
+                if "DIE_ROLLED_SIX" not in player.current_turn_effects:
+                    player.current_turn_effects.append("DIE_ROLLED_SIX")
+            for et, ep in _after:
+                fn = compile_effect(et, {k: v for k, v in ep.items() if k != "type"})
+                if fn is not None:
+                    fn(card, event, state)
         return _fn
 
     if etype == "APPLY_CONTINUOUS":
         target = params.get("target", "")
-        modifications = params.get("modifications", [])
+        # Single modification authored as "effect": {...} rather than the
+        # "modifications" list (the recalc consumer reads the list only).
+        modifications = params.get("modifications") or []
+        if not modifications and isinstance(params.get("effect"), dict):
+            modifications = [params["effect"]]
         span = params.get("span", "THIS_TURN")
         filter_raw = params.get("filter")
         def _fn(card, event, state, _tgt=target, _mods=modifications,

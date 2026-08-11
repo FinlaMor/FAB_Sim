@@ -1,5 +1,6 @@
 {
   "slug": "reckless_charge_blue",
+  "_comment": "Kayo Specialization. Roll a 6 sided die, gain action points equal to half the number rolled (rounded down). If you've rolled a 6 on a die this turn, draw a card. ROLL records DIE_ROLLED_SIX turn-scoped, so the draw sees earlier rolls this turn too.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -9,8 +10,9 @@
           "sides": 6,
           "on_success": [
             {
+              "_comment": "action points are an asset, not a combat keyword",
               "type": "GAIN",
-              "keyword": "ACTION_POINTS",
+              "asset": "ACTION_POINTS",
               "amount": {
                 "type": "HALF",
                 "value": {
@@ -21,24 +23,15 @@
           ]
         },
         {
-          "type": "SET_FLAG",
-          "flag": "DIE_ROLLED_SIX"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "END_OF_TURN",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "DIE_ROLLED_SIX"
-        }
-      ],
-      "effects": [
-        {
+          "_comment": "resolves now, not at end of turn",
           "type": "DRAW",
-          "amount": 1
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "DIE_ROLLED_SIX"
+            }
+          ]
         }
       ]
     }

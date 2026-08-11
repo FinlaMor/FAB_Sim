@@ -795,6 +795,31 @@ STRUCTURAL_RULES = """
     ability_type PLAY — its effect resolves when played. (INSTANT fires on
     activation, never on play, so a played card with ability_type INSTANT does
     NOTHING.)
+14. LISTS ARE LISTS. Sub-effects always go in a LIST key, never a singular one.
+    Write "effects":[{...}] on MAY, "modifications":[{...}] on APPLY_CONTINUOUS,
+    "on_success":[{...}] on PAY_OR_DAMAGE/ROLL, "on_failure":[{...}] on
+    PAY_OR_ELSE. A singular "effect":{...} is a DIFFERENT key — the whole clause
+    is dropped and the ability does nothing.
+15. GAIN: "asset" vs "keyword" are NOT interchangeable. Resources, life, action
+    points and chi are ASSETS -> {"type":"GAIN","asset":"ACTION_POINTS",
+    "amount":N} (assets: RESOURCE_POINTS, LIFE_POINTS, ACTION_POINTS, CHI_POINTS).
+    "keyword" grants a COMBAT KEYWORD to the current attack (go again, dominate).
+    Using "keyword":"ACTION_POINTS" silently grants a nonsense keyword and gains
+    nothing.
+16. WHO PAYS decides the effect type. "<they> do X unless they pay {r}" targets
+    the OPPONENT -> {"type":"PAY_OR_ELSE","player":"OPPONENT","resources":N,
+    "on_failure":[<X with "player":"OPPONENT">]}. PAY_OR_DAMAGE is only for "deals
+    N damage to YOU unless YOU pay". Getting this backwards makes the wrong player
+    pay.
+17. Amounts that are a NUMBER must be a number. "resource"/"resources"/
+    "resource_cost" hold a QUANTITY (2), not a resource NAME ("RESOURCE_POINTS").
+    If you name the resource, the quantity must be in "amount".
+18. A filter you write must be a filter the condition READS. Class/talent/color
+    filters on CARD_IN_ZONE are "card_class"; keyword filters are "keywords":[...];
+    attacker-vs-defender on IN_COMBAT is "combat_role":"ATTACKER"/"DEFENDER". An
+    unread filter key makes the condition TOO PERMISSIVE (it fires when it should
+    not) rather than failing loudly — so prefer a key from the REFERENCE over one
+    that merely reads well.
 === END RULES ==="""
 
 
