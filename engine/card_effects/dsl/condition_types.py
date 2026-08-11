@@ -471,6 +471,36 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return False
         return _ctt
 
+    if ctype in ("CONTROLS_CHAIN_LINKS", "CHAIN_LINKS_CONTROLLED_GTE"):
+        # "control N or more chain links you control", optionally restricted to
+        # links whose ATTACK matches a variable `attribute` — a talent, class,
+        # subtype, or keyword (case-insensitive), e.g. attribute:"Draconic" for
+        # "2 or more Draconic chain links". Omit `attribute` to count every chain
+        # link you control. Each ChainLink stores its attack's talents/classes/
+        # subtypes/keywords at creation, so no per-link card lookup is needed.
+        try:
+            amount = int(params.get("amount", 1))
+        except (TypeError, ValueError):
+            amount = 1
+        attribute = (params.get("attribute") or params.get("talent")
+                     or params.get("class") or params.get("subtype") or "").lower()
+        def _ccl(c, e, s, _n=amount, _attr=attribute):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(c)
+            links = [lk for lk in (getattr(s, "chain_links", None) or [])
+                     if getattr(lk, "attacker_id", None) == cid]
+            if not _attr:
+                return len(links) >= _n
+            count = 0
+            for lk in links:
+                attrs = []
+                for fld in ("talents", "classes", "subtypes", "keywords"):
+                    attrs += [x.lower() for x in (getattr(lk, fld, None) or [])]
+                if _attr in attrs:
+                    count += 1
+            return count >= _n
+        return _ccl
+
     if ctype == "CONTROLS_SUBTYPE":
         # True if the controller controls a permanent with the given subtype
         # (e.g. "an aura you control"). Used to gate a MAY block so a

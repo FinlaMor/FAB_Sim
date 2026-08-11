@@ -1089,6 +1089,11 @@ class ChainLink:
     keywords: list[str]
     from_weapon: bool
     hit: bool = False
+    # Attack attributes captured at link creation so "N Draconic chain links",
+    # "N Ice chain links", etc. can be counted without a per-link card_db lookup.
+    talents: list[str] = field(default_factory=list)
+    classes: list[str] = field(default_factory=list)
+    subtypes: list[str] = field(default_factory=list)
 
     def to_dict(self):
         return {

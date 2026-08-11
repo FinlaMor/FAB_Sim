@@ -1,27 +1,36 @@
 {
   "slug": "blistering_blade_red",
+  "_comment": "Target dagger attack gets +2{p}; if you control 2 or more Draconic chain links, INSTEAD +3{p}. Modeled as base +2 plus a conditional +1 gated on CONTROLS_CHAIN_LINKS attribute:Draconic amount:2 (=+3 when 2+ Draconic links). Prior JSON gated the WHOLE ability on the condition (no +2 when under 2 links) via CONTROLS_TOKEN_TYPE (chain links aren't tokens, and it ignores amount) and used an unrecognized 'additional_effects' key.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtypes": [
+              "Dagger"
+            ]
+          }
+        ]
+      },
       "effects": [
         {
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": 2
-        }
-      ],
-      "conditions": [
-        {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_type": "draconic_chain_link",
-          "amount": 2
-        }
-      ],
-      "additional_effects": [
+        },
         {
           "type": "MODIFY_ATTACK",
           "mod": "add",
-          "amount": 1
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CONTROLS_CHAIN_LINKS",
+              "attribute": "Draconic",
+              "amount": 2
+            }
+          ]
         }
       ]
     }

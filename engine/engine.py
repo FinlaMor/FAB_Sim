@@ -1659,15 +1659,19 @@ def _resolve_damage(state: GameState) -> None:
         return
 
     # Store chain link result
+    _atk = combat.attack_card
     link = ChainLink(
         chainlink_id=combat.link_id,
         attacker_id=combat.attacker_id,
-        attack_slug=combat.attack_card.slug,
+        attack_slug=_atk.slug,
         attack_power=combat.attack_power,
         net_damage=net_damage,
         keywords=combat.keywords,
         from_weapon=combat.from_weapon,
         hit=(net_damage > 0),
+        talents=list(getattr(_atk, "talents", None) or []),
+        classes=list(getattr(_atk, "classes", None) or []),
+        subtypes=list(getattr(_atk, "subtypes", None) or []),
     )
     state.chain_links.append(link)
 

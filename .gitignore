@@ -110,3 +110,5 @@ data_collection/candidate_audit/
 # semantic-audit run artifacts (regenerated)
 docs/semantic_audit_all_candidates.jsonl
 docs/semantic_audit_all_candidates.md
+docs/semantic_audit_reaudit.jsonl
+docs/semantic_audit_reaudit.md

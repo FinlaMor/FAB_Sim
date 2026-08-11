@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import engine.card_effects.dsl as dsl
 from engine.card_effects.dsl.loader import load_all_cards
-from engine.state import CombatState
+from engine.state import CombatState, ChainLink
 from tests.conftest import _make_state, _make_card
 
 
@@ -173,3 +173,42 @@ def test_misfire_dampener_prevents_2_arcane_when_boosted():
     st.players[1].current_turn_effects.append("BOOSTED_THIS_TURN")
     _activate(st, "misfire_dampener")
     assert _arcane_to_self(st, 3) == 1  # 3 - prevented 2
+
+
+# ------------------------------------------------- blistering_blade (chain-link count)
+def _dagger_combat(st):
+    atk = _make_card(slug="dagger_atk", name="dagger", types=["Action", "Attack"],
+                     subtypes=["Dagger"])
+    atk.owner = atk.controller = 1
+    atk.base_power = 3
+    atk.power = 3
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            attack_card=atk, keywords=[])
+    st.combat.base_attack_power = 3
+    return atk
+
+
+def _draconic_links(st, n, pid=1):
+    for i in range(n):
+        st.chain_links.append(ChainLink(
+            chainlink_id=i, attacker_id=pid, attack_slug="x", attack_power=1,
+            net_damage=1, keywords=[], from_weapon=False, hit=True,
+            talents=["Draconic"]))
+
+
+def test_blistering_blade_plus2_under_2_draconic_links():
+    load_all_cards()
+    st = _make_state()
+    _dagger_combat(st)
+    _draconic_links(st, 1)  # only 1 Draconic link
+    _play(st, "blistering_blade_red", types=["AttackReaction"])
+    assert st.combat.attack_power == 5  # 3 + 2
+
+
+def test_blistering_blade_plus3_with_2_draconic_links():
+    load_all_cards()
+    st = _make_state()
+    _dagger_combat(st)
+    _draconic_links(st, 2)  # 2 Draconic links
+    _play(st, "blistering_blade_red", types=["AttackReaction"])
+    assert st.combat.attack_power == 6  # 3 + 3
