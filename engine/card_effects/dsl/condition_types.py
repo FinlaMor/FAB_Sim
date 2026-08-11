@@ -81,7 +81,12 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _acl
 
     if ctype == "ATTACK_TYPE_IN":
-        types = [v.lower() for v in params.get("types", [])]
+        # Cards author the type list under "types" OR "attack_type" (~7 usages
+        # used the latter, unread -> empty list). Accept a string or a list.
+        _raw = params.get("types") or params.get("attack_type") or []
+        if isinstance(_raw, str):
+            _raw = [_raw]
+        types = [v.lower() for v in _raw]
         def _ati(c, e, s, _types=types):
             if not s.combat or not getattr(s.combat, 'attack_card', None):
                 return False

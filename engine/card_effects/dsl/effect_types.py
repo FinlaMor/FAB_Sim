@@ -401,13 +401,18 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "CREATE_TOKEN":
         token = params.get("token", "")
         count = params.get("count", 1)
-        player_target = params.get("player", "SELF")
+        # Whose control the token enters. Cards author it under "player" OR
+        # "controller" (~13 usages used the latter, which was unread -> the token
+        # wrongly defaulted to SELF). Opponent-side values: opponent/defending/
+        # defender/target_hero (the hit hero).
+        player_target = params.get("player") or params.get("controller") or "SELF"
         destination = params.get("destination")  # e.g. "weapon_slot" to equip
         def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target, _dest=destination):
             from engine.effect_keywords import create_token as _ek_create_token
             from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(card)
-            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            tid = (3 - cid) if _pt.upper() in (
+                "OPPONENT", "DEFENDING", "DEFENDER", "TARGET_HERO") else cid
             # count may be a dynamic expression, e.g. Spreading Plague's
             # "X = the number of defending cards this chain link".
             if isinstance(_cnt, str):

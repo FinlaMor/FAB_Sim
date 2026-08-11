@@ -324,3 +324,29 @@ def test_combo_contains_reads_card_name_and_rejects_empty():
     assert compile_condition("COMBO_CONTAINS", {"card_name": "Head Jab"})(src, None, st) is False
     # empty no longer matches everything (was the always-true bug)
     assert compile_condition("COMBO_CONTAINS", {})(src, None, st) is False
+
+
+def test_create_token_reads_controller_key():
+    from engine.card import CardDB
+    from engine.card_effects.dsl.effect_types import compile_effect
+    load_all_cards()
+    st = _make_state()
+    st.card_db = CardDB()
+    src = _make_card(slug="src", name="src")
+    src.owner = src.controller = 1
+    compile_effect("CREATE_TOKEN", {"token": "frailty", "controller": "opponent"})(src, None, st)
+    assert any(x.slug == "frailty" for x in st.players[2].permanents.cards)
+    assert not any(x.slug == "frailty" for x in st.players[1].permanents.cards)
+
+
+def test_attack_type_in_reads_attack_type_key():
+    from engine.card_effects.dsl.condition_types import compile_condition
+    st = _make_state()
+    src = _make_card(slug="src", name="src")
+    src.owner = src.controller = 1
+    atk = _make_card(slug="a", name="a", types=["Action", "Attack"])
+    atk.owner = atk.controller = 1
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            attack_card=atk, keywords=[])
+    assert compile_condition("ATTACK_TYPE_IN", {"attack_type": "Attack"})(src, None, st) is True
+    assert compile_condition("ATTACK_TYPE_IN", {"attack_type": "Instant"})(src, None, st) is False
