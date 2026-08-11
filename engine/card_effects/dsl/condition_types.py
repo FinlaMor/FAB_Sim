@@ -353,34 +353,49 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return lambda c, e, s, _kw=kw: bool(getattr(c, 'keywords', None)) and _kw in c.keywords
 
     if ctype == "CARD_IN_ZONE":
-        zone = params.get("zone", "").lower()
+        # Zones: cards author either "zone" (singular) or "zones" (a list, ~19
+        # usages) — read both. Optional filters: cost_gte/cost_lte, filter_types,
+        # and `color` (red/yellow/blue via pitch 1/2/3, ~14 usages) which was
+        # previously ignored.
+        zones = params.get("zones")
+        if not zones:
+            zones = [params.get("zone", "")]
+        zones = [z.lower() for z in zones if z]
         cost_gte = params.get("cost_gte")
         cost_lte = params.get("cost_lte")
         filter_types = [t.lower() for t in params.get("filter_types", [])]
+        color = (params.get("color") or "").lower()
         # count_gte: >= N cards match; "amount" is a legacy alias for count_gte
         count_gte = params.get("count_gte", params.get("amount"))
         count_eq  = params.get("count_eq")
+        _PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
 
-        def _ciz(c, e, s, _z=zone, _cge=cost_gte, _cle=cost_lte, _ft=filter_types,
-                 _nge=count_gte, _neq=count_eq):
+        def _ciz(c, e, s, _zs=zones, _cge=cost_gte, _cle=cost_lte, _ft=filter_types,
+                 _col=color, _nge=count_gte, _neq=count_eq):
             from engine.card_effects.ability_keywords import _controller_id
             player = s.players[_controller_id(c)]
-            zone_obj = getattr(player, _z, None)
-            if zone_obj is None:
-                return False
             count = 0
-            for card in zone_obj.cards:
-                cost = getattr(card, 'cost', None) or 0
-                if _cge is not None and cost < _cge:
+            for _z in _zs:
+                zone_obj = getattr(player, _z, None)
+                if zone_obj is None:
                     continue
-                if _cle is not None and cost > _cle:
-                    continue
-                if _ft:
-                    card_types = [t.lower() for t in (getattr(card, 'subtypes', None) or [])]
-                    card_types += [t.lower() for t in (getattr(card, 'types', None) or [])]
-                    if not any(t in card_types for t in _ft):
+                for card in zone_obj.cards:
+                    cost = getattr(card, 'cost', None) or 0
+                    if _cge is not None and cost < _cge:
                         continue
-                count += 1
+                    if _cle is not None and cost > _cle:
+                        continue
+                    if _ft:
+                        card_types = [t.lower() for t in (getattr(card, 'subtypes', None) or [])]
+                        card_types += [t.lower() for t in (getattr(card, 'types', None) or [])]
+                        if not any(t in card_types for t in _ft):
+                            continue
+                    if _col:
+                        card_color = (getattr(card, 'color', None)
+                                      or _PITCH_COLOR.get(getattr(card, 'pitch', None)))
+                        if (card_color or "").lower() != _col:
+                            continue
+                    count += 1
             if _neq is not None:
                 return count == _neq
             if _nge is not None:
@@ -390,7 +405,8 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _ciz
 
     if ctype == "COUNTER_GTE":
-        ctype2 = params.get("counter_type", params.get("type", ""))
+        ctype2 = (params.get("counter_type") or params.get("counter")
+                  or params.get("type") or "")
         min_val = params.get("min", params.get("amount", 1))
         def _cge(c, e, s, _ct=ctype2, _min=min_val):
             from engine.card_effects.ability_keywords import _controller_id

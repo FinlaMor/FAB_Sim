@@ -421,7 +421,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "PUT_COUNTER":
-        ctype = params.get("counter_type", "")
+        # Cards author the counter kind under EITHER "counter_type" or "counter";
+        # only "counter_type" was read, so ~47 usages put an empty-typed counter.
+        ctype = params.get("counter_type") or params.get("counter") or ""
         amt = params.get("amount", 1)
         def _fn(card, event, state, _ct=ctype, _a=amt):
             from engine.card_effects.ability_keywords import effect_put_counter
@@ -430,7 +432,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "REMOVE_COUNTER":
-        ctype = params.get("counter_type", "")
+        ctype = params.get("counter_type") or params.get("counter") or ""
         amt = params.get("amount", 1)
         def _fn(card, event, state, _ct=ctype, _a=amt):
             from engine.card_effects.ability_keywords import effect_remove_counter

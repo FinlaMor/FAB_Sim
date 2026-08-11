@@ -282,3 +282,31 @@ def _activate_start(st, slug, pid=1):
     card.owner = card.controller = pid
     st.players[pid].permanents.add(card)
     dsl.dispatch(st, "START_OF_TURN", slug, card=card, event=None)
+
+
+# ------------------------------------ systemic key fixes (counter / zones / color)
+def test_put_and_check_counter_via_counter_key():
+    from engine.card_effects.dsl.condition_types import compile_condition
+    from engine.card_effects.dsl.effect_types import compile_effect
+    st = _make_state()
+    tgt = _make_card(slug="cog", name="cog", types=["Action"])
+    tgt.owner = tgt.controller = 1
+    compile_effect("PUT_COUNTER", {"counter": "steam", "amount": 1})(tgt, None, st)
+    gte = compile_condition("COUNTER_GTE", {"counter": "steam", "amount": 1})
+    assert gte(tgt, None, st) is True   # counter key read on both sides
+
+
+def test_card_in_zone_reads_zones_list_and_color():
+    from engine.card_effects.dsl.condition_types import compile_condition
+    st = _make_state()
+    src = _make_card(slug="src", name="src")
+    src.owner = src.controller = 1
+    cond = compile_condition("CARD_IN_ZONE",
+                             {"zones": ["pitch"], "color": "blue", "amount": 2})
+    assert cond(src, None, st) is False
+    for i in range(2):
+        b = _make_card(slug=f"b{i}", name="b", types=["Action"])
+        b.owner = b.controller = 1
+        b.pitch = 3  # blue
+        st.players[1].pitch.add(b)
+    assert cond(src, None, st) is True
