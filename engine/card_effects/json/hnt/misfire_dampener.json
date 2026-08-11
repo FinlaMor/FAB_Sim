@@ -1,5 +1,6 @@
 {
   "slug": "misfire_dampener",
+  "_comment": "Instant - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn; if you've boosted this turn, INSTEAD prevent the next 2. Modeled as an ACTIVATE with a destroy-this cost and a CONDITIONAL_EFFECT on the BOOSTED flag (then PREVENT_DAMAGE 2, else 1). Prior JSON gated the whole ability on BOOSTED (no prevention at all when not boosted), used an unrecognized 'additional_effects' key, and only SET_FLAG (which nothing consumed).",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -12,22 +13,25 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "MISFIRE_DAMPENER_PREVENT_ARCANE",
-          "amount": 1
-        }
-      ],
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "BOOSTED_THIS_TURN"
-        }
-      ],
-      "additional_effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "MISFIRE_DAMPENER_PREVENT_ARCANE",
-          "amount": 2
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "FLAG_SET",
+              "flag": "BOOSTED_THIS_TURN"
+            }
+          ],
+          "then": [
+            {
+              "type": "PREVENT_DAMAGE",
+              "amount": 2
+            }
+          ],
+          "else": [
+            {
+              "type": "PREVENT_DAMAGE",
+              "amount": 1
+            }
+          ]
         }
       ]
     }

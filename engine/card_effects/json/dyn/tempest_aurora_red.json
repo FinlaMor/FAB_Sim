@@ -1,40 +1,16 @@
 {
   "slug": "tempest_aurora_red",
+  "_comment": "The next card you play this turn with cost 2 or less and an arcane-damage effect instead deals that much +1; Go again. Modeled as AMP 1 (engine's 'next arcane damage this turn +N', CR 8.5.47) + GO_AGAIN. The 'cost 2 or less' restriction on which card is simplified/omitted (Amp buffs the next arcane damage regardless of the source card's cost). Prior JSON used a malformed nested APPLY_CONTINUOUS that implemented nothing.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
+          "type": "AMP",
+          "amount": 1
+        },
         {
-          "type": "APPLY_CONTINUOUS",
-          "conditions": [
-            {
-              "type": "DURING_TURN"
-            },
-            {
-              "type": "AND",
-              "conditions": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "HAND",
-                  "cost_lte": 2,
-                  "effects": [
-                    {
-                      "type": "DEAL_ARCANE",
-                      "amount": 1
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+          "type": "GO_AGAIN"
         }
       ]
     }

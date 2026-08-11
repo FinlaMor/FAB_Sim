@@ -132,3 +132,44 @@ def test_aether_flare_deals_1_then_amps_next_by_1():
     _play(st, "aether_flare_blue", types=["Action"])
     assert before - st.players[2].life == 1  # its own 1 arcane
     assert _next_arcane(st, 1) == 2  # 1 + amp 1
+
+
+def test_tempest_aurora_amps_next_arcane_by_1():
+    load_all_cards()
+    st = _make_state()
+    _play(st, "tempest_aurora_red", types=["Action"])
+    assert _next_arcane(st, 1) == 2  # 1 + amp 1
+
+
+# ---------------------------------------------------------------- misfire_dampener
+def _activate(st, slug, pid=1):
+    from engine.card import CardDB
+    st.card_db = CardDB()
+    card = _make_card(slug=slug, name=slug, types=["Item"])
+    card.owner = card.controller = pid
+    st.players[pid].permanents.add(card)
+    dsl.dispatch(st, "ON_ACTIVATE", slug, card=card, event=None)
+
+
+def _arcane_to_self(st, amount):
+    from engine.card_effects.ability_keywords import effect_deal_arcane
+    src = _make_card(slug="src", name="src", types=["Action"])
+    src.owner = src.controller = 2  # opponent deals arcane to p1
+    before = st.players[1].life
+    effect_deal_arcane(st, 1, amount, src)
+    return before - st.players[1].life
+
+
+def test_misfire_dampener_prevents_1_arcane_without_boost():
+    load_all_cards()
+    st = _make_state()
+    _activate(st, "misfire_dampener")
+    assert _arcane_to_self(st, 3) == 2  # 3 - prevented 1
+
+
+def test_misfire_dampener_prevents_2_arcane_when_boosted():
+    load_all_cards()
+    st = _make_state()
+    st.players[1].current_turn_effects.append("BOOSTED_THIS_TURN")
+    _activate(st, "misfire_dampener")
+    assert _arcane_to_self(st, 3) == 1  # 3 - prevented 2
