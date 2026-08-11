@@ -1,24 +1,30 @@
 {
   "slug": "comet_collision_red",
+  "_comment": "Deal 3 arcane to any target; Starfall - if an instant card has been put into your graveyard this turn, INSTEAD deal 4. Modeled with a CONDITIONAL_EFFECT on the STARFALL_FLAG (then deal 4, else deal 3). Prior JSON (a) gated the whole ability on the flag (dealing nothing without it), (b) used an unrecognized 'alternative_effects' key, and (c) used ability_type INSTANT (fires on ON_ACTIVATE) for a PLAYED action card, so it never fired on play; corrected to PLAY.",
   "abilities": [
     {
-      "ability_type": "INSTANT",
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "DEAL_ARCANE",
-          "amount": 3
-        }
-      ],
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "STARFALL_FLAG"
-        }
-      ],
-      "alternative_effects": [
-        {
-          "type": "DEAL_ARCANE",
-          "amount": 4
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "FLAG_SET",
+              "flag": "STARFALL_FLAG"
+            }
+          ],
+          "then": [
+            {
+              "type": "DEAL_ARCANE",
+              "amount": 4
+            }
+          ],
+          "else": [
+            {
+              "type": "DEAL_ARCANE",
+              "amount": 3
+            }
+          ]
         }
       ]
     }

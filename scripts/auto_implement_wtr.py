@@ -765,6 +765,36 @@ STRUCTURAL_RULES = """
      list to that count.
 8. Slugs use underscores, never hyphens. Output ONLY the raw JSON object — no
    markdown fences, no prose. It must parse (no trailing commas; true/false).
+9. "INSTEAD" / "If X, instead Y" is a MUTUALLY-EXCLUSIVE choice, not two things.
+   The base case must ALWAYS happen when the condition is false. Two ways:
+   (a) one effect with CONDITIONAL_EFFECT {"when":[<cond>], "then":[<Y>], "else":[<X>]};
+   (b) OR two effects: <X> gated on NOT the condition, <Y> gated on the condition.
+   NEVER gate the WHOLE ability on the condition (that zeroes the default case —
+   e.g. "deal 3, instead 4 if starfall" must still deal 3 without starfall), and
+   NEVER emit both an always-on <X> and an always-on <Y> (that does X+Y).
+   Example — "Deal 3 arcane; if you rolled a 6 this turn, instead deal 5":
+     {"ability_type":"PLAY","effects":[{"type":"CONDITIONAL_EFFECT",
+       "when":[{"type":"FLAG_SET","flag":"ROLLED_6"}],
+       "then":[{"type":"DEAL_ARCANE","amount":5}],
+       "else":[{"type":"DEAL_ARCANE","amount":3}]}]}
+10. "You may X. If you do, Y." is a MAY block — put BOTH X and Y inside one
+    {"type":"MAY","effects":[<X>,<Y>]}. Declining runs neither, so "if you do"
+    falls out for free. NEVER emit X and Y unconditionally, and NEVER model "you
+    may" as always-happening.
+11. Only use JSON KEYS that appear in the DSL REFERENCE / EXAMPLES. Invented keys
+    like "additional_effects", "alternative_effects", "additional_cost" on a
+    non-PLAY-cost, etc. are SILENTLY IGNORED — the clause then does nothing. If a
+    branch/extra effect is needed, put it in "effects" (with per-effect
+    "conditions"), not a made-up key.
+12. "create a <token> under their control" / "under another hero's control" ->
+    add "player":"OPPONENT" to CREATE_TOKEN. Default (no player) creates it under
+    YOU. Match the controller named in the text.
+13. ability_type INSTANT is ONLY for ACTIVATED abilities on a permanent that STAY
+    in play ("Instant - {cost}: effect"). A played instant-speed ACTION card
+    (type line says Instant but there is NO "Instant -  ... :" activated cost) is
+    ability_type PLAY — its effect resolves when played. (INSTANT fires on
+    activation, never on play, so a played card with ability_type INSTANT does
+    NOTHING.)
 === END RULES ==="""
 
 

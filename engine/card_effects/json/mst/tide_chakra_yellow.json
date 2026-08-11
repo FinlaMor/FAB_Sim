@@ -1,15 +1,9 @@
 {
   "slug": "tide_chakra_yellow",
+  "_comment": "Target Assassin or Mystic attack action card gets +2{p}; if you've transcended this turn, INSTEAD +4{p}. Modeled as a base +2 plus a second +2 gated on the TRANSCENDED flag (so +2 normally, +4 when transcended). Prior JSON gated the WHOLE ability on TRANSCENDED (giving nothing when not transcended) and used an unrecognized 'additional_effects' key.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 2
-        }
-      ],
       "target": {
         "filter": [
           {
@@ -21,17 +15,22 @@
           }
         ]
       },
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "TRANSCENDED"
-        }
-      ],
-      "additional_effects": [
+      "effects": [
         {
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": 2
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "TRANSCENDED"
+            }
+          ]
         }
       ]
     }
