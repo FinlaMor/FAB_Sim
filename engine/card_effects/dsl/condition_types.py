@@ -452,23 +452,38 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _oim
 
     if ctype == "CONTROLS_TOKEN_TYPE":
-        # True if the controller has >= 1 permanent of the given slug OR a
-        # permanent that "counts as" that token (matched via subtype, e.g. Aurum
-        # Aegis counts as a Gold). Searches all permanents (a Gold token is an
-        # Item sub-zone member, not the Token sub-zone) plus equipment/weapon slots.
-        token_slug = params.get("token", "")
-        def _ctt(c, e, s, _slug=token_slug):
+        # True if the controller has >= `amount` permanents of the given token OR
+        # permanents that "count as" it (matched via subtype, e.g. Aurum Aegis
+        # counts as a Gold). Searches all permanents (a Gold token is an Item
+        # sub-zone member, not the Token sub-zone) plus equipment/weapon slots.
+        #
+        # Cards author the token under EITHER "token" (a slug) or "token_type" (a
+        # display name like "Seismic Surge"); previously only "token" was read, so
+        # every card using "token_type" (the large majority) had a permanently
+        # false condition. Read both and normalise the display name to a slug.
+        raw = (params.get("token") or params.get("token_type") or "").strip()
+        want_slug = raw.lower().replace(" ", "_")
+        want_disp = raw.lower()
+        try:
+            need = int(params.get("amount", 1))
+        except (TypeError, ValueError):
+            need = 1
+        def _ctt(c, e, s, _slug=want_slug, _disp=want_disp, _n=need):
             from engine.card_effects.ability_keywords import _controller_id
             player = s.players[_controller_id(c)]
+            count = 0
             for zone_name in ('permanents', 'head', 'chest', 'arms', 'legs',
                               'weapon1', 'weapon2'):
                 zone = getattr(player, zone_name, None)
-                if zone and any(
-                        getattr(t, 'slug', '') == _slug
-                        or _slug.lower() in [st.lower() for st in (getattr(t, 'subtypes', None) or [])]
-                        for t in zone.cards):
-                    return True
-            return False
+                if not zone:
+                    continue
+                for t in zone.cards:
+                    subs = [st.lower() for st in (getattr(t, 'subtypes', None) or [])]
+                    if (getattr(t, 'slug', '') == _slug
+                            or _disp in subs
+                            or _slug in [st.replace(" ", "_") for st in subs]):
+                        count += 1
+            return count >= _n
         return _ctt
 
     if ctype in ("CONTROLS_CHAIN_LINKS", "CHAIN_LINKS_CONTROLLED_GTE"):

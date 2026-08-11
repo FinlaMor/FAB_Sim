@@ -1,14 +1,5 @@
 {
   "slug": "teklo_base_head",
-  "abilities": [
-    {
-      "ability_type": "STATIC_TRIGGERED",
-      "trigger": "ON_DEFEND",
-      "effects": [
-        {
-          "type": "INTIMIDATE"
-        }
-      ]
-    }
-  ]
+  "_comment": "Vanilla head equipment \u2014 its only text is the Blade Break keyword (engine-handled). Prior JSON fabricated a STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability that the card does not have.",
+  "abilities": []
 }

@@ -1,5 +1,6 @@
 {
   "slug": "testament_of_valahai",
+  "_comment": "If you control 3+ Seismic Surge tokens, +2{d}; if 6+, INSTEAD +4{d}; Guardwell. Modeled as base +2 (at 3+) plus an additional +2 (at 6+) so it totals +2 at 3-5 and +4 at 6+. Prior JSON gave +2 (3+) AND +4 (6+) as separate statics -> +6 at 6+ (wrong); and CONTROLS_TOKEN_TYPE ignored 'amount' (fired at 1+). Both now correct: amount honored + additive branches.",
   "abilities": [
     {
       "ability_type": "STATIC",
@@ -31,7 +32,7 @@
         {
           "type": "MODIFY_DEFENSE_VALUE",
           "mod": "add",
-          "amount": 4
+          "amount": 2
         }
       ]
     }

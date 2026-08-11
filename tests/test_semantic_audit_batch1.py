@@ -212,3 +212,27 @@ def test_blistering_blade_plus3_with_2_draconic_links():
     _draconic_links(st, 2)  # 2 Draconic links
     _play(st, "blistering_blade_red", types=["AttackReaction"])
     assert st.combat.attack_power == 6  # 3 + 3
+
+
+# ---------------------------------- CONTROLS_TOKEN_TYPE (token_type key + amount)
+def test_controls_token_type_reads_token_type_key_and_honors_amount():
+    from engine.card_effects.dsl.condition_types import compile_condition
+    load_all_cards()
+    st = _make_state()
+    src = _make_card(slug="src", name="src")
+    src.owner = src.controller = 1
+    cond = compile_condition("CONTROLS_TOKEN_TYPE",
+                             {"token_type": "Seismic Surge", "amount": 3})
+
+    def add_tokens(n):
+        for _ in range(n):
+            t = _make_card(slug="seismic_surge", name="Seismic Surge",
+                           types=["Token"], subtypes=["Seismic Surge"])
+            t.owner = t.controller = 1
+            st.players[1].permanents.add(t)
+
+    assert cond(src, None, st) is False          # 0 tokens
+    add_tokens(2)
+    assert cond(src, None, st) is False          # 2 < 3 (amount honored)
+    add_tokens(1)
+    assert cond(src, None, st) is True           # 3 >= 3 (token_type key read)
