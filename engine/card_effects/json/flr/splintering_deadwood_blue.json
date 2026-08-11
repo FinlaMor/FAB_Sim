@@ -1,22 +1,30 @@
 {
   "slug": "splintering_deadwood_blue",
+  "_comment": "When this attacks or hits, you MAY destroy an aura you control; if you do, create a Runechant token. The MAY is gated on CONTROLS_SUBTYPE Aura so it is only offered when you have an aura, and the block destroys a chosen aura then creates the Runechant (declining runs neither). Prior JSON destroyed the attack ITSELF (target 'self') and created the Runechant unconditionally.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "OPT",
-          "amount": 1
-        },
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        },
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Runechant",
-          "token": "runechant"
+          "type": "MAY",
+          "conditions": [
+            {
+              "type": "CONTROLS_SUBTYPE",
+              "subtype": "Aura"
+            }
+          ],
+          "prompt": "Destroy an aura you control to create a Runechant?",
+          "effects": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "subtype": "Aura"
+            },
+            {
+              "type": "CREATE_TOKEN",
+              "token": "runechant"
+            }
+          ]
         }
       ]
     },
@@ -25,17 +33,24 @@
       "trigger": "ON_HIT",
       "effects": [
         {
-          "type": "OPT",
-          "amount": 1
-        },
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        },
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Runechant",
-          "token": "runechant"
+          "type": "MAY",
+          "conditions": [
+            {
+              "type": "CONTROLS_SUBTYPE",
+              "subtype": "Aura"
+            }
+          ],
+          "prompt": "Destroy an aura you control to create a Runechant?",
+          "effects": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "subtype": "Aura"
+            },
+            {
+              "type": "CREATE_TOKEN",
+              "token": "runechant"
+            }
+          ]
         }
       ]
     }

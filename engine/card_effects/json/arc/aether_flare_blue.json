@@ -1,5 +1,6 @@
 {
   "slug": "aether_flare_blue",
+  "_comment": "Deal 1 arcane to target opposing hero; the next card you play this turn with an arcane-damage effect instead deals that much +X, where X = the damage this dealt (1). Modeled as DEAL_ARCANE 1 + AMP 1 (Amp = engine's 'next arcane damage this turn +N', CR 8.5.47). X is 1 in the base case (the 1 arcane it deals); the dynamic 'X = damage actually dealt' is simplified to the printed 1. Prior JSON used SET_FLAG + a STATIC MODIFY_ATTACK on a non-existent DEAL_ARCANE keyword (buffs attack power, not arcane).",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -9,55 +10,8 @@
           "amount": 1
         },
         {
-          "type": "SET_FLAG",
-          "flag": "AETHER_FLARE_DEALT"
-        }
-      ],
-      "target": {
-        "filter": [
-          {
-            "type": "CARD_IN_ZONE",
-            "zones": [
-              "opponent"
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "AETHER_FLARE_DEALT"
-        },
-        {
-          "type": "AND",
-          "conditions": [
-            {
-              "type": "IS_ACTIVE_PLAYER"
-            },
-            {
-              "type": "OR",
-              "conditions": [
-                {
-                  "type": "ATTACK_HAS_KEYWORD",
-                  "keyword": "DEAL_ARCANE"
-                },
-                {
-                  "type": "ATTACK_HAS_KEYWORD",
-                  "keyword": "DEAL_GENERIC"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": "AETHER_FLARE_DAMAGE"
+          "type": "AMP",
+          "amount": 1
         }
       ]
     }

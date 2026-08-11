@@ -1,31 +1,13 @@
 {
   "slug": "absorb_in_aether_red",
+  "_comment": "Defense Reaction. 'The next card you play this turn with an effect that deals arcane damage instead deals that much +2' is exactly the engine's Amp mechanic (CR 8.5.47: next arcane damage this turn +N). Modeled as AMP 2. Prior JSON used a DEFEND-injected ON_PLAY trigger with MODIFY_ATTACK (which buffs attack power, not arcane damage).",
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",
-      "trigger": "ON_DEFEND",
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_PLAY",
-            "conditions": [
-              {
-                "type": "DURING_TURN"
-              },
-              {
-                "type": "HAS_KEYWORD",
-                "keyword": "DEAL_ARCANE"
-              }
-            ],
-            "effects": [
-              {
-                "type": "MODIFY_ATTACK",
-                "mod": "add",
-                "amount": 2
-              }
-            ]
-          }
+          "type": "AMP",
+          "amount": 2
         }
       ]
     }

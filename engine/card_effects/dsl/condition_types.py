@@ -471,6 +471,19 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return False
         return _ctt
 
+    if ctype == "CONTROLS_SUBTYPE":
+        # True if the controller controls a permanent with the given subtype
+        # (e.g. "an aura you control"). Used to gate a MAY block so a
+        # "destroy an aura … if you do …" clause is only offered when there is
+        # a legal target.
+        want = (params.get("subtype", "") or "").lower()
+        def _csub(c, e, s, _w=want):
+            from engine.card_effects.ability_keywords import _controller_id
+            perms = s.players[_controller_id(c)].permanents.cards
+            return any(_w in [st.lower() for st in (getattr(p, "subtypes", None) or [])]
+                       for p in perms)
+        return _csub
+
     if ctype == "ATTACK_HAS_KEYWORD":
         # Normalise separators so "go_again", "go again" and "Go Again" all
         # match — combat.keywords stores the title-cased form ("Go Again") while

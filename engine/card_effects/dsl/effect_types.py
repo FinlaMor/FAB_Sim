@@ -641,11 +641,32 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype in ("DESTROY_PERMANENT", "DESTROY_SELF"):
         target = params.get("target", "self")
-        def _fn(card, event, state, _t=target):
-            if _t == "self":
+        subtype = params.get("subtype")  # "destroy a <subtype> you control" (e.g. Aura)
+        def _fn(card, event, state, _t=target, _sub=subtype):
+            from engine.effect_keywords import destroy as _ek_destroy
+            if _t == "self" and not _sub:
                 # destroy() resolves the card's actual zone itself.
-                from engine.effect_keywords import destroy as _ek_destroy
                 _ek_destroy(state, card, None)
+                return
+            # Subtype target: destroy a chosen permanent of that subtype the
+            # controller controls (e.g. "you may destroy an aura you control").
+            # No match -> destroy nothing (a following "if you do" clause should
+            # be gated by the CONTROLS_SUBTYPE condition or a MAY so it, too,
+            # falls out when there is no legal target).
+            from engine.card_effects.ability_keywords import _controller_id, _ask_player
+            cid = _controller_id(card)
+            want = (_sub or "").lower()
+            cands = [c for c in state.players[cid].permanents.cards
+                     if want in [s.lower() for s in (getattr(c, "subtypes", None) or [])]]
+            if not cands:
+                return
+            if len(cands) == 1:
+                chosen = cands[0]
+            else:
+                pick = _ask_player(state, cid, [c.slug for c in cands],
+                                   context=f"Choose a {_sub} you control to destroy")
+                chosen = next((c for c in cands if c.slug == pick), cands[0])
+            _ek_destroy(state, chosen, card)
         return _fn
 
     if etype == "MODIFY_DEFENSE_VALUE":
