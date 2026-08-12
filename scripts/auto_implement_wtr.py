@@ -820,6 +820,34 @@ STRUCTURAL_RULES = """
     unread filter key makes the condition TOO PERMISSIVE (it fires when it should
     not) rather than failing loudly — so prefer a key from the REFERENCE over one
     that merely reads well.
+19. IMPLEMENT ONLY WHAT THE TEXT SAYS. Never add an ability the card does not
+    have. A card whose whole text is a keyword (e.g. "**Blade Break**") gets
+    {"abilities": []} — it does NOT get an ON_DEFEND ability granting some other
+    keyword. 27 cards were found granting an INTIMIDATE they never had, all of
+    them Blade Break equipment. If you catch yourself adding an effect no clause
+    asked for, delete it.
+20. A NAMED KEYWORD MECHANIC HAS A KEYWORD EFFECT — never hand-roll it with
+    SET_FLAG. "the crowd cheers you" -> {"type":"CROWD_CHEER"} and the check
+    "if you've been cheered this turn" -> {"type":"IS_CHEERED"}; likewise
+    CROWD_BOO / IS_BOOED, MARK / OPPONENT_IS_MARKED. A private
+    SET_FLAG/FLAG_SET pair is invisible to every other card and to replacement
+    effects: 8 cards invented FOUR different spellings of the cheer flag, two of
+    them checking a flag no card ever set, so those abilities could never fire.
+    "Whenever the crowd cheers you, X" is a TRIGGER: ability_type TRIGGERED with
+    "trigger":"ON_CHEER" (ON_BOO for boos) — not a condition on some other event.
+21. "YOUR NEXT <thing> THIS TURN" IS ONE-SHOT. Use
+    {"type":"MODIFY_NEXT_ATTACK","mod":"add","amount":N,"filter":[...]} for power
+    and {"type":"GRANT_NEXT_ATTACK","keyword":"GO_AGAIN","filter":[...]} for a
+    keyword; both are consumed by the FIRST attack matching "filter". A SET_FLAG
+    plus a flag-gated STATIC applies to EVERY attack for the rest of the turn,
+    which is not what "next" means and is worse than omitting the clause. Put the
+    restriction ("your next WEAPON attack") in "filter", not in the static's
+    conditions.
+22. ONE SLUG, ONE FILE, RIGHT FOLDER. The loader REJECTS a slug defined by more
+    than one JSON file — both copies stop working, so never create a second file
+    for a card that already exists; edit the existing one. Choose the folder from
+    the card's setIdentifiers, never from its class or from the set you happen to
+    be working on.
 === END RULES ==="""
 
 

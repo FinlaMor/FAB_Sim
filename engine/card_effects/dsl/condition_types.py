@@ -467,6 +467,11 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         zones = [z.lower() for z in zones if z]
         cost_gte = params.get("cost_gte")
         cost_lte = params.get("cost_lte")
+        # "a card with 6 or more {p} in your pitch zone" — authored as
+        # power_gte, or as pitch_power_gte on the wrong condition entirely
+        # (REF_PITCH_IS, which tests a referenced card's PITCH VALUE).
+        power_gte = params.get("power_gte", params.get("pitch_power_gte"))
+        power_lte = params.get("power_lte")
         filter_types = [t.lower() for t in params.get("filter_types", [])]
         color = (params.get("color") or "").lower()
         # card_class: a class ("Guardian"), talent ("Earth") or color ("Blue")
@@ -481,7 +486,7 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
 
         def _ciz(c, e, s, _zs=zones, _cge=cost_gte, _cle=cost_lte, _ft=filter_types,
                  _col=color, _nge=count_gte, _neq=count_eq,
-                 _cc=card_class, _kws=want_kws):
+                 _cc=card_class, _kws=want_kws, _pge=power_gte, _ple=power_lte):
             from engine.card_effects.ability_keywords import _controller_id
             player = s.players[_controller_id(c)]
             count = 0
@@ -504,6 +509,16 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                         card_color = (getattr(card, 'color', None)
                                       or _PITCH_COLOR.get(getattr(card, 'pitch', None)))
                         if (card_color or "").lower() != _col:
+                            continue
+                    if _pge is not None or _ple is not None:
+                        power = getattr(card, 'power', None)
+                        if power is None:
+                            power = getattr(card, 'base_power', None)
+                        if power is None:
+                            continue          # no printed power: cannot match
+                        if _pge is not None and power < _pge:
+                            continue
+                        if _ple is not None and power > _ple:
                             continue
                     if _cc and _cc not in _card_traits(card):
                         continue

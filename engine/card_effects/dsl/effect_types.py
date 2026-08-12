@@ -1094,26 +1094,50 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # OPPONENT). on_failure is a list of effect specs resolved when unpaid; their
         # own `player` params are relative to the SAME source card, so e.g. a DISCARD
         # with player=OPPONENT hits the same target that was asked to pay.
-        resources = params.get("resources", params.get("amount", 0))
+        # The cost is normally resources, but "destroy this UNLESS you remove a
+        # steam counter from it" pays in counters instead — set counter_type and
+        # the amount comes from `amount` (the recurring Crank/steam pattern).
+        counter_type = params.get("counter_type") or params.get("counter")
+        if counter_type:
+            resources = 0
+            counters_due = int(params.get("amount", 1) or 1)
+        else:
+            resources = params.get("resources", params.get("amount", 0))
+            counters_due = 0
         player_target = (params.get("player") or "SELF").upper()
-        on_fail_specs = [((e.get("type") or "").upper(), e)
-                         for e in params.get("on_failure", [])]
+        # Eager, so a bad on_failure spec fails at load like every other effect
+        # rather than only for the players who decline.
+        on_fail = [compile_effect((e.get("type") or "").upper(),
+                                  {k: v for k, v in e.items() if k != "type"})
+                   for e in params.get("on_failure", [])]
 
-        def _fn(card, event, state, _r=resources, _pt=player_target, _fail=on_fail_specs):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+        def _fn(card, event, state, _r=resources, _pt=player_target, _fail=on_fail,
+                _ct=counter_type, _cn=counters_due):
+            from engine.card_effects.ability_keywords import (
+                _ask_player, _controller_id, effect_remove_counter)
             cid = _controller_id(card)
             tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
             paid = False
-            if _r > 0 and player.resources >= _r:
+            if _ct:
+                have = player.counters.get((card.slug, card.zone, _ct), 0)
+                if have >= _cn:
+                    choice = _ask_player(
+                        state, tid, ["pay", "decline"],
+                        context=f"Remove {_cn} {_ct} counter(s) to avoid the effect?")
+                    if str(choice) == "pay":
+                        effect_remove_counter(state, card, _ct, _cn)
+                        paid = True
+            elif _r > 0 and player.resources >= _r:
                 choice = _ask_player(state, tid, ["pay", "decline"],
                                      context=f"Pay {_r} to avoid the effect?")
                 if str(choice) == "pay":
                     player.resources -= _r
                     paid = True
             if not paid:
-                for et, ep in _fail:
-                    compile_effect(et, ep)(card, event, state)
+                for fn in _fail:
+                    if fn is not None:
+                        fn(card, event, state)
         return _fn
 
     if etype == "PUT_CARDS_BOTTOM":

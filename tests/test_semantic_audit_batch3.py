@@ -187,3 +187,94 @@ def test_agility_token_grants_go_again_to_one_attack():
     dsl.dispatch(st, "START_OF_TURN", "agility", card=token, event=None)
     assert st.players[1].dsl_queued_attack_mods == [
         {"mod": "grant_keyword", "keyword": "Go Again", "filter": []}]
+
+
+# ------------------------------------------------ pitch-zone power filter
+def test_card_in_zone_power_filter():
+    """"a card with 6 or more {p} in your pitch zone". Cards authored this as
+    pitch_power_gte on REF_PITCH_IS, which tests a REFERENCED card's PITCH VALUE
+    and defaults to pitch 1 — so it really asked "is it red?"."""
+    st = _make_state()
+    src = _src()
+    cond = compile_condition("CARD_IN_ZONE", {"zone": "pitch", "power_gte": 6})
+    assert cond(src, None, st) is False
+    st.players[1].pitch.add(_make_card(slug="weak", name="weak", base_power=3))
+    assert cond(src, None, st) is False
+    st.players[1].pitch.add(_make_card(slug="big", name="big", base_power=6))
+    assert cond(src, None, st) is True
+    # legacy key name resolves to the same filter
+    assert compile_condition(
+        "CARD_IN_ZONE", {"zone": "pitch", "pitch_power_gte": 6})(src, None, st) is True
+
+
+def test_card_in_zone_power_filter_skips_cards_with_no_power():
+    st = _make_state()
+    src = _src()
+    st.players[1].pitch.add(_make_card(slug="equip", name="equip", types=["Equipment"]))
+    assert compile_condition(
+        "CARD_IN_ZONE", {"zone": "pitch", "power_gte": 1})(src, None, st) is False
+
+
+# ------------------------------------------------ PAY_OR_ELSE with a counter cost
+def _counter_state(steam):
+    """Prismatic Lens is an Item — a plain Action would be redirected out of the
+    permanents zone by the CR 3.13.2 entry rule and never land there."""
+    st = _make_state()
+    card = _make_card(slug="lens", name="lens", types=["Item"])
+    card.owner = card.controller = 1
+    st.players[1].permanents.add(card)
+    assert card in st.players[1].permanents.cards      # fixture sanity
+    # Capture the counter key NOW: destroying the card moves it to the
+    # graveyard, so a key rebuilt from card.zone afterwards would silently look
+    # up a different entry and make these assertions meaningless.
+    key = (card.slug, card.zone, "steam")
+    if steam:
+        st.players[1].counters[key] = steam
+    return st, card, key
+
+
+def test_pay_or_else_counter_cost_removes_the_counter_when_paid():
+    """"destroy this UNLESS you remove a steam counter from it" — the two
+    branches are mutually exclusive; the card used to do BOTH every turn."""
+    st, card, key = _counter_state(1)
+
+    def _pay(state, options, context, **kwargs):
+        return "pay"
+
+    st.player_agents = {1: _pay, 2: _pay}
+    compile_effect("PAY_OR_ELSE", {
+        "counter_type": "steam", "amount": 1,
+        "on_failure": [{"type": "DESTROY_PERMANENT", "target": "self"}],
+    })(card, None, st)
+    assert st.players[1].counters.get(key, 0) == 0
+    assert card in st.players[1].permanents.cards      # survived
+
+
+def test_pay_or_else_counter_cost_runs_on_failure_when_declined():
+    st, card, key = _counter_state(1)
+
+    def _decline(state, options, context, **kwargs):
+        return "decline"
+
+    st.player_agents = {1: _decline, 2: _decline}
+    compile_effect("PAY_OR_ELSE", {
+        "counter_type": "steam", "amount": 1,
+        "on_failure": [{"type": "DESTROY_PERMANENT", "target": "self"}],
+    })(card, None, st)
+    assert st.players[1].counters.get(key, 0) == 1
+    assert card not in st.players[1].permanents.cards  # destroyed
+
+
+def test_pay_or_else_counter_cost_with_no_counter_cannot_pay():
+    """No counter to remove: the else-branch is forced, not skipped."""
+    st, card, key = _counter_state(0)
+
+    def _pay(state, options, context, **kwargs):
+        return "pay"
+
+    st.player_agents = {1: _pay, 2: _pay}
+    compile_effect("PAY_OR_ELSE", {
+        "counter_type": "steam", "amount": 1,
+        "on_failure": [{"type": "DESTROY_PERMANENT", "target": "self"}],
+    })(card, None, st)
+    assert card not in st.players[1].permanents.cards

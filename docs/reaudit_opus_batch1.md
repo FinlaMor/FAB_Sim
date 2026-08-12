@@ -68,15 +68,17 @@ pitch zone. Condition corrected to `CARD_IN_ZONE {zone: pitch, color: blue,
 count_gte: 2}`; the fabricated INTIMIDATE removed. The conditional blade-break
 grant remains **UNIMPLEMENTED** — there is no `BLADE_BREAK` effect type.
 
-### prismatic_lens_yellow — "unless" modelled as AND
+### prismatic_lens_yellow — "unless" modelled as AND (FIXED)
 Text: "At the start of your turn, **destroy this unless you remove a steam
-counter from it**." The JSON runs `DESTROY_PERMANENT` **and** `REMOVE_COUNTER`
-unconditionally — it destroys the card every turn *and* removes the counter.
+counter from it**." The JSON ran `DESTROY_PERMANENT` **and** `REMOVE_COUNTER`
+unconditionally — destroying the card every turn *and* spending the counter.
 This is the mutually-exclusive-branch class (rule 9 of the authoring prompt),
-which the prompt already warns about, so the generator is still violating it.
+which the prompt already warned about, so the generator was still violating it.
 
-Correct shape: choose to remove a steam counter, else destroy; and destroy
-outright when there is no counter to remove.
+Fixed by extending `PAY_OR_ELSE` to take a **counter cost** (`counter_type` +
+`amount`) instead of resources, since "destroy this unless you remove a X
+counter" is the recurring Crank/steam pattern. Declining, or having no counter
+to spend, runs `on_failure`.
 
 Secondary: the activated ability's "Mechanologist item **of the same color**"
 is hardcoded `"color": "yellow"`, and the nested filter uses singular
@@ -213,11 +215,29 @@ time they defend" applies to the DEFENDING player's cards and there is no
 equivalent one-shot queue on the defence side (it also sets its flag on the
 wrong player — `SET_FLAG` defaults to SELF).
 
+### pitch_power_gte — a zone filter, not a ref check (FIXED)
+Correcting an earlier reading in this document: `pitch_power_gte` was described
+as needing a `REF_POWER_GTE` primitive. It does not. Buckwild and Rough Up both
+say "if there is a card with 6 or more {p} **in your pitch zone**" — a COUNT
+over a zone, so it is a `power_gte` filter on `CARD_IN_ZONE` (added, alongside
+`power_lte`, and accepting the legacy `pitch_power_gte` spelling). They were
+authored as `REF_PITCH_IS`, which tests a *referenced card's pitch value* and
+defaults to `pitch: 1`, so both really asked "is the referenced card red?".
+`buckwild_yellow` also granted go again with `GRANT_SUBTYPE` — go again is a
+keyword, not a subtype.
+
+Only the two Tuffnut cards need a genuine ref-based power check, because theirs
+is "pitch the top card of your deck; if **it** has 6 or more {p}".
+
 Remaining known-unimplemented, in rough order of leverage:
-- one-shot queue for "the next time they DEFEND" (`nerve_scalpel`)
-- `REF_POWER_GTE` + pitch-top-of-deck — finishes both Tuffnut cards, and fixes
-  the four cards misusing `REF_PITCH_IS` with the unread `pitch_power_gte`
+- one-shot queue for "the next time they DEFEND" (`nerve_scalpel` — which also
+  sets its flag on the wrong player, `SET_FLAG` defaulting to SELF; fixing only
+  the player would leave it turn-long, i.e. still wrong but less visibly)
+- ref-based power check + pitch-top-of-deck — finishes both Tuffnut cards
 - per-card defend-legality restriction — clears the two `KNOWN_UNIMPLEMENTED`
   xfails (`embrace_adversity`, `overcome_adversity`)
-- `prismatic_lens_yellow` ("unless" as AND) and `lady_barthimont` (specialization
-  to bottom of deck instead of face up in arsenal) — per-card, no primitive needed
+- `lady_barthimont` (specialization to bottom of deck instead of face up in
+  arsenal) — per-card, no primitive needed
+- `prismatic_lens_yellow`'s activated ability: "Mechanologist item **of the same
+  color**" is hardcoded yellow, and its nested filter uses singular
+  `subtype`/`class` keys `CARD_IN_ZONE` does not read, so that filter is inert

@@ -1,5 +1,6 @@
 {
   "slug": "prismatic_lens_yellow",
+  "_comment": "Crank. \"At the start of your turn, destroy this UNLESS you remove a steam counter from it\" — mutually exclusive, but the JSON ran DESTROY_PERMANENT and REMOVE_COUNTER unconditionally, so it destroyed itself every turn AND spent the counter. Now a PAY_OR_ELSE whose cost is the counter. STILL SIMPLIFIED: the activated ability's \"Mechanologist item OF THE SAME COLOR\" is hardcoded yellow, and its nested filter uses singular subtype/class keys that CARD_IN_ZONE does not read (it reads filter_types / card_class), so that search filter is inert.",
   "abilities": [
     {
       "ability_type": "STATIC",
@@ -21,13 +22,15 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        },
-        {
-          "type": "REMOVE_COUNTER",
-          "counter": "steam",
-          "amount": 1
+          "type": "PAY_OR_ELSE",
+          "counter_type": "steam",
+          "amount": 1,
+          "on_failure": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "target": "self"
+            }
+          ]
         }
       ]
     },

@@ -1,12 +1,15 @@
 {
   "slug": "rough_up_yellow",
+  "_comment": "\"When this attacks, if there is a card with 6 or more {p} in your pitch zone, this gets +1{p}.\" Same unread pitch_power_gte on REF_PITCH_IS as buckwild_yellow. \"When this attacks\" is ON_ATTACK, not the ATTACK_REACTION ability type (which dispatches on ON_PLAY).",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "pitch_power_gte": 6
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "power_gte": 6
         }
       ],
       "effects": [

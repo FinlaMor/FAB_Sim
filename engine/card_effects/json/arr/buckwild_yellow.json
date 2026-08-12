@@ -1,18 +1,19 @@
 {
   "slug": "buckwild_yellow",
+  "_comment": "\"If there is a card with 6 or more {p} in your pitch zone, this gets go again.\" Was REF_PITCH_IS with a pitch_power_gte key the condition never read — REF_PITCH_IS tests a REFERENCED card's PITCH VALUE and defaults to pitch 1, so it really asked \"is the referenced card red?\". Also granted go again via GRANT_SUBTYPE, but go again is a keyword, not a subtype.",
   "abilities": [
     {
       "ability_type": "STATIC",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "pitch_power_gte": 6
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "power_gte": 6
         }
       ],
       "effects": [
         {
-          "type": "GRANT_SUBTYPE",
-          "subtype": "GoAgain"
+          "type": "GO_AGAIN"
         }
       ]
     }
