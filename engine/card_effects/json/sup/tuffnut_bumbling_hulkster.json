@@ -1,6 +1,6 @@
 {
   "slug": "tuffnut_bumbling_hulkster",
-  "_comment": "Brute (Revered) hero. Instant - {t}: Pitch the top card of your deck; if it has 6 or more {p}, the crowd cheers you. Whenever the crowd cheers you, create a Toughness token. Modeled as the payoff: activation cost TAP_SELF -> CREATE_TOKEN toughness; the pitch-top-card check and the crowd-cheer gating are simplified/omitted.",
+  "_comment": "Brute (Revered) hero. Instant - {t}: Pitch the top card of your deck; if it has 6 or more {p}, the crowd cheers you. Whenever the crowd cheers you, create a Toughness token. DELIBERATE SIMPLIFICATION: cost TAP_SELF is right, but the token is created unconditionally — the pitch, the 6-power check and the crowd-cheer step are all skipped, so this is too generous. Kept over a rival her/ implementation that had more structure but was wrong in every part (phantom {r}1 activation cost; the pitch modelled as a COST rather than the effect; REF_PITCH_IS gating the WHOLE ability on the card's pitch VALUE before it was even pitched, with pitch_power_gte silently unread; and the token on an ON_BECOME trigger that never fires for a cheer). Completing this needs three primitives that do not exist: pitch-top-of-deck, REF_POWER_GTE, and a CROWD_CHEER effect wired to the canonical effect_keywords.cheer() (the DSL has CROWD_BOO but no cheer). See docs/reaudit_opus_batch1.md.",
   "abilities": [
     {
       "ability_type": "INSTANT",
