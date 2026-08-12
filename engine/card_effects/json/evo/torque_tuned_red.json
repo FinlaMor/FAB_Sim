@@ -1,13 +1,14 @@
 {
   "slug": "torque_tuned_red",
+  "_comment": "Generic destroyed-this-turn tracking: this read ITEM_DESTROYED_THIS_TURN, a flag nothing ever set, so the clause could never fire. effect_keywords.destroy now records \"destroyed_this_turn:<slug|type|subtype>\" for whatever was destroyed, and DESTROYED_THIS_TURN reads it by name.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_DEFEND",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "ITEM_DESTROYED_THIS_TURN"
+          "type": "DESTROYED_THIS_TURN",
+          "name": "item"
         }
       ],
       "effects": [

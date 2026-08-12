@@ -830,6 +830,28 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
 # DEFEND step
 # ---------------------------------------------------------------------------
 
+def _defend_restriction_met(state: GameState, card: Card) -> bool:
+    """False when a card's own "this may only defend if ..." clause is unmet.
+
+    A DEFEND_RESTRICTION ability carries conditions and no effects: every
+    condition must hold for the card to be declarable as a defender (CR 7.3.2).
+    Nothing else in the DSL can express a defend-LEGALITY restriction — an
+    ordinary triggered ability fires too late, once the card is already
+    defending.
+    """
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    card_def = _dsl_get_card(getattr(card, 'slug', '') or '')
+    if card_def is None:
+        return True
+    for ability in card_def.abilities:
+        if (ability.ability_type or "").upper() != "DEFEND_RESTRICTION":
+            continue
+        for cond in ability.conditions:
+            if cond.fn is not None and not cond.fn(card, None, state):
+                return False
+    return True
+
+
 def get_defendable_cards(state: GameState) -> list[Card]:
     """Return all cards the defender may use to defend (hand cards + equipment)."""
     combat = state.combat
@@ -849,6 +871,8 @@ def get_defendable_cards(state: GameState) -> list[Card]:
             continue
         if not card.has_defense:
             continue
+        if not _defend_restriction_met(state, card):
+            continue
         defendable_cards.append(card)
 
     # Headbutt (CR 8.x): "can't be defended by non-head equipment" — only the
@@ -864,6 +888,8 @@ def get_defendable_cards(state: GameState) -> list[Card]:
         if getattr(equip_card, 'face_down', False):
             continue
         if not equip_card.has_defense:
+            continue
+        if not _defend_restriction_met(state, equip_card):
             continue
         defendable_cards.append(equip_card)
 

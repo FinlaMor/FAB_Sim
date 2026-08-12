@@ -343,3 +343,109 @@ def test_renamed_flags_now_match_what_the_engine_writes():
         if isinstance(d, dict):
             walk(d.get("abilities", []), Path(f).stem)
     assert offenders == [], f"cards still reading a never-set flag: {offenders}"
+
+
+# ------------------------------------ generic "destroyed a <thing> this turn"
+def test_destroyed_this_turn_records_slug_and_types():
+    """One generic condition replaces the per-card flags cards invented
+    (MIGHT_TOKEN_DESTROYED_THIS_TURN, ITEM_DESTROYED_THIS_TURN, ...), none of
+    which anything ever set."""
+    from engine.effect_keywords import destroy
+
+    st = _make_state()
+    token = _make_card(slug="might", name="Might", types=["Token"], subtypes=["Might"])
+    token.owner = token.controller = 1
+    st.players[1].permanents.add(token)
+    src = _src()
+
+    by_slug = compile_condition("DESTROYED_THIS_TURN", {"name": "Might"})
+    by_type = compile_condition("DESTROYED_THIS_TURN", {"name": "Token"})
+    other = compile_condition("DESTROYED_THIS_TURN", {"name": "Item"})
+
+    assert by_slug(src, None, st) is False
+    destroy(st, token)
+    assert by_slug(src, None, st) is True     # matches the slug
+    assert by_type(src, None, st) is True     # and the type
+    assert other(src, None, st) is False      # but not an unrelated name
+
+
+def test_destroyed_this_turn_player_opponent():
+    """"if the ATTACK'S CONTROLLER has destroyed a Might token" reads the other
+    player's record, not your own."""
+    from engine.effect_keywords import destroy
+
+    st = _make_state()
+    token = _make_card(slug="might", name="Might", types=["Token"], subtypes=["Might"])
+    token.owner = token.controller = 1
+    st.players[1].permanents.add(token)
+    destroy(st, token)
+
+    mine, theirs = _src(1), _src(2)
+    own = compile_condition("DESTROYED_THIS_TURN", {"name": "might"})
+    opp = compile_condition("DESTROYED_THIS_TURN", {"name": "might", "player": "OPPONENT"})
+    assert own(mine, None, st) is True        # p1 destroyed it
+    assert opp(mine, None, st) is False       # p2 did not
+    assert opp(theirs, None, st) is True      # from p2's view, p1 did
+
+
+# ------------------------------------------------------ DEFEND_RESTRICTION
+def _defend_setup(destroyed_a_might):
+    """p2 defends p1's attack with Embrace Adversity."""
+    from engine.state import CombatState
+    load_all_cards()
+    st = _make_state()
+    st.active_player = 1
+    atk = _make_card(slug="atk", name="atk", types=["Action", "Attack"])
+    atk.owner = atk.controller = 1
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            keywords=[], attack_card=atk)
+    st.combat.attack_target = None
+
+    shield = _make_card(slug="embrace_adversity", name="Embrace Adversity",
+                        types=["Equipment"], subtypes=["Chest"], base_defense=2)
+    shield.owner = shield.controller = 2
+    st.players[2].chest.add(shield)
+
+    if destroyed_a_might:
+        from engine.effect_keywords import destroy
+        token = _make_card(slug="might", name="Might", types=["Token"], subtypes=["Might"])
+        token.owner = token.controller = 1          # the ATTACKER destroyed it
+        st.players[1].permanents.add(token)
+        destroy(st, token)
+    return st, shield
+
+
+def test_embrace_adversity_cannot_defend_without_the_destroyed_might():
+    """"This may only defend an attack if the attack's controller has destroyed
+    a Might token this turn." Previously the card carried a fabricated
+    ON_DEFEND -> INTIMIDATE gated on a flag nothing set: dead twice over."""
+    from engine.actions import get_defendable_cards
+
+    st, shield = _defend_setup(destroyed_a_might=False)
+    assert shield not in get_defendable_cards(st)
+
+
+def test_embrace_adversity_may_defend_once_the_attacker_destroyed_a_might():
+    from engine.actions import get_defendable_cards
+
+    st, shield = _defend_setup(destroyed_a_might=True)
+    assert shield in get_defendable_cards(st)
+
+
+def test_defend_restriction_does_not_affect_ordinary_equipment():
+    from engine.actions import get_defendable_cards
+    from engine.state import CombatState
+
+    load_all_cards()
+    st = _make_state()
+    st.active_player = 1
+    atk = _make_card(slug="atk", name="atk", types=["Action", "Attack"])
+    atk.owner = atk.controller = 1
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            keywords=[], attack_card=atk)
+    st.combat.attack_target = None
+    plain = _make_card(slug="teklo_base_chest", name="Teklo Base Chest",
+                       types=["Equipment"], subtypes=["Chest"], base_defense=2)
+    plain.owner = plain.controller = 2
+    st.players[2].chest.add(plain)
+    assert plain in get_defendable_cards(st)

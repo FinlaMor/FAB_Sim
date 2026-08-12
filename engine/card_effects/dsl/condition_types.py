@@ -583,6 +583,29 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return False
         return _cdp
 
+    if ctype in ("DESTROYED_THIS_TURN", "HAS_DESTROYED_THIS_TURN"):
+        # "if you have destroyed a <thing> this turn" — one generic condition
+        # taking the thing's name, replacing the per-card flags cards invented
+        # (MIGHT_TOKEN_DESTROYED_THIS_TURN, ITEM_DESTROYED_THIS_TURN, ...), none
+        # of which anything ever set. The name matches a slug, a type or a
+        # subtype: "might", "item", "aura", "lightning flow".
+        #
+        # `player` picks whose destruction counts — SELF (default), or OPPONENT
+        # for "if the attacking hero has destroyed ...".
+        want = _norm(params.get("name") or params.get("card_name")
+                     or params.get("subtype") or params.get("card_type") or "")
+        who = (params.get("player") or "SELF").upper()
+
+        def _dtt(c, e, s, _w=want, _who=who):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import DESTROYED_MARKER
+            if not _w:
+                return False
+            cid = _controller_id(c)
+            pid = (3 - cid) if _who in ("OPPONENT", "ATTACKING", "ATTACKER") else cid
+            return f"{DESTROYED_MARKER}{_w}" in s.players[pid].current_turn_effects
+        return _dtt
+
     if ctype == "IS_BOOED":
         # True if the controller has been booed this turn.
         def _ib(c, e, s):

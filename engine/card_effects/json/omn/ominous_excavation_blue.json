@@ -1,5 +1,6 @@
 {
   "slug": "ominous_excavation_blue",
+  "_comment": "Generic destroyed-this-turn tracking: this read AURA_DESTROYED_THIS_TURN, a flag nothing ever set, so the clause could never fire. effect_keywords.destroy now records \"destroyed_this_turn:<slug|type|subtype>\" for whatever was destroyed, and DESTROYED_THIS_TURN reads it by name.",
   "abilities": [
     {
       "ability_type": "INSTANT",
@@ -13,8 +14,8 @@
           "token_type": "Ponder",
           "conditions": [
             {
-              "type": "FLAG_SET",
-              "flag": "AURA_DESTROYED_THIS_TURN"
+              "type": "DESTROYED_THIS_TURN",
+              "name": "aura"
             }
           ],
           "token": "ponder"

@@ -48,6 +48,49 @@ for _stream in (sys.stdout, sys.stderr):
 # ---------------------------------------------------------------------------
 
 ROOT = Path(__file__).resolve().parent.parent
+
+# ---------------------------------------------------------------------------
+# Run control (pause / resume / stop), driven by scripts/pipeline_gui.py
+# ---------------------------------------------------------------------------
+# A single JSON file the GUI writes and this script reads AT CARD BOUNDARIES
+# only. Never mid-card: the queue is saved once per card, so a boundary is the
+# one place where stopping loses nothing and a half-generated card can't be
+# left behind. A file (rather than a signal or a pipe) means control also works
+# when the run was started from a terminal, and survives the GUI being closed.
+CONTROL_PATH = ROOT / ".pipeline_control.json"
+
+
+def read_control() -> dict:
+    """Current control state; missing/corrupt file means 'just keep going'."""
+    try:
+        return json.loads(CONTROL_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def wait_while_paused(poll: float = 0.5) -> bool:
+    """Block while paused. Returns False when the run should stop.
+
+    Called at the top of each card. Prints a marker line on each transition so
+    a watching UI can distinguish "finishing the current card" from "idle".
+    """
+    import time
+    announced = False
+    while True:
+        control = read_control()
+        if control.get("stop"):
+            print("[control] STOPPED at card boundary — queue is saved, "
+                  "re-run to resume", flush=True)
+            return False
+        if not control.get("paused"):
+            if announced:
+                print("[control] RESUMED", flush=True)
+            return True
+        if not announced:
+            print("[control] PAUSED at card boundary — nothing is mid-flight, "
+                  "your machine is free", flush=True)
+            announced = True
+        time.sleep(poll)
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))  # so the load gate can import engine.* in-process
 CLAW_DIR = Path(os.environ.get("CLAW_DIR", str(Path(__file__).resolve().parent.parent.parent / "claw-code")))
@@ -848,6 +891,32 @@ STRUCTURAL_RULES = """
     for a card that already exists; edit the existing one. Choose the folder from
     the card's setIdentifiers, never from its class or from the set you happen to
     be working on.
+23. **NEVER INVENT A FLAG.** This is the single most common way a card ends up
+    doing nothing. FLAG_SET compiles to `flag in player.current_turn_effects`, so
+    a flag NOTHING WRITES is permanently false and the ability it gates CAN NEVER
+    FIRE — while the card loads, passes its tests and looks finished. 167 invented
+    flags across 195 cards were found this way.
+    A FLAG_SET is legitimate in exactly two cases:
+      (a) the SAME card sets it earlier with SET_FLAG (a two-part combo), or
+      (b) it is one of the engine's own markers, which are LOWERCASE:
+          "boosted_this_turn", "cranked_this_turn", "played_lightning",
+          "crowd_booed", "crowd_cheered", "fused_<slug>", "DIE_ROLLED_SIX",
+          "destroyed_this_turn:<name>".
+    Writing BOOSTED_THIS_TURN or FUSED instead of the lowercase engine marker is
+    the same bug — the case must match exactly. If the state you need is not in
+    that list and your card does not set it itself, the mechanic does not exist:
+    output NEEDS_NEW_DSL rather than inventing a flag name that reads plausibly.
+24. "IF YOU HAVE DESTROYED A <thing> THIS TURN" has a generic condition — do not
+    invent MIGHT_TOKEN_DESTROYED_THIS_TURN or ITEM_DESTROYED_THIS_TURN. Use
+    {"type":"DESTROYED_THIS_TURN","name":"might"}. "name" matches the destroyed
+    card's slug, type OR subtype ("might", "item", "aura", "lightning flow"), so
+    pick whichever the text names. Add "player":"OPPONENT" when the text says
+    someone ELSE destroyed it ("if the attack's controller has destroyed ...").
+25. "THIS MAY ONLY DEFEND ... IF <x>" is a defend-LEGALITY restriction, not a
+    triggered ability — a trigger fires too late, once the card is already
+    defending. Use an ability with "ability_type":"DEFEND_RESTRICTION" carrying
+    "conditions" and NO effects; the card is simply not offered as a defender
+    while they are unmet.
 === END RULES ==="""
 
 
@@ -1642,6 +1711,10 @@ def main() -> None:
     processed = 0
     for card in pending:
         if processed >= limit:
+            break
+        # Card boundary: the only safe place to pause or stop. The previous
+        # card's status is already written and the next has not started.
+        if not wait_while_paused():
             break
 
         slug = card["slug"]

@@ -507,6 +507,48 @@ class DestroyEvent:
     canceled: bool = False
 
 
+DESTROYED_MARKER = "destroyed_this_turn:"
+
+
+def _destroyed_identifiers(card) -> set[str]:
+    """Every name a card could be referred to by in "destroyed a X this turn".
+
+    A Might token answers to its slug ("might") and its type ("token"); an item
+    answers to "item"; an aura to "aura". Folded to lowercase alphanumerics so
+    "Lightning Flow" and "lightning_flow" are the same identifier.
+    """
+    out = set()
+    def _add(v):
+        n = "".join(ch for ch in str(v) if ch.isalnum()).lower()
+        if n:
+            out.add(n)
+    _add(getattr(card, "slug", ""))
+    _add(getattr(card, "name", "") or getattr(card, "raw_name", ""))
+    for attr in ("subtypes", "types", "raw_subtypes", "raw_types"):
+        for v in (getattr(card, attr, None) or []):
+            _add(v)
+    return out
+
+
+def _record_destroyed_this_turn(state: GameState, card) -> None:
+    """Record that this player destroyed such-a-thing this turn (CR turn-scoped).
+
+    Generic replacement for the per-card flags cards used to invent
+    (MIGHT_TOKEN_DESTROYED_THIS_TURN, ITEM_DESTROYED_THIS_TURN, ...), none of
+    which anything ever set. Attributed to the destroyed card's controller,
+    which is who "destroyed a Might token" in every card that asks — those
+    tokens are destroyed by their own controller for the benefit.
+    """
+    pid = coo(card)
+    player = state.players.get(pid) if pid is not None else None
+    if player is None:
+        return
+    for ident in _destroyed_identifiers(card):
+        marker = f"{DESTROYED_MARKER}{ident}"
+        if marker not in player.current_turn_effects:
+            player.current_turn_effects.append(marker)
+
+
 def destroy(state: GameState, destroy_target: Card, destroy_source: Optional[Card] = None):
     """CR 8.5.4 Destroy is a discrete effect. To destroy an object, put it into its owner's graveyard.
 
@@ -534,6 +576,7 @@ def destroy(state: GameState, destroy_target: Card, destroy_source: Optional[Car
         return event
 
     destroy_target = event.target
+    _record_destroyed_this_turn(state, destroy_target)
     zone = destroy_target.zone
     was_arena = zone in _ARENA_ZONES or getattr(destroy_target, 'prev_zone', None) in _ARENA_ZONES
 

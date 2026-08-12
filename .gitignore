@@ -112,3 +112,6 @@ docs/semantic_audit_all_candidates.jsonl
 docs/semantic_audit_all_candidates.md
 docs/semantic_audit_reaudit.jsonl
 docs/semantic_audit_reaudit.md
+
+# Pipeline run control (pause/resume), written by scripts/pipeline_gui.py
+.pipeline_control.json

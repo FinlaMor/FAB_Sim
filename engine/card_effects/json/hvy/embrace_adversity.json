@@ -1,5 +1,16 @@
 {
   "slug": "embrace_adversity",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). UNIMPLEMENTED: \"This may only defend an attack if the attack's controller has destroyed a Might token this turn\" — a defend-legality restriction, which has no DSL primitive yet. The prior INTIMIDATE ability did not model it.",
-  "abilities": []
+  "_comment": "\"This may only defend an attack if the attack's controller has destroyed a Might token this turn.\" A defend-LEGALITY restriction: DEFEND_RESTRICTION carries conditions and no effects, and actions.get_defendable_cards (the live path _defend_step uses) drops the card when they are unmet. The previous JSON was dead twice over — an ON_DEFEND ability granting a fabricated INTIMIDATE, gated on MIGHT_TOKEN_DESTROYED_THIS_TURN, a flag nothing ever set.",
+  "abilities": [
+    {
+      "ability_type": "DEFEND_RESTRICTION",
+      "conditions": [
+        {
+          "type": "DESTROYED_THIS_TURN",
+          "name": "might",
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ]
 }

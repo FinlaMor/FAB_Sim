@@ -26,7 +26,9 @@ SLUG_INDEX = ROOT / "card_data" / "slug_index.json"
 # Ability types that legitimately carry no "effects" list: COST_MODIFIER only
 # adjusts a cost, and REPLACEMENT is wired in replacement_abilities.py with
 # the JSON entry acting as a declaration.
-NO_EFFECTS_REQUIRED = {"COST_MODIFIER", "REPLACEMENT"}
+# DEFEND_RESTRICTION carries conditions only: it gates whether the card may be
+# declared as a defender at all, so it has nothing to resolve.
+NO_EFFECTS_REQUIRED = {"COST_MODIFIER", "REPLACEMENT", "DEFEND_RESTRICTION"}
 
 # Bold runs are keyword markup (**Ward 1**, **Go again**). A card whose entire
 # functional text is keywords needs no DSL effects — the engine implements
@@ -39,19 +41,11 @@ _BOLD = re.compile(r"\*\*.*?\*\*")
 # that does the wrong thing. Removing an entry is the definition of done for
 # the primitive it names.
 #
-# These two read "This may only defend an attack if the attack's controller has
-# destroyed a Might/Agility token this turn" — a defend-LEGALITY restriction on
-# the equipment itself. Nothing in the DSL can express it: the only defence
-# restriction that exists is combat.head_equipment_only (attacker-side, set by
-# Headbutt), and a general version has to be enforced in the live legal-action
-# path (play.available_actions), not just actions.get_defendable_cards.
-# Both previously carried a fabricated ON_DEFEND -> INTIMIDATE ability, which
-# GRANTED a bonus keyword for text that is purely a downside — strictly worse
-# than doing nothing. See docs/reaudit_opus_batch1.md.
-KNOWN_UNIMPLEMENTED = {
-    "embrace_adversity",   # needs: per-card defend-legality restriction
-    "overcome_adversity",  # needs: per-card defend-legality restriction
-}
+# Currently empty. It briefly held embrace_adversity and overcome_adversity
+# ("this may only defend an attack if ..."), which are now implemented by the
+# DEFEND_RESTRICTION ability type — enforced in actions.get_defendable_cards,
+# the path engine._defend_step actually uses.
+KNOWN_UNIMPLEMENTED: set[str] = set()
 
 
 def _card_files() -> list[Path]:
