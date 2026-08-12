@@ -1,6 +1,6 @@
 {
   "slug": "agility",
-  "_comment": "Aura token: \"At the start of your turn, destroy this, then your next attack this turn gets go again.\" INCOMPLETE — the destroy is modelled, the go-again grant is not. It needs a one-shot \"next attack gains <keyword>\" primitive: MODIFY_NEXT_ATTACK is correctly one-shot but carries power mods only, and a plain SET_FLAG + flag-gated static (the shape a deleted duplicate in ako/ used) grants go again to EVERY attack for the rest of the turn, which is worse than granting none. Same missing primitive as driving_blade_red / nerve_scalpel — see docs/reaudit_opus_batch1.md.",
+  "_comment": "Aura token: \"At the start of your turn, destroy this, then your next attack this turn gets go again.\" The go-again is GRANT_NEXT_ATTACK, which queues a one-shot consumed by the first attack; a deleted duplicate in ako/ used SET_FLAG plus a flag-gated static, which granted go again to EVERY attack for the rest of the turn.",
   "abilities": [
     {
       "ability_type": "STATIC_TRIGGERED",
@@ -8,6 +8,10 @@
       "effects": [
         {
           "type": "DESTROY_SELF"
+        },
+        {
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "GO_AGAIN"
         }
       ]
     }

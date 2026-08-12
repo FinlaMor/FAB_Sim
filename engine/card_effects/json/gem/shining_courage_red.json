@@ -12,10 +12,10 @@
           "max_targets": 1
         },
         {
-          "type": "SET_FLAG",
-          "flag": "THE_CROWD_CHEERS"
+          "type": "CROWD_CHEER"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Up to one target defending action card gets +3{d} this turn. The crowd cheers you. The cheer was SET_FLAG THE_CROWD_CHEERS, a private flag nothing else read."
 }

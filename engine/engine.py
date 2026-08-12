@@ -1130,6 +1130,19 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                     CardEffect(prop="power", stage=7, substage=5,
                                fn=lambda val, _n=amt: val + _n))
                 # consumed — not re-added to remaining
+            elif matches and mod.get('mod') == 'grant_keyword':
+                # "your NEXT attack this turn gets go again" — one-shot, so it
+                # is consumed here. Authored as a turn-long flag plus a
+                # flag-gated static, it would buff every attack for the rest of
+                # the turn instead, which is worse than granting nothing.
+                kw = mod.get('keyword') or ''
+                if kw and state.combat is not None and attack_card is state.combat.attack_card:
+                    if kw not in (state.combat.keywords or []):
+                        state.combat.grant_keyword(kw)
+                    # consumed
+                else:
+                    # No live combat to grant onto — keep it for the real attack.
+                    remaining.append(mod)
             elif matches and mod.get('mod') == 'set_base':
                 # "the next attack action card you play this turn has N base
                 # {p}" (Chain of Brutality). Setting base power leaves later
@@ -1357,6 +1370,18 @@ def _setup_dsl_listeners(state: GameState) -> None:
         if hero is not None:
             dispatch(game_state, "ON_BOO", hero.slug, card=hero, event=event)
 
+    def _dsl_cheer_listener(event, game_state: GameState) -> None:
+        # "Whenever the crowd cheers you" — fires on the cheered player's hero,
+        # mirroring _dsl_boo_listener. Every card with this text is a hero
+        # (Pleiades, Tuffnut, Tuffnut Bumbling Hulkster); a non-hero permanent
+        # with the text would need wider dispatch, same as for ON_BOO.
+        pid = event.data.get('player_id') if isinstance(event.data, dict) else None
+        if pid is None:
+            return
+        hero = game_state.players[pid].hero
+        if hero is not None:
+            dispatch(game_state, "ON_CHEER", hero.slug, card=hero, event=event)
+
     def _dsl_token_created_listener(event, game_state: GameState) -> None:
         # "When you create a <token>" — dispatched to the creator's hero; the
         # DSL gates on the token slug in event.data (see TRIGGER_EVENT_GATES).
@@ -1434,6 +1459,7 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('combat_chain_close', _dsl_combat_close_listener)
     state.event_manager.register('start_of_game', _dsl_start_of_game_listener)
     state.event_manager.register('crowd_boos', _dsl_boo_listener)
+    state.event_manager.register('crowd_cheers', _dsl_cheer_listener)
     state.event_manager.register('token_created', _dsl_token_created_listener)
     state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)
     state.event_manager.register('recalculate_attack_power', _dsl_recalc_listener)

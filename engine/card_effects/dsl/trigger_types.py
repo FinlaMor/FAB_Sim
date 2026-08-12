@@ -22,6 +22,8 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "ON_PITCH":                 "ON_PITCH",
     "ON_DEFEND":                "ON_DEFEND",
     "ON_BOO":                   "ON_BOO",
+    "ON_CHEER":                 "ON_CHEER",
+    "ON_CROWD_CHEER":           "ON_CHEER",
     "ON_TOKEN_CREATED":         "ON_TOKEN_CREATED",
     # Sugar: fires on ON_TOKEN_CREATED, gated on the created token's slug.
     "ON_GOLD_CREATED":          "ON_TOKEN_CREATED",

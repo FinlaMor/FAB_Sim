@@ -45,6 +45,7 @@ from engine.card_effects.ability_keywords import (
     create_token, _controller_id, _get_controller,
     _get_opponent_of,
     roll_die, effect_crowd_boos, has_been_booed, effect_steal_token,
+    effect_crowd_cheers as _effect_crowd_cheers,
     create_token_card,
 )
 from engine.effect_keywords import (
@@ -373,10 +374,12 @@ def build_keyword_triggers(card: Card) -> list[TriggerDef]:
             pass  # Discrete effect, applied by card text
 
         elif kw_base == "the crowd cheers":
+            # Route through the keyword function rather than appending a raw
+            # flag: the flag this used to write was read by nothing.
             triggers.append(TriggerDef(
                 event_type="on_play",
-                effect_fn=lambda c, e, s: s.players[_controller_id(c)]
-                    .current_turn_effects.append("crowd_cheers"),
+                effect_fn=lambda c, e, s: _effect_crowd_cheers(
+                    s, _controller_id(c)),
             ))
 
         elif kw_base == "contract":

@@ -1,39 +1,31 @@
 {
   "slug": "driving_blade_red",
+  "_comment": "\"Your next weapon attack this turn gains +3{p} and go again. Go again.\" Both grants are one-shot and filtered to weapon attacks, via the queue consumed by the first matching attack. Previously a turn-long SET_FLAG plus a flag-gated static, which buffed EVERY weapon attack for the rest of the turn.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "DRIVING_BLADE_ACTIVE"
-        },
-        {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "DRIVING_BLADE_ACTIVE"
-        },
-        {
-          "type": "IN_COMBAT"
-        },
-        {
-          "type": "ATTACK_IS_WEAPON"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
         },
         {
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "GO_AGAIN",
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        },
+        {
+          "_comment": "the card's own printed Go again",
           "type": "GO_AGAIN"
         }
       ]

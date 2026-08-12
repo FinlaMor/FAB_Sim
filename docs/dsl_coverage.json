@@ -1,0 +1,67 @@
+{
+  "authored_pairs": 205,
+  "executed_pairs": 162,
+  "coverage_pct": 79.02,
+  "reachable_never_executed": {
+    "arakni_black_widow": [
+      "BANISH"
+    ],
+    "arakni_funnel_web": [
+      "BANISH"
+    ],
+    "aurum_aegis": [
+      "GRANT_SUBTYPE"
+    ],
+    "blacktek_whisperers": [
+      "GO_AGAIN"
+    ],
+    "booze_blue": [
+      "DESTROY_SELF"
+    ],
+    "frailty_trap_red": [
+      "CREATE_TOKEN"
+    ],
+    "lair_of_the_spider_red": [
+      "MARK"
+    ],
+    "nights_embrace_blue": [
+      "APPLY_CONTINUOUS"
+    ],
+    "pummel_red": [
+      "DISCARD"
+    ],
+    "quickdodge_flexors": [
+      "DESTROY_SELF"
+    ],
+    "scar_tissue_red": [
+      "MARK"
+    ],
+    "the_golden_son_yellow": [
+      "DESTROY_TOKEN",
+      "GAIN",
+      "MODIFY_ATTACK"
+    ]
+  },
+  "unreachable_from_test_decks": [
+    "10000_year_reunion_red",
+    "agility",
+    "alpha_rampage_red",
+    "ancestral_empowerment_red",
+    "anothos",
+    "awakening_bellow_blue",
+    "awakening_bellow_red",
+    "awakening_bellow_yellow",
+    "barkbone_strapping",
+    "courage",
+    "debilitate_blue",
+    "debilitate_yellow",
+    "disable_red",
+    "disable_yellow",
+    "nimblism_red",
+    "nimblism_yellow",
+    "quicken",
+    "runechant",
+    "seismic_surge",
+    "silver"
+  ]
+}

@@ -91,14 +91,21 @@ and the "whenever you play an attack action card" gate is authored as
 `CARD_IN_ZONE {zone: HAND, card_type: ATTACK_ACTION}`, which asks whether an
 attack action is *in hand*, not whether the played card *is* one.
 
-### driving_blade_red — "next" not consumed
-"Your **next** weapon attack this turn gains +3{p} and go again" is modelled as
-a turn-long `SET_FLAG` + `STATIC` gate, so it buffs **every** weapon attack for
-the rest of the turn. The +3 should use `MODIFY_NEXT_ATTACK` (verified one-shot:
-`engine.py:1115-1141` consumes the queued entry on the first attack matching its
-`filter`). Note `MODIFY_NEXT_ATTACK` carries power mods only — granting a
-one-shot **go again** has no primitive yet, so this card needs one to be fully
-correct.
+### driving_blade_red — "next" not consumed (FIXED)
+"Your **next** weapon attack this turn gains +3{p} and go again" was modelled as
+a turn-long `SET_FLAG` + `STATIC` gate, so it buffed **every** weapon attack for
+the rest of the turn.
+
+Fixed, together with the missing primitive it needed. `MODIFY_NEXT_ATTACK` was
+already correctly one-shot (`engine.py` consumes the queued entry on the first
+attack matching its `filter`) but carries power mods only, so **`GRANT_NEXT_ATTACK`**
+now queues a one-shot keyword grant on the same list. Driving Blade uses both,
+weapon-filtered; the Agility token uses it for its go-again clause.
+
+Deliberately NOT built as a self-consuming flag condition: `FLAG_SET` is
+re-evaluated repeatedly during attack-power recalculation, so a condition with
+side effects would fire an unpredictable number of times. Reusing the existing
+consume-at-announcement queue keeps the one-shot semantics exact.
 
 ### nerve_scalpel — same class, plus wrong player
 "the **next time** they defend with 1 or more reaction cards this turn" — the
@@ -146,24 +153,71 @@ damage" — text that never says the keyword. `ARCANE_BARRIER` (2:
 a look. So INTIMIDATE was the one real hallucination class, not the first of
 many — but the check is cheap and belongs in tooling as a regression guard.
 
-### Duplicate slugs — silent shadowing (pre-existing, NOT fixed)
+### Crowd cheer — four private flags, none connected (FIXED)
+Chasing Tuffnut turned up a defect class of its own: "the crowd cheers you" had
+**four** hand-rolled spellings across 8 cards and no shared state at all.
+
+- `CROWD_CHEERS` (comeback_kid_red, pleiades, tuffnut, tuffnut_bumbling_hulkster)
+- `CROWD_CHEERS_ACTIVE` (comeback_kid_blue)
+- `THE_CROWD_CHEERS` (shining_courage_red)
+- `CHEERED_THIS_TURN` (disarm_yellow, old_favorite_yellow)
+
+Consequences: **Comeback Kid red and blue — the same card in two colours — used
+different flags**, so neither could see the other's cheer. `disarm_yellow` and
+`old_favorite_yellow` tested `CHEERED_THIS_TURN`, which **no card ever set**, so
+those abilities could never fire. `pleiades` read a flag nothing set and hung
+its Confidence token off `ON_CLASH_WIN_REVEALED`, unrelated to its actual
+"whenever the crowd cheers you" text.
+
+Meanwhile `effect_keywords.cheer()` (CR 8.5.57) was **dead code called by
+nothing but its own unit test**, and the "the crowd cheers" keyword-text handler
+in triggers.py appended a flag no code read.
+
+Now one path: `CROWD_CHEER` effect → `ability_keywords.effect_crowd_cheers` →
+the CR `cheer()`; an `IS_CHEERED` condition over shared state; and an `ON_CHEER`
+trigger mirroring `ON_BOO` for "whenever the crowd cheers you" (every card with
+that text is a hero, which is what the boo-style hero dispatch covers).
+`IS_CHEERED` also accepts the legacy spellings so no cheer is lost. `boo` had
+the identical split and got the same routing.
+
+### Duplicate slugs — silent shadowing (FIXED)
 `engine/card_effects/json/` contains **two slugs implemented twice in different
 set directories**, with *different* JSON in each:
 
 - `agility` — `ako/` vs `tokens/` (different ability_type and effects)
 - `tuffnut_bumbling_hulkster` — `her/` vs `sup/` (entirely different abilities)
 
-Whichever the loader's glob reaches last wins, so the live behaviour is
-arbitrary and neither file is obviously the intended one. `load_all_cards()`
-does not complain. Given the loader's existing fail-loud design (unknown
-effect/condition types raise), **it should raise on a duplicate slug too** —
-but that change will hard-fail the game until these two are resolved, so it
-needs a deliberate pass, not a drive-by fix. Resolving which implementation is
-correct is per-card judgement.
+Whichever the loader's glob reached last won, so the live behaviour was
+arbitrary and neither file was obviously the intended one.
 
-Two other defect classes here are the same "one-shot vs turn-long" mistake
-(`driving_blade_red`, `nerve_scalpel`). A **`CLEAR_FLAG` effect** — or a
-`consume: true` option on `FLAG_SET`/`FLAG_SET`-gated statics — would give the
-generator a way to express "the next time ..." for cases `MODIFY_NEXT_ATTACK`
-does not cover. That is probably the single highest-leverage primitive to add
-next, since "your next X this turn" is an extremely common FAB template.
+Resolved by the owner: `agility` keeps `tokens/` (both were wrong; the deleted
+`ako/` one at least *attempted* the go-again clause, but as a turn-long flag —
+worse than omitting it). `tuffnut_bumbling_hulkster` keeps `sup/`, which was
+also the better implementation on the merits (see the analysis in its
+`_comment`). Note the pair was invisible to
+`test_card_is_filed_under_a_set_it_was_printed_in` because the card is printed
+in **both** HER146 and SUP001, so either folder passed.
+
+**The loader now refuses duplicates.** A slug defined by more than one file is
+recorded in `loader.DUPLICATE_SLUGS`, dropped from the registry and added to
+`LOAD_ERRORS`, so `require_card` rejects it at game start naming both paths —
+an ambiguous definition counts as no definition. It earned its keep within
+minutes, catching a `driving_blade_red` duplicate created during this very
+session (and `setIdentifiers` then showed the new copy was in the wrong set
+folder too). A regression test asserts the real corpus stays at zero.
+
+Two other defect classes here were the same "one-shot vs turn-long" mistake
+(`driving_blade_red`, `nerve_scalpel`). `GRANT_NEXT_ATTACK` now covers the
+attack-keyword case; **`nerve_scalpel` is still open**, because its "the next
+time they defend" applies to the DEFENDING player's cards and there is no
+equivalent one-shot queue on the defence side (it also sets its flag on the
+wrong player — `SET_FLAG` defaults to SELF).
+
+Remaining known-unimplemented, in rough order of leverage:
+- one-shot queue for "the next time they DEFEND" (`nerve_scalpel`)
+- `REF_POWER_GTE` + pitch-top-of-deck — finishes both Tuffnut cards, and fixes
+  the four cards misusing `REF_PITCH_IS` with the unread `pitch_power_gte`
+- per-card defend-legality restriction — clears the two `KNOWN_UNIMPLEMENTED`
+  xfails (`embrace_adversity`, `overcome_adversity`)
+- `prismatic_lens_yellow` ("unless" as AND) and `lady_barthimont` (specialization
+  to bottom of deck instead of face up in arsenal) — per-card, no primitive needed

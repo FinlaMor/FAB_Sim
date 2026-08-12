@@ -1,42 +1,27 @@
 {
   "slug": "tuffnut",
+  "_comment": "Young hero. Instant - {t}: Pitch the top card of your deck; if it has 6 or more {p}, the crowd cheers you. Whenever the crowd cheers you, create a Toughness token. The cheer and its trigger are now canonical. STILL SIMPLIFIED: the activation pitches nothing and skips the 6-power check, because pitch-top-of-deck and REF_POWER_GTE do not exist yet — the prior JSON faked the check with REF_PITCH_IS (which tests PITCH VALUE, and whose pitch_power_gte key was silently unread) and charged a phantom {r}1. See docs/reaudit_opus_batch1.md.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 1,
+      "ability_type": "INSTANT",
       "cost": [
         {
-          "type": "PITCH",
-          "amount": 1
+          "type": "TAP_SELF"
         }
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "CROWD_CHEERS"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "REF_PITCH_IS",
-          "ref": "TOP_DECK",
-          "pitch_power_gte": 6
+          "type": "CROWD_CHEER"
         }
       ]
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_BECOME",
+      "trigger": "ON_CHEER",
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "TOUGHNESS"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "CROWD_CHEERS"
+          "token": "toughness"
         }
       ]
     }

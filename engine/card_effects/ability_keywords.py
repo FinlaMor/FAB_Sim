@@ -749,12 +749,39 @@ def create_token_card(token_slug: str, owner_id: int, **kwargs) -> Card:
 
 
 def effect_crowd_boos(state: GameState, player_id: int) -> None:
-    """The crowd boos you — tracks that this player has been booed this turn."""
+    """The crowd boos you — tracks that this player has been booed this turn.
+
+    Also routes through the CR 8.5.57 keyword (effect_keywords.boo), which
+    emits a BooEvent that replacement effects can intercept and sets
+    class_counters['booed_this_turn']. Without that call the CR-level function
+    was dead code and no replacement could ever see a boo.
+    """
     from engine.state import Event
+    from engine.effect_keywords import boo as _cr_boo
     player = state.players[player_id]
     player.current_turn_effects.append("crowd_booed")
+    _cr_boo(state, player_id)
     state.event_manager.emit(
         Event(type='crowd_boos', data={'player_id': player_id}),
+        state
+    )
+
+
+def effect_crowd_cheers(state: GameState, player_id: int) -> None:
+    """The crowd cheers you — the counterpart of effect_crowd_boos (CR 8.5.57).
+
+    Cheer previously had no working path at all: effect_keywords.cheer() was
+    called by nothing, the "the crowd cheers" keyword handler appended a flag
+    nothing read, and cards hand-rolled a private SET_FLAG. This is the single
+    entry point for all three.
+    """
+    from engine.state import Event
+    from engine.effect_keywords import cheer as _cr_cheer
+    player = state.players[player_id]
+    player.current_turn_effects.append("crowd_cheered")
+    _cr_cheer(state, player_id)
+    state.event_manager.emit(
+        Event(type='crowd_cheers', data={'player_id': player_id}),
         state
     )
 
@@ -762,6 +789,21 @@ def effect_crowd_boos(state: GameState, player_id: int) -> None:
 def has_been_booed(state: GameState, player_id: int) -> bool:
     """Check if player has been booed this turn."""
     return "crowd_booed" in state.players[player_id].current_turn_effects
+
+
+# Spellings that have all meant "was cheered this turn" at some point: the
+# canonical flag, the one the keyword-text handler writes, and the private flag
+# hand-rolled by cards before CROWD_CHEER existed. Accepting all three keeps a
+# cheer from one path visible to a card written against another.
+_CHEERED_FLAGS = ("crowd_cheered", "crowd_cheers", "CROWD_CHEERS")
+
+
+def has_been_cheered(state: GameState, player_id: int) -> bool:
+    """Check if player has been cheered this turn."""
+    player = state.players[player_id]
+    if player.class_counters.get("cheered_this_turn"):
+        return True
+    return any(f in player.current_turn_effects for f in _CHEERED_FLAGS)
 
 
 def roll_die(state: GameState, player_id: int, faces: int = 6) -> int:

@@ -575,6 +575,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return has_been_booed(s, _controller_id(c))
         return _ib
 
+    if ctype in ("IS_CHEERED", "HAS_BEEN_CHEERED"):
+        # "If you've been cheered this turn" — reads the shared cheer state, so
+        # a cheer from ANY source counts. Cards used to test their own private
+        # SET_FLAG, which only ever saw cheers they caused themselves.
+        def _ic(c, e, s):
+            from engine.card_effects.ability_keywords import has_been_cheered, _controller_id
+            return has_been_cheered(s, _controller_id(c))
+        return _ic
+
     if ctype == "OPPONENT_IS_MARKED":
         # True if the opponent hero is currently marked.
         def _oim(c, e, s):

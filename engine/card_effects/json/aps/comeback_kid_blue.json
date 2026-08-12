@@ -1,5 +1,6 @@
 {
   "slug": "comeback_kid_blue",
+  "_comment": "When this attacks a hero, if you have less {h} than them, the crowd cheers you. If you've been cheered this turn, this gets +1{p}. Was SET_FLAG/FLAG_SET on a private flag — red used CROWD_CHEERS and blue CROWD_CHEERS_ACTIVE, so neither could see a cheer from the other or from any other source.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -14,8 +15,7 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "CROWD_CHEERS_ACTIVE"
+          "type": "CROWD_CHEER"
         }
       ]
     },
@@ -23,8 +23,7 @@
       "ability_type": "STATIC",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "CROWD_CHEERS_ACTIVE"
+          "type": "IS_CHEERED"
         }
       ],
       "effects": [

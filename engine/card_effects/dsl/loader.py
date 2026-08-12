@@ -19,6 +19,13 @@ _CARDS: dict[str, CardDef] = {}
 # file stem → "path: error". These slugs count as unimplemented.
 LOAD_ERRORS: dict[str, str] = {}
 
+# Slugs defined by more than one JSON file: slug → [paths]. Two files claiming
+# one slug used to mean the last one walked silently won, so which definition
+# the engine ran came down to filesystem order — and the loser could be the
+# correct one. A duplicated slug is an ambiguous definition, so it is treated
+# as NO definition (see load_all_cards) rather than an arbitrary pick.
+DUPLICATE_SLUGS: dict[str, list[str]] = {}
+
 # True once load_all_cards() has run; get_card() lazy-loads on first lookup.
 _LOADED = False
 
@@ -165,6 +172,8 @@ def load_all_cards(json_dir: Path | None = None) -> int:
     _LOADED = True
     _CARDS.clear()
     LOAD_ERRORS.clear()
+    DUPLICATE_SLUGS.clear()
+    seen_paths: dict[str, str] = {}
 
     root = json_dir or _json_dir()
     if not root.exists():
@@ -185,6 +194,22 @@ def load_all_cards(json_dir: Path | None = None) -> int:
             card = compile_card(raw)
             if not card.slug:
                 raise ValueError("missing 'slug'")
+            if card.slug in seen_paths:
+                # Ambiguous: drop the slug entirely so require_card/validate_slugs
+                # reject it at game start naming both files, instead of running a
+                # definition picked by walk order.
+                DUPLICATE_SLUGS.setdefault(card.slug, [seen_paths[card.slug]]).append(str(path))
+                LOAD_ERRORS[card.slug] = (
+                    f"slug {card.slug!r} is defined by multiple files "
+                    f"({', '.join(DUPLICATE_SLUGS[card.slug])}) — delete or rename all "
+                    f"but the correct one"
+                )
+                if _CARDS.pop(card.slug, None) is not None:
+                    count -= 1
+                logger.warning("Duplicate slug %s: %s", card.slug,
+                               DUPLICATE_SLUGS[card.slug])
+                continue
+            seen_paths[card.slug] = str(path)
             _CARDS[card.slug] = card
             count += 1
         except Exception as exc:

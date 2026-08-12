@@ -31,13 +31,8 @@
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_CLASH_WIN_REVEALED",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "CROWD_CHEERS"
-        }
-      ],
+      "trigger": "ON_CHEER",
+      "conditions": [],
       "effects": [
         {
           "type": "CREATE_TOKEN",
@@ -45,5 +40,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Young hero. The Confidence token is 'Whenever the crowd cheers you' — a TRIGGER on the cheer, not a condition checked at clash resolution. Was ON_CLASH_WIN_REVEALED gated on a private FLAG_SET CROWD_CHEERS that nothing ever set, so it never fired."
 }

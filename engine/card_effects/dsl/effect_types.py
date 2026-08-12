@@ -771,6 +771,19 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             effect_crowd_boos(state, tid)
         return _fn
 
+    if etype in ("CROWD_CHEER", "CROWD_CHEERS"):
+        # "the crowd cheers you" (CR 8.5.57). Cards used to hand-roll this as
+        # SET_FLAG CROWD_CHEERS, which never reached the keyword function, so a
+        # cheer was invisible to every other card and to replacement effects.
+        # Defaults to SELF — the crowd cheers YOU, mirroring CROWD_BOO.
+        player_target = params.get("player", "SELF")
+        def _fn(card, event, state, _pt=player_target):
+            from engine.card_effects.ability_keywords import effect_crowd_cheers, _controller_id
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            effect_crowd_cheers(state, tid)
+        return _fn
+
     if etype == "DEAL_GENERIC":
         amt = params.get("amount", 0)
         tgt = params.get("target", "OPPONENT")
@@ -1863,6 +1876,28 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             player.dsl_queued_attack_mods.append({
                 "mod": _mod,
                 "amount": _resolve_amount(_a, state),
+                "filter": _filt,
+            })
+        return _fn
+
+    if etype in ("GRANT_NEXT_ATTACK", "GRANT_NEXT_ATTACK_KEYWORD"):
+        # "Your next attack this turn gets <keyword>" (Agility token, Driving
+        # Blade). Queued on the same one-shot list as MODIFY_NEXT_ATTACK and
+        # consumed by _apply_turn_attack_effects on the first attack matching
+        # "filter" — the ONLY correct shape for "next", since a SET_FLAG plus a
+        # flag-gated static grants the keyword to every attack for the rest of
+        # the turn.
+        keyword = params.get("keyword", "")
+        kw = "Go Again" if str(keyword).lower().replace("_", " ") == "go again" else keyword
+        filter_specs = params.get("filter", [])
+        def _fn(card, event, state, _kw=kw, _filt=filter_specs):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = state.players[_controller_id(card)]
+            if not hasattr(player, 'dsl_queued_attack_mods'):
+                player.dsl_queued_attack_mods = []
+            player.dsl_queued_attack_mods.append({
+                "mod": "grant_keyword",
+                "keyword": _kw,
                 "filter": _filt,
             })
         return _fn
