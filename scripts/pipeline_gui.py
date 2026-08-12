@@ -17,6 +17,7 @@ Stdlib only (tkinter) — no new dependencies.
 from __future__ import annotations
 
 import json
+import os
 import queue
 import subprocess
 import sys
@@ -105,6 +106,13 @@ class PipelineGUI:
         self.limit = tk.StringVar(value="")
         self.model = tk.StringVar(value="qwen2.5-coder:14b")
         self.audit_model = tk.StringVar(value="qwen2.5-coder:14b")
+        # Which server answers /chat/completions. Without this the GUI would
+        # silently fall back to Ollama (:11434) even with the much faster
+        # llama.cpp GPU server running on :8080 — a slow run that looks fine.
+        # Embeddings always go to Ollama on :11434 regardless (hardcoded, and
+        # they degrade silently), so the GPU path wants BOTH servers up.
+        self.base_url = tk.StringVar(
+            value=os.environ.get("FAB_LLM_BASE_URL", "http://localhost:11434/v1"))
 
         row = ttk.Frame(frame)
         row.pack(fill="x", padx=8, pady=6)
@@ -124,6 +132,14 @@ class PipelineGUI:
                                   ("Auditor", self.audit_model, 22)):
             ttk.Label(row, text=label).pack(side="left", padx=(0, 4))
             ttk.Entry(row, textvariable=var, width=width).pack(side="left", padx=(0, 14))
+
+        row2 = ttk.Frame(frame)
+        row2.pack(fill="x", padx=8, pady=(0, 6))
+        ttk.Label(row2, text="LLM endpoint").pack(side="left", padx=(0, 4))
+        ttk.Entry(row2, textvariable=self.base_url, width=34).pack(side="left", padx=(0, 8))
+        ttk.Button(row2, text="Check", command=self.on_check).pack(side="left", padx=(0, 8))
+        self.lbl_llm = ttk.Label(row2, text="")
+        self.lbl_llm.pack(side="left")
 
         self.set_code.trace_add("write", lambda *_: self.refresh_counts())
 
@@ -177,6 +193,8 @@ class PipelineGUI:
             cmd += ["--model", self.model.get().strip()]
         if self.audit_model.get().strip():
             cmd += ["--audit-model", self.audit_model.get().strip()]
+        if self.base_url.get().strip():
+            cmd += ["--base-url", self.base_url.get().strip()]
 
         self.append(f"$ {' '.join(cmd)}\n", "ctl")
         creation = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -193,6 +211,27 @@ class PipelineGUI:
         for line in self.proc.stdout:
             self.lines.put(line)
         self.lines.put(None)  # sentinel: process ended
+
+    def on_check(self):
+        """Confirm the endpoint answers and report which models it serves."""
+        import json as _json
+        import urllib.request
+        url = self.base_url.get().strip().rstrip("/") + "/models"
+        try:
+            with urllib.request.urlopen(url, timeout=4) as resp:
+                ids = [m["id"] for m in _json.loads(resp.read().decode()).get("data", [])]
+            wanted = self.model.get().strip()
+            ok = wanted in ids
+            self.lbl_llm.config(
+                text=f"up · {len(ids)} model(s) · {wanted}: {'yes' if ok else 'NOT SERVED'}")
+            self.append(f"[check] {url} -> {len(ids)} model(s): {', '.join(ids[:8])}\n",
+                        "ok" if ok else "warn")
+            if not ok:
+                self.append(f"[check] '{wanted}' is not served here — "
+                            f"the run would fail on every card\n", "warn")
+        except Exception as exc:
+            self.lbl_llm.config(text="unreachable")
+            self.append(f"[check] {url} unreachable: {exc}\n", "bad")
 
     def on_pause(self):
         write_control(paused=True, stop=False)
