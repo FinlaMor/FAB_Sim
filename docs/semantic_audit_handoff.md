@@ -182,8 +182,13 @@ The sweep is now largely mined out — pass 2 fixed every high-count mismatch an
 the leftovers are documented above as benign or as small per-card items. The
 remaining yield is in the re-audit, so:
 
-1. **Opus re-audit of the 14b-clean cards (§2)** — ~244 remain un-re-audited.
-   This is now the highest-value lane; both systemic bugs of pass 1 came from it.
+1. **Opus re-audit of the 14b-clean cards (§2)** — **231 remain** (14 done in
+   `docs/reaudit_opus_batch1.md`; read that first). This is the highest-value
+   lane: batch 1 flagged 6 of 14 and turned up a **27-card fabricated-INTIMIDATE
+   class** the 14b auditor rated clean. Batch 1 also names the next move —
+   re-run the hallucinated-keyword grep (it generalises) and consider a
+   "consume this flag after one use" primitive, since "your next X this turn"
+   is a very common template that currently mis-implements as turn-long.
 2. Clear the small "still open" list above (`pitch_power_gte` → REF_POWER_GTE
    primitive, `card_condition` on CARD_IN_ZONE, `ward_type`, FLAG_SET `count`).
 3. Re-run the sweep once more after those; it should come back clean.
