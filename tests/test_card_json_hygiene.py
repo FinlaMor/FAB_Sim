@@ -34,6 +34,25 @@ NO_EFFECTS_REQUIRED = {"COST_MODIFIER", "REPLACEMENT"}
 # implemented.
 _BOLD = re.compile(r"\*\*.*?\*\*")
 
+# Cards whose printed text CANNOT be expressed with the current DSL, listed
+# explicitly so the gap is tracked rather than papered over with an ability
+# that does the wrong thing. Removing an entry is the definition of done for
+# the primitive it names.
+#
+# These two read "This may only defend an attack if the attack's controller has
+# destroyed a Might/Agility token this turn" — a defend-LEGALITY restriction on
+# the equipment itself. Nothing in the DSL can express it: the only defence
+# restriction that exists is combat.head_equipment_only (attacker-side, set by
+# Headbutt), and a general version has to be enforced in the live legal-action
+# path (play.available_actions), not just actions.get_defendable_cards.
+# Both previously carried a fabricated ON_DEFEND -> INTIMIDATE ability, which
+# GRANTED a bonus keyword for text that is purely a downside — strictly worse
+# than doing nothing. See docs/reaudit_opus_batch1.md.
+KNOWN_UNIMPLEMENTED = {
+    "embrace_adversity",   # needs: per-card defend-legality restriction
+    "overcome_adversity",  # needs: per-card defend-legality restriction
+}
+
 
 def _card_files() -> list[Path]:
     """Every JSON the loader would treat as a card definition."""
@@ -132,6 +151,8 @@ def test_card_with_functional_text_implements_something(path: Path):
         pytest.skip("no printed entry (token or unindexed slug)")
     if raw.get("abilities") or raw.get("setup"):
         return
+    if slug in KNOWN_UNIMPLEMENTED:
+        pytest.xfail(f"{slug}: no DSL primitive for this text yet (see KNOWN_UNIMPLEMENTED)")
     prose = _BOLD.sub("", entry.get("functionalText") or "").strip(" \n\t-—,.")
     assert not prose, (
         f"{slug} has no abilities and no setup, but its text is not purely "

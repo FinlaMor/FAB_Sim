@@ -1,5 +1,6 @@
 {
   "slug": "cogwerx_tinker_rings",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -9,14 +10,6 @@
           "type": "CREATE_TOKEN",
           "token_type": "Golden Cog",
           "token": "golden_cog"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "INTIMIDATE"
         }
       ]
     }

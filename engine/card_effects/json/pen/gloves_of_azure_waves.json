@@ -1,5 +1,6 @@
 {
   "slug": "gloves_of_azure_waves",
+  "_comment": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets +3{d} and blade break. The prior JSON emitted INTIMIDATE for the blade-break clause (the same hallucination found on 27 Blade Break cards) and gated it on REF_PITCH_IS, which tests a REFERENCED card's pitch value, not a count of blue cards in the pitch zone. UNIMPLEMENTED: the conditional blade-break grant has no DSL primitive (no BLADE_BREAK effect type exists).",
   "abilities": [
     {
       "ability_type": "STATIC",
@@ -14,10 +15,10 @@
       "ability_type": "STATIC",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "ref": "self",
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
           "color": "blue",
-          "amount": 2
+          "count_gte": 2
         }
       ],
       "effects": [
@@ -25,9 +26,6 @@
           "type": "MODIFY_DEFENSE_VALUE",
           "mod": "add",
           "amount": 3
-        },
-        {
-          "type": "INTIMIDATE"
         }
       ]
     }

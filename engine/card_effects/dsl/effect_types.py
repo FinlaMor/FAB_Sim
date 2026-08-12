@@ -1045,7 +1045,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         dmg = params.get("damage", 0)
         if not isinstance(dmg, (int, float)) or isinstance(dmg, bool):
             dmg = 0
-        on_success = [((e.get("type") or "").upper(), e)
+        # Compiled eagerly so a bad on_success spec fails at JSON load time like
+        # every other effect, instead of raising mid-game only for the players
+        # who choose to pay.
+        on_success = [compile_effect((e.get("type") or "").upper(),
+                                     {k: v for k, v in e.items() if k != "type"})
                       for e in (params.get("on_success") or [])]
         def _fn(card, event, state, _r=resources, _d=dmg, _win=on_success):
             from engine.card_effects.ability_keywords import (
@@ -1064,8 +1068,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     player.resources -= _r
                     paid = True
             if paid:
-                for et, ep in _win:
-                    fn = compile_effect(et, {k: v for k, v in ep.items() if k != "type"})
+                for fn in _win:
                     if fn is not None:
                         fn(card, event, state)
             else:
@@ -1916,7 +1919,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # authored under "on_success" and run after the roll — they read the
         # result through _resolve_amount's ROLL_RESULT/HALF tokens.
         faces = params.get("faces", params.get("sides", 6))
-        after = [((e.get("type") or "").upper(), e)
+        after = [compile_effect((e.get("type") or "").upper(),
+                                {k: v for k, v in e.items() if k != "type"})
                  for e in (params.get("on_success") or [])]
         def _fn(card, event, state, _f=faces, _after=after):
             from engine.card_effects.ability_keywords import roll_die, _controller_id
@@ -1930,8 +1934,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 player = state.players[cid]
                 if "DIE_ROLLED_SIX" not in player.current_turn_effects:
                     player.current_turn_effects.append("DIE_ROLLED_SIX")
-            for et, ep in _after:
-                fn = compile_effect(et, {k: v for k, v in ep.items() if k != "type"})
+            for fn in _after:
                 if fn is not None:
                     fn(card, event, state)
         return _fn
@@ -1976,22 +1979,32 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "CHOOSE":
         choose_amt = params.get("amount", 1)
         options_raw = params.get("options", [])
-        compiled_options = [
-            [compile_effect(e.get("type", "").upper(),
-                            {k: v for k, v in e.items() if k != "type"})
-             for e in opt]
-            for opt in options_raw
-        ]
-        def _fn(card, event, state, _n=choose_amt, _opts=compiled_options):
+        # An option is either a bare list of effect specs, or a named block
+        # {"name": "Head Jab", "effects": [...]} — cards use both. Iterating the
+        # dict form as a list yielded its KEYS and crashed on `str.get`.
+        compiled_options, labels = [], []
+        for i, opt in enumerate(options_raw):
+            if isinstance(opt, dict):
+                specs = opt.get("effects") or []
+                labels.append(str(opt.get("name") or i))
+            else:
+                specs = opt or []
+                labels.append(str(i))
+            compiled_options.append(
+                [compile_effect((e.get("type") or "").upper(),
+                                {k: v for k, v in e.items() if k != "type"})
+                 for e in specs])
+
+        def _fn(card, event, state, _n=choose_amt, _opts=compiled_options, _labels=labels):
             if not _opts:
                 return
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
             cid = _controller_id(card)
-            labels = [str(i) for i in range(len(_opts))]
-            pick = _ask_player(state, cid, labels, context="Choose an effect")
-            idx = int(pick) if pick and pick.isdigit() and int(pick) < len(_opts) else 0
+            pick = _ask_player(state, cid, _labels, context="Choose an effect")
+            idx = _labels.index(pick) if pick in _labels else 0
             for eff_fn in _opts[idx]:
-                eff_fn(card, event, state)
+                if eff_fn is not None:
+                    eff_fn(card, event, state)
         return _fn
 
     # ── attack / wager ─────────────────────────────────────────────────────

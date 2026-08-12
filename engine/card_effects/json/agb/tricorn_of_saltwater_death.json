@@ -1,5 +1,6 @@
 {
   "slug": "tricorn_of_saltwater_death",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",
@@ -23,14 +24,6 @@
               "keyword": "WATERY_GRAVE"
             }
           ]
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "INTIMIDATE"
         }
       ]
     }

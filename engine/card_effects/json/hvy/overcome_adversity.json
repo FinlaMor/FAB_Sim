@@ -1,19 +1,5 @@
 {
   "slug": "overcome_adversity",
-  "abilities": [
-    {
-      "ability_type": "DEFENSE_REACTION",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "AGILITY_TOKEN_DESTROYED_THIS_TURN"
-        }
-      ],
-      "effects": [
-        {
-          "type": "INTIMIDATE"
-        }
-      ]
-    }
-  ]
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). UNIMPLEMENTED: \"This may only defend an attack if the attack's controller has destroyed an Agility token this turn\" — a defend-legality restriction, which has no DSL primitive yet. The prior INTIMIDATE ability did not model it.",
+  "abilities": []
 }

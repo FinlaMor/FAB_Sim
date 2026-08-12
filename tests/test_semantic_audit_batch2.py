@@ -216,26 +216,61 @@ def _play(state, slug, pid=1, types=("Action",)):
     return card
 
 
+# engine.effect_keywords.roll() uses the global `random`, so seeding fixes the
+# die. Seed 19 rolls a 6 and seed 0 rolls a 4 — both branches are asserted
+# outright rather than against whatever the die happened to give, which would
+# only exercise the six-branch about one run in six.
+_SEED_ROLLS_SIX = 19
+_SEED_ROLLS_FOUR = 0
+
+
+def _stocked_state(seed):
+    """State with a seeded die and a non-empty deck (_make_state's deck is
+    empty, so a draw would silently do nothing)."""
+    import random
+    random.seed(seed)
+    st = _make_state()
+    for i in range(5):
+        c = _make_card(slug=f"deck{i}", name=f"deck{i}")
+        c.owner = c.controller = 1
+        st.players[1].deck.add(c)
+    return st
+
+
 def test_reckless_charge_blue_gains_action_points_from_the_roll():
     """on_success was dropped and the AP was authored as a combat `keyword`
     rather than the ACTION_POINTS asset, so the card gained nothing."""
     load_all_cards()
-    st = _make_state()
+    st = _stocked_state(_SEED_ROLLS_SIX)
     before = st.players[1].action_points
     _play(st, "reckless_charge_blue")
-    assert st.players[1].action_points - before == st._roll_result // 2
+    assert st._roll_result == 6
+    assert st.players[1].action_points - before == 3      # half of 6, rounded down
+
+    st = _stocked_state(_SEED_ROLLS_FOUR)
+    before = st.players[1].action_points
+    _play(st, "reckless_charge_blue")
+    assert st._roll_result == 4
+    assert st.players[1].action_points - before == 2
 
 
 def test_reckless_charge_blue_draws_only_after_a_six():
     """The DIE_ROLLED_SIX flag used to be set unconditionally, so the draw
     happened on every roll."""
     load_all_cards()
-    st = _make_state()
+    st = _stocked_state(_SEED_ROLLS_SIX)
     hand_before = len(st.players[1].hand.cards)
     _play(st, "reckless_charge_blue")
-    drew = len(st.players[1].hand.cards) - hand_before
-    assert drew == (1 if st._roll_result == 6 else 0)
-    assert ("DIE_ROLLED_SIX" in st.players[1].current_turn_effects) == (st._roll_result == 6)
+    assert st._roll_result == 6
+    assert len(st.players[1].hand.cards) - hand_before == 1
+    assert "DIE_ROLLED_SIX" in st.players[1].current_turn_effects
+
+    st = _stocked_state(_SEED_ROLLS_FOUR)
+    hand_before = len(st.players[1].hand.cards)
+    _play(st, "reckless_charge_blue")
+    assert st._roll_result == 4
+    assert len(st.players[1].hand.cards) == hand_before
+    assert "DIE_ROLLED_SIX" not in st.players[1].current_turn_effects
 
 
 def test_controls_token_type_comparison_against_opponent():
@@ -295,3 +330,44 @@ def test_aether_icevein_blue_opponent_discards_only_when_fused():
     before2 = len(st2.players[2].hand.cards)
     _play(st2, "aether_icevein_blue")
     assert len(st2.players[2].hand.cards) == before2
+
+
+def test_choose_accepts_named_option_blocks():
+    """Options come in two shapes: a bare list of effect specs, and a named block
+    {"name": ..., "effects": [...]}. Iterating the dict form as a list yielded its
+    KEYS and crashed on str.get — latent until on_success actually ran."""
+    st = _make_state()
+    picked = {}
+
+    def _pick_second(state, options, context, **kwargs):
+        picked["labels"] = list(options)
+        return options[1]
+
+    st.player_agents = {1: _pick_second, 2: _pick_second}
+    before = st.players[1].life
+    compile_effect("CHOOSE", {"options": [
+        {"name": "Small", "effects": [{"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}]},
+        {"name": "Big", "effects": [{"type": "GAIN", "asset": "LIFE_POINTS", "amount": 5}]},
+    ]})(_src(), None, st)
+    assert picked["labels"] == ["Small", "Big"]     # names surface as the choices
+    assert st.players[1].life == before + 5         # the picked block ran
+
+
+def test_be_like_water_blue_pays_then_chooses():
+    """End-to-end: "you may pay {r}. If you do, choose ..." — the payoff is a
+    CHOOSE authored with named blocks."""
+    load_all_cards()
+
+    def _pay(state, options, context, **kwargs):
+        for o in options or []:
+            if "pay" in str(o).lower():
+                return o
+        return options[0] if options else None
+
+    st = _make_state()
+    st.player_agents = {1: _pay, 2: _pay}
+    st.players[1].resources = 5
+    card = _make_card(slug="be_like_water_blue", name="Be Like Water")
+    card.owner = card.controller = 1
+    dsl.dispatch(st, "ON_HIT", "be_like_water_blue", card=card, event=None)
+    assert st.players[1].resources == 4

@@ -1,5 +1,6 @@
 {
   "slug": "evo_engine_room_yellow",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -16,14 +17,6 @@
           "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
           "amount": -1,
           "duration": "this_turn"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "INTIMIDATE"
         }
       ]
     }
