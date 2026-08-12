@@ -278,3 +278,68 @@ def test_pay_or_else_counter_cost_with_no_counter_cannot_pay():
         "on_failure": [{"type": "DESTROY_PERMANENT", "target": "self"}],
     })(card, None, st)
     assert card not in st.players[1].permanents.cards
+
+
+# ------------------------------------------------------------- dangling flags
+def test_lightning_flow_flag_is_actually_written_when_a_lightning_card_is_played():
+    """Every Lightning Flow card read "played_lightning" out of
+    current_turn_effects and NOTHING wrote it, so the mechanic was inert —
+    ability_keywords.check_lightning_flow could never return True."""
+    from engine.actions import Action, ActionType
+    from engine.play import _apply_play_card
+
+    st = _make_state()
+    lightning = _make_card(slug="arc_lightning_yellow", name="Arc Lightning",
+                           talents=["Lightning"])
+    lightning.owner = lightning.controller = 1
+    st.players[1].hand.add(lightning)
+    assert "played_lightning" not in st.players[1].current_turn_effects
+    _apply_play_card(st, Action(type=ActionType.PLAY_CARD, player_id=1, card=lightning))
+    assert "played_lightning" in st.players[1].current_turn_effects
+
+    from engine.card_effects.ability_keywords import check_lightning_flow
+    assert check_lightning_flow(st, 1) is True
+
+
+def test_non_lightning_card_does_not_set_lightning_flow():
+    from engine.actions import Action, ActionType
+    from engine.play import _apply_play_card
+
+    st = _make_state()
+    other = _make_card(slug="plain", name="Plain", talents=["Elemental"])
+    other.owner = other.controller = 1
+    st.players[1].hand.add(other)
+    _apply_play_card(st, Action(type=ActionType.PLAY_CARD, player_id=1, card=other))
+    assert "played_lightning" not in st.players[1].current_turn_effects
+
+
+def test_renamed_flags_now_match_what_the_engine_writes():
+    """These families read flags nothing set. The engine records fusion as
+    "fused_<slug>", boost as "boosted_this_turn" and a played Lightning card as
+    "played_lightning" — all lowercase; the cards used bare uppercase names."""
+    import glob
+    load_all_cards()
+    dead = {"FUSED", "FUSED_FLAG", "FUSION", "BOOSTED", "BOOSTED_THIS_TURN",
+            "BOOSTED_ATTACK_THIS_TURN", "LIGHTNING_PLAYED_THIS_TURN", "LIGHTNING_FUSED"}
+    offenders = []
+
+    def walk(o, slug):
+        if isinstance(o, dict):
+            if (o.get("type") or "").upper() == "FLAG_SET" and o.get("flag") in dead:
+                offenders.append((slug, o["flag"]))
+            for v in o.values():
+                walk(v, slug)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v, slug)
+
+    for f in glob.glob("engine/card_effects/json/**/*.json", recursive=True):
+        if "needs_review" in f or "_work_queue" in f:
+            continue
+        try:
+            d = json.loads(Path(f).read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(d, dict):
+            walk(d.get("abilities", []), Path(f).stem)
+    assert offenders == [], f"cards still reading a never-set flag: {offenders}"

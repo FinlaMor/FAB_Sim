@@ -1,5 +1,6 @@
 {
   "slug": "snow_under_yellow",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: SNOW_UNDER_FUSED.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -7,7 +8,7 @@
       "conditions": [
         {
           "type": "FLAG_SET",
-          "flag": "SNOW_UNDER_FUSED"
+          "flag": "fused_snow_under_yellow"
         },
         {
           "type": "ATTACK_TARGET_IS_HERO"

@@ -621,6 +621,17 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # defend on a chain link.
     card.controller = action.player_id
 
+    # Lightning Flow: "if you've played a Lightning card this turn".
+    # ability_keywords.check_lightning_flow and every Lightning Flow card read
+    # "played_lightning" out of current_turn_effects, but NOTHING ever wrote it,
+    # so the whole mechanic was inert. This is the one place a card is played
+    # from hand, so record it here.
+    if any("lightning" in str(t).lower()
+           for t in ((getattr(card, 'talents', None) or [])
+                     + (getattr(card, 'types', None) or []))):
+        if "played_lightning" not in player.current_turn_effects:
+            player.current_turn_effects.append("played_lightning")
+
     _src_zone = player.zone_by_name(getattr(card, 'zone', None) or 'hand')
     if _src_zone is not None and card in _src_zone.cards:
         _src_zone.remove(card)

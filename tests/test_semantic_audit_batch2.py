@@ -321,7 +321,9 @@ def test_aether_icevein_blue_opponent_discards_only_when_fused():
         return st
 
     st = _setup()
-    st.players[1].current_turn_effects.append("FUSED")
+    # ability_keywords.fusion records "fused_<slug>"; the card used to read a
+    # bare "FUSED" that nothing ever wrote.
+    st.players[1].current_turn_effects.append("fused_aether_icevein_blue")
     before = len(st.players[2].hand.cards)
     _play(st, "aether_icevein_blue")
     assert len(st.players[2].hand.cards) == before - 1

@@ -1,6 +1,6 @@
 {
   "slug": "misfire_dampener",
-  "_comment": "Instant - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn; if you've boosted this turn, INSTEAD prevent the next 2. Modeled as an ACTIVATE with a destroy-this cost and a CONDITIONAL_EFFECT on the BOOSTED flag (then PREVENT_DAMAGE 2, else 1). Prior JSON gated the whole ability on BOOSTED (no prevention at all when not boosted), used an unrecognized 'additional_effects' key, and only SET_FLAG (which nothing consumed).",
+  "_comment": "Instant - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn; if you've boosted this turn, INSTEAD prevent the next 2. Modeled as an ACTIVATE with a destroy-this cost and a CONDITIONAL_EFFECT on the BOOSTED flag (then PREVENT_DAMAGE 2, else 1). Prior JSON gated the whole ability on BOOSTED (no prevention at all when not boosted), used an unrecognized 'additional_effects' key, and only SET_FLAG (which nothing consumed). Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED_THIS_TURN.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -17,7 +17,7 @@
           "when": [
             {
               "type": "FLAG_SET",
-              "flag": "BOOSTED_THIS_TURN"
+              "flag": "boosted_this_turn"
             }
           ],
           "then": [

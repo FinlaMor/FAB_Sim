@@ -1,12 +1,13 @@
 {
   "slug": "entwine_earth_yellow",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSED_FLAG.",
   "abilities": [
     {
       "ability_type": "STATIC",
       "conditions": [
         {
           "type": "FLAG_SET",
-          "flag": "FUSED_FLAG"
+          "flag": "fused_entwine_earth_yellow"
         }
       ],
       "effects": [

@@ -170,7 +170,17 @@ def test_misfire_dampener_prevents_1_arcane_without_boost():
 def test_misfire_dampener_prevents_2_arcane_when_boosted():
     load_all_cards()
     st = _make_state()
-    st.players[1].current_turn_effects.append("BOOSTED_THIS_TURN")
+    # Drive the REAL boost keyword rather than appending a flag by hand: this
+    # test used to set "BOOSTED_THIS_TURN", a name nothing in the engine ever
+    # writes, so it proved the card worked only in a state no game can reach.
+    from engine.card_effects.ability_keywords import boost
+    booster = _make_card(slug="booster", name="booster")
+    booster.owner = booster.controller = 1
+    _top = _make_card(slug="topcard", name="topcard")
+    _top.owner = _top.controller = 1        # banish resolves the owner off the card
+    st.players[1].deck.add(_top)
+    assert boost(booster, st) is not None
+    assert "boosted_this_turn" in st.players[1].current_turn_effects
     _activate(st, "misfire_dampener")
     assert _arcane_to_self(st, 3) == 1  # 3 - prevented 2
 

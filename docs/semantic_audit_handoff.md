@@ -11,7 +11,20 @@ Where the card-quality effort stands and exactly how to continue it. Branch:
 - All engine changes below are verified against the full suite (~13,136 tests,
   ~8 min) and pushed.
 
-## The two techniques that work (ranked by ROI)
+## The techniques that work (ranked by ROI)
+
+**The pattern behind all of them:** one query over the whole corpus, finding a
+whole defect class at once, catching exactly what per-card review cannot — cards
+that load cleanly, pass their own tests, and look implemented. Three such sweeps
+have now each found a class an LLM auditor rated "clean":
+
+| Sweep | Found | Where |
+|---|---|---|
+| Param-key | 10 systemic key bugs incl. a crash | §1 below |
+| Hallucinated-keyword | 27 cards granting a fabricated INTIMIDATE | `docs/reaudit_opus_batch1.md` |
+| **Dangling-flag** | **167 flags / 195 cards (~19%) that can NEVER fire** | `docs/dangling_flags_2026-08.md` |
+
+Run all three after any bulk authoring.
 
 ### 1. Param-key sweep — HIGHEST ROI, do this first each session
 
