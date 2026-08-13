@@ -99,9 +99,63 @@ def build_slug_index() -> dict:
     return idx
 
 
+@functools.lru_cache(maxsize=1)
+def _card_object_sources() -> dict[str, str]:
+    """slug -> PHP class body, from Talishar's newer Classes/CardObjects format.
+
+    Talishar is migrating off `switch($cardID) case "slug":` onto per-card
+    classes, and the migration is well ahead of the switch blocks: 4983 slugs
+    are defined as classes vs 3915 as cases, and the newest sets (pen, sup, omn,
+    aha) exist ONLY as classes. Reading just the old format cost ~20 points of
+    coverage overall and left those sets at 0-14%.
+
+    A per-colour class is usually a thin wrapper delegating to a shared base
+    (`$this->baseCard = new edge_ahead(...)`), so the wrapper alone is nearly
+    contentless — the real logic is in the base class. Both are returned, base
+    first, which is also better material than a switch fragment: the methods are
+    named (PlayAbility / OnAttackEffect / ProcessTrigger / CombatEffectActive)
+    and map onto our ability types.
+    """
+    bodies: dict[str, str] = {}
+    class_re = re.compile(r'^\s*class\s+([A-Za-z0-9_]+)\s+extends\s+\w+\s*\{')
+    for php in TALISHAR.rglob("*.php"):
+        if "CardObjects" not in str(php):
+            continue
+        try:
+            lines = php.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        starts = [(i, m.group(1)) for i, line in enumerate(lines)
+                  if (m := class_re.match(line))]
+        for n, (i, name) in enumerate(starts):
+            end = starts[n + 1][0] if n + 1 < len(starts) else len(lines)
+            bodies[name] = "\n".join(lines[i:end]).rstrip()
+    return bodies
+
+
+def _card_object_text(slug: str) -> str:
+    """Class-format logic for a slug: its own class plus the base it delegates to."""
+    bodies = _card_object_sources()
+    own = bodies.get(slug)
+    if not own:
+        return ""
+    parts = []
+    m = re.search(r'baseCard\s*=\s*new\s+([A-Za-z0-9_]+)\s*\(', own)
+    if m and m.group(1) in bodies and m.group(1) != slug:
+        parts.append(f"# shared base class {m.group(1)} (the actual logic)\n"
+                     f"{bodies[m.group(1)]}")
+    parts.append(f"# class {slug}\n{own}")
+    return "\n\n".join(parts)
+
+
 def reference_text(slug: str, max_chars: int = 1600) -> str:
     """Talishar reference for a slug formatted for prompt injection (empty if
-    none). Deduplicates identical blocks and caps length."""
+    none). Deduplicates identical blocks and caps length.
+
+    Prefers the older `case` blocks where they exist (terser, already proven in
+    the auditor prompt) and falls back to the class format, which is the only
+    source for the newest sets.
+    """
     blocks = build_slug_index().get(slug, [])
     seen, parts = set(), []
     for b in blocks:
@@ -111,6 +165,8 @@ def reference_text(slug: str, max_chars: int = 1600) -> str:
         seen.add(key)
         parts.append(f"# {b['func']}()\n{b['code']}")
     out = "\n".join(parts)
+    if not out.strip():
+        out = _card_object_text(slug)
     return out[:max_chars]
 
 

@@ -724,6 +724,15 @@ def build_real_examples(n: int = 8) -> str:
             continue
         at = abilities[0].get("ability_type", "?")
         body = json.dumps(raw, ensure_ascii=False)
+        # Skip cards whose whole implementation is one bare keyword grant. They
+        # win the "smallest" contest for their ability_type and so ship in every
+        # prompt, while teaching nothing but "emit this keyword" — the pen run
+        # copied the smallest STATIC_TRIGGERED card (an ON_DEFEND INTIMIDATE)
+        # onto 13 unrelated Blade Break cards. A slightly larger example that
+        # actually demonstrates structure is worth far more.
+        _effs = [e for ab in abilities for e in (ab.get("effects") or [])]
+        if len(_effs) == 1 and set(_effs[0]) <= {"type"}:
+            continue
         by_type.setdefault(at, []).append((len(body), raw.get("slug", path.stem), path))
 
     order = ["TRIGGERED", "PLAY", "ATTACK_REACTION", "ACTIVATE", "STATIC_TRIGGERED",
@@ -997,13 +1006,46 @@ def build_implementation_prompt(card: dict, dsl_ref: str, queue: list[dict] | No
     card_block = json.dumps({k: v for k, v in card.items() if k != "status"}, indent=2, ensure_ascii=False)
     dynamic = build_dynamic_examples(card, queue or [], embed_model=embed_model) if queue else ""
     extra = f"\n{dynamic}\n" if dynamic else ""
-    real_examples = build_real_examples()
+
+    # Prefer THIS CARD's reference logic over generic few-shot examples.
+    #
+    # The examples are chosen as the SMALLEST loading card per ability_type, so
+    # the same handful ships in every prompt — and the smallest STATIC_TRIGGERED
+    # card in the corpus grants INTIMIDATE, which a 14B copied onto 13 unrelated
+    # Blade Break cards in the pen run. A minimal example is maximally copyable,
+    # which is precisely the problem: the demonstration outweighs the prose rule
+    # forbidding it.
+    #
+    # Talishar's own per-card logic is keyed by the same slug and is specific to
+    # THIS card, so it cannot teach another card's shape. It covers ~80% of the
+    # remaining corpus (though only ~13% of pen/sup, the newest sets). Where it
+    # exists it replaces the examples; otherwise we fall back to them.
+    talishar = _talishar_reference(card["slug"])
+    if talishar and talishar.strip():
+        grounding = f"""=== REFERENCE IMPLEMENTATION (Talishar) ===
+
+Talishar is a different, independently written FAB engine (PHP). Below is ITS
+logic for THIS EXACT CARD. Use it to understand WHAT THE CARD DOES — which
+clauses exist, what is optional, who chooses, what is a cost vs an effect.
+
+Do NOT translate it line by line, and do NOT copy its structure: it is another
+engine with different primitives, and it is a second opinion, not ground truth
+(Talishar's own README disclaims correctness). Where it disagrees with the
+printed card text, THE PRINTED TEXT WINS.
+
+{talishar.strip()}
+
+=== END REFERENCE ===
+"""
+    else:
+        grounding = build_real_examples()
+
     return f"""\
 You are implementing a card effect JSON file for the Flesh and Blood trading card game simulator.
 
 {dsl_ref}
 
-{real_examples}
+{grounding}
 {extra}
 {STRUCTURAL_RULES}
 
