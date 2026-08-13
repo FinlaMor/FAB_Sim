@@ -1,0 +1,21 @@
+{
+  "slug": "blunten_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "DISCARD",
+          "player": "OPPONENT",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_IS_WEAPON"
+        }
+      ]
+    }
+  ]
+}

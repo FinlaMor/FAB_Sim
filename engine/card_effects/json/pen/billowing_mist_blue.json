@@ -1,0 +1,33 @@
+{
+  "slug": "billowing_mist_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": []
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_TOKEN_CREATED",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "created_ephemeral_this_turn"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "name": "ephemeral",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

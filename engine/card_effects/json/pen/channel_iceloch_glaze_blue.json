@@ -1,0 +1,78 @@
+{
+  "slug": "channel_iceloch_glaze_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "APPLY_CONTINUOUS",
+          "modifications": [
+            {
+              "type": "FREEZE",
+              "filter": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "ARSENAL",
+                  "player": "OPPONENT"
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token_type": "FROSTBITE"
+            },
+            {
+              "type": "OR",
+              "conditions": [
+                {
+                  "type": "CONTROLS_TOKEN_TYPE",
+                  "token_type": "FROZEN"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "END_OF_TURN",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "FLOW",
+          "target": "self"
+        },
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "SELF",
+          "resources": 0,
+          "on_failure": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "target": "self"
+            }
+          ],
+          "on_success": [
+            {
+              "type": "PUT_CARDS_BOTTOM",
+              "player": "SELF",
+              "zone": "PITCH",
+              "cards": [
+                {
+                  "type": "CARD_IN_ZONE",
+                  "zone": "PITCH",
+                  "player": "SELF",
+                  "card_class": "ICE"
+                }
+              ],
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

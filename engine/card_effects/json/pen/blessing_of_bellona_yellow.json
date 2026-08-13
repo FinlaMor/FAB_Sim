@@ -2,29 +2,19 @@
   "slug": "blessing_of_bellona_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_TOKEN_CREATED",
+      "trigger": "ON_GOLD_CREATED",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "ref": "soul",
-          "pitch": 2
+          "type": "CARD_IN_ZONE",
+          "card_class": "SOUL",
+          "player": "SELF"
         }
       ],
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Courage",
-          "token": "courage"
+          "token_slug": "courage"
         }
       ]
     },
@@ -33,9 +23,7 @@
       "trigger": "START_OF_TURN",
       "effects": [
         {
-          "type": "MOVE_REF",
-          "source_ref": "self",
-          "destination_ref": "soul"
+          "type": "BANISH"
         }
       ]
     }

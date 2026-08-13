@@ -1,0 +1,19 @@
+{
+  "slug": "become_the_cup_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CHOOSE",
+          "choice_type": "COLOR",
+          "player": "SELF"
+        },
+        {
+          "type": "GRANT_SUBTYPE",
+          "subtype": "YELLOW"
+        }
+      ]
+    }
+  ]
+}

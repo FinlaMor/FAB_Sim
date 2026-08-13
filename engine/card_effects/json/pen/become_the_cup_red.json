@@ -1,0 +1,17 @@
+{
+  "slug": "become_the_cup_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_SUBTYPE",
+          "subtype": "RED"
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

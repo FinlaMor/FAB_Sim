@@ -1,0 +1,39 @@
+{
+  "slug": "buzzard_helm",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD_RANDOM",
+          "player": "SELF"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "HAND",
+          "filter": {
+            "power_gte": 6
+          },
+          "player": "SELF"
+        }
+      ]
+    }
+  ]
+}

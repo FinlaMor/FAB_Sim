@@ -3,6 +3,7 @@
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",
+      "activation_cost": 0,
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
@@ -12,17 +13,17 @@
       "effects": [
         {
           "type": "MAY",
-          "effect": {
-            "type": "PUT_REF_BOTTOM",
-            "ref": "arsenal",
-            "conditions": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zone": "arsenal",
-                "card_type": "action"
-              }
-            ]
-          }
+          "effects": [
+            {
+              "type": "SELECT_FROM_REF",
+              "ref": "arsenal",
+              "filter": {
+                "card_type": "ACTION"
+              },
+              "player": "SELF",
+              "target": "chain_link_defense"
+            }
+          ]
         }
       ]
     }

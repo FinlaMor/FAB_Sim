@@ -1,0 +1,41 @@
+{
+  "slug": "break_open_the_chests_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "APPLY_CONTINUOUS",
+          "modifications": [
+            {
+              "type": "TURN_ARSENAL_FACE_UP",
+              "player": "SELF"
+            },
+            {
+              "type": "TURN_ARSENAL_FACE_UP",
+              "player": "OPPONENT"
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "ARSENAL",
+              "card_class": "YELLOW",
+              "face_up": true
+            }
+          ],
+          "then": [
+            {
+              "type": "CREATE_TOKEN",
+              "token_slug": "gold",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

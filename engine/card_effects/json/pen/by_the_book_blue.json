@@ -1,0 +1,19 @@
+{
+  "slug": "by_the_book_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IN_COMBAT"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN"
+        }
+      ]
+    }
+  ]
+}

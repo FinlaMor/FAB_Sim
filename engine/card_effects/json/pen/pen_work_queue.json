@@ -474,7 +474,7 @@
     ],
     "specializations": [],
     "functional_text": "As you play this, choose a color. This gets the chosen color.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "become_the_cup_yellow",
@@ -497,7 +497,7 @@
     ],
     "specializations": [],
     "functional_text": "As you play this, choose a color. This gets the chosen color.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "beneath_the_surface_yellow",
@@ -519,7 +519,7 @@
     ],
     "specializations": [],
     "functional_text": "**Watery Grave**\n\nWhile this is defending, when it's put into your graveyard from the arena, turn it face-down.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "billowing_mist_blue",
@@ -542,7 +542,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this turn gets +1{p}.\n\nThe next time you would create a card with ephemeral this turn, instead create that many plus 1.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "blackstone_greaves",
@@ -565,7 +565,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've dealt arcane damage this turn, this gets +1{d}.\n\n**Temper**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "blast_rig_red",
@@ -589,7 +589,7 @@
     ],
     "specializations": [],
     "functional_text": "**Evo Upgrade** - This gets +1{p} for each Evo you have equipped.\n\n**Boost**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "blessing_of_bellona_yellow",
@@ -613,7 +613,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhenever a card is put into your soul, create a Courage token.\n\nAt the start of your turn, put this into your soul.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "blessing_of_themis_yellow",
@@ -637,7 +637,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen this enters the arena, name a card. Turn all cards with that name in banished zones face-down. Whenever a card with that name is banished while this is in the arena, turn that card face-down.\n\nAt the start of your turn, put this into your soul.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "blunten_yellow",
@@ -656,7 +656,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends a weapon attack, the attacking hero discards a card.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "boltn_boots",
@@ -680,7 +680,7 @@
     ],
     "specializations": [],
     "functional_text": "**Attack Reaction** - {r}, destroy this: Target arrow attack with {p} greater than its base gets **go again**.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bone_puppetry",
@@ -703,7 +703,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, you may return an ally from your graveyard to the arena. If you do, at the beginning of the end phase, destroy it and discard your hand.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "boo_resident_spook_yellow",
@@ -729,7 +729,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {t}: **Attack**\n\nIf this is untapped, it gets **spellvoid 2**.\n\n**Watery Grave**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "break_open_the_chests_yellow",
@@ -752,7 +752,7 @@
     ],
     "specializations": [],
     "functional_text": "Turn all cards in all arsenals face-up. Then if there's a face-up yellow card in any arsenal, create 2 Gold tokens.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bubba_lubba_run_aground_yellow",
@@ -778,7 +778,7 @@
     ],
     "specializations": [],
     "functional_text": "This enters the arena with a +1{p} counter.\n\n**Action** - {r}, {t}: **Attack**\n\n**Action** - Remove a +1{p} counter from an ally you control: Destroy an aura token. **Go again**\n\n**Watery Grave**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "burnished_bunkerplate",
@@ -799,7 +799,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Defense Reaction** - Destroy this: You may add an action card from your arsenal to the active chain link as a defending card.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "buzzard_helm",
@@ -822,7 +822,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets +1{d} this turn.\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "by_the_book_blue",
@@ -844,7 +844,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you have less {h} than each other hero, you may play this as though it were an instant.\n\nHeroes can't draw cards during action phases.\n\nAt the beginning of your action phase, destroy this.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "carrion_crown",
@@ -868,7 +868,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Discard an ally, destroy this: Draw a card. **Go again**\n\n**Blade Break**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "chain_of_brutality_red",
@@ -916,7 +916,7 @@
     ],
     "specializations": [],
     "functional_text": "When this enters the arena and at the start of your turn, **freeze** target ally, aura, item, or equipment while this is in the arena.\n\n**Channel Ice** - At the beginning of your end phase, put a flow counter on this, then destroy it unless you put an Ice card from your pitch zone on the bottom of your deck for each flow counter on it.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "channel_iceloch_glaze_blue",
@@ -942,7 +942,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nCards in opponents' arsenals are **frozen** while they control a Frostbite or a frozen permanent.\n\n**Channel Ice** - At the beginning of your end phase, put a flow counter on this, then destroy it unless you put an Ice card from your pitch zone on the bottom of your deck for each flow counter on it.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "channel_the_skybreaker_yellow",

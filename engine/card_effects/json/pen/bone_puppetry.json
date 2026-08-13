@@ -1,0 +1,44 @@
+{
+  "slug": "bone_puppetry",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "RETURN_DR_FROM_GRAVEYARD",
+              "target_zone": "ALLY"
+            },
+            {
+              "type": "SET_FLAG",
+              "flag": "BONE_PUPPETRY_DEFEND"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "BONE_PUPPETRY_DEFEND"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_TOKEN"
+        },
+        {
+          "type": "DISCARD",
+          "amount": 0,
+          "player": "SELF"
+        }
+      ]
+    }
+  ]
+}

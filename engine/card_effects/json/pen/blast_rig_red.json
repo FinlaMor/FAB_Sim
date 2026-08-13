@@ -1,0 +1,23 @@
+{
+  "slug": "blast_rig_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "EQUIPMENT",
+              "keywords": [
+                "Evo"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,21 +1,26 @@
 {
   "slug": "carrion_crown",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 0,
-      "cost": [
+      "ability_type": "PLAY",
+      "additional_cost": [
         {
-          "type": "DISCARD_RANDOM",
-          "target": "ALLY"
-        },
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
+          "type": "DISCARD_CARD",
+          "target": "hand",
+          "filter": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "HAND",
+              "subtype": "Ally"
+            }
+          ]
         }
       ],
       "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
         {
           "type": "DRAW",
           "amount": 1

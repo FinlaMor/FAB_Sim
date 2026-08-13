@@ -104,8 +104,10 @@ class PipelineGUI:
 
         self.set_code = tk.StringVar(value=default_set)
         self.limit = tk.StringVar(value="")
-        self.model = tk.StringVar(value="qwen2.5-coder:14b")
-        self.audit_model = tk.StringVar(value="qwen2.5-coder:14b")
+        # 30B is an MoE (~3B active), so it is no slower than the 14B while
+        # producing far more loadable cards. docs/model_comparison_2026-08.md.
+        self.model = tk.StringVar(value="qwen3-coder-30b-ctx8k:latest")
+        self.audit_model = tk.StringVar(value="qwen3-coder-30b-ctx8k:latest")
         # Which server answers /chat/completions. Without this the GUI would
         # silently fall back to Ollama (:11434) even with the much faster
         # llama.cpp GPU server running on :8080 — a slow run that looks fine.

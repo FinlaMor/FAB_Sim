@@ -1,0 +1,14 @@
+{
+  "slug": "boo_resident_spook_yellow",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "effects": [
+        {
+          "type": "PLAY_ACTIVATE_ATTACK"
+        }
+      ]
+    }
+  ]
+}

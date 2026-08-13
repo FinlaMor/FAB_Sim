@@ -12,17 +12,18 @@
       ],
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "ATTACK_TYPE_IN",
-          "attack_type": "ARROW"
-        },
-        {
-          "type": "ATTACK_POWER_GT_BASE"
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "GO_AGAIN",
+          "filter": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "attack_type": "ARROW"
+            },
+            {
+              "type": "ATTACK_PITCH_POWER_GTE",
+              "amount": 1
+            }
+          ]
         }
       ]
     }

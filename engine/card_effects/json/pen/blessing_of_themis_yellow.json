@@ -1,0 +1,42 @@
+{
+  "slug": "blessing_of_themis_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "CHOOSE",
+          "choice_type": "CARD_NAME",
+          "target": "self",
+          "player": "SELF"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_BECOME",
+      "conditions": [
+        {
+          "type": "REF_EXISTS",
+          "target": "banished"
+        }
+      ],
+      "effects": [
+        {
+          "type": "FLIP_REF",
+          "target": "banished"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "PUT_SELF_BOTTOM_DECK"
+        }
+      ]
+    }
+  ]
+}

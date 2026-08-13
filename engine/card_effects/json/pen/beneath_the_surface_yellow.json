@@ -1,0 +1,28 @@
+{
+  "slug": "beneath_the_surface_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "conditions": [
+        {
+          "type": "IN_COMBAT"
+        },
+        {
+          "type": "CONTROLS_ATTACK_ACTION",
+          "player": "SELF"
+        },
+        {
+          "type": "REF_EXISTS",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "FLIP_REF",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

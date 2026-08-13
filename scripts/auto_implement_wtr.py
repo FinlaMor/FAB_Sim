@@ -1688,10 +1688,13 @@ def main() -> None:
     if BACKEND == "openai":
         # Runnable defaults that honour the implementer/auditor split; override freely.
         if not args.model:
-            args.model = "qwen2.5-coder:14b"
+            # 30B (MoE, ~3B active) measured FASTER than the 14B — 5.64 vs
+            # 5.42 tok/s — while loading 95% vs 75% and giving the first
+            # non-zero verification rate. See docs/model_comparison_2026-08.md.
+            args.model = "qwen3-coder-30b-ctx8k:latest"
             print(f"[cfg] no --model given; implementer defaults to {args.model}")
         if not args.verify_model:
-            args.verify_model = "qwen2.5-coder:14b"
+            args.verify_model = "qwen3-coder-30b-ctx8k:latest"
             print(f"[cfg] no --audit-model given; auditor defaults to {args.verify_model}")
         if args.verify_model == args.model:
             # Same weights is allowed: each call is a stateless /chat/completions
