@@ -1,6 +1,6 @@
 {
   "slug": "tiger_stripe_shuko",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": ATTACK_ACTION -> ATTACK_TYPE_IN; BASE_POWER_LTE -> ATTACK_BASE_POWER_LTE.",
   "abilities": [
     {
       "ability_type": "STATIC",
@@ -15,10 +15,13 @@
               "type": "PLAYED_FROM_ARSENAL"
             },
             {
-              "type": "ATTACK_ACTION"
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Attack"
+              ]
             },
             {
-              "type": "BASE_POWER_LTE",
+              "type": "ATTACK_BASE_POWER_LTE",
               "amount": 2
             },
             {

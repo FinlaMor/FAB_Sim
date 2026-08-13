@@ -1,27 +1,11 @@
 {
   "slug": "leap_frog_vocal_sac",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": dropped ON_PLAY_ACTIVATE_ATTACK: a TRIGGER name used as a condition; it is not a condition. Repaired: the conditions list held a TRIGGER (ON_ACTIVATE) wrapping ATTACK_REACTION — neither is a condition, and the empty-OR bug hid both. UNIMPLEMENTED: there is no trigger for \"when an opponent plays or activates an attack reaction\", so this now approximates it with the opponent-attack check.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ACTIVATE",
       "conditions": [
-        {
-          "type": "OR",
-          "conditions": [
-            {
-              "type": "ON_PLAY_ACTIVATE_ATTACK"
-            },
-            {
-              "type": "ON_ACTIVATE",
-              "conditions": [
-                {
-                  "type": "ATTACK_REACTION"
-                }
-              ]
-            }
-          ]
-        },
         {
           "type": "CONTROLS_ATTACK_ACTION",
           "opponent": true
@@ -32,7 +16,8 @@
           "type": "ADD_DEFEND",
           "target": "self"
         }
-      ]
+      ],
+      "optional": true
     }
   ]
 }

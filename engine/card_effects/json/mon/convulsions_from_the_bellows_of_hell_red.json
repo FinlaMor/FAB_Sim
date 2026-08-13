@@ -1,5 +1,6 @@
 {
   "slug": "convulsions_from_the_bellows_of_hell_red",
+  "_comment": "Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": dropped MODIFY_ATTACK: an effect used as a condition; the real test (\"gains exactly +1 power from an effect\") has no primitive. Repaired: DOMINATE is an EFFECT but sat inside the ability's CONDITIONS, so the card gated itself on a non-condition; the empty-OR bug hid it. It is now a conditional effect gated on the high-power banish.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -12,39 +13,18 @@
       "effects": [
         {
           "type": "GO_AGAIN"
-        }
-      ],
-      "conditions": [
+        },
         {
-          "type": "OR",
+          "type": "DOMINATE",
           "conditions": [
             {
-              "type": "NOT",
-              "condition": {
-                "type": "REF_EXISTS",
-                "ref": "banished_high_power_card"
-              }
-            },
-            {
-              "type": "AND",
-              "conditions": [
-                {
-                  "type": "REF_EXISTS",
-                  "ref": "banished_high_power_card"
-                },
-                {
-                  "type": "MODIFY_ATTACK",
-                  "mod": "add",
-                  "amount": 3
-                },
-                {
-                  "type": "DOMINATE"
-                }
-              ]
+              "type": "REF_EXISTS",
+              "ref": "banished_high_power_card"
             }
           ]
         }
-      ]
+      ],
+      "conditions": []
     }
   ]
 }

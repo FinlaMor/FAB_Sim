@@ -3,17 +3,41 @@
   "abilities": [
     {
       "ability_type": "ACTIVATE",
-      "activation_cost": 2,
+      "activation_cost": 0,
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
+        },
+        {
+          "type": "PITCH",
+          "amount": 2
+        },
+        {
+          "type": "PAY_RESOURCES",
+          "resources": 1
         }
       ],
       "effects": [
         {
-          "type": "RETURN_DR_FROM_GRAVEYARD",
-          "cost": "X"
+          "type": "CHOOSE",
+          "options": [
+            {
+              "type": "SELECT_FROM_REF",
+              "ref": "MYGRAVEYARD",
+              "filter": [
+                {
+                  "type": "SUBTYPE_IN",
+                  "subtype": "Aura"
+                }
+              ],
+              "max": 1
+            }
+          ]
+        },
+        {
+          "type": "PUT_REF_TOP",
+          "ref": "MYHAND"
         }
       ]
     }

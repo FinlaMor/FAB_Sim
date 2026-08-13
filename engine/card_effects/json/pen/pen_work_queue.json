@@ -20,7 +20,7 @@
     ],
     "specializations": [],
     "functional_text": "**Arcane Barrier 2**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "aggressive_pounce_blue",
@@ -43,7 +43,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've intimidated an opponent this turn, this gets **go again**.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "aggressive_pounce_red",
@@ -66,7 +66,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've intimidated an opponent this turn, this gets **go again**.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "aggressive_pounce_yellow",
@@ -89,7 +89,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've intimidated an opponent this turn, this gets **go again**.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "arc_bending_red",
@@ -114,7 +114,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if a Lightning or Elemental attack would deal damage this combat chain, instead it deals that much damage plus 1.\n\n**Lightning Bond** - If a Lightning card was pitched to play this, this gets **go again**.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "art_of_the_phoenix_war_red",
@@ -133,7 +133,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play this, discard a Phoenix Flame.\n\nDraconic attack action cards you control get +1{p} this turn.\n\nDraw 2 card.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "assembly_module_blue",
@@ -157,7 +157,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crank**\n\nThis enters the arena with a stream counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Action** - {t}: Search your deck for a Hyper Driver, put it into the arena, then shuffle.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "astravolt_elemental_red",
@@ -178,7 +178,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may discard an instant card. If you do, draw a card and create an Embodiment of Lightning token.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bad_breath_blue",
@@ -202,7 +202,7 @@
     ],
     "specializations": [],
     "functional_text": "**Intimidate** target hero.\n\nThe next time an attack you control hits this turn, create a Might token.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bad_breath_red",
@@ -226,7 +226,7 @@
     ],
     "specializations": [],
     "functional_text": "**Intimidate** target hero.\n\nThe next time an attack you control hits this turn, create 3 Might tokens.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bad_breath_yellow",
@@ -250,7 +250,7 @@
     ],
     "specializations": [],
     "functional_text": "**Intimidate** target hero.\n\nThe next time an attack you control hits this turn, create 2 Might tokens.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "basalt_boots",
@@ -273,7 +273,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control a Seismic Surge token, this gets +1{d}.\n\n**Temper**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bear_hug_blue",
@@ -294,7 +294,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Play this only if you've pitched a card with 6 or more {p} this turn.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "bear_hug_red",
@@ -315,7 +315,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Play this only if you've pitched a card with 6 or more {p} this turn.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "bear_hug_yellow",
@@ -336,7 +336,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Play this only if you've pitched a card with 6 or more {p} this turn.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "beckoning_haunt",
@@ -359,7 +359,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {x}{x}{r}, destroy this: Return target aura with cost X from your graveyard to your hand.\n\n**Guardwell**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "become_the_bottle_blue",
@@ -382,7 +382,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, choose a card on the combat chain. This gets the chosen card's name.\n\n**Go again**",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "become_the_bottle_red",
@@ -405,7 +405,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, choose a card on the combat chain. This gets the chosen card's name.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "become_the_bottle_yellow",
@@ -428,7 +428,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, choose a card on the combat chain. This gets the chosen card's name.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "become_the_cup_blue",
@@ -451,7 +451,7 @@
     ],
     "specializations": [],
     "functional_text": "As you play this, choose a color. This gets the chosen color.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "become_the_cup_red",

@@ -1,0 +1,27 @@
+{
+  "slug": "become_the_bottle_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "SELECT_FROM_REF",
+          "ref": "COMBAT_CHAIN",
+          "amount": 1,
+          "on_success": [
+            {
+              "type": "SET_FLAG",
+              "flag": "CHOOSEN_CARD_NAME",
+              "value": {
+                "type": "REFERENCE",
+                "ref": "SELECTED_CARD",
+                "property": "name"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "basalt_boots",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "seismic_surge"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

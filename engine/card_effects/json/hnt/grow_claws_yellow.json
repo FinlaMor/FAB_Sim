@@ -1,5 +1,6 @@
 {
   "slug": "grow_claws_yellow",
+  "_comment": "Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": dropped LAST_ATTACK_IN_COMBAT_CHAIN: no primitive for \"was the last attack this combat chain\".",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
@@ -12,9 +13,6 @@
               "classes": [
                 "draconic"
               ]
-            },
-            {
-              "type": "LAST_ATTACK_IN_COMBAT_CHAIN"
             }
           ]
         }

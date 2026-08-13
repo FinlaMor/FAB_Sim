@@ -746,19 +746,28 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _ahk
 
     # ── boolean combinators ────────────────────────────────────────────────
-    if ctype == "OR":
-        sub_conds = [compile_condition(sc.get("type", "none"), sc)
-                     for sc in params.get("any", [])]
-        def _or(c, e, s, _subs=sub_conds):
-            return any((fn is None or fn(c, e, s)) for fn in _subs)
-        return _or
+    # Sub-conditions are authored under "any"/"all" but very often as
+    # "conditions" (54 usages). Reading only the former silently produced an
+    # EMPTY list, and an empty combinator does not fail loudly — it collapses:
+    # any([]) is False, so the OR could never fire and its whole ability was
+    # dead; all([]) is True, so the AND removed the gate it was meant to
+    # enforce. Reading both is the fix; note the invalid inner types went
+    # unvalidated too, because nothing ever compiled them.
+    if ctype in ("OR", "AND"):
+        specs = (params.get("any" if ctype == "OR" else "all")
+                 or params.get("conditions") or [])
+        sub_conds = [compile_condition(sc.get("type", "none"), sc) for sc in specs]
+        combine = any if ctype == "OR" else all
 
-    if ctype == "AND":
-        sub_conds = [compile_condition(sc.get("type", "none"), sc)
-                     for sc in params.get("all", [])]
-        def _and(c, e, s, _subs=sub_conds):
-            return all((fn is None or fn(c, e, s)) for fn in _subs)
-        return _and
+        def _combine(c, e, s, _subs=sub_conds, _fn=combine):
+            if not _subs:
+                # An empty combinator is an authoring error, not a truth value.
+                # Treat it as no restriction rather than silently killing the
+                # ability (OR) or silently passing a gate (AND) — the loader
+                # surfaces the real problem via the unknown inner type.
+                return True
+            return _fn((fn is None or fn(c, e, s)) for fn in _subs)
+        return _combine
 
     if ctype == "ATTACK_TARGET_IS_HERO":
         # "When this attacks A HERO" — false when the attack was declared

@@ -1,0 +1,37 @@
+{
+  "slug": "become_the_cup_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "REVEAL_CARD_COST_GTE",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "CHOOSE_COLOR"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "CHOOSE_COLOR"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

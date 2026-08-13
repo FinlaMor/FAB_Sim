@@ -1,0 +1,28 @@
+{
+  "slug": "bad_breath_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [],
+      "alternative_cost": [],
+      "effects": [
+        {
+          "type": "INTIMIDATE",
+          "target": "hero"
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "arsenal",
+              "controller": "self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

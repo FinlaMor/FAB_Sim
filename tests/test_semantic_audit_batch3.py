@@ -449,3 +449,44 @@ def test_defend_restriction_does_not_affect_ordinary_equipment():
     plain.owner = plain.controller = 2
     st.players[2].chest.add(plain)
     assert plain in get_defendable_cards(st)
+
+
+# ------------------------------------------------ OR / AND sub-condition key
+def test_or_and_read_sub_conditions_authored_as_conditions():
+    """Cards write sub-conditions under "conditions"; OR/AND read only
+    "any"/"all". The mismatch produced an EMPTY combinator, which does not fail
+    loudly — it collapses: any([]) is False so the OR could never fire and its
+    ability was dead, all([]) is True so the AND removed its own gate. 54
+    usages across ~50 cards."""
+    st = _make_state()
+    src = _src()
+    true_c = {"type": "IS_ACTIVE_PLAYER", "value": True}
+    false_c = {"type": "IS_ACTIVE_PLAYER", "value": False}
+
+    # canonical keys still work
+    assert compile_condition("OR", {"any": [false_c, true_c]})(src, None, st) is True
+    assert compile_condition("AND", {"all": [true_c, false_c]})(src, None, st) is False
+    # and so does the spelling cards actually use
+    assert compile_condition("OR", {"conditions": [false_c, true_c]})(src, None, st) is True
+    assert compile_condition("OR", {"conditions": [false_c]})(src, None, st) is False
+    assert compile_condition("AND", {"conditions": [true_c, false_c]})(src, None, st) is False
+    assert compile_condition("AND", {"conditions": [true_c]})(src, None, st) is True
+
+
+def test_empty_combinator_is_not_a_truth_value():
+    """An empty OR/AND is an authoring error. Neither silently killing the
+    ability nor silently passing the gate is acceptable, so both read as "no
+    restriction" and the real fault surfaces as an unknown inner type."""
+    st = _make_state()
+    src = _src()
+    assert compile_condition("OR", {})(src, None, st) is True
+    assert compile_condition("AND", {})(src, None, st) is True
+
+
+def test_invalid_nested_condition_now_fails_at_load():
+    """The empty-combinator bug meant inner conditions were never compiled, so
+    invalid types inside OR/AND escaped the load gate entirely — a PHP
+    identifier (TalentContainsAny) reached a shipped card that way."""
+    import pytest
+    with pytest.raises(ValueError):
+        compile_condition("OR", {"conditions": [{"type": "TalentContainsAny"}]})

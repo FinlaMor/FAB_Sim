@@ -1,0 +1,14 @@
+{
+  "slug": "aetherstorm_wellingtons",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "ARCANE_BARRIER",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

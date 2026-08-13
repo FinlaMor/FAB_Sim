@@ -1,5 +1,6 @@
 {
   "slug": "talisman_of_featherfoot_yellow",
+  "_comment": "Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": dropped MODIFY_ATTACK: an effect used as a condition; the real test (\"gains exactly +1 power from an effect\") has no primitive.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -10,11 +11,6 @@
           "conditions": [
             {
               "type": "ATTACK_CONTROLLED_BY_YOU"
-            },
-            {
-              "type": "MODIFY_ATTACK",
-              "mod": "add",
-              "amount": 1
             }
           ]
         }

@@ -1,0 +1,27 @@
+{
+  "slug": "bad_breath_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [],
+      "effects": [
+        {
+          "type": "INTIMIDATE",
+          "target": "hero"
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "arsenal",
+              "controller": "self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
