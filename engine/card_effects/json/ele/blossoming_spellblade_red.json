@@ -1,6 +1,6 @@
 {
   "slug": "blossoming_spellblade_red",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSED_FLAG.",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSED_FLAG. Turn-event tracking: read BANISHED_CARD_FLAG — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -35,8 +35,8 @@
           "type": "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE",
           "conditions": [
             {
-              "type": "FLAG_SET",
-              "flag": "BANISHED_CARD_FLAG"
+              "type": "EVENT_THIS_TURN",
+              "event": "banish"
             }
           ]
         }

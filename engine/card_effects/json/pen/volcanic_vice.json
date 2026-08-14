@@ -1,12 +1,14 @@
 {
   "slug": "volcanic_vice",
+  "_comment": "Turn-event tracking: read SEISMIC_SURGE_CREATED — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
   "abilities": [
     {
       "ability_type": "STATIC",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "SEISMIC_SURGE_CREATED"
+          "type": "EVENT_THIS_TURN",
+          "event": "create",
+          "qualifier": "seismic_surge"
         }
       ],
       "effects": [

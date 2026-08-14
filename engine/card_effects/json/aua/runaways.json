@@ -1,5 +1,6 @@
 {
   "slug": "runaways",
+  "_comment": "Turn-event tracking: read HERO_TAKEN_DAMAGE_THIS_TURN — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -18,8 +19,9 @@
       ],
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "HERO_TAKEN_DAMAGE_THIS_TURN"
+          "type": "EVENT_THIS_TURN",
+          "event": "damage",
+          "qualifier": "hero"
         }
       ]
     }

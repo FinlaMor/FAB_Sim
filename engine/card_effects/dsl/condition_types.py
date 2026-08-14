@@ -583,6 +583,39 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return False
         return _cdp
 
+    if ctype in ("EVENT_THIS_TURN", "DID_THIS_TURN"):
+        # "if you've dealt arcane damage this turn", "if you've pitched a blue
+        # card", "if you've attacked with a weapon twice" — one condition over
+        # markers the canonical keyword functions record.
+        #
+        #   {"type":"EVENT_THIS_TURN","event":"damage","qualifier":"arcane"}
+        #   {"type":"EVENT_THIS_TURN","event":"pitch","qualifier":"blue"}
+        #   {"type":"EVENT_THIS_TURN","event":"draw","count":2}
+        #
+        # `event` is one of damage / pitch / banish / draw / create. `qualifier`
+        # narrows it (a damage type, a colour, a class, a talent, a token slug,
+        # a card type); omit it to ask coarsely. `count` is >= N occurrences.
+        # These replace 154 hand-rolled private flags across 169 cards, none of
+        # which anything ever set.
+        event = _norm(params.get("event") or "")
+        qualifier = _norm(params.get("qualifier") or params.get("name") or "")
+        try:
+            need = int(params.get("count", 1) or 1)
+        except (TypeError, ValueError):
+            need = 1
+        who = (params.get("player") or "SELF").upper()
+
+        def _event_turn(c, e, s, _ev=event, _q=qualifier, _n=need, _who=who):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import TURN_EVENT_MARKER
+            if not _ev:
+                return False
+            cid = _controller_id(c)
+            pid = (3 - cid) if _who in ("OPPONENT", "ATTACKING", "ATTACKER", "DEFENDING") else cid
+            marker = f"{TURN_EVENT_MARKER}{_ev}" + (f":{_q}" if _q else "")
+            return sum(1 for m in s.players[pid].current_turn_effects if m == marker) >= _n
+        return _event_turn
+
     if ctype in ("DESTROYED_THIS_TURN", "HAS_DESTROYED_THIS_TURN"):
         # "if you have destroyed a <thing> this turn" — one generic condition
         # taking the thing's name, replacing the per-card flags cards invented

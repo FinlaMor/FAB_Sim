@@ -1,13 +1,14 @@
 {
   "slug": "second_strike_red",
+  "_comment": "Turn-event tracking: read DAMAGE_DEALT_THIS_TURN — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "DAMAGE_DEALT_THIS_TURN"
+          "type": "EVENT_THIS_TURN",
+          "event": "damage"
         }
       ],
       "effects": [

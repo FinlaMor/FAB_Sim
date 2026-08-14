@@ -1,5 +1,6 @@
 {
   "slug": "wide_blue_yonder_blue",
+  "_comment": "Turn-event tracking: read BLUE_PITCHED_THIS_TURN — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
@@ -10,8 +11,9 @@
           "amount": 1,
           "conditions": [
             {
-              "type": "FLAG_SET",
-              "flag": "BLUE_PITCHED_THIS_TURN"
+              "type": "EVENT_THIS_TURN",
+              "event": "pitch",
+              "qualifier": "blue"
             }
           ]
         }

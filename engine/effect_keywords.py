@@ -168,6 +168,14 @@ def banish(state: GameState, card: Card, source_player_id: int,
             z.remove(card)
     getattr(player, event.destination).add(card)
 
+    # "if you've banished an Earth card this turn" and similar.
+    _record_turn_event(state, event.source_player_id, "banish",
+                       getattr(card, "slug", None),
+                       getattr(card, "types", None) or [],
+                       getattr(card, "subtypes", None) or [],
+                       getattr(card, "talents", None) or [],
+                       getattr(card, "classes", None) or [])
+
     # trigger: "when a card is banished" listeners fire after (CR 8.5.1)
     state.event_manager.emit(event=create_emit_event(event=event), game_state=state)
 
@@ -389,6 +397,12 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
         state,
     )
 
+    # "if you've created a Gold this turn" / "an aura was created this turn".
+    # One marker per token created, so "the FIRST Gold created this turn" is a
+    # count check rather than needing its own flag.
+    for _ in range(max(1, event.number or 1)):
+        _record_turn_event(state, event.target_player_id, "create", _slug)
+
     # CR 8.5.2b: "when {token} enters the arena" triggers fire after creation.
     state.event_manager.emit(create_emit_event(event), state)
 
@@ -469,6 +483,14 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
     is_hero = any('hero' in t.lower() for t in [t.lower() for t in (damage_target.types or []) + (damage_target.subtypes or [])])
     target_type = 'hero' if is_hero else 'ally'
 
+    # "if you've dealt arcane damage this turn" and friends. Recorded once the
+    # damage is final (past replacements/cancellation), against the DEALING
+    # player, with the damage type as the qualifier.
+    if event.amount > 0:
+        _record_turn_event(state, event.source_player_id, "damage",
+                           getattr(event.damage_type, "value", event.damage_type),
+                           "hero" if is_hero else "ally")
+
     # execute the damage
     if is_hero:
         target_player = state.players[coo(damage_target)]
@@ -505,6 +527,45 @@ class DestroyEvent:
     source_player_id: Optional[int] = None
     type: str = EventType.DESTROY
     canceled: bool = False
+
+
+TURN_EVENT_MARKER = "did_this_turn:"
+
+
+def _norm_ident(value) -> str:
+    return "".join(ch for ch in str(value) if ch.isalnum()).lower()
+
+
+def _record_turn_event(state: GameState, player_id, event: str, *qualifiers) -> None:
+    """Record "you did <event> (to/with a <qualifier>) this turn".
+
+    The generic backing for cards that ask "if you've dealt arcane damage this
+    turn", "if you've pitched a blue card", "if you've attacked with a weapon
+    twice". Those were each hand-rolled as a private flag nobody set — 154 such
+    flags across 169 cards, every one an ability that could never fire — and
+    they fragment badly: "arcane damage dealt this turn" alone appeared under
+    seven different spellings.
+
+    One marker is written for the bare event and one per qualifier, so a card
+    can ask coarsely ("dealt damage") or precisely ("dealt arcane damage").
+    Markers are appended on EVERY occurrence, never deduplicated, so a count
+    check ("attacked with a weapon twice") is just counting them — the same
+    convention boost uses.
+    """
+    player = state.players.get(player_id) if player_id is not None else None
+    if player is None:
+        return
+    event = _norm_ident(event)
+    if not event:
+        return
+    markers = [f"{TURN_EVENT_MARKER}{event}"]
+    for qual in qualifiers:
+        values = qual if isinstance(qual, (list, tuple, set)) else [qual]
+        for value in values:
+            ident = _norm_ident(value) if value is not None else ""
+            if ident:
+                markers.append(f"{TURN_EVENT_MARKER}{event}:{ident}")
+    player.current_turn_effects.extend(markers)
 
 
 DESTROYED_MARKER = "destroyed_this_turn:"
@@ -750,6 +811,9 @@ def draw(state: GameState, draw_player: int, source: Optional[Card] = None,
     # only suppresses action-phase / effect-driven draws, as the card intends.
     if "cant_draw" in getattr(player, "current_turn_effects", []):
         return event
+
+    # "if you've drawn a card this turn" / "drawn 2 or more".
+    _record_turn_event(state, event.draw_player, "draw")
 
     drawn = 0
 
@@ -2545,6 +2609,17 @@ def pitch(state: GameState, card: Card, player_id: int,
 
     if event.canceled:
         return event
+
+    # "if you've pitched a blue card this turn" — colour, class and talent are
+    # all recorded so a card can key off whichever its text names.
+    _PITCH_COLOUR = {1: "red", 2: "yellow", 3: "blue"}
+    _record_turn_event(
+        state, event.player_id, "pitch",
+        getattr(event.card, "color", None) or _PITCH_COLOUR.get(
+            getattr(event.card, "pitch", None)),
+        getattr(event.card, "classes", None) or [],
+        getattr(event.card, "talents", None) or [],
+    )
 
     put_object(state, target_card=event.card, destination_zone="pitch",
                destination_player_id=event.player_id,

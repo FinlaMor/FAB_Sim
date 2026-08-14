@@ -1,12 +1,14 @@
 {
   "slug": "waxing_specter_yellow",
+  "_comment": "Turn-event tracking: read PITCHED_BLUE_CARD_THIS_TURN — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
   "abilities": [
     {
       "ability_type": "STATIC",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "PITCHED_BLUE_CARD_THIS_TURN"
+          "type": "EVENT_THIS_TURN",
+          "event": "pitch",
+          "qualifier": "blue"
         }
       ],
       "effects": [

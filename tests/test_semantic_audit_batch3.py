@@ -490,3 +490,97 @@ def test_invalid_nested_condition_now_fails_at_load():
     import pytest
     with pytest.raises(ValueError):
         compile_condition("OR", {"conditions": [{"type": "TalentContainsAny"}]})
+
+
+# ------------------------------------------------ generic turn-event tracking
+def test_event_this_turn_damage_qualifier_discriminates():
+    """"if you've dealt arcane damage this turn" — recorded by the canonical
+    deal_damage, qualified by damage type. Cards hand-rolled this under seven
+    different private flag spellings, none of which anything ever set."""
+    from engine.effect_keywords import DamageType, deal_damage
+
+    st = _make_state()
+    src = _src()
+    arcane = compile_condition("EVENT_THIS_TURN", {"event": "damage", "qualifier": "arcane"})
+    physical = compile_condition("EVENT_THIS_TURN", {"event": "damage", "qualifier": "physical"})
+    anydmg = compile_condition("EVENT_THIS_TURN", {"event": "damage"})
+
+    assert arcane(src, None, st) is False
+    deal_damage(st, 2, DamageType.ARCANE, 1, st.players[2].hero, "test")
+    assert arcane(src, None, st) is True
+    assert anydmg(src, None, st) is True       # coarse form also matches
+    assert physical(src, None, st) is False    # but the wrong type does not
+
+
+def test_event_this_turn_counts_occurrences():
+    """"drawn 2 or more cards" is a count, not a boolean — markers are appended
+    per occurrence rather than deduplicated."""
+    from engine.effect_keywords import draw
+
+    st = _make_state()
+    src = _src()
+    for i in range(3):
+        c = _make_card(slug=f"d{i}", name=f"d{i}")
+        c.owner = c.controller = 1
+        st.players[1].deck.add(c)
+    once = compile_condition("EVENT_THIS_TURN", {"event": "draw"})
+    twice = compile_condition("EVENT_THIS_TURN", {"event": "draw", "count": 2})
+
+    draw(st, 1)
+    assert (once(src, None, st), twice(src, None, st)) == (True, False)
+    draw(st, 1)
+    assert twice(src, None, st) is True
+
+
+def test_event_this_turn_reads_the_other_player():
+    """"if the ATTACKING hero has drawn 2 cards" reads their record, not yours."""
+    from engine.effect_keywords import draw
+
+    st = _make_state()
+    for i in range(2):
+        c = _make_card(slug=f"d{i}", name=f"d{i}")
+        c.owner = c.controller = 1
+        st.players[1].deck.add(c)
+    draw(st, 1)
+    mine = compile_condition("EVENT_THIS_TURN", {"event": "draw"})
+    theirs = compile_condition("EVENT_THIS_TURN", {"event": "draw", "player": "OPPONENT"})
+    assert mine(_src(1), None, st) is True
+    assert theirs(_src(1), None, st) is False    # p2 drew nothing
+    assert theirs(_src(2), None, st) is True     # from p2's view, p1 drew
+
+
+def test_pitching_records_colour_class_and_talent():
+    from engine.effect_keywords import pitch
+
+    st = _make_state()
+    src = _src()
+    blue = _make_card(slug="b", name="b", classes=["Runeblade"], talents=["Elemental"])
+    blue.owner = blue.controller = 1
+    blue.pitch = 3                                   # pitch 3 == blue
+    st.players[1].hand.add(blue)
+
+    by_colour = compile_condition("EVENT_THIS_TURN", {"event": "pitch", "qualifier": "blue"})
+    by_talent = compile_condition("EVENT_THIS_TURN", {"event": "pitch", "qualifier": "elemental"})
+    wrong = compile_condition("EVENT_THIS_TURN", {"event": "pitch", "qualifier": "red"})
+    assert by_colour(src, None, st) is False
+    pitch(st, blue, 1)
+    assert by_colour(src, None, st) is True
+    assert by_talent(src, None, st) is True
+    assert wrong(src, None, st) is False
+
+
+def test_blackstone_greaves_can_now_fire():
+    """End-to-end on a card whose only ability was gated on an invented flag, so
+    it could never fire in any game since it was authored."""
+    from engine.card_effects.dsl.loader import get_card
+    from engine.effect_keywords import DamageType, deal_damage
+
+    load_all_cards()
+    cond = get_card("blackstone_greaves").abilities[0].effects[0].conditions[0]
+    st = _make_state()
+    card = _make_card(slug="blackstone_greaves", name="bg",
+                      types=["Equipment"], subtypes=["Legs"])
+    card.owner = card.controller = 1
+    assert cond.fn(card, None, st) is False
+    deal_damage(st, 2, DamageType.ARCANE, 1, st.players[2].hero, "test")
+    assert cond.fn(card, None, st) is True
