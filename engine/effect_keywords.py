@@ -399,9 +399,15 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
 
     # "if you've created a Gold this turn" / "an aura was created this turn".
     # One marker per token created, so "the FIRST Gold created this turn" is a
-    # count check rather than needing its own flag.
+    # count check rather than needing its own flag. Subtypes and types are
+    # recorded alongside the slug so a card can ask by category ("an aura")
+    # rather than having to name every token that happens to be one.
+    _created = locals().get("token")
     for _ in range(max(1, event.number or 1)):
-        _record_turn_event(state, event.target_player_id, "create", _slug)
+        _record_turn_event(state, event.target_player_id, "create", _slug,
+                           getattr(_created, "subtypes", None) or [],
+                           getattr(_created, "types", None) or [],
+                           getattr(_created, "permanent_subtype", None))
 
     # CR 8.5.2b: "when {token} enters the arena" triggers fire after creation.
     state.event_manager.emit(create_emit_event(event), state)
@@ -558,12 +564,18 @@ def _record_turn_event(state: GameState, player_id, event: str, *qualifiers) -> 
     event = _norm_ident(event)
     if not event:
         return
+    # Deduplicate WITHIN one call but never across calls: a single token can
+    # answer to "aura" via subtypes, types and permanent_subtype at once, and
+    # writing it three times would make one creation look like three to a count
+    # check. One occurrence must contribute exactly one marker per identity.
     markers = [f"{TURN_EVENT_MARKER}{event}"]
+    seen: set[str] = set()
     for qual in qualifiers:
         values = qual if isinstance(qual, (list, tuple, set)) else [qual]
         for value in values:
             ident = _norm_ident(value) if value is not None else ""
-            if ident:
+            if ident and ident not in seen:
+                seen.add(ident)
                 markers.append(f"{TURN_EVENT_MARKER}{event}:{ident}")
     player.current_turn_effects.extend(markers)
 

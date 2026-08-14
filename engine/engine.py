@@ -556,6 +556,17 @@ def _attack_step(state: GameState, attack_card: Card, entry: Optional[StackEntry
     # 'attacking' fires for any attack (weapon, attack action card, or ally).
     # 'attacking_hero' fires only when the attack targets the hero (attack_target is None = default hero target).
     # 'target_of_attack' fires when attack has a specific card target (e.g. Spectra aura).
+    # "if you've attacked with a weapon this turn" / "attacked twice with
+    # weapons" — recorded per attack so the count forms work, qualified by
+    # whether it came from a weapon and by the attack's own identity.
+    from engine.effect_keywords import _record_turn_event as _rec_turn
+    _rec_turn(state, state.combat.attacker_id, "attack",
+              "weapon" if state.combat.from_weapon else "nonweapon",
+              getattr(attack_card, "slug", None),
+              getattr(attack_card, "subtypes", None) or [],
+              getattr(attack_card, "classes", None) or [],
+              getattr(attack_card, "talents", None) or [])
+
     state.event_manager.emit(Event(type='attacking', card=attack_card.slug), state)
     if state.combat.attack_target is None:
         state.event_manager.emit(Event(type='attacking_hero', card=attack_card.slug), state)

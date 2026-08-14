@@ -1,12 +1,14 @@
 {
   "slug": "runerager_swarm_blue",
+  "_comment": "Turn-event tracking: read AURA_PLAYED_OR_CREATED_THIS_TURN — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "AURA_PLAYED_OR_CREATED_THIS_TURN"
+          "type": "EVENT_THIS_TURN",
+          "event": "create",
+          "qualifier": "aura"
         }
       ],
       "effects": [

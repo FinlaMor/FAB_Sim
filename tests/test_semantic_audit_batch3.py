@@ -584,3 +584,40 @@ def test_blackstone_greaves_can_now_fire():
     assert cond.fn(card, None, st) is False
     deal_damage(st, 2, DamageType.ARCANE, 1, st.players[2].hero, "test")
     assert cond.fn(card, None, st) is True
+
+
+def test_create_records_token_category_not_just_slug():
+    """"if an aura was created this turn" must match without naming every token
+    that happens to be an aura."""
+    from engine.card import CardDB
+    from engine.effect_keywords import create_token
+
+    load_all_cards()
+    st = _make_state()
+    st.card_db = CardDB()
+    src = _src()
+    by_slug = compile_condition("EVENT_THIS_TURN", {"event": "create", "qualifier": "runechant"})
+    by_kind = compile_condition("EVENT_THIS_TURN", {"event": "create", "qualifier": "aura"})
+    assert by_kind(src, None, st) is False
+    create_token(st, target_player_id=1, token_slug="runechant")
+    assert by_slug(src, None, st) is True
+    assert by_kind(src, None, st) is True
+
+
+def test_one_occurrence_contributes_one_marker_per_identity():
+    """A runechant answers to "aura" via subtypes, types AND permanent_subtype.
+    Recording it once per source would make a single creation look like three
+    to a count check."""
+    from engine.card import CardDB
+    from engine.effect_keywords import create_token
+
+    load_all_cards()
+    st = _make_state()
+    st.card_db = CardDB()
+    src = _src()
+    two_auras = compile_condition("EVENT_THIS_TURN",
+                                  {"event": "create", "qualifier": "aura", "count": 2})
+    create_token(st, target_player_id=1, token_slug="runechant")
+    assert two_auras(src, None, st) is False      # one creation is not two
+    create_token(st, target_player_id=1, token_slug="runechant")
+    assert two_auras(src, None, st) is True
