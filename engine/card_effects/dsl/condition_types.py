@@ -648,7 +648,12 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return sum(1 for m in s.players[pid].current_turn_effects if m == marker) >= _n
         return _event_turn
 
-    if ctype in ("LAST_CHAIN_ATTACK", "COMBO"):
+    # NOTE: do NOT alias this as "COMBO". That name is already handled earlier
+    # (combo_check over a `names` list), and compile_condition returns on the
+    # first match, so an alias here would be dead code — while a card authored
+    # as {"type":"COMBO","name":"..."} would silently reach the OTHER handler,
+    # whose `names` lookup misses `name` entirely and gates on an empty list.
+    if ctype == "LAST_CHAIN_ATTACK":
         # "Combo - If Surging Strike was the last attack this combat chain, ...",
         # "If a Draconic attack was the last attack this combat chain, ...",
         # "If the last attack on this combat chain hit, ...".

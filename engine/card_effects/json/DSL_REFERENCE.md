@@ -599,10 +599,17 @@ More vocabulary added for the Arakni demi-heroes:
 
 ## Combo / "last attack this combat chain"
 
-`LAST_CHAIN_ATTACK` (alias `COMBO`) asks about the attack that immediately
-preceded this one on the combat chain. Use it for every "**Combo** - If <Card>
-was the last attack this combat chain", "If a Draconic attack was the last
-attack this combat chain", and "If the last attack on this combat chain hit".
+`LAST_CHAIN_ATTACK` asks about the attack that immediately preceded this one on
+the combat chain. Use it for every "**Combo** - If <Card> was the last attack
+this combat chain", "If a Draconic attack was the last attack this combat
+chain", and "If the last attack on this combat chain hit".
+
+**The type is `LAST_CHAIN_ATTACK`, never `COMBO`.** `COMBO` is a DIFFERENT,
+older condition that reads a `names` LIST via `combo_check`; a card authored
+`{"type":"COMBO","name":"Surging Strike"}` reaches that handler instead, finds
+no `names`, and gates on an empty list. `COMBO_CONTAINS` is a third one, doing a
+looser SUBSTRING match on the last link's slug — prefer `LAST_CHAIN_ATTACK`,
+which matches the name exactly and also supports talent/class/subtype/hit.
 
 ```json
 {"type": "LAST_CHAIN_ATTACK", "name": "Surging Strike"}
