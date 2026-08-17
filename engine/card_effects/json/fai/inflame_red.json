@@ -6,8 +6,10 @@
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "RED_CARD_PLAYED_THIS_TURN"
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "red",
+          "count": 2
         }
       ],
       "effects": [

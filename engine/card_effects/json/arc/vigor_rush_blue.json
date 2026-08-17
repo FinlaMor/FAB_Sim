@@ -5,8 +5,9 @@
       "ability_type": "STATIC",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "NON_ATTACK_ACTION_PLAYED_THIS_TURN"
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "non_attack_action"
         }
       ],
       "effects": [

@@ -17,8 +17,10 @@
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "BLUE_CARD_PLAYED_THIS_TURN"
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "blue",
+          "count": 2
         }
       ],
       "effects": [

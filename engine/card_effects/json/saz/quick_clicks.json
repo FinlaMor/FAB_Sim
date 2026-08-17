@@ -6,8 +6,9 @@
       "activation_cost": 0,
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "NIMBLISM_PLAYED_THIS_TURN"
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "nimblism"
         }
       ],
       "cost": [

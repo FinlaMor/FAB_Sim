@@ -21,6 +21,7 @@ Queue state is saved after every card — re-running the script resumes automati
 from __future__ import annotations
 
 import argparse
+import ast
 import functools
 import json
 import math
@@ -1111,10 +1112,20 @@ with _make_state(), dispatch with the real signature
 `dispatch(state, EVENT_TYPE, slug, card=<card>, event=None)`, and assert an
 OBSERVABLE outcome. Do NOT invent a mock state dict. The harness already
 provides _make_state, _card, DB, dispatch, get_card, activate(state, card),
-attack(state, card), hit(state), stock_deck(state, pid, n=20) and
-give_token(state, pid, slug, n=1) — do NOT redefine them. Use stock_deck before
+attack(state, card), hit(state), stock_deck(state, pid, n=20),
+give_token(state, pid, slug, n=1) and set_turn_flag(state, pid, "marker")
+— do NOT redefine them. Use stock_deck before
 any "top of deck" effect (the deck starts EMPTY) and give_token for
 "if you control a X token" preconditions (slugs are lowercase: 'might', 'gold').
+
+To stage TURN STATE ("if you've attacked this turn", "if an attack action was
+played this turn") use `set_turn_flag(st, 1, "did_this_turn:attack")`. There is
+NO `st.flags` and NO `st.players[p].flags` dict — inventing one is the single
+most common way these tests fail. Turn state lives in
+`st.players[p].current_turn_effects`, a list of lowercase string markers.
+
+`_card` and `stock_deck` accept attribute overrides for preconditions:
+`_card("x", cost=3)`, `stock_deck(st, 1, n=1, color="yellow")`.
 
 REAL PASSING EXAMPLE (same ability_type):
 {gold}
@@ -1303,15 +1314,26 @@ GATE_HARNESS = (
     "                c = Card(slug='dummy_card', name='dummy', types=['Action']); c.owner = c.controller = pid\n"
     "                st.players[pid].deck.cards.append(c)\n"
     "    return st\n"
-    "def _card(slug, owner=1):\n"
+    "def _card(slug, owner=1, **overrides):\n"
     "    # Tolerate a slug that isn't a real card: the auditor sometimes builds a\n"
     "    # generic setup/opponent card via _card('some_slug'). DB.get returns None\n"
     "    # for those, and None.owner crashes the whole test (zero signal). Fall\n"
     "    # back to a bare Card so the test can still exercise the card UNDER TEST.\n"
+    "    #\n"
+    "    # **overrides sets attributes on the built card (_card('x', cost=3),\n"
+    "    # pitch=1, power=4, defense=2, types=[...]). The auditor writes these to\n"
+    "    # express a legitimate precondition ('a card costing 3 in hand'); before\n"
+    "    # they were accepted the call raised TypeError and the sample was lost\n"
+    "    # for a reason unrelated to the card under test.\n"
     "    base = DB.get(slug)\n"
     "    if base is None:\n"
-    "        return Card(slug=slug, name=slug, types=['Action'], owner=owner, controller=owner)\n"
-    "    c = copy.deepcopy(base); c.owner = c.controller = owner\n"
+    "        c = Card(slug=slug, name=slug, types=['Action'], owner=owner, controller=owner)\n"
+    "    else:\n"
+    "        c = copy.deepcopy(base); c.owner = c.controller = owner\n"
+    "    _ALIAS = {'attack_power': 'power', 'attack': 'power', 'base_attack': 'base_power',\n"
+    "              'defense_value': 'defense', 'pitch_power': 'pitch', 'pitch_value': 'pitch'}\n"
+    "    for k, v in overrides.items():\n"
+    "        setattr(c, _ALIAS.get(k, k), v)\n"
     "    return c\n"
     "def activate(state, card, player_id=1):\n"
     "    # Real activation flow: pays the ability's cost array (e.g. 'Destroy this')\n"
@@ -1336,16 +1358,35 @@ GATE_HARNESS = (
     "    dispatch(state, 'ON_ATTACK', card.slug, card=card, event=None)\n"
     "    _E._recalculate_attack_power(state)\n"
     "    return state.combat\n"
-    "def hit(state):\n"
+    "def hit(state, damage=None, **kw):\n"
     "    # The current attack hits -> fires ON_HIT for the attacking card.\n"
+    "    # `damage`/`amount` set the attack's power first, so a test for an\n"
+    "    # 'if this deals 4 or more damage' clause can stage that precondition\n"
+    "    # instead of raising TypeError on an unexpected kwarg.\n"
+    "    dmg = damage if damage is not None else kw.get('amount')\n"
+    "    if dmg is not None:\n"
+    "        state.combat.attack_power = dmg\n"
     "    ac = state.combat.attack_card; state.combat.hit = True\n"
     "    dispatch(state, 'ON_HIT', ac.slug, card=ac, event=None)\n"
-    "def stock_deck(state, pid, n=20):\n"
+    "def stock_deck(state, pid, n=20, **attrs):\n"
     "    # Add more dummy cards to a deck (decks are pre-stocked with 20 already).\n"
+    "    # **attrs set attributes on each stocked card (color='yellow', pitch=3,\n"
+    "    # card_type='Arrow'), so 'reveal a yellow card' style preconditions are\n"
+    "    # expressible; unknown kwargs used to raise TypeError and lose the sample.\n"
+    "    _ALIAS = {'card_type': 'types', 'type': 'types', 'pitch_power': 'pitch'}\n"
     "    for _ in range(n):\n"
     "        c = Card(slug='dummy_card', name='dummy', types=['Action']); c.owner = c.controller = pid\n"
+    "        for k, v in attrs.items():\n"
+    "            k = _ALIAS.get(k, k)\n"
+    "            setattr(c, k, [v] if k == 'types' and isinstance(v, str) else v)\n"
     "        state.players[pid].deck.cards.append(c)\n"
     "    return state.players[pid].deck.cards\n"
+    "def set_turn_flag(state, pid, marker):\n"
+    "    # Stage a turn-scoped precondition the REAL way. The engine has no\n"
+    "    # `state.flags` / `player.flags` dict (44 + 18 recorded gate failures\n"
+    "    # invented one); turn state lives in `player.current_turn_effects` as\n"
+    "    # lowercase string markers written by the canonical keyword functions.\n"
+    "    state.players[pid].current_turn_effects.append(str(marker).lower())\n"
     "def give_token(state, pid, slug, n=1):\n"
     "    # Put n copies of a token under a player via the real create path, so\n"
     "    # 'if you control a X token' conditions see them. Slugs are LOWERCASE\n"
@@ -1574,26 +1615,105 @@ def process_impl_output(slug: str, output: str, debug: bool = False) -> tuple[st
 
 
 def extract_test_code(output: str) -> str:
-    """Pull the test function(s) out of an LLM response. '' if none found."""
+    """Pull the test function(s) out of an LLM response. '' if none found.
+
+    The extracted text is SYNTAX-VALIDATED before being returned. The model
+    routinely appends a prose paragraph after the final test (or leaves a string
+    literal unterminated), which made the whole file a SyntaxError and burned the
+    sample for a reason unrelated to the card — 21 of the 823 recorded test-gate
+    failures are exactly that. When the block does not parse, drop trailing
+    top-level statements one at a time and keep the longest prefix of whole test
+    functions that does parse, so a good first test is not lost to bad trailing
+    output.
+    """
     # Strip <think>...</think> chain-of-thought and markdown fences.
     cleaned = re.sub(r'<think>[\s\S]*?</think>', '', output, flags=re.IGNORECASE).strip()
     cleaned = re.sub(r'```python\s*', '', cleaned)
     cleaned = re.sub(r'```\s*', '', cleaned).strip()
     match = re.search(r'((?:^|\n)(def test_[\s\S]+))', cleaned)
-    return match.group(2).strip() if match else ''
+    if not match:
+        return ''
+    code = match.group(2).strip()
+    return _largest_parsing_prefix(code)
+
+
+def _largest_parsing_prefix(code: str) -> str:
+    """The longest prefix of `code` that is valid Python AND ends on a complete
+    test function. Returns '' if not even the first function parses."""
+    if _parses(code):
+        return code
+    # Drop trailing LINES until what remains parses. This keeps the longest good
+    # prefix in every case: a prose paragraph after the last test costs only the
+    # prose, while an unterminated string mid-function falls back to the whole
+    # functions before it. (Working per whole-function instead would throw away a
+    # good second test just because prose followed it.)
+    lines = code.splitlines()
+    for cut in range(len(lines), 0, -1):
+        candidate = "\n".join(lines[:cut]).rstrip()
+        if candidate and _parses(candidate) and re.search(r'(?m)^def test_', candidate):
+            return candidate
+    return ''
+
+
+def _parses(code: str) -> bool:
+    try:
+        ast.parse(code)
+        return True
+    except SyntaxError:
+        return False
+
+
+def _is_vacuous_test(code: str) -> bool:
+    """True if `code` would pass without proving anything about the card.
+
+    Guards the repair loop: showing the model its failing test invites the
+    cheapest possible 'fix' — delete the assertion, or assert something
+    trivially true — which would mark the card verified on no evidence. A real
+    behavioural test must assert against live game state (`st.` / `state.`) or
+    the card object, so a block whose every assert is a literal/constant is
+    rejected even though pytest is happy with it.
+    """
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
+        return False  # a syntax error is reported by the gate, not here
+    asserts = [n for n in ast.walk(tree) if isinstance(n, ast.Assert)]
+    if not asserts:
+        return True
+    for node in asserts:
+        for sub in ast.walk(node.test):
+            # A Name/Attribute reference means the assertion reads something
+            # from the running state rather than comparing two constants.
+            if isinstance(sub, (ast.Attribute, ast.Call)):
+                return False
+            if isinstance(sub, ast.Name) and sub.id not in ("True", "False", "None"):
+                return False
+    return True
 
 
 def append_test(slug: str, code: str) -> None:
     """Append verified test code to the committed test_{set}_generated.py file."""
+    docstring = (
+        f'"""Auto-generated pytest tests for {SET_CODE.upper()} card DSL implementations.\n'
+        'Generated by scripts/auto_implement_wtr.py — do not edit manually.\n"""\n'
+    )
     if not TEST_OUTPUT.exists():
         # Same harness the gate runs tests under (build_test_prompt example +
         # run_generated_test header), so appended tests keep passing here.
-        TEST_OUTPUT.write_text(
-            f'"""Auto-generated pytest tests for {SET_CODE.upper()} card DSL implementations.\n'
-            'Generated by scripts/auto_implement_wtr.py — do not edit manually.\n"""\n'
-            + GATE_HARNESS,
-            encoding="utf-8",
-        )
+        TEST_OUTPUT.write_text(docstring + GATE_HARNESS, encoding="utf-8")
+    else:
+        # The committed file embeds a COPY of the harness from whenever it was
+        # created. When the harness gains a helper (set_turn_flag, kwargs on
+        # _card/stock_deck), a test that passes the gate would NameError/TypeError
+        # here — verified-then-broken, the worst outcome. Refresh the stale header
+        # in place, keeping every already-appended test below it.
+        existing = TEST_OUTPUT.read_text(encoding="utf-8")
+        marker = "\n# --- "
+        idx = existing.find(marker)
+        header, body = (existing[:idx], existing[idx:]) if idx != -1 else (existing, "")
+        if header != docstring + GATE_HARNESS:
+            TEST_OUTPUT.write_text(docstring + GATE_HARNESS + body, encoding="utf-8")
+            print(f"  [test] refreshed stale harness header in {TEST_OUTPUT.name}")
     with TEST_OUTPUT.open("a", encoding="utf-8") as f:
         f.write(f"\n# --- {slug} ---\n")
         f.write(code)
@@ -1864,14 +1984,21 @@ def main() -> None:
             last_run_out = ""     # gate output of the last test we actually ran
             saw_needs_dsl = False
             last_gen_err = ""
+            repair_ctx = ""       # previous attempt's code + real pytest error
             for i in range(n):
                 temp = round(min(0.1 + 0.35 * i, 1.0), 2)
                 seed = (1000 + i) if n > 1 else None
                 tag = f" [{i + 1}/{n}]" if n > 1 else ""
                 print(f"  [test] auditor ({audit_model or 'default'}){tag} "
                       f"writing test (t={temp})...")
-                out = run_llm(test_prompt, verbose=args.verbose, model=audit_model,
-                              temperature=temp, seed=seed)
+                # REPAIR LOOP: after a failed attempt, show the model its own code
+                # and the ACTUAL pytest output instead of re-rolling blind. Most
+                # gate failures are a wrong attribute/signature the traceback names
+                # outright (211 of 823 recorded failures are AttributeError, 62 of
+                # them an invented `.flags`), which a blind re-roll reproduces and
+                # a shown traceback usually fixes in one step.
+                out = run_llm(test_prompt + repair_ctx, verbose=args.verbose,
+                              model=audit_model, temperature=temp, seed=seed)
                 if out == "CLAW_TIMEOUT" or out.startswith("CLAW_ERROR"):
                     last_gen_err = out
                     continue
@@ -1886,12 +2013,42 @@ def main() -> None:
                     passed_code = code
                     break
                 passed, run_out = run_generated_test(slug, code, verbose=args.verbose)
+                if passed and _is_vacuous_test(code):
+                    # A test that passes while asserting nothing about game state is
+                    # worse than no test: it marks the card 'done' (verified) on no
+                    # evidence. Treat it as a failure and demand a real assertion.
+                    passed = False
+                    run_out = ("The test passed but asserts nothing observable about "
+                               "game state, so it proves nothing. Assert a real "
+                               "state change (health/resources/zone contents).")
+                    print(f"  [gate]{tag} vacuous test (no state assertion) — rejected")
                 if passed:
                     passed_code = code
                     break
                 last_run_out = run_out + "\n\n--- TEST CODE ---\n" + code
                 if i + 1 < n:
-                    print(f"  [gate]{tag} did not pass — retrying with a new sample")
+                    print(f"  [gate]{tag} did not pass — retrying with the error fed back")
+                    repair_ctx = f"""
+
+=== YOUR PREVIOUS ATTEMPT FAILED — FIX IT ===
+
+You wrote this test:
+
+{code}
+
+Running it produced:
+
+{run_out[-1500:]}
+
+Fix the cause. If the traceback says an attribute does not exist, you INVENTED it
+— use only the real names listed above (there is no `state.flags`, no
+`player.flags`, no `.max_health`; use `set_turn_flag(st, pid, "marker")` to stage
+turn state). If a helper rejected a keyword argument, check its real signature.
+
+Do NOT weaken the test to make it pass: keep asserting a real, observable state
+change. Deleting the assertion or asserting something trivially true is a
+FAILURE, not a fix. Output ONLY the corrected Python.
+"""
 
             if passed_code is not None:
                 append_test(slug, passed_code)

@@ -632,6 +632,37 @@ def _apply_play_card(state: GameState, action: Action) -> None:
         if "played_lightning" not in player.current_turn_effects:
             player.current_turn_effects.append("played_lightning")
 
+    # "if you've played a blue card / an attack action / a non-attack action this
+    # turn". The Lightning case above is one hand-rolled instance of this pattern;
+    # cards asked the same question about colours, types, classes and talents via
+    # a dozen private flags nothing wrote. Record the play generically so those
+    # ask through EVENT_THIS_TURN instead of each inventing a flag.
+    from engine.effect_keywords import _record_turn_event
+    # "Attack" is a SUBTYPE, not a type (an attack action is types=['Action'],
+    # subtypes=['Attack']), so both lists are recorded and the attack/non-attack
+    # split uses the card's own is_attack/is_action properties rather than
+    # re-deriving it from types alone.
+    _is_attack = bool(getattr(card, 'is_attack', False))
+    _is_action = bool(getattr(card, 'is_action', False))
+    _PLAY_COLOUR = {1: "red", 2: "yellow", 3: "blue"}
+    _record_turn_event(
+        state, action.player_id, "play",
+        getattr(card, 'slug', None),
+        # Name as well as slug: "if you've played a Nimblism this turn" names the
+        # CARD, which spans every colour variant (nimblism_red/yellow/blue), so a
+        # slug-only marker would miss two thirds of them.
+        getattr(card, 'name', None),
+        getattr(card, 'types', None) or [],
+        getattr(card, 'subtypes', None) or [],
+        getattr(card, 'classes', None) or [],
+        getattr(card, 'talents', None) or [],
+        getattr(card, 'color', None) or _PLAY_COLOUR.get(getattr(card, 'pitch', None)),
+        # Derived compounds the card text names directly; "non-attack action"
+        # is a real category in FAB and is not expressible as a single type.
+        "attack_action" if (_is_attack and _is_action) else None,
+        "non_attack_action" if (_is_action and not _is_attack) else None,
+    )
+
     _src_zone = player.zone_by_name(getattr(card, 'zone', None) or 'hand')
     if _src_zone is not None and card in _src_zone.cards:
         _src_zone.remove(card)
