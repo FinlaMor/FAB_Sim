@@ -2,11 +2,12 @@
   "slug": "blackout_kick_yellow",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "RISING_KNEE_THRUST_LAST_ATTACK"
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Rising Knee Thrust"
         }
       ],
       "effects": [

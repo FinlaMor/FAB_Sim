@@ -2,11 +2,12 @@
   "slug": "rising_knee_thrust_blue",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "LEG_TAP_LAST_ATTACK"
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Leg Tap"
         }
       ],
       "effects": [
@@ -16,8 +17,7 @@
           "amount": 2
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

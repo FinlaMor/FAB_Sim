@@ -596,3 +596,35 @@ More vocabulary added for the Arakni demi-heroes:
   `player.playable_from_banished` — playable from the banished zone until the
   start of that player's next turn (cleared in `start_of_turn_refresh_player`).
 - `DESTROY_TOKEN` `{token}` — destroy one such permanent you control.
+
+## Combo / "last attack this combat chain"
+
+`LAST_CHAIN_ATTACK` (alias `COMBO`) asks about the attack that immediately
+preceded this one on the combat chain. Use it for every "**Combo** - If <Card>
+was the last attack this combat chain", "If a Draconic attack was the last
+attack this combat chain", and "If the last attack on this combat chain hit".
+
+```json
+{"type": "LAST_CHAIN_ATTACK", "name": "Surging Strike"}
+{"type": "LAST_CHAIN_ATTACK", "talent": "Draconic"}
+{"type": "LAST_CHAIN_ATTACK", "hit": true}
+```
+
+| Param | Matches |
+|---|---|
+| `name` | the card NAME as printed — matches every colour printing (`Rising Knee Thrust` matches `rising_knee_thrust_red/yellow/blue`) |
+| `talent` / `class` / `subtype` | the previous attack's category |
+| `hit` | whether the previous attack hit (`true`/`false`) |
+
+Params combine with AND. With no params it asks only that some attack preceded
+this one. If there is no previous link (this is the first attack of the chain)
+every form is false.
+
+**Do not invent a flag for this.** Cards previously each rolled their own
+(`SURGING_STRIKE_LAST_ATTACK`, `LEG_TAP_LAST_ATTACK`, `LAST_ATTACK_WAS_DRACONIC`,
+`LAST_ATTACK_HIT`), none of which anything ever set, so the Combo clause could
+never fire.
+
+Model the pump itself as `TRIGGERED` + `ON_ATTACK` + `MODIFY_ATTACK` — an
+Action - Attack card is NOT an `ATTACK_REACTION`, and using that ability_type
+means the ability never fires.

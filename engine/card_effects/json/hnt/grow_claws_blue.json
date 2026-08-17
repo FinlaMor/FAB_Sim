@@ -2,11 +2,12 @@
   "slug": "grow_claws_blue",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "LAST_ATTACK_WAS_DRACONIC"
+          "type": "LAST_CHAIN_ATTACK",
+          "talent": "Draconic"
         }
       ],
       "effects": [

@@ -1,5 +1,6 @@
 """Compile JSON condition objects into (card, event, state) -> bool callables."""
 from __future__ import annotations
+import re
 from typing import Any, Callable
 
 
@@ -615,6 +616,65 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             marker = f"{TURN_EVENT_MARKER}{_ev}" + (f":{_q}" if _q else "")
             return sum(1 for m in s.players[pid].current_turn_effects if m == marker) >= _n
         return _event_turn
+
+    if ctype in ("LAST_CHAIN_ATTACK", "COMBO"):
+        # "Combo - If Surging Strike was the last attack this combat chain, ...",
+        # "If a Draconic attack was the last attack this combat chain, ...",
+        # "If the last attack on this combat chain hit, ...".
+        #
+        #   {"type":"LAST_CHAIN_ATTACK","name":"Surging Strike"}
+        #   {"type":"LAST_CHAIN_ATTACK","talent":"Draconic"}
+        #   {"type":"LAST_CHAIN_ATTACK","hit":true}
+        #
+        # ChainLink already captures attack_slug/hit/talents/classes/subtypes at
+        # link close, and a link is appended AFTER its damage resolves, so during
+        # a new attack chain_links[-1] IS the previous attack. Cards each invented
+        # a private flag for this (SURGING_STRIKE_LAST_ATTACK, LEG_TAP_LAST_ATTACK,
+        # LAST_ATTACK_WAS_DRACONIC, ...), none of which anything ever set.
+        #
+        # `name` matches the card NAME as printed, which spans colour variants —
+        # "Surging Strike" must match surging_strike_red/yellow/blue — so it is
+        # compared against the slug with any colour suffix stripped, and against
+        # the resolved card name.
+        want_name = _norm(params.get("name") or params.get("card_name") or "")
+        want_talent = _norm(params.get("talent") or "")
+        want_class = _norm(params.get("class") or params.get("card_class") or "")
+        want_subtype = _norm(params.get("subtype") or "")
+        want_hit = params.get("hit")
+
+        def _last_chain(c, e, s, _n=want_name, _t=want_talent, _c=want_class,
+                        _st=want_subtype, _h=want_hit):
+            links = getattr(s, "chain_links", None) or []
+            if not links:
+                return False
+            link = links[-1]
+            if _h is not None and bool(link.hit) is not bool(_h):
+                return False
+            if _t and _t not in {_norm(x) for x in (link.talents or [])}:
+                return False
+            if _c and _c not in {_norm(x) for x in (link.classes or [])}:
+                return False
+            if _st and _st not in {_norm(x) for x in (link.subtypes or [])}:
+                return False
+            if _n:
+                slug = str(getattr(link, "attack_slug", "") or "")
+                names = {_norm(slug)}
+                # Strip a trailing colour so "Surging Strike" matches every
+                # printing of the card rather than only the red one.
+                base = re.sub(r"_(red|yellow|blue)$", "", slug)
+                names.add(_norm(base))
+                db = getattr(s, "card_db", None)
+                if db is not None:
+                    card = db.get(slug)
+                    if card is not None and getattr(card, "name", None):
+                        names.add(_norm(card.name))
+                if _n not in names:
+                    return False
+            # A bare {"type":"LAST_CHAIN_ATTACK"} asks only that an attack
+            # preceded this one on the chain, which the empty-links check above
+            # already established.
+            return True
+        return _last_chain
 
     if ctype in ("DESTROYED_THIS_TURN", "HAS_DESTROYED_THIS_TURN"):
         # "if you have destroyed a <thing> this turn" — one generic condition

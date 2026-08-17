@@ -1,13 +1,34 @@
 {
   "slug": "whelming_gustwave_red",
+  "_comment": "Combo gates all three clauses on the SAME condition; the +1p/go again apply on attack, the draw only if it hits.",
   "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Surging Strike"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "SURGING_STRIKE_LAST_ATTACK"
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Surging Strike"
         }
       ],
       "effects": [

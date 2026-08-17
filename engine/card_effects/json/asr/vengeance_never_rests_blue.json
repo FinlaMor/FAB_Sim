@@ -1,27 +1,19 @@
 {
   "slug": "vengeance_never_rests_blue",
+  "_comment": "NEEDS_NEW_DSL for the second clause: 'When this hits a hero, banish it. You may play it this turn' needs banish-self + a play grant from banished, and no effect expresses that (BANISH_OPP_TOP_GRANT_PLAY is the opponent's deck). The previous implementation used BANISH target 'hero', which banishes the HERO — actively wrong, so it is removed rather than kept. The go-again clause below is expressible and correct.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "EDGE_OF_AUTUMN_LAST_ATTACK"
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Edge of Autumn"
         }
       ],
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        },
-        {
-          "type": "BANISH",
-          "target": "hero"
-        },
-        {
-          "type": "BANISH_OPP_TOP_GRANT_PLAY",
-          "amount": 1
+          "type": "GO_AGAIN"
         }
       ]
     }
