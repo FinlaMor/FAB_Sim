@@ -115,3 +115,6 @@ docs/semantic_audit_reaudit.md
 
 # Pipeline run control (pause/resume), written by scripts/pipeline_gui.py
 .pipeline_control.json
+
+# Benchmark/run scratch output (logs, per-run JSON) — not project state
+scratchpad/

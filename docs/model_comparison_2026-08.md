@@ -144,8 +144,38 @@ means "the JSON loads and is not a stub, but no generated test passed", so the
 **baseline is 0 by definition** — no cherry-picking is possible, and any pass is
 attributable to the changes.
 
-Partial run (killed by memory exhaustion, see below): **2 of 6 previously
-unpassable cards got a passing test**, both on the first attempt.
+Full 29-card run: **6 / 29 (20%) against a 0 / 29 baseline**, in 3103 s.
+
+| Attempts to pass | Cards |
+|---|---|
+| 1 (harness fixes alone) | 4 |
+| 2 (repair loop rescued) | 1 |
+| 3 (repair loop rescued) | 1 |
+
+**A third of the passes came from the repair loop**, so feeding the traceback
+back is doing real work and not just riding on the tolerant helpers.
+
+## The result that matters more than 20%
+
+Re-running 8 of these cards with the failure class recorded: **all 5 residual
+failures are `AssertionError`. Zero AttributeError, zero TypeError, zero
+SyntaxError.**
+
+The original 823-failure distribution was 32% mechanical (26% AttributeError,
+3% TypeError, 3% SyntaxError). Those classes have effectively disappeared from
+the gate. What remains is the test and the card disagreeing about behaviour —
+which is exactly what a gate is *for*. A failure now means "someone is wrong
+about this card", not "the auditor misspelled an attribute".
+
+That reframes the remaining 80%: it is no longer harness friction that more
+prompt engineering could clear. It is the genuinely hard part — deciding whether
+the card or the expectation is wrong — and some of it is the known
+missing-primitives problem (`blackstone_greaves` is in this failing set, and it
+still cannot be expressed).
+
+**Implication for next steps:** further test-gate plumbing has low remaining
+value. The leverage moved to the DSL primitives and to semantic review of the
+cards themselves.
 
 ## Benchmarking trap, second instance
 

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -77,8 +78,19 @@ def run_one(card: dict, model: str, samples: int, repair: bool, verbose: bool) -
                 "something trivially true is a FAILURE, not a fix. Output ONLY the "
                 "corrected Python.\n"
             )
+    # Record the last failure's exception class. Whether the residual failures are
+    # AttributeError (harness friction still worth fixing) or AssertionError (the
+    # card or the expectation is genuinely wrong) decides whether more gate work
+    # would pay off at all, and that is invisible from a pass rate alone.
+    err = ""
+    for line in reversed((run_out or "").splitlines()):
+        m = re.search(r"\b(\w*(?:Error|Exception))\b", line)
+        if m:
+            err = m.group(1)
+            break
     return {"slug": slug, "result": "fail", "attempts": samples,
-            "secs": round(time.time() - t0)}
+            "secs": round(time.time() - t0), "error": err,
+            "detail": (run_out or "")[-400:]}
 
 
 def main() -> None:
