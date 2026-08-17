@@ -1,5 +1,6 @@
 {
   "slug": "glint_the_quicksilver_blue",
+  "_comment": "Reprise (CR 8.4.3) is an EXISTING condition; the card invented REPRISE_FLAG. The reprise half was also ability_type DEFENSE_REACTION on a Warrior ATTACK Reaction card — the wrong card type entirely, so it never fired.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
@@ -11,11 +12,10 @@
       ]
     },
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "ATTACK_REACTION",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "REPRISE_FLAG"
+          "type": "REPRISE"
         }
       ],
       "effects": [

@@ -755,3 +755,18 @@ Nothing in the engine wrote any of them, so each test passed while proving only
 that the card behaved in a state the game could never reach — and each failed
 honestly the moment the mechanic became real. Drive the actual keyword function
 instead. A test that stages state this way is strong evidence the flag is dead.
+
+## Reprise (CR 8.4.3)
+
+"**Reprise** - If the defending hero has defended with a card from their hand
+this chain link, ..." — use the EXISTING condition, which reads
+`combat.defender_used_hand_card`:
+
+```json
+{"type": "REPRISE"}
+```
+
+Reprise cards are usually **Attack Reactions**, and the reprise clause is part of
+the SAME resolution — put it on a second `ATTACK_REACTION` ability gated by
+`REPRISE`, not on a `STATIC` or a `DEFENSE_REACTION`. Both cards with this text
+got that wrong, so their reprise halves were unreachable regardless of the flag.
