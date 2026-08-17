@@ -1,0 +1,1 @@
+invented flag 'IN_GRAVEYARD' (can never fire)

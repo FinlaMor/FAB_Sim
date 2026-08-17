@@ -1,0 +1,1 @@
+invented flag 'CHAIN_LINK_4_OR_HIGHER' (can never fire)

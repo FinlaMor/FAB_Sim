@@ -1,0 +1,1 @@
+invented flag 'INSTANT_GRAVEYARD_THIS_TURN' (can never fire)

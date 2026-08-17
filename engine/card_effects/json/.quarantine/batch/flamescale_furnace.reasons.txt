@@ -1,0 +1,2 @@
+invented amount 'pitch_red_count' (resolves to 0)
+invented flag 'RED_CARD_PLAYED_THIS_TURN' (can never fire)

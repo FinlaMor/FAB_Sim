@@ -1,0 +1,2 @@
+invented flag 'DISSIPATION_SHIELD_IN_GRAVEYARD' (can never fire)
+invented flag 'DISSIPATION_SHIELD_IN_PLAY' (can never fire)

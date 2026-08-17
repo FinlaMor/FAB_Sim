@@ -1,0 +1,1 @@
+invented flag 'ACTION_OR_ABILITY_PLAYED_THIS_REACTION_STEP' (can never fire)

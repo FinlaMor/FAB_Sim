@@ -1,0 +1,1 @@
+invented amount 'hand_size' (resolves to 0)

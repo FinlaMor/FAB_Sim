@@ -1,0 +1,1 @@
+invented flag 'NEXT_ATTACK_IS_WEAPON' (can never fire)

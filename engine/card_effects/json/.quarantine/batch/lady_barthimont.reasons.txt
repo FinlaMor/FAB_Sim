@@ -1,0 +1,2 @@
+invented flag 'BARTHIMONT_FACE_DOWN' (can never fire)
+invented flag 'BARTHIMONT_FACE_UP' (can never fire)

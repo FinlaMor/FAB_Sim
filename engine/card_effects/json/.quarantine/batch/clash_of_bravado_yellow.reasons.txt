@@ -1,0 +1,2 @@
+invented flag 'CLASH_ACTIVE' (can never fire)
+invented flag 'CLASH_WIN' (can never fire)

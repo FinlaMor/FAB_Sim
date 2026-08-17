@@ -1,0 +1,1 @@
+invented flag 'HERO_WOULD_BE_DEALT_DAMAGE' (can never fire)

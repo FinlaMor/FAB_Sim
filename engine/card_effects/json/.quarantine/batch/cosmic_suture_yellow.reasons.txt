@@ -1,0 +1,1 @@
+invented flag 'STARFALL_TRIGGERED' (can never fire)

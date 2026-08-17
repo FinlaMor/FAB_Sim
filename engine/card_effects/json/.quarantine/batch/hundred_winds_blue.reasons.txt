@@ -1,0 +1,1 @@
+invented flag 'HUNDRED_WINDS_LAST_ATTACK' (can never fire)

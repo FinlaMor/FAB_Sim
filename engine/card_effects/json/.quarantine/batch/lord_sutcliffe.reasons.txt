@@ -1,0 +1,2 @@
+invented flag 'FACE_DOWN_IN_ARSENAL' (can never fire)
+invented flag 'FACE_UP_IN_ARSENAL' (can never fire)

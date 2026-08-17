@@ -1,0 +1,1 @@
+invented flag 'WAGERED_THIS_CHAIN_LINK' (can never fire)

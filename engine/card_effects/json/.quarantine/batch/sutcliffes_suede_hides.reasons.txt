@@ -1,0 +1,1 @@
+invented flag 'NON_ATTACK_ACTION_PLAYED' (can never fire)

@@ -1,0 +1,1 @@
+invented flag 'DISCARDED_HIGH_POWER_CARD_THIS_TURN' (can never fire)

@@ -1,0 +1,1 @@
+invented flag 'INTIMIDATED_THIS_TURN' (can never fire)

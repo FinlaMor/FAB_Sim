@@ -1,0 +1,1 @@
+invented flag 'BLUE_CARD_GRAVEYARD_THIS_TURN' (can never fire)

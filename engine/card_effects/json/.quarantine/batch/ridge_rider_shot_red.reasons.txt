@@ -1,0 +1,1 @@
+invented flag 'RIDGE_RIDER_SHOT_IN_ARSENAL' (can never fire)

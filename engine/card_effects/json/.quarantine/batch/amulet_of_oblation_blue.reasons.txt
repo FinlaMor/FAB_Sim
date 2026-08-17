@@ -1,0 +1,1 @@
+invented flag 'CARD_ENTERED_GRAVEYARD_THIS_TURN' (can never fire)

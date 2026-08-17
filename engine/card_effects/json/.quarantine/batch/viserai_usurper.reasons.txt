@@ -1,0 +1,2 @@
+invented flag 'BLOOD_DEBT_ATTACK_PLAYED_THIS_TURN' (can never fire)
+invented flag 'GATE_TO_ARATHAEL_CREATED_OR_ACTIVATED_THIS_TURN' (can never fire)

@@ -1,0 +1,1 @@
+invented amount 'BOOST_COUNT' (resolves to 0)

@@ -1,0 +1,1 @@
+invented flag 'RUSHING_RIVER_OR_FLOOD_OF_FORCE_LAST_ATTACK' (can never fire)

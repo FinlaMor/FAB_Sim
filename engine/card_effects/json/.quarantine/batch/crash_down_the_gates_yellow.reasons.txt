@@ -1,0 +1,1 @@
+invented amount 'REVEALED_CARD_POWER' (resolves to 0)

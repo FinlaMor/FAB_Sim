@@ -1,0 +1,4 @@
+invented flag 'EVO_IS_HERO' (can never fire)
+invented flag 'SAME_NAME_EVO' (can never fire)
+invented flag 'TRANSFORM_FROM_EVO' (can never fire)
+invented flag 'TRANSFORM_TO_EVO' (can never fire)

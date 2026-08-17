@@ -1,0 +1,1 @@
+invented amount 'pitch_value' (resolves to 0)

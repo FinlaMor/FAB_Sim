@@ -1,0 +1,1 @@
+invented amount 'DEAL_ARCANE_AMOUNT' (resolves to 0)

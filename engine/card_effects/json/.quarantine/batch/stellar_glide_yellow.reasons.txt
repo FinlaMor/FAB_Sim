@@ -1,0 +1,1 @@
+invented flag 'DESTROYED_LIGHTNING_FLOW' (can never fire)

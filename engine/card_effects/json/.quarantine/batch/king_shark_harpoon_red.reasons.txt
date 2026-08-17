@@ -1,0 +1,2 @@
+invented flag 'CANNON_ACTIVATED_THIS_TURN' (can never fire)
+invented flag 'KING_SHARK_HARPOON_REVEAL' (can never fire)

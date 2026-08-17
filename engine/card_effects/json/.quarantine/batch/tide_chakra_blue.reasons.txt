@@ -1,0 +1,1 @@
+invented flag 'TRANSCEDED_THIS_TURN' (can never fire)

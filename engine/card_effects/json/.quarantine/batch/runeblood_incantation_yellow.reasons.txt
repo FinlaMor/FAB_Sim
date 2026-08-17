@@ -1,0 +1,1 @@
+invented flag 'IS_ACTIVE_PLAYER' (can never fire)

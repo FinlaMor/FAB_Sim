@@ -1,0 +1,1 @@
+invented flag 'OPPONENT_BANISHED_3_OR_MORE' (can never fire)

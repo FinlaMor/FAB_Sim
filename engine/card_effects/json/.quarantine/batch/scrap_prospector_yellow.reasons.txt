@@ -1,0 +1,1 @@
+invented flag 'SCRAPPED_CARD' (can never fire)

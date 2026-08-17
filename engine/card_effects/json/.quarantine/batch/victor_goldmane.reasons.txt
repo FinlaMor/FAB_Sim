@@ -1,0 +1,1 @@
+invented flag 'FIRST_CLASH_FAIL_THIS_TURN' (can never fire)

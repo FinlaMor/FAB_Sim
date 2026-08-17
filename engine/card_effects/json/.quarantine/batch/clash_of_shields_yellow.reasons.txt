@@ -1,0 +1,2 @@
+invented flag 'CLASH_NO_WINNER' (can never fire)
+invented flag 'CLASH_WINNER' (can never fire)

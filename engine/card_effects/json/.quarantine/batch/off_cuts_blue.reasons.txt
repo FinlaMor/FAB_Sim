@@ -1,0 +1,1 @@
+invented flag 'FRANKIE_SPECIALIZATION' (can never fire)

@@ -1,0 +1,1 @@
+invented flag 'BAIT_IN_PLAY' (can never fire)

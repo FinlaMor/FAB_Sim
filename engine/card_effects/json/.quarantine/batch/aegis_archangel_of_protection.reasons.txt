@@ -1,0 +1,1 @@
+invented flag 'AEGIS_ATTACKED_THIS_TURN' (can never fire)

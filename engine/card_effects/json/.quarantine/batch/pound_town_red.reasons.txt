@@ -1,0 +1,1 @@
+invented flag 'BEAT_CHEST_THIS_TURN' (can never fire)

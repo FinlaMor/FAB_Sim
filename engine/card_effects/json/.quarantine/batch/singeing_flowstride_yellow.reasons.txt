@@ -1,0 +1,2 @@
+invented flag 'FIRST_DAMAGE_TO_HERO' (can never fire)
+invented flag 'GO_AGAIN_ACTIVE' (can never fire)
