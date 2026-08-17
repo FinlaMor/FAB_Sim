@@ -628,3 +628,32 @@ never fire.
 Model the pump itself as `TRIGGERED` + `ON_ATTACK` + `MODIFY_ATTACK` — an
 Action - Attack card is NOT an `ATTACK_REACTION`, and using that ability_type
 means the ability never fires.
+
+## Dynamic amounts ("where X is ...")
+
+An amount may be an integer, or an expression dict. **An unknown amount resolves
+to 0**, so an invented token ("BOOST_COUNT", "DAMAGE_AMOUNT") makes the effect
+silently do nothing while looking implemented — that is why the audit reports
+invented amounts as defects.
+
+```json
+{"type": "CREATE_TOKEN", "token": "runechant",
+ "amount": {"type": "COUNT_CHAIN_LINKS", "talent": "Draconic"}}
+
+{"type": "DESTROY_TOKEN",
+ "amount": {"type": "COUNT_COUNTERS", "counter": "doom"}}
+```
+
+| Expression | Value |
+|---|---|
+| `COUNT_CHAIN_LINKS` | chain links **you control**, filtered by `talent` / `class` / `subtype` / `hit` |
+| `COUNT_COUNTERS` | counters named `counter` on this card |
+| `ROLL_RESULT`, `ROLL_NUMBER` | the last die roll |
+| `HALF` | `{"type":"HALF","value":<expr>}`, rounded down |
+| `VALUE` | a literal wrapper |
+
+The same expressions work as a threshold in `ATTACK_COST_LTE` / `ATTACK_COST_GTE`.
+**Never author a threshold as a bare invented string**: those conditions compare
+it against an int, so a string raised `TypeError` and aborted resolution
+mid-game rather than merely failing. An unresolvable threshold now fails closed
+(condition unmet).

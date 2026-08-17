@@ -21,7 +21,10 @@
               },
               {
                 "type": "ATTACK_COST_LTE",
-                "amount": "DRACONIC_CHAIN_LINKS_CONTROLLED"
+                "amount": {
+                  "type": "COUNT_CHAIN_LINKS",
+                  "talent": "Draconic"
+                }
               }
             ]
           }
@@ -74,5 +77,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "X = Draconic chain links you control, counted from ChainLink.talents via COUNT_CHAIN_LINKS. Was the bare string 'DRACONIC_CHAIN_LINKS_CONTROLLED', which ATTACK_COST_LTE compared against an int -> TypeError mid-resolution, not merely a no-op."
 }

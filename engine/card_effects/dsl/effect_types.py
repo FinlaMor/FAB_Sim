@@ -15,13 +15,18 @@ def _track_injected_effect(slug: str, effect_type: str) -> None:
         tracker.record_effect(slug, effect_type)
 
 
-def _resolve_amount(amount: Any, state) -> int | float:
+def _resolve_amount(amount: Any, state, card=None) -> int | float:
     """Resolve a dynamic amount token to a numeric value.
 
     Two authoring forms are accepted: a bare string token ("ROLL_NUMBER") and a
     nested expression dict ({"type": "HALF", "value": {"type": "ROLL_RESULT"}}).
     Both appear in card JSON; an unresolved dict used to flow through as a dict
     and blow up the arithmetic in the calling effect.
+
+    An UNKNOWN amount resolves to 0, which makes the effect silently do nothing —
+    "create X Runechants" creates none. That is why invented amount strings
+    (BOOST_COUNT, DRACONIC_CHAIN_LINKS_CONTROLLED, ...) are audited as defects:
+    they look implemented and are inert. Prefer the COUNT_* expressions below.
     """
     roll = getattr(state, '_roll_result', 0) or 0
     if isinstance(amount, str):
@@ -35,11 +40,75 @@ def _resolve_amount(amount: Any, state) -> int | float:
         if atype in ("ROLL_NUMBER", "ROLL_RESULT"):
             return roll
         if atype in ("HALF", "HALF_ROUND_DOWN"):
-            return int(_resolve_amount(amount.get("value", 0), state)) // 2
+            return int(_resolve_amount(amount.get("value", 0), state, card)) // 2
         if atype in ("VALUE", "CONSTANT", "LITERAL"):
-            return _resolve_amount(amount.get("value", 0), state)
+            return _resolve_amount(amount.get("value", 0), state, card)
+
+        # "X is the number of Draconic chain links you control" — ChainLink
+        # already records talents/classes/subtypes per link, so this is a count
+        # over existing state rather than new bookkeeping.
+        if atype == "COUNT_CHAIN_LINKS":
+            pid = _amount_controller(state, card)
+            want_talent = _norm_amt(amount.get("talent"))
+            want_class = _norm_amt(amount.get("class") or amount.get("card_class"))
+            want_sub = _norm_amt(amount.get("subtype"))
+            only_hit = amount.get("hit")
+            n = 0
+            for link in getattr(state, "chain_links", None) or []:
+                if pid is not None and link.attacker_id != pid:
+                    continue
+                if only_hit is not None and bool(link.hit) is not bool(only_hit):
+                    continue
+                if want_talent and want_talent not in {_norm_amt(x) for x in (link.talents or [])}:
+                    continue
+                if want_class and want_class not in {_norm_amt(x) for x in (link.classes or [])}:
+                    continue
+                if want_sub and want_sub not in {_norm_amt(x) for x in (link.subtypes or [])}:
+                    continue
+                n += 1
+            return n
+
+        # "X is the number of doom counters on this" — counters already live on
+        # the player keyed by (slug, zone, counter).
+        if atype in ("COUNT_COUNTERS", "COUNTER"):
+            pid = _amount_controller(state, card)
+            want = _norm_amt(amount.get("counter") or amount.get("name"))
+            slug = _norm_amt(getattr(card, "slug", None)) if card is not None else ""
+            if pid is None or not want:
+                return 0
+            total = 0
+            for key, value in (state.players[pid].counters or {}).items():
+                try:
+                    k_slug, _zone, k_counter = key
+                except (TypeError, ValueError):
+                    continue
+                if _norm_amt(k_counter) != want:
+                    continue
+                if slug and _norm_amt(k_slug) != slug:
+                    continue
+                total += value
+            return total
         return 0
     return amount
+
+
+def _norm_amt(value) -> str:
+    return "".join(ch for ch in str(value or "") if ch.isalnum()).lower()
+
+
+def _amount_controller(state, card):
+    """Whose things to count. The card's controller when known; otherwise the
+    attacking player, so a count inside combat still resolves."""
+    if card is not None:
+        from engine.card_effects.ability_keywords import _controller_id
+        try:
+            return _controller_id(card)
+        except Exception:
+            pass
+    combat = getattr(state, "combat", None)
+    if combat is not None:
+        return combat.attacker_id
+    return getattr(state, "active_player", None)
 
 
 def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
@@ -162,7 +231,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             # amount may arrive as a dynamic token or a stray string; coerce to a
             # non-negative int so it can index/slice a zone (bad values -> no-op,
             # never a TypeError that aborts the game).
-            _a = _resolve_amount(_a, state)
+            _a = _resolve_amount(_a, state, card)
             try:
                 _a = max(0, int(_a))
             except (TypeError, ValueError):
@@ -1557,7 +1626,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         def _fn(card, event, state, _mod=mod, _a=amt):
             if not state.combat:
                 return
-            val = _resolve_amount(_a, state)
+            val = _resolve_amount(_a, state, card)
             # WHILE_STATIC abilities re-run this on every _recalculate_attack_power
             # (event type 'recalculate_attack_power'); those must apply transiently
             # in the stage-8 window and NOT accumulate on power_mods.
@@ -1899,7 +1968,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 player.dsl_queued_attack_mods = []
             player.dsl_queued_attack_mods.append({
                 "mod": _mod,
-                "amount": _resolve_amount(_a, state),
+                "amount": _resolve_amount(_a, state, card),
                 "filter": _filt,
             })
         return _fn
@@ -1934,7 +2003,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             def _fn(card, event, state, _asset=asset, _a=amt):
                 from engine.card_effects.ability_keywords import _controller_id
                 cid = _controller_id(card)
-                val = _resolve_amount(_a, state)
+                val = _resolve_amount(_a, state, card)
                 if _asset == "RESOURCE_POINTS":
                     from engine.card_effects.ability_keywords import effect_gain_resources
                     effect_gain_resources(state, cid, val)

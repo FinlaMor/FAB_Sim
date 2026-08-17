@@ -33,6 +33,31 @@ def _card_traits(card) -> set[str]:
     return traits
 
 
+def _numeric_amount(value, state, card):
+    """A condition's threshold as a NUMBER, or None when it cannot be resolved.
+
+    Thresholds are authored as ints, as dynamic expressions
+    ({"type":"COUNT_CHAIN_LINKS","talent":"Draconic"}), and — in older cards — as
+    bare invented strings. Comparing an int against a raw string raises
+    TypeError and aborts the game mid-resolution, so anything unresolvable
+    returns None and the caller treats the condition as unmet instead.
+    """
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return value
+    if isinstance(value, str):
+        try:
+            return int(value.strip())
+        except (TypeError, ValueError):
+            return None
+    if isinstance(value, dict):
+        from engine.card_effects.dsl.effect_types import _resolve_amount
+        resolved = _resolve_amount(value, state, card)
+        return resolved if isinstance(resolved, (int, float)) else None
+    return None
+
+
 def _attack_card_cost(attack_card) -> int:
     """Printed resource cost of the attack card (0-cost cards stay 0)."""
     cost = getattr(attack_card, 'cost', None)
@@ -144,7 +169,10 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         def _acg(c, e, s, _amt=amount):
             if not s.combat or not s.combat.attack_card:
                 return False
-            return _attack_card_cost(s.combat.attack_card) >= _amt
+            limit = _numeric_amount(_amt, s, c)
+            if limit is None:
+                return False
+            return _attack_card_cost(s.combat.attack_card) >= limit
         return _acg
 
     if ctype == "ATTACK_COST_LTE":
@@ -153,7 +181,10 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         def _acl(c, e, s, _amt=amount):
             if not s.combat or not s.combat.attack_card:
                 return False
-            return _attack_card_cost(s.combat.attack_card) <= _amt
+            limit = _numeric_amount(_amt, s, c)
+            if limit is None:
+                return False
+            return _attack_card_cost(s.combat.attack_card) <= limit
         return _acl
 
     if ctype == "ATTACK_TYPE_IN":
