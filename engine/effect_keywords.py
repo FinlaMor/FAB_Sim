@@ -3670,6 +3670,12 @@ def transcend(state: GameState, source_card: Card,
     # Activate back-face AFTER zone entry so counters aren't cleared
     card.counters['__back_face_active__'] = 1
 
+    # CR 8.5.48a: "the player that controls the effect is considered to have
+    # transcended". 13 cards ask "if you've transcended this turn" and each had
+    # invented its own flag (TRANSCENDED / TRANSCEDED / TRANSCEDED_THIS_TURN —
+    # two of them misspelled, so they could not even collide into working).
+    _record_turn_event(state, event.player_id, "transcend")
+
     state.event_manager.emit(create_emit_event(event), state)
 
     return event

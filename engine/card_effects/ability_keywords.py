@@ -996,21 +996,21 @@ def effect_decompose(state: GameState, card: Card, player_id: int) -> bool:
 
 
 def effect_transcend(state: GameState, player_id: int, source: Card = None) -> bool:
-    """CR 8.5.48: Transcend — put the transcend source into its owner's hand
-    with its back-face active (double-faced card mechanic).
-    Since the engine may not have full double-face support, move the card to hand
-    and mark it as transcended.
-    source: the card being transcended (moved from current zone to hand).
-    Returns True if transcend occurred."""
+    """CR 8.5.48: Transcend — delegates to the canonical effect_keywords.transcend.
+
+    This used to be a second, divergent implementation: it moved the card by hand,
+    set a bespoke `source.transcended` attribute, did NOT activate the back face
+    the way the canonical function does, did NOT emit the transcend event (so no
+    "whenever you transcend" trigger could fire), and did NOT record the turn
+    event. Neither version had any caller, so the split was invisible — but the
+    first caller to pick this one would have got silently different behaviour.
+    Returns True if transcend occurred.
+    """
     if source is None:
         return False
-    player = state.players[player_id]
-    _remove_from_current_zone(source, state)
-    # Set transcended flag and mark it as front-face inactive (back-face active)
-    source.face_down = False
-    source.transcended = True
-    player.hand.add(source)
-    return True
+    from engine.effect_keywords import transcend as _transcend
+    event = _transcend(state, source, player_id)
+    return not getattr(event, "canceled", False)
 
 
 def effect_steal(state: GameState, stealer_id: int, victim_id: int,

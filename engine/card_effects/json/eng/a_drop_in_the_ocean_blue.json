@@ -1,9 +1,9 @@
 {
   "slug": "a_drop_in_the_ocean_blue",
+  "_comment": "Mystic Instant: it resolves when PLAYED, so ability_type is PLAY — it was TRIGGERED/ON_ATTACK and never fired. 'Transcend' is the CR 8.5.48 keyword (TRANSCEND effect); it was modelled as TRANSFORM_HERO {hero: 'Transcend'}, which is the Arakni Agent-of-Chaos transform and unrelated (the 'hero' param is not even read). 'ANOTHER blue card' is count 2, since playing this card records a blue play itself.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "PLAY",
       "effects": [
         {
           "type": "MODIFY_ATTACK",
@@ -13,8 +13,7 @@
       ]
     },
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "PLAY",
       "conditions": [
         {
           "type": "EVENT_THIS_TURN",
@@ -25,8 +24,7 @@
       ],
       "effects": [
         {
-          "type": "TRANSFORM_HERO",
-          "hero": "Transcend"
+          "type": "TRANSCEND"
         }
       ]
     }

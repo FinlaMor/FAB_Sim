@@ -1393,6 +1393,22 @@ def _setup_dsl_listeners(state: GameState) -> None:
         if hero is not None:
             dispatch(game_state, "ON_CHEER", hero.slug, card=hero, event=event)
 
+    def _dsl_transcend_listener(event, game_state: GameState) -> None:
+        # CR 8.5.48 — "whenever you transcend" (Twelve Petal Kasaya). Dispatched
+        # to the transcending player's hero and to their permanents: unlike boo
+        # and cheer, the cards with this text are equipment, not heroes.
+        pid = event.data.get('player_id') if isinstance(event.data, dict) else None
+        if pid is None:
+            return
+        player = game_state.players[pid]
+        targets = [player.hero] + list(player.permanents.cards)
+        for zone in (player.head, player.chest, player.arms, player.legs,
+                     player.weapon1, player.weapon2):
+            targets += list(zone.cards)
+        for target in targets:
+            if target is not None:
+                dispatch(game_state, "ON_TRANSCEND", target.slug, card=target, event=event)
+
     def _dsl_token_created_listener(event, game_state: GameState) -> None:
         # "When you create a <token>" — dispatched to the creator's hero; the
         # DSL gates on the token slug in event.data (see TRIGGER_EVENT_GATES).
@@ -1471,6 +1487,7 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('start_of_game', _dsl_start_of_game_listener)
     state.event_manager.register('crowd_boos', _dsl_boo_listener)
     state.event_manager.register('crowd_cheers', _dsl_cheer_listener)
+    state.event_manager.register('transcend', _dsl_transcend_listener)
     state.event_manager.register('token_created', _dsl_token_created_listener)
     state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)
     state.event_manager.register('recalculate_attack_power', _dsl_recalc_listener)

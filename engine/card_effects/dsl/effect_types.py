@@ -1565,6 +1565,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     fn(card, event, state)
         return _fn
 
+    if etype == "TRANSCEND":
+        # CR 8.5.48 — "**transcend**": put the transcend source into its owner's
+        # hand with its back-face active. The source is THIS card unless the JSON
+        # names another. Routed through the canonical keyword function so the
+        # transcend event is emitted (ON_TRANSCEND listeners) and "you have
+        # transcended this turn" is recorded; 13 checker cards read that.
+        def _fn(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import transcend as _transcend
+            if card is None:
+                return
+            _transcend(state, card, _controller_id(card))
+        return _fn
+
     if etype == "TRANSFORM_HERO":
         # Arakni: "become a random Agent of Chaos" / "return to the brood".
         # choose=true lets the controller pick the form (e.g. Mask of Deceit when

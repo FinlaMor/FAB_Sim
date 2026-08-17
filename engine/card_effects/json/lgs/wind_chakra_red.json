@@ -10,8 +10,8 @@
           "amount": 3,
           "conditions": [
             {
-              "type": "FLAG_SET",
-              "flag": "TRANSCEDED_THIS_TURN"
+              "type": "EVENT_THIS_TURN",
+              "event": "transcend"
             }
           ]
         },
@@ -25,5 +25,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'If you've transcended this turn' now reads the turn event recorded by the canonical transcend (CR 8.5.48a). Was a private flag — and the flag names were misspelled inconsistently (TRANSCEDED / TRANSCEDED_THIS_TURN), so the cards could not even have collided into working by accident."
 }

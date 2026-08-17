@@ -1,21 +1,18 @@
 {
   "slug": "twelve_petal_kasaya",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. 'Whenever you transcend' is the ON_TRANSCEND TRIGGER (CR 8.5.48), not a 'have transcended this turn' check — it was on ON_BECOME, which is the Arakni transform trigger and never fires for this card. NOTE: the activation cost is {c}{c}{c} (CHI), modelled here as a generic activation_cost of 3; chi is a separate pool (player.chi).",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_BECOME",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "TRANSCEND"
-        }
-      ],
+      "trigger": "ON_TRANSCEND",
       "effects": [
         {
-          "type": "GAIN",
-          "asset": "RESOURCE_POINTS",
-          "amount": 1
+          "type": "MAY",
+          "effect": {
+            "type": "GAIN",
+            "asset": "RESOURCE_POINTS",
+            "amount": 1
+          }
         }
       ]
     },

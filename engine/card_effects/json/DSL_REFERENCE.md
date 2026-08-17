@@ -705,3 +705,21 @@ do not assert on it in tests.
 "gains +3{p}. If you've X, instead it gains +5{p}" is ONE bonus chosen by the
 condition. Authoring two effects (+3 and +5) gated on the same condition yields
 +8.
+
+## Transcend (CR 8.5.48)
+
+`{"type": "TRANSCEND"}` puts THIS card into its owner's hand with its back-face
+active, and records that its controller transcended this turn (CR 8.5.48a).
+
+Checkers ask through the turn event, never a flag:
+
+```json
+{"type": "EVENT_THIS_TURN", "event": "transcend"}
+```
+
+"**Whenever** you transcend" is the `ON_TRANSCEND` TRIGGER, not a this-turn
+check — and it is dispatched to the hero AND to equipment/permanents, since the
+cards with that text are equipment.
+
+Do not model transcend as `TRANSFORM_HERO`: that is the Arakni Agent-of-Chaos
+transform and is unrelated (its `hero` param is not even read).

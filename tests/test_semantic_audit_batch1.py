@@ -69,9 +69,22 @@ def test_tide_chakra_plus2_without_transcend():
 
 
 def test_tide_chakra_plus4_with_transcend():
+    # Drives a REAL transcend (CR 8.5.48) rather than hand-setting a flag. This
+    # test used to append "TRANSCENDED" to current_turn_effects — a flag NOTHING
+    # in the engine ever wrote — so it passed while proving only that the card
+    # worked in a state the game could never reach.
+    from engine.card import CardDB
+    from engine.effect_keywords import transcend
+
     load_all_cards()
     st = _make_state()
-    st.players[1].current_turn_effects.append("TRANSCENDED")
+    st.card_db = CardDB()
+    source = _make_card(slug="a_drop_in_the_ocean_blue", name="A Drop in the Ocean",
+                        types=["Instant"])
+    source.owner = source.controller = 1
+    st.players[1].arsenal.add(source)
+    transcend(st, source, 1)
+
     _attack_combat(st, ["Mystic"])
     _play(st, "tide_chakra_yellow", types=["AttackReaction"])
     assert st.combat.attack_power == 7  # 3 + 4
