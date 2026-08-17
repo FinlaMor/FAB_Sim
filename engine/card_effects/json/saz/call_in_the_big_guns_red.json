@@ -1,27 +1,20 @@
 {
   "slug": "call_in_the_big_guns_red",
+  "_comment": "NEEDS_NEW_DSL: 'you may put an arrow from your hand FACE-UP into your arsenal' has no effect type (the previous PUT_CARDS_BOTTOM put it on the bottom of the DECK, which is a different zone and simply wrong). Dropped rather than left doing the wrong thing. The +3 arrow clause is implemented.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 3,
-          "conditions": [
+          "filter": [
             {
-              "type": "FLAG_SET",
-              "flag": "NEXT_ARROW_ATTACK"
-            }
-          ]
-        },
-        {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "PUT_ARROW_IN_ARSENAL"
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Arrow"
+              ]
             }
           ]
         },

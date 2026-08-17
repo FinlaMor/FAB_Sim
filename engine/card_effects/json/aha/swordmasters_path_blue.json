@@ -1,28 +1,20 @@
 {
   "slug": "swordmasters_path_blue",
+  "_comment": "NEEDS_NEW_DSL: the 'sharpen an additional time' clause needs the sharpen mechanic, which does not exist (was the invented flag SHARPEN_FLAG). The +1 sword clause is implemented.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 1,
-          "conditions": [
+          "filter": [
             {
               "type": "ATTACK_SUBTYPE_IN",
-              "subtype": "Sword"
-            }
-          ]
-        },
-        {
-          "type": "GAIN",
-          "keyword": "SHARPEN",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "SHARPEN_FLAG"
+              "subtypes": [
+                "Sword"
+              ]
             }
           ]
         },

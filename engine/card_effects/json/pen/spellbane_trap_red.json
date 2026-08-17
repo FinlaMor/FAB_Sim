@@ -1,44 +1,43 @@
 {
   "slug": "spellbane_trap_red",
+  "_comment": "The defend clause reads the ATTACKING hero's arcane damage this turn, which EVENT_THIS_TURN already records (player: OPPONENT); it was the invented flag OPPONENT_DEALT_ARCANE_DAMAGE.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 3,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "SPELLBANE_TRAP_ACTIVATED"
-            }
-          ]
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Arrow"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     },
     {
       "ability_type": "DEFENSE_REACTION",
       "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "damage",
+          "qualifier": "arcane",
+          "player": "OPPONENT"
+        }
+      ],
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_name": "Spellbane Aegis",
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "OPPONENT_DEALT_ARCANE_DAMAGE"
-            }
-          ]
+          "token_name": "Spellbane Aegis"
         }
       ]
     }

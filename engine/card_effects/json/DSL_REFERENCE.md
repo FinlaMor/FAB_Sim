@@ -657,3 +657,44 @@ The same expressions work as a threshold in `ATTACK_COST_LTE` / `ATTACK_COST_GTE
 it against an int, so a string raised `TypeError` and aborted resolution
 mid-game rather than merely failing. An unresolvable threshold now fails closed
 (condition unmet).
+
+## "Your next <filtered> attack this turn gets +N"
+
+Use `MODIFY_NEXT_ATTACK` with a `filter`. **Never a SET_FLAG plus a flag-gated
+`STATIC`**: that buffs EVERY attack for the rest of the turn, not just the next
+one, so it is wrong as well as usually dead.
+
+```json
+{"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 3,
+ "filter": [{"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Arrow"]}]}
+```
+
+The filter takes any condition spec, evaluated against the attacking card:
+
+| Text says | Filter |
+|---|---|
+| next **arrow / dagger / sword / angel** attack | `ATTACK_SUBTYPE_IN` — these are SUBTYPES (dagger and sword live on WEAPONS, which attack as themselves) |
+| next **Brute / Ninja** attack | `ATTACK_CLASS_IN` — talent/class, not subtype |
+| next attack on a **marked** hero | `OPPONENT_IS_MARKED` |
+| next attack with cost ≤ N | `ATTACK_COST_LTE` |
+
+`ATTACK_SUBTYPE_IN` uses key `subtypes`; `ATTACK_CLASS_IN` uses `classes`.
+
+### `INSTANT` is not "the card is an Instant"
+
+`ability_type: INSTANT` means an ACTIVATED ability with instant timing
+("**Instant** - Destroy this: ..."), and maps to `ON_ACTIVATE`. An Instant CARD
+whose effect happens when you play it is `ability_type: PLAY`. Getting this
+wrong means the ability never fires.
+
+### "marked" has two representations
+
+`effect_mark` writes `player.class_counters["marked"]`, and `OPPONENT_IS_MARKED`
+reads it. `Player.marked` is a separate, older boolean that neither touches —
+do not assert on it in tests.
+
+### "instead" replaces, it does not stack
+
+"gains +3{p}. If you've X, instead it gains +5{p}" is ONE bonus chosen by the
+condition. Authoring two effects (+3 and +5) gated on the same condition yields
++8.

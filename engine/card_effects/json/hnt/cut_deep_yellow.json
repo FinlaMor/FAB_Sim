@@ -1,28 +1,25 @@
 {
   "slug": "cut_deep_yellow",
+  "_comment": "Was a STATIC gated on the invented flag CUT_DEEP_ACTIVE. 'Your next X attack' is MODIFY_NEXT_ATTACK + filter (one-shot); a flag-gated STATIC would buff EVERY attack for the rest of the turn once set.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "CUT_DEEP_ACTIVE"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Dagger"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

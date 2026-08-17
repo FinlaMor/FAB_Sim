@@ -1,12 +1,12 @@
 {
   "slug": "thump_blue",
+  "_comment": "ATTACK_POWER_GT_BASE is exactly 'power greater than its base power'. Was SELF_ATTACK_POWER_GTE with amount 'BASE_ATTACK_POWER'; that condition coerces a non-numeric amount to 0, so it read '>= 0' — ALWAYS TRUE, giving Thump dominate and the discard unconditionally.",
   "abilities": [
     {
       "ability_type": "STATIC",
       "conditions": [
         {
-          "type": "SELF_ATTACK_POWER_GTE",
-          "amount": "BASE_ATTACK_POWER"
+          "type": "ATTACK_POWER_GT_BASE"
         }
       ],
       "effects": [

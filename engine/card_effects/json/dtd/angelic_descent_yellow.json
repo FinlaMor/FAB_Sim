@@ -1,23 +1,20 @@
 {
   "slug": "angelic_descent_yellow",
+  "_comment": "NEEDS_NEW_DSL for 'target attack action card with Herald in its NAME' — no name-matching target filter exists. Also dropped a bogus DESTROY_PERMANENT self cost: this is an Instant, not a permanent, so it is played, not destroyed. The +2 angel clause is implemented. ability_type is PLAY, not INSTANT: in this DSL INSTANT means an ACTIVATED ability with instant timing ('Instant - Destroy this: ...') and maps to ON_ACTIVATE, whereas an Instant CARD resolves when played.",
   "abilities": [
     {
-      "ability_type": "INSTANT",
-      "cost": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        }
-      ],
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 2,
-          "conditions": [
+          "filter": [
             {
-              "type": "FLAG_SET",
-              "flag": "ANGEL_ATTACK_THIS_TURN"
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Angel"
+              ]
             }
           ]
         }

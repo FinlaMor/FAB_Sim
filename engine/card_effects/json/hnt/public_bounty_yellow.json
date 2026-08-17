@@ -1,5 +1,6 @@
 {
   "slug": "public_bounty_yellow",
+  "_comment": "'The NEXT TIME you attack a marked hero' is one-shot -> MODIFY_NEXT_ATTACK with an OPPONENT_IS_MARKED filter. Was a STATIC on the invented flag TARGET_MARKED, which would have buffed every attack while the mark lasted.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -9,27 +10,17 @@
           "target": "opponent"
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "TARGET_MARKED"
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {
+              "type": "OPPONENT_IS_MARKED"
+            }
+          ]
         },
         {
-          "type": "DURING_TURN"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 2
+          "type": "GO_AGAIN"
         }
       ]
     }
