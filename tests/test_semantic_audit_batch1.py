@@ -39,9 +39,18 @@ def test_comet_collision_deals_3_without_starfall():
 
 
 def test_comet_collision_deals_4_with_starfall():
+    # Stages the Starfall condition for real — an actual instant card put into
+    # the controller's graveyard. This test used to append "STARFALL_FLAG" to
+    # current_turn_effects, a flag NOTHING in the engine ever wrote, so it
+    # passed while proving only that the card worked in an unreachable state.
+    from engine.card import Card
+
     load_all_cards()
     st = _make_state()
-    st.players[1].current_turn_effects.append("STARFALL_FLAG")
+    binned = Card(slug="spent_instant", name="Spent Instant", types=["Instant"])
+    binned.owner = binned.controller = 1
+    st.players[1].graveyard.add(binned)
+
     before = st.players[2].life
     _play(st, "comet_collision_red", types=["Action", "Instant"])
     assert before - st.players[2].life == 4

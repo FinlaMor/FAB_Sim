@@ -542,6 +542,33 @@ def _norm_ident(value) -> str:
     return "".join(ch for ch in str(value) if ch.isalnum()).lower()
 
 
+def record_turn_event_for_player(player, event: str, *qualifiers) -> None:
+    """Same as _record_turn_event but keyed on a Player object rather than a
+    GameState + id.
+
+    Zone.add is the single choke point for a card entering the graveyard — 11
+    call sites across 3 files reach it, and future ones will too — but it has
+    only a `player` back-reference, no state. Recording there instead of at each
+    call site is what makes "an instant was put into your graveyard this turn"
+    (Starfall, 16 cards) reliable rather than a list of paths someone remembered.
+    """
+    if player is None:
+        return
+    event = _norm_ident(event)
+    if not event:
+        return
+    markers = [f"{TURN_EVENT_MARKER}{event}"]
+    seen: set[str] = set()
+    for qual in qualifiers:
+        values = qual if isinstance(qual, (list, tuple, set)) else [qual]
+        for value in values:
+            ident = _norm_ident(value) if value is not None else ""
+            if ident and ident not in seen:
+                seen.add(ident)
+                markers.append(f"{TURN_EVENT_MARKER}{event}:{ident}")
+    player.current_turn_effects.extend(markers)
+
+
 def _record_turn_event(state: GameState, player_id, event: str, *qualifiers) -> None:
     """Record "you did <event> (to/with a <qualifier>) this turn".
 
@@ -558,26 +585,13 @@ def _record_turn_event(state: GameState, player_id, event: str, *qualifiers) -> 
     check ("attacked with a weapon twice") is just counting them — the same
     convention boost uses.
     """
-    player = state.players.get(player_id) if player_id is not None else None
-    if player is None:
-        return
-    event = _norm_ident(event)
-    if not event:
-        return
     # Deduplicate WITHIN one call but never across calls: a single token can
     # answer to "aura" via subtypes, types and permanent_subtype at once, and
     # writing it three times would make one creation look like three to a count
     # check. One occurrence must contribute exactly one marker per identity.
-    markers = [f"{TURN_EVENT_MARKER}{event}"]
-    seen: set[str] = set()
-    for qual in qualifiers:
-        values = qual if isinstance(qual, (list, tuple, set)) else [qual]
-        for value in values:
-            ident = _norm_ident(value) if value is not None else ""
-            if ident and ident not in seen:
-                seen.add(ident)
-                markers.append(f"{TURN_EVENT_MARKER}{event}:{ident}")
-    player.current_turn_effects.extend(markers)
+    # (That dedupe now lives in record_turn_event_for_player, which this wraps.)
+    player = state.players.get(player_id) if player_id is not None else None
+    record_turn_event_for_player(player, event, *qualifiers)
 
 
 DESTROYED_MARKER = "destroyed_this_turn:"

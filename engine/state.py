@@ -250,8 +250,23 @@ class Zone:
         if card.is_in_arena and card.controller is None and card.owner is not None:
             card.controller = card.owner
         card.is_public = next_is_public
-        if not any(c is card for c in self.cards):
+        already_here = any(c is card for c in self.cards)
+        if not already_here:
             self.cards.append(card)
+            # "If an instant card has been put into your graveyard this turn"
+            # (Starfall, 16 cards). Recorded HERE because Zone.add is the single
+            # choke point every graveyard path funnels through — 11 call sites
+            # across 3 files today, plus any added later — so hooking the call
+            # sites instead would silently miss paths. Only on an actual entry,
+            # never on a re-add of a card already present.
+            if self.name == "graveyard" and self.player is not None:
+                from engine.effect_keywords import record_turn_event_for_player
+                record_turn_event_for_player(
+                    self.player, "graveyard",
+                    getattr(card, "slug", None),
+                    getattr(card, "types", None) or [],
+                    getattr(card, "subtypes", None) or [],
+                )
         return ZoneEntryResult.ALLOW
 
     def remove(self, card: Card) -> bool:

@@ -723,3 +723,35 @@ cards with that text are equipment.
 
 Do not model transcend as `TRANSFORM_HERO`: that is the Arakni Agent-of-Chaos
 transform and is unrelated (its `hero` param is not even read).
+
+## Starfall / "put into your graveyard this turn"
+
+```json
+{"type": "EVENT_THIS_TURN", "event": "graveyard", "qualifier": "instant"}
+```
+
+Recorded in `Zone.add`, so EVERY path into the graveyard counts (destroy,
+discard, attack resolution, chain close, the CR 3.0.12 CLEAR redirect, ...).
+Qualifiers are the card's slug, types and subtypes; omit `qualifier` to ask
+"any card". It records against the graveyard's OWNER, so it means *your*
+graveyard.
+
+Pair it with `CONDITIONAL_EFFECT` then/else for the "instead" wording:
+
+```json
+{"type": "CONDITIONAL_EFFECT",
+ "when": [{"type": "EVENT_THIS_TURN", "event": "graveyard", "qualifier": "instant"}],
+ "then": [{"type": "DEAL_ARCANE", "amount": 4}],
+ "else": [{"type": "DEAL_ARCANE", "amount": 3}]}
+```
+
+Two effects both gated on the condition would deal 3 **and** 4.
+
+## Never stage state with a hand-set flag in tests
+
+Three tests in this repo asserted a card worked by appending an UPPERCASE flag
+(`TRANSCENDED`, `STARFALL_FLAG`, `BOOSTED_THIS_TURN`) to `current_turn_effects`.
+Nothing in the engine wrote any of them, so each test passed while proving only
+that the card behaved in a state the game could never reach — and each failed
+honestly the moment the mechanic became real. Drive the actual keyword function
+instead. A test that stages state this way is strong evidence the flag is dead.
