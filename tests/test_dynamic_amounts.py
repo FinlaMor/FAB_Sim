@@ -176,12 +176,16 @@ def test_count_permanent_ignores_other_subtypes():
     assert _resolve_amount({"type": "COUNT_PERMANENT", "subtype": "Runechant"}, st, card) == 0
 
 
-def test_count_boosts_counts_one_marker_per_boost():
+def test_count_boosts_counts_one_turn_marker_per_boost():
+    # boost() appends one "boosted_this_turn" marker per boost, so the TURN
+    # scope is a count rather than a boolean. Scope is explicit here because the
+    # DEFAULT is CHAIN — this test seeds only the turn marker, so relying on the
+    # default would read 0 and prove nothing about the marker.
     st = _state()
     card = _card("bloodsheath_skeleta")
     for _ in range(2):
         st.players[1].current_turn_effects.append("boosted_this_turn")
-    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 2
+    assert _resolve_amount({"type": "COUNT_BOOSTS", "scope": "TURN"}, st, card) == 2
 
 
 def test_count_expressions_do_not_crash_without_a_controller():
@@ -255,3 +259,80 @@ def test_no_invented_amounts_remain(slug):
                      "EVO_COUNT", "BOOST_COUNT\"", "FLAG_SET"):
         assert invented not in abilities, f"{slug} still carries {invented}"
     assert "COUNT_" in abilities
+
+
+# --- chain-scoped boost counter --------------------------------------------
+
+def _boost(st, pid=1):
+    """One boost, recorded the way ability_keywords.boost records it."""
+    st.players[pid].current_turn_effects.append("boosted_this_turn")
+    st.players[pid].boosts_this_chain = getattr(
+        st.players[pid], "boosts_this_chain", 0) + 1
+
+
+def test_chain_scope_is_the_default_for_count_boosts():
+    st = _state()
+    card = _card("pulsewave_harpoon_red")
+    _boost(st); _boost(st)
+    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 2
+
+
+def test_turn_scope_still_available_explicitly():
+    st = _state()
+    card = _card("pulsewave_harpoon_red")
+    _boost(st)
+    assert _resolve_amount({"type": "COUNT_BOOSTS", "scope": "TURN"}, st, card) == 1
+
+
+def test_chain_count_does_not_inherit_an_earlier_attacks_boosts():
+    # The whole point: two attacks in one turn. After the first chain closes,
+    # the second must start from zero, while the TURN count keeps both.
+    import engine.engine as E
+    st = _state()
+    card = _card("pulsewave_harpoon_red")
+    _boost(st); _boost(st)
+    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 2
+
+    for p in st.players.values():          # chain closes
+        p.chain_attack_hooks = []
+        p.boosts_this_chain = 0
+
+    _boost(st)                             # one boost on the SECOND attack
+    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 1
+    assert _resolve_amount({"type": "COUNT_BOOSTS", "scope": "TURN"}, st, card) == 3
+
+
+def test_chain_count_starts_at_zero():
+    st = _state()
+    card = _card("pulsewave_harpoon_red")
+    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 0
+
+
+def test_real_boost_increments_both_scopes_and_chain_close_resets_one():
+    # Drives the REAL boost keyword, not a hand-written marker: the earlier
+    # tests seed state directly, which would still pass if boost() stopped
+    # tallying the chain entirely.
+    from engine.card import Card
+    from engine.card_effects.ability_keywords import boost as real_boost
+
+    st = _state()
+    st.player_agents = {1: lambda s, o, context="": o[0],
+                        2: lambda s, o, context="": o[0]}
+    for _ in range(4):
+        c = Card(slug="d", name="d", types=["Action"])
+        c.owner = c.controller = 1
+        st.players[1].deck.cards.append(c)
+    card = Card(slug="booster", name="booster", types=["Action"])
+    card.owner = card.controller = 1
+
+    real_boost(card, st)
+    real_boost(card, st)
+    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 2
+    assert _resolve_amount({"type": "COUNT_BOOSTS", "scope": "TURN"}, st, card) == 2
+
+    for p in st.players.values():          # chain closes (engine._close_step)
+        p.boosts_this_chain = 0
+
+    real_boost(card, st)
+    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 1, "chain count leaked"
+    assert _resolve_amount({"type": "COUNT_BOOSTS", "scope": "TURN"}, st, card) == 3

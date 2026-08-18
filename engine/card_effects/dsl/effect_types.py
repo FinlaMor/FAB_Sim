@@ -108,11 +108,19 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
         # ability_keywords.boost already appends one "boosted_this_turn" marker
         # PER boost precisely so it can be counted, not just tested.
         if atype in ("COUNT_BOOSTS", "BOOST_COUNT"):
+            # scope: "CHAIN" (default) counts boosts made during the CURRENT
+            # combat chain; "TURN" counts the whole turn. Both printed wordings
+            # exist, and they differ: a second attack in the same turn must not
+            # inherit the first attack's boosts, so a turn count OVER-counts for
+            # a card that says "this combat chain".
             pid = _amount_controller(state, card)
             if pid is None:
                 return 0
-            return sum(1 for m in state.players[pid].current_turn_effects
-                       if m == "boosted_this_turn")
+            player = state.players[pid]
+            if (amount.get("scope") or "CHAIN").upper() == "TURN":
+                return sum(1 for m in player.current_turn_effects
+                           if m == "boosted_this_turn")
+            return int(getattr(player, "boosts_this_chain", 0) or 0)
 
         # "X is the number of doom counters on this" — counters already live on
         # the player keyed by (slug, zone, counter).

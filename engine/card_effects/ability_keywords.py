@@ -428,6 +428,10 @@ def boost(card: Card, state: GameState) -> bool:
         # Also set class_counters flag for legacy checks (Maxx hero condition etc.)
         controller.current_turn_effects.append("boosted_this_turn")
         controller.class_counters["boosted_this_turn"] = True
+        # ... and a CHAIN-scoped tally. "this combat chain" is narrower than
+        # "this turn": a second attack in the same turn must not inherit the
+        # first attack's boosts. Cleared at chain close (engine._close_step).
+        controller.boosts_this_chain = getattr(controller, "boosts_this_chain", 0) + 1
         # Emit event so items/abilities can react to each boost (e.g. Absorbtion Zone)
         from engine.state import Event
         state.event_manager.emit(

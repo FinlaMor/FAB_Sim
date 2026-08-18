@@ -835,6 +835,12 @@ class Player:
         # not at end of turn. Re-applied to every attack link by
         # _apply_turn_attack_effects alongside turn_attack_hooks.
         self.chain_attack_hooks: list = []
+        # Boosts made during the CURRENT combat chain. "the number of times
+        # you've boosted this combat chain" (Pulsewave Harpoon, Urgent Delivery)
+        # is narrower than the turn-scoped "boosted_this_turn" marker, which
+        # over-counts on a multi-attack turn. Cleared with the chain, alongside
+        # chain_attack_hooks.
+        self.boosts_this_chain: int = 0
         self.weapon_exhausted: bool = False
         self.hero_power_exhausted: bool = False
 

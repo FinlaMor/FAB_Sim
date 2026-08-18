@@ -777,9 +777,11 @@ def _close_step(state: GameState) -> None:
     # 7.7.6: remaining objects on combat chain are cleared
     _close_combat_chain(state)
 
-    # Combat-chain-scoped attack hooks ("... this combat chain ...") expire now.
+    # Combat-chain-scoped attack hooks ("... this combat chain ...") expire now,
+    # and so does the chain-scoped boost tally.
     for _p in state.players.values():
         _p.chain_attack_hooks = []
+        _p.boosts_this_chain = 0
 
     state.combat = None
 
@@ -892,8 +894,9 @@ def _end_phase_iter(state: GameState) -> None:
     # target player's turn start above.)
     player.turn_attack_hooks = []
     # Safety net: chain hooks normally clear at chain close; drop any that outlived
-    # an unclosed chain into this turn's end.
+    # an unclosed chain into this turn's end. Same for the chain boost tally.
     player.chain_attack_hooks = []
+    player.boosts_this_chain = 0
     # Unused "next attack this turn" power mods (MODIFY_NEXT_ATTACK) expire.
     if hasattr(player, 'dsl_queued_attack_mods'):
         player.dsl_queued_attack_mods = []

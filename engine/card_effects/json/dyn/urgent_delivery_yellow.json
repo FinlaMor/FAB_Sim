@@ -43,5 +43,5 @@
       ]
     }
   ],
-  "_comment": "X = times you've boosted -> COUNT_BOOSTS (boost appends one marker per boost). APPROXIMATION: the card says 'this COMBAT CHAIN' but the marker is TURN-scoped, so on a multi-attack turn this over-counts. Recorded rather than hidden; an exact fix needs a chain-scoped boost counter."
+  "_comment": "X = times you've boosted -> COUNT_BOOSTS (boost appends one marker per boost). X = times you've boosted THIS COMBAT CHAIN -> COUNT_BOOSTS (scope CHAIN, the default), backed by player.boosts_this_chain which is cleared when the chain closes. Previously this read the TURN-scoped marker and over-counted on a multi-attack turn."
 }
