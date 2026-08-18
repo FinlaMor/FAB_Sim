@@ -2,7 +2,7 @@
   "slug": "break_of_dawn_red",
   "abilities": [
     {
-      "ability_type": "INSTANT",
+      "ability_type": "PLAY",
       "effects": [
         {
           "type": "SET_FLAG",

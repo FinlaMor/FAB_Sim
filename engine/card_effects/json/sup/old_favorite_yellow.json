@@ -3,7 +3,7 @@
   "_comment": "\"When this attacks, if you've been cheered this turn, create a Toughness token.\" The cheer check was FLAG_SET on a private CHEERED_THIS_TURN flag that no card ever set — a fourth spelling alongside CROWD_CHEERS, CROWD_CHEERS_ACTIVE and THE_CROWD_CHEERS — so it never fired. Now reads the shared cheer state via IS_CHEERED.",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "conditions": [
         {
@@ -18,7 +18,7 @@
       ]
     },
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "trigger": "ON_DEFEND",
       "conditions": [
         {

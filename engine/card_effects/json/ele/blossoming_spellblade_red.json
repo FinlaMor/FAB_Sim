@@ -43,7 +43,7 @@
       ]
     },
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "FLAG_SET",
@@ -55,7 +55,8 @@
           "type": "DEAL_ARCANE",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
   ]
 }

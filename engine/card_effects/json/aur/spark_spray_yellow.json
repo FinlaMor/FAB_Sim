@@ -2,7 +2,7 @@
   "slug": "spark_spray_yellow",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "DEFENDS_WITH_OTHER_HAND_CARD",
@@ -26,7 +26,9 @@
             }
           ]
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
-  ]
+  ],
+  "_comment": "NEEDS_NEW_DSL: 'When this is DEFENDED BY 1 or more cards, you may pay {r}' needs a trigger for defenders being declared against this attack (not ON_DEFEND, which is this card defending). ability_type corrected to TRIGGERED/ON_ATTACK to make it reachable; the timing is approximate."
 }

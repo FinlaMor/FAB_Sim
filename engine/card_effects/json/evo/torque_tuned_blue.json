@@ -19,7 +19,7 @@
       ]
     },
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "effects": [
         {
           "type": "MAY",
@@ -35,7 +35,8 @@
             }
           ]
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
   ]
 }

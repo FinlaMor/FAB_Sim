@@ -2,7 +2,7 @@
   "slug": "insult_to_injury_yellow",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "conditions": [
         {

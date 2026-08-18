@@ -2,7 +2,7 @@
   "slug": "fight_fair_red",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "CARD_IN_ZONE",
@@ -16,7 +16,8 @@
           "mod": "add",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "ON_HIT"
     },
     {
       "ability_type": "TRIGGERED",

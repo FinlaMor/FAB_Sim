@@ -2,7 +2,7 @@
   "slug": "gold_hunter_lightsail_yellow",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "CONTROLS_TOKEN_TYPE",
@@ -15,7 +15,8 @@
         {
           "type": "GO_AGAIN"
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
   ]
 }

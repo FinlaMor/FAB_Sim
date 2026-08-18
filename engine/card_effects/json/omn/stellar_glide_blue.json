@@ -2,7 +2,7 @@
   "slug": "stellar_glide_blue",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "CONTROLS_TOKEN_TYPE",
@@ -18,7 +18,8 @@
           "type": "GAIN",
           "keyword": "GO_AGAIN"
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
   ]
 }

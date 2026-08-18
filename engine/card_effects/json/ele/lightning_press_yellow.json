@@ -2,7 +2,7 @@
   "slug": "lightning_press_yellow",
   "abilities": [
     {
-      "ability_type": "INSTANT",
+      "ability_type": "PLAY",
       "cost": [
         {
           "type": "DESTROY_PERMANENT",

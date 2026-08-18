@@ -2,7 +2,7 @@
   "slug": "right_behind_you_red",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "DEFENDS_WITH_OTHER_HAND_CARD"
@@ -23,7 +23,8 @@
           "target": "top_deck",
           "optional": true
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
   ]
 }

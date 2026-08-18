@@ -2,7 +2,7 @@
   "slug": "evo_magneto_blue",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "effects": [
         {
           "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
@@ -24,7 +24,8 @@
             ]
           }
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
   ]
 }

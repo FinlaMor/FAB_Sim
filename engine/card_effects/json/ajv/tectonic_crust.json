@@ -2,7 +2,7 @@
   "slug": "tectonic_crust",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "trigger": "ON_DEFEND",
       "conditions": [
         {

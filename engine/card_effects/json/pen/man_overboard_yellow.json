@@ -2,7 +2,7 @@
   "slug": "man_overboard_yellow",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "effects": [
         {
           "type": "OPT",
@@ -17,7 +17,8 @@
           "type": "GAIN",
           "keyword": "GO_AGAIN"
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
   ]
 }

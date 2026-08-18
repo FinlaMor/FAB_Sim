@@ -2,7 +2,7 @@
   "slug": "sweeping_blow_blue",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "effects": [
         {

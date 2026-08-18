@@ -2,7 +2,7 @@
   "slug": "vaporize__shock_yellow",
   "abilities": [
     {
-      "ability_type": "INSTANT",
+      "ability_type": "PLAY",
       "effects": [
         {
           "type": "DESTROY_PERMANENT",
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "ability_type": "INSTANT",
+      "ability_type": "PLAY",
       "effects": [
         {
           "type": "DEAL_ARCANE",

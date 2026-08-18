@@ -2,7 +2,7 @@
   "slug": "lace_with_frailty_red",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "ATTACK_TYPE_IN",
@@ -17,7 +17,8 @@
           "mod": "add",
           "amount": 3
         }
-      ]
+      ],
+      "trigger": "ON_HIT"
     },
     {
       "ability_type": "TRIGGERED",

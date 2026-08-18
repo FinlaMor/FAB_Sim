@@ -2,7 +2,7 @@
   "slug": "swift_pickup_red",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "effects": [
         {
           "type": "MAY",
@@ -20,7 +20,8 @@
             }
           ]
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     },
     {
       "ability_type": "PLAY",

@@ -16,7 +16,7 @@
       ]
     },
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "FLAG_SET",
@@ -33,7 +33,8 @@
           "mod": "add",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "START_OF_TURN"
     }
   ]
 }

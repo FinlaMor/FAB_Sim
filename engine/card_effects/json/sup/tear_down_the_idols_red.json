@@ -2,7 +2,7 @@
   "slug": "tear_down_the_idols_red",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "AND",
@@ -18,7 +18,8 @@
         {
           "type": "INTIMIDATE"
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     },
     {
       "ability_type": "TRIGGERED",
@@ -42,5 +43,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'When this attacks a Revered hero, intimidate' is TRIGGERED/ON_ATTACK; ATTACK_REACTION on a Reviled Action - Attack card never fires. The second clause (ON_HIT) was already correct."
 }

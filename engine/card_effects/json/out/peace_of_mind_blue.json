@@ -2,7 +2,7 @@
   "slug": "peace_of_mind_blue",
   "abilities": [
     {
-      "ability_type": "INSTANT",
+      "ability_type": "PLAY",
       "cost": [
         {
           "type": "PAY_LIFE",

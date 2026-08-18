@@ -2,7 +2,7 @@
   "slug": "trade_in_yellow",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "effects": [
         {
           "type": "DISCARD",
@@ -12,7 +12,8 @@
           "type": "DRAW",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     },
     {
       "ability_type": "STATIC",

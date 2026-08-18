@@ -2,7 +2,7 @@
   "slug": "captain_of_the_guard_blue",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "IN_COMBAT"
@@ -17,7 +17,9 @@
           "mod": "add",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
-  ]
+  ],
+  "_comment": "NEEDS_NEW_DSL: 'While this is DEFENDING, cards with {p} greater than the attack they are defending get +1{d}' is a continuous effect scoped to the defending step, granting +{d} to OTHER defending cards chosen by a comparison against the attack's power. No effect grants defence to co-defenders, and no condition compares a defender's power to the attack. ability_type corrected to TRIGGERED/ON_DEFEND so it is at least reachable; the effect body is still wrong."
 }

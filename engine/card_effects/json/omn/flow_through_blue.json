@@ -2,7 +2,7 @@
   "slug": "flow_through_blue",
   "abilities": [
     {
-      "ability_type": "INSTANT",
+      "ability_type": "PLAY",
       "cost": [
         {
           "type": "DESTROY_PERMANENT",

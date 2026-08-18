@@ -2,7 +2,7 @@
   "slug": "clash_of_might_yellow",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "trigger": "ON_DEFEND",
       "effects": [
         {

@@ -2,7 +2,7 @@
   "slug": "break_ground_red",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "effects": [
         {
           "type": "PUT_CARDS_BOTTOM",
@@ -25,7 +25,8 @@
           "type": "FLAG_SET",
           "flag": "PUT_CARDS_BOTTOM_FLAG"
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
   ]
 }

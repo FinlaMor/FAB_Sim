@@ -137,3 +137,30 @@ def test_reprise_cards_use_the_real_condition(slug):
     # wrong ability types and so were unreachable.
     assert "DEFENSE_REACTION" not in abilities
     assert '"STATIC"' not in abilities
+
+
+# --- SOUL_COUNT_GTE (added for Soul Cleaver) -------------------------------
+
+def test_soul_count_gte_reads_the_defending_heros_soul():
+    from engine.card import Card
+    from engine.card_effects.dsl.condition_types import compile_condition
+    st = _state()
+    card = _card("soul_cleaver_blue", owner=1)
+    cond = compile_condition("SOUL_COUNT_GTE", {"amount": 1, "player": "DEFENDING"})
+    assert cond(card, None, st) is False
+    soul_card = Card(slug="souled", name="souled", types=["Action"])
+    soul_card.owner = soul_card.controller = 2
+    st.players[2].soul.add(soul_card)
+    assert cond(card, None, st) is True
+
+
+def test_soul_count_gte_does_not_read_your_own_soul():
+    from engine.card import Card
+    from engine.card_effects.dsl.condition_types import compile_condition
+    st = _state()
+    card = _card("soul_cleaver_blue", owner=1)
+    mine = Card(slug="mine", name="mine", types=["Action"])
+    mine.owner = mine.controller = 1
+    st.players[1].soul.add(mine)
+    cond = compile_condition("SOUL_COUNT_GTE", {"amount": 1, "player": "DEFENDING"})
+    assert cond(card, None, st) is False

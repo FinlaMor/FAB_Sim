@@ -2,7 +2,7 @@
   "slug": "feisty_locals_blue",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "DEFENDS_WITH_OTHER_HAND_CARD"
@@ -14,7 +14,9 @@
           "mod": "add",
           "amount": 2
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
-  ]
+  ],
+  "_comment": "NEEDS_NEW_DSL: 'If this is DEFENDED BY an action card, this gets +2{p}' asks about the cards defending THIS attack, which needs a condition over combat.defending_cards by type. ability_type corrected to TRIGGERED/ON_ATTACK so it is reachable, but with no such condition the gate is absent and the buff would apply unconditionally — left ungated deliberately rather than faked with an invented flag."
 }

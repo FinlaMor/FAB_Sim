@@ -16,7 +16,7 @@
       ]
     },
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "ATTACK_POWER_GT_BASE",
@@ -27,7 +27,8 @@
         {
           "type": "DISCARD"
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
   ]
 }

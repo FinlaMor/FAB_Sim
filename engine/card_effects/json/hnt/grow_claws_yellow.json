@@ -1,20 +1,14 @@
 {
   "slug": "grow_claws_yellow",
-  "_comment": "Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": dropped LAST_ATTACK_IN_COMBAT_CHAIN: no primitive for \"was the last attack this combat chain\".",
+  "_comment": "ATTACK_REACTION on an Action - Attack card never fires; it is TRIGGERED/ON_ATTACK. The condition also asked ATTACK_CLASS_IN about the CURRENT attack, but the text is about the LAST attack on the chain — LAST_CHAIN_ATTACK.",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "AND",
-          "conditions": [
-            {
-              "type": "ATTACK_CLASS_IN",
-              "classes": [
-                "draconic"
-              ]
-            }
-          ]
+          "type": "LAST_CHAIN_ATTACK",
+          "talent": "Draconic"
         }
       ],
       "effects": [
@@ -26,11 +20,10 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

@@ -2,7 +2,7 @@
   "slug": "grasp_of_darkness",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "ACTIVATE",
       "conditions": [
         {
           "type": "DURING_TURN",
@@ -21,5 +21,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "NEEDS_NEW_DSL: 'If your hero would be dealt damage, you may banish this to prevent 2' is a REPLACEMENT effect on incoming damage, not a reaction — replacement abilities live in replacement_abilities.py, not the DSL. ability_type corrected to ACTIVATE so it is at least a legal, reachable ability."
 }

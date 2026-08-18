@@ -2,7 +2,7 @@
   "slug": "energetic_impact_blue",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "AND",
@@ -23,7 +23,8 @@
           "token_type": "Vigor",
           "token": "vigor"
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
   ]
 }

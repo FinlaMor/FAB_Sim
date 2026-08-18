@@ -898,6 +898,27 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return _fn((fn is None or fn(c, e, s)) for fn in _subs)
         return _combine
 
+    if ctype in ("SOUL_COUNT_GTE", "SOUL_COUNT"):
+        # "If the defending hero has 1 or more cards in their soul" (Soul Cleaver).
+        # player.soul is a real zone, so this is a count over existing state.
+        # `player`: DEFENDING (default here, since that is how the cards word it)
+        # / SELF / OPPONENT.
+        try:
+            need = int(params.get("amount", params.get("count", 1)) or 1)
+        except (TypeError, ValueError):
+            need = 1
+        who = (params.get("player") or "DEFENDING").upper()
+
+        def _soul(c, e, s, _n=need, _who=who):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(c)
+            pid = (3 - cid) if _who in ("DEFENDING", "OPPONENT", "DEFENDER") else cid
+            player = s.players.get(pid)
+            if player is None:
+                return False
+            return len(player.soul.cards) >= _n
+        return _soul
+
     if ctype == "ATTACK_TARGET_IS_HERO":
         # "When this attacks A HERO" — false when the attack was declared
         # against a permanent or ally. combat.attack_target is set only for

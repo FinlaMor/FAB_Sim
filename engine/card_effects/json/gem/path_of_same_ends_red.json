@@ -2,7 +2,7 @@
   "slug": "path_of_same_ends_red",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "conditions": [
         {

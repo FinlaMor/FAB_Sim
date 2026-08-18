@@ -16,7 +16,7 @@
       ]
     },
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "FLAG_SET",
@@ -29,7 +29,8 @@
           "ref": "hero_or_ally",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
   ]
 }

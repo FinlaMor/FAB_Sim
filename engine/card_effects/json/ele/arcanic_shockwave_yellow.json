@@ -2,7 +2,7 @@
   "slug": "arcanic_shockwave_yellow",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "HAS_KEYWORD",
@@ -14,7 +14,8 @@
           "type": "DEAL_ARCANE",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
   ]
 }

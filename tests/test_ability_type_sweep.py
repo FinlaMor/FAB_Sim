@@ -106,15 +106,33 @@ def test_instant_ability_type_with_an_activated_instant_is_clean(tmp_path):
     assert not any("INSTANT but the text" in f for f in found), found
 
 
-def test_sweep_finds_real_defects_in_the_corpus():
-    # Guards the guard: if the rule were accidentally disabled the checks above
-    # would still pass on synthetic input while the corpus went unswept.
-    index = audit_run.load_index() if hasattr(audit_run, "load_index") else None
-    if index is None:
-        import json
-        index = json.loads((ROOT / "card_data" / "slug_index.json").read_text(encoding="utf-8"))
-        index = index.get("by_slug", index)
+def test_sweep_runs_over_the_real_corpus_without_error():
+    # Originally this asserted the sweep FOUND defects corpus-wide, as a guard
+    # against the rule being silently disabled. That was true while the 80
+    # existed and became false the moment they were repaired — the two
+    # assertions cannot both hold. The synthetic cases above already prove the
+    # rule fires through the same audit() entry point, so what remains worth
+    # checking here is that the sweep still runs over real card files at all.
+    import json
+    index = json.loads((ROOT / "card_data" / "slug_index.json").read_text(encoding="utf-8"))
+    index = index.get("by_slug", index)
+    files = audit_run.card_files()
+    assert files, "no card files found — the corpus scan is not reaching anything"
+    audit_run.audit(files, index)
+
+
+# --- after the repair ------------------------------------------------------
+
+def test_corpus_has_no_ability_type_defects_left():
+    # All 80 were repaired; this keeps the class at zero rather than letting it
+    # creep back in as new cards are authored.
+    import json
+    index = json.loads((ROOT / "card_data" / "slug_index.json").read_text(encoding="utf-8"))
+    index = index.get("by_slug", index)
     findings = audit_run.audit(audit_run.card_files(), index)
-    hits = [f for fs in findings.values() for f in fs
-            if "not one" in f or "INSTANT but the text" in f]
-    assert hits, "the ability_type sweep reported nothing across the whole corpus"
+    hits = sorted(
+        f"{slug}: {f}"
+        for slug, fs in findings.items() for f in fs
+        if "not one" in f or "INSTANT but the text" in f
+    )
+    assert not hits, "ability_type defects reintroduced:\n" + "\n".join(hits)

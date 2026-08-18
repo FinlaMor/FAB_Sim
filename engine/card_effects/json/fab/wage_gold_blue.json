@@ -2,7 +2,7 @@
   "slug": "wage_gold_blue",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "ATTACK_TARGET_IS_HERO"
@@ -12,7 +12,8 @@
         {
           "type": "WAGER"
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
   ]
 }

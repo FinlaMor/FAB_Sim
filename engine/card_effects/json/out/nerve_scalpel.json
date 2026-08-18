@@ -27,7 +27,7 @@
       ]
     },
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "FLAG_SET",
@@ -43,7 +43,8 @@
           "mod": "subtract",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "ON_HIT"
     }
   ]
 }

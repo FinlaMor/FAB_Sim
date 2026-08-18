@@ -2,7 +2,7 @@
   "slug": "infuse_alloy_yellow",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "effects": [
         {
           "type": "OPT",
@@ -34,7 +34,8 @@
             }
           ]
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
   ]
 }

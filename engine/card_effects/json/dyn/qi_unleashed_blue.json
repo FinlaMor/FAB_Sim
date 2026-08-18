@@ -1,12 +1,14 @@
 {
   "slug": "qi_unleashed_blue",
+  "_comment": "Combo - Crouching Tiger. ATTACK_REACTION on an Action - Attack never fires. COMBO_CONTAINS is the looser substring variant; LAST_CHAIN_ATTACK matches the card name exactly.",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "COMBO_CONTAINS",
-          "card": "Crouching Tiger"
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Crouching Tiger"
         }
       ],
       "effects": [

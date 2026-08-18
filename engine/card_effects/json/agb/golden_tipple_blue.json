@@ -2,7 +2,7 @@
   "slug": "golden_tipple_blue",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "effects": [
         {
           "type": "DISCARD",
@@ -23,7 +23,8 @@
           "type": "DISCARDED_CARD_POWER_GTE",
           "amount": 1
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     },
     {
       "ability_type": "PLAY",

@@ -2,7 +2,7 @@
   "slug": "tough_old_wrench_yellow",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "HAS_KEYWORD",
@@ -19,7 +19,8 @@
           "token_type": "Golden Cog",
           "token": "golden_cog"
         }
-      ]
+      ],
+      "trigger": "ON_DEFEND"
     }
   ]
 }

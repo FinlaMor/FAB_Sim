@@ -1,12 +1,14 @@
 {
   "slug": "lay_to_rest_blue",
+  "_comment": "'When this attacks a SHADOW HERO' is about the DEFENDING hero, so it is ATTACK_TARGET_IS_HERO hero_type Shadow — ATTACK_CLASS_IN asked about the attacking CARD's class, which is always Light here. Also ATTACK_REACTION on an Action - Attack never fires.",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "ATTACK_CLASS_IN",
-          "class": "Shadow"
+          "type": "ATTACK_TARGET_IS_HERO",
+          "hero_type": "Shadow"
         }
       ],
       "effects": [
@@ -20,6 +22,11 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
       "effects": [
         {
           "type": "BANISH_REF",

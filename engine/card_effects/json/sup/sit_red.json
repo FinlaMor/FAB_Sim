@@ -2,7 +2,7 @@
   "slug": "sit_red",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
       "trigger": "ON_DEFEND",
       "conditions": [
         {

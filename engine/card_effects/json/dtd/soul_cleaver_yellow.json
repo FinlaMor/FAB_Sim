@@ -1,20 +1,20 @@
 {
   "slug": "soul_cleaver_yellow",
+  "_comment": "'If the defending hero has 1 or more cards in their soul' -> SOUL_COUNT_GTE (player.soul is a real zone). Was FLAG_SET 'BLOOD_DEBT_FLAG' — an invented flag, and Blood Debt is an unrelated keyword. ATTACK_REACTION on an Action - Attack never fires either.",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "CARD_IN_ZONE",
-          "zone": "SOUL",
+          "type": "SOUL_COUNT_GTE",
           "amount": 1,
-          "comparison": "gte"
+          "player": "DEFENDING"
         }
       ],
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

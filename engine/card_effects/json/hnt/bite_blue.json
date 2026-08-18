@@ -2,7 +2,7 @@
   "slug": "bite_blue",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "ATTACK_TARGET_IS_HERO"
@@ -21,7 +21,8 @@
           "type": "DESTROY_REF",
           "target": "DAGGER"
         }
-      ]
+      ],
+      "trigger": "ON_ATTACK"
     }
   ]
 }
