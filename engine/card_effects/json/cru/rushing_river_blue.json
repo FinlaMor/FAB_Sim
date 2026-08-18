@@ -1,12 +1,14 @@
 {
   "slug": "rushing_river_blue",
+  "_comment": "Four defects, each independently fatal. (1) ability_type ATTACK_REACTION on a Ninja ACTION - Attack card, so nothing fired; it is TRIGGERED/ON_ATTACK. (2) amount 'CHAIN_HIT_COUNT' was an invented string resolving to 0, so the draw drew nothing; 'X is the number of attacks that have hit this combat chain' is COUNT_CHAIN_LINKS with hit:true. (3) REORDER_REF with ref HAND reorders cards ALREADY IN A DECK (it filters on `c in deck.cards`), so with hand cards it silently no-opped; putting cards from hand on top is PUT_HAND_CARD_TOP. (4) COMBO_CONTAINS is the looser substring variant; LAST_CHAIN_ATTACK matches the card name exactly.",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "COMBO_CONTAINS",
-          "card": "torrent_of_tempo"
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Torrent of Tempo"
         }
       ],
       "effects": [
@@ -16,23 +18,31 @@
           "amount": 1
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         },
         {
           "type": "INJECT_TRIGGER",
-          "trigger": "ON_HIT",
-          "effects": [
-            {
-              "type": "DRAW",
-              "amount": "CHAIN_HIT_COUNT"
-            },
-            {
-              "type": "REORDER_REF",
-              "ref": "HAND",
-              "amount": "CHAIN_HIT_COUNT"
-            }
-          ]
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {
+                "type": "DRAW",
+                "amount": {
+                  "type": "COUNT_CHAIN_LINKS",
+                  "hit": true
+                }
+              },
+              {
+                "type": "PUT_HAND_CARD_TOP",
+                "player": "SELF",
+                "optional": false,
+                "amount": {
+                  "type": "COUNT_CHAIN_LINKS",
+                  "hit": true
+                }
+              }
+            ]
+          }
         }
       ]
     }

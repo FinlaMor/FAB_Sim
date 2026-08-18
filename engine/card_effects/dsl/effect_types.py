@@ -360,28 +360,41 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # optional: True (default) allows declining. Cards worded "they put a
         #           card…" are mandatory (e.g. Boulder Drop) and must pass false,
         #           or the affected player can simply refuse the effect.
+        # amount:   how many cards to move (default 1). May be a dynamic
+        #           expression — "put X cards from your hand on top of your deck,
+        #           where X is ..." (Rushing River). One card is chosen at a
+        #           time, so the player orders them by choice order, which is
+        #           what "in any order" means.
         player_target = params.get("player", "SELF")
         to_top = (etype == "PUT_HAND_CARD_TOP"
                   or str(params.get("to", "BOTTOM")).upper() == "TOP")
         optional = params.get("optional", True)
-        def _fn(card, event, state, _pt=player_target, _top=to_top, _opt=optional):
+        amount = params.get("amount", 1)
+        def _fn(card, event, state, _pt=player_target, _top=to_top, _opt=optional,
+                _a=amount):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id, DECLINE
             from engine.effect_keywords import put_object
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
-            if not player.hand.cards:
-                return
             where = "top" if _top else "bottom"
-            options = [c.slug for c in player.hand.cards]
-            if _opt:
-                options = options + [DECLINE]
-            choice = _ask_player(state, tid, options,
-                                 context=f"Choose a card to put on the {where} of your deck")
-            if choice == DECLINE:
-                return
-            target = player.hand.find(choice)
-            if target:
+            try:
+                count = int(_resolve_amount(_a, state, card))
+            except (TypeError, ValueError):
+                count = 0
+            for _ in range(max(0, count)):
+                if not player.hand.cards:
+                    return
+                options = [c.slug for c in player.hand.cards]
+                if _opt:
+                    options = options + [DECLINE]
+                choice = _ask_player(state, tid, options,
+                                     context=f"Choose a card to put on the {where} of your deck")
+                if choice == DECLINE:
+                    return
+                target = player.hand.find(choice)
+                if target is None:
+                    return
                 # position "top" → cards[0]; None → zone default (bottom, cards[-1])
                 put_object(state, target, "deck",
                            destination_player_id=tid, source_player_id=tid,
