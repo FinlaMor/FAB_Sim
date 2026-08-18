@@ -21,11 +21,13 @@
         {
           "type": "LOSE_LIFE",
           "amount": {
-            "type": "CHAIN_HIT_COUNT_GTE",
-            "value": 0
+            "type": "COUNT_CHAIN_LINKS",
+            "subtype": "Dagger",
+            "hit": true
           }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "X = times a DAGGER has hit this combat chain -> COUNT_CHAIN_LINKS with subtype Dagger and hit:true; ChainLink already records subtypes and hit. Was an invented string resolving to 0, so the life loss was always 0."
 }

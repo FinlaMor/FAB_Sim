@@ -15,11 +15,16 @@
           "conditions": [
             {
               "type": "ATTACK_COST_LTE",
-              "amount": "EVO_COUNT"
+              "amount": {
+                "type": "COUNT_PERMANENT",
+                "subtype": "Evo",
+                "zone": "EQUIPMENT"
+              }
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "X = Evos you have EQUIPPED -> COUNT_PERMANENT subtype Evo, zone EQUIPMENT (equipment lives in head/chest/arms/legs/weapon slots, not the permanents zone). Was the invented string 'EVO_COUNT' resolving to 0."
 }

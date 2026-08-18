@@ -4,16 +4,12 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "BOOST_FLAG"
-        }
-      ],
       "effects": [
         {
           "type": "REVEAL_HAND_MARK_IF_TYPE",
-          "amount": "BOOST_FLAG_COUNT",
+          "amount": {
+            "type": "COUNT_BOOSTS"
+          },
           "card_type": "ACTION"
         },
         {
@@ -26,7 +22,9 @@
             },
             {
               "type": "ATTACK_COST_LTE",
-              "amount": "BOOST_FLAG_COUNT"
+              "amount": {
+                "type": "COUNT_BOOSTS"
+              }
             }
           ],
           "effects": [
@@ -39,5 +37,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "X = times you've boosted -> COUNT_BOOSTS (boost appends one marker per boost). APPROXIMATION: the card says 'this COMBAT CHAIN' but the marker is TURN-scoped, so on a multi-attack turn this over-counts. Recorded rather than hidden; an exact fix needs a chain-scoped boost counter. Removed a FLAG_SET 'BOOST_FLAG' gate: the flag was invented AND the text has no such condition — 'when this attacks a hero, they reveal X cards' happens unconditionally, with X simply 0 if you have not boosted."
 }

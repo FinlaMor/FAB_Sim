@@ -78,8 +78,23 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
             want_sub = _norm_amt(amount.get("subtype"))
             want_type = _norm_amt(amount.get("card_type") or amount.get("type_name"))
             want_slug = _norm_amt(amount.get("slug") or amount.get("name"))
+            # "you control" covers the whole arena, not just the permanents zone:
+            # "the number of Evos you have EQUIPPED" counts head/chest/arms/legs
+            # and weapon slots, none of which live in `permanents`. Scanning
+            # permanents alone returned 0 for every equipment count.
+            # zone: "ARENA" (default) | "PERMANENTS" | "EQUIPMENT".
+            player = state.players[pid]
+            zone = (amount.get("zone") or "ARENA").upper()
+            equipment = [player.head, player.chest, player.arms, player.legs,
+                         player.weapon1, player.weapon2]
+            if zone == "PERMANENTS":
+                pool = list(player.permanents.cards)
+            elif zone == "EQUIPMENT":
+                pool = [c for z in equipment for c in z.cards]
+            else:
+                pool = list(player.permanents.cards) + [c for z in equipment for c in z.cards]
             n = 0
-            for perm in state.players[pid].permanents.cards:
+            for perm in pool:
                 if want_sub and want_sub not in {_norm_amt(x) for x in (getattr(perm, "subtypes", None) or [])}:
                     continue
                 if want_type and want_type not in {_norm_amt(x) for x in (getattr(perm, "types", None) or [])}:

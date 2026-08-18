@@ -195,3 +195,63 @@ def test_count_expressions_do_not_crash_without_a_controller():
     st.active_player = None
     assert _resolve_amount({"type": "COUNT_PERMANENT", "subtype": "Runechant"}, st, orphan) == 0
     assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, orphan) == 0
+
+
+# --- counts that were invented strings/dicts on real cards -----------------
+
+def test_dagger_hit_count_on_the_chain():
+    # stab_wound_blue: "X is the number of times a dagger has hit this combat
+    # chain". ChainLink already records subtypes and hit, so this needed no new
+    # engine state — only the right expression.
+    st = _state()
+    st.chain_links.append(ChainLink(
+        chainlink_id=1, attacker_id=1, attack_slug="d1", attack_power=1,
+        net_damage=1, keywords=[], from_weapon=True, hit=True,
+        talents=[], classes=[], subtypes=["Dagger"]))
+    st.chain_links.append(ChainLink(
+        chainlink_id=2, attacker_id=1, attack_slug="d2", attack_power=1,
+        net_damage=0, keywords=[], from_weapon=True, hit=False,
+        talents=[], classes=[], subtypes=["Dagger"]))     # missed — must not count
+    st.chain_links.append(ChainLink(
+        chainlink_id=3, attacker_id=1, attack_slug="s1", attack_power=1,
+        net_damage=1, keywords=[], from_weapon=True, hit=True,
+        talents=[], classes=[], subtypes=["Sword"]))      # not a dagger
+    card = _card("stab_wound_blue")
+    n = _resolve_amount({"type": "COUNT_CHAIN_LINKS", "subtype": "Dagger", "hit": True},
+                        st, card)
+    assert n == 1
+
+
+def test_count_permanent_counts_equipped_cards():
+    # heavy_artillery_red: "the number of Evos you have EQUIPPED". Equipment
+    # lives in head/chest/arms/legs/weapon slots, NOT the permanents zone, so
+    # scanning permanents alone returned 0 for every equipment count.
+    # Use a REAL Evo chest equipment: Zone.add enforces zone-entry rules, so a
+    # synthetic card with subtypes ["Evo"] but no slot subtype is REJECTED and
+    # the chest stays empty — which reads exactly like a broken count.
+    st = _state()
+    card = _card("heavy_artillery_red")
+    evo = _card("evo_atom_breaker_red")
+    st.players[1].chest.add(evo)
+    assert evo in st.players[1].chest.cards, "fixture did not actually equip"
+    assert _resolve_amount({"type": "COUNT_PERMANENT", "subtype": "Evo",
+                            "zone": "EQUIPMENT"}, st, card) == 1
+    # and the permanents-only scope still excludes it
+    assert _resolve_amount({"type": "COUNT_PERMANENT", "subtype": "Evo",
+                            "zone": "PERMANENTS"}, st, card) == 0
+
+
+@pytest.mark.parametrize("slug", [
+    "mounting_anger_blue", "stab_wound_blue", "pulsewave_harpoon_red",
+    "urgent_delivery_yellow", "heavy_artillery_red",
+])
+def test_no_invented_amounts_remain(slug):
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
+    path = [p for p in root.rglob(f"{slug}.json") if ".quarantine" not in p.parts][0]
+    abilities = json.dumps(json.loads(path.read_text(encoding="utf-8"))["abilities"])
+    for invented in ("COUNT_CONTROLLERS", "CHAIN_HIT_COUNT_GTE", "BOOST_FLAG",
+                     "EVO_COUNT", "BOOST_COUNT\"", "FLAG_SET"):
+        assert invented not in abilities, f"{slug} still carries {invented}"
+    assert "COUNT_" in abilities

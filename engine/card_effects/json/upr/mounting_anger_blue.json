@@ -1,6 +1,6 @@
 {
   "slug": "mounting_anger_blue",
-  "_comment": "Turn-event tracking: read BANISHED_ATTACK_ACTION — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
+  "_comment": "Turn-event tracking: read BANISHED_ATTACK_ACTION — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it. X = Draconic chain links you control -> COUNT_CHAIN_LINKS (same fix as mounting_anger_red). Was the invented string 'COUNT_CONTROLLERS', which ATTACK_COST_LTE compared against an int -> TypeError, not merely a no-op.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -21,8 +21,8 @@
                 {
                   "type": "ATTACK_COST_LTE",
                   "amount": {
-                    "type": "COUNT_CONTROLLERS",
-                    "controller_type": "draconic_chain_links"
+                    "type": "COUNT_CHAIN_LINKS",
+                    "talent": "Draconic"
                   }
                 }
               ]

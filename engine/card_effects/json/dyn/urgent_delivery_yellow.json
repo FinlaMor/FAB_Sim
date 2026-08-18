@@ -33,12 +33,15 @@
               },
               {
                 "type": "COST_LTE",
-                "amount": "BOOST_COUNT"
+                "amount": {
+                  "type": "COUNT_BOOSTS"
+                }
               }
             ]
           }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "X = times you've boosted -> COUNT_BOOSTS (boost appends one marker per boost). APPROXIMATION: the card says 'this COMBAT CHAIN' but the marker is TURN-scoped, so on a multi-attack turn this over-counts. Recorded rather than hidden; an exact fix needs a chain-scoped boost counter."
 }
