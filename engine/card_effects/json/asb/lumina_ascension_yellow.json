@@ -1,93 +1,22 @@
 {
   "slug": "lumina_ascension_yellow",
+  "_comment": "Light Warrior ACTION, so it resolves on PLAY — it was ability_type STATIC and never fired. Four separate defects: (1) gated on an invented BOLTYN_SPECIALIZATION_ACTIVE flag, and Specialization is a META-STATIC DECKBUILDING restriction (CR 8.3.7, 'functional outside the game') that is never an in-game condition, so the gate was conceptually wrong as well as dead; (2) 'until end of turn weapons gain +1{p}' was a MODIFY_ATTACK on the CURRENT attack instead of MODIFY_ATTACKS_THIS_TURN filtered to weapons; (3) the injected trigger had trigger_type 'TRIGGERED' with the real trigger in a sibling key, so it could not bind; (4) its Light branch put the revealed card on the BOTTOM OF DECK when the text says put it into your hero's SOUL. NEEDS_NEW_DSL for two clauses: the on-hit reveal needs a deck->soul move (which is NOT charging, per CR 8.5.29b), and 'attack an additional time with each weapon' needs an extra-attack grant that no effect provides. Both are omitted rather than left doing something wrong.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "BOLTYN_SPECIALIZATION_ACTIVE"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1,
-          "target": "WEAPONS_CONTROLLED_BY_YOU"
-        },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "TRIGGERED",
-            "trigger": "ON_HIT",
-            "effects": [
-              {
-                "type": "REVEAL_TOP_DECK",
-                "amount": 1
-              },
-              {
-                "type": "CONDITIONAL",
-                "conditions": [
-                  {
-                    "type": "CARD_IN_ZONE",
-                    "zone": "DECK",
-                    "card_type": "LIGHT"
-                  }
-                ],
-                "effects": [
-                  {
-                    "type": "PUT_SELF_BOTTOM_DECK",
-                    "target": "REVEALED_CARD"
-                  },
-                  {
-                    "type": "GAIN_LIFE",
-                    "amount": 1
-                  }
-                ]
-              },
-              {
-                "type": "CONDITIONAL",
-                "conditions": [
-                  {
-                    "type": "NOT",
-                    "condition": {
-                      "type": "CARD_IN_ZONE",
-                      "zone": "DECK",
-                      "card_type": "LIGHT"
-                    }
-                  }
-                ],
-                "effects": [
-                  {
-                    "type": "PUT_CARD_BOTTOM",
-                    "target": "REVEALED_CARD"
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "ability_type": "ACTIVATE",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "CHARGED_THIS_TURN"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GO_AGAIN",
-          "target": "WEAPONS_CONTROLLED_BY_YOU"
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
+        {
+          "type": "MODIFY_ATTACKS_THIS_TURN",
+          "mod": "add",
+          "amount": 1,
+          "scope": "TURN",
+          "player": "SELF",
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        },
         {
           "type": "GO_AGAIN"
         }

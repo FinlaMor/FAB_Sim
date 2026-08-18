@@ -2302,6 +2302,17 @@ def charge(state: GameState, card: Card, player_id: int,
         card.top_card = player.hero
         player.hero.cards_underneath.append(card)
 
+    # CR 8.5.29a: "the player that controls the effect is considered to have
+    # charged a card". Recorded inside the canonical function and AFTER the
+    # replacement/cancel checks, so a cancelled charge does not count — 8.5.29b
+    # is explicit that only this effect counts as charging, so a card reaching
+    # the soul any other way must not set it either.
+    _record_turn_event(state, event.player_id, "charge",
+                       getattr(card, "slug", None),
+                       getattr(card, "types", None) or [],
+                       getattr(card, "classes", None) or [],
+                       getattr(card, "talents", None) or [])
+
     state.event_manager.emit(create_emit_event(event), state)
 
     return event

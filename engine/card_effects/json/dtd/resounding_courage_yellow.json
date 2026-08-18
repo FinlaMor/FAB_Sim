@@ -1,19 +1,34 @@
 {
   "slug": "resounding_courage_yellow",
+  "_comment": "'If you've CHARGED this turn' now reads the turn event recorded by the canonical charge() (CR 8.5.29a); it was the invented flag CHARGED_THIS_TURN. The +2{p} — the card's MAIN effect — was missing entirely: only the conditional Courage token was implemented, so even a charged turn produced no attack buff.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "CHARGED_THIS_TURN"
-        }
-      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_CLASS_IN",
+            "classes": [
+              "Warrior"
+            ]
+          }
+        ]
+      },
       "effects": [
         {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
           "type": "CREATE_TOKEN",
-          "token_type": "Courage",
-          "token": "courage"
+          "token": "courage",
+          "conditions": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "charge"
+            }
+          ]
         }
       ]
     }
