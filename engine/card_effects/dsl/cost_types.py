@@ -133,6 +133,55 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             pass
         return can_pay, pay
 
+    if ctype == "SCRAP":
+        # CR 8.3.32 — Scrap: "As an additional cost to play this, you MAY banish
+        # an item or equipment from your graveyard." 8.3.32a: paying it means the
+        # player has scrapped and that card was scrapped. 8.3.32b: a player
+        # cannot scrap if they cannot pay it.
+        #
+        # Optional, so it never blocks play (can_pay is always True) — unlike a
+        # mandatory additional cost, which must gate legality.
+        #
+        # The player is ASKED. The nearest existing optional cost
+        # (BANISH_NAMED_GRAVEYARD_OPTIONAL) silently auto-pays whenever a target
+        # exists, which is wrong for "you may" and is not copied here. Banishing
+        # also goes through the canonical banish() so the event fires, rather
+        # than moving the card between zones by hand.
+        def can_pay(card, event, state):
+            return True
+
+        def pay(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id, ask_yes_no, ask_optional
+            from engine.effect_keywords import banish as _banish, _record_turn_event
+            cid = _controller_id(card)
+            player = state.players[cid]
+            eligible = [c for c in player.graveyard.cards
+                        if {"item", "equipment"} & {t.lower() for t in (c.types or [])}]
+            if not eligible:
+                return                      # 8.3.32b — cannot scrap
+            if not ask_yes_no(state, cid, context="Scrap: banish an item or equipment "
+                                                  "from your graveyard?"):
+                return
+            slugs = [c.slug for c in eligible]
+            chosen = ask_optional(state, cid, slugs, context="Choose a card to scrap")
+            if chosen is None:
+                return
+            target = next((c for c in eligible if c.slug == chosen), eligible[0])
+            # origin_zone MUST be named: banish() only removes the card from its
+            # old zone when told which one, so passing None adds it to banished
+            # while leaving it in the graveyard — present in both at once.
+            _banish(state, target, cid, "graveyard")
+            # TWO identities are recorded, because the cards ask both questions:
+            #   "if IT scrapped a card"        -> this card's slug
+            #   "if it scrapped a HYPER DRIVER" -> the scrapped card's slug/name
+            # One marker family serves both; SCRAPPED with no `name` checks the
+            # asking card, and with a `name` checks what was scrapped.
+            _record_turn_event(state, cid, "scrap",
+                               getattr(card, "slug", None),
+                               getattr(target, "slug", None),
+                               getattr(target, "name", None))
+        return can_pay, pay
+
     if ctype == "BANISH_NAMED_GRAVEYARD_OPTIONAL":
         # "You may banish [slug_contains] from your graveyard. If you do, [bonus via flag]."
         # Always payable (optional). Sets a turn flag if a matching card was banished.

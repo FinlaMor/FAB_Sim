@@ -143,7 +143,11 @@ def test_card_with_functional_text_implements_something(path: Path):
     entry = INDEX.get(slug)
     if entry is None:
         pytest.skip("no printed entry (token or unindexed slug)")
-    if raw.get("abilities") or raw.get("setup"):
+    # A card-level `cost` is a play-time additional cost: it is compiled to
+    # play_cost and both checked and paid by engine/play.py, so a card whose only
+    # implementable clause is that cost (Scrap, CR 8.3.32) HAS implemented
+    # something. Counting abilities alone reported such a card as untouched.
+    if raw.get("abilities") or raw.get("setup") or raw.get("cost"):
         return
     if slug in KNOWN_UNIMPLEMENTED:
         pytest.xfail(f"{slug}: no DSL primitive for this text yet (see KNOWN_UNIMPLEMENTED)")

@@ -1,13 +1,18 @@
 {
   "slug": "scrap_prospector_blue",
+  "_comment": "Scrap (CR 8.3.32) is an OPTIONAL ADDITIONAL COST to play: banish an item or equipment from your graveyard. It was missing entirely, and the trigger read an invented FLAG_SET 'SCRAPPED_CARD'. The SCRAPPED condition is keyed to THIS card's slug because the text says 'if IT scrapped', not 'if you scrapped'. Scrap is authored as the CARD-LEVEL `cost` (a play-time additional cost) rather than a separate empty PLAY ability: an ability existing only to carry a cost has no effects, which is a no-op by the hygiene rule and rightly flagged. Card-level `cost` compiles to play_cost, which engine/play.py checks and pays.",
+  "cost": {
+    "type": "SCRAP",
+    "play_activate": "PLAY",
+    "optional": "TRUE"
+  },
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "SCRAPPED_CARD"
+          "type": "SCRAPPED"
         }
       ],
       "effects": [

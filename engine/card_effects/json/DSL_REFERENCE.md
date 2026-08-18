@@ -770,3 +770,32 @@ Reprise cards are usually **Attack Reactions**, and the reprise clause is part o
 the SAME resolution — put it on a second `ATTACK_REACTION` ability gated by
 `REPRISE`, not on a `STATIC` or a `DEFENSE_REACTION`. Both cards with this text
 got that wrong, so their reprise halves were unreachable regardless of the flag.
+
+## Scrap (CR 8.3.32)
+
+Scrap is an **optional additional cost to play**: "you may banish an item or
+equipment from your graveyard". Put it on the card's PLAY ability:
+
+```json
+{"ability_type": "PLAY", "additional_cost": [{"type": "SCRAP"}], "effects": []}
+```
+
+Then gate the payoff with `SCRAPPED`:
+
+```json
+{"type": "SCRAPPED"}                      // did THIS card scrap?
+{"type": "SCRAPPED", "name": "Hyper Driver"}   // what was scrapped?
+```
+
+`SCRAPPED` with no `name` is keyed to the ASKING card, because the text reads
+"if **it** scrapped a card", not "if you scrapped" — a player-level flag would
+also fire for a different scrap card played earlier the same turn.
+
+Being optional, scrap never blocks play (unlike a mandatory additional cost,
+which must gate legality). With no item or equipment in the graveyard, the cost
+simply cannot be paid (8.3.32b) and the payoff does not fire.
+
+**Banishing takes an origin zone.** `banish(state, card, pid, "graveyard")` —
+passing `None` adds the card to the banished zone WITHOUT removing it from the
+graveyard, leaving it in both at once. Pass `None` only when the caller has
+already removed the card itself.

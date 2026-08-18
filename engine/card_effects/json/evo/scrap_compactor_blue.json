@@ -1,22 +1,10 @@
 {
   "slug": "scrap_compactor_blue",
-  "abilities": [
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "SCRAPPED_CARD"
-        }
-      ],
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "PLAY_EVO_AS_INSTANT",
-          "value": true
-        }
-      ]
-    }
-  ]
+  "_comment": "Scrap cost added (CR 8.3.32) and the invented FLAG_SET 'SCRAPPED_CARD' replaced by the SCRAPPED condition. NEEDS_NEW_DSL for the payoff: 'you may play your next Evo this turn as though it were an INSTANT' changes the timing at which a card may be played, which no effect expresses — the previous SET_FLAG 'PLAY_EVO_AS_INSTANT' was read by nothing, so it did nothing. Scrap is authored as the CARD-LEVEL `cost` (a play-time additional cost) rather than a separate empty PLAY ability: an ability existing only to carry a cost has no effects, which is a no-op by the hygiene rule and rightly flagged. Card-level `cost` compiles to play_cost, which engine/play.py checks and pays. The ON_ATTACK ability is REMOVED, not left empty: its payoff ('play your next Evo this turn as though it were an instant') is not expressible, and an ability with a condition but no effects is a no-op that only looks implemented. The scrap COST is kept because the card genuinely has it and it is optional.",
+  "cost": {
+    "type": "SCRAP",
+    "play_activate": "PLAY",
+    "optional": "TRUE"
+  },
+  "abilities": []
 }

@@ -898,6 +898,28 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return _fn((fn is None or fn(c, e, s)) for fn in _subs)
         return _combine
 
+    if ctype in ("SCRAPPED", "HAS_SCRAPPED"):
+        # CR 8.3.32 — "if it scrapped a card". Note "IT", not "you": the check is
+        # whether THIS card paid its scrap cost when played, so the marker is
+        # keyed by the card's own slug rather than a bare "player scrapped this
+        # turn" flag, which would also fire for a different scrap card.
+        #
+        # `name` overrides the slug for the rare card asking about another
+        # ("if it scrapped a Hyper Driver" asks what was scrapped — see
+        # speed_demon_red, which needs the SCRAPPED CARD's identity and is not
+        # expressible with this alone).
+        want = _norm(params.get("name") or params.get("slug") or "")
+
+        def _scrapped(c, e, s, _w=want):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import TURN_EVENT_MARKER
+            ident = _w or _norm(getattr(c, "slug", "") or "")
+            if not ident:
+                return False
+            pid = _controller_id(c)
+            return f"{TURN_EVENT_MARKER}scrap:{ident}" in s.players[pid].current_turn_effects
+        return _scrapped
+
     if ctype in ("SOUL_COUNT_GTE", "SOUL_COUNT"):
         # "If the defending hero has 1 or more cards in their soul" (Soul Cleaver).
         # player.soul is a real zone, so this is a count over existing state.
