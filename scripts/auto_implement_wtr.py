@@ -178,7 +178,14 @@ on a flag nothing sets is an ability that can NEVER fire.
     -> "amount": {"type":"COUNT_PERMANENT","subtype":"Runechant"}
        (also takes card_type / slug)
 "the number of times you've boosted this turn"
-    -> "amount": {"type":"COUNT_BOOSTS"}
+    -> "amount": {"type":"COUNT_BOOSTS"}   (scope CHAIN by default; "scope":"TURN")
+
+"you may pay up to {r}{r}{r}. <do something> that many times"
+    -> [{"type":"PAY_UP_TO","max":3,"asset":"RESOURCES"},
+        {"type":"<effect>","amount":{"type":"PAID_AMOUNT"}}]
+    PAY_UP_TO charges what the player chooses; the NEXT effect reads how much
+    was paid as PAID_AMOUNT (alias AMOUNT_PAID). This is a payment made during
+    RESOLUTION — it is not a play cost, so it does not go in `cost`.
 "the number rolled" / "half the number rolled, rounded down"
     -> "amount": {"type":"ROLL_RESULT"}   (alias ROLL_NUMBER)
     -> "amount": {"type":"HALF","value":{"type":"ROLL_RESULT"}}   (alias HALF_ROUND_DOWN)
@@ -186,8 +193,8 @@ on a flag nothing sets is an ability that can NEVER fire.
 
     "amount" MUST be an integer, or a dict whose "type" is one of EXACTLY these:
         COUNT_CHAIN_LINKS, COUNT_COUNTERS, COUNTER, COUNT_PERMANENT,
-        COUNT_PERMANENTS, COUNT_BOOSTS, BOOST_COUNT, ROLL_RESULT, ROLL_NUMBER,
-        HALF, HALF_ROUND_DOWN, LITERAL, CONSTANT, VALUE
+        COUNT_PERMANENTS, COUNT_BOOSTS, BOOST_COUNT, PAID_AMOUNT, AMOUNT_PAID,
+        ROLL_RESULT, ROLL_NUMBER, HALF, HALF_ROUND_DOWN, LITERAL, CONSTANT, VALUE
     Anything else — an invented name, or a CONDITION type such as FLAG_SET —
     resolves to 0 and the effect silently does NOTHING. If the count you need is
     not in that list, prefer a fixed integer or omit the effect and say

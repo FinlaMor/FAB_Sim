@@ -1,19 +1,22 @@
 {
   "slug": "bask_in_your_own_greatness_red",
+  "_comment": "'You may pay up to {r}{r}{r}' is a variable OPTIONAL payment made during resolution, not a play cost: PAY_UP_TO charges what the player chooses and stores it, and the following effect reads it as PAID_AMOUNT — the same mechanism ROLL/ROLL_RESULT already used. Was an invented amount string resolving to 0, so the payoff was always nothing.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "CREATE_MIGHT_PER_GOLD",
-          "amount": "PAY_AMOUNT"
-        }
-      ],
-      "additional_cost": [
+          "type": "PAY_UP_TO",
+          "max": 3,
+          "asset": "RESOURCES"
+        },
         {
-          "type": "PAY_RESOURCES",
-          "amount": 3
+          "type": "CREATE_TOKEN",
+          "token": "might",
+          "amount": {
+            "type": "PAID_AMOUNT"
+          }
         }
       ]
     }

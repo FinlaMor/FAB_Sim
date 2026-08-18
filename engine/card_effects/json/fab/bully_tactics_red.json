@@ -1,5 +1,6 @@
 {
   "slug": "bully_tactics_red",
+  "_comment": "'You may pay up to {r}{r}{r}' is a variable OPTIONAL payment made during resolution, not a play cost: PAY_UP_TO charges what the player chooses and stores it, and the following effect reads it as PAID_AMOUNT — the same mechanism ROLL/ROLL_RESULT already used. Was an invented amount string resolving to 0, so the payoff was always nothing. INTIMIDATE gained an `amount` so 'intimidate them that many times' repeats.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -11,14 +12,15 @@
       ],
       "effects": [
         {
-          "type": "INTIMIDATE",
-          "amount": "PAYMENT_AMOUNT"
-        }
-      ],
-      "additional_cost": [
+          "type": "PAY_UP_TO",
+          "max": 3,
+          "asset": "RESOURCES"
+        },
         {
-          "type": "PAY_RESOURCES",
-          "amount": "UP_TO_3"
+          "type": "INTIMIDATE",
+          "amount": {
+            "type": "PAID_AMOUNT"
+          }
         }
       ]
     }

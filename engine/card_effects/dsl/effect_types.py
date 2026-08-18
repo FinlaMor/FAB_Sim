@@ -39,6 +39,10 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
         atype = (amount.get("type") or "").upper()
         if atype in ("ROLL_NUMBER", "ROLL_RESULT"):
             return roll
+        # "that many times" / "that many tokens" — how much a preceding
+        # PAY_UP_TO actually charged. Same mechanism as ROLL_RESULT.
+        if atype in ("PAID_AMOUNT", "AMOUNT_PAID"):
+            return getattr(state, "_paid_amount", 0) or 0
         if atype in ("HALF", "HALF_ROUND_DOWN"):
             return int(_resolve_amount(amount.get("value", 0), state, card)) // 2
         if atype in ("VALUE", "CONSTANT", "LITERAL"):
@@ -359,10 +363,52 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "INTIMIDATE":
-        def _fn(card, event, state):
+        # `amount` repeats it: "intimidate them that many times" (Bully Tactics),
+        # "instead intimidate twice" (High Roller). It may be a dynamic
+        # expression, so "that many times" resolves from what was actually paid.
+        amt = params.get("amount", 1)
+        def _fn(card, event, state, _a=amt):
             from engine.card_effects.ability_keywords import effect_intimidate, _controller_id
             cid = _controller_id(card)
-            effect_intimidate(state, 3 - cid)
+            try:
+                times = int(_resolve_amount(_a, state, card))
+            except (TypeError, ValueError):
+                times = 1
+            for _ in range(max(0, times)):
+                effect_intimidate(state, 3 - cid)
+        return _fn
+
+    if etype in ("PAY_UP_TO", "MAY_PAY_UP_TO"):
+        # "you may pay up to {r}{r}{r}. <do something> that many times."
+        # The player chooses how much to pay (0 .. max, capped by what they
+        # actually have), and the amount paid is stored for a LATER effect to
+        # read as {"type": "PAID_AMOUNT"} — mirroring how ROLL stores
+        # state._roll_result for ROLL_RESULT.
+        max_amt = params.get("max", params.get("amount", 0))
+        asset = (params.get("asset") or "RESOURCES").upper()
+        def _fn(card, event, state, _max=max_amt, _asset=asset):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import lose, AssetType
+            cid = _controller_id(card)
+            player = state.players[cid]
+            try:
+                cap = int(_resolve_amount(_max, state, card))
+            except (TypeError, ValueError):
+                cap = 0
+            available = player.resources if _asset == "RESOURCES" else getattr(
+                player, _asset.lower(), 0)
+            cap = max(0, min(cap, int(available or 0)))
+            # Offered high-to-low so a default agent (which takes the first
+            # option) pays the most, matching "you MAY pay up to" being an
+            # upside — the same reasoning as offering `yes` before `no`.
+            choice = _ask_player(state, cid, list(range(cap, -1, -1)),
+                                 context=f"Pay up to {cap} {_asset.lower()}?")
+            paid = int(choice) if isinstance(choice, int) else 0
+            paid = max(0, min(paid, cap))
+            if paid:
+                lose(state, getattr(AssetType, _asset, AssetType.RESOURCES), paid,
+                     source_player_id=cid, target_player_id=cid)
+            state._paid_amount = paid
         return _fn
 
     if etype == "RETURN_TO_HAND":
@@ -571,7 +617,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # slugifies a display name, so pass whichever was given.
         token = (params.get("token") or params.get("token_name")
                  or params.get("token_type") or "")
-        count = params.get("count", 1)
+        # "count" is the documented key, but "amount" is the natural one and is
+        # what every other numeric effect uses — accept both, or "create X
+        # tokens" silently creates one.
+        count = params.get("count", params.get("amount", 1))
         # Whose control the token enters. Cards author it under "player" OR
         # "controller" (~13 usages used the latter, which was unread -> the token
         # wrongly defaulted to SELF). Opponent-side values: opponent/defending/
@@ -584,13 +633,22 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in (
                 "OPPONENT", "DEFENDING", "DEFENDER", "TARGET_HERO") else cid
-            # count may be a dynamic expression, e.g. Spreading Plague's
-            # "X = the number of defending cards this chain link".
+            # count may be a dynamic expression: the bespoke string form
+            # ("DEFENDING_CARD_COUNT"), or any amount expression dict such as
+            # {"type": "PAID_AMOUNT"} for "create that many Might tokens".
+            # Dict amounts were not resolved here at all, so they fell through
+            # as a dict and compared <= 0, creating nothing.
             if isinstance(_cnt, str):
                 n = 0
                 if _cnt.upper() == "DEFENDING_CARD_COUNT" and state.combat is not None:
                     n = len(getattr(state.combat, "defending_cards", []) or [])
                 _cnt = n
+            elif isinstance(_cnt, dict):
+                _cnt = _resolve_amount(_cnt, state, card)
+            try:
+                _cnt = int(_cnt)
+            except (TypeError, ValueError):
+                return
             if _cnt <= 0:
                 return
             _ek_create_token(state, tid, _tok, _cnt, destination=_dest)
