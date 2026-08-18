@@ -126,20 +126,93 @@ def _extract_types_from_source(path: Path, pattern: str) -> list[str]:
         return []
 
 
+# Card text -> the primitive that already implements it. Every entry here is a
+# defect class actually found in the corpus: the author invented a private flag
+# (or a wrong ability_type) for a mechanic the DSL ALREADY expressed, because the
+# prompt listed the type name among ~200 others with no hint of when to use it.
+# Four whole mechanics needed NO new engine code once the right primitive was
+# found — this block is what makes them findable.
+PRIMITIVE_RECIPES = """
+=== HOW TO SAY IT — text patterns and the primitive that implements them ===
+
+NEVER invent a flag. If you are about to write {"type":"FLAG_SET","flag":"..."}
+for a mechanic, the primitive almost certainly already exists below. A FLAG_SET
+on a flag nothing sets is an ability that can NEVER fire.
+
+"if you've <done X> this turn"          -> {"type":"EVENT_THIS_TURN","event":"<e>","qualifier":"<q>"}
+    events: damage (qualifier = damage type), pitch (colour/class/talent),
+            banish, draw, create (token slug or category), play (colour, type,
+            subtype, class, talent, card name, attack_action, non_attack_action),
+            transcend, graveyard (qualifier = a type, e.g. "instant")
+    "ANOTHER blue card" -> add "count": 2 (this card's own play is recorded too)
+
+"if you've destroyed a <thing> this turn"  -> {"type":"DESTROYED_THIS_TURN","name":"<thing>"}
+
+"Combo - If <Card> was the last attack this combat chain"
+                                        -> {"type":"LAST_CHAIN_ATTACK","name":"<Card Name>"}
+    also takes talent / class / subtype / hit. NEVER the type "COMBO" — that is a
+    different, older condition and your params will be silently ignored.
+
+"Reprise - If the defending hero has defended with a card from their hand"
+                                        -> {"type":"REPRISE"}
+
+"Your next <arrow/dagger/sword/angel> attack this turn gets +N"
+    -> {"type":"MODIFY_NEXT_ATTACK","mod":"add","amount":N,
+        "filter":[{"type":"ATTACK_SUBTYPE_IN","subtypes":["Arrow"]}]}
+    by class instead: {"type":"ATTACK_CLASS_IN","classes":["Brute"]}
+    on a marked hero:  {"type":"OPPONENT_IS_MARKED"}
+    NEVER a SET_FLAG + flag-gated STATIC: that buffs EVERY attack for the rest of
+    the turn, not just the next one.
+
+"weapons you control gain +N until end of turn"
+    -> {"type":"MODIFY_ATTACKS_THIS_TURN","mod":"add","amount":N,
+        "filter":[{"type":"ATTACK_IS_WEAPON"}]}
+
+"while this has more {p} than its base {p}"  -> {"type":"ATTACK_POWER_GT_BASE"}
+
+"X is the number of <Draconic> chain links you control"
+    -> "amount": {"type":"COUNT_CHAIN_LINKS","talent":"Draconic"}
+"X is the number of <doom> counters on this"
+    -> "amount": {"type":"COUNT_COUNTERS","counter":"doom"}
+    An unknown amount STRING resolves to 0, so the effect silently does nothing.
+
+"... , instead <bigger effect>"          -> ONE {"type":"CONDITIONAL_EFFECT",
+                                              "when":[...],"then":[...],"else":[...]}
+    Two effects gated on the same condition give you BOTH (3 and 4 = 7).
+
+=== ability_type — as fatal to get wrong as a dead flag ===
+An Attack Action card ("Action - Attack") is NOT an ATTACK_REACTION.
+A card that resolves when PLAYED is PLAY — INSTANT means an ACTIVATED ability
+with instant timing ("Instant - Destroy this: ...") and fires on ON_ACTIVATE.
+Reprise/Combo clauses belong on the SAME ability_type as the card's main effect.
+=== END ===
+"""
+
+
 def build_dsl_reference() -> str:
     """Return a compact DSL reference string for injection into prompts."""
-    effect_types = _extract_types_from_source(
-        DSL_DIR / "effect_types.py",
-        r'if etype == "([A-Z_]+)"'
-    )
-    condition_types = _extract_types_from_source(
-        DSL_DIR / "condition_types.py",
-        r'if ctype == "([A-Z_]+)"'
-    )
-    cost_types = _extract_types_from_source(
-        DSL_DIR / "cost_types.py",
-        r'if ctype == "([A-Z_]+)"'
-    )
+    # Both registration forms: `if etype == "X"` AND `if etype in ("X","Y")`.
+    # Matching only `==` omitted 30 types the VALIDATOR accepts — including
+    # EVENT_THIS_TURN, CONDITIONAL_EFFECT, OR and AND — so the model was told
+    # its way of expressing "if you've done X this turn" did not exist, and
+    # invented a flag instead. The prompt vocabulary and the validator
+    # vocabulary must be the same set.
+    def _types(fname: str, kind: str) -> list[str]:
+        src = DSL_DIR / fname
+        eq = _extract_types_from_source(src, rf'if {kind} == "([A-Z_0-9]+)"')
+        tup: list[str] = []
+        for group in _extract_types_from_source(src, rf'if {kind} in \(([^)]*)\)'):
+            tup += re.findall(r'"([A-Z_0-9]+)"', group)
+        seen, out = set(), []
+        for t in eq + tup:
+            if t not in seen:
+                seen.add(t)
+                out.append(t)
+        return out
+
+    effect_types = _types("effect_types.py", "etype")
+    condition_types = _types("condition_types.py", "ctype")
+    cost_types = _types("cost_types.py", "ctype")
     trigger_types = _extract_types_from_source(
         DSL_DIR / "trigger_types.py",
         r'"(ON_[A-Z_]+|START_OF[A-Z_]+|END_OF[A-Z_]+)":'
@@ -180,6 +253,7 @@ def build_dsl_reference() -> str:
         "CONDITIONS ON EFFECTS: an effect object may have a 'conditions' key (list) to gate only that effect.",
         "CONDITIONS ON ABILITIES: an ability may have a 'conditions' key (list) — ALL must pass or nothing fires.",
         "=== END DSL REFERENCE ===",
+        PRIMITIVE_RECIPES,
     ]
     return "\n".join(lines)
 
