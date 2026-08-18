@@ -77,9 +77,13 @@ draft/
 debug_modal_verb.py
 temp_ability_examples.py
 temp_triggered_examples.py
-temp_*.py
-audit_*.py
-check_*.py
+# Anchored to the repo ROOT: these target throwaway scripts left beside the
+# project files. Unanchored, `audit_*.py` also matched scripts/audit_run.py —
+# the corpus audit tool — which silently stayed untracked for an entire
+# session while commits claimed to include it.
+/temp_*.py
+/audit_*.py
+/check_*.py
 
 # --- Local probe/debug outputs ---
 ollama_*_out.txt
