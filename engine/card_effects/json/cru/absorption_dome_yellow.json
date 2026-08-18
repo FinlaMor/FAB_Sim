@@ -1,0 +1,20 @@
+{
+  "slug": "absorption_dome_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "target": "self",
+          "counter": "steam",
+          "amount": {
+            "type": "COUNT_BOOSTS"
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Steam counters on entry = times boosted this turn -> COUNT_BOOSTS (boost appends one marker per boost). Was {\"type\":\"FLAG_SET\"} used as an AMOUNT — a condition type in an amount slot, which resolves to 0. NEEDS_NEW_DSL: the damage-replacement half ('if your hero would be dealt damage, remove that many steam counters instead') needs the incoming damage amount in a replacement context, which no amount expression provides; that ability is removed rather than left silently doing nothing."
+}

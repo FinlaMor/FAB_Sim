@@ -1,0 +1,47 @@
+{
+  "slug": "beast_within_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "REF_EXISTS",
+            "ref": "COMBATCHAINLINK"
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "TOP_DECK"
+        },
+        {
+          "type": "LOSE_LIFE",
+          "amount": 1
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "ATTACK_POWER_GTE",
+              "amount": 6
+            }
+          ],
+          "then": [
+            {
+              "type": "RETURN_TO_HAND"
+            }
+          ],
+          "else": [
+            {
+              "type": "PUT_SELF_BOTTOM_DECK"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

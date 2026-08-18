@@ -1,0 +1,26 @@
+{
+  "slug": "blessing_of_serenity_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 2,
+          "target": "PLAYER"
+        }
+      ],
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "player": "SELF"
+        },
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "damage",
+          "qualifier": "physical"
+        }
+      ]
+    }
+  ]
+}

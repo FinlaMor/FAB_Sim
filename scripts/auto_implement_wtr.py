@@ -174,7 +174,24 @@ on a flag nothing sets is an ability that can NEVER fire.
     -> "amount": {"type":"COUNT_CHAIN_LINKS","talent":"Draconic"}
 "X is the number of <doom> counters on this"
     -> "amount": {"type":"COUNT_COUNTERS","counter":"doom"}
-    An unknown amount STRING resolves to 0, so the effect silently does nothing.
+"for each <Runechant> you control" / "X is the number of <Evos> you control"
+    -> "amount": {"type":"COUNT_PERMANENT","subtype":"Runechant"}
+       (also takes card_type / slug)
+"the number of times you've boosted this turn"
+    -> "amount": {"type":"COUNT_BOOSTS"}
+"the number rolled" / "half the number rolled, rounded down"
+    -> "amount": {"type":"ROLL_RESULT"}   (alias ROLL_NUMBER)
+    -> "amount": {"type":"HALF","value":{"type":"ROLL_RESULT"}}   (alias HALF_ROUND_DOWN)
+    a plain number may be wrapped as {"type":"LITERAL","value":N} (alias CONSTANT)
+
+    "amount" MUST be an integer, or a dict whose "type" is one of EXACTLY these:
+        COUNT_CHAIN_LINKS, COUNT_COUNTERS, COUNTER, COUNT_PERMANENT,
+        COUNT_PERMANENTS, COUNT_BOOSTS, BOOST_COUNT, ROLL_RESULT, ROLL_NUMBER,
+        HALF, HALF_ROUND_DOWN, LITERAL, CONSTANT, VALUE
+    Anything else — an invented name, or a CONDITION type such as FLAG_SET —
+    resolves to 0 and the effect silently does NOTHING. If the count you need is
+    not in that list, prefer a fixed integer or omit the effect and say
+    NEEDS_NEW_DSL; do NOT invent an expression name.
 
 "... , instead <bigger effect>"          -> ONE {"type":"CONDITIONAL_EFFECT",
                                               "when":[...],"then":[...],"else":[...]}
@@ -274,6 +291,18 @@ def valid_type_names() -> set[str]:
     # Triggers + ability types are also written as "type"/"trigger" in card JSON.
     names |= set(_extract_types_from_source(
         DSL_DIR / "trigger_types.py", r'"(ON_[A-Z_]+|START_OF[A-Z_]+|END_OF[A-Z_]+)"'))
+    # AMOUNT EXPRESSIONS ({"amount": {"type": "COUNT_CHAIN_LINKS", ...}}) are a
+    # second dispatch chain: _resolve_amount matches on `atype`, not `etype`, so
+    # scanning only the effect/condition/cost chains declared them invalid. They
+    # compile fine — the validator's model of "valid" was incomplete, which it
+    # proved by rejecting the (correct) recipe block for COUNT_CHAIN_LINKS and
+    # COUNT_COUNTERS.
+    effects_src = (DSL_DIR / "effect_types.py")
+    if effects_src.exists():
+        text = effects_src.read_text(encoding="utf-8")
+        names |= set(re.findall(r'atype == "([A-Z_]+)"', text))
+        for grp in re.findall(r'atype in \(([^)]*)\)', text):
+            names |= set(re.findall(r'"([A-Z_]+)"', grp))
     return names
 
 

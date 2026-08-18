@@ -1,0 +1,18 @@
+{
+  "slug": "aetherize_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "INSTANT",
+          "cost_limit": {
+            "type": "LITERAL",
+            "value": 1
+          }
+        }
+      ]
+    }
+  ]
+}

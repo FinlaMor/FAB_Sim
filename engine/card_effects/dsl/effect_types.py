@@ -68,6 +68,37 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
                 n += 1
             return n
 
+        # "for each Runechant you control" — the commonest "X is the number of"
+        # phrasing in the game. Counts permanents you control, filtered by
+        # subtype / type / slug.
+        if atype in ("COUNT_PERMANENT", "COUNT_PERMANENTS"):
+            pid = _amount_controller(state, card)
+            if pid is None:
+                return 0
+            want_sub = _norm_amt(amount.get("subtype"))
+            want_type = _norm_amt(amount.get("card_type") or amount.get("type_name"))
+            want_slug = _norm_amt(amount.get("slug") or amount.get("name"))
+            n = 0
+            for perm in state.players[pid].permanents.cards:
+                if want_sub and want_sub not in {_norm_amt(x) for x in (getattr(perm, "subtypes", None) or [])}:
+                    continue
+                if want_type and want_type not in {_norm_amt(x) for x in (getattr(perm, "types", None) or [])}:
+                    continue
+                if want_slug and _norm_amt(getattr(perm, "slug", "")) != want_slug:
+                    continue
+                n += 1
+            return n
+
+        # "the number of times you've boosted this <turn|combat chain>".
+        # ability_keywords.boost already appends one "boosted_this_turn" marker
+        # PER boost precisely so it can be counted, not just tested.
+        if atype in ("COUNT_BOOSTS", "BOOST_COUNT"):
+            pid = _amount_controller(state, card)
+            if pid is None:
+                return 0
+            return sum(1 for m in state.players[pid].current_turn_effects
+                       if m == "boosted_this_turn")
+
         # "X is the number of doom counters on this" — counters already live on
         # the player keyed by (slug, zone, counter).
         if atype in ("COUNT_COUNTERS", "COUNTER"):
@@ -98,17 +129,32 @@ def _norm_amt(value) -> str:
 
 def _amount_controller(state, card):
     """Whose things to count. The card's controller when known; otherwise the
-    attacking player, so a count inside combat still resolves."""
+    attacking player, so a count inside combat still resolves.
+
+    Returns None rather than an id that is not a real player: a card with no
+    owner/controller yields 0 from _controller_id, and `state.players[0]` raises
+    KeyError, aborting resolution mid-game. An unresolvable controller must make
+    the count 0, not crash.
+    """
+    players = getattr(state, "players", None) or {}
+
+    def _valid(pid):
+        return pid if pid in players else None
+
     if card is not None:
         from engine.card_effects.ability_keywords import _controller_id
         try:
-            return _controller_id(card)
+            pid = _valid(_controller_id(card))
+            if pid is not None:
+                return pid
         except Exception:
             pass
     combat = getattr(state, "combat", None)
     if combat is not None:
-        return combat.attacker_id
-    return getattr(state, "active_player", None)
+        pid = _valid(getattr(combat, "attacker_id", None))
+        if pid is not None:
+            return pid
+    return _valid(getattr(state, "active_player", None))
 
 
 def compile_effect(etype: str, params: dict[str, Any]) -> Callable:

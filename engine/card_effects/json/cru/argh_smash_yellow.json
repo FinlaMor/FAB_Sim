@@ -1,0 +1,29 @@
+{
+  "slug": "argh_smash_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "ROLL",
+          "player": "SELF"
+        },
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "ITEM",
+          "player": "OPPONENT",
+          "amount": {
+            "type": "HALF",
+            "value": {
+              "type": "ROLL_RESULT"
+            }
+          },
+          "max": true
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

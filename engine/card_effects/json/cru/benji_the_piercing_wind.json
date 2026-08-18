@@ -1,0 +1,56 @@
+{
+  "slug": "benji_the_piercing_wind",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "APPLY_CONTINUOUS",
+          "modifications": [
+            {
+              "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT",
+              "filter": [
+                {
+                  "type": "ATTACK_IS_NOT_WEAPON"
+                },
+                {
+                  "type": "ATTACK_PITCH_POWER_LTE",
+                  "amount": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_IS_NOT_WEAPON"
+        },
+        {
+          "type": "ATTACKER_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "attack_action"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACKER_CONTROLLED_BY_YOU"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -150,3 +150,48 @@ def test_migrated_cards_no_longer_carry_an_invented_amount(slug):
     assert "DRACONIC_CHAIN_LINKS_CONTROLLED" not in abilities
     assert '"amount": "doom"' not in abilities
     assert "COUNT_" in abilities, f"{slug} lost its dynamic amount"
+
+
+# --- COUNT_PERMANENT / COUNT_BOOSTS ----------------------------------------
+
+def test_count_permanent_counts_matching_subtype():
+    from engine.card import Card
+    st = _state()
+    card = _card("bloodsheath_skeleta")
+    for _ in range(3):
+        t = Card(slug="runechant", name="Runechant", types=["Token"],
+                 subtypes=["Runechant", "Aura"])
+        t.owner = t.controller = 1
+        st.players[1].permanents.add(t)
+    assert _resolve_amount({"type": "COUNT_PERMANENT", "subtype": "Runechant"}, st, card) == 3
+
+
+def test_count_permanent_ignores_other_subtypes():
+    from engine.card import Card
+    st = _state()
+    card = _card("bloodsheath_skeleta")
+    t = Card(slug="gold", name="Gold", types=["Token"], subtypes=["Item"])
+    t.owner = t.controller = 1
+    st.players[1].permanents.add(t)
+    assert _resolve_amount({"type": "COUNT_PERMANENT", "subtype": "Runechant"}, st, card) == 0
+
+
+def test_count_boosts_counts_one_marker_per_boost():
+    st = _state()
+    card = _card("bloodsheath_skeleta")
+    for _ in range(2):
+        st.players[1].current_turn_effects.append("boosted_this_turn")
+    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 2
+
+
+def test_count_expressions_do_not_crash_without_a_controller():
+    # A card with no owner yields controller id 0, and state.players[0] raises
+    # KeyError — aborting resolution mid-game. An unresolvable controller must
+    # make the count 0.
+    from engine.card import Card
+    st = _state()
+    orphan = Card(slug="orphan", name="orphan", types=["Action"])
+    st.combat = None
+    st.active_player = None
+    assert _resolve_amount({"type": "COUNT_PERMANENT", "subtype": "Runechant"}, st, orphan) == 0
+    assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, orphan) == 0

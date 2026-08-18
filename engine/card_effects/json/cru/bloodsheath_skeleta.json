@@ -1,0 +1,49 @@
+{
+  "slug": "bloodsheath_skeleta",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "APPLY_CONTINUOUS",
+          "modifications": [
+            {
+              "type": "MODIFY_COST",
+              "mod": "subtract",
+              "amount": {
+                "type": "COUNT_PERMANENT",
+                "subtype": "Runechant"
+              },
+              "filter": [
+                {
+                  "type": "CARD_TYPE_IN",
+                  "types": [
+                    "Action"
+                  ]
+                },
+                {
+                  "type": "ATTACK_ACTION",
+                  "value": false
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "DURING_TURN",
+              "player": "SELF"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'costs {r} less for each Runechant you control' -> COUNT_PERMANENT with subtype Runechant, now a real amount expression. It was invented here, and an invented dict amount resolves to 0 — note this card had already been marked VERIFIED DONE by the test gate, so a passing behavioural test does not prove an untested clause works."
+}

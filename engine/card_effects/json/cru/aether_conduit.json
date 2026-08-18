@@ -8,7 +8,7 @@
         {
           "type": "DEAL_ARCANE",
           "amount": 2,
-          "target": "hero"
+          "target": "OPPONENT"
         }
       ]
     }

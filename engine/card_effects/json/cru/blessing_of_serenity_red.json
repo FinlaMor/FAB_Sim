@@ -1,0 +1,29 @@
+{
+  "slug": "blessing_of_serenity_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 3,
+          "target": "PLAYER",
+          "conditions": [
+            {
+              "type": "DURING_TURN",
+              "player": "SELF"
+            },
+            {
+              "type": "IN_COMBAT"
+            },
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "damage",
+              "qualifier": "physical"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

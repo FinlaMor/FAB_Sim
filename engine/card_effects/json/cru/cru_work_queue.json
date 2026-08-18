@@ -19,7 +19,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Absorption Dome enters the arena with steam counters on it equal to the number of times you have **boosted** this turn.\n\nIf your hero would be dealt damage, remove that many steam counters from Absorption Dome instead, then prevent damage equal to the number of steam counters removed this way.\n\nWhen Absorption Dome has no steam counters on it, destroy it.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "aether_conduit",
@@ -41,7 +41,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: Deal 2 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aetherize_blue",
@@ -62,7 +62,7 @@
     ],
     "specializations": [],
     "functional_text": "**Negate** target instant card with cost {r} or less.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "argh_smash_yellow",
@@ -85,7 +85,7 @@
     ],
     "specializations": [],
     "functional_text": "Roll a 6 sided die. Destroy up to X items, where X is half the number rolled, rounded down.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arknight_shard_blue",
@@ -111,7 +111,7 @@
       "Viserai"
     ],
     "functional_text": "**Legendary Viserai Specialization**\n\nWhen you pitch Arknight Shard, create a Runechant token.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "barraging_big_horn_blue",
@@ -134,7 +134,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Barraging Big Horn, discard a random card.\n\nWhile Barraging Big Horn is defended by less than 2 non-equipment cards, it has **go again**.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "barraging_big_horn_red",
@@ -157,7 +157,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Barraging Big Horn, discard a random card.\n\nWhile Barraging Big Horn is defended by less than 2 non-equipment cards, it has **go again**.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "barraging_big_horn_yellow",
@@ -180,7 +180,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Barraging Big Horn, discard a random card.\n\nWhile Barraging Big Horn is defended by less than 2 non-equipment cards, it has **go again**.",
-    "status": "pending"
+    "status": "needs_review"
   },
   {
     "slug": "beast_within_yellow",
@@ -201,7 +201,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Beast Within is put into a graveyard from anywhere other than the combat chain, banish the top card of your deck and lose 1{h}. If it has 6 or more {p}, put it into your hand, otherwise, repeat this process.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "benji_the_piercing_wind",
@@ -222,7 +222,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your attack action cards with 2 or less {p} can't be defended by cards from hand.\n\nThe first time an attack action card you control hits each turn, your next attack gains +1{p}.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bittering_thorns_yellow",
@@ -245,7 +245,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, your next attack this turn gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "blessing_of_serenity_blue",
@@ -264,7 +264,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next time your hero would be dealt {p} damage this turn, prevent 1 damage that source would deal.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_serenity_red",
@@ -283,7 +283,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next time your hero would be dealt {p} damage this turn, prevent 3 damage that source would deal.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_serenity_yellow",
@@ -302,7 +302,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next time your hero would be dealt {p} damage this turn, prevent 2 damage that source would deal.",
-    "status": "pending"
+    "status": "candidate"
   },
   {
     "slug": "bloodsheath_skeleta",
@@ -325,7 +325,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: The next attack action card and non-attack action card you play this turn get \"This card costs {r} less to play for each Runechant you control.\"\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "breeze_rider_boots",
