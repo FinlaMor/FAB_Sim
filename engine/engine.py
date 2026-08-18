@@ -897,6 +897,7 @@ def _end_phase_iter(state: GameState) -> None:
     # an unclosed chain into this turn's end. Same for the chain boost tally.
     player.chain_attack_hooks = []
     player.boosts_this_chain = 0
+    player.life_gained_this_turn = 0
     # Unused "next attack this turn" power mods (MODIFY_NEXT_ATTACK) expire.
     if hasattr(player, 'dsl_queued_attack_mods'):
         player.dsl_queued_attack_mods = []

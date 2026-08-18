@@ -336,3 +336,36 @@ def test_real_boost_increments_both_scopes_and_chain_close_resets_one():
     real_boost(card, st)
     assert _resolve_amount({"type": "COUNT_BOOSTS"}, st, card) == 1, "chain count leaked"
     assert _resolve_amount({"type": "COUNT_BOOSTS", "scope": "TURN"}, st, card) == 3
+
+
+# --- life gained this turn (a magnitude, not an occurrence count) -----------
+
+def test_life_gained_this_turn_tallies_amounts_not_events():
+    from engine.card_effects.ability_keywords import effect_gain_life
+    st = _state()
+    card = _card("thistle_bloom__life_yellow")
+    assert _resolve_amount({"type": "LIFE_GAINED_THIS_TURN"}, st, card) == 0
+    effect_gain_life(st, 1, 2)
+    effect_gain_life(st, 1, 3)
+    # Two gains totalling 5 — an occurrence marker would say 2, which is why
+    # this needed a tally rather than a turn-event marker.
+    assert _resolve_amount({"type": "LIFE_GAINED_THIS_TURN"}, st, card) == 5
+
+
+def test_life_gained_is_per_player():
+    from engine.card_effects.ability_keywords import effect_gain_life
+    st = _state()
+    card = _card("thistle_bloom__life_yellow", owner=1)
+    effect_gain_life(st, 2, 4)
+    assert _resolve_amount({"type": "LIFE_GAINED_THIS_TURN"}, st, card) == 0
+
+
+def test_thistle_bloom_creates_one_runechant_per_life_gained():
+    from engine.card_effects.ability_keywords import effect_gain_life
+    from engine.card_effects.dsl import dispatch
+    st = _state()
+    card = _card("thistle_bloom__life_yellow")
+    effect_gain_life(st, 1, 2)
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    runechants = [c for c in st.players[1].permanents.cards if c.slug == "runechant"]
+    assert len(runechants) == 2

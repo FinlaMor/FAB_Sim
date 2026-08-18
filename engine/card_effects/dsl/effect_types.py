@@ -43,6 +43,15 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
         # PAY_UP_TO actually charged. Same mechanism as ROLL_RESULT.
         if atype in ("PAID_AMOUNT", "AMOUNT_PAID"):
             return getattr(state, "_paid_amount", 0) or 0
+
+        # "X is the total {h} you've gained this turn" (Thistle Bloom). A
+        # MAGNITUDE, not an occurrence count — turn-event markers record that
+        # something happened, never how much — so gain() tallies it directly.
+        if atype in ("LIFE_GAINED_THIS_TURN", "COUNT_LIFE_GAINED"):
+            pid = _amount_controller(state, card)
+            if pid is None:
+                return 0
+            return int(getattr(state.players[pid], "life_gained_this_turn", 0) or 0)
         if atype in ("HALF", "HALF_ROUND_DOWN"):
             return int(_resolve_amount(amount.get("value", 0), state, card)) // 2
         if atype in ("VALUE", "CONSTANT", "LITERAL"):

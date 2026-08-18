@@ -841,6 +841,10 @@ class Player:
         # over-counts on a multi-attack turn. Cleared with the chain, alongside
         # chain_attack_hooks.
         self.boosts_this_chain: int = 0
+        # Total {h} gained this turn. "X is the total {h} you've gained this
+        # turn" (Thistle Bloom) needs the AMOUNT gained, which no marker
+        # carries — turn-event markers count occurrences, not magnitudes.
+        self.life_gained_this_turn: int = 0
         self.weapon_exhausted: bool = False
         self.hero_power_exhausted: bool = False
 

@@ -192,9 +192,7 @@ on a flag nothing sets is an ability that can NEVER fire.
     a plain number may be wrapped as {"type":"LITERAL","value":N} (alias CONSTANT)
 
     "amount" MUST be an integer, or a dict whose "type" is one of EXACTLY these:
-        COUNT_CHAIN_LINKS, COUNT_COUNTERS, COUNTER, COUNT_PERMANENT,
-        COUNT_PERMANENTS, COUNT_BOOSTS, BOOST_COUNT, PAID_AMOUNT, AMOUNT_PAID,
-        ROLL_RESULT, ROLL_NUMBER, HALF, HALF_ROUND_DOWN, LITERAL, CONSTANT, VALUE
+{AMOUNT_EXPRESSIONS}
     Anything else — an invented name, or a CONDITION type such as FLAG_SET —
     resolves to 0 and the effect silently does NOTHING. If the count you need is
     not in that list, prefer a fixed integer or omit the effect and say
@@ -211,6 +209,30 @@ with instant timing ("Instant - Destroy this: ...") and fires on ON_ACTIVATE.
 Reprise/Combo clauses belong on the SAME ability_type as the card's main effect.
 === END ===
 """
+
+
+def amount_expression_names() -> list[str]:
+    """Amount-expression types, read from _resolve_amount's own dispatch chain.
+
+    This list was hand-maintained in PRIMITIVE_RECIPES and drifted from the
+    engine THREE times in one session — each time the prompt declared a
+    just-added expression invalid, which is exactly the failure that originally
+    hid 30 types and drove authors to invent flags. Generating it from the same
+    source the validator reads makes the two impossible to disagree.
+    """
+    src = DSL_DIR / "effect_types.py"
+    if not src.exists():
+        return []
+    text = src.read_text(encoding="utf-8")
+    names: list[str] = []
+    seen: set[str] = set()
+    for group in re.findall(r'atype == "([A-Z_]+)"', text) + [
+            m for grp in re.findall(r'atype in \(([^)]*)\)', text)
+            for m in re.findall(r'"([A-Z_]+)"', grp)]:
+        if group not in seen:
+            seen.add(group)
+            names.append(group)
+    return names
 
 
 def build_dsl_reference() -> str:
@@ -277,7 +299,12 @@ def build_dsl_reference() -> str:
         "CONDITIONS ON EFFECTS: an effect object may have a 'conditions' key (list) to gate only that effect.",
         "CONDITIONS ON ABILITIES: an ability may have a 'conditions' key (list) — ALL must pass or nothing fires.",
         "=== END DSL REFERENCE ===",
-        PRIMITIVE_RECIPES,
+        # The closed list of amount expressions is generated, never typed: see
+        # amount_expression_names().
+        PRIMITIVE_RECIPES.replace(
+            "{AMOUNT_EXPRESSIONS}",
+            textwrap.fill(", ".join(amount_expression_names()), width=88,
+                          initial_indent=" " * 8, subsequent_indent=" " * 8)),
     ]
     return "\n".join(lines)
 

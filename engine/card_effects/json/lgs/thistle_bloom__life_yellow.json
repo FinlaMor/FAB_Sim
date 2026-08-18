@@ -7,7 +7,9 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Runechant",
-          "amount": "TOTAL_HEALTH_GAINED_THIS_TURN",
+          "amount": {
+            "type": "LIFE_GAINED_THIS_TURN"
+          },
           "token": "runechant"
         },
         {
@@ -17,5 +19,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "X = total {h} gained this turn -> LIFE_GAINED_THIS_TURN, tallied by gain() at the single point life actually rises. This is a MAGNITUDE, so a turn-event marker could not carry it — markers count occurrences, not amounts. Was the invented string 'TOTAL_HEALTH_GAINED_THIS_TURN' resolving to 0, so the card created no Runechants at all."
 }

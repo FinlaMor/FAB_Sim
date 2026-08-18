@@ -942,6 +942,12 @@ def gain(state: GameState, asset_type: str, amount: int, source_player_id: int,
             event.target_card.life = (event.target_card.life or 0) + event.amount
         else:
             state.players[event.target_player_id].life += event.amount
+            # Tallied here, at the single point life actually rises, rather than
+            # at call sites — the same reason the graveyard turn-event hooks
+            # Zone.add. A magnitude, not an occurrence count.
+            player = state.players[event.target_player_id]
+            player.life_gained_this_turn = getattr(
+                player, "life_gained_this_turn", 0) + event.amount
     elif event.asset_type == AssetType.RESOURCES:
         state.players[event.target_player_id].resources += event.amount
     elif event.asset_type == AssetType.ACTION_POINTS:

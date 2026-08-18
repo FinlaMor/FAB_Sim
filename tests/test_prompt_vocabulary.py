@@ -62,3 +62,34 @@ def test_recipes_map_card_text_to_primitives():
 
 def test_prompt_warns_against_inventing_flags():
     assert "NEVER invent a flag" in A.build_dsl_reference()
+
+
+def test_amount_expression_list_is_generated_not_typed():
+    # This list was hand-maintained and drifted from the engine three times in
+    # one session, each time telling the model a just-added expression was
+    # invalid. It is now read from _resolve_amount's own dispatch chain.
+    names = A.amount_expression_names()
+    assert names, "no amount expressions found — the extraction regex is stale"
+    reference = A.build_dsl_reference()
+    assert "{AMOUNT_EXPRESSIONS}" not in reference, "placeholder was never substituted"
+    for name in names:
+        assert name in reference, f"{name} is a real amount expression but absent from the prompt"
+
+
+def test_a_new_amount_expression_reaches_the_prompt_automatically(tmp_path, monkeypatch):
+    # The drift test: add an expression to the engine source and confirm the
+    # prompt picks it up with no second edit. Guards the generation itself —
+    # the test above would still pass if the list were re-hardcoded to today's
+    # values.
+    real = (A.DSL_DIR / "effect_types.py").read_text(encoding="utf-8")
+    fake_dir = tmp_path / "dsl"
+    fake_dir.mkdir()
+    (fake_dir / "effect_types.py").write_text(
+        real + '\n\ndef _probe():\n    if atype == "TOTALLY_NEW_EXPRESSION":\n        return 0\n',
+        encoding="utf-8")
+    for name in ("condition_types.py", "cost_types.py", "trigger_types.py"):
+        (fake_dir / name).write_text((A.DSL_DIR / name).read_text(encoding="utf-8"),
+                                     encoding="utf-8")
+    monkeypatch.setattr(A, "DSL_DIR", fake_dir)
+    assert "TOTALLY_NEW_EXPRESSION" in A.amount_expression_names()
+    assert "TOTALLY_NEW_EXPRESSION" in A.build_dsl_reference()
