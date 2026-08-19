@@ -108,6 +108,7 @@ def new_game(
 
     # Load DSL-defined card effects and register event listeners.
     _setup_dsl_listeners(state)
+    _setup_material_statics(state)
 
     # Player that won coin flip decides who goes first (once at game start)
     if state.step == Step.BEGIN_GAME:
@@ -1254,6 +1255,55 @@ def _populate_reviled_inventory(state: GameState) -> None:
             player.inventory.add(c)
 
 
+def _setup_material_statics(state: GameState) -> None:
+    """Register the two DERIVED continuous effects that implement Material.
+
+    CR 3.0.14 / the **Material** keyword: "While this is under a permanent, that
+    permanent has <property>". These are registered once per game and never
+    removed, because they carry no card-specific state — each simply asks the
+    card what is under it RIGHT NOW (ability_keywords.material_grants) and
+    applies whatever those sub-cards declare in their own JSON.
+
+    Registering-on-arrival was the obvious alternative and is wrong: it would
+    need every path by which a sub-card stops being underneath to unregister the
+    grant, and missing one leaves a permanent with phantasm it should not have.
+    Deriving makes "while" true by construction — the grant cannot outlive the
+    relationship it is read from.
+
+    Stage 6 is the keyword stage and stages 7-8 the numeric ones, matching where
+    _recalculate_attack_power already consults the manager, so nothing else has
+    to change to see these.
+    """
+    from engine.card_effects.ability_keywords import material_grants
+    from engine.continuous_effects import ContinuousEffect, next_timestamp
+
+    def _keywords(value, st, card):
+        granted = [g.get("keyword") for g in material_grants(card) if g.get("keyword")]
+        if not granted:
+            return value
+        # `value` is a set at stage 6 but a list elsewhere; preserve whichever.
+        if isinstance(value, set):
+            return value | set(granted)
+        out = list(value or [])
+        return out + [k for k in granted if k not in out]
+
+    def _power(value, st, card):
+        bonus = 0
+        for grant in material_grants(card):
+            try:
+                bonus += int(grant.get("power", 0) or 0)
+            except (TypeError, ValueError):
+                continue
+        return (value or 0) + bonus if bonus else value
+
+    state.continuous_effect_manager.add(ContinuousEffect(
+        stage=6, substage=0, timestamp=next_timestamp(), prop='keywords',
+        apply_fn=_keywords, persistent=True, source_slug='__material__'))
+    state.continuous_effect_manager.add(ContinuousEffect(
+        stage=7, substage=1, timestamp=next_timestamp(), prop='power',
+        apply_fn=_power, persistent=True, source_slug='__material__'))
+
+
 def _setup_dsl_listeners(state: GameState) -> None:
     """Load DSL card definitions and register event listeners that call dispatch().
 
@@ -1447,30 +1497,6 @@ def _setup_dsl_listeners(state: GameState) -> None:
             if target is not None:
                 dispatch(game_state, "ON_TRANSCEND", target.slug, card=target, event=event)
 
-    def _dsl_transformed_listener(event, game_state: GameState) -> None:
-        # CR 8.5.36a — the objects put under the permanent are considered to
-        # have transformed into it, and the permanent to have transformed from
-        # them. Ash's "**Material** - While Ash is under an object, that object
-        # has **phantasm**" is printed on the SUB-CARD, so each one is
-        # dispatched to as well as the resulting permanent.
-        # TransformEvent names these `objects` and `permanent` (an earlier
-        # version of this listener guessed `sources`/`result` and silently
-        # dispatched nothing at all — a listener that reads the wrong attribute
-        # fails exactly like a card reading the wrong parameter).
-        data = getattr(event, "data", None)
-        if isinstance(data, dict):
-            objects = data.get("objects") or []
-            permanent = data.get("permanent")
-        else:
-            objects = getattr(event, "objects", None) or []
-            permanent = getattr(event, "permanent", None)
-        for sub in list(objects):
-            if sub is not None:
-                dispatch(game_state, "ON_TRANSFORMED", sub.slug, card=sub, event=event)
-        if permanent is not None:
-            dispatch(game_state, "ON_TRANSFORMED_INTO", permanent.slug,
-                     card=permanent, event=event)
-
     def _dsl_card_played_listener(event, game_state: GameState) -> None:
         # "Whenever you play your SECOND non-attack action card each turn, ..."
         # (Briar). Hero text keyed on the act of playing a card, which nothing
@@ -1575,7 +1601,6 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('transcend', _dsl_transcend_listener)
     state.event_manager.register('token_created', _dsl_token_created_listener)
     state.event_manager.register('on_play', _dsl_card_played_listener)
-    state.event_manager.register('transform', _dsl_transformed_listener)
     state.event_manager.register('start_of_action_phase',
                                  _dsl_start_of_action_phase_listener)
     state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)

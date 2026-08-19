@@ -324,6 +324,49 @@ def piercing(card: Card, amount: int, state: GameState) -> None:
 # 8.3 Ability Keywords — Triggered static abilities
 # ---------------------------------------------------------------------------
 
+def material_grants(card) -> list[dict]:
+    """CR 3.0.14 — what the cards UNDER `card` grant it right now.
+
+    **Material** reads "While this is under a permanent, that permanent has
+    <property>". The grant is a property of the RELATIONSHIP, not an event, so it
+    is derived from `cards_underneath` on every recalculation rather than
+    registered when the sub-card arrives and unregistered when it leaves.
+
+    That is the whole design decision. Registering it would mean finding every
+    path by which a sub-card can stop being underneath — banished as a cost,
+    the top card leaving its zone, the sub-card ceasing to exist — and undoing
+    the grant at each. Deriving it means a sub-card that is no longer there
+    cannot possibly still be granting anything: the "while" is enforced by
+    construction instead of by remembering.
+
+    Each grant is the MATERIAL effect's params from the sub-card's own JSON, so
+    no card names appear in engine code. `except_slug` covers the six Dust cards
+    that read "under a permanent OTHER THAN <its own dragon>".
+    """
+    grants: list[dict] = []
+    subs = getattr(card, "cards_underneath", None) or []
+    if not subs:
+        return grants
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    for sub in subs:
+        card_def = _dsl_get_card(getattr(sub, "slug", "") or "")
+        if card_def is None:
+            continue
+        for ability in card_def.abilities:
+            if (ability.ability_type or "").upper() != "STATIC":
+                continue
+            for eff in ability.effects:
+                if (getattr(eff, "effect_type", "") or "").upper() != "MATERIAL":
+                    continue
+                params = dict(getattr(eff, "params", None) or {})
+                except_slug = str(params.get("except_slug") or "").lower()
+                if except_slug and (getattr(card, "slug", "") or "").lower() == except_slug:
+                    continue          # "other than Miragai"
+                params["_source"] = sub
+                grants.append(params)
+    return grants
+
+
 def phantasm_check(card: Card, event: Event, state: GameState) -> bool:
     """8.3.13: Check if a non-Illusionist attack action card with 6+ power is defending."""
     if not state.combat:

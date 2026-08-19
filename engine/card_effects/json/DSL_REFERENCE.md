@@ -895,3 +895,59 @@ because the choice is not recorded anywhere.
 `subtypes`, so they gated on an empty list and never fired. This fails exactly
 like an invented type but is **invisible to a type-name audit** — when adding a
 condition, check the compiler's `params.get(...)` keys, not what the name suggests.
+
+## Material (CR 3.0.14) — a grant that must END when its source leaves
+
+"While this is under a permanent, that permanent has \<property\>." Declared, not
+resolved:
+
+```json
+{"ability_type": "STATIC",
+ "effects": [{"type": "MATERIAL", "keyword": "Phantasm"}]}
+{"ability_type": "STATIC",
+ "effects": [{"type": "MATERIAL", "power": 1}]}
+{"ability_type": "STATIC",
+ "effects": [{"type": "MATERIAL", "keyword": "Phantasm", "except_slug": "miragai"}]}
+```
+
+`engine._setup_material_statics` registers two continuous effects — one at stage
+6 (`keywords`), one at stage 7 (`power`) — that ask each card what is under it at
+the moment of every recalculation.
+
+**Why derived rather than registered.** Granting the property when the sub-card
+arrives would require undoing it on every path by which a sub-card stops being
+underneath: banished to pay a cost, the top card leaving the arena, the sub-card
+ceasing to exist. Miss one and a permanent keeps phantasm forever. Deriving makes
+the "while" true by construction — a sub-card that is no longer there cannot
+still be granting anything. This is the same choke-point argument that put the
+graveyard turn event inside `Zone.add`.
+
+The general rule: **an ability whose text begins "while" is a property of a
+relationship, not an event.** If a condition can stop being true, do not write
+the consequence down anywhere it can outlive the condition.
+
+## Transform (CR 8.5.36)
+
+Transform puts the object **under** the permanent (3.0.14) — it is not a swap and
+not a destroy, which is why Nitro Mechanoid can later pay "banish a card from
+under this" with the very parts it was built from.
+
+```json
+{"type": "TRANSFORM", "from": "ash", "to": "aether_ashwing", "amount": 1, "up_to": true}
+{"type": "TRANSFORM", "to": "aether_ashwing", "amount": 3, "each": true}
+{"type": "TRANSFORM", "to": "nitro_mechanoid",
+ "sources": [{"zone": "head"}, {"zone": "permanents", "from": "hyper_driver", "amount": 3}]}
+```
+
+- `each` — one permanent per source ("into Aether Ashwing**s**") versus all
+  sources under one ("into Nitro Mechanoid"). The card text distinguishes these
+  by pluralising the target, and they are different board states.
+- `sources` — several different requirements at once. Equipment lives in the slot
+  zones and never in `permanents`, so a permanents-only scan finds none of it.
+- CR 8.5.36d is **all-or-nothing**: if any named part is missing, nothing
+  transforms. On Nitro Mechanoid that rule *is* the printed "if you don't,
+  negate this".
+
+Do not author this as `TRANSFORM_HERO` — that is Arakni's "become a random Agent
+of Chaos" and does something else entirely. Five cards did, and a real type doing
+the wrong thing is invisible to a type-name audit.

@@ -127,8 +127,8 @@ def test_regression_count_does_not_grow():
                lambda n: hits.extend(A.audit_node(n, INDEX)))
         if hits:
             findings += 1
-    assert findings <= 101, (
-        f"{findings} cards have a parameter the compiler never reads (was 101). "
+    assert findings <= 99, (
+        f"{findings} cards have a parameter the compiler never reads (was 99). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

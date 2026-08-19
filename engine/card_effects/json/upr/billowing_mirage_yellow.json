@@ -1,0 +1,27 @@
+{
+  "slug": "billowing_mirage_yellow",
+  "_comment": "Colour variant of billowing_mirage_blue; identical text, differing only in {p} and pitch, both of which come from card data. Transform (CR 8.5.36) puts the ash UNDER the Aether Ashwing, which is what makes Ash's Material ability grant it phantasm.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "TRANSFORM",
+          "from": "ash",
+          "to": "aether_ashwing",
+          "amount": 1,
+          "up_to": true
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

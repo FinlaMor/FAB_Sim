@@ -319,19 +319,29 @@ class Zone:
         card.is_public = next_is_public
         self.cards.append(card)
 
-    def add_under(self, sub_card: "Card") -> bool:
+    def add_under(self, sub_card: "Card", top_card: "Card" = None) -> bool:
         """Place sub_card underneath top_card in this zone (CR 3.0.14).
 
         top_card must already be in this zone. sub_card is appended to
         top_card.cards_underneath — it does not appear in zone.cards directly.
+
+        `top_card` MUST be named when it matters. It used to be implicit —
+        whatever happened to be `self.top` at that moment — which meant
+        transforming two objects into one permanent put the first under the
+        SECOND OBJECT (still in the zone at the time) rather than under the
+        permanent the caller named. It returned True both times, so nothing
+        reported a problem; the sub-card simply attached to the wrong card and
+        vanished with it. Defaulted to self.top only for existing callers that
+        genuinely mean "the top of this zone".
 
         CR 3.0.14b: becoming a sub-card causes the card to cease to exist as its
         previous self and become a new object (reset). is_sub_card is set True.
         CR 3.0.14d: sub-card inherits top-card's visibility.
         Returns True on success, False if top_card is not in this zone.
         """
-        top_card = self.top if len(self.cards) > 0 else None
-        if top_card not in self.cards :
+        if top_card is None:
+            top_card = self.top if len(self.cards) > 0 else None
+        if top_card not in self.cards:
             return False
         # CR 3.0.14b: card becomes new object on entering as sub-card
         sub_card.reset_to_base_state()
@@ -423,8 +433,8 @@ class SubZoneView:
         for card in cards:
             self.add(card)
 
-    def add_under(self, sub_card: "Card") -> bool:
-        return self.parent.add_under(sub_card)
+    def add_under(self, sub_card: "Card", top_card: "Card" = None) -> bool:
+        return self.parent.add_under(sub_card, top_card)
 
     def _matches(self, card: Card) -> bool:
         return getattr(card, 'permanent_subtype', None) == self.subtype

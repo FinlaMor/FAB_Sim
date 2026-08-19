@@ -1,22 +1,25 @@
 {
   "slug": "rake_the_embers_red",
+  "_comment": "Was TRANSFORM_HERO (Arakni's agent-of-chaos effect). 'Transform up to 3 ash into Aether AshwingS' is PLURAL: each ash becomes its own Ashwing, so each=true. Passing all three to one transform would stack them under a single Ashwing -- a different board state, and strictly worse for the player. 'Up to' means fewer than 3 is fine.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Ash"
+          "token_type": "Ash",
+          "token": "ash"
         },
         {
-          "type": "TRANSFORM_HERO",
-          "from": "Ash",
-          "to": "Aether Ashwings",
-          "max_count": 3
+          "type": "TRANSFORM",
+          "from": "ash",
+          "to": "aether_ashwing",
+          "amount": 3,
+          "up_to": true,
+          "each": true
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

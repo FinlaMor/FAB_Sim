@@ -1,0 +1,24 @@
+{
+  "slug": "dustup_yellow",
+  "_comment": "Colour variant of dustup_blue; identical text. Order matters and is preserved: the Ash token is created FIRST, so the transform that follows has something to consume even when the player controlled no ash beforehand.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ash",
+          "token": "ash"
+        },
+        {
+          "type": "TRANSFORM",
+          "from": "ash",
+          "to": "aether_ashwing",
+          "amount": 1,
+          "up_to": true
+        }
+      ]
+    }
+  ]
+}

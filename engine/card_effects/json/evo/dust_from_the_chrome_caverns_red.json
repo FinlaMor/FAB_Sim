@@ -1,0 +1,16 @@
+{
+  "slug": "dust_from_the_chrome_caverns_red",
+  "_comment": "Draconic Illusionist Action - Ash. '**Material** - While this is under a permanent OTHER THAN Cromai, that permanent has **phantasm**.' The exception is the whole point of the card -- these exist to give a NON-dragon permanent phantasm -- so except_slug is a real gate, not decoration: without it the card would hand phantasm to the very dragon it is meant to exclude.",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MATERIAL",
+          "keyword": "Phantasm",
+          "except_slug": "cromai"
+        }
+      ]
+    }
+  ]
+}

@@ -1,17 +1,19 @@
 {
   "slug": "invoke_nekria_red",
+  "_comment": "Was TRANSFORM_HERO (Arakni's agent-of-chaos effect) with 'target'/'transform_to' keys that nothing read, so this called become_agent_of_chaos on an Illusionist hero. 'Target ash' is mandatory, not 'up to', so up_to is false: with no ash the transform simply cannot happen (CR 8.5.36d).",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "TRANSFORM_HERO",
-          "target": "ash",
-          "transform_to": "nekria"
+          "type": "TRANSFORM",
+          "from": "ash",
+          "to": "nekria",
+          "amount": 1,
+          "up_to": false
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

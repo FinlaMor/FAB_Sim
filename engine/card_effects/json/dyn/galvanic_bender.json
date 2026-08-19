@@ -1,0 +1,15 @@
+{
+  "slug": "galvanic_bender",
+  "_comment": "Mechanologist Equipment - Arms. '**Material** - While this is under a permanent, that permanent has +1{p}.' The other seven Material cards grant a KEYWORD; this one grants POWER, which is why the derived static is registered for both prop='keywords' (stage 6) and prop='power' (stage 7). Battleworn is a printed keyword, read from card data.",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "MATERIAL",
+          "power": 1
+        }
+      ]
+    }
+  ]
+}

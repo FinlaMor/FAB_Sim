@@ -89,21 +89,20 @@ def test_transform_creates_the_target_permanent():
 
 
 def test_transform_grants_phantasm_to_what_the_ash_went_under():
-    # Ash's printed Material ability. It is on the SUB-CARD, so the transform
-    # event has to reach the object that was put underneath, not only the
-    # permanent it became.
-    #
-    # The listeners are registered explicitly: conftest's bare state never calls
-    # _setup_dsl_listeners (only new_game does), so without this the test would
-    # exercise no listener at all and pass or fail for the wrong reason.
+    # Ash's printed Material ability. The grant is DERIVED at recalculation
+    # rather than written onto card.keywords, so that removing the Ash removes
+    # the phantasm — see test_material.py, which owns that behaviour. Asserted
+    # here too because it is what makes the transform observable at all.
     import engine.engine as E
     st = _state()
-    E._setup_dsl_listeners(st)
+    E._setup_material_statics(st)
     ash = _token(st, "ash", name="Ash")
     _do_transform(st, [ash], "aether_ashwing", 1)
     wing = next(c for c in st.players[1].permanents.cards
                 if c.slug == "aether_ashwing")
-    assert "Phantasm" in (wing.keywords or [])
+    keywords = st.continuous_effect_manager.recalculate(
+        st, wing, 'keywords', set(wing.keywords or []))
+    assert "Phantasm" in keywords
 
 
 def test_transform_of_nothing_does_nothing():

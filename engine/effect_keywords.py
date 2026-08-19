@@ -3411,15 +3411,23 @@ def transform(state: GameState, objects: list[Card], permanent: Card,
         event.canceled = True
         return event
 
-    # Put each object under the permanent
+    # CR 8.5.36d — validate BEFORE moving anything. The loop below used to
+    # remove each object and then check whether attaching it worked, so a
+    # failure partway through left the earlier objects already gone and produced
+    # no permanent to show for them. All-or-nothing has to mean nothing has
+    # moved when the answer is "nothing".
+    if perm not in perm_zone.cards:
+        event.canceled = True
+        return event
+
+    # Put each object under the permanent. `perm` is named explicitly: passing
+    # it implicitly used whatever was on top of the zone, which for a multi-object
+    # transform is one of the other objects being transformed.
     for obj in event.objects:
-        src_zone_name = obj.zone
-        src_controller = coo(obj)
-        src_zone = state.get_zone(src_zone_name, src_controller)
+        src_zone = state.get_zone(obj.zone, coo(obj))
         if src_zone is not None:
             src_zone.remove(obj)
-        success = perm_zone.add_under(obj)
-        if not success:
+        if not perm_zone.add_under(obj, perm):
             event.canceled = True
             return event
 

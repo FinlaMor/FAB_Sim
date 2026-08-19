@@ -188,6 +188,59 @@ def _dispatch_params(path: Path, var: str) -> dict[str, set[str]]:
     return out
 
 
+# Declarative statics: types whose params are deliberately NOT read by the
+# compile block (it returns a no-op) but by a named engine reader instead,
+# because the property is continuous, or is consulted outside effect resolution.
+#
+# The reader FUNCTIONS are parsed for the keys they actually read, so this
+# cannot become a lie the way a hand-written allowlist can: audit_run.py's
+# ENGINE_FLAGS asserted "die_rolled_six" was engine-written when nothing wrote
+# it, and so certified a dead flag for an entire corpus sweep. Scoping to named
+# functions rather than whole files matters just as much in the other
+# direction — a file-wide scan picks up every .get() in the module and would
+# suppress genuine findings on unrelated types.
+DECLARATIVE_READERS: dict[str, tuple[tuple[str, str], ...]] = {
+    "MATERIAL": (("engine/card_effects/ability_keywords.py", "material_grants"),
+                 ("engine/engine.py", "_setup_material_statics")),
+    "PLAYABLE_FROM_BANISHED": (("engine/play.py", "_self_playable_from_banished"),),
+    "RUNE_GATE": (("engine/play.py", "rune_gate_available"),),
+    "DEFENSE_EQUALS": (("engine/play.py", "_apply_dynamic_defense"),),
+}
+
+
+def _keys_read_by(path: Path, func_name: str) -> set[str]:
+    """String-literal .get("k") keys inside one named function (nested defs included)."""
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except OSError:
+        return set()
+    target = next((n for n in ast.walk(tree)
+                   if isinstance(n, ast.FunctionDef) and n.name == func_name), None)
+    if target is None:
+        return set()
+    keys: set[str] = set()
+    for node in ast.walk(target):
+        if (isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr == "get"
+                and node.args
+                and isinstance(node.args[0], ast.Constant)
+                and isinstance(node.args[0].value, str)):
+            keys.add(node.args[0].value)
+    return keys
+
+
+def _declarative_keys() -> dict[str, set[str]]:
+    """Keys each declarative type's reader is actually SEEN to read."""
+    out: dict[str, set[str]] = {}
+    for type_name, readers in DECLARATIVE_READERS.items():
+        keys: set[str] = set()
+        for rel, func_name in readers:
+            keys |= _keys_read_by(ROOT / rel, func_name)
+        out[type_name] = keys
+    return out
+
+
 def build_index() -> dict[str, set[str]]:
     """type name -> keys read, across conditions, effects and costs.
 
@@ -200,6 +253,9 @@ def build_index() -> dict[str, set[str]]:
                           ("effect_types.py", "etype"),
                           ("cost_types.py", "ctype")):
         for name, keys in _dispatch_params(DSL_DIR / filename, var).items():
+            index[name] |= keys
+    for name, keys in _declarative_keys().items():
+        if name in index:
             index[name] |= keys
     return index
 

@@ -1,12 +1,11 @@
 {
   "slug": "ash",
-  "_comment": "Draconic Illusionist Token - Ash. '**Material** - While Ash is under an object, that object has **phantasm**.' Granted when the Ash is put underneath (CR 8.5.36a). The printed wording is CONTINUOUS, so removing the Ash afterwards should remove phantasm and currently does not -- there is no continuous layer keyed on sub-cards. Stated here rather than left to be discovered.",
+  "_comment": "Draconic Illusionist Token - Ash. '**Material** - While Ash is under an object, that object has **phantasm**.' MATERIAL is declarative: engine._setup_material_statics derives the grant from whatever is under a card at each recalculation, so banishing the Ash removes the phantasm without anything having to remember to undo it. Granting it once, when the Ash went under, would leave the permanent with phantasm forever.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_TRANSFORMED",
+      "ability_type": "STATIC",
       "effects": [
-        {"type": "GRANT_KEYWORD_TO_TOP_CARD", "keyword": "Phantasm"}
+        {"type": "MATERIAL", "keyword": "Phantasm"}
       ]
     }
   ]

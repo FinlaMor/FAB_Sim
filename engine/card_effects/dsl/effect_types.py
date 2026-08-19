@@ -376,7 +376,22 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     # reads off the CardDef while the card sits in the zone (see
     # play._self_playable_from_banished); resolving it does nothing, so it is a
     # no-op here rather than a missing type that would fail the load.
-    if etype in ("PLAYABLE_FROM_BANISHED", "DEFENSE_EQUALS", "RUNE_GATE"):
+    if etype in ("PLAYABLE_FROM_BANISHED", "DEFENSE_EQUALS", "RUNE_GATE",
+                 "MATERIAL"):
+        # MATERIAL (CR 3.0.14 sub-cards): "While this is under a permanent, that
+        # permanent has <property>." Declarative for the same reason as the
+        # others, but the reason is sharper here — the ability is CONTINUOUS and
+        # conditioned on a relationship that can end. Resolving it once, at the
+        # moment the sub-card went under, would grant a property that then
+        # outlives the "while": banish the sub-card as a cost and the permanent
+        # keeps phantasm forever.
+        #
+        # engine._setup_material_statics registers two derived continuous
+        # effects that read these params off whatever is under a card at the
+        # moment of each recalculation, so the grant cannot outlive its source.
+        #   {"type":"MATERIAL","keyword":"Phantasm"}
+        #   {"type":"MATERIAL","power":1}
+        #   {"type":"MATERIAL","keyword":"Phantasm","except_slug":"miragai"}
         # RUNE_GATE (CR 8.3.27) is likewise declarative: play.rune_gate_available
         # reads it to offer the card from the banished zone for free when the
         # controller has Runechants >= its {r} cost.
@@ -2176,6 +2191,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         source = _first(params, "from", "source", "subtype", default="")
         amount = _first(params, "amount", "count", "max_count", default=1)
         optional = bool(params.get("up_to", True))
+        # One permanent per source ("into Aether AshwingS") vs all sources under
+        # one permanent ("into Nitro Mechanoid"). The card text distinguishes
+        # them by pluralising the target, and they are different board states.
+        each = bool(params.get("each"))
 
         # "transform target Mechanologist head, chest, arms, legs, weapon AND 3
         # Hyper Drivers into Nitro Mechanoid" — several different requirements
@@ -2186,7 +2205,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         source_specs = params.get("sources")
 
         def _fn(card, event, state, _into=into, _src=source, _a=amount,
-                _opt=optional, _specs=source_specs):
+                _opt=optional, _specs=source_specs, _each=each):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
             cid = _controller_id(card)
             if cid not in state.players or not _into:
@@ -2227,8 +2246,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                            if isinstance(_a, dict) else _a)
             except (TypeError, ValueError):
                 need = 1
-            if len(pool) < need:
+            if len(pool) < need and not _opt:
                 return          # 8.5.36d — cannot complete, so nothing happens
+            need = min(need, len(pool)) if _opt else need
             chosen = []
             for _ in range(max(need, 0)):
                 remaining = [c for c in pool if c not in chosen]
@@ -2245,9 +2265,19 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     pick_card = next((c for c in remaining if c.slug == pick),
                                      remaining[0])
                 chosen.append(pick_card)
-            if len(chosen) < need:
+            if len(chosen) < need and not _opt:
                 return
-            _do_transform(state, chosen, str(_into), cid)
+            if not chosen:
+                return
+            if _each:
+                # "transform up to 3 ash into Aether AshwingS" — plural, so each
+                # ash becomes its own Ashwing. Passing all three to one call
+                # would instead stack them under a SINGLE Ashwing, which is a
+                # different board state and a strictly worse one for the player.
+                for one in chosen:
+                    _do_transform(state, [one], str(_into), cid)
+            else:
+                _do_transform(state, chosen, str(_into), cid)
         return _fn
 
     if etype == "TRANSFORM_HERO":
@@ -2902,26 +2932,6 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             )
             entry.pitched_for_attack = []
             state.stack_entries.append(entry)
-        return _fn
-
-    if etype == "GRANT_KEYWORD_TO_TOP_CARD":
-        # "While Ash is under an object, that object has phantasm" (CR 3.0.14
-        # sub-cards). Granted when the sub-card is put underneath.
-        #
-        # LIMITATION, stated rather than hidden: this grants once, at that
-        # moment. The printed wording is CONTINUOUS ("while ... is under"), so
-        # removing the Ash afterwards should remove phantasm and does not. There
-        # is no continuous layer keyed on sub-cards to hang it from; modelling
-        # that is a design change, not a missing parameter.
-        keyword = params.get("keyword", "")
-
-        def _fn(card, event, state, _kw=keyword):
-            top = getattr(card, "top_card", None)
-            if top is None or not _kw:
-                return
-            existing = list(getattr(top, "keywords", None) or [])
-            if _kw not in existing:
-                top.keywords = existing + [_kw]
         return _fn
 
     if etype == "SHARPEN":
