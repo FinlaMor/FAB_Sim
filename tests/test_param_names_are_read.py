@@ -108,6 +108,32 @@ def test_not_with_a_bare_flag_is_not_always_false():
         "NOT over an unset flag must be True; it was False for every input"
 
 
+def test_inert_rules_name_a_real_type_and_key():
+    # Every INERT entry is a CLAIM that honouring a key would change nothing.
+    # A wrong one hides a broken card forever, which is exactly how ENGINE_FLAGS
+    # certified "die_rolled_six". At minimum the type must still exist — an
+    # entry for a type that has been renamed silently protects nothing and
+    # would go unnoticed.
+    for (type_name, key), (values, why) in A.INERT.items():
+        assert type_name in INDEX, (
+            f"INERT names {type_name}, which is no longer a registered type — "
+            "the rule now suppresses nothing and hides its own staleness")
+        assert values, f"INERT[{type_name}.{key}] allows no values"
+        assert why, f"INERT[{type_name}.{key}] gives no reason"
+
+
+def test_inert_only_covers_values_that_match_the_default():
+    # The severity split is only trustworthy if "inert" means the value the code
+    # already uses. A non-default value on the same key must still be ACTIVE —
+    # "player": "OPPONENT" is a real defect even though "player": "SELF" is not.
+    assert A.severity("CHOOSE", "player", "SELF") == "inert"
+    assert A.severity("CHOOSE", "player", "OPPONENT") == "active"
+    assert A.severity("SEARCH_DECK", "shuffle", True) == "inert"
+    assert A.severity("SEARCH_DECK", "shuffle", False) == "active"
+    # A key with no rule is never inert.
+    assert A.severity("CHOOSE", "totally_made_up", "SELF") == "active"
+
+
 def test_regression_count_does_not_grow():
     # The remaining unread keys are one-off inventions on individual cards, not
     # families — each needs its own judgement, so this pins the number rather
@@ -127,8 +153,10 @@ def test_regression_count_does_not_grow():
                lambda n: hits.extend(A.audit_node(n, INDEX)))
         if hits:
             findings += 1
-    assert findings <= 99, (
-        f"{findings} cards have a parameter the compiler never reads (was 99). "
+    # ACTIVE findings only: a key whose value is the default anyway is redundant,
+    # not broken, and counting those invites churning correct cards.
+    assert findings <= 77, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 77). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

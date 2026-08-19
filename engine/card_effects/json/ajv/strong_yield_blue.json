@@ -1,18 +1,10 @@
 {
   "slug": "strong_yield_blue",
+  "_comment": "Three defects. (1) The trigger was START_OF_TURN; the card says 'at the beginning of your ACTION PHASE' (CR 4.3.1), which is later. (2) 'Your NEXT attack this turn gets +1{p}' was MODIFY_ATTACK with an unread duration -- MODIFY_ATTACK mutates the CURRENT combat, and there is none at the start of a phase, so it did nothing; as a turn-long effect it would instead buff every attack for the rest of the turn. MODIFY_NEXT_ATTACK is the one-shot, and it already expires with the turn, which is why no duration is needed. (3) Go again is a printed keyword here, not an activated ability with a cost.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 1,
-      "effects": [
-        {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
+      "trigger": "START_OF_ACTION_PHASE",
       "conditions": [
         {
           "type": "IS_ACTIVE_PLAYER"
@@ -24,10 +16,9 @@
           "target": "self"
         },
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 1,
-          "duration": "turn"
+          "amount": 1
         }
       ]
     }

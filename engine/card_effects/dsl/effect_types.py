@@ -645,11 +645,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "RETURN_TO_HAND":
-        # Return this card to the controller's hand. A "zone" parameter here
-        # names the SOURCE zone, which put_object resolves from the card itself,
-        # so it is accepted and ignored rather than left looking unread.
-        params.get("zone")
-
+        # Return this card to the controller's hand. A "zone" parameter names the
+        # SOURCE, which put_object resolves from the card itself; it is declared
+        # inert in scripts/audit_params.py rather than touched here, so the
+        # reason is recorded instead of hidden behind a no-op read.
         def _fn(card, event, state):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import put_object
@@ -759,7 +758,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # parameters that did nothing.
         subtype = params.get("subtype")
         max_cost = params.get("max_cost")            # int or amount expression
-        destination = params.get("destination", "hand")
+        # "action": "BANISH" and "put_on_top"/"put_into_hand"/"put_into" are all
+        # ways of naming the DESTINATION, and none were read — so every one of
+        # them put the card into the hand instead of where the card said.
+        destination = _first(params, "destination", "put_into", "to_zone",
+                             default=None)
+        if destination is None:
+            action = str(params.get("action") or "").lower()
+            if action in ("banish", "banished"):
+                destination = "banished"
+            elif params.get("put_on_top"):
+                destination = "deck_top"
+            elif params.get("put_into_hand"):
+                destination = "hand"
+            else:
+                destination = "hand"
         count = params.get("amount", params.get("count", 1))
         # Restrict the pool to a set a preceding LOOK_AT stored ("look at the
         # top X+1 cards, choose up to 4 traps" searches THOSE, not the deck).
@@ -919,7 +932,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # (5 nodes author it, meaning BANISHED or HAND), and it was unread — so
         # those tokens entered the default zone instead.
         destination = _first(params, "destination", "zone", "to_zone")
-        def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target, _dest=destination):
+        # "create a Steam Counter token with 2 steam counters on it" — the
+        # counters were dropped, so the token arrived bare and any ability
+        # reading them saw none.
+        counters = params.get("counters")
+        def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target,
+                _dest=destination, _counters=counters):
             from engine.effect_keywords import create_token as _ek_create_token
             from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(card)
@@ -944,6 +962,27 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             if _cnt <= 0:
                 return
             _ek_create_token(state, tid, _tok, _cnt, destination=_dest)
+            if _counters:
+                # Cards author this as {"steam": 2} or [{"type":"steam","amount":2}].
+                pairs = []
+                if isinstance(_counters, dict):
+                    pairs = list(_counters.items())
+                elif isinstance(_counters, list):
+                    pairs = [(c.get("type") or c.get("counter"), c.get("amount", 1))
+                             for c in _counters if isinstance(c, dict)]
+                if pairs:
+                    from engine.card_effects.ability_keywords import effect_put_counter
+                    made = [c for c in state.players[tid].permanents.cards
+                            if c.slug == _tok][-_cnt:]
+                    for made_token in made:
+                        for kind, qty in pairs:
+                            if not kind:
+                                continue
+                            try:
+                                qty = int(qty)
+                            except (TypeError, ValueError):
+                                qty = 1
+                            effect_put_counter(state, made_token, str(kind), qty)
         return _fn
 
     if etype == "PUT_COUNTER":
@@ -1882,10 +1921,17 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         ref = params.get("ref", "looked")
         # "to" is the obvious short spelling and was unread, so those nodes
         # silently moved the card to the DECK regardless of what they said.
-        to_zone = _first(params, "to_zone", "to", "destination", "zone",
-                         default="deck")
+        to_zone = _first(params, "to_zone", "to", "destination", default="deck")
         position = _first(params, "position", "order", default="bottom")
         who = params.get("player", "OWNER").upper()
+        # "from"/"zone" name the ORIGIN, which put_object resolves from the card
+        # itself. They are deliberately NOT in the destination list above —
+        # reading them there would move the card to where it already is — and
+        # deliberately not touched here either: a bare params.get() would mark
+        # them "read" for the audit without honouring them, which is the same
+        # lie as an allowlist entry that is not true. They are declared inert in
+        # scripts/audit_params.py instead, where the reason is visible.
+
         def _fn(card, event, state, _r=ref, _z=to_zone, _pos=position, _w=who):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import put_object
@@ -2062,8 +2108,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # without moving cards, so unlike the old LOOK-then-banish pairing the
         # card is still in its zone when we get here.
         ref = params.get("ref", "chosen")
-        origin = params.get("from_zone")
-        def _fn(card, event, state, _r=ref, _origin=origin):
+        # "zone" is the other natural spelling of the ORIGIN, and it was unread —
+        # so those nodes passed None and banish() left the card in place while
+        # also adding it to the banished zone: present in both at once.
+        origin = _first(params, "from_zone", "zone", "from")
+        face_down = bool(params.get("face_down"))
+
+        def _fn(card, event, state, _r=ref, _origin=origin, _fd=face_down):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.context import get_ref
             from engine.effect_keywords import banish as _ek_banish
@@ -2073,7 +2124,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             cid = _controller_id(card)
             for obj in (target if isinstance(target, list) else [target]):
                 zone = _origin or getattr(obj, "zone", None)
-                _ek_banish(state, obj, cid, origin_zone=zone)
+                _ek_banish(state, obj, cid, origin_zone=zone, face_down=_fd)
         return _fn
 
     if etype == "REORDER_REF":
@@ -2619,7 +2670,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # Codex of Frailty / Inertia: "Each hero puts a card [from graveyard /
         # top of deck] face down into their arsenal. Each hero that does, discards
         # a card." source: "graveyard" (attack action cards) | "deck" (top card).
-        source = params.get("source", "deck")
+        # "zone" is the same thing as "source" and was unread, so those nodes
+        # fell through to the deck default and took the top card instead of the
+        # graveyard card the text names.
+        source = _first(params, "source", "zone", "from_zone", default="deck")
+
         def _fn(card, event, state, _src=source):
             from engine.card_effects.ability_keywords import _ask_player, effect_discard
             for pid, player in state.players.items():

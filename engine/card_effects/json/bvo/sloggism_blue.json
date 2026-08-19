@@ -1,28 +1,23 @@
 {
   "slug": "sloggism_blue",
+  "_comment": "'The NEXT attack action card with cost 2 or greater you play this turn gains +4{p}' is a one-shot, not a turn-long continuous: APPLY_CONTINUOUS would buff EVERY qualifying attack for the rest of the turn. The nested CARD_IN_ZONE gate was meaningless too -- it asked whether the HAND held such a card, not whether the attack being made was one. MODIFY_NEXT_ATTACK carries the filter and is consumed by the first attack that matches.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "duration": "END_OF_TURN",
-          "effects": [
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "filter": [
             {
-              "type": "MODIFY_ATTACK",
-              "mod": "add",
-              "amount": 4,
-              "conditions": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "HAND",
-                  "conditions": [
-                    {
-                      "type": "ATTACK_COST_GTE",
-                      "amount": 2
-                    }
-                  ]
-                }
+              "type": "ATTACK_COST_GTE",
+              "amount": 2
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
               ]
             }
           ]

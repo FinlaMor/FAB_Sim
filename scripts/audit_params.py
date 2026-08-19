@@ -260,6 +260,63 @@ def build_index() -> dict[str, set[str]]:
     return index
 
 
+# An unread key is not automatically a defect. When the value it carries is the
+# same as what the code does anyway, honouring it would change nothing — the key
+# is redundant, not broken. Reporting those alongside real defects invites
+# someone to churn dozens of correct cards, so they are separated.
+#
+# Every entry here is a CLAIM about the code and can therefore be wrong, which is
+# how audit_run.py's ENGINE_FLAGS certified a dead flag for a whole sweep. So the
+# list is kept small and each entry names the behaviour that makes it inert; when
+# in doubt a finding stays ACTIVE, because a false "active" costs someone a
+# second look while a false "inert" hides a broken card forever.
+INERT: dict[tuple[str, str], tuple[frozenset[str], str]] = {
+    # Every effect that takes a player defaults to the controller, so "SELF" is
+    # what already happens. "OPPONENT" on the same key is a real defect.
+    ("CHOOSE", "player"):            (frozenset({"self"}), "defaults to controller"),
+    ("ATTACK_IS_WEAPON", "player"):  (frozenset({"self"}), "defaults to controller"),
+    ("ROLL", "player"):              (frozenset({"self"}), "defaults to controller"),
+    ("DISCARD_RANDOM", "player"):    (frozenset({"self"}), "defaults to controller"),
+    ("SELECT_FROM_REF", "player"):   (frozenset({"self"}), "defaults to controller"),
+    ("PUT_CARDS_BOTTOM", "player"):  (frozenset({"self"}), "defaults to controller"),
+    ("CONTROLS_ATTACK_ACTION", "player"): (frozenset({"self"}), "defaults to controller"),
+    ("IN_COMBAT", "player"):         (frozenset({"self"}), "defaults to controller"),
+    ("SOURCE_IS_ATTACK", "source"):  (frozenset({"self"}), "the source IS this card"),
+    ("CARD_IN_ZONE", "source"):      (frozenset({"self"}), "defaults to controller"),
+    # SEARCH_DECK always shuffles (effect_shuffle at the end) and always reveals
+    # what it moves (is_public=True), so saying so changes nothing.
+    ("SEARCH_DECK", "shuffle"):      (frozenset({"true"}), "always shuffles"),
+    ("SEARCH_DECK", "reveal"):       (frozenset({"true"}), "moves with is_public=True"),
+    ("SEARCH_DECK", "face_up"):      (frozenset({"true"}), "moves with is_public=True"),
+    # "put them back in any order" needs no effect: revealing never moved them.
+    ("PUT_CARDS_BOTTOM", "order"):   (frozenset({"any"}), "reveal does not move cards"),
+    # These name the card's CURRENT zone, which put_object resolves from the
+    # card itself. Naming it changes nothing. They are recorded here rather than
+    # "read" with a bare params.get() in the compiler — touching a key to quiet
+    # the audit marks it consumed without honouring it, which is the same lie as
+    # an allowlist entry that is not true, and hides the next real defect on
+    # that key.
+    ("MOVE_REF", "from"):            (frozenset({"revealed_cards", "graveyard",
+                                                 "deck", "hand", "arsenal"}),
+                                      "origin comes from the card"),
+    ("MOVE_REF", "zone"):            (frozenset({"deck", "hand", "graveyard",
+                                                 "arsenal", "banished"}),
+                                      "origin comes from the card"),
+    ("RETURN_TO_HAND", "zone"):      (frozenset({"graveyard", "arena", "deck",
+                                                 "banished", "permanents"}),
+                                      "origin comes from the card"),
+}
+
+
+def severity(type_name: str, key: str, value) -> str:
+    """"active" if honouring this key would change behaviour, else "inert"."""
+    rule = INERT.get((type_name.upper(), key))
+    if rule is None:
+        return "active"
+    allowed, _why = rule
+    return "inert" if str(value).strip().lower() in allowed else "active"
+
+
 def card_files(set_code: str | None = None) -> list[Path]:
     return [p for p in JSON_ROOT.rglob("*.json")
             if not p.stem.endswith("_work_queue")
@@ -268,7 +325,8 @@ def card_files(set_code: str | None = None) -> list[Path]:
             and (set_code is None or p.parent.name == set_code)]
 
 
-def audit_node(node: dict, index: dict[str, set[str]]) -> list[str]:
+def audit_node(node: dict, index: dict[str, set[str]],
+               include_inert: bool = False) -> list[str]:
     ntype = node.get("type")
     if not isinstance(ntype, str) or not ntype:
         return []
@@ -276,12 +334,17 @@ def audit_node(node: dict, index: dict[str, set[str]]) -> list[str]:
     if known is None:
         return []          # unknown type — that is audit_run.py's job, not this
     bad = []
-    for key in node:
+    for key, value in node.items():
         if key in STRUCTURAL_KEYS or key in NESTED_KEYS or key.startswith("_"):
             continue
-        if key not in known:
-            bad.append(f"{ntype} has no parameter {key!r} "
-                       f"(reads: {', '.join(sorted(known)) or 'nothing'})")
+        if key in known:
+            continue
+        kind = severity(ntype, key, value)
+        if kind == "inert" and not include_inert:
+            continue
+        label = "" if kind == "active" else " [inert: carries the default]"
+        bad.append(f"{ntype} has no parameter {key!r}{label} "
+                   f"(reads: {', '.join(sorted(known)) or 'nothing'})")
     return bad
 
 
@@ -300,6 +363,8 @@ def main() -> int:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--set", dest="set_code", help="set folder to audit")
     ap.add_argument("--quiet", action="store_true", help="summary only")
+    ap.add_argument("--all", action="store_true",
+                    help="include INERT findings (keys whose value is the default anyway)")
     args = ap.parse_args()
 
     index = build_index()
@@ -320,13 +385,15 @@ def main() -> int:
         if not isinstance(raw, dict):
             continue
         found: list[str] = []
-        walk(raw.get("abilities", []), lambda n: found.extend(audit_node(n, index)))
+        walk(raw.get("abilities", []),
+             lambda n: found.extend(audit_node(n, index, include_inert=args.all)))
         if found:
             findings[path.stem] = sorted(set(found))
 
     kinds = Counter(re.sub(r" has no parameter.*", "", f)
                     for fs in findings.values() for f in fs)
-    print(f"cards with >=1 unread parameter: {len(findings)} / {len(paths)}"
+    kind = "unread parameter" if args.all else "ACTIVE unread parameter"
+    print(f"cards with >=1 {kind}: {len(findings)} / {len(paths)}"
           f"  ({100 * len(findings) / max(len(paths), 1):.0f}%)")
     if kinds:
         print("\nby type:")
