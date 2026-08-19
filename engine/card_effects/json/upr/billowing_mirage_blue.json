@@ -1,15 +1,17 @@
 {
   "slug": "billowing_mirage_blue",
+  "_comment": "Was TRANSFORM_HERO, which is Arakni's 'become a random Agent of Chaos' -- a real type doing something else entirely, so this called become_agent_of_chaos on an Illusionist hero. The unread 'from'/'to' keys were the only visible symptom. Transform (CR 8.5.36) puts the transformed object UNDER the new permanent; it is not a swap or a destroy. Go again is printed on the card, so it belongs to the same play, not a second ability.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "TRANSFORM_HERO",
+          "type": "TRANSFORM",
           "from": "ash",
           "to": "aether_ashwing",
-          "amount": 1
+          "amount": 1,
+          "up_to": true
         }
       ]
     },
@@ -17,8 +19,7 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

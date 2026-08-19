@@ -1447,6 +1447,30 @@ def _setup_dsl_listeners(state: GameState) -> None:
             if target is not None:
                 dispatch(game_state, "ON_TRANSCEND", target.slug, card=target, event=event)
 
+    def _dsl_transformed_listener(event, game_state: GameState) -> None:
+        # CR 8.5.36a — the objects put under the permanent are considered to
+        # have transformed into it, and the permanent to have transformed from
+        # them. Ash's "**Material** - While Ash is under an object, that object
+        # has **phantasm**" is printed on the SUB-CARD, so each one is
+        # dispatched to as well as the resulting permanent.
+        # TransformEvent names these `objects` and `permanent` (an earlier
+        # version of this listener guessed `sources`/`result` and silently
+        # dispatched nothing at all — a listener that reads the wrong attribute
+        # fails exactly like a card reading the wrong parameter).
+        data = getattr(event, "data", None)
+        if isinstance(data, dict):
+            objects = data.get("objects") or []
+            permanent = data.get("permanent")
+        else:
+            objects = getattr(event, "objects", None) or []
+            permanent = getattr(event, "permanent", None)
+        for sub in list(objects):
+            if sub is not None:
+                dispatch(game_state, "ON_TRANSFORMED", sub.slug, card=sub, event=event)
+        if permanent is not None:
+            dispatch(game_state, "ON_TRANSFORMED_INTO", permanent.slug,
+                     card=permanent, event=event)
+
     def _dsl_card_played_listener(event, game_state: GameState) -> None:
         # "Whenever you play your SECOND non-attack action card each turn, ..."
         # (Briar). Hero text keyed on the act of playing a card, which nothing
@@ -1551,6 +1575,7 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('transcend', _dsl_transcend_listener)
     state.event_manager.register('token_created', _dsl_token_created_listener)
     state.event_manager.register('on_play', _dsl_card_played_listener)
+    state.event_manager.register('transform', _dsl_transformed_listener)
     state.event_manager.register('start_of_action_phase',
                                  _dsl_start_of_action_phase_listener)
     state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)

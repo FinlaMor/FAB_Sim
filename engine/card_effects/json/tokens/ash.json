@@ -1,0 +1,13 @@
+{
+  "slug": "ash",
+  "_comment": "Draconic Illusionist Token - Ash. '**Material** - While Ash is under an object, that object has **phantasm**.' Granted when the Ash is put underneath (CR 8.5.36a). The printed wording is CONTINUOUS, so removing the Ash afterwards should remove phantasm and currently does not -- there is no continuous layer keyed on sub-cards. Stated here rather than left to be discovered.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_TRANSFORMED",
+      "effects": [
+        {"type": "GRANT_KEYWORD_TO_TOP_CARD", "keyword": "Phantasm"}
+      ]
+    }
+  ]
+}

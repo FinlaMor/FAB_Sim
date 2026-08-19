@@ -42,6 +42,10 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     # zone from your deck" — dispatched from Zone.add, the only place that
     # knows all of: previous zone, face-up-ness, and effect-vs-rule source.
     "ON_PUT_FACEUP_FROM_DECK":  "ON_PUT_FACEUP_FROM_DECK",
+    # CR 8.5.36a — dispatched to each object put under the permanent
+    # (ON_TRANSFORMED) and to the permanent itself (ON_TRANSFORMED_INTO).
+    "ON_TRANSFORMED":           "ON_TRANSFORMED",
+    "ON_TRANSFORMED_INTO":      "ON_TRANSFORMED_INTO",
     "ON_DEAL_DAMAGE":           "ON_DEAL_DAMAGE",
     "RECALC_ATTACK_POWER":      "RECALC_ATTACK_POWER",
     "ON_BECOME":                "ON_BECOME",

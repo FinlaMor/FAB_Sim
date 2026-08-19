@@ -1,21 +1,35 @@
 {
   "slug": "construct_nitro_mechanoid_yellow",
+  "_comment": "Was TRANSFORM_HERO (Arakni's agent-of-chaos effect) with 'parts' and 'transform_to' keys that nothing read, so it called become_agent_of_chaos on a Mechanologist hero. Transform (CR 8.5.36) is all-or-nothing across every named part (8.5.36d), and the equipment lives in the slot zones, never in `permanents` -- a permanents-only scan finds none of it. 'If you don't, negate this' is exactly that all-or-nothing failure: when a part is missing nothing transforms.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "TRANSFORM_HERO",
-          "target": "Mechanologist",
-          "parts": [
-            "head",
-            "chest",
-            "arms",
-            "legs",
-            "weapon",
-            "3 Hyper Drivers"
-          ],
-          "transform_to": "Nitro Mechanoid"
+          "type": "TRANSFORM",
+          "to": "nitro_mechanoid",
+          "sources": [
+            {
+              "zone": "head"
+            },
+            {
+              "zone": "chest"
+            },
+            {
+              "zone": "arms"
+            },
+            {
+              "zone": "legs"
+            },
+            {
+              "zone": "weapon1"
+            },
+            {
+              "zone": "permanents",
+              "from": "hyper_driver",
+              "amount": 3
+            }
+          ]
         },
         {
           "type": "GO_AGAIN"

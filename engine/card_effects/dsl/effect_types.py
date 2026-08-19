@@ -335,6 +335,29 @@ def _first(params, *keys, default=None):
     return default
 
 
+def _do_transform(state, sources, into_slug: str, player_id: int):
+    """CR 8.5.36c — create the named token, then put the sources under it.
+
+    effect_keywords.transform already implements 8.5.36b/d and takes the
+    permanent as a Card, so this only has to bring that permanent into
+    existence. (An earlier version of this re-implemented transform outright
+    and was silently shadowed by the real one, which is exactly the failure
+    mode this whole audit is about — check what exists before adding it.)
+    """
+    from engine.effect_keywords import create_token, transform as _ek_transform
+    player = state.players.get(player_id)
+    if player is None or not sources:
+        return
+    before = set(id(c) for c in player.permanents.cards)
+    create_token(state, target_player_id=player_id, token_slug=into_slug,
+                 number=1, source_player_id=player_id)
+    perm = next((c for c in reversed(player.permanents.cards)
+                 if c.slug == into_slug and id(c) not in before), None)
+    if perm is None:
+        return
+    _ek_transform(state, list(sources), perm, source_player_id=player_id)
+
+
 def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     """Return a (card, event, state)->None callable."""
 
@@ -475,7 +498,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         amt = params.get("amount", 1)
         from_zone = params.get("from_zone", "TOP_DECK")
         player_target = params.get("player", "SELF")
-        def _fn(card, event, state, _a=amt, _fz=from_zone, _pt=player_target):
+        # "banish it face down" — hidden information, and not available to the
+        # effects that reference banished cards. Dropping it banished face UP.
+        face_down = bool(params.get("face_down"))
+        # "banish a card with cost N or less" — an unread limit banished any
+        # card at all, so a restricted effect became an unrestricted one.
+        cost_limit = params.get("cost_limit", params.get("max_cost"))
+
+        def _fn(card, event, state, _a=amt, _fz=from_zone, _pt=player_target,
+                _fd=face_down, _cl=cost_limit):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
             from engine.effect_keywords import banish as _ek_banish
             cid = _controller_id(card)
@@ -489,40 +520,47 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 _a = max(0, int(_a))
             except (TypeError, ValueError):
                 _a = 0
+            cap = None
+            if _cl is not None:
+                cap = _resolve_amount(_cl, state, card)
+                try:
+                    cap = int(cap)
+                except (TypeError, ValueError):
+                    cap = None
+
+            def _ok(c, _cap=cap):
+                if _cap is None:
+                    return True
+                cost = getattr(c, "raw_cost", None)
+                if cost is None:
+                    cost = getattr(c, "cost", None)
+                try:
+                    return int(cost or 0) <= _cap
+                except (TypeError, ValueError):
+                    return True
+
+            _ZONES = {"TOP_DECK": "deck", "DECK": "deck", "HAND": "hand",
+                      "GRAVEYARD": "graveyard", "ARSENAL": "arsenal"}
+            zone_name = _ZONES.get(fz)
+            if zone_name is None:
+                return
+            player = state.players[tid]
             if fz in ("TOP_DECK", "DECK"):
-                targets = state.players[tid].deck.cards[:_a]
-                for t in targets:
-                    _ek_banish(state, t, tid, origin_zone="deck")
-            elif fz == "HAND":
-                hand = state.players[tid].hand.cards
-                if not hand:
+                # From the top of the deck nothing is chosen — it is whatever is
+                # there — so a cost limit filters rather than prompts.
+                for t in [c for c in player.deck.cards[:_a] if _ok(c)]:
+                    _ek_banish(state, t, tid, origin_zone="deck", face_down=_fd)
+                return
+            for _ in range(_a):
+                pool = [c for c in getattr(player, zone_name).cards if _ok(c)]
+                if not pool:
                     return
-                for _ in range(min(_a, len(hand))):
-                    options = [c.slug for c in state.players[tid].hand.cards]
-                    pick = _ask_player(state, tid, options, context="Choose a card to banish from hand")
-                    target = next((c for c in state.players[tid].hand.cards if c.slug == pick), None)
-                    if target:
-                        _ek_banish(state, target, tid, origin_zone="hand")
-            elif fz == "GRAVEYARD":
-                gy = state.players[tid].graveyard.cards
-                if not gy:
+                pick = _ask_player(state, tid, [c.slug for c in pool],
+                                   context=f"Choose a card to banish from {zone_name}")
+                target = next((c for c in pool if c.slug == pick), None)
+                if target is None:
                     return
-                for _ in range(min(_a, len(gy))):
-                    options = [c.slug for c in state.players[tid].graveyard.cards]
-                    pick = _ask_player(state, tid, options, context="Choose a card to banish from graveyard")
-                    target = next((c for c in state.players[tid].graveyard.cards if c.slug == pick), None)
-                    if target:
-                        _ek_banish(state, target, tid, origin_zone="graveyard")
-            elif fz == "ARSENAL":
-                arsenal = state.players[tid].arsenal.cards
-                for _ in range(min(_a, len(arsenal))):
-                    if not state.players[tid].arsenal.cards:
-                        break
-                    options = [c.slug for c in state.players[tid].arsenal.cards]
-                    pick = _ask_player(state, tid, options, context="Choose a card to banish from arsenal")
-                    target = next((c for c in state.players[tid].arsenal.cards if c.slug == pick), None)
-                    if target:
-                        _ek_banish(state, target, tid, origin_zone="arsenal")
+                _ek_banish(state, target, tid, origin_zone=zone_name, face_down=_fd)
         return _fn
 
     if etype == "CHARGE":
@@ -2120,6 +2158,98 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             _transcend(state, card, _controller_id(card))
         return _fn
 
+    if etype == "TRANSFORM":
+        # CR 8.5.36 — "**transform** up to 1 ash you control into an Aether
+        # Ashwing", "transform target Mechanologist head, chest, arms, legs,
+        # weapon and 3 Hyper Drivers into Nitro Mechanoid".
+        #
+        # Three cards authored this as TRANSFORM_HERO, which is Arakni's
+        # "become a random Agent of Chaos" and does something else entirely —
+        # a real type doing the WRONG thing, which no type-name audit can catch
+        # and which the unread `to`/`from` parameters were the only hint of.
+        #
+        # `from` names what to consume (a token slug or subtype); `amount` how
+        # many; `to` what to become. 8.5.36d makes it all-or-nothing, which the
+        # keyword enforces.
+        into = _first(params, "to", "into", "transform_to", "token",
+                      "target_token", default="")
+        source = _first(params, "from", "source", "subtype", default="")
+        amount = _first(params, "amount", "count", "max_count", default=1)
+        optional = bool(params.get("up_to", True))
+
+        # "transform target Mechanologist head, chest, arms, legs, weapon AND 3
+        # Hyper Drivers into Nitro Mechanoid" — several different requirements
+        # at once, and equipment lives in the slot zones, never in `permanents`.
+        # Authored as "sources": [{"zone": "head"}, ..., {"from": "hyper_driver",
+        # "amount": 3}]. 8.5.36d applies across the whole set: if any part is
+        # missing, nothing transforms.
+        source_specs = params.get("sources")
+
+        def _fn(card, event, state, _into=into, _src=source, _a=amount,
+                _opt=optional, _specs=source_specs):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            cid = _controller_id(card)
+            if cid not in state.players or not _into:
+                return
+            player = state.players[cid]
+
+            def _match(c, want):
+                return (not want
+                        or _norm_amt(getattr(c, "slug", "")) == want
+                        or _norm_amt(getattr(c, "name", "")) == want
+                        or want in {_norm_amt(x) for x in (getattr(c, "subtypes", None) or [])})
+
+            if _specs:
+                gathered = []
+                for spec in _specs:
+                    zone_name = (spec.get("zone") or "permanents").lower()
+                    zone = getattr(player, zone_name, None)
+                    if zone is None:
+                        return
+                    want_s = _norm_amt(spec.get("from") or spec.get("subtype") or "")
+                    try:
+                        n = int(spec.get("amount", spec.get("count", 1)))
+                    except (TypeError, ValueError):
+                        n = 1
+                    picks = [c for c in zone.cards
+                             if _match(c, want_s) and c not in gathered][:n]
+                    if len(picks) < n:
+                        return          # 8.5.36d — a missing part fails it all
+                    gathered.extend(picks)
+                if gathered:
+                    _do_transform(state, gathered, str(_into), cid)
+                return
+
+            want = _norm_amt(_src)
+            pool = [c for c in player.permanents.cards if _match(c, want)]
+            try:
+                need = int(_resolve_amount(_a, state, card)
+                           if isinstance(_a, dict) else _a)
+            except (TypeError, ValueError):
+                need = 1
+            if len(pool) < need:
+                return          # 8.5.36d — cannot complete, so nothing happens
+            chosen = []
+            for _ in range(max(need, 0)):
+                remaining = [c for c in pool if c not in chosen]
+                if not remaining:
+                    break
+                if len(remaining) == 1:
+                    pick_card = remaining[0]
+                else:
+                    options = [c.slug for c in remaining] + (["none"] if _opt else [])
+                    pick = _ask_player(state, cid, options,
+                                       context=f"Choose a {_src or 'permanent'} to transform")
+                    if pick == "none":
+                        return
+                    pick_card = next((c for c in remaining if c.slug == pick),
+                                     remaining[0])
+                chosen.append(pick_card)
+            if len(chosen) < need:
+                return
+            _do_transform(state, chosen, str(_into), cid)
+        return _fn
+
     if etype == "TRANSFORM_HERO":
         # Arakni: "become a random Agent of Chaos" / "return to the brood".
         # choose=true lets the controller pick the form (e.g. Mask of Deceit when
@@ -2772,6 +2902,26 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             )
             entry.pitched_for_attack = []
             state.stack_entries.append(entry)
+        return _fn
+
+    if etype == "GRANT_KEYWORD_TO_TOP_CARD":
+        # "While Ash is under an object, that object has phantasm" (CR 3.0.14
+        # sub-cards). Granted when the sub-card is put underneath.
+        #
+        # LIMITATION, stated rather than hidden: this grants once, at that
+        # moment. The printed wording is CONTINUOUS ("while ... is under"), so
+        # removing the Ash afterwards should remove phantasm and does not. There
+        # is no continuous layer keyed on sub-cards to hang it from; modelling
+        # that is a design change, not a missing parameter.
+        keyword = params.get("keyword", "")
+
+        def _fn(card, event, state, _kw=keyword):
+            top = getattr(card, "top_card", None)
+            if top is None or not _kw:
+                return
+            existing = list(getattr(top, "keywords", None) or [])
+            if _kw not in existing:
+                top.keywords = existing + [_kw]
         return _fn
 
     if etype == "SHARPEN":

@@ -132,11 +132,18 @@ class BanishEvent:
     origin_zone: str = None           # where the card came from ("hand", "deck", etc.)
     destination: str = "banished"     # replacement effects can change this
     until_condition: str = None       # e.g. "end_of_turn" for temporary banish (CR 8.5.1c)
+    # Banished cards are face UP unless the effect says otherwise. Face-down is
+    # not decoration: a face-down banished card is hidden information and is not
+    # available to the effects that reference banished cards, so a card saying
+    # "banish it face down" whose face_down was dropped banished it face UP and
+    # handed the opponent information the card was meant to deny them.
+    face_down: bool = False
     cancelled: bool = False
 
 
 def banish(state: GameState, card: Card, source_player_id: int,
-           origin_zone: Optional[str] = None, until_condition: str = None) -> BanishEvent:
+           origin_zone: Optional[str] = None, until_condition: str = None,
+           face_down: bool = False) -> BanishEvent:
     """CR 8.5.1 — banish a card.
     
     Returns the event so callers can inspect what actually happened
@@ -148,6 +155,7 @@ def banish(state: GameState, card: Card, source_player_id: int,
         target=card,
         source_player_id=source_player_id,
         target_player_id=target_player_id,
+        face_down=face_down,
         origin_zone=origin_zone,
         until_condition=until_condition,
     )
@@ -166,7 +174,10 @@ def banish(state: GameState, card: Card, source_player_id: int,
         z = getattr(player, event.origin_zone, None)
         if z is not None:
             z.remove(card)
-    getattr(player, event.destination).add(card)
+    if event.face_down:
+        getattr(player, event.destination).add(card, is_public=False)
+    else:
+        getattr(player, event.destination).add(card)
 
     # "if you've banished an Earth card this turn" and similar.
     _record_turn_event(state, event.source_player_id, "banish",

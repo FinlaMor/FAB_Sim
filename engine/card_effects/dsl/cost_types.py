@@ -299,6 +299,36 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
                     permanents.cards.remove(candidates[0])
         return can_pay, pay
 
+    if ctype == "BANISH_FROM_UNDER_SELF":
+        # "Banish a card from under Nitro Mechanoid: Attack" — the cost consumes
+        # one of the cards this permanent transformed FROM (CR 8.5.36a / 3.0.14
+        # sub-cards). This is the reason transform puts objects UNDER the
+        # permanent rather than destroying them: they are the ammunition.
+        def can_pay(card, event, state):
+            return bool(getattr(card, "cards_underneath", None))
+
+        def pay(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.effect_keywords import banish as _banish
+            under = list(getattr(card, "cards_underneath", None) or [])
+            if not under:
+                return
+            cid = _controller_id(card)
+            if len(under) == 1:
+                target = under[0]
+            else:
+                pick = _ask_player(state, cid, [c.slug for c in under],
+                                   context="Choose a card to banish from under this")
+                target = next((c for c in under if c.slug == pick), under[0])
+            card.cards_underneath.remove(target)
+            target.is_sub_card = False
+            target.top_card = None
+            # origin_zone is None on purpose: the card is not IN a zone's card
+            # list while it is a sub-card, so naming one would try to remove it
+            # from a list it was never in.
+            _banish(state, target, cid)
+        return can_pay, pay
+
     if ctype == "DESTROY_PERMANENTS_OPTIONAL":
         # "As an additional cost to play this, you MAY destroy ANY NUMBER of
         # weapons, equipment and/or non-token items you control." (Cash Out.)

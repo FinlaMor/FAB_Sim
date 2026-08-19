@@ -1,0 +1,5 @@
+{
+  "slug": "aether_ashwing",
+  "_comment": "Draconic Illusionist Token - Dragon Ally, 1{p}/1{h}, Arcane Barrier 1. No abilities of its own: the keyword comes from token_meta.TOKEN_KEYWORDS (numbered keywords are not on the card-DB template) and the stats from ALLY_TOKEN_STATS. This file existed nowhere, so creating one raised MissingCardImplementation and aborted the game.",
+  "abilities": []
+}

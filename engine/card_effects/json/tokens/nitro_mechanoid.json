@@ -1,0 +1,16 @@
+{
+  "slug": "nitro_mechanoid",
+  "_comment": "Mechanologist Weapon Equipment - Item, 5{p}, Overpower + Temper (printed keywords, read from card data). 'Action - Banish a card from under Nitro Mechanoid: Attack' -- the cost banishes one of the cards this transformed FROM (CR 8.5.36a), which is why the transform puts them under rather than destroying them.",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {"type": "BANISH_FROM_UNDER_SELF"}
+      ],
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    }
+  ]
+}

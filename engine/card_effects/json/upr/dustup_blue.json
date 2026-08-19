@@ -1,5 +1,6 @@
 {
   "slug": "dustup_blue",
+  "_comment": "Was TRANSFORM_HERO (Arakni's agent-of-chaos effect), not the Transform keyword. Order matters and is preserved: the Ash token is created FIRST, so the transform that follows has something to consume even when the player controlled no ash beforehand.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -7,13 +8,15 @@
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Ash"
+          "token_type": "Ash",
+          "token": "ash"
         },
         {
-          "type": "TRANSFORM_HERO",
-          "from": "Ash",
-          "to": "Aether Ashwing",
-          "max_count": 1
+          "type": "TRANSFORM",
+          "from": "ash",
+          "to": "aether_ashwing",
+          "amount": 1,
+          "up_to": true
         }
       ]
     }
