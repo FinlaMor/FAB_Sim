@@ -1140,6 +1140,10 @@ class CombatState:
     total_defense: int = 0
     defending_equipment_defense: int = 0
     defender_used_hand_card: bool = False
+    # Damage this attack actually dealt, AFTER defence — set when the hit
+    # resolves. "X is the damage dealt by this attack" (Eradicate) cannot be
+    # recovered from attack_power, which ignores blockers.
+    net_damage_dealt: int = 0
     # object_ids of defending cards that came from the defender's hand (for
     # "defends together with another card from hand" triggers, e.g. Right Behind You).
     hand_defender_ids: set = field(default_factory=set)

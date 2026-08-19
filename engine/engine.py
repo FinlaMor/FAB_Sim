@@ -1705,6 +1705,11 @@ def _resolve_damage(state: GameState) -> None:
             return
         # 7.5.5: hit event (physical damage from attack)
         # 'hit_hero' fires only when the hit target is the defending hero.
+        # "banish the top X cards of their deck, where X is the damage dealt by
+        # this attack" (Eradicate). Stored on combat so an ON_HIT ability can
+        # read it: net_damage is the damage AFTER defence, which is what the
+        # cards mean, and it is not recoverable from attack_power alone.
+        combat.net_damage_dealt = net_damage
         state.event_manager.emit(Event(type='hit', card=combat.attack_card.slug, data={'damage': net_damage}), state)
         if target_card is None:
             state.event_manager.emit(Event(type='hit_hero', card=combat.attack_card.slug, data={'damage': net_damage}), state)

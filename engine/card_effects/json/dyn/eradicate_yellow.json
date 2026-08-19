@@ -1,5 +1,6 @@
 {
   "slug": "eradicate_yellow",
+  "_comment": "'Banish the top X cards of THEIR deck, where X is the damage dealt by Eradicate.' Three defects: the amount was the invented string 'DAMAGE_AMOUNT' (resolving to 0), and the BANISH named neither a zone nor a player — so even with a number it would not have banished from the opponent's deck. X is DAMAGE_DEALT, the damage AFTER defence, which attack_power does not give. NEEDS_NEW_DSL: the Contract clause (CR 8.5.39 — a continuous effect rewarding repeated completions) is not modelled; it is omitted rather than approximated.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -12,7 +13,11 @@
       "effects": [
         {
           "type": "BANISH",
-          "amount": "DAMAGE_AMOUNT"
+          "from_zone": "TOP_DECK",
+          "player": "OPPONENT",
+          "amount": {
+            "type": "DAMAGE_DEALT"
+          }
         }
       ]
     }

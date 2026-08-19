@@ -369,3 +369,25 @@ def test_thistle_bloom_creates_one_runechant_per_life_gained():
     dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
     runechants = [c for c in st.players[1].permanents.cards if c.slug == "runechant"]
     assert len(runechants) == 2
+
+
+# --- damage dealt by this attack -------------------------------------------
+
+def test_damage_dealt_reads_damage_after_defence():
+    # eradicate_yellow: "banish the top X cards of their deck, where X is the
+    # damage dealt". attack_power ignores blockers, so it is the WRONG source —
+    # a 6-power attack blocked for 4 deals 2.
+    st = _state()
+    card = _card("eradicate_yellow")
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=6,
+                            attack_card=card, keywords=[])
+    st.combat.total_defense = 4
+    st.combat.net_damage_dealt = 2
+    assert _resolve_amount({"type": "DAMAGE_DEALT"}, st, card) == 2
+
+
+def test_damage_dealt_is_zero_outside_combat():
+    st = _state()
+    card = _card("eradicate_yellow")
+    st.combat = None
+    assert _resolve_amount({"type": "DAMAGE_DEALT"}, st, card) == 0

@@ -47,6 +47,14 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
         # "X is the total {h} you've gained this turn" (Thistle Bloom). A
         # MAGNITUDE, not an occurrence count — turn-event markers record that
         # something happened, never how much — so gain() tallies it directly.
+        # "X is the damage dealt by this attack" — the damage AFTER defence,
+        # which attack_power does not give.
+        if atype in ("DAMAGE_DEALT", "NET_DAMAGE"):
+            combat = getattr(state, "combat", None)
+            if combat is None:
+                return 0
+            return int(getattr(combat, "net_damage_dealt", 0) or 0)
+
         if atype in ("LIFE_GAINED_THIS_TURN", "COUNT_LIFE_GAINED"):
             pid = _amount_controller(state, card)
             if pid is None:

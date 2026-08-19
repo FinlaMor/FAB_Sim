@@ -55,7 +55,11 @@ KEYWORD_EFFECTS = {
     "STEALTH": "stealth", "PIERCING": "piercing", "BATTLEWORN": "battleworn",
     "TEMPER": "temper", "BLOOD_DEBT": "blood debt",
 }
-KNOWN_AMOUNT_TOKENS = {"X", "ROLL_NUMBER", "ROLL_RESULT", "ROLL_NUMBER_HALF_ROUND_DOWN"}
+# "ALL" is genuinely supported by the look/reveal effects ("reveal ALL cards in
+# their hand", "look at the whole arsenal") — flagging it was a FALSE POSITIVE
+# on leave_no_witnesses_red and pry_yellow, both of which were correct.
+KNOWN_AMOUNT_TOKENS = {"X", "ALL", "ROLL_NUMBER", "ROLL_RESULT",
+                       "ROLL_NUMBER_HALF_ROUND_DOWN"}
 
 # Amount EXPRESSIONS, i.e. {"amount": {"type": ...}}. Read from the resolver's own
 # dispatch chain rather than hard-coded, so the audit cannot drift out of date the
