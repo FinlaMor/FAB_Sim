@@ -360,7 +360,11 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
 
     if ctype == "REMOVE_COUNTERS":
         # Generic counter removal (any zone)
-        counter_type = params.get("counter_type", "")
+        # "counter" as well as "counter_type": 4 nodes author the short form,
+        # and an empty counter type matches no counter, so the cost could never
+        # be paid and the ability was unusable.
+        counter_type = (params.get("counter_type") or params.get("counter")
+                        or params.get("name") or "")
         amount = params.get("amount", 1)
         def can_pay(card, event, state, _ct=counter_type, _a=amount):
             from engine.card_effects.ability_keywords import _controller_id

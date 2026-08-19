@@ -319,6 +319,22 @@ def _amount_controller(state, card):
     return _valid(getattr(state, "active_player", None))
 
 
+def _first(params, *keys, default=None):
+    """First present key among `keys`. See condition_types._as_list.
+
+    A parameter the compiler does not read is silently dropped, and the effect
+    then does nothing or does the wrong thing — indistinguishable from an
+    invented type at runtime, but invisible to a type-name audit. Reading every
+    spelling a card plausibly uses is what keeps that class closed;
+    scripts/audit_params.py reports any that slip through.
+    """
+    for key in keys:
+        value = params.get(key)
+        if value is not None:
+            return value
+    return default
+
+
 def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     """Return a (card, event, state)->None callable."""
 
@@ -576,7 +592,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "RETURN_TO_HAND":
-        # Return this card to the controller's hand.
+        # Return this card to the controller's hand. A "zone" parameter here
+        # names the SOURCE zone, which put_object resolves from the card itself,
+        # so it is accepted and ignored rather than left looking unread.
+        params.get("zone")
+
         def _fn(card, event, state):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import put_object
@@ -831,8 +851,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # "token_type" (a display name like "Seismic Surge"). Only "token" was
         # read, so cards using the name keys created an empty token; create_token
         # slugifies a display name, so pass whichever was given.
-        token = (params.get("token") or params.get("token_name")
-                 or params.get("token_type") or "")
+        token = _first(params, "token", "token_name", "token_type",
+                       "token_slug", "subtype", default="")
         # "count" is the documented key, but "amount" is the natural one and is
         # what every other numeric effect uses — accept both, or "create X
         # tokens" silently creates one.
@@ -842,7 +862,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # wrongly defaulted to SELF). Opponent-side values: opponent/defending/
         # defender/target_hero (the hit hero).
         player_target = params.get("player") or params.get("controller") or "SELF"
-        destination = params.get("destination")  # e.g. "weapon_slot" to equip
+        # e.g. "weapon_slot" to equip. "zone" is the other natural spelling
+        # (5 nodes author it, meaning BANISHED or HAND), and it was unread — so
+        # those tokens entered the default zone instead.
+        destination = _first(params, "destination", "zone", "to_zone")
         def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target, _dest=destination):
             from engine.effect_keywords import create_token as _ek_create_token
             from engine.card_effects.ability_keywords import _controller_id
@@ -906,17 +929,30 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     # ── flags / misc ───────────────────────────────────────────────────────
     if etype == "SET_FLAG":
         flag = params.get("flag", "")
-        scope = params.get("scope", "CURRENT").upper()
+        # "duration" is the natural spelling of "scope" and was unread.
+        scope = str(_first(params, "scope", "duration", default="CURRENT")).upper()
         player_target = params.get("player", "SELF")
-        def _fn(card, event, state, _f=flag, _s=scope, _pt=player_target):
+        # {"value": false} means CLEAR the flag, and it was not read — so eight
+        # nodes that meant "this is no longer true" were SETTING it, the exact
+        # opposite. An unread boolean is worse than an unread filter: it does
+        # not weaken the effect, it inverts it.
+        value = params.get("value", True)
+        clear = value is False
+
+        def _fn(card, event, state, _f=flag, _s=scope, _pt=player_target,
+                _clear=clear):
             from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
-            if _s == "NEXT" and hasattr(player, "next_turn_effects"):
-                player.next_turn_effects.append(_f)
-            else:
-                player.current_turn_effects.append(_f)
+            target = (player.next_turn_effects
+                      if _s == "NEXT" and hasattr(player, "next_turn_effects")
+                      else player.current_turn_effects)
+            if _clear:
+                while _f in target:
+                    target.remove(_f)
+                return
+            target.append(_f)
         return _fn
 
     if etype == "INJECT_TRIGGER":
@@ -1077,13 +1113,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "PUT_ARSENAL_BOTTOM":
         # Put the target player's arsenal card on the bottom of their deck.
         player_target = params.get("player", "OPPONENT")
-        def _fn(card, event, state, _pt=player_target):
+        # A "card_type" filter restricts WHICH arsenal card is bottomed; it was
+        # unread, so those nodes bottomed whatever happened to be there.
+        want_type = _first(params, "card_type", "card_types", "filter_types")
+
+        def _fn(card, event, state, _pt=player_target, _wt=want_type):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import put_object
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
             arsenal = getattr(player, 'arsenal', None)
+            if _wt and arsenal is not None:
+                wants = {str(t).lower() for t in
+                         ([_wt] if isinstance(_wt, str) else _wt)}
+                if not any(wants & {t.lower() for t in
+                                    (getattr(c, "types", None) or [])
+                                    + (getattr(c, "subtypes", None) or [])}
+                           for c in arsenal.cards):
+                    return
             if arsenal and hasattr(arsenal, 'cards') and arsenal.cards:
                 card_to_move = arsenal.cards[0]
                 # position=None → zone default (append = bottom, cards[-1])
@@ -1094,12 +1142,23 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "DESTROY_TOKEN":
         # Destroy one token of the given slug the ability's controller controls.
-        token_slug = params.get("token", "")
+        # "token_type" (6 nodes) was not read, so those destroyed a token with
+        # the empty slug — i.e. nothing. It also holds the printed NAME
+        # ("Seismic Surge") where "token" holds the slug ("seismic_surge"), so
+        # matching normalises both rather than comparing slugs only.
+        token_slug = _first(params, "token", "token_type", "token_slug",
+                            "token_name", default="")
+
         def _fn(card, event, state, _slug=token_slug):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import destroy as _ek_destroy
+            if not _slug:
+                return
+            want = _norm_amt(_slug)
             player = state.players[_controller_id(card)]
-            tok = player.permanents.find(_slug)
+            tok = next((c for c in player.permanents.cards
+                        if _norm_amt(getattr(c, "slug", "")) == want
+                        or _norm_amt(getattr(c, "name", "")) == want), None)
             if tok is not None:
                 _ek_destroy(state, tok, None)
         return _fn
@@ -1194,9 +1253,28 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "MODIFY_DEFENSE_VALUE":
         amt = params.get("amount", 0)
-        def _fn(card, event, state, _a=amt):
-            if state.combat:
-                state.combat.total_defense = (getattr(state.combat, 'total_defense', 0) or 0) + _a
+        # "mod" was not read at all, so every node ADDED. 27 of the 34 that
+        # author it say "add" and were unaffected, but 6 say "subtract" and one
+        # says "set" — those 7 moved defence the wrong way, which is worse than
+        # doing nothing: a card meant to REDUCE the defending total was
+        # increasing it.
+        mod = (params.get("mod") or "add").lower()
+
+        def _fn(card, event, state, _a=amt, _m=mod):
+            if not state.combat:
+                return
+            current = getattr(state.combat, 'total_defense', 0) or 0
+            delta = _resolve_amount(_a, state, card) if isinstance(_a, dict) else _a
+            try:
+                delta = int(delta)
+            except (TypeError, ValueError):
+                delta = 0
+            if _m in ("set", "="):
+                state.combat.total_defense = delta
+            elif _m in ("subtract", "sub", "minus", "-"):
+                state.combat.total_defense = max(0, current - delta)
+            else:
+                state.combat.total_defense = current + delta
         return _fn
 
     if etype == "ADD_DEFEND":
@@ -1241,9 +1319,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # the controller's — Overcrowded reads "among aura tokens in the
         # arena"). stat: "power" (default) applies to attack power; "defense"
         # applies to the defending total, for the "or defends" half.
-        per = params.get("per", 1)
+        per = params.get("per", params.get("amount", 1))
         stat = params.get("stat", "power")
-        def _fn(card, event, state, _per=per, _stat=stat):
+        # Same unread "mod" as MODIFY_DEFENSE_VALUE: 3 nodes say "subtract" and
+        # 2 say "set", and all of them were adding.
+        mod = (params.get("mod") or "add").lower()
+
+        def _fn(card, event, state, _per=per, _stat=stat, _m=mod):
             names = set()
             for pl in state.players.values():
                 auras = getattr(pl, "auras", None)
@@ -1252,10 +1334,23 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             n = len(names)
             if not n or state.combat is None:
                 return
+            delta = n * _per
             if _stat == "defense":
-                state.combat.total_defense = (getattr(state.combat, "total_defense", 0) or 0) + n * _per
+                current = getattr(state.combat, "total_defense", 0) or 0
+                if _m in ("set", "="):
+                    state.combat.total_defense = delta
+                elif _m in ("subtract", "sub", "minus", "-"):
+                    state.combat.total_defense = max(0, current - delta)
+                else:
+                    state.combat.total_defense = current + delta
             else:
-                state.combat.attack_power = (state.combat.attack_power or 0) + n * _per
+                current = state.combat.attack_power or 0
+                if _m in ("set", "="):
+                    state.combat.attack_power = delta
+                elif _m in ("subtract", "sub", "minus", "-"):
+                    state.combat.attack_power = max(0, current - delta)
+                else:
+                    state.combat.attack_power = current + delta
         return _fn
 
     if etype == "CROWD_BOO":
@@ -1639,7 +1734,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "PUT_CARDS_BOTTOM":
         # Put all cards from the given zones on the bottom of the controller's
         # deck (e.g. Inertia token: hand + arsenal → bottom of deck).
-        from_zones = params.get("from_zones", ["hand", "arsenal"])
+        # "zone" (5 nodes) was not read, so those fell through to the DEFAULT
+        # hand+arsenal — a card meant to bottom its revealed cards was emptying
+        # the player's hand instead. A wrong default is more damaging than none.
+        from_zones = _first(params, "from_zones", "zones", "zone", "from_zone",
+                            default=["hand", "arsenal"])
+        if isinstance(from_zones, str):
+            from_zones = [from_zones]
+        from_zones = [str(z).lower() for z in from_zones]
         def _fn(card, event, state, _zones=from_zones):
             from engine.card_effects.ability_keywords import _controller_id
             player = state.players[_controller_id(card)]
@@ -1725,8 +1827,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         #   position: "top" | "bottom" (default) — only meaningful for the deck
         #   player:   SELF | OPPONENT | OWNER (default) — whose zone
         ref = params.get("ref", "looked")
-        to_zone = params.get("to_zone", "deck")
-        position = params.get("position", "bottom")
+        # "to" is the obvious short spelling and was unread, so those nodes
+        # silently moved the card to the DECK regardless of what they said.
+        to_zone = _first(params, "to_zone", "to", "destination", "zone",
+                         default="deck")
+        position = _first(params, "position", "order", default="bottom")
         who = params.get("player", "OWNER").upper()
         def _fn(card, event, state, _r=ref, _z=to_zone, _pos=position, _w=who):
             from engine.card_effects.ability_keywords import _controller_id
@@ -2667,6 +2772,49 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             )
             entry.pitched_for_attack = []
             state.stack_entries.append(entry)
+        return _fn
+
+    if etype == "SHARPEN":
+        # "**Sharpen** target sword you control (twice)." Put a +1{p} counter on
+        # a weapon you control; 41 corpus cards use the keyword, and a further
+        # group asks "if the weapon has been SHARPENED this turn", so the turn
+        # event is recorded here and nowhere else — a power counter arriving by
+        # any other route is not sharpening.
+        #
+        # _recalculate_attack_power already adds card.counters['power'] to an
+        # attacking card, so the counter needs no separate power plumbing.
+        amount = params.get("amount", params.get("count", 1))
+        subtype = params.get("subtype", "Sword")
+
+        def _fn(card, event, state, _a=amount, _sub=subtype):
+            from engine.card_effects.ability_keywords import (
+                _ask_player, _controller_id, effect_put_counter)
+            from engine.effect_keywords import _record_turn_event
+            cid = _controller_id(card)
+            if cid not in state.players:
+                return
+            player = state.players[cid]
+            want = str(_sub).lower()
+            candidates = [c for z in (player.weapon1, player.weapon2)
+                          for c in z.cards
+                          if want in [x.lower() for x in (getattr(c, "subtypes", None) or [])]]
+            if not candidates:
+                return
+            if len(candidates) == 1:
+                target = candidates[0]
+            else:
+                pick = _ask_player(state, cid, [c.slug for c in candidates],
+                                   context=f"Choose a {_sub} to sharpen")
+                target = next((c for c in candidates if c.slug == pick), candidates[0])
+            try:
+                times = int(_resolve_amount(_a, state, card)
+                            if isinstance(_a, dict) else _a)
+            except (TypeError, ValueError):
+                times = 1
+            for _ in range(max(times, 0)):
+                effect_put_counter(state, target, "power", 1)
+                _record_turn_event(state, cid, "sharpen",
+                                   getattr(target, "slug", None))
         return _fn
 
     if etype == "WAGER":

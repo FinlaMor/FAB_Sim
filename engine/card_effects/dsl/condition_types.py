@@ -15,6 +15,37 @@ def _norm(value: str) -> str:
     return "".join(ch for ch in str(value) if ch.isalnum()).lower()
 
 
+def _first_present(params, *keys, default=None):
+    """First present key among `keys` — the scalar counterpart of _as_list."""
+    for key in keys:
+        value = params.get(key)
+        if value is not None:
+            return value
+    return default
+
+
+def _as_list(params, *keys) -> list:
+    """First present key among `keys`, always as a list.
+
+    Cards author singular and plural interchangeably ("class"/"classes",
+    "subtype"/"subtypes") because both read naturally. A key the compiler does
+    not look at leaves the filter EMPTY, so the condition matches nothing and
+    the ability can never fire — the same outcome as an invented type, but
+    invisible to a type-name audit, which only checks that the TYPE is real.
+    Reading every spelling is what keeps that class from recurring.
+    """
+    for key in keys:
+        value = params.get(key)
+        if value is None:
+            continue
+        if isinstance(value, str):
+            return [value]
+        if isinstance(value, (list, tuple, set)):
+            return list(value)
+        return [value]
+    return []
+
+
 def _card_traits(card) -> set[str]:
     """Normalised classes + talents + color of a card, for `card_class` filters.
 
@@ -92,8 +123,24 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # Combat happens inside the action phase (CR 4.3), so the combat steps
         # count as ACTION_PHASE.
         phase = _norm(params.get("phase") or "")
+        # "during YOUR turn" / "during your OPPONENT'S turn". 14 nodes author
+        # `player`, which was not read, so all of them fired on BOTH turns —
+        # a restriction silently doing nothing rather than failing loudly.
+        who = (params.get("player") or "ANY").upper()
+
+        def _whose_turn(c, s, _who=who):
+            if _who in ("ANY", ""):
+                return True
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(c)
+            active = getattr(s, "active_player", None)
+            if _who in ("OPPONENT", "DEFENDING", "DEFENDER"):
+                return active == 3 - cid
+            return active == cid
+
         if not phase:
-            return lambda c, e, s: getattr(s, "individual_turns", 0) >= 1
+            return lambda c, e, s: (getattr(s, "individual_turns", 0) >= 1
+                                    and _whose_turn(c, s))
         _PHASE_STEPS = {
             "actionphase": {"action", "combat_layer", "combat_attack", "combat_defend",
                             "combat_reaction", "combat_damage", "combat_resolution",
@@ -110,6 +157,8 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
 
         def _during(c, e, s, _allowed=allowed):
             if getattr(s, "individual_turns", 0) < 1:
+                return False
+            if not _whose_turn(c, s):
                 return False
             if _allowed is None:
                 return True
@@ -146,7 +195,7 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return lambda c, e, s: s.combat is not None and not getattr(s.combat, 'from_weapon', False)
 
     if ctype == "ATTACK_CLASS_IN":
-        classes = [v.lower() for v in params.get("classes", [])]
+        classes = [v.lower() for v in _as_list(params, "classes", "class")]
         def _aci(c, e, s, _cls=classes):
             if not s.combat or not getattr(s.combat, 'attack_card', None):
                 return False
@@ -161,8 +210,7 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # on an empty list, which matches nothing, and never fired. A parameter
         # name the compiler does not read fails exactly like an invented type
         # but is invisible to a type-name audit.
-        values = [v.upper() for v in (params.get("values")
-                                      or params.get("subtypes") or [])]
+        values = [v.upper() for v in _as_list(params, "values", "subtypes", "subtype")]
         def _wsi(c, e, s, _vals=values):
             if not s.combat:
                 return False
@@ -197,7 +245,8 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
     if ctype == "ATTACK_TYPE_IN":
         # Cards author the type list under "types" OR "attack_type" (~7 usages
         # used the latter, unread -> empty list). Accept a string or a list.
-        _raw = params.get("types") or params.get("attack_type") or []
+        _raw = _as_list(params, "types", "attack_type", "attack_types",
+                        "values", "type_name")
         if isinstance(_raw, str):
             _raw = [_raw]
         types = [v.lower() for v in _raw]
@@ -209,7 +258,7 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _ati
 
     if ctype == "ATTACK_SUBTYPE_IN":
-        subtypes = [v.lower() for v in params.get("subtypes", [])]
+        subtypes = [v.lower() for v in _as_list(params, "subtypes", "subtype")]
         def _asi(c, e, s, _subs=subtypes):
             if not s.combat or not getattr(s.combat, 'attack_card', None):
                 return False
@@ -511,23 +560,45 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # (REF_PITCH_IS, which tests a referenced card's PITCH VALUE).
         power_gte = params.get("power_gte", params.get("pitch_power_gte"))
         power_lte = params.get("power_lte")
-        filter_types = [t.lower() for t in params.get("filter_types", [])]
+        # filter_types / card_type / subtypes / subtype all name the same thing
+        # here: the matcher below already checks types AND subtypes together.
+        # 47 nodes author one of the unread spellings, and a dropped filter does
+        # not disable the condition — it makes it TOO PERMISSIVE, which is worse
+        # than failing closed: "an instant in your graveyard" silently becomes
+        # "any card in your graveyard".
+        filter_types = [t.lower() for t in _as_list(
+            params, "filter_types", "card_type", "card_types",
+            "subtypes", "subtype")]
         color = (params.get("color") or "").lower()
         # card_class: a class ("Guardian"), talent ("Earth") or color ("Blue")
         # filter; keywords: match any (e.g. "blood_debt"). Both were ignored,
         # making the condition too permissive.
         card_class = _norm(params.get("card_class") or "")
-        want_kws = [k for k in (params.get("keywords") or []) if k]
+        _classes_alias = _as_list(params, "classes", "class", "class_in",
+                                  "talent", "talents")
+        if not card_class and _classes_alias:
+            card_class = _norm(_classes_alias[0])
+        want_kws = [k for k in _as_list(params, "keywords", "keyword") if k]
         # count_gte: >= N cards match; "amount" is a legacy alias for count_gte
         count_gte = params.get("count_gte", params.get("amount"))
         count_eq  = params.get("count_eq")
         _PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
 
+        # "a card in THEIR graveyard" — 7 nodes author `player`, which was not
+        # read, so every one of them looked at the controller's own zone.
+        who = str(_first_present(params, "player", "controller", "controlled_by",
+                                 default="SELF")).upper()
+
         def _ciz(c, e, s, _zs=zones, _cge=cost_gte, _cle=cost_lte, _ft=filter_types,
                  _col=color, _nge=count_gte, _neq=count_eq,
-                 _cc=card_class, _kws=want_kws, _pge=power_gte, _ple=power_lte):
+                 _cc=card_class, _kws=want_kws, _pge=power_gte, _ple=power_lte,
+                 _who=who):
             from engine.card_effects.ability_keywords import _controller_id
-            player = s.players[_controller_id(c)]
+            _cid = _controller_id(c)
+            _pid = (3 - _cid) if _who in ("OPPONENT", "DEFENDING", "DEFENDER") else _cid
+            if _pid not in s.players:
+                return False
+            player = s.players[_pid]
             count = 0
             for _z in _zs:
                 zone_obj = getattr(player, _z, None)
@@ -946,7 +1017,8 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # every card using "token_type" (the large majority) had a permanently
         # false condition. Read both and normalise the display name to a slug.
         # Also accepts a "token_types" LIST (match ANY of them).
-        _raws = [params.get("token"), params.get("token_type")]
+        _raws = [params.get("token"), params.get("token_type"),
+                 params.get("subtype"), params.get("name")]
         _raws += list(params.get("token_types") or [])
         wants = []  # (slug, display) pairs
         for r in _raws:
@@ -1161,7 +1233,16 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # condition on a referenced card rather than something baked into a
         # card-specific effect.
         ref = params.get("ref", "looked")
-        want = params.get("pitch", 1)
+        # Cards author the COLOUR ("yellow") as readily as the pitch number, and
+        # "color" was not read — so those nodes silently fell back to pitch 1
+        # and tested red. Colour is the more natural spelling given the text
+        # says "if it's a blue card", so it must not be the one that is dropped.
+        _COLOR_PITCH = {"red": 1, "yellow": 2, "blue": 3}
+        want = params.get("pitch")
+        if want is None:
+            want = _COLOR_PITCH.get(_norm(params.get("color")
+                                          or params.get("colour") or ""), 1)
+
         def _ref_pitch(c, e, s, _r=ref, _w=want):
             from engine.context import get_ref
             target = get_ref(_r)
@@ -1187,6 +1268,13 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             inner = compile_condition(inner_spec.get("type", "none"), inner_spec)
         else:
             inner_t = params.get("inner_type")
+            # A bare "flag" is the flattened FLAG_SET form: {"type":"NOT",
+            # "flag":"x"} means "if x is not set". Without this the inner
+            # condition is None and _not returns FALSE unconditionally, so the
+            # ability can never fire — which is what six once-per-turn gates on
+            # the Arakni demi-heroes were doing.
+            if not inner_t and params.get("flag"):
+                inner_t = "FLAG_SET"
             inner = compile_condition(inner_t, params) if inner_t else None
         def _not(c, e, s, _fn=inner):
             return not (_fn is None or _fn(c, e, s))

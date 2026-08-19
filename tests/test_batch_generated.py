@@ -1221,16 +1221,52 @@ def test_brimming_blade_red_play():
     dispatch(st, "ON_PLAY", "brimming_blade_red", card=card, event=None)
     assert len(st.players[1].arsenal.cards) >= n0
 
-def test_brimming_blade_red_modify_attack():
+def test_brimming_blade_red_sharpens_a_sword_twice():
+    # The old test asserted "+2{p} if a Sword is in your ARSENAL", which is not
+    # what the card says ("Sharpen target sword you control twice") — and it
+    # only passed because CARD_IN_ZONE silently ignored the "subtype" key, so
+    # the condition degenerated to "is your arsenal non-empty". Once that key
+    # was honoured the test failed, which is how the hallucinated card was
+    # found. Sharpen puts +1{p} counters on a weapon in the ARENA.
     st = _make_state(); st.card_db = DB
+    st.player_agents = {1: lambda s, o, context="": o[0],
+                        2: lambda s, o, context="": o[0]}
     card = _card("brimming_blade_red")
-    sword = _card("sword")  # Assuming there is a sword card in the DB
-    st.players[1].arsenal.cards.append(sword)
-    st.players[1].arsenal.cards.append(card)
-    attack(st, sword)
-    before_power = st.combat.attack_power
+    sword = Card(slug="a_sword", name="A Sword", types=["Weapon"],
+                 subtypes=["Sword"])
+    sword.owner = sword.controller = 1
+    st.players[1].weapon1.cards.append(sword)
     dispatch(st, "ON_PLAY", "brimming_blade_red", card=card, event=None)
-    assert st.combat.attack_power == before_power + 2
+    assert sword.counters.get("power", 0) == 2
+
+
+def test_brimming_blade_red_records_sharpening():
+    # A separate group of cards asks "if the weapon has been sharpened this
+    # turn", so the act has to be recorded — and only by sharpening, never by a
+    # power counter arriving some other way.
+    from engine.effect_keywords import TURN_EVENT_MARKER
+    st = _make_state(); st.card_db = DB
+    st.player_agents = {1: lambda s, o, context="": o[0],
+                        2: lambda s, o, context="": o[0]}
+    card = _card("brimming_blade_red")
+    sword = Card(slug="a_sword", name="A Sword", types=["Weapon"],
+                 subtypes=["Sword"])
+    sword.owner = sword.controller = 1
+    st.players[1].weapon1.cards.append(sword)
+    dispatch(st, "ON_PLAY", "brimming_blade_red", card=card, event=None)
+    assert f"{TURN_EVENT_MARKER}sharpen" in st.players[1].current_turn_effects
+
+
+def test_brimming_blade_red_sharpens_nothing_without_a_sword():
+    st = _make_state(); st.card_db = DB
+    st.player_agents = {1: lambda s, o, context="": o[0],
+                        2: lambda s, o, context="": o[0]}
+    card = _card("brimming_blade_red")
+    axe = Card(slug="an_axe", name="An Axe", types=["Weapon"], subtypes=["Axe"])
+    axe.owner = axe.controller = 1
+    st.players[1].weapon1.cards.append(axe)
+    dispatch(st, "ON_PLAY", "brimming_blade_red", card=card, event=None)
+    assert axe.counters.get("power", 0) == 0
 
 # --- clearing_bellow_blue ---
 def test_clearing_bellow_blue_play():
