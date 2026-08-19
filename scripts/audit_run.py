@@ -43,8 +43,13 @@ VALID_ABILITY_TYPES = {
 }
 # Turn-effect markers engine code actually writes. Anything else must be set by
 # the same card, or the ability can never fire.
+# VERIFIED, not assumed: test_engine_flags_are_real.py asserts every name here
+# is actually written somewhere in engine/. "die_rolled_six" sat in this list for
+# the whole corpus sweep and was set by NOTHING, so the audit certified a dead
+# flag as legitimate — an allowlist entry that is wrong suppresses exactly the
+# defect the audit exists to find.
 ENGINE_FLAGS = {
-    "die_rolled_six", "activated_cannon", "boosted_this_turn", "cranked_this_turn",
+    "activated_cannon", "boosted_this_turn", "cranked_this_turn",
     "crowd_booed", "crowd_cheered", "first_attack_-2p", "played_lightning",
     "next_weapon_attack_go_again", "next_weapon_attack_hit_go_again",
     "ripple_away_active",

@@ -1,5 +1,6 @@
 {
   "slug": "loan_shark_yellow",
+  "_comment": "NO_GOLD_CREATED_OR_STOLEN_THIS_TURN was set by nothing. It is a NEGATIVE condition over two events: create was already recorded, steal was not, so effect_steal_token now records it. 'Lose 2{h} UNLESS you discard a card' is not an additional cost of the trigger -- authoring it as one would have blocked the destroy too, and would have made discarding mandatory; it is a choice offered after the destroy.",
   "abilities": [
     {
       "ability_type": "STATIC",
@@ -27,8 +28,22 @@
       "trigger": "END_OF_TURN",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "NO_GOLD_CREATED_OR_STOLEN_THIS_TURN"
+          "type": "NOT",
+          "condition": {
+            "type": "OR",
+            "conditions": [
+              {
+                "type": "EVENT_THIS_TURN",
+                "event": "create",
+                "qualifier": "gold"
+              },
+              {
+                "type": "EVENT_THIS_TURN",
+                "event": "steal",
+                "qualifier": "gold"
+              }
+            ]
+          }
         }
       ],
       "effects": [
@@ -36,13 +51,37 @@
           "type": "DESTROY_SELF"
         },
         {
-          "type": "LOSE_LIFE",
-          "amount": 2
-        }
-      ],
-      "additional_cost": [
-        {
-          "type": "DISCARD_CARD"
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "HAND_SIZE_GTE",
+              "amount": 1
+            }
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Discard a card to avoid losing 2 life?",
+              "effects": [
+                {
+                  "type": "DISCARD",
+                  "amount": 1
+                }
+              ],
+              "else": [
+                {
+                  "type": "LOSE_LIFE",
+                  "amount": 2
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "type": "LOSE_LIFE",
+              "amount": 2
+            }
+          ]
         }
       ]
     }

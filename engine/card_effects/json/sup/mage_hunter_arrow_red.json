@@ -1,9 +1,17 @@
 {
   "slug": "mage_hunter_arrow_red",
+  "_comment": "The activated ability was authored as an INJECT_TRIGGER on ON_DEATH gated by MAGE_HUNTER_ARROW_ACTIVE, a flag nothing sets -- so destroying the arrow did nothing at all. 'Prevent the next 3 arcane damage this turn' is exactly what the existing PREVENT_DAMAGE effect does; no new engine code was needed. 'Activate only while face-up in your arsenal' is a restriction on THIS card, which CARD_IN_ZONE cannot express -- it only asks whether the zone is non-empty.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
+      "conditions": [
+        {
+          "type": "SELF_IN_ZONE",
+          "zone": "arsenal",
+          "face_up": true
+        }
+      ],
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
@@ -12,23 +20,9 @@
       ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_DEATH",
-            "conditions": [
-              {
-                "type": "FLAG_SET",
-                "flag": "MAGE_HUNTER_ARROW_ACTIVE"
-              }
-            ],
-            "effects": [
-              {
-                "type": "PAY_OR_DAMAGE",
-                "amount": 3,
-                "damage_type": "ARCANE"
-              }
-            ]
-          }
+          "type": "PREVENT_DAMAGE",
+          "amount": 3,
+          "damage_type": "ARCANE"
         }
       ]
     },
@@ -37,24 +31,28 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
-          "type": "OR",
-          "conditions": [
-            {
-              "type": "ATTACK_TARGET_IS_HERO",
-              "hero_type": "Runeblade"
-            },
-            {
-              "type": "ATTACK_TARGET_IS_HERO",
-              "hero_type": "Wizard"
-            }
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
+        {
+          "type": "TARGET_HERO_CLASS_IN",
+          "classes": [
+            "Runeblade",
+            "Wizard"
           ]
         }
       ],
       "effects": [
         {
-          "type": "DESTROY_TOKEN",
-          "target": "opponent",
-          "token_type": "Aura"
+          "type": "MAY",
+          "prompt": "Destroy an aura they control?",
+          "effects": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "target": "chosen",
+              "player": "OPPONENT",
+              "subtype": "Aura"
+            }
+          ]
         }
       ]
     }

@@ -1,49 +1,24 @@
 {
   "slug": "cash_out_blue",
+  "_comment": "The old additional_cost searched the ARSENAL for weapons/equipment/items -- none of which are ever there -- and 'destroyed_permanents_count' was a bare string amount, which resolves to 0, so the card created no Silver at all. The cost is optional, repeats, and its COUNT is the entire payoff; DESTROY_PERMANENTS_OPTIONAL covers all three and sees equipment in the slot zones, which a permanents-only scan misses.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "additional_cost": [
         {
-          "type": "DESTROY_PERMANENT",
-          "target": "controlled",
-          "conditions": [
-            {
-              "type": "OR",
-              "conditions": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "arsenal",
-                  "subtype": "Weapon"
-                },
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "arsenal",
-                  "subtype": "Equipment"
-                },
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "arsenal",
-                  "subtype": "Item",
-                  "not": {
-                    "type": "TOKEN"
-                  }
-                }
-              ]
-            }
-          ]
+          "type": "DESTROY_PERMANENTS_OPTIONAL",
+          "types": ["Weapon", "Equipment", "Item"],
+          "exclude_tokens": true
         }
       ],
       "effects": [
         {
           "type": "CREATE_TOKEN",
           "token_type": "Silver",
-          "amount": "destroyed_permanents_count",
-          "token": "silver"
+          "token": "silver",
+          "amount": {"type": "DESTROYED_COUNT"}
         },
-        {
-          "type": "GO_AGAIN"
-        }
+        {"type": "GO_AGAIN"}
       ]
     }
   ]

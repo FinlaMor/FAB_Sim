@@ -28,6 +28,21 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     # Sugar: fires on ON_TOKEN_CREATED, gated on the created token's slug.
     "ON_GOLD_CREATED":          "ON_TOKEN_CREATED",
     "ON_CLASH_WIN_REVEALED":    "ON_CLASH_WIN_REVEALED",
+    # CR 8.5.46 — "wagers with the defending hero. The winner loses 1{h}."
+    # A wager could only ever pay out a token; this is how a card expresses any
+    # other outcome. Dispatched to the card that made the wager.
+    "ON_WAGER_RESOLVED":        "ON_WAGER_RESOLVED",
+    # "Whenever you play your second non-attack action card each turn" — hero
+    # text about the act of playing a card, dispatched to that player's hero.
+    "ON_CARD_PLAYED":           "ON_CARD_PLAYED",
+    # CR 4.3.1 — "at the beginning of your action phase", which is NOT the start
+    # of the turn (that is the start phase, and it happens earlier).
+    "START_OF_ACTION_PHASE":    "START_OF_ACTION_PHASE",
+    # "If an activated ability or action card effect puts this face up into a
+    # zone from your deck" — dispatched from Zone.add, the only place that
+    # knows all of: previous zone, face-up-ness, and effect-vs-rule source.
+    "ON_PUT_FACEUP_FROM_DECK":  "ON_PUT_FACEUP_FROM_DECK",
+    "ON_DEAL_DAMAGE":           "ON_DEAL_DAMAGE",
     "RECALC_ATTACK_POWER":      "RECALC_ATTACK_POWER",
     "ON_BECOME":                "ON_BECOME",
     # CR 8.5.48 — "whenever you transcend" (Twelve Petal Kasaya).

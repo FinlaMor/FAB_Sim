@@ -1,6 +1,6 @@
 {
   "slug": "reckless_charge_blue",
-  "_comment": "Kayo Specialization. Roll a 6 sided die, gain action points equal to half the number rolled (rounded down). If you've rolled a 6 on a die this turn, draw a card. ROLL records DIE_ROLLED_SIX turn-scoped, so the draw sees earlier rolls this turn too.",
+  "_comment": "Kayo Specialization. Roll a 6 sided die, gain action points equal to half the number rolled (rounded down). The draw was gated on a DIE_ROLLED_SIX flag that nothing ever set -- roll() records no such flag -- so it could never fire. roll() now records the die faces as turn events, which is turn-scoped as the text requires: an earlier roll of a 6 this turn counts even though this card's own roll was not a 6.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -28,8 +28,9 @@
           "amount": 1,
           "conditions": [
             {
-              "type": "FLAG_SET",
-              "flag": "DIE_ROLLED_SIX"
+              "type": "EVENT_THIS_TURN",
+              "event": "roll",
+              "qualifier": "6"
             }
           ]
         }

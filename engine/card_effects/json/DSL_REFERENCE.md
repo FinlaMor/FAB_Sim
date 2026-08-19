@@ -799,3 +799,99 @@ simply cannot be paid (8.3.32b) and the payoff does not fire.
 passing `None` adds the card to the banished zone WITHOUT removing it from the
 graveyard, leaving it in both at once. Pass `None` only when the caller has
 already removed the card itself.
+
+## Counting, not just testing ("where X is the number of ...")
+
+`EVENT_THIS_TURN` **tests** a turn event; `COUNT_TURN_EVENT` **counts** one. The
+condition existed and the amount expression did not, so every card phrased "X is
+the number of \<thing\> you've done this turn" invented a private counter that
+nothing incremented — X was 0 and the card did nothing.
+
+```json
+{"type": "MODIFY_ATTACK", "mod": "add",
+ "amount": {"type": "COUNT_TURN_EVENT", "event": "play",
+            "qualifier": "non_attack_action"}}
+```
+
+Same `event`/`qualifier` vocabulary as the condition, so a card that tests and a
+card that counts speak one language.
+
+**Magnitudes are not counts.** Markers record that something happened, so four
+1-point arcane hits look identical to one. Anything phrased "the total damage
+you've dealt" needs the tally instead:
+
+```json
+{"type": "DAMAGE_DEALT_THIS_TURN", "damage_type": "arcane", "target": "hero"}
+```
+
+Other amount expressions added for the same reason: `DESTROYED_COUNT` (how many
+an optional destroy-cost actually destroyed), `LAST_DAMAGE_DEALT` (what a
+preceding damage effect actually landed, which the printed number does not give
+once prevention has had its say), `COUNT_REF` (a filtered count over cards a
+preceding `LOOK_AT` / `REVEAL_TOP_DECK` stored), `COUNT_OPPOSING_HEROES`, and
+`X` — the amount a player chose to pay for a card with an X in its cost.
+Arithmetic is `{"type": "X", "plus": 1}` or `{"type": "SUM", "values": [...]}`;
+there is no need for an expression per offset.
+
+## "The first time ... this turn" is `once_per_turn`, never a flag
+
+An ability-level key, not a condition:
+
+```json
+{"ability_type": "TRIGGERED", "trigger": "ON_DEAL_DAMAGE",
+ "once_per_turn": "earth",
+ "conditions": [...], "effects": [...]}
+```
+
+The value names the use, so two once-per-turn abilities on one card do not share
+a single one. It is checked **after** every other gate, so a trigger whose
+conditions failed does not burn the turn's use — "the first time X happens" means
+the first time it actually happens.
+
+For "your **second** \<thing\> each turn", add `"exact": true` to
+`EVENT_THIS_TURN`. A `>=` test stays true for the third and every later one,
+turning "the second" into "the second and every one after".
+
+## Timing words are not interchangeable
+
+- `START_OF_TURN` is the start phase. **`START_OF_ACTION_PHASE`** (CR 4.3.1) is
+  later and is what "at the beginning of your action phase" means.
+- `ON_ATTACK` fires even when the attack is fully blocked. "When this **deals
+  damage**" is `ON_DEAL_DAMAGE`.
+- `ON_CARD_PLAYED` is dispatched to the player's **hero** — for hero text about
+  the act of playing a card. It is not `ON_PLAY` on the played card.
+- `ON_WAGER_RESOLVED` is dispatched to the card that made the wager, for a payoff
+  that is not a token ("the winner loses 1{h}"; use `"player": "WAGER_WINNER"`).
+- `ON_PUT_FACEUP_FROM_DECK` fires from `Zone.add`, the only place that knows the
+  previous zone, face-up-ness, and whether an effect rather than a rule moved it.
+
+## Declarative statics (read by the engine, never "resolved")
+
+Some abilities are properties, not events. `STATIC` maps to **no event**, so a
+`STATIC` ability whose effects were meant to run simply never ran — several cards
+had their entire text under one and did nothing at all. Declare these instead:
+
+- `PLAYABLE_FROM_BANISHED` — "you may play this from your banished zone"
+- `RUNE_GATE` (CR 8.3.27) — the same, free, while you control Runechants ≥ its
+  {r} cost; the card and player are then marked as having rune gated
+  (`WAS_RUNE_GATED`, and the `rune_gate` turn event)
+- `DEFENSE_EQUALS` — a printed {d} that is an expression
+
+## "Next \<card\> you play" and "unless"
+
+`MODIFY_NEXT_CARD_COST` is the one-shot cost reduction; its `filter` is ordinary
+DSL conditions over the card being played, and `on_consume` runs effects against
+whichever card used it — which is how "**that** card deals 1 more damage" can
+name a card nobody has chosen yet. As a turn-long flag plus a flag-gated modifier
+it would discount every matching card for the rest of the turn.
+
+`MAY` takes an `else` block. "Lose 2{h} **unless** you discard a card" is one
+effect, not two with inverted conditions — there is nothing to invert against,
+because the choice is not recorded anywhere.
+
+## A parameter name the compiler does not read fails silently
+
+`WEAPON_SUBTYPE_IN` read `values`; three of the five cards using it authored
+`subtypes`, so they gated on an empty list and never fired. This fails exactly
+like an invented type but is **invisible to a type-name audit** — when adding a
+condition, check the compiler's `params.get(...)` keys, not what the name suggests.

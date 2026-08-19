@@ -1,53 +1,21 @@
 {
   "slug": "auric_shards_yellow",
+  "_comment": "HOLO_COUNTER was authored as a FLAG_SET on a flag nothing sets, so neither branch could resolve correctly -- the NOT branch was permanently true and the +3 branch permanently false. A holo counter is a real COUNTER, and COUNTER_GTE already reads counters, so this needed no new engine code at all. Ward 1 is a printed keyword, not an ability.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ENTER_PLAY",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "NOT",
-              "condition": {
-                "type": "FLAG_SET",
-                "flag": "HOLO_COUNTER"
-              }
-            }
-          ]
-        },
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 3,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "HOLO_COUNTER"
-            }
-          ]
-        }
-      ],
       "target": {
         "filter": [
-          {
-            "type": "ATTACK_TYPE_IN",
-            "types": [
-              "fragment"
-            ]
-          }
+          {"type": "ATTACK_HAS_KEYWORD", "keyword": "fragment"}
         ]
-      }
-    },
-    {
-      "ability_type": "STATIC",
+      },
       "effects": [
         {
-          "type": "WARD",
-          "amount": 1
+          "type": "CONDITIONAL_EFFECT",
+          "when": [{"type": "COUNTER_GTE", "counter": "holo", "amount": 1}],
+          "then": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}],
+          "else": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}]
         }
       ]
     }

@@ -300,6 +300,21 @@ def start_of_turn_refresh_player(state: GameState, playerid: int):
     # Weapons ready at the start of the turn (CR 4.4.3d).
     player.weapon_exhausted = False
 
+    # "if you've controlled a <thing> this turn" must count what you ALREADY
+    # control when the turn begins, not only what entered during it. Zone.add
+    # records arena entries, but a permanent that survived from a previous turn
+    # never re-enters, so without this sweep the commonest case — the token has
+    # simply been sitting there — would read as "you controlled nothing".
+    from engine.effect_keywords import record_turn_event_for_player
+    for card in player.arena_cards:
+        record_turn_event_for_player(
+            player, "controlled",
+            getattr(card, "slug", None),
+            getattr(card, "name", None),
+            getattr(card, "types", None) or [],
+            getattr(card, "subtypes", None) or [],
+        )
+
     for card in player.arena_cards:
         if getattr(card, 'has_per_turn_limit'):
             setattr(card, 'activations', card.base_activations)
@@ -898,9 +913,14 @@ def _end_phase_iter(state: GameState) -> None:
     player.chain_attack_hooks = []
     player.boosts_this_chain = 0
     player.life_gained_this_turn = 0
+    player.damage_dealt_this_turn = {}
     # Unused "next attack this turn" power mods (MODIFY_NEXT_ATTACK) expire.
     if hasattr(player, 'dsl_queued_attack_mods'):
         player.dsl_queued_attack_mods = []
+    # Unused "the next <card> you play this turn costs less" reductions expire
+    # with the turn, exactly like the attack mods above.
+    if hasattr(player, 'dsl_queued_cost_mods'):
+        player.dsl_queued_cost_mods = []
     # "this turn" DSL continuous effects (APPLY_CONTINUOUS, e.g. Night's Embrace).
     if getattr(player, 'dsl_continuous_effects', None):
         player.dsl_continuous_effects = [
@@ -1335,6 +1355,20 @@ def _setup_dsl_listeners(state: GameState) -> None:
     # A card's own resolution abilities run when its layer resolves (CR 5.3.4):
     # play.py sets StackEntry.effect_fn for non-attack card layers, and
     # _attack_step dispatches ON_PLAY for attacks (CR 7.2.3).
+    # (_dsl_card_played_listener below DOES listen on 'on_play', but dispatches
+    # ON_CARD_PLAYED to the player's HERO — hero text about the act of playing a
+    # card. It never dispatches ON_PLAY to the played card, so the rule above
+    # still holds.)
+
+    def _dsl_start_of_action_phase_listener(event, game_state: GameState) -> None:
+        # "At the beginning of your action phase" (CR 4.3.1) — distinct from the
+        # start of the TURN, which is the start phase and happens earlier. The
+        # engine already emitted this event; nothing dispatched it to the DSL, so
+        # a card with this timing had no trigger to use.
+        player = game_state.active()
+        for zone in _dsl_permanent_zones(player):
+            for card in list(zone.cards):
+                dispatch(game_state, "START_OF_ACTION_PHASE", card.slug, card=card)
 
     def _dsl_attacking_listener(event, game_state: GameState) -> None:
         combat = game_state.combat
@@ -1413,6 +1447,21 @@ def _setup_dsl_listeners(state: GameState) -> None:
             if target is not None:
                 dispatch(game_state, "ON_TRANSCEND", target.slug, card=target, event=event)
 
+    def _dsl_card_played_listener(event, game_state: GameState) -> None:
+        # "Whenever you play your SECOND non-attack action card each turn, ..."
+        # (Briar). Hero text keyed on the act of playing a card, which nothing
+        # dispatched to the hero — so every such ability invented a private flag
+        # instead. play.py already records the play as turn events, so the card
+        # counts those; this only has to deliver the trigger.
+        data = event.data if isinstance(getattr(event, 'data', None), dict) else {}
+        played = data.get('card')
+        pid = getattr(played, 'controller', None) or getattr(played, 'owner', None)
+        if pid is None or pid not in game_state.players:
+            return
+        hero = game_state.players[pid].hero
+        if hero is not None:
+            dispatch(game_state, "ON_CARD_PLAYED", hero.slug, card=hero, event=event)
+
     def _dsl_token_created_listener(event, game_state: GameState) -> None:
         # "When you create a <token>" — dispatched to the creator's hero; the
         # DSL gates on the token slug in event.data (see TRIGGER_EVENT_GATES).
@@ -1468,6 +1517,14 @@ def _setup_dsl_listeners(state: GameState) -> None:
         slug = combat.attack_card.slug
         dispatch(game_state, "ON_DEAL_DAMAGE", slug,
                  card=combat.attack_card, event=event)
+        # "The first time an attack action card YOU CONTROL deals damage to an
+        # opposing hero, ..." is printed on the HERO (Briar), not on the attack,
+        # so the hero has to hear about it too. Dispatched to the attacking
+        # player's hero; the card's own conditions narrow which attacks count.
+        _hero = game_state.players[combat.attacker_id].hero
+        if _hero is not None:
+            dispatch(game_state, "ON_DEAL_DAMAGE", _hero.slug,
+                     card=_hero, event=event)
         remaining = []
         for td in combat.injected_triggers:
             if td.event_type != "ON_DEAL_DAMAGE":
@@ -1493,6 +1550,9 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('crowd_cheers', _dsl_cheer_listener)
     state.event_manager.register('transcend', _dsl_transcend_listener)
     state.event_manager.register('token_created', _dsl_token_created_listener)
+    state.event_manager.register('on_play', _dsl_card_played_listener)
+    state.event_manager.register('start_of_action_phase',
+                                 _dsl_start_of_action_phase_listener)
     state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)
     state.event_manager.register('recalculate_attack_power', _dsl_recalc_listener)
 
@@ -1752,19 +1812,27 @@ def _resolve_wagers(state: GameState, combat) -> None:
         return
 
     hit = combat.hit
-    for controller_id, prize_slug in combat.wagers:
+    for entry in combat.wagers:
+        # Older entries are 2-tuples; the third element is the source card.
+        controller_id, prize_slug = entry[0], entry[1]
+        source = entry[2] if len(entry) > 2 else None
         opponent_id = 3 - controller_id
         winner_id = controller_id if hit else opponent_id
         # Emit wager_resolved event
-        state.event_manager.emit(
-            Event(type='wager_resolved',
-                  data={'winner': winner_id, 'loser': 3 - winner_id,
-                        'hit': hit, 'prize': prize_slug,
-                        'controller': controller_id}),
-            state)
+        _event = Event(type='wager_resolved',
+                       data={'winner': winner_id, 'loser': 3 - winner_id,
+                             'hit': hit, 'prize': prize_slug,
+                             'controller': controller_id})
+        state.event_manager.emit(_event, state)
         # Create prize token for the winner
         if prize_slug:
             create_token(state, winner_id, prize_slug)
+        # "The winner loses 1{h}" — a payoff that is not a token. Dispatched to
+        # the card that made the wager, which is where that text is printed.
+        if source is not None:
+            from engine.card_effects.dsl import dispatch
+            dispatch(state, "ON_WAGER_RESOLVED", source.slug,
+                     card=source, event=_event)
 
     combat.wagers.clear()
 

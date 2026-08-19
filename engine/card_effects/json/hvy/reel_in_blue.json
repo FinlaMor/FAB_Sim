@@ -1,42 +1,25 @@
 {
   "slug": "reel_in_blue",
+  "_comment": "'X+1' was a bare string amount, which resolves to 0, so this looked at nothing and found nothing. The REVEAL_CARD_COST_GTE cost and the trailing REVEAL/PUT_CARDS_BOTTOM were invented -- the text has no such cost, and 'then shuffle' is what SEARCH_DECK already does. The traps are chosen from the cards LOOKED AT, not from the whole deck, so the search is scoped to that ref.",
   "abilities": [
     {
       "ability_type": "PLAY",
-      "cost": [
-        {
-          "type": "REVEAL_CARD_COST_GTE",
-          "amount": 1
-        }
-      ],
       "effects": [
         {
           "type": "LOOK_AT",
-          "amount": "X+1"
+          "player": "SELF",
+          "zone": "DECK_TOP",
+          "amount": {"type": "X", "plus": 1},
+          "into": "looked"
         },
         {
           "type": "SEARCH_DECK",
+          "from_ref": "looked",
+          "subtype": "Trap",
           "amount": 4,
-          "filter": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zones": [
-                "deck"
-              ],
-              "subtypes": [
-                "trap"
-              ]
-            }
-          ]
+          "destination": "hand"
         },
-        {
-          "type": "REVEAL_TOP_DECK",
-          "amount": "X+1"
-        },
-        {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": "X+1"
-        }
+        {"type": "RELOAD"}
       ]
     }
   ]

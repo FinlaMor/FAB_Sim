@@ -1,37 +1,17 @@
 {
   "slug": "song_of_sinew_yellow",
+  "_comment": "Was MODIFY_ATTACK (this card is not an attack and buffs your NEXT attack) with an invented COUNT expression over a nonexistent REVEALED zone, so it did nothing at all. REVEAL_TOP_DECK now stores what it revealed under a ref and COUNT_REF asks the question. 'Put them back in any order' needs no effect: revealing never moved them off the deck.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 4, "into": "revealed"},
         {
-          "type": "REVEAL_TOP_DECK",
-          "amount": 4
-        },
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": {
-            "type": "COUNT",
-            "condition": {
-              "type": "CARD_IN_ZONE",
-              "zone": "REVEALED",
-              "conditions": [
-                {
-                  "type": "ATTACK_POWER_GTE",
-                  "amount": 6
-                }
-              ]
-            }
-          }
+          "amount": {"type": "COUNT_REF", "ref": "revealed", "power_gte": 6}
         },
-        {
-          "type": "PUT_CARDS_BOTTOM",
-          "zone": "REVEALED"
-        },
-        {
-          "type": "GO_AGAIN"
-        }
+        {"type": "GO_AGAIN"}
       ]
     }
   ]

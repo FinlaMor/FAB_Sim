@@ -60,7 +60,11 @@ def test_wager_effect_registers_on_combat():
     st.combat = CombatState(attacker_id=1, link_id=1, attack_power=1,
                             attack_card=src, keywords=[])
     compile_effect("WAGER", {"prize": "gold"})(src, None, st)
-    assert (1, "gold") in st.combat.wagers
+    # Controller and prize, not the whole tuple: entries also carry the source
+    # card so a wager whose payoff is not a token ("the winner loses 1{h}") can
+    # be dispatched back to the card that made it.
+    assert [(w[0], w[1]) for w in st.combat.wagers] == [(1, "gold")]
+    assert st.combat.wagers[0][2] is src
 
 
 # --- PITCH cost: pay by pitching a chosen card (CR 8.5.44) ----------------

@@ -1,40 +1,32 @@
 {
   "slug": "briar",
+  "_comment": "Both flags were set by nothing, so neither of Briar's hero abilities could ever fire. 'The FIRST TIME ... this turn' is a once-per-turn gate on the trigger, not a flag, and it is checked after every other condition so a trigger whose conditions failed does not burn the turn's single use. 'Your SECOND non-attack action card' must be an EXACT count: a >= test stays true for the third and every later play, turning 'the second' into 'the second and every one after'.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "trigger": "ON_DEAL_DAMAGE",
+      "once_per_turn": "earth",
       "conditions": [
-        {
-          "type": "SOURCE_IS_ATTACK",
-          "source": "self"
-        },
-        {
-          "type": "FLAG_SET",
-          "flag": "FIRST_ATTACK_DAMAGE_DEALT"
-        }
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "ATTACK_CONTROLLED_BY_YOU"},
+        {"type": "ATTACK_IS_NOT_WEAPON"},
+        {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
       ],
       "effects": [
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Embodiment of Earth"
-        }
+        {"type": "CREATE_TOKEN", "token_type": "Embodiment of Earth",
+         "token": "embodiment_of_earth"}
       ]
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "trigger": "ON_CARD_PLAYED",
       "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "SECOND_NON_ATTACK_PLAYED"
-        }
+        {"type": "EVENT_THIS_TURN", "event": "play",
+         "qualifier": "non_attack_action", "count": 2, "exact": true}
       ],
       "effects": [
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Embodiment of Lightning"
-        }
+        {"type": "CREATE_TOKEN", "token_type": "Embodiment of Lightning",
+         "token": "embodiment_of_lightning"}
       ]
     }
   ]

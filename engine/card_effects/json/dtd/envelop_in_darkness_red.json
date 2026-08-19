@@ -1,34 +1,21 @@
 {
   "slug": "envelop_in_darkness_red",
+  "_comment": "RUNE_GATE_FLAG was set by nothing, and it gated a STATIC ability, which maps to no event and never runs -- so the +3 was doubly dead. Rune Gate (CR 8.3.27) is now a real keyword: a card declaring it is offered from the banished zone, free, when its controller has Runechants >= its {r} cost, and 8.3.27a marks the card and the player as having rune gated. 'The NEXT attack action card you rune gate' is a one-shot on the next matching attack, not a turn-long static -- as a static it would buff every rune-gated attack for the rest of the turn.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
+        {"type": "CREATE_TOKEN", "token_type": "Runechant", "token": "runechant"},
         {
-          "type": "CREATE_TOKEN",
-          "token_type": "Runechant",
-          "token": "runechant"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "RUNE_GATE_FLAG"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
-        }
+          "amount": 3,
+          "filter": [
+            {"type": "WAS_RUNE_GATED"},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+          ]
+        },
+        {"type": "GO_AGAIN"}
       ]
     }
   ]

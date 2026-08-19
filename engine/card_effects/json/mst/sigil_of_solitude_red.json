@@ -1,24 +1,20 @@
 {
   "slug": "sigil_of_solitude_red",
+  "_comment": "CONTROLS_TOKEN_TYPE with an 'amount': 'gt' and a stray 'value' was nonsense on three counts: an Illusionist aura is not a token type, 'gt' is not an amount, and nothing excluded THIS card -- so had it worked at all, Sigil would have seen itself and destroyed itself every turn. Ward 4 is a printed keyword, not an ability.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
       "conditions": [
         {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_types": [
-            "Illusionist"
-          ],
-          "amount": "gt",
-          "value": 1
+          "type": "CONTROLS_SUBTYPE",
+          "subtype": "Aura",
+          "card_class": "Illusionist",
+          "exclude_self": true
         }
       ],
       "effects": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        }
+        {"type": "DESTROY_PERMANENT", "target": "self"}
       ]
     }
   ]

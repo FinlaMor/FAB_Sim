@@ -320,6 +320,15 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
     can_afford = True
     exclude = card if card is not None else None
 
+    # CR 8.3.27 — rune gating plays the card from the banished zone WITHOUT
+    # PAYING its {r} cost. The permission alone is not the keyword; a rune-gated
+    # card that still had to be paid for would almost never be worth playing.
+    if (playable and card is not None and getattr(card, 'zone', None) == 'banished'
+            and rune_gate_available(state, player, card)):
+        setattr(action, 'resource_cost', 0)
+        setattr(action, 'rune_gated', True)
+        return True, action
+
     x_in_cost = False  # True when the printed cost contains an X (e.g. '3X'); action carries the raw string
     cost_with_x = None
     if playable: # play cards are evaluated with the properties cost and special_cost
@@ -327,7 +336,12 @@ def _cost_check(state, card, player_id, action, playable) -> tuple[bool, Action]
             resource_cost = _calculate_resource_cost(state, action)
         elif card.special_cost is not None:
             cost_with_x = card.special_cost
-            min_cost = int(str(cost_with_x).strip('Xx \t')) #ie '3X' cost on imposing visage means 'pay at least 3'
+            # ie 'X3' cost on imposing visage means 'pay at least 3'. A bare 'X'
+            # (Reel In) strips to the empty string, and int('') RAISES — the
+            # card was unplayable-by-crash rather than free. A bare X has no
+            # minimum, so it is 0.
+            _min_text = str(cost_with_x).strip('Xx \t')
+            min_cost = int(_min_text) if _min_text else 0
             if min_cost < 0:
                 return False, action
             resource_cost = min_cost
@@ -442,6 +456,144 @@ def can_pay_resource_cost(hand_cards: list[Card], target_cost: int, current_reso
     )
     return total_pitch >= needed
 
+def _cost_mod_matches(state, mod, card) -> bool:
+    """Does a queued one-shot cost reduction apply to this card?
+
+    The filter holds raw DSL condition specs evaluated against the card being
+    played, so "the next BLUE card", "the next Runeblade card" and "the next
+    attack action" are all the same mechanism rather than one regex each.
+    """
+    from engine.card_effects.dsl.condition_types import compile_condition as _cc
+    for spec in mod.get('filter', []) or []:
+        fn = _cc(spec.get('type', 'none'), spec)
+        if fn is not None and not fn(card, None, state):
+            return False
+    return True
+
+
+def _apply_dynamic_defense(state, card) -> None:
+    """Recompute a card whose printed {d} is an expression, before it is read.
+
+    "Grandstand Legplates' {d} is equal to the number of opposing heroes with
+    greater {h} than you" — the value changes with the game state, so it cannot
+    be a fixed number on the card. There is no defense-recalculation layer to
+    hang this on (the continuous-effect manager documents prop='defense' but
+    nothing ever recalculates it), so it is applied at the one point a defending
+    card's {d} is actually consumed. Declared as
+    {"ability_type":"STATIC","effects":[{"type":"DEFENSE_EQUALS","amount":...}]}.
+    """
+    slug = getattr(card, "slug", None)
+    if not slug:
+        return
+    from engine.card_effects.dsl.loader import get_card
+    card_def = get_card(slug)
+    if card_def is None:
+        return
+    for ability in card_def.abilities:
+        if (ability.ability_type or "").upper() != "STATIC":
+            continue
+        for eff in ability.effects:
+            if (getattr(eff, "effect_type", "") or "").upper() != "DEFENSE_EQUALS":
+                continue
+            from engine.card_effects.dsl.effect_types import _resolve_amount
+            try:
+                value = int(_resolve_amount(eff.params.get("amount", 0), state, card))
+            except (TypeError, ValueError):
+                value = 0
+            card.defense = card.base_defense = value
+            return
+
+
+def _record_reaction_on_link(state, player_id, kinds) -> None:
+    """Record that a reaction was played or activated on THIS chain link.
+
+    "the attacking hero has played or activated an attack reaction THIS CHAIN
+    LINK" (Hunted or Hunter) is narrower than anything turn-scoped: a second
+    attack in the same turn must not inherit the first link's reactions. A new
+    CombatState is built per attack, so the list is link-scoped by construction.
+    """
+    combat = getattr(state, "combat", None)
+    if combat is None or player_id is None:
+        return
+    for kind in kinds:
+        combat.reactions_this_link.append((player_id, kind))
+
+
+def _reaction_kinds(card=None, ability_type=None) -> list[str]:
+    """Which reaction kinds a card (by type) or an ability (by ability_type) is."""
+    names = set()
+    if ability_type:
+        names.add(str(ability_type).upper())
+    for t in ((getattr(card, "types", None) or [])
+              + (getattr(card, "subtypes", None) or [])) if card is not None else []:
+        names.add(str(t).upper())
+    flat = {"".join(ch for ch in n if ch.isalnum()) for n in names}
+    out = []
+    if "ATTACKREACTION" in flat:
+        out.append("attack_reaction")
+    if "DEFENSEREACTION" in flat:
+        out.append("defense_reaction")
+    return out
+
+
+def _static_effect_types(card) -> set[str]:
+    """Effect types declared by this card's STATIC abilities, from the CardDef.
+
+    Read from the definition rather than a Card attribute so a declaration holds
+    for any copy, including one that reached its zone before any ability of
+    theirs ever ran.
+    """
+    slug = getattr(card, "slug", None)
+    if not slug:
+        return set()
+    from engine.card_effects.dsl.loader import get_card
+    card_def = get_card(slug)
+    if card_def is None:
+        return set()
+    return {(getattr(eff, "effect_type", "") or "").upper()
+            for ability in card_def.abilities
+            if (ability.ability_type or "").upper() == "STATIC"
+            for eff in ability.effects}
+
+
+def _runechant_count(player) -> int:
+    return sum(1 for c in player.permanents.cards
+               if "runechant" in (getattr(c, "slug", "") or "").lower())
+
+
+def rune_gate_available(state, player, card) -> bool:
+    """CR 8.3.27 — may this card be rune gated from the banished zone right now?
+
+    "If you control Runechants equal to or greater than this's {r} cost, you may
+    play it from your banished zone WITHOUT PAYING its {r} cost." Both halves
+    matter: the permission AND the free cost. 26 corpus cards carry the keyword.
+    """
+    if "RUNE_GATE" not in _static_effect_types(card):
+        return False
+    cost = getattr(card, "raw_cost", None)
+    if cost is None:
+        cost = getattr(card, "cost", None)
+    try:
+        cost = int(cost)
+    except (TypeError, ValueError):
+        return False
+    return _runechant_count(player) >= cost
+
+
+def _self_playable_from_banished(card, state=None, player=None) -> bool:
+    """Does this card's own JSON say it may be played from the banished zone?
+
+    Declared as {"ability_type":"STATIC","effects":[{"type":"PLAYABLE_FROM_BANISHED"}]},
+    or as RUNE_GATE, whose permission is conditional on Runechants.
+    """
+    statics = _static_effect_types(card)
+    if "PLAYABLE_FROM_BANISHED" in statics:
+        return True
+    if "RUNE_GATE" in statics and state is not None and player is not None:
+        return rune_gate_available(state, player, card)
+    return False
+
+
 def recalculate_playable(state, player_id):
     player = state.players[player_id]
     mgr = state.continuous_effect_manager
@@ -463,6 +615,16 @@ def recalculate_playable(state, player_id):
     _banish_playable = [c for c in _all_banished
                         if any(c is g for g in player.playable_from_banished)
                         and c.raw_cost is not None]
+    # Cards that grant themselves the permission permanently ("You may play Rift
+    # Bind from your banished zone"). Unlike a trap_door grant this is not a
+    # timed effect on some OTHER card — the card carries it while it sits in the
+    # zone, so there is no moment at which anything could push it onto
+    # playable_from_banished. Declared as a STATIC PLAYABLE_FROM_BANISHED
+    # effect, and only from the controller's OWN banished zone.
+    _banish_playable += [c for c in player.banished.cards
+                         if c.raw_cost is not None
+                         and c not in _banish_playable
+                         and _self_playable_from_banished(c, state, player)]
     for card in _banish_playable:
         card.playable = True
 
@@ -663,7 +825,36 @@ def _apply_play_card(state: GameState, action: Action) -> None:
         "non_attack_action" if (_is_action and not _is_attack) else None,
     )
 
+    _record_reaction_on_link(state, action.player_id, _reaction_kinds(card=card))
+
+    # CR 8.3.27a: a card played from the banished zone using rune gate is
+    # considered RUNE GATED, and its controller to have rune gated. Both are
+    # recorded — "the next attack action card you rune gate this turn gets
+    # +3{p}" (Envelop in Darkness) asks about the CARD, other cards ask about
+    # the player.
+    if getattr(action, 'rune_gated', False):
+        card.rune_gated = True
+        from engine.effect_keywords import _record_turn_event as _rec_rg
+        _rec_rg(state, action.player_id, "rune_gate",
+                getattr(card, 'slug', None),
+                getattr(card, 'types', None) or [],
+                getattr(card, 'subtypes', None) or [])
+
     _src_zone = player.zone_by_name(getattr(card, 'zone', None) or 'hand')
+    # Where it was played FROM, captured before the move. "If you play this from
+    # your banished zone, ..." / "...from your arsenal" is a real and recurring
+    # template, and by the time the play ability resolves the card has already
+    # left, so asking "is it in the banished zone" then is always false.
+    card.played_from_zone = (getattr(_src_zone, 'name', None)
+                             if _src_zone is not None else 'hand') or 'hand'
+    # X for a card with an X in its cost ("search for an aura with cost X or
+    # less", "look at the top X+1 cards"). Costs are paid before this point, so
+    # action.resource_cost is what the player actually chose to pay. The engine
+    # has carried X costs since Imposing Visage, but the DSL had no way to READ
+    # the paid amount, so every X card either hard-coded a number or invented an
+    # amount that resolved to 0.
+    if getattr(card, 'special_cost', None) is not None:
+        card.x_paid = int(getattr(action, 'resource_cost', 0) or 0)
     if _src_zone is not None and card in _src_zone.cards:
         _src_zone.remove(card)
     else:
@@ -815,6 +1006,9 @@ def _apply_activate(state: GameState, action: Action) -> None:
         # ability (target filter + conditions + effects) directly rather than
         # broadcasting ON_ACTIVATE (which maps to ACTIVATE/INSTANT only).
         from engine.card_effects.dsl.interpreter import run_ability
+        # "played OR ACTIVATED an attack reaction" — this is the activated half.
+        _record_reaction_on_link(state, action.player_id,
+                                 _reaction_kinds(ability_type=ability.ability_type))
         run_ability(ability, card, _ev, state)
     else:
         from engine.card_effects.dsl import dispatch as _dsl_dispatch
@@ -871,6 +1065,7 @@ def _apply_defend(state: GameState, action: Action) -> None:
         # under its controller — the defender who declared it.
         card.controller = defender.player_id
         combat.defending_cards.append(card)
+        _apply_dynamic_defense(state, card)
         defense_val = card.defense or 0
         combat.total_defense += defense_val
         if card.is_equipment:
@@ -940,6 +1135,17 @@ def _calculate_resource_cost(state: GameState, action: Action) -> int:
             m2 = re.match(r'^next_guardian_attack_action_cost_-(\d+)$', key)
             if m2 and is_attack_action and 'guardian' in card_classes:
                 cost -= int(m2.group(1))
+                break
+
+        # "The NEXT BLUE card you play this turn costs {r} less" and friends.
+        # The two regexes above are hand-written special cases for attack
+        # actions and Guardian attack actions; any other wording had no way to
+        # express itself. This is the same queued-one-shot shape
+        # dsl_queued_attack_mods already uses for "your next attack", with the
+        # match expressed as ordinary DSL conditions over the card being played.
+        for mod in (getattr(player, 'dsl_queued_cost_mods', None) or []):
+            if _cost_mod_matches(state, mod, card):
+                cost -= int(mod.get('amount', 0) or 0)
                 break
 
     # DSL conditional cost modifiers on the card itself (CR 5.1.6, e.g. Stains
@@ -1183,6 +1389,20 @@ def _pay_costs(state, player_id, action):
         if is_attack_action and 'guardian' in card_classes:
             player.current_turn_effects.remove(key)
             break
+    # Consume the matching queued cost mod, and run whatever the card said to do
+    # to the card that used it ("...THAT card deals 1 more damage"). The target
+    # is not known until this moment — it is whichever card consumed the
+    # reduction — so the follow-up can only be attached here.
+    _queued_costs = getattr(player, 'dsl_queued_cost_mods', None) or []
+    for mod in list(_queued_costs):
+        if not _cost_mod_matches(state, mod, card):
+            continue
+        _queued_costs.remove(mod)
+        from engine.card_effects.dsl.effect_types import compile_effect as _ce
+        for spec in (mod.get('on_consume') or []):
+            _ce((spec.get('type') or '').upper(),
+                {k: v for k, v in spec.items() if k != 'type'})(card, None, state)
+        break
 
     life_cost: int = 0
     if hasattr(action, "life_cost") and (action.life_cost or 0) > 0 and player.hero is not None:

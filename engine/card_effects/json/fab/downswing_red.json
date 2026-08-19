@@ -1,49 +1,25 @@
 {
   "slug": "downswing_red",
+  "_comment": "CLASH_WIN/CLASH_LOSE were flags nothing sets, and this card does not clash -- it WAGERS (CR 8.5.46). Both branches were also identical, so even a working flag would have produced the same result either way. A wager could previously only pay out a token, so 'the winner loses 1{h}' had no expression; the wager now carries its source card and dispatches ON_WAGER_RESOLVED back to it.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
-        },
-        {
-          "type": "CLASH",
-          "target": "defending_hero"
-        },
-        {
-          "type": "LOSE_LIFE",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "CLASH_WIN"
-            }
-          ]
-        },
-        {
-          "type": "LOSE_LIFE",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "CLASH_LOSE"
-            }
-          ]
-        }
-      ],
       "target": {
         "filter": [
-          {
-            "type": "WEAPON_SUBTYPE_IN",
-            "subtypes": [
-              "sword"
-            ]
-          }
+          {"type": "WEAPON_SUBTYPE_IN", "subtypes": ["sword"]}
         ]
-      }
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {"type": "WAGER"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_WAGER_RESOLVED",
+      "effects": [
+        {"type": "LOSE_LIFE", "player": "WAGER_WINNER", "amount": 1}
+      ]
     }
   ]
 }

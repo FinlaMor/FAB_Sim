@@ -1,52 +1,23 @@
 {
   "slug": "lesson_in_lava_yellow",
+  "_comment": "DEAL_ARCANE was used as a FLAG name and DEAL_ARCANE_AMOUNT as an amount; neither exists, so the search could never run and its cost cap was 0 regardless. 'The damage dealt by Lesson in Lava' is what ACTUALLY landed, not the printed 3 -- prevention and replacement effects change it -- so it reads the last dealt amount. The search puts the card ON TOP of the deck, which is why the destination is deck_top and not hand. Kano Specialization is a deckbuilding restriction (CR 8.3.7), never an in-game condition.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
+        {"type": "DEAL_ARCANE", "amount": 3, "target": "OPPONENT"},
         {
-          "type": "DEAL_ARCANE",
-          "amount": 3
-        },
-        {
-          "type": "SEARCH_DECK",
+          "type": "MAY",
+          "prompt": "Search your deck for a Wizard card to put on top?",
           "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "DEAL_ARCANE"
-            }
+            {"type": "NOT", "condition": {"type": "DECK_EMPTY"}}
           ],
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zones": [
-                  "deck"
-                ]
-              },
-              {
-                "type": "CLASS_IN",
-                "classes": [
-                  "Wizard"
-                ]
-              },
-              {
-                "type": "REVEAL_CARD_COST_LTE",
-                "amount": "DEAL_ARCANE_AMOUNT"
-              }
-            ]
-          },
           "effects": [
             {
-              "type": "REVEAL_TOP_DECK"
-            },
-            {
-              "type": "PUT_CARDS_BOTTOM",
-              "amount": 1
-            },
-            {
-              "type": "PUT_CARDS_TOP",
-              "amount": 1
+              "type": "SEARCH_DECK",
+              "card_class": "Wizard",
+              "max_cost": {"type": "LAST_DAMAGE_DEALT"},
+              "destination": "deck_top"
             }
           ]
         }

@@ -1,44 +1,42 @@
 {
   "slug": "vaporize__shock_yellow",
+  "_comment": "Meld card (CR 8.3.38). Both sides previously fired unconditionally as two bare PLAY abilities, and the Vaporize side used COUNTER_GTE -- a CONDITION type -- as an amount, so X was always 0 and nothing was ever destroyed. X is the total ARCANE damage dealt to opposing heroes this turn, a magnitude the turn-event markers cannot carry, so it reads the tally.",
   "abilities": [
     {
       "ability_type": "PLAY",
+      "conditions": [
+        {"type": "MELD_SIDE", "side": "top"}
+      ],
       "effects": [
         {
           "type": "DESTROY_PERMANENT",
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zones": [
-                  "aura"
-                ]
-              },
-              {
-                "type": "COUNTER_GTE",
-                "asset": "ARCANIC_DAMAGE_DEALT",
-                "amount": 0
-              }
-            ]
-          }
+          "target": "chosen",
+          "player": "ANY",
+          "subtype": "Aura",
+          "token": false,
+          "optional": true,
+          "max_cost": {"type": "DAMAGE_DEALT_THIS_TURN",
+                       "damage_type": "arcane", "target": "hero"}
         },
         {
-          "type": "DESTROY_TOKEN",
-          "amount": {
-            "type": "COUNTER_GTE",
-            "asset": "ARCANIC_DAMAGE_DEALT",
-            "amount": 0
-          }
+          "type": "DESTROY_PERMANENT",
+          "target": "chosen",
+          "player": "ANY",
+          "subtype": "Aura",
+          "token": true,
+          "optional": true,
+          "amount": {"type": "DAMAGE_DEALT_THIS_TURN",
+                     "damage_type": "arcane", "target": "hero"}
         }
       ]
     },
     {
       "ability_type": "PLAY",
+      "conditions": [
+        {"type": "MELD_SIDE", "side": "bottom"}
+      ],
       "effects": [
-        {
-          "type": "DEAL_ARCANE",
-          "amount": 1
-        }
+        {"type": "DEAL_ARCANE", "amount": 1}
       ]
     }
   ]

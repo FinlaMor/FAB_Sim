@@ -1,32 +1,23 @@
 {
   "slug": "break_ground_red",
+  "_comment": "PUT_CARDS_BOTTOM_FLAG was set by nothing, and it gated BOTH the ability and the draw -- so the whole card was dead. 'You MAY put a card ... If you do, draw' is a MAY block: declining runs nothing, which is what makes 'if you do' fall out without needing a flag at all. Gated on the arsenal actually holding a card, so an empty arsenal cannot accept the prompt and draw for free.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": 1,
-          "zone": "arsenal"
-        },
-        {
-          "type": "DRAW",
-          "amount": 1,
+          "type": "MAY",
+          "prompt": "Put a card from your arsenal on the bottom of your deck to draw a card?",
           "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "PUT_CARDS_BOTTOM_FLAG"
-            }
+            {"type": "CARD_IN_ZONE", "zone": "arsenal", "player": "SELF"}
+          ],
+          "effects": [
+            {"type": "PUT_CARDS_BOTTOM", "from_zones": ["arsenal"]},
+            {"type": "DRAW", "amount": 1}
           ]
         }
-      ],
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "PUT_CARDS_BOTTOM_FLAG"
-        }
-      ],
-      "trigger": "ON_ATTACK"
+      ]
     }
   ]
 }

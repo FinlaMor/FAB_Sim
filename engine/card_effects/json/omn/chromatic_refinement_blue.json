@@ -1,45 +1,23 @@
 {
   "slug": "chromatic_refinement_blue",
+  "_comment": "Both flags were set by nothing, and they gated a STATIC ability, which maps to no event and never runs -- so nothing on this card worked. The trigger is the beginning of the ACTION phase (CR 4.3.1), not the start of the turn: the start phase happens earlier. 'The NEXT blue card you play' is a one-shot queued reduction; as a turn-long flag it would discount every blue card for the rest of the turn. 'THAT card' is not known until something consumes the reduction, so the damage boost is attached at that moment via on_consume, and it is a REPLACEMENT ('instead it deals that much plus 1'), not a trigger.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "trigger": "START_OF_ACTION_PHASE",
       "conditions": [
-        {
-          "type": "IS_ACTIVE_PLAYER"
-        }
+        {"type": "IS_ACTIVE_PLAYER"}
       ],
       "effects": [
+        {"type": "DESTROY_PERMANENT", "target": "self"},
         {
-          "type": "DESTROY_REF",
-          "target": "self"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "CHROMATIC_REFINEMENT_FLAG"
-        }
-      ],
-      "effects": [
-        {
-          "type": "PAY_OR_DAMAGE",
-          "target": "next_blue_card_played",
-          "resource_cost": 1
-        },
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
+          "type": "MODIFY_NEXT_CARD_COST",
           "amount": 1,
-          "target": "next_blue_card_played",
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "CHROMATIC_REFINEMENT_DEALT_DAMAGE"
-            }
+          "filter": [
+            {"type": "CARD_IS_COLOR", "color": "blue"}
+          ],
+          "on_consume": [
+            {"type": "BOOST_NEXT_DAMAGE", "amount": 1}
           ]
         }
       ]

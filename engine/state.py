@@ -267,6 +267,33 @@ class Zone:
                     getattr(card, "types", None) or [],
                     getattr(card, "subtypes", None) or [],
                 )
+            # "If you've CONTROLLED a Seismic Surge token this turn"
+            # (Aftershock). Deliberately broader than the create event: a token
+            # you were given, stole, or already had at turn start was never
+            # created this turn, yet you controlled it. Same choke-point
+            # argument as the graveyard marker above.
+            elif card.is_in_arena and self.player is not None:
+                from engine.effect_keywords import record_turn_event_for_player
+                record_turn_event_for_player(
+                    self.player, "controlled",
+                    getattr(card, "slug", None),
+                    getattr(card, "name", None),
+                    getattr(card, "types", None) or [],
+                    getattr(card, "subtypes", None) or [],
+                )
+
+            # "If an activated ability or ACTION CARD EFFECT puts this face up
+            # into a zone FROM YOUR DECK, ..." (Back Alley Breakline). Every
+            # part of that sentence is known only here: the previous zone,
+            # whether the card is face up, and — via the effect context —
+            # whether a card effect rather than a game rule moved it.
+            if (card.prev_zone == "deck" and next_is_public
+                    and source == "effect" and self.name != "deck"):
+                _st = getattr(self, "state", None)
+                if _st is not None:
+                    from engine.card_effects.dsl import dispatch as _dsl_dispatch
+                    _dsl_dispatch(_st, "ON_PUT_FACEUP_FROM_DECK", card.slug,
+                                  card=card, event=None)
         return ZoneEntryResult.ALLOW
 
     def remove(self, card: Card) -> bool:
@@ -845,6 +872,14 @@ class Player:
         # turn" (Thistle Bloom) needs the AMOUNT gained, which no marker
         # carries — turn-event markers count occurrences, not magnitudes.
         self.life_gained_this_turn: int = 0
+        # Damage DEALT this turn, tallied by magnitude and keyed by what the
+        # printed text names: "total" plus one key per damage type ("arcane"),
+        # per target kind ("hero"), and per pair ("arcane:hero"). Vaporize's
+        # "X is the total arcane damage you've dealt to opposing heroes this
+        # turn" needs the sum, and a turn-event marker cannot carry it — markers
+        # count occurrences, so three 1-point hits and one 3-point hit are
+        # indistinguishable to them.
+        self.damage_dealt_this_turn: dict = {}
         self.weapon_exhausted: bool = False
         self.hero_power_exhausted: bool = False
 
@@ -1156,7 +1191,16 @@ class CombatState:
     attack_target: Optional["Card"] = None  # Set when attack targets a specific card (e.g. Spectra aura, ally) instead of hero
     attack_target_card: Optional["Card"] = None  # The resolved Card object for the attack target
     # Wager system (CR 8.5.46): list of (controller_id, prize_token_slug_or_None)
-    wagers: list[tuple[int, str | None]] = field(default_factory=list)
+    # (controller_id, prize_slug, source_card). The source is carried so a
+    # wager whose payoff is not a token can dispatch back to the card that
+    # made it (see engine._resolve_wagers).
+    wagers: list[tuple] = field(default_factory=list)
+    # (player_id, card_slug) for each attack/defense reaction played or
+    # activated on THIS chain link. "the attacking hero has played or activated
+    # an attack reaction this chain link" (Hunted or Hunter) is narrower than
+    # any turn-scoped record — a later chain link in the same turn must not
+    # inherit it — and there was nothing chain-link-scoped to read.
+    reactions_this_link: list[tuple] = field(default_factory=list)
     # Stage-6 keyword effects added directly during this combat chain link
     # (e.g. Go Again from triggered abilities). Unioned into combat.keywords by
     # _recalculate_attack_power so all "X in combat.keywords" checks still work.
@@ -1282,9 +1326,14 @@ class GameState:
 
     def __post_init__(self):
         # Wire players dict into every zone so CLEAR redirects can reach any player's graveyard.
+        # The state itself goes with it: Zone.add is the one place that knows a
+        # card entered a zone FROM THE DECK, face up, inside an effect — the
+        # exact question Back Alley Breakline asks — and without a state
+        # reference it had no way to dispatch that to the card.
         for player in self.players.values():
             for zone in _get_player_zones(player):
                 zone.players = self.players
+                zone.state = self
 
     @property
     def continuous_effect_manager(self):

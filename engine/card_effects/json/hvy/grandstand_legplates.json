@@ -1,27 +1,13 @@
 {
   "slug": "grandstand_legplates",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). The remaining STATIC used MODIFY_DEFENSE_VALUE with an invented COUNT expression -- and a STATIC ability maps to no event, so it never ran at all. Its {d} is an EXPRESSION, so it is declared as DEFENSE_EQUALS and evaluated where the defending card's {d} is consumed.",
   "abilities": [
     {
       "ability_type": "STATIC",
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "amount": {
-            "type": "COUNT",
-            "condition": {
-              "type": "AND",
-              "conditions": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "opponent_heroes"
-                },
-                {
-                  "type": "HEALTH_GT_OPP"
-                }
-              ]
-            }
-          }
+          "type": "DEFENSE_EQUALS",
+          "amount": {"type": "COUNT_OPPOSING_HEROES", "life": "GREATER"}
         }
       ]
     }

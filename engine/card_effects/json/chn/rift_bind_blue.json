@@ -1,12 +1,21 @@
 {
   "slug": "rift_bind_blue",
+  "_comment": "The bogus BANISH_FROM_GRAVEYARD additional_cost is gone: 'play this from your banished zone' is a PERMISSION, not a cost, and Rift Bind is already IN the banished zone when it applies. X counts real turn events (play.py records non_attack_action per play) instead of the invented COUNT expression, which resolved to 0 and made the whole card do nothing.",
   "abilities": [
     {
-      "ability_type": "PLAY",
-      "additional_cost": [
+      "ability_type": "STATIC",
+      "effects": [
         {
-          "type": "BANISH_FROM_GRAVEYARD",
-          "target": "self"
+          "type": "PLAYABLE_FROM_BANISHED"
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ZONE",
+          "zone": "banished"
         }
       ],
       "effects": [
@@ -14,18 +23,9 @@
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": {
-            "type": "COUNT",
-            "condition": {
-              "type": "CARD_IN_ZONE",
-              "zone": "play",
-              "condition": {
-                "type": "NOT",
-                "condition": {
-                  "type": "HAS_KEYWORD",
-                  "keyword": "Attack"
-                }
-              }
-            }
+            "type": "COUNT_TURN_EVENT",
+            "event": "play",
+            "qualifier": "non_attack_action"
           }
         }
       ]

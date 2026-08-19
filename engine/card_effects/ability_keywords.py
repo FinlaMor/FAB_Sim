@@ -840,6 +840,15 @@ def effect_steal_token(state: GameState, stealer_id: int, victim_id: int,
     victim.auras.remove(token)
     token.controller = stealer_id
     stealer.auras.add(token)
+    # "if you haven't created or stolen a Gold this turn" (Loan Shark). Creating
+    # is already recorded inside the create-token keyword; stealing is the other
+    # half of that sentence and had no record at all, so the check could only
+    # ever see half the game.
+    from engine.effect_keywords import _record_turn_event
+    _record_turn_event(state, stealer_id, "steal",
+                       getattr(token, "slug", None),
+                       getattr(token, "name", None),
+                       getattr(token, "subtypes", None) or [])
     return True
 
 
@@ -942,15 +951,21 @@ def effect_wager(state: GameState, player_id: int, source: Card = None) -> bool:
     return winner == player_id
 
 
-def add_wager(state: GameState, controller_id: int, prize_slug: str | None = None) -> None:
+def add_wager(state: GameState, controller_id: int, prize_slug: str | None = None,
+              source: Card | None = None) -> None:
     """Add a wager to the current combat chain link.
 
     The wager resolves automatically at chain link resolution via
     ``_resolve_wagers`` in engine.py: if the attack hits, the controller
     wins and creates the prize token; otherwise the opponent wins it.
+
+    `source` is the card that created the wager. A token prize was the only
+    outcome the wager could have, so a card whose payoff is anything else
+    ("the winner loses 1{h}") had no way to express it; recording the source
+    lets _resolve_wagers dispatch ON_WAGER_RESOLVED back to that card.
     """
     if state.combat is not None:
-        state.combat.wagers.append((controller_id, prize_slug))
+        state.combat.wagers.append((controller_id, prize_slug, source))
         state.event_manager.emit(
             type('Event', (), {'type': 'wagered',
                                'data': {'controller': controller_id, 'prize': prize_slug}})(),

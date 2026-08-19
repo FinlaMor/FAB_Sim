@@ -55,5 +55,10 @@ def _beat_chest_effect_cost(state: GameState, player_id: int, action, check: boo
         player.hand.remove(target)
         player.graveyard.add(target)
     action.additional_costs['beat_chest'] = True
+    # "if you've beaten chest this turn" (Pound Town). CR 8.3.33 makes beating
+    # chest the act of paying this optional cost, so it is recorded HERE and
+    # only when the player actually paid — declining above returns before this.
+    from engine.effect_keywords import _record_turn_event
+    _record_turn_event(state, player_id, "beat_chest")
     return True
 KEYWORD_COSTS['beat_chest'] = _beat_chest_effect_cost

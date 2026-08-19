@@ -57,6 +57,33 @@ def _run_ability(ability, card, event, state) -> None:
         if fn is not None and not fn(card, event, state):
             return
 
+    # "The FIRST TIME an attack action card you control deals damage to an
+    # opposing hero this turn", "the first time this deals damage to a hero".
+    # A once-per-turn gate on a TRIGGERED ability, which the DSL could not
+    # express: every such card invented a private flag (FIRST_ATTACK_DAMAGE_DEALT,
+    # DASHING_FLASHFOOT_FIRST_DAMAGE) that nothing set, so it never fired.
+    #
+    # Checked here, past every other gate, so a trigger whose conditions FAILED
+    # does not burn the turn's single use — "the first time X happens" means the
+    # first time it actually happens.
+    _opt = getattr(ability, 'params', None) or {}
+    _once = _opt.get('once_per_turn')
+    if _once:
+        from engine.card_effects.ability_keywords import _controller_id
+        from engine.effect_keywords import TURN_EVENT_MARKER
+        # Keyed by the ability's own name when given ("once_per_turn": "earth"),
+        # else the card slug, so two once-per-turn abilities on one card do not
+        # share a single use.
+        key = _once if isinstance(_once, str) else getattr(card, 'slug', '?')
+        marker = f"{TURN_EVENT_MARKER}onceperturn:{key}"
+        pid = _controller_id(card)
+        player = state.players.get(pid) if pid in getattr(state, 'players', {}) else None
+        if player is None:
+            return
+        if marker in player.current_turn_effects:
+            return
+        player.current_turn_effects.append(marker)
+
     # Past every gate — this ability is genuinely resolving, not just matched.
     _track_ability(card, ability)
 

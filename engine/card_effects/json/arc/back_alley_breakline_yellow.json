@@ -1,21 +1,12 @@
 {
   "slug": "back_alley_breakline_yellow",
+  "_comment": "ACTIVATED_ABILITY_OR_ACTION_CARD_EFFECT was set by nothing, and the trigger was ON_ENTER_PLAY -- this card goes to hand or arsenal, never to the arena, so even a working flag would have gated a trigger that could not fire. Zone.add is the only place that knows the previous zone, whether the card is face up, and whether an EFFECT rather than a game rule moved it (engine.context), so the trigger is dispatched from there. Narrowing 'a card effect' further to 'an ACTIVATED ability or ACTION card effect' specifically is not modelled: the effect context records the source card, not whether the ability was activated or triggered.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_ENTER_PLAY",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "ACTIVATED_ABILITY_OR_ACTION_CARD_EFFECT"
-        }
-      ],
+      "trigger": "ON_PUT_FACEUP_FROM_DECK",
       "effects": [
-        {
-          "type": "GAIN",
-          "asset": "ACTION_POINTS",
-          "amount": 1
-        }
+        {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1}
       ]
     }
   ]

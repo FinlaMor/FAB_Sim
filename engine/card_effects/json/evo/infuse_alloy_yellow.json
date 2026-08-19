@@ -1,41 +1,23 @@
 {
   "slug": "infuse_alloy_yellow",
+  "_comment": "OPT_1_USED was set by nothing, and the OPT effect itself was invented -- the card has no 'look at the top card' text. Galvanize (the keyword in the printed text) is 'when this defends, you may destroy an item you control; if you do, +2{d}'. A MAY block makes 'if you do' fall out on declining, so no flag is needed.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
       "effects": [
         {
-          "type": "OPT",
-          "amount": 1
-        },
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zones": [
-                  "arsenal"
-                ],
-                "subtypes": [
-                  "Item"
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "amount": 2,
+          "type": "MAY",
+          "prompt": "Galvanize: destroy an item you control to give this +2{d}?",
           "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "OPT_1_USED"
-            }
+            {"type": "CONTROLS_SUBTYPE", "subtype": "Item"}
+          ],
+          "effects": [
+            {"type": "DESTROY_PERMANENT", "target": "chosen", "subtype": "Item"},
+            {"type": "MODIFY_DEFENSE_VALUE", "amount": 2}
           ]
         }
-      ],
-      "trigger": "ON_DEFEND"
+      ]
     }
   ]
 }

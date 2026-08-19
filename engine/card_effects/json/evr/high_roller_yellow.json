@@ -1,34 +1,22 @@
 {
   "slug": "high_roller_yellow",
+  "_comment": "All three abilities were STATIC, which maps to no event and therefore never ran at all -- so even the unconditional Intimidate and Go again did nothing. Card is an action, so its keywords apply when it is played. ROLL_5_OR_6 was set by nothing; roll() now records the die faces. 'Instead intimidate twice' means one extra intimidate on top of the base one, not a second full copy of the ability.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "effects": [
+        {"type": "INTIMIDATE"},
         {
-          "type": "INTIMIDATE"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "ROLL_5_OR_6"
-        }
-      ],
-      "effects": [
-        {
-          "type": "INTIMIDATE"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GO_AGAIN"
-        }
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "OR", "conditions": [
+              {"type": "EVENT_THIS_TURN", "event": "roll", "qualifier": "5"},
+              {"type": "EVENT_THIS_TURN", "event": "roll", "qualifier": "6"}
+            ]}
+          ],
+          "then": [{"type": "INTIMIDATE"}]
+        },
+        {"type": "GO_AGAIN"}
       ]
     }
   ]

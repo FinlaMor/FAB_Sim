@@ -1,21 +1,15 @@
 {
   "slug": "pound_town_blue",
+  "_comment": "BEAT_CHEST_THIS_TURN was set by nothing. Beating chest (CR 8.3.33) is paying the optional discard-a-6-power-card cost, so the turn event is now recorded where that cost is actually paid -- and only when the player accepts it, never when they decline.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "BEAT_CHEST_THIS_TURN"
-        }
+        {"type": "EVENT_THIS_TURN", "event": "beat_chest"}
       ],
       "effects": [
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Might",
-          "token": "might"
-        }
+        {"type": "CREATE_TOKEN", "token_type": "Might", "token": "might"}
       ]
     }
   ]

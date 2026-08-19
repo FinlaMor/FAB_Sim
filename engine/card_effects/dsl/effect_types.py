@@ -34,15 +34,47 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
             return roll
         if amount == "ROLL_NUMBER_HALF_ROUND_DOWN":
             return roll // 2
+        # The X a player chose to pay for a card with an X in its cost. play.py
+        # stamps it at play time; before that (or on a card with no X cost) it
+        # is 0, which is also the correct answer for "X" when nothing was paid.
+        if amount == "X":
+            return int(getattr(card, "x_paid", 0) or 0)
         return 0
     if isinstance(amount, dict):
         atype = (amount.get("type") or "").upper()
+        # "the top X+1 cards" (Reel In) — arithmetic over other expressions, so
+        # an offset needs no new expression per card.
+        #   {"type":"SUM","values":[{"type":"X"}, 1]}
+        #   {"type":"X","plus":1}   — sugar for the same thing
+        #
+        # Checked FIRST: {"type":"X","plus":1} must not be answered by the "X"
+        # branch below, which would silently drop the +1.
+        if amount.get("plus") is not None or amount.get("minus") is not None:
+            base = _resolve_amount({k: v for k, v in amount.items()
+                                    if k not in ("plus", "minus")}, state, card)
+            return (base + int(amount.get("plus") or 0)
+                    - int(amount.get("minus") or 0))
+        if atype in ("SUM", "ADD", "PLUS"):
+            return sum(_resolve_amount(v, state, card)
+                       for v in (amount.get("values") or []))
+        if atype == "X":
+            return int(getattr(card, "x_paid", 0) or 0)
         if atype in ("ROLL_NUMBER", "ROLL_RESULT"):
             return roll
         # "that many times" / "that many tokens" — how much a preceding
         # PAY_UP_TO actually charged. Same mechanism as ROLL_RESULT.
         if atype in ("PAID_AMOUNT", "AMOUNT_PAID"):
             return getattr(state, "_paid_amount", 0) or 0
+        # "Create a Silver token for each permanent destroyed this way" (Cash
+        # Out) — how many the DESTROY_PERMANENTS_OPTIONAL additional cost
+        # actually destroyed. Same publish-on-state mechanism as PAID_AMOUNT.
+        if atype in ("DESTROYED_COUNT", "PERMANENTS_DESTROYED"):
+            return getattr(state, "_destroyed_count", 0) or 0
+        # "equal to or less than the damage dealt by <this card>" — the amount
+        # that ACTUALLY landed, which the printed number does not give once
+        # prevention or replacement effects have had their say.
+        if atype in ("LAST_DAMAGE_DEALT", "DAMAGE_JUST_DEALT"):
+            return int(getattr(state, "_last_damage_dealt", 0) or 0)
 
         # "X is the total {h} you've gained this turn" (Thistle Bloom). A
         # MAGNITUDE, not an occurrence count — turn-event markers record that
@@ -60,6 +92,92 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
             if pid is None:
                 return 0
             return int(getattr(state.players[pid], "life_gained_this_turn", 0) or 0)
+        # "X is the number of non-attack action cards you've played this turn"
+        # (Rift Bind), "for each card you've banished this turn". The
+        # EVENT_THIS_TURN *condition* could already TEST these markers; nothing
+        # could COUNT them, so every such card invented a private counter that
+        # nothing incremented. Same event/qualifier vocabulary as the condition,
+        # so a card that tests and a card that counts speak one language.
+        if atype in ("COUNT_TURN_EVENT", "EVENT_COUNT_THIS_TURN"):
+            pid = _amount_controller(state, card)
+            if pid is None:
+                return 0
+            event = _norm_amt(amount.get("event"))
+            if not event:
+                return 0
+            if (amount.get("player") or "SELF").upper() in (
+                    "OPPONENT", "ATTACKING", "ATTACKER", "DEFENDING"):
+                pid = 3 - pid
+            qualifier = _norm_amt(amount.get("qualifier") or amount.get("name"))
+            from engine.effect_keywords import TURN_EVENT_MARKER
+            marker = f"{TURN_EVENT_MARKER}{event}" + (f":{qualifier}" if qualifier else "")
+            return sum(1 for m in state.players[pid].current_turn_effects
+                       if m == marker)
+
+        # "X is the total arcane damage you've dealt to opposing heroes this
+        # turn" (Vaporize). A MAGNITUDE, so it reads the tally rather than
+        # counting markers — four 1-point hits are 4, not 1.
+        #   {"type":"DAMAGE_DEALT_THIS_TURN","damage_type":"arcane","target":"hero"}
+        if atype in ("DAMAGE_DEALT_THIS_TURN", "TOTAL_DAMAGE_THIS_TURN"):
+            pid = _amount_controller(state, card)
+            if pid is None:
+                return 0
+            dtype = _norm_amt(amount.get("damage_type"))
+            target = _norm_amt(amount.get("target"))
+            key = ":".join([p for p in (dtype, target) if p]) or "total"
+            tally = getattr(state.players[pid], "damage_dealt_this_turn", None) or {}
+            return int(tally.get(key, 0) or 0)
+
+        # "the number of opposing heroes with greater {h} than you"
+        # (Grandstand Legplates). Two-player games make this 0 or 1, but it is
+        # written as a count because the game supports multiplayer, and reading
+        # it as a boolean would be wrong there.
+        # "X is the number of cards with 6 or more {p} revealed this way"
+        # (Song of Sinew). Counts the ability-scoped ref a preceding LOOK_AT /
+        # REVEAL_TOP_DECK stored, so any question about a looked-at set is a
+        # filter here rather than a new parameter on the reveal effect.
+        if atype in ("COUNT_REF", "REF_COUNT"):
+            from engine.context import get_ref
+            pool = get_ref(amount.get("ref") or "revealed")
+            if pool is None:
+                return 0
+            if not isinstance(pool, list):
+                pool = [pool]
+            power_gte = amount.get("power_gte")
+            cost_gte = amount.get("cost_gte")
+            want_sub = _norm_amt(amount.get("subtype"))
+            want_type = _norm_amt(amount.get("card_type") or amount.get("type_name"))
+            n = 0
+            for c in pool:
+                if power_gte is not None and (getattr(c, "power", None) or 0) < power_gte:
+                    continue
+                if cost_gte is not None and (getattr(c, "cost", None) or 0) < cost_gte:
+                    continue
+                if want_sub and want_sub not in {_norm_amt(x) for x in (getattr(c, "subtypes", None) or [])}:
+                    continue
+                if want_type and want_type not in {_norm_amt(x) for x in (getattr(c, "types", None) or [])}:
+                    continue
+                n += 1
+            return n
+
+        if atype in ("COUNT_OPPOSING_HEROES", "COUNT_OPPONENTS"):
+            pid = _amount_controller(state, card)
+            if pid is None:
+                return 0
+            mine = getattr(state.players[pid], "life", 0) or 0
+            cmp_life = (amount.get("life") or "").upper()
+            n = 0
+            for other_id, other in (state.players or {}).items():
+                if other_id == pid:
+                    continue
+                their = getattr(other, "life", 0) or 0
+                if cmp_life in ("GREATER", "GT", "MORE") and not their > mine:
+                    continue
+                if cmp_life in ("LESS", "LT", "FEWER") and not their < mine:
+                    continue
+                n += 1
+            return n
+
         if atype in ("HALF", "HALF_ROUND_DOWN"):
             return int(_resolve_amount(amount.get("value", 0), state, card)) // 2
         if atype in ("VALUE", "CONSTANT", "LITERAL"):
@@ -214,6 +332,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         except (TypeError, ValueError):
             pass
 
+    # ── declarative statics (read by the engine, never "resolved") ─────────
+    # "You may play Rift Bind from your banished zone." A permission the engine
+    # reads off the CardDef while the card sits in the zone (see
+    # play._self_playable_from_banished); resolving it does nothing, so it is a
+    # no-op here rather than a missing type that would fail the load.
+    if etype in ("PLAYABLE_FROM_BANISHED", "DEFENSE_EQUALS", "RUNE_GATE"):
+        # RUNE_GATE (CR 8.3.27) is likewise declarative: play.rune_gate_available
+        # reads it to offer the card from the banished zone for free when the
+        # controller has Runechants >= its {r} cost.
+        # DEFENSE_EQUALS likewise: a printed {d} that is an expression, read by
+        # play._apply_dynamic_defense at the moment the value is consumed.
+        def _fn(card, event, state):
+            return None
+        return _fn
+
     # ── life / damage ──────────────────────────────────────────────────────
     if etype == "GAIN_LIFE_PER_CARD_IN_HAND":
         def _fn(card, event, state):
@@ -230,8 +363,22 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         def _fn(card, event, state, _a=amt, _t=tgt):
             from engine.card_effects.ability_keywords import effect_lose_life, _controller_id
             cid = _controller_id(card)
-            tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
-            effect_lose_life(state, tid, _a)
+            _t = _t.upper()
+            # "The WINNER loses 1{h}" — which player that is depends on how the
+            # wager resolved, so it can only come from the event payload; SELF /
+            # OPPONENT cannot express it.
+            if _t in ("WAGER_WINNER", "WAGER_LOSER", "WINNER", "LOSER"):
+                data = getattr(event, "data", None) or {}
+                key = "winner" if _t in ("WAGER_WINNER", "WINNER") else "loser"
+                tid = data.get(key)
+                if tid is None:
+                    return
+            elif _t in ("OPPONENT", "DEFENDING", "DEFENDER"):
+                tid = 3 - cid
+            else:
+                tid = cid
+            effect_lose_life(state, tid, _resolve_amount(_a, state, card)
+                             if isinstance(_a, dict) else _a)
         return _fn
 
     if etype in ("DEAL_DAMAGE", "DEAL_PHYSICAL"):
@@ -532,30 +679,82 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # Player may "fail to find" (CR 8.5.19). Follows the nimby pattern.
         filter_types = params.get("filter_types", None)   # optional list of card types
         filter_slug_contains = params.get("slug_contains", None)  # optional substring
-        def _fn(card, event, state, _ft=filter_types, _fsc=filter_slug_contains):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+        # The search was hard-wired to "any card, into hand, exactly one". Real
+        # search text almost always narrows all three — "an AURA card with cost
+        # X or less, put it into the ARENA", "up to 4 traps ... into your hand"
+        # — so every such card either searched for the wrong thing or invented
+        # parameters that did nothing.
+        subtype = params.get("subtype")
+        max_cost = params.get("max_cost")            # int or amount expression
+        destination = params.get("destination", "hand")
+        count = params.get("amount", params.get("count", 1))
+        # Restrict the pool to a set a preceding LOOK_AT stored ("look at the
+        # top X+1 cards, choose up to 4 traps" searches THOSE, not the deck).
+        from_ref = params.get("from_ref")
+
+        card_class = params.get("card_class") or params.get("class")
+
+        def _fn(card, event, state, _ft=filter_types, _fsc=filter_slug_contains,
+                _sub=subtype, _max=max_cost, _dest=destination, _n=count,
+                _ref=from_ref, _cls=card_class):
+            from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import shuffle as effect_shuffle
             cid = _controller_id(card)
             controller = state.players[cid]
-            eligible = list(controller.deck.cards)
+            if _ref:
+                from engine.context import get_ref
+                pool = get_ref(_ref)
+                eligible = list(pool) if isinstance(pool, list) else (
+                    [pool] if pool is not None else [])
+            else:
+                eligible = list(controller.deck.cards)
             if _ft:
                 eligible = [c for c in eligible if any(t in (c.types or []) for t in _ft)]
             if _fsc:
                 eligible = [c for c in eligible if _fsc in c.slug]
+            if _sub:
+                want = str(_sub).lower()
+                eligible = [c for c in eligible
+                            if want in [s.lower() for s in (c.subtypes or [])]]
+            if _cls:
+                wc = str(_cls).lower()
+                eligible = [c for c in eligible
+                            if wc in [x.lower() for x in (c.classes or [])]]
+            if _max is not None:
+                cap = _resolve_amount(_max, state, card)
+                try:
+                    cap = int(cap)
+                except (TypeError, ValueError):
+                    cap = 0
+                eligible = [c for c in eligible
+                            if int(getattr(c, "cost", None) or 0) <= cap]
+            try:
+                limit = int(_resolve_amount(_n, state, card))
+            except (TypeError, ValueError):
+                limit = 1
+
             from engine.card_effects.ability_keywords import ask_optional, FAIL_TO_FIND
-            pick = ask_optional(state, cid, [c.slug for c in eligible], sentinel=FAIL_TO_FIND,
-                                context="Search your deck for a card and put it into hand (or fail to find)")
-            if pick is not None:
+            from engine.effect_keywords import put_object
+            for _ in range(max(limit, 0)):
+                if not eligible:
+                    break
+                pick = ask_optional(state, cid, [c.slug for c in eligible],
+                                    sentinel=FAIL_TO_FIND,
+                                    context=f"Search for a card to put into your {_dest} "
+                                            "(or fail to find)")
+                if pick is None:
+                    break
                 target = next((c for c in eligible if c.slug == pick), None)
-                if target:
-                    from engine.effect_keywords import put_object
-                    # Assign ownership before the move so put_object resolves dest correctly.
-                    target.owner = cid
-                    target.controller = cid
-                    # is_public=True: searched cards are revealed when put into hand.
-                    put_object(state, target, "hand",
-                               destination_player_id=cid, source_player_id=cid,
-                               is_public=True)
+                if target is None:
+                    break
+                eligible.remove(target)
+                # Assign ownership before the move so put_object resolves dest correctly.
+                target.owner = cid
+                target.controller = cid
+                # is_public=True: searched cards are revealed when they move.
+                put_object(state, target, _dest,
+                           destination_player_id=cid, source_player_id=cid,
+                           is_public=True)
             effect_shuffle(state, cid)
         return _fn
 
@@ -851,10 +1050,23 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         amount = params.get("amount", 1)
         gain_life = params.get("gain_life", 0)
         cost_gte = params.get("cost_gte", None)
-        def _fn(card, event, state, _a=amount, _gl=gain_life, _cg=cost_gte):
+        # "Reveal the top 4 cards ... X is the number of cards with 6 or more
+        # {p} revealed this way" — the gain_life/cost_gte pair above is one
+        # hard-wired question about the revealed cards. `into` stores them so a
+        # later effect in the same ability can ask any other question (see
+        # COUNT_REF), instead of each new wording needing its own parameter.
+        into = params.get("into")
+
+        def _fn(card, event, state, _a=amount, _gl=gain_life, _cg=cost_gte, _into=into):
             from engine.card_effects.ability_keywords import effect_gain_life, _controller_id
             pid = _controller_id(card)
             revealed = state.players[pid].deck.cards[:_a]
+            for c in revealed:
+                c.is_public = True
+            if _into:
+                from engine.context import set_ref
+                set_ref(_into, list(revealed))
+                set_ref(_into + "_owner", pid)
             if _gl and _cg is not None:
                 matching = sum(1 for c in revealed
                                if (getattr(c, 'cost', None) or 0) >= _cg)
@@ -895,31 +1107,89 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype in ("DESTROY_PERMANENT", "DESTROY_SELF"):
         target = params.get("target", "self")
         subtype = params.get("subtype")  # "destroy a <subtype> you control" (e.g. Aura)
-        def _fn(card, event, state, _t=target, _sub=subtype):
+        # "destroy an aura permanent with cost X or less", "destroy up to X aura
+        # TOKENS", "destroy an aura THEY control". Every one of these was
+        # unreachable: the pool was hard-wired to the controller's own
+        # permanents, with no cost filter, no token filter and no count — so a
+        # card naming any of them either destroyed the wrong thing or nothing.
+        whose = (params.get("player") or ("SELF" if target == "self" else "SELF")).upper()
+        max_cost = params.get("max_cost")   # int or an amount expression
+        want_token = params.get("token")    # True: tokens only; False: non-tokens only
+        count = params.get("amount", params.get("count", 1))
+        optional = bool(params.get("optional") or params.get("up_to"))
+
+        def _fn(card, event, state, _t=target, _sub=subtype, _whose=whose,
+                _max=max_cost, _tok=want_token, _n=count, _opt=optional):
             from engine.effect_keywords import destroy as _ek_destroy
-            if _t == "self" and not _sub:
+            if _t == "self" and not _sub and _max is None and _tok is None:
                 # destroy() resolves the card's actual zone itself.
                 _ek_destroy(state, card, None)
                 return
-            # Subtype target: destroy a chosen permanent of that subtype the
-            # controller controls (e.g. "you may destroy an aura you control").
-            # No match -> destroy nothing (a following "if you do" clause should
-            # be gated by the CONTROLS_SUBTYPE condition or a MAY so it, too,
-            # falls out when there is no legal target).
+            # Subtype target: destroy a chosen permanent of that subtype (by
+            # default one the controller controls). No match -> destroy nothing
+            # (a following "if you do" clause should be gated by the
+            # CONTROLS_SUBTYPE condition or a MAY so it, too, falls out when
+            # there is no legal target).
             from engine.card_effects.ability_keywords import _controller_id, _ask_player
             cid = _controller_id(card)
-            want = (_sub or "").lower()
-            cands = [c for c in state.players[cid].permanents.cards
-                     if want in [s.lower() for s in (getattr(c, "subtypes", None) or [])]]
-            if not cands:
+            if cid not in state.players:
                 return
-            if len(cands) == 1:
-                chosen = cands[0]
+            if _whose in ("OPPONENT", "DEFENDING", "DEFENDER"):
+                pids = [3 - cid]
+            elif _whose in ("ANY", "ALL", "EACH"):
+                pids = [cid, 3 - cid]
             else:
-                pick = _ask_player(state, cid, [c.slug for c in cands],
-                                   context=f"Choose a {_sub} you control to destroy")
-                chosen = next((c for c in cands if c.slug == pick), cands[0])
-            _ek_destroy(state, chosen, card)
+                pids = [cid]
+            limit = _resolve_amount(_n, state, card)
+            try:
+                limit = int(limit)
+            except (TypeError, ValueError):
+                limit = 1
+            cap = None
+            if _max is not None:
+                cap = _resolve_amount(_max, state, card)
+                try:
+                    cap = int(cap)
+                except (TypeError, ValueError):
+                    cap = 0
+            want = (_sub or "").lower()
+
+            def _eligible(c):
+                if want and want not in [s.lower() for s in (getattr(c, "subtypes", None) or [])]:
+                    return False
+                if _tok is not None and bool(getattr(c, "is_token", False)) is not bool(_tok):
+                    return False
+                if cap is not None:
+                    # A token has no printed cost; "cost X or less" is satisfied
+                    # by a costless permanent, so None reads as 0 rather than
+                    # excluding it.
+                    c_cost = getattr(c, "raw_cost", None)
+                    if c_cost is None:
+                        c_cost = getattr(c, "cost", None)
+                    try:
+                        c_cost = int(c_cost)
+                    except (TypeError, ValueError):
+                        c_cost = 0
+                    if c_cost > cap:
+                        return False
+                return True
+
+            for _ in range(max(limit, 0)):
+                cands = [c for pid in pids
+                         for c in state.players[pid].permanents.cards
+                         if _eligible(c)]
+                if not cands:
+                    return
+                if len(cands) == 1 and not _opt:
+                    chosen = cands[0]
+                else:
+                    options = [c.slug for c in cands] + (["none"] if _opt else [])
+                    pick = _ask_player(state, cid, options,
+                                       context=f"Choose a {_sub or 'permanent'} to destroy")
+                    if pick == "none":
+                        return
+                    chosen = next((c for c in cands if c.slug == pick), cands[0])
+                _ek_destroy(state, chosen, card)
         return _fn
 
     if etype == "MODIFY_DEFENSE_VALUE":
@@ -1701,21 +1971,30 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         if not sub_specs and isinstance(params.get("effect"), dict):
             sub_specs = [params["effect"]]
         from engine.card_effects.dsl.condition_types import compile_condition
-        subs = []
-        for spec in sub_specs:
-            sub_params = {k: v for k, v in spec.items() if k != "type"}
-            gate_specs = sub_params.pop("conditions", []) or []
-            gates = [compile_condition(g.get("type", "").upper(),
-                                       {k: v for k, v in g.items() if k != "type"})
-                     for g in gate_specs]
-            subs.append((compile_effect(spec.get("type", "").upper(), sub_params), gates))
 
-        def _fn(card, event, state, _s=subs, _p=prompt):
+        def _compile_block(specs):
+            out = []
+            for spec in specs or []:
+                sub_params = {k: v for k, v in spec.items() if k != "type"}
+                gate_specs = sub_params.pop("conditions", []) or []
+                gates = [compile_condition(g.get("type", "").upper(),
+                                           {k: v for k, v in g.items() if k != "type"})
+                         for g in gate_specs]
+                out.append((compile_effect(spec.get("type", "").upper(), sub_params), gates))
+            return out
+
+        subs = _compile_block(sub_specs)
+        # "Lose 2{h} UNLESS you discard a card" — declining is not always free.
+        # Without an else block the penalty had to be authored as a separate
+        # effect with its own inverted condition, and there is nothing to invert
+        # against: the choice is not recorded anywhere.
+        alts = _compile_block(params.get("else") or params.get("else_effects"))
+
+        def _fn(card, event, state, _s=subs, _p=prompt, _alt=alts):
             from engine.card_effects.ability_keywords import ask_yes_no, _controller_id
             cid = _controller_id(card)
-            if not ask_yes_no(state, cid, context=_p):
-                return
-            for fn, gates in _s:
+            chosen = _s if ask_yes_no(state, cid, context=_p) else _alt
+            for fn, gates in chosen:
                 if fn is None:
                     continue
                 if all(g is None or g(card, event, state) for g in gates):
@@ -2144,6 +2423,66 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             })
         return _fn
 
+    if etype == "MODIFY_NEXT_CARD_COST":
+        # "The NEXT blue card you play this turn costs {r} less to play."
+        # Queued as a one-shot on the controller and consumed by the first card
+        # matching "filter" — the only correct shape for "next". As a turn-long
+        # flag plus a flag-gated cost modifier it would discount EVERY blue card
+        # for the rest of the turn.
+        #
+        # "on_consume" effects run against the card that used the reduction,
+        # which is how "...THAT card deals 1 more damage" can name a card nobody
+        # has chosen yet.
+        amount = params.get("amount", 1)
+        filter_specs = params.get("filter", [])
+        on_consume = params.get("on_consume", [])
+
+        def _fn(card, event, state, _a=amount, _f=filter_specs, _oc=on_consume):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = state.players[_controller_id(card)]
+            if not hasattr(player, 'dsl_queued_cost_mods'):
+                player.dsl_queued_cost_mods = []
+            player.dsl_queued_cost_mods.append({
+                "amount": _resolve_amount(_a, state, card),
+                "filter": _f,
+                "on_consume": _oc,
+            })
+        return _fn
+
+    if etype in ("BOOST_NEXT_DAMAGE", "MODIFY_NEXT_DAMAGE"):
+        # "The FIRST TIME that card would deal damage this turn, INSTEAD it
+        # deals that much plus 1." A replacement (CR 6.4), not a trigger: the
+        # damage has to be changed on the way out, and only once.
+        try:
+            bonus = int(params.get("amount", 1))
+        except (TypeError, ValueError):
+            bonus = 1
+
+        def _fn(card, event, state, _b=bonus):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effects import ReplacementEffect, ReplacementType
+            cid = _controller_id(card)
+            used = {"done": False}
+            target = card
+
+            def _cond(ev, s, _t=target, _u=used):
+                if _u["done"] or not isinstance(ev, dict):
+                    return False
+                if ev.get("type") not in ("damage", None) and "amount" not in ev:
+                    return False
+                src = ev.get("source_card") or ev.get("damage_source_card")
+                return src is _t and (ev.get("amount") or 0) > 0
+
+            def _repl(ev, s, _b=_b, _u=used):
+                _u["done"] = True
+                ev["amount"] = (ev.get("amount") or 0) + _b
+                return ev
+
+            state.effect_manager.add_replacement(ReplacementEffect(
+                source_card=card, replacement_type=ReplacementType.STANDARD,
+                condition_fn=_cond, replace_fn=_repl, owner_id=cid))
+        return _fn
+
     if etype in ("GRANT_NEXT_ATTACK", "GRANT_NEXT_ATTACK_KEYWORD"):
         # "Your next attack this turn gets <keyword>" (Agility token, Driving
         # Blade). Queued on the same one-shot list as MODIFY_NEXT_ATTACK and
@@ -2338,7 +2677,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         prize = params.get("prize") or params.get("token")
         def _fn(card, event, state, _prize=prize):
             from engine.card_effects.ability_keywords import add_wager, _controller_id
-            add_wager(state, _controller_id(card), _prize)
+            # The source card is passed so a non-token payoff ("the winner loses
+            # 1{h}") can be dispatched back to it when the wager resolves.
+            add_wager(state, _controller_id(card), _prize, source=card)
         return _fn
 
     if etype == "PREVENT_DAMAGE":

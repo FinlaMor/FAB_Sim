@@ -299,6 +299,63 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
                     permanents.cards.remove(candidates[0])
         return can_pay, pay
 
+    if ctype == "DESTROY_PERMANENTS_OPTIONAL":
+        # "As an additional cost to play this, you MAY destroy ANY NUMBER of
+        # weapons, equipment and/or non-token items you control." (Cash Out.)
+        #
+        # Three things the existing DESTROY_PERMANENT cost cannot do and which
+        # this text needs: it is optional, it repeats until the player stops,
+        # and the COUNT is the whole point ("create a Silver token for each
+        # permanent destroyed this way"). It also has to see equipment, which
+        # lives in the head/chest/arms/legs/weapon slot zones and never appears
+        # in `permanents` — a permanents-only scan finds none of it.
+        #
+        # The count is published on the state for the DESTROYED_COUNT amount
+        # expression, the same way PAY_UP_TO publishes _paid_amount.
+        want_types = [t.lower() for t in (params.get("types") or [])]
+        exclude_tokens = bool(params.get("exclude_tokens", True))
+
+        def _pool(state, pid, _wt=want_types, _xt=exclude_tokens):
+            player = state.players[pid]
+            slots = [player.head, player.chest, player.arms, player.legs,
+                     player.weapon1, player.weapon2]
+            cards = list(player.permanents.cards) + [c for z in slots for c in z.cards]
+            out = []
+            for c in cards:
+                if _xt and getattr(c, "is_token", False):
+                    continue
+                if _wt and not ({t.lower() for t in (getattr(c, "types", None) or [])}
+                                & set(_wt)):
+                    continue
+                out.append(c)
+            return out
+
+        def can_pay(card, event, state):
+            return True        # optional — never blocks play
+
+        def pay(card, event, state):
+            from engine.card_effects.ability_keywords import (
+                _controller_id, ask_optional)
+            from engine.effect_keywords import destroy as _ek_destroy
+            cid = _controller_id(card)
+            destroyed = 0
+            while True:
+                candidates = _pool(state, cid)
+                if not candidates:
+                    break
+                pick = ask_optional(state, cid, [c.slug for c in candidates],
+                                    context="Destroy a permanent as an additional "
+                                            "cost? (or stop)")
+                if pick is None:
+                    break
+                target = next((c for c in candidates if c.slug == pick), None)
+                if target is None:
+                    break
+                _ek_destroy(state, target, card)
+                destroyed += 1
+            state._destroyed_count = destroyed
+        return can_pay, pay
+
     # ── alternative costs (pay INSTEAD of normal resource cost) ───────────
 
     if ctype == "REMOVE_COUNTERS":

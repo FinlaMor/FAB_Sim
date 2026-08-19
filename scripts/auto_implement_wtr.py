@@ -148,6 +148,36 @@ on a flag nothing sets is an ability that can NEVER fire.
 
 "if you've destroyed a <thing> this turn"  -> {"type":"DESTROYED_THIS_TURN","name":"<thing>"}
 
+"X is the NUMBER of <things> you've <done> this turn"
+                                        -> {"type":"COUNT_TURN_EVENT","event":"<e>","qualifier":"<q>"}
+    Same event/qualifier vocabulary as EVENT_THIS_TURN, which only TESTS. Any
+    "where X is the number of" wording needs this, not a new counter.
+"X is the TOTAL DAMAGE you've dealt this turn"
+                                        -> {"type":"DAMAGE_DEALT_THIS_TURN","damage_type":"arcane","target":"hero"}
+    A magnitude, not a count: markers cannot tell four 1-point hits from one.
+"X" in a card's cost (specialCost)      -> {"type":"X"}; arithmetic: {"type":"X","plus":1}
+
+"The FIRST TIME <X> this turn, ..."     -> ability-level "once_per_turn": "<name>"
+    NOT a flag and NOT a condition. Put it on the ability object beside
+    "trigger". Checked after every other gate, so a trigger whose conditions
+    failed does not burn the turn's use.
+"your SECOND <thing> each turn"         -> {"type":"EVENT_THIS_TURN", ..., "count":2, "exact":true}
+    Without "exact" it stays true for the third and every later one.
+
+"at the beginning of your ACTION PHASE" -> trigger "START_OF_ACTION_PHASE"
+    NOT "START_OF_TURN", which is the earlier start phase.
+"when this DEALS DAMAGE"                -> trigger "ON_DEAL_DAMAGE"
+    NOT "ON_ATTACK", which fires even when the attack is fully blocked.
+
+"lose N{h} UNLESS you <do X>"           -> {"type":"MAY","effects":[<X>],"else":[{"type":"LOSE_LIFE","amount":N}]}
+    One effect with an else block; there is no flag recording the choice.
+
+A property, not an event — declare as a STATIC effect, never as a flag:
+    "you may play this from your banished zone" -> PLAYABLE_FROM_BANISHED
+    "Rune Gate"                                  -> RUNE_GATE
+    "this's {d} is equal to <expression>"        -> DEFENSE_EQUALS
+A STATIC ability maps to NO event: any other effect placed under one never runs.
+
 "Combo - If <Card> was the last attack this combat chain"
                                         -> {"type":"LAST_CHAIN_ATTACK","name":"<Card Name>"}
     also takes talent / class / subtype / hit. NEVER the type "COMBO" — that is a

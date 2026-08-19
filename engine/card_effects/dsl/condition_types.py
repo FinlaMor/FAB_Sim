@@ -155,7 +155,14 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _aci
 
     if ctype == "WEAPON_SUBTYPE_IN":
-        values = [v.upper() for v in params.get("values", [])]
+        # Read under BOTH spellings. The compiler took "values" while three of
+        # the five cards using this condition author "subtypes" — the natural
+        # name given the condition is called SUBTYPE_IN — so those three gated
+        # on an empty list, which matches nothing, and never fired. A parameter
+        # name the compiler does not read fails exactly like an invented type
+        # but is invisible to a type-name audit.
+        values = [v.upper() for v in (params.get("values")
+                                      or params.get("subtypes") or [])]
         def _wsi(c, e, s, _vals=values):
             if not s.combat:
                 return False
@@ -636,8 +643,13 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         except (TypeError, ValueError):
             need = 1
         who = (params.get("player") or "SELF").upper()
+        # "your SECOND non-attack action card each turn" fires ON the second and
+        # not on the third. A >= test stays true for every later play, turning
+        # "the second" into "the second and every one after".
+        exact = bool(params.get("exact"))
 
-        def _event_turn(c, e, s, _ev=event, _q=qualifier, _n=need, _who=who):
+        def _event_turn(c, e, s, _ev=event, _q=qualifier, _n=need, _who=who,
+                        _exact=exact):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import TURN_EVENT_MARKER
             if not _ev:
@@ -645,7 +657,8 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             cid = _controller_id(c)
             pid = (3 - cid) if _who in ("OPPONENT", "ATTACKING", "ATTACKER", "DEFENDING") else cid
             marker = f"{TURN_EVENT_MARKER}{_ev}" + (f":{_q}" if _q else "")
-            return sum(1 for m in s.players[pid].current_turn_effects if m == marker) >= _n
+            n = sum(1 for m in s.players[pid].current_turn_effects if m == marker)
+            return n == _n if _exact else n >= _n
         return _event_turn
 
     # NOTE: do NOT alias this as "COMBO". That name is already handled earlier
@@ -653,6 +666,169 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
     # first match, so an alias here would be dead code — while a card authored
     # as {"type":"COMBO","name":"..."} would silently reach the OTHER handler,
     # whose `names` lookup misses `name` entirely and gates on an empty list.
+    if ctype in ("HAND_SIZE_GTE", "HAND_SIZE_LTE", "HAND_SIZE_EQ"):
+        # "unless you discard a card" must not be offered to a player with an
+        # empty hand: accepting would discard nothing and dodge the penalty for
+        # free. There was no hand-size condition of any kind.
+        #
+        #   {"type":"HAND_SIZE_GTE","amount":1}          — your hand
+        #   {"type":"HAND_SIZE_LTE","amount":0,"player":"OPPONENT"}
+        try:
+            need = int(params.get("amount", params.get("count", 1)) or 0)
+        except (TypeError, ValueError):
+            need = 0
+        who = (params.get("player") or "SELF").upper()
+
+        def _hand_size(c, e, s, _n=need, _who=who, _kind=ctype):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(c)
+            pid = (3 - cid) if _who in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            player = s.players.get(pid)
+            if player is None:
+                return False
+            n = len(player.hand.cards)
+            if _kind == "HAND_SIZE_LTE":
+                return n <= _n
+            if _kind == "HAND_SIZE_EQ":
+                return n == _n
+            return n >= _n
+        return _hand_size
+
+    if ctype in ("CARD_IS_COLOR", "CARD_IS_COLOUR", "SELF_IS_COLOR"):
+        # "the next BLUE card you play this turn". Colour is pitch value 1/2/3
+        # (red/yellow/blue) unless the card carries an explicit colour, and the
+        # card's own colour had no condition of its own — CARD_IN_ZONE could
+        # filter a ZONE by colour, which is a different question.
+        want = _norm(params.get("color") or params.get("colour") or "")
+        _PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
+
+        def _is_color(c, e, s, _w=want):
+            if not _w:
+                return False
+            colour = (getattr(c, "color", None)
+                      or _PITCH_COLOR.get(getattr(c, "pitch", None)))
+            return _norm(colour or "") == _w
+        return _is_color
+
+    if ctype in ("WAS_RUNE_GATED", "IS_RUNE_GATED"):
+        # CR 8.3.27a — "the next attack action card you RUNE GATE this turn".
+        # A property of the card that was played, stamped by play.py, so a
+        # next-attack filter can ask it of the attack card it is offered.
+        def _rune_gated(c, e, s):
+            return bool(getattr(c, "rune_gated", False))
+        return _rune_gated
+
+    if ctype == "REACTION_THIS_LINK":
+        # "the attacking hero has played or ACTIVATED an attack reaction THIS
+        # CHAIN LINK" (Hunted or Hunter). Chain-link scope is the whole point:
+        # a turn-scoped record would let a reaction from the first attack of the
+        # turn keep answering yes for every later attack.
+        #
+        #   {"type":"REACTION_THIS_LINK","kind":"attack_reaction","player":"ATTACKING"}
+        kind = _norm(params.get("kind") or params.get("reaction") or "")
+        who = (params.get("player") or "SELF").upper()
+
+        def _reaction_link(c, e, s, _k=kind, _who=who):
+            from engine.card_effects.ability_keywords import _controller_id
+            combat = getattr(s, "combat", None)
+            if combat is None:
+                return False
+            cid = _controller_id(c)
+            if _who in ("ATTACKING", "ATTACKER"):
+                pid = combat.attacker_id
+            elif _who in ("DEFENDING", "DEFENDER"):
+                pid = 3 - combat.attacker_id
+            elif _who == "OPPONENT":
+                pid = 3 - cid
+            else:
+                pid = cid
+            for entry_pid, entry_kind in getattr(combat, "reactions_this_link", []):
+                if entry_pid != pid:
+                    continue
+                if _k and _norm(entry_kind) != _k:
+                    continue
+                return True
+            return False
+        return _reaction_link
+
+    if ctype in ("TARGET_HERO_CLASS_IN", "OPPOSING_HERO_CLASS_IN"):
+        # "When this hits a Runeblade or Wizard HERO" — the class of the hero
+        # being attacked, not of the attack. ATTACK_CLASS_IN is the nearest
+        # existing condition and reads the ATTACK card's classes, so using it
+        # here would ask whether the arrow itself is a Runeblade card.
+        #
+        #   {"type":"TARGET_HERO_CLASS_IN","classes":["Runeblade","Wizard"]}
+        want = [_norm(v) for v in (params.get("classes")
+                                   or params.get("class_names") or []) if v]
+
+        def _target_hero_class(c, e, s, _w=want):
+            from engine.card_effects.ability_keywords import _controller_id
+            if not _w:
+                return False
+            combat = getattr(s, "combat", None)
+            if combat is None:
+                return False
+            # The hero on the receiving end of the attack.
+            defender_id = 3 - combat.attacker_id
+            hero = s.players[defender_id].hero if defender_id in s.players else None
+            if hero is None:
+                return False
+            have = {_norm(x) for x in (getattr(hero, "classes", None) or [])}
+            have |= {_norm(x) for x in (getattr(hero, "talents", None) or [])}
+            return any(w in have for w in _w)
+        return _target_hero_class
+
+    if ctype in ("SELF_IN_ZONE", "THIS_IN_ZONE"):
+        # "Activate this only while this is face-up in your arsenal."
+        # CARD_IN_ZONE counts ANY card in the zone, so it answers "is your
+        # arsenal non-empty" — true whenever the card is there, and true just as
+        # often when it is not. A restriction on THIS card needs its own check.
+        #
+        #   {"type":"SELF_IN_ZONE","zone":"arsenal","face_up":true}
+        want_zone = _norm(params.get("zone") or "")
+        face_up = params.get("face_up")
+
+        def _self_in_zone(c, e, s, _z=want_zone, _fu=face_up):
+            if _z and _norm(getattr(c, "zone", "") or "") != _z:
+                return False
+            if _fu is not None and bool(getattr(c, "is_public", False)) is not bool(_fu):
+                return False
+            return True
+        return _self_in_zone
+
+    if ctype == "MELD_SIDE":
+        # CR 8.3.38 Meld: one card, two halves, played as top / bottom / both.
+        # The engine already resolves which was chosen and stamps card.meld_side
+        # at play; the DSL had no way to ASK, so a meld card's two sides were
+        # authored as two unconditional PLAY abilities and both always fired.
+        #
+        #   {"type":"MELD_SIDE","side":"top"}   — also true when 'both' is played
+        want = _norm(params.get("side") or "")
+
+        def _meld_side(c, e, s, _want=want):
+            side = _norm(getattr(c, "meld_side", "") or "")
+            if not _want:
+                return bool(side)
+            # Playing "both" plays each half, so each half's ability applies.
+            return side == _want or side == "both"
+        return _meld_side
+
+    if ctype in ("PLAYED_FROM_ZONE", "PLAYED_FROM"):
+        # "You may play Rift Bind from your banished zone. IF YOU DO, it gains
+        # +X{p}." The conditional half cannot be a CARD_IN_ZONE check: the card
+        # has already left that zone by the time its play ability resolves, so
+        # such a check is false for every card in the game. play.py stamps the
+        # source zone on the card just before the move.
+        #
+        #   {"type":"PLAYED_FROM_ZONE","zone":"banished"}
+        want = _norm(params.get("zone") or params.get("from_zone") or "")
+
+        def _played_from(c, e, s, _want=want):
+            if not _want:
+                return False
+            return _norm(getattr(c, "played_from_zone", "") or "") == _want
+        return _played_from
+
     if ctype == "LAST_CHAIN_ATTACK":
         # "Combo - If Surging Strike was the last attack this combat chain, ...",
         # "If a Draconic attack was the last attack this combat chain, ...",
@@ -855,11 +1031,30 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # "destroy an aura … if you do …" clause is only offered when there is
         # a legal target.
         want = (params.get("subtype", "") or "").lower()
-        def _csub(c, e, s, _w=want):
+        # "if you control ANOTHER Illusionist aura" needs all three of these:
+        # the class, a count, and — critically — excluding the card asking.
+        # Without exclude_self, Sigil of Solitude sees ITSELF and destroys
+        # itself at the start of every turn.
+        want_class = (params.get("card_class") or params.get("class") or "").lower()
+        exclude_self = bool(params.get("exclude_self") or params.get("another"))
+        try:
+            need = int(params.get("count", 1) or 1)
+        except (TypeError, ValueError):
+            need = 1
+
+        def _csub(c, e, s, _w=want, _cls=want_class, _x=exclude_self, _n=need):
             from engine.card_effects.ability_keywords import _controller_id
             perms = s.players[_controller_id(c)].permanents.cards
-            return any(_w in [st.lower() for st in (getattr(p, "subtypes", None) or [])]
-                       for p in perms)
+            n = 0
+            for p in perms:
+                if _x and p is c:
+                    continue
+                if _w and _w not in [st.lower() for st in (getattr(p, "subtypes", None) or [])]:
+                    continue
+                if _cls and _cls not in [cl.lower() for cl in (getattr(p, "classes", None) or [])]:
+                    continue
+                n += 1
+            return n >= _n
         return _csub
 
     if ctype == "ATTACK_HAS_KEYWORD":

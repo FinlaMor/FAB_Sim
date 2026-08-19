@@ -1,25 +1,19 @@
 {
   "slug": "hunted_or_hunter_red",
+  "_comment": "ATTACK_REACTION_PLAYED_OR_ACTIVATED was set by nothing. The check is CHAIN-LINK scoped, which nothing recorded: a turn-scoped record would let a reaction from the turn's first attack keep answering yes for every later attack. The ATTACK_CLASS_IN 'assassin' gate was invented -- the card names no class -- and LOSE_LIFE defaulted to SELF, so the card would have drained ITS OWN controller rather than the attacking hero.",
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",
-      "trigger": "ON_DEFEND",
-      "conditions": [
-        {
-          "type": "ATTACK_CLASS_IN",
-          "classes": [
-            "assassin"
-          ]
-        },
-        {
-          "type": "FLAG_SET",
-          "flag": "ATTACK_REACTION_PLAYED_OR_ACTIVATED"
-        }
-      ],
       "effects": [
         {
-          "type": "LOSE_LIFE",
-          "amount": 1
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "REACTION_THIS_LINK", "kind": "attack_reaction",
+             "player": "ATTACKING"}
+          ],
+          "then": [
+            {"type": "LOSE_LIFE", "player": "OPPONENT", "amount": 1}
+          ]
         }
       ]
     }

@@ -1,20 +1,15 @@
 {
   "slug": "aftershock_red",
+  "_comment": "SEISMIC_SURGE_TOKEN_CONTROLLED_THIS_TURN was set by nothing, so this could never fire. 'Controlled this turn' is deliberately broader than 'created this turn' -- a token stolen, given, or simply still there from last turn was never created -- so it reads the 'controlled' turn event, which Zone.add records on arena entry and start_of_turn_refresh_player sweeps for permanents that were already there.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "SEISMIC_SURGE_TOKEN_CONTROLLED_THIS_TURN"
-        }
+        {"type": "EVENT_THIS_TURN", "event": "controlled", "qualifier": "seismicsurge"}
       ],
       "effects": [
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Seismic Surge"
-        }
+        {"type": "CREATE_TOKEN", "token_type": "Seismic Surge", "token": "seismic_surge"}
       ]
     }
   ]

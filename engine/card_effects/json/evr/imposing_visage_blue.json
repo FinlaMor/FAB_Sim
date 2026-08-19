@@ -1,43 +1,17 @@
 {
   "slug": "imposing_visage_blue",
+  "_comment": "The PUT_CARDS_BOTTOM with a SEARCHED_COUNT amount was pure invention -- the text says 'then shuffle your deck', which SEARCH_DECK already does -- and the Go again was authored as an ACTIVATE ability, which needs an activation the card does not have. X is the amount actually paid for the X in this card's cost (specialCost 'X3'), now readable from the DSL.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
           "type": "SEARCH_DECK",
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zones": [
-                  "deck"
-                ],
-                "subtypes": [
-                  "Aura"
-                ],
-                "cost": {
-                  "type": "LTE",
-                  "amount": "X"
-                }
-              }
-            ]
-          },
+          "subtype": "Aura",
+          "max_cost": {"type": "X"},
           "destination": "arena"
         },
-        {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": "SEARCHED_COUNT",
-          "zone": "deck"
-        }
-      ]
-    },
-    {
-      "ability_type": "ACTIVATE",
-      "effects": [
-        {
-          "type": "GO_AGAIN"
-        }
+        {"type": "GO_AGAIN"}
       ]
     }
   ]

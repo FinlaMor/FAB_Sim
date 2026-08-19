@@ -493,9 +493,25 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
     # damage is final (past replacements/cancellation), against the DEALING
     # player, with the damage type as the qualifier.
     if event.amount > 0:
-        _record_turn_event(state, event.source_player_id, "damage",
-                           getattr(event.damage_type, "value", event.damage_type),
-                           "hero" if is_hero else "ally")
+        _dtype = getattr(event.damage_type, "value", event.damage_type)
+        _kind = "hero" if is_hero else "ally"
+        _record_turn_event(state, event.source_player_id, "damage", _dtype, _kind)
+        # The marker above answers "have you dealt arcane damage this turn";
+        # this tally answers "how much", which the markers cannot — see
+        # Player.damage_dealt_this_turn.
+        # "with cost equal to or less than the DAMAGE DEALT by this card"
+        # (Lesson in Lava). The printed number is not the answer — prevention
+        # and replacement effects can change it — so the last actually-dealt
+        # amount is published for the LAST_DAMAGE_DEALT amount expression.
+        state._last_damage_dealt = event.amount
+        _src = state.players.get(event.source_player_id) if event.source_player_id is not None else None
+        if _src is not None:
+            tally = getattr(_src, "damage_dealt_this_turn", None)
+            if tally is None:
+                tally = _src.damage_dealt_this_turn = {}
+            for key in ("total", str(_dtype).lower(), _kind,
+                        f"{str(_dtype).lower()}:{_kind}"):
+                tally[key] = tally.get(key, 0) + event.amount
 
     # execute the damage
     if is_hero:
@@ -1725,6 +1741,15 @@ def roll(state: GameState, num_dice: int = 1, faces: int = 6,
     results = tuple(_rng.randint(1, event.faces) for _ in range(event.num_dice))
     event.results = results
     event.total = sum(results)
+
+    # "If you have rolled a 5 or 6 on a die this turn" (High Roller). One marker
+    # per distinct die FACE, so a card can ask about any value. Recorded here
+    # rather than at the ability that rolled, so every rolling effect feeds it.
+    # Note the markers answer "did you roll an N", not "how many": a single call
+    # rolling two 5s dedupes to one "roll:5", which is what the printed wording
+    # asks. A count of dice rolled would need its own tally.
+    _record_turn_event(state, event.source_player_id, "roll",
+                       *[str(r) for r in results])
 
     state.event_manager.emit(create_emit_event(event), state)
 
