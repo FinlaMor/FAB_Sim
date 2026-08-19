@@ -84,6 +84,24 @@ def _known_amount_expressions() -> set[str]:
 KNOWN_AMOUNT_EXPRESSIONS = _known_amount_expressions()
 
 
+# "The NEXT <thing> you play this turn gets X" is a ONE-SHOT: it applies to one
+# card and is then spent. Both wrong shapes are plausible-looking JSON that
+# nothing rejects:
+#
+#   APPLY_CONTINUOUS / SET_FLAG + a flag-gated static -> buffs EVERY matching
+#       card for the rest of the turn, which is strictly stronger than printed
+#   MODIFY_ATTACK at resolution -> buffs the CURRENT attack, and for a card that
+#       resolves outside combat there is none, so it does nothing at all
+#
+# Neither errors, and both pass any test that makes ONE attack — which is how
+# the class survived: you have to attack twice to see it.
+ONE_SHOT_PRIMITIVES = (
+    "MODIFY_NEXT_ATTACK", "GRANT_NEXT_ATTACK", "MODIFY_NEXT_CARD_COST",
+    "PREVENT_DAMAGE", "INJECT_REPLACEMENT", "BOOST_NEXT_DAMAGE",
+    "APPLY_REPLACEMENT",
+)
+
+
 def _walk(node, fn):
     if isinstance(node, dict):
         fn(node)
@@ -183,6 +201,18 @@ def audit(paths: list[Path], index: dict) -> dict[str, list[str]]:
                     f"ability[{i}] INSTANT but the text has no 'Instant -' "
                     f"activated ability ({type_text or 'unknown type'}) — "
                     "an Instant CARD resolving on play is PLAY")
+
+        # "the next <thing> ... this turn" with no one-shot primitive anywhere.
+        if "the next" in text:
+            abilities_json = json.dumps(raw.get("abilities", []))
+            if not any(k in abilities_json for k in ONE_SHOT_PRIMITIVES):
+                shape = ("turn-long" if any(
+                    k in abilities_json for k in
+                    ("APPLY_CONTINUOUS", "SET_FLAG", "MODIFY_ATTACKS_THIS_TURN"))
+                    else "no one-shot")
+                found.append(
+                    f'text says "the next ..." but no one-shot primitive '
+                    f"({shape}) — applies to every match, or to none")
 
         def visit(node):
             ntype = (node.get("type") or "").upper()

@@ -1,17 +1,20 @@
 {
   "slug": "force_sight_red",
+  "_comment": "Two defects. The +3{p} is UNCONDITIONAL and applies to your NEXT attack action card this turn -- it was MODIFY_ATTACK (the CURRENT attack, of which there is none when this resolves) gated on not-played-from-arsenal, which the card never says. Only the opt 2 depends on the arsenal. PLAYED_FROM_ARSENAL now reads `value`, so the positive form is expressible; before, value:false returned the POSITIVE answer and the two branches were swapped.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 3,
-          "conditions": [
+          "filter": [
             {
-              "type": "PLAYED_FROM_ARSENAL",
-              "value": false
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
           ]
         },

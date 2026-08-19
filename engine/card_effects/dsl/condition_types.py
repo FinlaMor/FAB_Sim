@@ -508,8 +508,14 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _de
 
     if ctype == "PLAYED_FROM_ARSENAL":
-        # card.prev_zone is 'arsenal' when played from arsenal (set by Zone tracking)
-        return lambda c, e, s: getattr(c, 'prev_zone', '').lower() == 'arsenal'
+        # card.prev_zone is 'arsenal' when played from arsenal (set by Zone tracking).
+        #
+        # `value` (default True) is the expected answer, matching IS_ACTIVE_PLAYER:
+        # value:false means "NOT played from arsenal". It was unread, so a card
+        # asking for the negative got the positive - the opposite branch entirely.
+        want = params.get("value", True)
+        return lambda c, e, s, _w=want: (
+            (getattr(c, 'prev_zone', '') or '').lower() == 'arsenal') is bool(_w)
 
     if ctype == "IS_ACTIVE_PLAYER":
         # `value` (default True) is the expected answer: value:false means "it is

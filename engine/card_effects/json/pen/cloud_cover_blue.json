@@ -1,12 +1,13 @@
 {
   "slug": "cloud_cover_blue",
+  "_comment": "The card was a single SET_FLAG that nothing read, so it did nothing whatsoever. 'The next time you would be dealt damage this turn, prevent 1' is a REPLACEMENT (CR 6.4) and PREVENT_DAMAGE already registers exactly that one-shot shield.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "CLOUD_COVER_ACTIVE"
+          "type": "PREVENT_DAMAGE",
+          "amount": 1
         }
       ]
     }

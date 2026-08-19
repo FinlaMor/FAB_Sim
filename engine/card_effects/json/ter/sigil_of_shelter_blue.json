@@ -1,25 +1,13 @@
 {
   "slug": "sigil_of_shelter_blue",
+  "_comment": "'The next time you would be dealt damage this turn, prevent 1 of that damage' is a one-shot replacement (CR 6.4), not a turn-long state.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_HIT",
-            "conditions": [
-              {
-                "type": "DURING_TURN"
-              }
-            ],
-            "effects": [
-              {
-                "type": "PAY_OR_DAMAGE",
-                "amount": 1
-              }
-            ]
-          }
+          "type": "PREVENT_DAMAGE",
+          "amount": 1
         }
       ]
     }

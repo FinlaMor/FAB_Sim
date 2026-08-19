@@ -1,15 +1,15 @@
 {
   "slug": "peace_of_mind_blue",
+  "_comment": "The prevention -- the card's main effect -- was missing entirely, and a PAY_LIFE 2 cost was invented that the card does not have. '{p} damage' is PHYSICAL specifically, so the shield is typed; PREVENT_DAMAGE ignored damage_type, which would have prevented arcane damage this card never touches.",
   "abilities": [
     {
       "ability_type": "PLAY",
-      "cost": [
-        {
-          "type": "PAY_LIFE",
-          "amount": 2
-        }
-      ],
       "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 2,
+          "damage_type": "physical"
+        },
         {
           "type": "CREATE_TOKEN",
           "token_type": "Ponder",

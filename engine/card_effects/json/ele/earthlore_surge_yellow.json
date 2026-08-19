@@ -1,16 +1,20 @@
 {
   "slug": "earthlore_surge_yellow",
+  "_comment": "MODIFY_ATTACK buffs the CURRENT attack, and this resolves outside combat where there is none -- so the card did nothing at all. The DURING_TURN gate was meaningless too. 'The NEXT attack action card you play this turn' is the one-shot MODIFY_NEXT_ATTACK, which is consumed by the first matching attack and expires with the turn.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 4,
-          "conditions": [
+          "filter": [
             {
-              "type": "DURING_TURN"
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
           ]
         },

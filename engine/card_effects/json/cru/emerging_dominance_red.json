@@ -1,9 +1,10 @@
 {
   "slug": "emerging_dominance_red",
+  "_comment": "The buff was a STATIC ability, which maps to no event and never ran at all, gated on PLAYED_FROM_ARSENAL with card_type/card_class keys the condition does not read -- and the card says nothing about arsenals. It is an Aura: at the beginning of your ACTION PHASE (CR 4.3.1, later than the start phase) it destroys itself and buffs the NEXT Guardian attack action you play this turn. One-shot, so MODIFY_NEXT_ATTACK plus GRANT_NEXT_ATTACK; as a static it would have buffed every Guardian attack for the rest of the turn.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "trigger": "START_OF_ACTION_PHASE",
       "conditions": [
         {
           "type": "IS_ACTIVE_PLAYER"
@@ -11,31 +12,45 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_REF",
+          "type": "DESTROY_PERMANENT",
           "target": "self"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "IS_ACTIVE_PLAYER"
         },
         {
-          "type": "PLAYED_FROM_ARSENAL",
-          "card_type": "ACTION",
-          "card_class": "Guardian"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ]
         },
         {
-          "type": "DOMINATE"
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Dominate",
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ]
         }
       ]
     }

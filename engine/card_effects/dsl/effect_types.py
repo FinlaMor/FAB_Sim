@@ -3055,15 +3055,26 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             amount = int(params.get("amount", 0))
         except (TypeError, ValueError):
             amount = 0
-        def _fn(card, event, state, _amt=amount):
+        _dtype = str(params.get("damage_type") or "").lower()
+
+        def _fn(card, event, state, _amt=amount, _dtype=_dtype):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effects import ReplacementEffect, ReplacementType
             cid = _controller_id(card)
-            def _cond(ev, st, _cid=cid):
-                return (ev.get("type") == "damage"
+            def _cond(ev, st, _cid=cid, _dt=_dtype):
+                if not (ev.get("type") == "damage"
                         and ev.get("amount", 0) > 0
                         and not ev.get("unpreventable", False)
-                        and ev.get("target_player_id") == _cid)
+                        and ev.get("target_player_id") == _cid):
+                    return False
+                # "prevent 2 of that {p} damage" / "3 arcane damage" — the type
+                # was not read, so a card that only prevents ONE kind of damage
+                # was preventing every kind.
+                if _dt:
+                    have = ev.get("damage_type")
+                    have = getattr(have, "value", have)
+                    return str(have).lower() == _dt
+                return True
             def _replace(ev, st, _a=_amt):
                 prevented = min(_a, ev.get("amount", 0))
                 ev["amount"] = ev.get("amount", 0) - prevented
