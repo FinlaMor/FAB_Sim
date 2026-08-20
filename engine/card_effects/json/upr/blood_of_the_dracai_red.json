@@ -1,43 +1,21 @@
 {
   "slug": "blood_of_the_dracai_red",
+  "_comment": "'The next 3 DRACONIC cards you play this turn cost {r} less' \u2014 ONE queue entry with three uses, not three entries and not a turn-long discount. As a one-use entry the other two reductions are simply lost; as a turn-long effect every Draconic card is cheaper for the rest of the turn. Triggers on PITCH, not on play.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_PITCH",
-      "conditions": [
-        {
-          "type": "REF_PITCH_IS",
-          "ref": "blood_of_the_dracai_red"
-        }
-      ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "DRACONIC_COST_REDUCTION",
-          "duration": "END_OF_TURN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "DRACONIC_COST_REDUCTION"
-        },
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "HAND",
-          "class_in": [
-            "Draconic"
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 1,
+          "uses": 3,
+          "filter": [
+            {
+              "type": "CARD_IS_CLASS",
+              "card_class": "Draconic"
+            }
           ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
-          "mod": "subtract",
-          "amount": 1
         }
       ]
     }

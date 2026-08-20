@@ -802,10 +802,12 @@ def _close_step(state: GameState) -> None:
         # "this turn": a queued one-shot marked scope CHAIN must not survive
         # into the next attack chain of the same turn, where it would buff an
         # attack the card never promised.
-        _q = getattr(_p, 'dsl_queued_attack_mods', None)
-        if _q:
-            _p.dsl_queued_attack_mods = [
-                m for m in _q if str(m.get('scope', 'TURN')).upper() != 'CHAIN']
+        for _attr in ('dsl_queued_attack_mods', 'dsl_queued_defense_mods'):
+            _q = getattr(_p, _attr, None)
+            if _q:
+                setattr(_p, _attr, [
+                    m for m in _q
+                    if str(m.get('scope', 'TURN')).upper() != 'CHAIN'])
 
     state.combat = None
 
@@ -932,6 +934,8 @@ def _end_phase_iter(state: GameState) -> None:
         player.dsl_queued_cost_mods = []
     if hasattr(player, 'dsl_queued_card_mods'):
         player.dsl_queued_card_mods = []
+    if hasattr(player, 'dsl_queued_defense_mods'):
+        player.dsl_queued_defense_mods = []
     # "this turn" DSL continuous effects (APPLY_CONTINUOUS, e.g. Night's Embrace).
     if getattr(player, 'dsl_continuous_effects', None):
         player.dsl_continuous_effects = [

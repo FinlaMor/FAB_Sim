@@ -471,6 +471,37 @@ def _cost_mod_matches(state, mod, card) -> bool:
     return True
 
 
+def _apply_queued_defense_mods(state, card, player) -> None:
+    """Consume a one-shot "the next card you defend with gets +/-N{d}".
+
+    The attack queue is consumed by attacks and the play-time queue by cards
+    being played; a card used to DEFEND passes through neither, so this text had
+    no queue at all — "the next action card they defend with gets -1{d}" could
+    only be written as a turn-long effect that weakens every block instead of
+    one.
+
+    Applied where the defending card's {d} is actually consumed, so the mod
+    lands on the value that reaches total_defense.
+    """
+    queued = getattr(player, 'dsl_queued_defense_mods', None)
+    if not queued:
+        return
+    from engine.card_effects.dsl.condition_types import compile_condition as _cc
+    for mod in list(queued):
+        ok = True
+        for spec in mod.get('filter', []) or []:
+            fn = _cc(spec.get('type', 'none'), spec)
+            if fn is not None and not fn(card, None, state):
+                ok = False
+                break
+        if not ok:
+            continue
+        queued.remove(mod)
+        delta = int(mod.get('amount', 0) or 0)
+        card.defense = max(0, (card.defense or 0) + delta)
+        break
+
+
 def _apply_dynamic_defense(state, card) -> None:
     """Recompute a card whose printed {d} is an expression, before it is read.
 
@@ -1066,6 +1097,7 @@ def _apply_defend(state: GameState, action: Action) -> None:
         card.controller = defender.player_id
         combat.defending_cards.append(card)
         _apply_dynamic_defense(state, card)
+        _apply_queued_defense_mods(state, card, defender)
         defense_val = card.defense or 0
         combat.total_defense += defense_val
         if card.is_equipment:
@@ -1406,11 +1438,25 @@ def _pay_costs(state, player_id, action):
     for mod in list(_queued):
         if not _cost_mod_matches(state, mod, card):
             continue
-        _queued.remove(mod)
+        # Multi-use entries ("the next 3 Draconic cards") stay queued until
+        # spent; only the last use removes the entry.
+        remaining = int(mod.get('uses', 1) or 1) - 1
+        if remaining > 0:
+            mod['uses'] = remaining
+        else:
+            _queued.remove(mod)
         for kw in (mod.get('keywords') or ([mod['keyword']] if mod.get('keyword') else [])):
             existing = list(getattr(card, 'keywords', None) or [])
             if kw not in existing:
                 card.keywords = existing + [kw]
+        # "The next card you play this turn IS DRACONIC" — a class grant, which
+        # is neither a keyword nor a number. Added rather than replaced: the
+        # card keeps its own classes ("in addition to its other class types").
+        for cls in (mod.get('grant_classes')
+                    or ([mod['grant_class']] if mod.get('grant_class') else [])):
+            have = list(getattr(card, 'classes', None) or [])
+            if cls not in have:
+                card.classes = have + [cls]
         from engine.card_effects.dsl.effect_types import compile_effect as _ce
         for spec in (mod.get('on_consume') or []):
             _ce((spec.get('type') or '').upper(),

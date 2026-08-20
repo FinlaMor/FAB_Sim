@@ -131,7 +131,32 @@ def test_splintering_no_aura_creates_nothing():
 
 
 # ------------------------------------------------------------- amp (next-arcane +N)
-def _next_arcane(st, amount=1):
+def _play_arcane_card(st, pid=1, slug="aether_flare_blue"):
+    """Play a real arcane-damage card through the play path, and return the
+    damage it deals.
+
+    These cards read "the next CARD YOU PLAY this turn with an effect that deals
+    arcane damage". The amp attaches when such a card is PLAYED, so a helper that
+    merely calls effect_deal_arcane from a synthetic source tests a turn-long
+    "any arcane damage" effect the cards do not have — which is what this helper
+    used to do, and why these tests passed against the old implementation.
+    """
+    import copy
+    import engine.play as P
+    from engine.actions import Action, ActionType
+    from engine.card import CardDB
+    card = copy.deepcopy(CardDB().get(slug))
+    card.owner = card.controller = pid
+    card.raw_cost = 0
+    st.players[pid].hand.add(card)
+    P._pay_costs(st, pid, Action(ActionType.PLAY_CARD, pid, card))
+    before = st.players[3 - pid].life
+    dsl.dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    return before - st.players[3 - pid].life
+
+
+def _unplayed_arcane(st, amount=1):
+    """Arcane damage from a source that was never played — must NOT be amped."""
     from engine.card_effects.ability_keywords import effect_deal_arcane
     src = _make_card(slug="src", name="src", types=["Action"])
     src.owner = src.controller = 1
@@ -143,24 +168,43 @@ def _next_arcane(st, amount=1):
 def test_absorb_in_aether_amps_next_arcane_by_2():
     load_all_cards()
     st = _make_state()
+    st.player_agents = {1: lambda s, o, context="": o[0],
+                        2: lambda s, o, context="": o[0]}
     _play(st, "absorb_in_aether_red", types=["DefenseReaction"])
-    assert _next_arcane(st, 1) == 3  # 1 + amp 2
+    # aether_flare prints 1 arcane; +2 makes 3.
+    assert _play_arcane_card(st) == 3
+
+
+def test_absorb_in_aether_does_not_amp_damage_from_an_unplayed_source():
+    # The card names "the next CARD YOU PLAY". Amping arbitrary arcane damage is
+    # a different, stronger effect.
+    load_all_cards()
+    st = _make_state()
+    _play(st, "absorb_in_aether_red", types=["DefenseReaction"])
+    assert _unplayed_arcane(st, 1) == 1
 
 
 def test_aether_flare_deals_1_then_amps_next_by_1():
     load_all_cards()
     st = _make_state()
+    st.player_agents = {1: lambda s, o, context="": o[0],
+                        2: lambda s, o, context="": o[0]}
     before = st.players[2].life
     _play(st, "aether_flare_blue", types=["Action"])
     assert before - st.players[2].life == 1  # its own 1 arcane
-    assert _next_arcane(st, 1) == 2  # 1 + amp 1
+    # "plus X, where X is the damage dealt by Aether Flare" — X is 1 here, so the
+    # next played arcane card deals its printed 1 plus 1.
+    assert _play_arcane_card(st) == 2
 
 
 def test_tempest_aurora_amps_next_arcane_by_1():
     load_all_cards()
     st = _make_state()
+    st.player_agents = {1: lambda s, o, context="": o[0],
+                        2: lambda s, o, context="": o[0]}
     _play(st, "tempest_aurora_red", types=["Action"])
-    assert _next_arcane(st, 1) == 2  # 1 + amp 1
+    # aether_flare costs 0 (<= 2) and deals arcane, so it qualifies: 1 + amp 1.
+    assert _play_arcane_card(st) == 2
 
 
 # ---------------------------------------------------------------- misfire_dampener
@@ -303,8 +347,10 @@ def test_clearwater_elixir_may_destroys_pox_and_gains_life():
 def test_blessing_of_aether_amps_next_arcane_at_turn_start():
     load_all_cards()
     st = _make_state()
+    st.player_agents = {1: lambda s, o, context="": o[0],
+                        2: lambda s, o, context="": o[0]}
     _activate_start(st, "blessing_of_aether_blue")
-    assert _next_arcane(st, 1) == 2  # 1 + amp 1
+    assert _play_arcane_card(st) == 2  # 1 + amp 1
 
 
 def _activate_start(st, slug, pid=1):

@@ -1,52 +1,23 @@
 {
   "slug": "leech_memory_red",
+  "_comment": "The +3{p} is the one-shot. The granted ability ('whenever this deals damage to a hero, you may put an attack action card from your graveyard on the bottom of your deck') is NOT modelled \u2014 the queue grants keywords and power, not whole triggered abilities. Omitted rather than approximated, since any approximation here would fire on the wrong events.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 3,
-          "conditions": [
+          "filter": [
             {
-              "type": "DURING_TURN"
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
           ]
         },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_DEAL_DAMAGE",
-            "target": {
-              "filter": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zones": [
-                    "hero"
-                  ]
-                }
-              ]
-            },
-            "effects": [
-              {
-                "type": "PUT_CARDS_BOTTOM",
-                "amount": 1,
-                "source": "GRAVEYARD",
-                "conditions": [
-                  {
-                    "type": "MAY"
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "ability_type": "ACTIVATE",
-      "effects": [
         {
           "type": "GO_AGAIN"
         }

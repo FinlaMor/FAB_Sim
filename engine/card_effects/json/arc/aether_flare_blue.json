@@ -1,17 +1,33 @@
 {
   "slug": "aether_flare_blue",
-  "_comment": "Deal 1 arcane to target opposing hero; the next card you play this turn with an arcane-damage effect instead deals that much +X, where X = the damage this dealt (1). Modeled as DEAL_ARCANE 1 + AMP 1 (Amp = engine's 'next arcane damage this turn +N', CR 8.5.47). X is 1 in the base case (the 1 arcane it deals); the dynamic 'X = damage actually dealt' is simplified to the printed 1. Prior JSON used SET_FLAG + a STATIC MODIFY_ATTACK on a non-existent DEAL_ARCANE keyword (buffs attack power, not arcane).",
+  "_comment": "'...plus X, where X is the damage dealt by Aether Flare' \u2014 X is what actually landed, so the amount is resolved when the one-shot is created, after the 1 arcane damage above it has resolved.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
           "type": "DEAL_ARCANE",
-          "amount": 1
+          "amount": 1,
+          "target": "OPPONENT"
         },
         {
-          "type": "AMP",
-          "amount": 1
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {
+              "type": "CARD_HAS_EFFECT",
+              "effect": "DEAL_ARCANE"
+            }
+          ],
+          "on_consume": [
+            {
+              "type": "BOOST_NEXT_DAMAGE",
+              "amount": {
+                "type": "LAST_DAMAGE_DEALT"
+              },
+              "damage_type": "arcane"
+            }
+          ]
         }
       ]
     }

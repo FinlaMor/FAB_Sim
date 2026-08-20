@@ -792,6 +792,74 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return n >= _n
         return _hand_size
 
+    if ctype in ("ATTACK_WAS_BOOSTED", "ATTACK_WAS_CHARGED",
+                 "CARD_WAS_BOOSTED", "CARD_WAS_CHARGED"):
+        # "The next attack you BOOST this turn gets +4{p}", "the next attack you
+        # CHARGE to play this turn gets +1{p}". Which ATTACK was boosted or
+        # charged cannot come from a turn marker — that records only that the
+        # player did it at some point, so it would buff an attack that was
+        # never boosted. boost() and charge() mark the card itself.
+        attr = "was_boosted" if "BOOSTED" in ctype else "was_charged"
+        # ATTACK_* asks about the attack on the chain; CARD_* about this card.
+        on_attack = ctype.startswith("ATTACK_")
+
+        def _was(c, e, s, _attr=attr, _atk=on_attack):
+            target = c
+            if _atk:
+                combat = getattr(s, "combat", None)
+                target = getattr(combat, "attack_card", None) if combat else None
+            return bool(getattr(target, _attr, False))
+        return _was
+
+    if ctype in ("CARD_COST_LTE", "CARD_COST_GTE"):
+        # THIS card's printed cost. The ATTACK_COST_* family asks about the
+        # attack on the chain, which for a play-time filter is either absent or
+        # a different card entirely.
+        limit = params.get("amount", params.get("cost"))
+
+        def _card_cost(c, e, s, _lim=limit, _kind=ctype):
+            n = _numeric_amount(_lim, s, c)
+            if n is None:
+                return False
+            cost = getattr(c, "raw_cost", None)
+            if cost is None:
+                cost = getattr(c, "cost", None)
+            try:
+                cost = int(cost or 0)
+            except (TypeError, ValueError):
+                cost = 0
+            return cost <= n if _kind == "CARD_COST_LTE" else cost >= n
+        return _card_cost
+
+    if ctype in ("CARD_HAS_EFFECT", "CARD_DEALS"):
+        # "The next card you play this turn WITH AN EFFECT THAT DEALS ARCANE
+        # DAMAGE" — the filter is about what the card DOES, which is knowable
+        # only from its own JSON. Read from the CardDef, so it holds for any
+        # copy and needs no per-card list in engine code.
+        #
+        #   {"type":"CARD_HAS_EFFECT","effect":"DEAL_ARCANE"}
+        want = str(params.get("effect") or params.get("effect_type") or "").upper()
+
+        def _has_effect(c, e, s, _w=want):
+            if not _w:
+                return False
+            from engine.card_effects.dsl.loader import get_card
+            card_def = get_card(getattr(c, "slug", "") or "")
+            if card_def is None:
+                return False
+            import json as _json
+            for ability in card_def.abilities:
+                # Nested effects (CONDITIONAL_EFFECT then/else, MAY blocks) count
+                # too: a card that deals arcane damage inside a branch still has
+                # an arcane damage effect.
+                for eff in ability.effects:
+                    if (eff.effect_type or "").upper() == _w:
+                        return True
+                    if _w in _json.dumps(eff.params or {}).upper():
+                        return True
+            return False
+        return _has_effect
+
     if ctype in ("CARD_IS_CLASS", "CARD_IS_TALENT", "SELF_IS_CLASS"):
         # Asks about THIS card's class/talent. The ATTACK_* family asks about the
         # attack on the chain, which is a different object — using one where the

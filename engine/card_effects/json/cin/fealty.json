@@ -1,8 +1,9 @@
 {
   "slug": "fealty",
+  "_comment": "Draconic Aura token. 'The next card you play this turn IS DRACONIC' is a CLASS grant -- neither a keyword nor a number, so the play-time queue learned grant_class. It is ADDED to the card's classes, not substituted, matching 'in addition to its other class types' elsewhere. The end-phase self-destroy condition ('if you haven't created a Fealty token or played a Draconic card this turn') reads two turn events that are both recorded.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "cost": [
         {
@@ -12,63 +13,32 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "FEALTY_DESTROYED"
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "FEALTY_PLAYED"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "FEALTY_DESTROYED"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "add",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "FEALTY_PLAYED"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "add",
-          "amount": 1
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "grant_class": "Draconic"
         }
       ]
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "END_OF_TURN",
+      "trigger": "BEGINNING_OF_END_PHASE",
       "conditions": [
         {
           "type": "NOT",
           "condition": {
-            "type": "FLAG_SET",
-            "flag": "FEALTY_DESTROYED"
-          }
-        },
-        {
-          "type": "NOT",
-          "condition": {
-            "type": "FLAG_SET",
-            "flag": "FEALTY_PLAYED"
+            "type": "OR",
+            "conditions": [
+              {
+                "type": "EVENT_THIS_TURN",
+                "event": "create",
+                "qualifier": "fealty"
+              },
+              {
+                "type": "EVENT_THIS_TURN",
+                "event": "play",
+                "qualifier": "draconic"
+              }
+            ]
           }
         }
       ],

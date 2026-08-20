@@ -1,13 +1,29 @@
 {
   "slug": "toughness",
-  "_comment": "Toughness aura token. Real text: at the start of your opponent's turn, destroy this, then the next action card you defend with this turn gets +1{d} this chain link. Modeled as the self-destroy (it expires at start of turn); the +1{d} defensive buff needs a defend-time hook and is omitted.",
+  "_comment": "Generic Aura token. 'The next action card you DEFEND with this turn gets +1{d}' \u2014 a defending card passes through neither the attack queue nor the play-time queue, which is why the defence queue exists. Triggers at the start of the OPPONENT'S turn, which is when you will be defending.",
   "abilities": [
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER",
+          "value": false
+        }
+      ],
       "effects": [
         {
           "type": "DESTROY_SELF"
+        },
+        {
+          "type": "MODIFY_NEXT_DEFENSE",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
+            }
+          ]
         }
       ]
     }

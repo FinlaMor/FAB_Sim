@@ -1,43 +1,22 @@
 {
   "slug": "evo_speedslip_blue",
+  "_comment": "'When this is equipped, the next attack action card you play this turn gets BOOST' \u2014 a keyword grant on the one-shot attack queue. The transform-on-equip half ('if you have a base legs equipped, transform it into this') is a real Transform (CR 8.5.36) of the equipped legs into this card. Arcane Barrier 1 is printed.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_EQUIP",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "EVO_SPEEDSLIP_EQUIPPED"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "EVO_SPEEDSLIP_EQUIPPED"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1,
-          "conditions": [
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Boost",
+          "filter": [
             {
-              "type": "IS_ACTIVE_PLAYER"
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "ARCANE_BARRIER",
-          "amount": 1
         }
       ]
     }

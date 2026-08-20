@@ -1,48 +1,37 @@
 {
   "slug": "phantasmify_yellow",
+  "_comment": "Colour variant of phantasmify_blue; +4{p} instead of +3{p}. The Illusionist class grant is likewise not modelled.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "PHANTASMIFY_ACTIVE"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "PHANTASMIFY_ACTIVE"
-        },
-        {
-          "type": "DURING_TURN"
-        },
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "HAND",
-          "card_type": "ACTION"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GRANT_SUBTYPE",
-          "subtype": "Illusionist"
-        },
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 4
+          "amount": 4,
+          "filter": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ]
         },
         {
-          "type": "SET_FLAG",
-          "flag": "PHANTASM"
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Phantasm",
+          "filter": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

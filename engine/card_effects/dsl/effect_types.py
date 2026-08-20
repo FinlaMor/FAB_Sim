@@ -2750,6 +2750,37 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             })
         return _fn
 
+    if etype in ("MODIFY_NEXT_DEFENSE", "GRANT_NEXT_DEFENSE"):
+        # "The next action card they defend with this combat chain gets -1{d}",
+        # "the next action card you defend with gets +1{d}". A card used to
+        # DEFEND passes through neither the attack queue (consumed by attacks)
+        # nor the play-time queue (consumed by cards being played), so this had
+        # no queue at all and could only be written turn-long — weakening or
+        # strengthening EVERY block instead of one.
+        #
+        # `player`: SELF (default) or OPPONENT — the defender whose next block is
+        # affected, which for "they defend with" is the opponent.
+        amount = params.get("amount", 0)
+        filter_specs = params.get("filter", [])
+        who = str(params.get("player") or "SELF").upper()
+        scope = str(params.get("scope") or "TURN").upper()
+
+        def _fn(card, event, state, _a=amount, _f=filter_specs, _w=who, _s=scope):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            pid = (3 - cid) if _w in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            if pid not in state.players:
+                return
+            player = state.players[pid]
+            if not hasattr(player, 'dsl_queued_defense_mods'):
+                player.dsl_queued_defense_mods = []
+            player.dsl_queued_defense_mods.append({
+                "amount": _resolve_amount(_a, state, card),
+                "filter": _f,
+                "scope": _s,
+            })
+        return _fn
+
     if etype in ("MODIFY_NEXT_CARD_COST", "MODIFY_NEXT_CARD", "GRANT_NEXT_CARD"):
         # "The NEXT blue card you play this turn costs {r} less to play."
         # Queued as a one-shot on the controller and consumed by the first card
@@ -2773,8 +2804,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         keywords = params.get("keywords") or (
             [params["keyword"]] if params.get("keyword") else [])
 
+        # "The next 3 Draconic cards you play this turn cost {r} less" — one
+        # entry with three uses, not three entries and not a turn-long effect.
+        # Without it the reduction applies once and the other two are lost.
+        try:
+            uses = int(params.get("uses", 1) or 1)
+        except (TypeError, ValueError):
+            uses = 1
+
+        # "is Draconic" / "is Illusionist in addition to its other class types"
+        grant_classes = params.get("grant_classes") or (
+            [params["grant_class"]] if params.get("grant_class") else [])
+
         def _fn(card, event, state, _a=amount, _f=filter_specs, _oc=on_consume,
-                _kw=keywords):
+                _kw=keywords, _uses=uses, _gc=grant_classes):
             from engine.card_effects.ability_keywords import _controller_id
             player = state.players[_controller_id(card)]
             if not hasattr(player, 'dsl_queued_card_mods'):
@@ -2784,6 +2827,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 "filter": _f,
                 "on_consume": _oc,
                 "keywords": list(_kw),
+                "grant_classes": list(_gc),
+                "uses": _uses,
             })
         return _fn
 
@@ -2796,20 +2841,28 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         except (TypeError, ValueError):
             bonus = 1
 
-        def _fn(card, event, state, _b=bonus):
+        _bdtype = str(params.get("damage_type") or "").lower()
+
+        def _fn(card, event, state, _b=bonus, _bdtype=_bdtype):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effects import ReplacementEffect, ReplacementType
             cid = _controller_id(card)
             used = {"done": False}
             target = card
 
-            def _cond(ev, s, _t=target, _u=used):
+            def _cond(ev, s, _t=target, _u=used, _dt=_bdtype):
                 if _u["done"] or not isinstance(ev, dict):
                     return False
                 if ev.get("type") not in ("damage", None) and "amount" not in ev:
                     return False
                 src = ev.get("source_card") or ev.get("damage_source_card")
-                return src is _t and (ev.get("amount") or 0) > 0
+                if src is not _t or (ev.get("amount") or 0) <= 0:
+                    return False
+                if _dt:
+                    have = ev.get("damage_type")
+                    have = getattr(have, "value", have)
+                    return str(have).lower() == _dt
+                return True
 
             def _repl(ev, s, _b=_b, _u=used):
                 _u["done"] = True

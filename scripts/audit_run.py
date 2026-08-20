@@ -101,6 +101,9 @@ ONE_SHOT_PRIMITIVES = (
     # play-time queue — consumed by any card, needed for "the next non-attack
     # action card you play" and friends
     "MODIFY_NEXT_CARD_COST", "MODIFY_NEXT_CARD", "GRANT_NEXT_CARD",
+    # defence queue — consumed by a card used to BLOCK, which passes through
+    # neither of the other two
+    "MODIFY_NEXT_DEFENSE", "GRANT_NEXT_DEFENSE",
     # one-shot replacements
     "PREVENT_DAMAGE", "INJECT_REPLACEMENT", "BOOST_NEXT_DAMAGE",
     "APPLY_REPLACEMENT",

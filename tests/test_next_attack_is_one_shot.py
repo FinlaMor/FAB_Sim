@@ -480,6 +480,200 @@ def test_break_of_dawn_ignores_a_non_shadow_source():
     assert _shadow_hit(st, 6, shadow=False) == 6
 
 
+# --- the DEFENCE queue ----------------------------------------------------
+# A card used to BLOCK passes through neither the attack queue (consumed by
+# attacks) nor the play-time queue (consumed by cards being played), so "the
+# next action card you defend with" had no queue at all.
+
+def _defend(st, defender_id=2, defense=3, slug="blocker", types=("Action",)):
+    """Declare a block through the real defend path, which is what reads {d}."""
+    from engine.actions import Action, ActionType
+    import engine.play as P
+    blocker = Card(slug=slug, name=slug, types=list(types))
+    blocker.owner = blocker.controller = defender_id
+    blocker.defense = blocker.base_defense = defense
+    st.players[defender_id].hand.add(blocker)
+    atk = Card(slug="atk", name="atk", types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = 3 - defender_id
+    atk.power = atk.base_power = 5
+    st.combat = CombatState(attacker_id=3 - defender_id, link_id=1,
+                            attack_power=5, attack_card=atk, keywords=[])
+    action = Action(ActionType.DEFEND_CARDS, defender_id, None)
+    action.card_list = [blocker]
+    P._apply_defend(st, action)
+    return st.combat.total_defense
+
+
+def test_toughness_buffs_the_next_block():
+    st = _state()
+    token = _card("toughness", owner=2)
+    st.players[2].permanents.add(token)
+    st.active_player = 1                       # the opponent's turn has begun
+    dispatch(st, "START_OF_TURN", token.slug, card=token, event=None)
+    assert _defend(st, defender_id=2, defense=3) == 4
+
+
+def test_toughness_buffs_one_block_only():
+    st = _state()
+    token = _card("toughness", owner=2)
+    st.players[2].permanents.add(token)
+    st.active_player = 1
+    dispatch(st, "START_OF_TURN", token.slug, card=token, event=None)
+    assert _defend(st, defender_id=2, defense=3, slug="first") == 4
+    assert _defend(st, defender_id=2, defense=3, slug="second") == 3,         "every block was buffed, not the next one"
+
+
+def test_razor_ring_weakens_the_opponents_next_block():
+    st = _state()
+    card = _card("razor_ring_blue", owner=1)
+    atk = Card(slug="rr", name="rr", types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = 1
+    atk.power = atk.base_power = 3
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            attack_card=atk, keywords=[])
+    dispatch(st, "ON_HIT", card.slug, card=card, event=None)
+    # The mod goes on the OPPONENT, not on the card's controller.
+    assert getattr(st.players[2], "dsl_queued_defense_mods", []),         "the -1{d} was queued on the wrong player"
+    assert _defend(st, defender_id=2, defense=3) == 2
+
+
+def test_defence_queue_respects_chain_scope():
+    st = _state()
+    card = _card("razor_ring_blue", owner=1)
+    atk = Card(slug="rr", name="rr", types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = 1
+    atk.power = atk.base_power = 3
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            attack_card=atk, keywords=[])
+    dispatch(st, "ON_HIT", card.slug, card=card, event=None)
+    E._close_step(st)
+    assert not [m for m in getattr(st.players[2], "dsl_queued_defense_mods", [])
+                if str(m.get("scope", "")).upper() == "CHAIN"],         "a chain-scoped defence mod outlived its combat chain"
+
+
+# --- arcane amplification and multi-use reductions ------------------------
+
+def test_multi_use_reduction_lasts_exactly_three_cards():
+    # "The next 3 Draconic cards you play this turn cost {r} less" — one entry
+    # with three uses. As a single-use entry two reductions are lost; as a
+    # turn-long effect every Draconic card is cheaper forever.
+    st = _state()
+    card = _card("blood_of_the_dracai_red")
+    dispatch(st, "ON_PITCH", card.slug, card=card, event=None)
+    queued = st.players[1].dsl_queued_card_mods
+    assert len(queued) == 1
+    assert queued[0]["uses"] == 3
+    import engine.play as P
+    for expected in (2, 1):
+        target = Card(slug="drac", name="drac", types=["Action"])
+        target.owner = target.controller = 1
+        target.classes = ["Draconic"]
+        target.raw_cost = 3
+        from engine.actions import Action, ActionType
+        st.players[1].hand.add(target)
+        P._pay_costs(st, 1, Action(ActionType.PLAY_CARD, 1, target))
+        assert st.players[1].dsl_queued_card_mods[0]["uses"] == expected
+    # third use spends the entry
+    target = Card(slug="drac", name="drac", types=["Action"])
+    target.owner = target.controller = 1
+    target.classes = ["Draconic"]
+    target.raw_cost = 3
+    from engine.actions import Action, ActionType
+    st.players[1].hand.add(target)
+    P._pay_costs(st, 1, Action(ActionType.PLAY_CARD, 1, target))
+    assert not st.players[1].dsl_queued_card_mods,         "the entry outlived its three uses"
+
+
+def test_card_has_effect_reads_the_played_cards_own_json():
+    # "with an effect that deals arcane damage" is knowable only from the card's
+    # definition; a filter that cannot see it matches everything.
+    from engine.card_effects.dsl.condition_types import compile_condition
+    st = _state()
+    fn = compile_condition("CARD_HAS_EFFECT", {"effect": "DEAL_ARCANE"})
+    arcane = _card("aether_flare_blue")          # deals arcane damage
+    plain = _card("overswing_blue")              # does not
+    assert fn(arcane, None, st) is True
+    assert fn(plain, None, st) is False
+
+
+def test_card_cost_lte_asks_about_this_card():
+    from engine.card_effects.dsl.condition_types import compile_condition
+    st = _state()
+    fn = compile_condition("CARD_COST_LTE", {"amount": 2})
+    cheap = Card(slug="c", name="c", types=["Action"])
+    cheap.raw_cost = 1
+    dear = Card(slug="d", name="d", types=["Action"])
+    dear.raw_cost = 5
+    assert fn(cheap, None, st) is True
+    assert fn(dear, None, st) is False
+
+
+# --- boosted / charged / class grants -------------------------------------
+
+def test_quickfire_buffs_only_an_attack_that_was_boosted():
+    # A turn marker records only that the player boosted at some point, so it
+    # would buff an attack that was never boosted. boost() marks the card.
+    st = _state()
+    card = _card("quickfire_red")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    unboosted = Card(slug="plain", name="plain", types=["Action"],
+                     subtypes=["Attack"])
+    unboosted.owner = unboosted.controller = 1
+    unboosted.power = unboosted.base_power = 3
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            attack_card=unboosted, keywords=[])
+    st.combat.base_attack_power = 3
+    E._apply_turn_attack_effects(st, unboosted)
+    E._register_card_continuous_effects(st, unboosted)
+    E._recalculate_attack_power(st)
+    assert st.combat.attack_power == 3, "an unboosted attack took the buff"
+
+    boosted = Card(slug="boosted", name="boosted", types=["Action"],
+                   subtypes=["Attack"])
+    boosted.owner = boosted.controller = 1
+    boosted.power = boosted.base_power = 3
+    boosted.was_boosted = True
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            attack_card=boosted, keywords=[])
+    st.combat.base_attack_power = 3
+    E._apply_turn_attack_effects(st, boosted)
+    E._register_card_continuous_effects(st, boosted)
+    E._recalculate_attack_power(st)
+    assert st.combat.attack_power == 7
+
+
+def test_boost_marks_the_card_it_boosted():
+    from engine.card_effects.ability_keywords import boost
+    st = _state()
+    target = Card(slug="t", name="t", types=["Action"], subtypes=["Attack"])
+    target.owner = target.controller = 1
+    for i in range(3):
+        c = Card(slug=f"d{i}", name=f"d{i}", types=["Action"])
+        c.owner = c.controller = 1
+        st.players[1].deck.add(c)
+    boost(target, st)
+    assert getattr(target, "was_boosted", False) is True
+
+
+def test_fealty_grants_a_class_to_the_next_card_played():
+    # "The next card you play this turn IS DRACONIC" — a class grant, neither a
+    # keyword nor a number, ADDED to the card's own classes.
+    st = _state()
+    token = _card("fealty")
+    st.players[1].permanents.add(token)
+    dispatch(st, "ON_ACTIVATE", token.slug, card=token, event=None)
+    from engine.actions import Action, ActionType
+    import engine.play as P
+    target = Card(slug="plain", name="plain", types=["Action"])
+    target.owner = target.controller = 1
+    target.classes = ["Ninja"]
+    target.raw_cost = 1
+    st.players[1].hand.add(target)
+    P._pay_costs(st, 1, Action(ActionType.PLAY_CARD, 1, target))
+    assert "Draconic" in target.classes
+    assert "Ninja" in target.classes, "the grant replaced the card's own class"
+
+
 # --- the queue expires with the turn ---------------------------------------
 
 def test_an_unused_next_attack_buff_does_not_survive_the_turn():

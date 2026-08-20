@@ -1,30 +1,33 @@
 {
   "slug": "convulsions_from_the_bellows_of_hell_red",
-  "_comment": "Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": dropped MODIFY_ATTACK: an effect used as a condition; the real test (\"gains exactly +1 power from an effect\") has no primitive. Repaired: DOMINATE is an EFFECT but sat inside the ability's CONDITIONS, so the card gated itself on a non-condition; the empty-OR bug hid it. It is now a conditional effect gated on the high-power banish.",
+  "_comment": "The additional cost (banish 3 random cards from your graveyard) gates play, so it is a cost and not an on-play effect. The payoff is conditional on a 6+ power card having been banished this way, which the banish turn events cannot express (they record identity, not power), so the +{p} is granted unconditionally on the next attack action \u2014 MORE generous than printed. Called out because it is the wrong direction for an approximation. The banish is also player-chosen rather than RANDOM: the cost has no random mode, and inventing a `random` flag it does not read would be silently dropped anyway.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "additional_cost": [
         {
-          "type": "BANISH_NAMED_GRAVEYARD_OPTIONAL",
+          "type": "BANISH_FROM_GRAVEYARD",
           "amount": 3
         }
       ],
       "effects": [
         {
-          "type": "GO_AGAIN"
-        },
-        {
-          "type": "DOMINATE",
-          "conditions": [
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
             {
-              "type": "REF_EXISTS",
-              "ref": "banished_high_power_card"
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
           ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
-      ],
-      "conditions": []
+      ]
     }
   ]
 }

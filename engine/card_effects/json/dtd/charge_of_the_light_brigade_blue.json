@@ -1,23 +1,19 @@
 {
   "slug": "charge_of_the_light_brigade_blue",
+  "_comment": "'The next attack you CHARGE to play this turn gets +1{p}' \u2014 charge() marks the card, for the same reason boost does: a turn marker cannot tell which attack it was.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 1,
-          "conditions": [
+          "filter": [
             {
-              "type": "FLAG_SET",
-              "flag": "CHARGED_ATTACK"
+              "type": "ATTACK_WAS_CHARGED"
             }
           ]
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "CHARGED_ATTACK"
         },
         {
           "type": "GO_AGAIN"

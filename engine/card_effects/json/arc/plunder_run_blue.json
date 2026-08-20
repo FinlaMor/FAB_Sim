@@ -1,53 +1,53 @@
 {
   "slug": "plunder_run_blue",
+  "_comment": "Two separate one-shots. 'The next time an attack action card you control HITS this turn, draw a card' is an injected turn-scoped trigger, spent on the first hit. 'If Plunder Run is played FROM ARSENAL, the next attack action card you play gains +1{p}' is conditional on where THIS card came from, which PLAYED_FROM_ARSENAL reads from prev_zone.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "CONTROLS_ATTACK_ACTION"
-        }
-      ],
-      "effects": [
-        {
-          "type": "DRAW",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ENTER_PLAY",
-      "conditions": [
-        {
-          "type": "PLAYED_FROM_ARSENAL"
-        }
-      ],
+      "ability_type": "PLAY",
       "effects": [
         {
           "type": "INJECT_TRIGGER",
+          "scope": "TURN",
           "trigger": {
-            "trigger": "ON_PLAY",
+            "trigger_type": "ON_HIT",
             "conditions": [
               {
-                "type": "CONTROLS_ATTACK_ACTION"
+                "type": "ATTACK_CONTROLLED_BY_YOU"
+              },
+              {
+                "type": "ATTACK_TYPE_IN",
+                "types": [
+                  "Action"
+                ]
               }
             ],
             "effects": [
               {
-                "type": "MODIFY_ATTACK",
-                "mod": "add",
+                "type": "DRAW",
                 "amount": 1
               }
             ]
           }
-        }
-      ]
-    },
-    {
-      "ability_type": "PLAY",
-      "effects": [
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "PLAYED_FROM_ARSENAL",
+              "value": true
+            }
+          ]
+        },
         {
           "type": "GO_AGAIN"
         }

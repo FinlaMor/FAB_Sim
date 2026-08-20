@@ -1,13 +1,30 @@
 {
   "slug": "tempest_aurora_red",
-  "_comment": "The next card you play this turn with cost 2 or less and an arcane-damage effect instead deals that much +1; Go again. Modeled as AMP 1 (engine's 'next arcane damage this turn +N', CR 8.5.47) + GO_AGAIN. The 'cost 2 or less' restriction on which card is simplified/omitted (Amp buffs the next arcane damage regardless of the source card's cost). Prior JSON used a malformed nested APPLY_CONTINUOUS that implemented nothing.",
+  "_comment": "Same shape as absorb_in_aether, with a COST cap as well: 'cost 2 or less AND an arcane damage effect'. Both are filters on which card consumes the one-shot; dropping either makes the amplification land on a card the text excludes.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "AMP",
-          "amount": 1
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {
+              "type": "CARD_HAS_EFFECT",
+              "effect": "DEAL_ARCANE"
+            },
+            {
+              "type": "CARD_COST_LTE",
+              "amount": 2
+            }
+          ],
+          "on_consume": [
+            {
+              "type": "BOOST_NEXT_DAMAGE",
+              "amount": 1,
+              "damage_type": "arcane"
+            }
+          ]
         },
         {
           "type": "GO_AGAIN"

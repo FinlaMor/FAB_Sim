@@ -1,47 +1,62 @@
 {
   "slug": "smashing_good_time_blue",
+  "_comment": "Same two-one-shot shape as plunder_run. The item destruction is optional ('you may') and capped at cost 2 or less \u2014 both are part of the printed effect, not decoration.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
+      "ability_type": "PLAY",
+      "effects": [
         {
-          "type": "ATTACK_CLASS_IN",
-          "classes": [
-            "Generic"
-          ]
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              },
+              {
+                "type": "ATTACK_TYPE_IN",
+                "types": [
+                  "Action"
+                ]
+              }
+            ],
+            "effects": [
+              {
+                "type": "MAY",
+                "prompt": "Destroy an item they control?",
+                "effects": [
+                  {
+                    "type": "DESTROY_PERMANENT",
+                    "target": "chosen",
+                    "player": "OPPONENT",
+                    "subtype": "Item",
+                    "max_cost": 2
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
-          "type": "ATTACK_TARGET_IS_HERO"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
-          "cost": 2
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ENTER_PLAY",
-      "conditions": [
-        {
-          "type": "PLAYED_FROM_ARSENAL"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 0,
-      "effects": [
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "PLAYED_FROM_ARSENAL",
+              "value": true
+            }
+          ]
+        },
         {
           "type": "GO_AGAIN"
         }

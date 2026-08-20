@@ -2343,6 +2343,10 @@ def charge(state: GameState, card: Card, player_id: int,
     # replacement/cancel checks, so a cancelled charge does not count — 8.5.29b
     # is explicit that only this effect counts as charging, so a card reaching
     # the soul any other way must not set it either.
+    # Mark the CARD as well as the player: "the next attack you CHARGE to play"
+    # is about which card was charged, which a turn marker cannot distinguish.
+    if event.card is not None:
+        event.card.was_charged = True
     _record_turn_event(state, event.player_id, "charge",
                        getattr(card, "slug", None),
                        getattr(card, "types", None) or [],

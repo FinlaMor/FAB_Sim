@@ -1,29 +1,22 @@
 {
   "slug": "quickfire_red",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED_ATTACK_THIS_TURN.",
+  "_comment": "'The next attack you BOOST this turn gets +4{p}' \u2014 WHICH attack was boosted cannot come from a turn marker, which records only that the player boosted at some point and would buff an attack that was never boosted. boost() now marks the card. 'This costs {r} less for each Hyper Driver you control' is a cost modifier and is declared as one so it affects play legality, not applied after the fact.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 4,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "boosted_this_turn"
-            }
-          ]
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "filter": [
+            {
+              "type": "ATTACK_WAS_BOOSTED"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

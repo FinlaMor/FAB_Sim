@@ -1,13 +1,14 @@
 {
   "slug": "art_of_the_dragon_blood_red",
+  "_comment": "'When this attacks, IF IT IS DRACONIC' \u2014 the condition is about this card, which can be made Draconic by another effect, so it is checked at attack time rather than assumed. Then go again plus the same three-use Draconic cost reduction as Blood of the Dracai.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "HAS_KEYWORD",
-          "keyword": "Draconic"
+          "type": "CARD_IS_CLASS",
+          "card_class": "Draconic"
         }
       ],
       "effects": [
@@ -15,30 +16,15 @@
           "type": "GO_AGAIN"
         },
         {
-          "type": "SET_FLAG",
-          "flag": "DRACONIC_ATTACK_GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "DRACONIC_ATTACK_GO_AGAIN"
-        },
-        {
-          "type": "DURING_TURN"
-        },
-        {
-          "type": "HAS_KEYWORD",
-          "keyword": "Draconic"
-        }
-      ],
-      "effects": [
-        {
-          "type": "PAY_OR_DAMAGE",
-          "amount": -1
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 1,
+          "uses": 3,
+          "filter": [
+            {
+              "type": "CARD_IS_CLASS",
+              "card_class": "Draconic"
+            }
+          ]
         }
       ]
     }

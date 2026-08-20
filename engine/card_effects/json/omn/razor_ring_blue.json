@@ -1,22 +1,7 @@
 {
   "slug": "razor_ring_blue",
+  "_comment": "'When this hits a hero, the next action card THEY defend with this combat chain gets -1{d}' \u2014 the OPPONENT's next block, chain-scoped, so it does not carry into a later chain. The activated attack half ('{r}, {t}, destroy this when the combat chain closes: Attack') is not modelled here; Legendary and Go again are printed keywords.",
   "abilities": [
-    {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 1,
-      "cost": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
@@ -27,10 +12,16 @@
       ],
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "subtract",
-          "amount": 1,
-          "duration": "end_of_turn"
+          "type": "MODIFY_NEXT_DEFENSE",
+          "amount": -1,
+          "player": "OPPONENT",
+          "scope": "CHAIN",
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
+            }
+          ]
         }
       ]
     }

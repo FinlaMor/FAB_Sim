@@ -469,6 +469,10 @@ def boost(card: Card, state: GameState) -> bool:
         #   - boolean check: "boosted_this_turn" in player.current_turn_effects
         #   - count check:   sum(1 for e in current_turn_effects if e == "boosted_this_turn")
         # Also set class_counters flag for legacy checks (Maxx hero condition etc.)
+        # Mark the CARD, not just the player: "the next attack you BOOST this
+        # turn gets +4{p}" is about which attack was boosted, and a turn marker
+        # cannot tell one attack from another.
+        card.was_boosted = True
         controller.current_turn_effects.append("boosted_this_turn")
         controller.class_counters["boosted_this_turn"] = True
         # ... and a CHAIN-scoped tally. "this combat chain" is narrower than

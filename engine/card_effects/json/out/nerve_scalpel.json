@@ -1,16 +1,7 @@
 {
   "slug": "nerve_scalpel",
+  "_comment": "'When this hits a hero, the next time they defend with 1 or more REACTION cards this turn, those cards have -1{d}' \u2014 the defence queue, on the OPPONENT, filtered to reaction cards. Piercing 1 and Go again are printed. The '1 or more ... those cards' plural is approximated as the next single reaction card blocked with: the queue is one-shot per card, so a multi-card block weakens only the first.",
   "abilities": [
-    {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 2,
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
@@ -21,30 +12,17 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "NERVE_SCALPEL_ACTIVE"
+          "type": "MODIFY_NEXT_DEFENSE",
+          "amount": -1,
+          "player": "OPPONENT",
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Defense Reaction"
+            }
+          ]
         }
       ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "NERVE_SCALPEL_ACTIVE"
-        },
-        {
-          "type": "DEFENDS_WITH_OTHER_HAND_CARD"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "subtract",
-          "amount": 1
-        }
-      ],
-      "trigger": "ON_HIT"
     }
   ]
 }
