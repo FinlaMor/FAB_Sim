@@ -3073,17 +3073,29 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # so the engine's damage pipeline (effect_manager.apply_replacements)
         # reduces the next damage event to this hero by up to N and then consumes
         # the shield. Used from injected ON_DAMAGE reactions like Steadfast.
-        try:
-            amount = int(params.get("amount", 0))
-        except (TypeError, ValueError):
-            amount = 0
+        # The amount may be an EXPRESSION: "prevent the next X arcane damage,
+        # where X is the damage dealt by Dampen". Coercing to int at compile
+        # time turned those into 0 — a shield that prevents nothing.
+        _raw_amount = params.get("amount", 0)
         _dtype = str(params.get("damage_type") or "").lower()
+        # "the next time a SHADOW source would deal damage" — a class/talent
+        # restriction on the SOURCE, not the target. Without it the shield
+        # absorbs damage from any source, which is strictly stronger.
+        _src_class = _norm_amt(params.get("source_class") or params.get("source_talent") or "")
 
-        def _fn(card, event, state, _amt=amount, _dtype=_dtype):
+        def _fn(card, event, state, _raw=_raw_amount, _dtype=_dtype,
+                _src_class=_src_class):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effects import ReplacementEffect, ReplacementType
             cid = _controller_id(card)
-            def _cond(ev, st, _cid=cid, _dt=_dtype):
+            try:
+                _amt = int(_resolve_amount(_raw, state, card)
+                           if isinstance(_raw, dict) else _raw)
+            except (TypeError, ValueError):
+                _amt = 0
+            if _amt <= 0:
+                return
+            def _cond(ev, st, _cid=cid, _dt=_dtype, _src_class=_src_class):
                 if not (ev.get("type") == "damage"
                         and ev.get("amount", 0) > 0
                         and not ev.get("unpreventable", False)
@@ -3095,7 +3107,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 if _dt:
                     have = ev.get("damage_type")
                     have = getattr(have, "value", have)
-                    return str(have).lower() == _dt
+                    if str(have).lower() != _dt:
+                        return False
+                if _src_class:
+                    src = ev.get("damage_source_card") or ev.get("source_card")
+                    traits = {_norm_amt(x) for x in
+                              (getattr(src, "classes", None) or [])
+                              + (getattr(src, "talents", None) or [])}
+                    if _src_class not in traits:
+                        return False
                 return True
             def _replace(ev, st, _a=_amt):
                 prevented = min(_a, ev.get("amount", 0))

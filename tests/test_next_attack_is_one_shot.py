@@ -431,6 +431,55 @@ def test_turn_scoped_grant_survives_a_chain_close():
     assert st.players[1].dsl_queued_attack_mods,         "a turn-scoped grant was dropped at chain close"
 
 
+# --- dynamic amounts and source filters on prevention ---------------------
+
+def test_dampen_prevents_what_it_actually_dealt():
+    # "X is the damage dealt by Dampen." PREVENT_DAMAGE coerced its amount to an
+    # int at COMPILE time, so any expression became 0 — a shield preventing
+    # nothing at all.
+    from engine.effect_keywords import DamageType
+    st = _state()
+    card = _card("dampen_yellow")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _hit(st, 5, dtype=DamageType.ARCANE) == 2,         "the shield did not absorb the 3 arcane damage Dampen dealt"
+
+
+def test_dampen_shield_is_arcane_only():
+    from engine.effect_keywords import DamageType
+    st = _state()
+    card = _card("dampen_yellow")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _hit(st, 5, dtype=DamageType.PHYSICAL) == 5
+
+
+def _shadow_hit(st, amount, shadow=True, pid=1):
+    from engine.effect_keywords import DamageType, deal_damage
+    src = Card(slug="src", name="src", types=["Action"])
+    src.owner = src.controller = 3 - pid
+    src.talents = ["Shadow"] if shadow else ["Light"]
+    before = st.players[pid].life
+    deal_damage(st, amount=amount, damage_type=DamageType.PHYSICAL,
+                source_player_id=3 - pid, damage_target=st.players[pid].hero,
+                damage_source="effect", damage_source_card=src)
+    return before - st.players[pid].life
+
+
+def test_break_of_dawn_prevents_shadow_damage():
+    st = _state()
+    card = _card("break_of_dawn_red")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _shadow_hit(st, 6, shadow=True) == 2
+
+
+def test_break_of_dawn_ignores_a_non_shadow_source():
+    # Unfiltered this is a flat 4-damage shield against anything, strictly
+    # stronger than the card. The source restriction IS the card.
+    st = _state()
+    card = _card("break_of_dawn_red")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _shadow_hit(st, 6, shadow=False) == 6
+
+
 # --- the queue expires with the turn ---------------------------------------
 
 def test_an_unused_next_attack_buff_does_not_survive_the_turn():

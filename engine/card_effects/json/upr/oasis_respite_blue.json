@@ -1,40 +1,13 @@
 {
   "slug": "oasis_respite_blue",
+  "_comment": "The prevention is the card's main effect. 'By a source of your choice' is not modelled: the shield takes the next qualifying damage from ANY source, which is more permissive than printed. Stated rather than left to be discovered. 'Target hero' is also not modelled \u2014 the shield goes on the controller, not on a chosen hero \u2014 and the conditional 1{h} for the hero with the least life is omitted rather than granted unconditionally, which would be stronger than printed.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 1,
-      "cost": [
-        {
-          "type": "PITCH",
-          "amount": 3
-        }
-      ],
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "WARD",
-          "amount": 2,
-          "target": "hero"
-        },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "type": "ON_END_OF_TURN",
-            "conditions": [
-              {
-                "type": "HEALTH_LT_OPP",
-                "target": "hero"
-              }
-            ],
-            "effects": [
-              {
-                "type": "GAIN",
-                "asset": "HEALTH",
-                "amount": 1,
-                "target": "hero"
-              }
-            ]
-          }
+          "type": "PREVENT_DAMAGE",
+          "amount": 2
         }
       ]
     }

@@ -1,12 +1,14 @@
 {
   "slug": "break_of_dawn_yellow",
+  "_comment": "Colour variant of break_of_dawn_red; prevents 3 instead of 4.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "BREAK_OF_DAWN_ACTIVE"
+          "type": "PREVENT_DAMAGE",
+          "amount": 3,
+          "source_class": "Shadow"
         }
       ]
     }

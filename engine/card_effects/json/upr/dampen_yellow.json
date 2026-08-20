@@ -1,5 +1,6 @@
 {
   "slug": "dampen_yellow",
+  "_comment": "'Prevent the next X arcane damage, where X is the DAMAGE DEALT BY DAMPEN' \u2014 X is what actually landed, not the printed 3, since prevention and replacement effects can change it. PREVENT_DAMAGE coerced its amount to an int at compile time, which turned any expression into 0: a shield preventing nothing. It now resolves the expression when the shield is created, after the damage above it has resolved.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -7,32 +8,14 @@
         {
           "type": "DEAL_ARCANE",
           "amount": 3,
-          "target": "any"
+          "target": "OPPONENT"
         },
         {
-          "type": "SET_FLAG",
-          "flag": "DAMPEN_DAMAGE_PREVENTED",
-          "amount": 3
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "DAMPEN_DAMAGE_PREVENTED"
-        },
-        {
-          "type": "DURING_TURN"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "add",
-          "amount": 3,
-          "target": "hero"
+          "type": "PREVENT_DAMAGE",
+          "damage_type": "arcane",
+          "amount": {
+            "type": "LAST_DAMAGE_DEALT"
+          }
         }
       ]
     }

@@ -1,17 +1,19 @@
 {
   "slug": "light_up_the_leaves_red",
+  "_comment": "Two abilities: the played effect (6 arcane damage) and an INSTANT activated from hand. The prevention is ARCANE-specific. 'Target source would deal' is not modelled \u2014 the shield applies to arcane damage from any source.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
           "type": "DEAL_ARCANE",
-          "amount": 6
+          "amount": 6,
+          "target": "OPPONENT"
         }
       ]
     },
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "cost": [
         {
@@ -19,21 +21,14 @@
         },
         {
           "type": "DISCARD_CARD",
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "HAND",
-              "subtypes": [
-                "Earth"
-              ]
-            }
-          ]
+          "class_filter": "Earth"
         }
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "LIGHT_UP_THE_LEAVES_ACTIVE"
+          "type": "PREVENT_DAMAGE",
+          "amount": 6,
+          "damage_type": "arcane"
         }
       ]
     }

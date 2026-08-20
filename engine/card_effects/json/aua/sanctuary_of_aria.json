@@ -1,18 +1,24 @@
 {
   "slug": "sanctuary_of_aria",
+  "_comment": "'Prevent the next 1 damage' is a one-shot replacement (CR 6.4). 'By a source of your choice' is not modelled: the shield takes the next qualifying damage from ANY source, which is more permissive than printed. Stated rather than left to be discovered. The self-destroy is at the beginning of the END PHASE.",
   "abilities": [
     {
       "ability_type": "INSTANT",
       "activation_cost": 2,
       "effects": [
         {
-          "type": "WARD",
+          "type": "PREVENT_DAMAGE",
           "amount": 1
-        },
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "effects": [
         {
           "type": "DESTROY_PERMANENT",
-          "target": "self",
-          "trigger": "START_OF_TURN_IN_GRAVEYARD"
+          "target": "self"
         }
       ]
     }

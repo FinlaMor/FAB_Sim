@@ -1,27 +1,28 @@
 {
   "slug": "well_grounded",
+  "_comment": "'Prevent the next 2 damage' is a one-shot replacement (CR 6.4). The activation restriction \u2014 4 or more EARTH cards in your banished zone \u2014 is a real gate: without it this is a free 2-damage shield on any board.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "banished",
+          "card_class": "Earth",
+          "count_gte": 4
+        }
+      ],
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
         }
       ],
-      "conditions": [
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "BANISHED",
-          "card_type": "Earth",
-          "amount": 4
-        }
-      ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "WELL_GROUNDED_ACTIVE"
+          "type": "PREVENT_DAMAGE",
+          "amount": 2
         }
       ]
     }

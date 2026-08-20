@@ -1,12 +1,14 @@
 {
   "slug": "break_of_dawn_red",
+  "_comment": "'The next time a SHADOW SOURCE would deal damage this turn, prevent 4' \u2014 the source restriction is the whole card. Unfiltered it is a flat 4-damage shield against anything, strictly stronger than printed, so PREVENT_DAMAGE learned source_class.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "BREAK_OF_DAWN_ACTIVE"
+          "type": "PREVENT_DAMAGE",
+          "amount": 4,
+          "source_class": "Shadow"
         }
       ]
     }

@@ -1,8 +1,9 @@
 {
   "slug": "sheltered_cove",
+  "_comment": "'The next time you would be dealt damage this turn' is a one-shot replacement (CR 6.4).",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 3,
       "cost": [
         {
@@ -12,16 +13,8 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "SHIELDED",
-          "duration": "TURN"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "SHIELDED",
-          "negate": true
+          "type": "PREVENT_DAMAGE",
+          "amount": 2
         }
       ]
     }
