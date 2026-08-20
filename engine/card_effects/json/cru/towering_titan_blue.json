@@ -1,9 +1,10 @@
 {
   "slug": "towering_titan_blue",
+  "_comment": "Aura. At the beginning of your ACTION PHASE (CR 4.3.1, not the start phase) it destroys itself and buffs the NEXT Guardian attack action card. One-shot: as a turn-long effect a 9-cost card would buff every Guardian attack for the rest of the turn.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "trigger": "START_OF_ACTION_PHASE",
       "conditions": [
         {
           "type": "IS_ACTIVE_PLAYER"
@@ -11,33 +12,27 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_REF",
+          "type": "DESTROY_PERMANENT",
           "target": "self"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "IS_ACTIVE_PLAYER"
         },
         {
-          "type": "CARD_IN_ZONE",
-          "zones": [
-            "arsenal"
-          ],
-          "card_type": "ACTION",
-          "classes": [
-            "Guardian"
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 8
+          "amount": 8,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ]
         }
       ]
     }

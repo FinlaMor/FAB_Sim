@@ -1,58 +1,31 @@
 {
   "slug": "quick_succession_red",
+  "_comment": "'The next Runeblade or Lightning attack action card gets go again' is the one-shot grant. The second sentence ('your next 3 attacks this turn get +1{p} while they have go again') is a conditional buff on three attacks and is NOT modelled \u2014 the queue holds one-shots, not counted multi-attack effects with a per-attack condition. Omitted rather than approximated as three flat +1s, which would buff attacks that do not have go again.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "conditions": [
-            {
-              "type": "DURING_TURN"
-            },
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "filter": [
             {
               "type": "ATTACK_CLASS_IN",
               "classes": [
-                "runeblade",
-                "lightning"
+                "Runeblade",
+                "Lightning"
               ]
             },
             {
-              "type": "FLAG_SET",
-              "flag": "QUICK_SUCCESSION_GO_AGAIN"
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
-          ],
-          "effect": {
-            "type": "GAIN",
-            "keyword": "GO_AGAIN"
-          }
+          ]
         },
         {
-          "type": "APPLY_CONTINUOUS",
-          "conditions": [
-            {
-              "type": "DURING_TURN"
-            },
-            {
-              "type": "FLAG_SET",
-              "flag": "QUICK_SUCCESSION_GO_AGAIN"
-            }
-          ],
-          "effect": {
-            "type": "MODIFY_ATTACK",
-            "mod": "add",
-            "amount": 1
-          }
-        }
-      ]
-    },
-    {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 0,
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "QUICK_SUCCESSION_GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

@@ -2729,7 +2729,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # Using "filter" (not "conditions") so the loader does not pop these as
         # EffectDef gate conditions — they are pass-through data for the engine.
         filter_specs = params.get("filter", [])
-        def _fn(card, event, state, _mod=mod, _a=amt, _filt=filter_specs):
+        # scope: "TURN" (default) | "CHAIN". "This combat chain" is narrower than
+        # "this turn" — a chain-scoped one-shot must not survive into the next
+        # attack chain of the same turn. Cleared at chain close.
+        scope = str(params.get("scope") or "TURN").upper()
+
+        def _fn(card, event, state, _mod=mod, _a=amt, _filt=filter_specs,
+                _scope=scope):
             # Queue on the card's controller, not the turn player — an
             # instant-speed card using this effect must buff its own controller.
             from engine.card_effects.ability_keywords import _controller_id
@@ -2740,6 +2746,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 "mod": _mod,
                 "amount": _resolve_amount(_a, state, card),
                 "filter": _filt,
+                "scope": _scope,
             })
         return _fn
 
@@ -2824,7 +2831,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         keyword = params.get("keyword", "")
         kw = "Go Again" if str(keyword).lower().replace("_", " ") == "go again" else keyword
         filter_specs = params.get("filter", [])
-        def _fn(card, event, state, _kw=kw, _filt=filter_specs):
+        # scope: "TURN" (default) | "CHAIN" — see MODIFY_NEXT_ATTACK.
+        scope = str(params.get("scope") or "TURN").upper()
+
+        def _fn(card, event, state, _kw=kw, _filt=filter_specs, _scope=scope):
             from engine.card_effects.ability_keywords import _controller_id
             player = state.players[_controller_id(card)]
             if not hasattr(player, 'dsl_queued_attack_mods'):
@@ -2833,6 +2843,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 "mod": "grant_keyword",
                 "keyword": _kw,
                 "filter": _filt,
+                "scope": _scope,
             })
         return _fn
 

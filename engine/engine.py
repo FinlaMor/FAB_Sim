@@ -798,6 +798,14 @@ def _close_step(state: GameState) -> None:
     for _p in state.players.values():
         _p.chain_attack_hooks = []
         _p.boosts_this_chain = 0
+        # "The next attack ... you play THIS COMBAT CHAIN" is narrower than
+        # "this turn": a queued one-shot marked scope CHAIN must not survive
+        # into the next attack chain of the same turn, where it would buff an
+        # attack the card never promised.
+        _q = getattr(_p, 'dsl_queued_attack_mods', None)
+        if _q:
+            _p.dsl_queued_attack_mods = [
+                m for m in _q if str(m.get('scope', 'TURN')).upper() != 'CHAIN']
 
     state.combat = None
 

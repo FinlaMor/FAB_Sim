@@ -1,30 +1,53 @@
 {
   "slug": "wind_chakra_red",
+  "_comment": "'The next CROUCHING TIGER you play this turn' names the CARD, which spans every colour variant, so ATTACK_NAME_IN strips the colour suffix rather than demanding one exact slug. '+3, or instead +5 if you have transcended this turn' is a replacement, so the two are branches of one conditional, not two buffs that could both land.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 3,
-          "conditions": [
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
             {
               "type": "EVENT_THIS_TURN",
               "event": "transcend"
             }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_NEXT_ATTACK",
+              "mod": "add",
+              "amount": 5,
+              "filter": [
+                {
+                  "type": "ATTACK_NAME_IN",
+                  "names": [
+                    "crouching_tiger"
+                  ]
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "type": "MODIFY_NEXT_ATTACK",
+              "mod": "add",
+              "amount": 3,
+              "filter": [
+                {
+                  "type": "ATTACK_NAME_IN",
+                  "names": [
+                    "crouching_tiger"
+                  ]
+                }
+              ]
+            }
           ]
-        },
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 5
         },
         {
           "type": "GO_AGAIN"
         }
       ]
     }
-  ],
-  "_comment": "'If you've transcended this turn' now reads the turn event recorded by the canonical transcend (CR 8.5.48a). Was a private flag — and the flag names were misspelled inconsistently (TRANSCEDED / TRANSCEDED_THIS_TURN), so the cards could not even have collided into working by accident."
+  ]
 }

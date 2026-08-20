@@ -1,13 +1,21 @@
 {
   "slug": "creep_red",
+  "_comment": "'The next attack WITH STEALTH you play this combat chain' \u2014 chain scoped, and the filter is the attack's keyword, not its type. Stealth on Creep itself is printed and read from card data.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "CREEP_STEALTH_GO_AGAIN"
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "scope": "CHAIN",
+          "filter": [
+            {
+              "type": "ATTACK_HAS_KEYWORD",
+              "keyword": "Stealth"
+            }
+          ]
         }
       ]
     }

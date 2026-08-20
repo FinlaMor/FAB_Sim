@@ -96,7 +96,12 @@ KNOWN_AMOUNT_EXPRESSIONS = _known_amount_expressions()
 # Neither errors, and both pass any test that makes ONE attack — which is how
 # the class survived: you have to attack twice to see it.
 ONE_SHOT_PRIMITIVES = (
-    "MODIFY_NEXT_ATTACK", "GRANT_NEXT_ATTACK", "MODIFY_NEXT_CARD_COST",
+    # attack queue — consumed only by an attack
+    "MODIFY_NEXT_ATTACK", "GRANT_NEXT_ATTACK",
+    # play-time queue — consumed by any card, needed for "the next non-attack
+    # action card you play" and friends
+    "MODIFY_NEXT_CARD_COST", "MODIFY_NEXT_CARD", "GRANT_NEXT_CARD",
+    # one-shot replacements
     "PREVENT_DAMAGE", "INJECT_REPLACEMENT", "BOOST_NEXT_DAMAGE",
     "APPLY_REPLACEMENT",
 )

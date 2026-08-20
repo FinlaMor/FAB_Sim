@@ -351,6 +351,86 @@ def test_mage_master_boots_skips_an_attack_action():
     assert "Go Again" in (non_attack.keywords or [])
 
 
+# --- talents, names, and chain scope --------------------------------------
+
+def _talent_attack(st, talents=("Ice",), power=3, pid=1, slug="atk"):
+    atk = Card(slug=slug, name=slug, types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = pid
+    atk.power = atk.base_power = power
+    atk.talents = list(talents)
+    st.combat = CombatState(attacker_id=pid, link_id=1, attack_power=power,
+                            attack_card=atk, keywords=[])
+    st.combat.base_attack_power = power
+    E._apply_turn_attack_effects(st, atk)
+    E._register_card_continuous_effects(st, atk)
+    E._recalculate_attack_power(st)
+    return st.combat.attack_power
+
+
+def test_weave_ice_matches_a_talent_not_just_a_class():
+    # "Ice or Elemental" are TALENTS. ATTACK_CLASS_IN read only `classes`, so it
+    # matched neither and the filter matched nothing at all.
+    st = _state()
+    card = _card("weave_ice_yellow")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _talent_attack(st, talents=["Ice"]) == 5
+
+
+def test_weave_ice_ignores_an_unrelated_talent():
+    st = _state()
+    card = _card("weave_ice_yellow")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _talent_attack(st, talents=["Shadow"]) == 3
+
+
+def test_wind_chakra_matches_the_card_name_across_colours():
+    # "The next Crouching Tiger" names the CARD, which spans every colour.
+    st = _state()
+    card = _card("wind_chakra_red")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _attack(st, power=3, slug="crouching_tiger_yellow") == 6
+
+
+def test_wind_chakra_ignores_a_different_card():
+    st = _state()
+    card = _card("wind_chakra_red")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _attack(st, power=3, slug="some_other_attack") == 3
+
+
+def test_wind_chakra_gives_five_after_transcending():
+    # "instead" — the two amounts are branches of one conditional, so they must
+    # never both land.
+    from engine.effect_keywords import _record_turn_event
+    st = _state()
+    _record_turn_event(st, 1, "transcend")
+    card = _card("wind_chakra_red")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _attack(st, power=3, slug="crouching_tiger_red") == 8
+
+
+def test_chain_scoped_grant_does_not_survive_the_chain():
+    # "this COMBAT CHAIN" is narrower than "this turn": the grant must be gone
+    # when the chain closes, not waiting to buff an attack in a later chain.
+    st = _state()
+    card = _card("ride_the_tailwind_blue")
+    dispatch(st, "ON_HIT", card.slug, card=card, event=None)
+    assert st.players[1].dsl_queued_attack_mods, "nothing was queued"
+    E._close_step(st)
+    assert not [m for m in st.players[1].dsl_queued_attack_mods
+                if str(m.get("scope", "")).upper() == "CHAIN"],         "a chain-scoped grant outlived its combat chain"
+
+
+def test_turn_scoped_grant_survives_a_chain_close():
+    # The other half of the same rule: a TURN-scoped one-shot must NOT be
+    # dropped just because a chain closed.
+    st = _state()
+    card = _card("quick_succession_red")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    E._close_step(st)
+    assert st.players[1].dsl_queued_attack_mods,         "a turn-scoped grant was dropped at chain close"
+
+
 # --- the queue expires with the turn ---------------------------------------
 
 def test_an_unused_next_attack_buff_does_not_survive_the_turn():

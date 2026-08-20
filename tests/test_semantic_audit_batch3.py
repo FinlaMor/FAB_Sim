@@ -125,7 +125,14 @@ def test_grant_next_attack_queues_a_one_shot_entry():
     st = _make_state()
     compile_effect("GRANT_NEXT_ATTACK", {"keyword": "GO_AGAIN"})(_src(), None, st)
     queued = st.players[1].dsl_queued_attack_mods
-    assert queued == [{"mod": "grant_keyword", "keyword": "Go Again", "filter": []}]
+    # The fields that define the behaviour, not the whole dict: entries also
+    # carry a `scope` ("TURN" by default, "CHAIN" for "this combat chain"), and
+    # pinning the exact shape makes an unrelated addition look like a break.
+    assert len(queued) == 1
+    assert queued[0]["mod"] == "grant_keyword"
+    assert queued[0]["keyword"] == "Go Again"
+    assert queued[0]["filter"] == []
+    assert queued[0].get("scope", "TURN") == "TURN"
 
 
 def test_grant_next_attack_applies_once_then_is_consumed():
@@ -185,8 +192,13 @@ def test_agility_token_grants_go_again_to_one_attack():
     token.owner = token.controller = 1
     st.players[1].permanents.add(token)
     dsl.dispatch(st, "START_OF_TURN", "agility", card=token, event=None)
-    assert st.players[1].dsl_queued_attack_mods == [
-        {"mod": "grant_keyword", "keyword": "Go Again", "filter": []}]
+    queued = st.players[1].dsl_queued_attack_mods
+    assert len(queued) == 1
+    assert queued[0]["mod"] == "grant_keyword"
+    assert queued[0]["keyword"] == "Go Again"
+    assert queued[0]["filter"] == []
+    # Turn-scoped: the Agility token's grant is not limited to one combat chain.
+    assert queued[0].get("scope", "TURN") == "TURN"
 
 
 # ------------------------------------------------ pitch-zone power filter

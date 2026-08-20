@@ -195,13 +195,34 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return lambda c, e, s: s.combat is not None and not getattr(s.combat, 'from_weapon', False)
 
     if ctype == "ATTACK_CLASS_IN":
-        classes = [v.lower() for v in _as_list(params, "classes", "class")]
+        classes = [_norm(v) for v in _as_list(params, "classes", "class",
+                                              "talent", "talents")]
+
         def _aci(c, e, s, _cls=classes):
             if not s.combat or not getattr(s.combat, 'attack_card', None):
                 return False
-            card_classes = [x.lower() for x in (getattr(s.combat.attack_card, 'classes', None) or [])]
-            return any(cl in card_classes for cl in _cls)
+            # TALENTS as well as classes. "Ice or Elemental attack action card"
+            # names two TALENTS, which never appear in `classes`, so a
+            # classes-only match found neither and the filter matched nothing.
+            have = _card_traits(s.combat.attack_card)
+            return any(cl in have for cl in _cls)
         return _aci
+
+    if ctype in ("ATTACK_NAME_IN", "ATTACK_IS_NAMED"):
+        # "The next CROUCHING TIGER you play this turn" names the card, which
+        # spans every colour variant, so the comparison strips the colour suffix
+        # the way LAST_CHAIN_ATTACK does rather than demanding an exact slug.
+        import re as _re
+        wants = {_norm(v) for v in _as_list(params, "names", "name", "card_name") if v}
+
+        def _ani(c, e, s, _w=wants):
+            if not _w or not s.combat or not getattr(s.combat, 'attack_card', None):
+                return False
+            atk = s.combat.attack_card
+            slug = _re.sub(r'_(red|yellow|blue)$', '', getattr(atk, 'slug', '') or '')
+            return (_norm(slug) in _w
+                    or _norm(getattr(atk, 'name', '') or '') in _w)
+        return _ani
 
     if ctype == "WEAPON_SUBTYPE_IN":
         # Read under BOTH spellings. The compiler took "values" while three of

@@ -1,78 +1,32 @@
 {
   "slug": "weave_ice_yellow",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSED.",
+  "_comment": "'Ice or Elemental' are TALENTS, not classes \u2014 ATTACK_CLASS_IN matched only `classes` and so found neither, making the filter match nothing. It now matches talents too. The conditional dominate ('if it's fused') is not modelled: fusion state is not tracked on the queued attack, and granting it unconditionally would be strictly stronger than printed, so it is omitted rather than approximated.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "WEAVE_ICE_ACTIVE"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "WEAVE_ICE_ACTIVE"
-        },
-        {
-          "type": "OR",
-          "conditions": [
-            {
-              "type": "ATTACK_CLASS_IN",
-              "class": "Ice"
-            },
-            {
-              "type": "ATTACK_CLASS_IN",
-              "class": "Elemental"
-            }
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "WEAVE_ICE_ACTIVE"
-        },
-        {
-          "type": "OR",
-          "conditions": [
+          "amount": 2,
+          "filter": [
             {
               "type": "ATTACK_CLASS_IN",
-              "class": "Ice"
+              "classes": [
+                "Ice",
+                "Elemental"
+              ]
             },
             {
-              "type": "ATTACK_CLASS_IN",
-              "class": "Elemental"
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
           ]
         },
         {
-          "type": "FLAG_SET",
-          "flag": "fused_weave_ice_yellow"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "DOMINATE"
+          "type": "GO_AGAIN"
         }
       ]
     }

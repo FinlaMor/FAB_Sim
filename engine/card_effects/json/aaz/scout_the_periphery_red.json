@@ -1,44 +1,36 @@
 {
   "slug": "scout_the_periphery_red",
+  "_comment": "'The next attack action card you play FROM ARSENAL this turn' \u2014 the arsenal restriction is part of which attack qualifies. PLAYED_FROM_ARSENAL reads the card's prev_zone, and the queue evaluates its filter against the attack card, so the same condition works as a filter.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
           "type": "LOOK_AT",
-          "target": "hero_deck"
+          "zone": "DECK_TOP",
+          "player": "OPPONENT",
+          "amount": 1,
+          "into": "scouted"
         },
         {
-          "type": "SET_FLAG",
-          "flag": "SCOUT_THE_PERIPHERY_ACTIVE"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "SCOUT_THE_PERIPHERY_ACTIVE"
-        },
-        {
-          "type": "DURING_TURN"
-        },
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "arsenal",
-          "card_type": "attack_action"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": [
+            {
+              "type": "PLAYED_FROM_ARSENAL",
+              "value": true
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

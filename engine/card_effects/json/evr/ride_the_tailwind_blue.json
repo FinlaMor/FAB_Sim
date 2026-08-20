@@ -1,41 +1,27 @@
 {
   "slug": "ride_the_tailwind_blue",
+  "_comment": "'This COMBAT CHAIN', not this turn \u2014 scope CHAIN, so the grant is dropped when the chain closes instead of waiting for an attack in some later chain the card never promised to buff. The base-power cap decides which attack qualifies.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "TAILWIND_ACTIVE"
-        }
-      ]
-    },
-    {
-      "ability_type": "ACTIVATE",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "TAILWIND_ACTIVE"
-        },
-        {
-          "type": "AND",
-          "conditions": [
-            {
-              "type": "ATTACK_TYPE_IN",
-              "attack_type": "Attack"
-            },
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "scope": "CHAIN",
+          "filter": [
             {
               "type": "ATTACK_BASE_POWER_LTE",
               "amount": 2
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
           ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
         }
       ]
     }
