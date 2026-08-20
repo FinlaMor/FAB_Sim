@@ -922,6 +922,8 @@ def _end_phase_iter(state: GameState) -> None:
     # with the turn, exactly like the attack mods above.
     if hasattr(player, 'dsl_queued_cost_mods'):
         player.dsl_queued_cost_mods = []
+    if hasattr(player, 'dsl_queued_card_mods'):
+        player.dsl_queued_card_mods = []
     # "this turn" DSL continuous effects (APPLY_CONTINUOUS, e.g. Night's Embrace).
     if getattr(player, 'dsl_continuous_effects', None):
         player.dsl_continuous_effects = [

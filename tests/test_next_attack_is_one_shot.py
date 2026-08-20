@@ -288,6 +288,69 @@ def test_prevention_is_one_shot():
     assert _hit(st, 6) == 6, "the shield absorbed a second hit"
 
 
+# --- "the next CARD you play": the play-time queue -------------------------
+# The attack queue is consumed in _apply_turn_attack_effects, so only ever by an
+# attack. "The next BLUE ACTION card" and "the next NON-ATTACK action card" name
+# cards that may never attack — queued there, they would never fire at all.
+
+def _play(st, card, pid=1):
+    """Run the play-time cost path, which is what consumes the card queue."""
+    from engine.actions import Action, ActionType
+    import engine.play as P
+    card.owner = card.controller = pid
+    st.players[pid].hand.add(card)
+    action = Action(ActionType.PLAY_CARD, pid, card)
+    P._pay_costs(st, pid, action)
+    return card
+
+
+def _action_card(pitch=3, is_attack=False, classes=("Generic",)):
+    c = Card(slug="target", name="target", types=["Action"],
+             subtypes=["Attack"] if is_attack else [])
+    c.pitch = pitch
+    c.raw_cost = 1
+    c.classes = list(classes)
+    c.power = c.base_power = 3 if is_attack else None
+    return c
+
+
+def test_fasting_carcass_grants_go_again_to_the_next_blue_action():
+    st = _state()
+    card = _card("fasting_carcass_blue")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    target = _play(st, _action_card(pitch=3))
+    assert "Go Again" in (target.keywords or [])
+
+
+def test_fasting_carcass_ignores_a_card_of_the_wrong_colour():
+    st = _state()
+    card = _card("fasting_carcass_blue")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    target = _play(st, _action_card(pitch=1))       # red
+    assert "Go Again" not in (target.keywords or [])
+
+
+def test_fasting_carcass_grants_to_one_card_only():
+    st = _state()
+    card = _card("fasting_carcass_blue")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    first = _play(st, _action_card(pitch=3))
+    second = _play(st, _action_card(pitch=3))
+    assert "Go Again" in (first.keywords or [])
+    assert "Go Again" not in (second.keywords or []),         "every blue action was granted go again, not the next one"
+
+
+def test_mage_master_boots_skips_an_attack_action():
+    # "the next NON-ATTACK action card". An attack must not consume it.
+    st = _state()
+    card = _card("mage_master_boots")
+    dispatch(st, "ON_ACTIVATE", card.slug, card=card, event=None)
+    attack_card = _play(st, _action_card(is_attack=True))
+    assert "Go Again" not in (attack_card.keywords or [])
+    non_attack = _play(st, _action_card(is_attack=False))
+    assert "Go Again" in (non_attack.keywords or [])
+
+
 # --- the queue expires with the turn ---------------------------------------
 
 def test_an_unused_next_attack_buff_does_not_survive_the_turn():

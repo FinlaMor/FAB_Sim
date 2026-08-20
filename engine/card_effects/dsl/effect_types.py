@@ -2743,7 +2743,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             })
         return _fn
 
-    if etype == "MODIFY_NEXT_CARD_COST":
+    if etype in ("MODIFY_NEXT_CARD_COST", "MODIFY_NEXT_CARD", "GRANT_NEXT_CARD"):
         # "The NEXT blue card you play this turn costs {r} less to play."
         # Queued as a one-shot on the controller and consumed by the first card
         # matching "filter" — the only correct shape for "next". As a turn-long
@@ -2753,19 +2753,30 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # "on_consume" effects run against the card that used the reduction,
         # which is how "...THAT card deals 1 more damage" can name a card nobody
         # has chosen yet.
+        #
+        # `keyword`/`keywords` grant to that card instead of (or as well as)
+        # reducing its cost: "the next blue ACTION card you play this turn gets
+        # go again" names cards that may never attack, so the ATTACK queue
+        # (GRANT_NEXT_ATTACK) cannot express it — that queue is only consumed
+        # when an attack is made.
         amount = params.get("amount", 1)
         filter_specs = params.get("filter", [])
         on_consume = params.get("on_consume", [])
 
-        def _fn(card, event, state, _a=amount, _f=filter_specs, _oc=on_consume):
+        keywords = params.get("keywords") or (
+            [params["keyword"]] if params.get("keyword") else [])
+
+        def _fn(card, event, state, _a=amount, _f=filter_specs, _oc=on_consume,
+                _kw=keywords):
             from engine.card_effects.ability_keywords import _controller_id
             player = state.players[_controller_id(card)]
-            if not hasattr(player, 'dsl_queued_cost_mods'):
-                player.dsl_queued_cost_mods = []
-            player.dsl_queued_cost_mods.append({
+            if not hasattr(player, 'dsl_queued_card_mods'):
+                player.dsl_queued_card_mods = []
+            player.dsl_queued_card_mods.append({
                 "amount": _resolve_amount(_a, state, card),
                 "filter": _f,
                 "on_consume": _oc,
+                "keywords": list(_kw),
             })
         return _fn
 

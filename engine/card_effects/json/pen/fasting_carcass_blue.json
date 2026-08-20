@@ -1,52 +1,27 @@
 {
   "slug": "fasting_carcass_blue",
+  "_comment": "'The next BLUE ACTION card you play this turn gets go again' names a card that may never attack, so the attack queue could never fire for it. Was a SET_FLAG plus a flag-gated trigger that also never cleared the flag, so every blue action for the rest of the turn would have gained go again. Blood Debt and the card's own Go again are printed keywords.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "FASTING_CARCASS_FLAG"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "FASTING_CARCASS_FLAG"
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
+            {
+              "type": "CARD_IS_COLOR",
+              "color": "blue"
+            },
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
+            }
+          ]
         },
         {
-          "type": "CARD_IN_ZONE",
-          "zone": "HAND",
-          "card_class": "Blue",
-          "card_type": "Action"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "BLOOD_DEBT"
+          "type": "GO_AGAIN"
         }
       ]
     }

@@ -1143,7 +1143,8 @@ def _calculate_resource_cost(state: GameState, action: Action) -> int:
         # express itself. This is the same queued-one-shot shape
         # dsl_queued_attack_mods already uses for "your next attack", with the
         # match expressed as ordinary DSL conditions over the card being played.
-        for mod in (getattr(player, 'dsl_queued_cost_mods', None) or []):
+        for mod in (getattr(player, 'dsl_queued_card_mods', None)
+                    or getattr(player, 'dsl_queued_cost_mods', None) or []):
             if _cost_mod_matches(state, mod, card):
                 cost -= int(mod.get('amount', 0) or 0)
                 break
@@ -1389,15 +1390,27 @@ def _pay_costs(state, player_id, action):
         if is_attack_action and 'guardian' in card_classes:
             player.current_turn_effects.remove(key)
             break
-    # Consume the matching queued cost mod, and run whatever the card said to do
-    # to the card that used it ("...THAT card deals 1 more damage"). The target
-    # is not known until this moment — it is whichever card consumed the
-    # reduction — so the follow-up can only be attached here.
-    _queued_costs = getattr(player, 'dsl_queued_cost_mods', None) or []
-    for mod in list(_queued_costs):
+    # Consume the matching queued "next card you play" mod: apply whatever it
+    # grants and run whatever the card said to do to the card that used it
+    # ("...THAT card deals 1 more damage"). The target is not known until this
+    # moment — it is whichever card consumed the mod — so the follow-up can only
+    # be attached here.
+    #
+    # This queue exists because the ATTACK queue (dsl_queued_attack_mods) is
+    # consumed in _apply_turn_attack_effects, which only runs for attacks. "The
+    # next BLUE ACTION card you play this turn gets go again" names cards that
+    # may never attack, so it could not be expressed there at all.
+    _queued = getattr(player, 'dsl_queued_card_mods', None)
+    if _queued is None:
+        _queued = getattr(player, 'dsl_queued_cost_mods', None) or []
+    for mod in list(_queued):
         if not _cost_mod_matches(state, mod, card):
             continue
-        _queued_costs.remove(mod)
+        _queued.remove(mod)
+        for kw in (mod.get('keywords') or ([mod['keyword']] if mod.get('keyword') else [])):
+            existing = list(getattr(card, 'keywords', None) or [])
+            if kw not in existing:
+                card.keywords = existing + [kw]
         from engine.card_effects.dsl.effect_types import compile_effect as _ce
         for spec in (mod.get('on_consume') or []):
             _ce((spec.get('type') or '').upper(),

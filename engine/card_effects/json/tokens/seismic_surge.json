@@ -1,17 +1,28 @@
 {
   "slug": "seismic_surge",
+  "_comment": "Guardian Aura token. Was a SET_FLAG naming a hand-written cost-marker string that play.py matched with a regex \u2014 one of exactly two such markers the cost path knew about, and the reason the generic queued cost reduction exists. The trigger is the beginning of the ACTION PHASE (CR 4.3.1), not the start of the turn.",
   "abilities": [
     {
       "ability_type": "STATIC_TRIGGERED",
-      "trigger": "START_OF_TURN",
+      "trigger": "START_OF_ACTION_PHASE",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
         {
           "type": "DESTROY_SELF"
         },
         {
-          "type": "SET_FLAG",
-          "flag": "next_guardian_attack_action_cost_-1",
-          "scope": "CURRENT"
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "CARD_IS_CLASS",
+              "card_class": "Guardian"
+            }
+          ]
         }
       ]
     }

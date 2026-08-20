@@ -1,45 +1,31 @@
 {
   "slug": "overswing_blue",
+  "_comment": "'The next Guardian attack action card you play this turn gets +1{p}' is a one-shot on the ATTACK queue \u2014 the thing it names must attack. Heave 2 and Go again are printed keywords, read from card data.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "OVERSWING_FLAG"
-        },
-        {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "OVERSWING_FLAG"
-        },
-        {
-          "type": "AND",
-          "conditions": [
-            {
-              "type": "IS_ACTIVE_PLAYER"
-            },
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
             {
               "type": "ATTACK_CLASS_IN",
               "classes": [
                 "Guardian"
               ]
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
             }
           ]
-        }
-      ],
-      "effects": [
+        },
         {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
+          "type": "GO_AGAIN"
         }
       ]
     }

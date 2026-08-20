@@ -1,40 +1,48 @@
 {
   "slug": "earthlore_empowerment_red",
+  "_comment": "An Aura. At the start of your turn it destroys itself, then the NEXT Guardian attack action card gets BOTH a cost reduction and +5{p}. The cost half rides the play-time queue (a cost cannot be reduced from the attack queue, which is consumed after the card is already paid for); the power half rides the attack queue. Both are one-shot and both filter on Guardian.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
         },
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_PLAY",
-            "conditions": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zone": "arsenal",
-                "card_type": "ACTION",
-                "classes": [
-                  "Guardian"
-                ]
-              }
-            ],
-            "effects": [
-              {
-                "type": "PAY_OR_DAMAGE",
-                "amount": 1
-              },
-              {
-                "type": "MODIFY_ATTACK",
-                "mod": "add",
-                "amount": 5
-              }
-            ]
-          }
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "CARD_IS_CLASS",
+              "card_class": "Guardian"
+            }
+          ]
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 5,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ]
         }
       ]
     }

@@ -1,5 +1,6 @@
 {
   "slug": "mage_master_boots",
+  "_comment": "'The next NON-ATTACK action card you play this turn gets go again' \u2014 a non-attack card never reaches the attack queue, so this needs the play-time one. The equipment's own Go again is printed.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -12,8 +13,19 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "MAGE_MASTER_BOOTS_FLAG"
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
+            },
+            {
+              "type": "CARD_IS_ATTACK",
+              "value": false
+            }
+          ]
         }
       ]
     }

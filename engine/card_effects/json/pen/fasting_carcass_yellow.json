@@ -1,41 +1,27 @@
 {
   "slug": "fasting_carcass_yellow",
+  "_comment": "Colour variant of fasting_carcass_blue; names YELLOW cards.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "FASTING_CARCASS_ACTIVE"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "FASTING_CARCASS_ACTIVE"
-        },
-        {
-          "type": "AND",
-          "conditions": [
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "HAND",
-              "card_type": "ACTION",
-              "color": "YELLOW"
+              "type": "CARD_IS_COLOR",
+              "color": "yellow"
             },
             {
-              "type": "DURING_TURN"
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
             }
           ]
-        }
-      ],
-      "effects": [
+        },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

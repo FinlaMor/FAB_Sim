@@ -1,37 +1,27 @@
 {
   "slug": "minnowism_red",
+  "_comment": "'The next attack action card with 3 or less base {p}' \u2014 the base-power cap is part of which attack qualifies, not decoration: without it the buff lands on the first attack of any size.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "DURING_TURN"
-        },
-        {
-          "type": "PLAYED_FROM_ARSENAL"
-        },
-        {
-          "type": "ATTACK_TYPE_IN",
-          "values": [
-            "Action"
-          ]
-        },
-        {
-          "type": "SELF_ATTACK_POWER_GTE",
-          "amount": 3
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 3
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_BASE_POWER_LTE",
+              "amount": 3
+            },
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            }
+          ]
+        },
         {
           "type": "GO_AGAIN"
         }

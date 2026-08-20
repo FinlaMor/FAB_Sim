@@ -771,6 +771,42 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return n >= _n
         return _hand_size
 
+    if ctype in ("CARD_IS_CLASS", "CARD_IS_TALENT", "SELF_IS_CLASS"):
+        # Asks about THIS card's class/talent. The ATTACK_* family asks about the
+        # attack on the chain, which is a different object — using one where the
+        # other is meant silently answers about the wrong card. Needed by the
+        # play-time "next card you play" queue, whose filters run against the
+        # card being played rather than against combat.
+        want = _norm(params.get("card_class") or params.get("class")
+                     or params.get("talent") or "")
+
+        def _is_class(c, e, s, _w=want):
+            return bool(_w) and _w in _card_traits(c)
+        return _is_class
+
+    if ctype in ("CARD_IS_TYPE", "SELF_IS_TYPE"):
+        # Types AND subtypes: "Attack" is a SUBTYPE while "Action" is a type, and
+        # a card naming either means the same thing by it.
+        want = _norm(params.get("card_type") or params.get("type_name")
+                     or params.get("subtype") or "")
+
+        def _is_type(c, e, s, _w=want):
+            if not _w:
+                return False
+            have = {_norm(x) for x in (getattr(c, "types", None) or [])}
+            have |= {_norm(x) for x in (getattr(c, "subtypes", None) or [])}
+            return _w in have
+        return _is_type
+
+    if ctype in ("CARD_IS_ATTACK", "SELF_IS_ATTACK"):
+        # "the next NON-ATTACK action card you play" — value:false is the whole
+        # point of the card, so the flag is read rather than assumed True.
+        want = params.get("value", True)
+
+        def _is_attack(c, e, s, _w=want):
+            return bool(getattr(c, "is_attack", False)) is bool(_w)
+        return _is_attack
+
     if ctype in ("CARD_IS_COLOR", "CARD_IS_COLOUR", "SELF_IS_COLOR"):
         # "the next BLUE card you play this turn". Colour is pitch value 1/2/3
         # (red/yellow/blue) unless the card carries an explicit colour, and the
