@@ -20,8 +20,10 @@ def dispatch(state, event_type: str, slug: str, card=None, event=None, **ctx) ->
     **ctx      : Additional context (reserved for future use)
     """
     card_def = get_card(slug)
-    if card_def is None:
-        return
+    # NOTE: no early return when card_def is None. A card can carry abilities
+    # GRANTED to it (Card.granted_abilities) that have nothing to do with its own
+    # definition — including tokens and cards whose slug has no JSON — and
+    # returning here dropped those silently.
 
     if card is None and state.combat:
         card = state.combat.attack_card
@@ -34,7 +36,19 @@ def dispatch(state, event_type: str, slug: str, card=None, event=None, **ctx) ->
 
     from engine.context import effect_context
     with effect_context():
-        dispatch_event(card_def, event_type, card, event, state)
+        if card_def is not None:
+            dispatch_event(card_def, event_type, card, event, state)
+        # Abilities granted to THIS COPY (Card.granted_abilities) fire alongside
+        # the card's own. Compiled here rather than at grant time so a grant is
+        # plain data on the instance, and dispatched through the same path so a
+        # granted trigger behaves exactly like a printed one.
+        granted = getattr(card, "granted_abilities", None)
+        if granted:
+            from engine.card_effects.dsl.loader import _compile_ability
+            from engine.card_effects.dsl.schema import CardDef
+            dispatch_event(CardDef(slug=slug,
+                                   abilities=[_compile_ability(a) for a in granted]),
+                           event_type, card, event, state)
 
 
 __all__ = [

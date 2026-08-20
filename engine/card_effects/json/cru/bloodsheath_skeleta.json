@@ -1,8 +1,9 @@
 {
   "slug": "bloodsheath_skeleta",
+  "_comment": "'The next attack action card AND non-attack action card you play this turn get \"This card costs {r} less to play for each Runechant you control.\"' Two separate one-shots, one per card kind. The reduction is DYNAMIC: it counts Runechants when the card is PLAYED, not when the entry is queued -- Runechants are created and spent in between -- so the queue stores the expression raw and resolves it at consumption. Temper is a printed keyword.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "cost": [
         {
@@ -12,38 +13,36 @@
       ],
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "modifications": [
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": {
+            "type": "COUNT_PERMANENT",
+            "slug": "runechant"
+          },
+          "filter": [
             {
-              "type": "MODIFY_COST",
-              "mod": "subtract",
-              "amount": {
-                "type": "COUNT_PERMANENT",
-                "subtype": "Runechant"
-              },
-              "filter": [
-                {
-                  "type": "CARD_TYPE_IN",
-                  "types": [
-                    "Action"
-                  ]
-                },
-                {
-                  "type": "ATTACK_ACTION",
-                  "value": false
-                }
-              ]
+              "type": "CARD_IS_TYPE",
+              "card_type": "Attack"
             }
-          ],
-          "conditions": [
+          ]
+        },
+        {
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": {
+            "type": "COUNT_PERMANENT",
+            "slug": "runechant"
+          },
+          "filter": [
             {
-              "type": "DURING_TURN",
-              "player": "SELF"
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
+            },
+            {
+              "type": "CARD_IS_ATTACK",
+              "value": false
             }
           ]
         }
       ]
     }
-  ],
-  "_comment": "'costs {r} less for each Runechant you control' -> COUNT_PERMANENT with subtype Runechant, now a real amount expression. It was invented here, and an invented dict amount resolves to 0 — note this card had already been marked VERIFIED DONE by the test gate, so a passing behavioural test does not prove an untested clause works."
+  ]
 }

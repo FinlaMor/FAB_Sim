@@ -1,27 +1,16 @@
 {
   "slug": "flourish_blue",
+  "_comment": "'The next time an attack would GAIN {p} this turn, INSTEAD it gains that much plus 2' \u2014 a replacement on the gain, which has to sit between deciding the amount and applying it. Power gains went straight into combat.attack_power from two places with nothing replaceable between; both now route through one choke point, and a test asserts both do. One-shot: it is spent on the first gain of the turn.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 2,
-          "conditions": [
-            {
-              "type": "DURING_TURN"
-            }
-          ]
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "REPLACE_NEXT_POWER_GAIN",
+          "amount": 2
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

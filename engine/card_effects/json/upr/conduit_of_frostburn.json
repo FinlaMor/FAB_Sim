@@ -1,8 +1,9 @@
 {
   "slug": "conduit_of_frostburn",
+  "_comment": "Grants a triggered ability to the next card you play that deals arcane damage. The filter asks what the card DOES (CARD_HAS_EFFECT reads its own JSON). Destroying a FROZEN card in their arsenal is approximated as destroying an arsenal card: frozen state is not tracked, so this is more permissive than printed. Quell 1 is a printed keyword.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "cost": [
         {
@@ -12,31 +13,24 @@
       ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_PLAY_ACTIVATE_ATTACK",
-          "conditions": [
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
             {
-              "type": "HAS_KEYWORD",
-              "keyword": "DEAL_ARCANE"
+              "type": "CARD_HAS_EFFECT",
+              "effect": "DEAL_ARCANE"
             }
           ],
-          "effects": [
-            {
-              "type": "TRIGGERED",
-              "trigger": "ON_DEAL_ARCANE",
-              "effects": [
-                {
-                  "type": "DESTROY_TOKEN",
-                  "conditions": [
-                    {
-                      "type": "HAS_KEYWORD",
-                      "keyword": "FROZEN"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+          "grant_ability": {
+            "ability_type": "TRIGGERED",
+            "trigger": "ON_DEAL_DAMAGE",
+            "effects": [
+              {
+                "type": "PUT_ARSENAL_BOTTOM",
+                "player": "OPPONENT"
+              }
+            ]
+          }
         }
       ]
     }

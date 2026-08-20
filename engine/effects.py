@@ -241,10 +241,17 @@ class EffectManager:
             ReplacementType.OUTCOME,
         ]
         applied_ids: set = set()
-        is_unpreventable = bool(event.get("unpreventable", False))
 
         for rtype in type_order:
             if rtype == ReplacementType.PREVENTION:
+                # Re-read HERE, not once before the loop. STANDARD replacements
+                # run earlier in type_order and one of them may be what MAKES the
+                # damage unpreventable ("the next Runechant effect that would
+                # deal damage this turn can't be prevented"). Reading the flag up
+                # front captured its value before that effect had run, so the
+                # mark was set on the event and then ignored by the only stage
+                # that consults it.
+                is_unpreventable = bool(event.get("unpreventable", False))
                 # Step-by-step: affected player picks one prevention effect at a time.
                 while True:
                     active = [

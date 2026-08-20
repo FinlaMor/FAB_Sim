@@ -1,20 +1,69 @@
 {
   "slug": "vynnset_iron_maiden",
-  "_comment": "Runeblade hero. Second ability ('whenever you play a Shadow non-attack action card, you may pay {h}; the next Runechant effect that would deal damage this turn can't be prevented') is not modeled — needs unpreventable-damage tracking.",
+  "_comment": "Hero. 'The next Runechant effect that would deal damage this turn CAN'T BE PREVENTED' -- DamageEvent.unpreventable already existed and effects.py already honoured it, but nothing ever SET it, and the flag was read ONCE before the replacement loop, so a STANDARD replacement setting it mid-loop was ignored by the only stage that consults it. Both halves are fixed. The optional {h} payment gates the grant.",
   "abilities": [
     {
-      "ability_type": "STATIC_TRIGGERED",
+      "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
-      "_comment": "At the start of your turn, banish a card from your hand. If you do, create a Runechant token. (The 'if you do' guard on empty hand is not modeled; BANISH no-ops on an empty hand.)",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
         {
-          "type": "BANISH",
-          "from_zone": "HAND",
-          "amount": 1
+          "type": "MAY",
+          "prompt": "Banish a card from your hand to create a Runechant?",
+          "conditions": [
+            {
+              "type": "HAND_SIZE_GTE",
+              "amount": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "BANISH",
+              "from_zone": "HAND",
+              "amount": 1
+            },
+            {
+              "type": "CREATE_TOKEN",
+              "token_type": "Runechant",
+              "token": "runechant"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CARD_PLAYED",
+      "conditions": [
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "shadow"
         },
         {
-          "type": "CREATE_TOKEN",
-          "token": "runechant"
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "non_attack_action"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Pay 1{h} to make the next Runechant damage unpreventable?",
+          "effects": [
+            {
+              "type": "LOSE_LIFE",
+              "amount": 1
+            },
+            {
+              "type": "MAKE_NEXT_DAMAGE_UNPREVENTABLE",
+              "source_slug": "runechant"
+            }
+          ]
         }
       ]
     }

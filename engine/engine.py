@@ -936,6 +936,9 @@ def _end_phase_iter(state: GameState) -> None:
         player.dsl_queued_card_mods = []
     if hasattr(player, 'dsl_queued_defense_mods'):
         player.dsl_queued_defense_mods = []
+    # "This turn" — an unused power-gain replacement expires with the turn.
+    if getattr(state, '_power_gain_replacements', None):
+        state._power_gain_replacements = []
     # "this turn" DSL continuous effects (APPLY_CONTINUOUS, e.g. Night's Embrace).
     if getattr(player, 'dsl_continuous_effects', None):
         player.dsl_continuous_effects = [
@@ -1174,7 +1177,13 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                     matches = False
                     break
             if matches and mod.get('mod', 'add') == 'add':
-                amt = mod.get('amount', 0)
+                # The other power-GAIN path. Both go through the one choke point
+                # so "the next time an attack would gain {p}" cannot be dodged by
+                # arriving via the queue instead of MODIFY_ATTACK.
+                from engine.card_effects.dsl.effect_types import (
+                    apply_power_gain_replacements)
+                amt = apply_power_gain_replacements(
+                    state, mod.get('amount', 0), attack_card)
                 attack_card.effects = list(getattr(attack_card, 'effects', []))
                 attack_card.effects.append(
                     CardEffect(prop="power", stage=7, substage=5,

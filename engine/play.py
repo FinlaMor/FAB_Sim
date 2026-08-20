@@ -456,6 +456,23 @@ def can_pay_resource_cost(hand_cards: list[Card], target_cost: int, current_reso
     )
     return total_pitch >= needed
 
+def _resolve_queued_amount(state, mod, card) -> int:
+    """The reduction a queued entry gives THIS card, counted now.
+
+    Stored raw rather than pre-resolved: "costs {r} less for each Runechant you
+    control" depends on the board at the moment the card is played, and
+    Runechants are created and spent between queueing and playing.
+    """
+    raw = mod.get('amount', 0)
+    if isinstance(raw, dict):
+        from engine.card_effects.dsl.effect_types import _resolve_amount
+        raw = _resolve_amount(raw, state, card)
+    try:
+        return int(raw or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
 def _cost_mod_matches(state, mod, card) -> bool:
     """Does a queued one-shot cost reduction apply to this card?
 
@@ -1178,7 +1195,7 @@ def _calculate_resource_cost(state: GameState, action: Action) -> int:
         for mod in (getattr(player, 'dsl_queued_card_mods', None)
                     or getattr(player, 'dsl_queued_cost_mods', None) or []):
             if _cost_mod_matches(state, mod, card):
-                cost -= int(mod.get('amount', 0) or 0)
+                cost -= _resolve_queued_amount(state, mod, card)
                 break
 
     # DSL conditional cost modifiers on the card itself (CR 5.1.6, e.g. Stains
@@ -1457,6 +1474,11 @@ def _pay_costs(state, player_id, action):
             have = list(getattr(card, 'classes', None) or [])
             if cls not in have:
                 card.classes = have + [cls]
+        # A whole granted ABILITY, attached to this copy only.
+        for ability in (mod.get('grant_abilities') or []):
+            if not hasattr(card, 'granted_abilities'):
+                card.granted_abilities = []
+            card.granted_abilities.append(ability)
         from engine.card_effects.dsl.effect_types import compile_effect as _ce
         for spec in (mod.get('on_consume') or []):
             _ce((spec.get('type') or '').upper(),

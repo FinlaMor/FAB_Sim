@@ -107,6 +107,8 @@ ONE_SHOT_PRIMITIVES = (
     # one-shot replacements
     "PREVENT_DAMAGE", "INJECT_REPLACEMENT", "BOOST_NEXT_DAMAGE",
     "APPLY_REPLACEMENT",
+    # replacements on things other than damage
+    "REPLACE_NEXT_POWER_GAIN", "MAKE_NEXT_DAMAGE_UNPREVENTABLE",
 )
 
 

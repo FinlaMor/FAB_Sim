@@ -191,6 +191,11 @@ class Card:
     exhausted: bool = False
     face_down: bool = False  # CR 8.5.24: face-down = private, face-up = public
     cards_underneath: list = field(default_factory=list)  # Cards placed "under" this card (CR 3.0.14)
+    # Abilities granted to THIS COPY by another card ("the next attack action
+    # card you play gains 'when you attack with this, deal 1 arcane damage'").
+    # Raw ability dicts, compiled on use. They belong to the instance, not the
+    # definition: every other copy of the card is unaffected.
+    granted_abilities: list = field(default_factory=list)
     permanent_subtype: Optional[str] = None  # Set by SubZoneView when card enters items/auras/allies/tokens/soul
     is_sub_card: bool = False          # CR 3.0.14: True when this card is under a top-card
     top_card: Optional["Card"] = field(default=None, repr=False)  # Back-ref to the top-card (CR 3.0.14c)
@@ -477,6 +482,9 @@ class Card:
         self.exhausted = False
         self.face_down = False
         self.cards_underneath = []
+        # CR 3.0.9 — a card that leaves the arena becomes a NEW object, so a
+        # granted ability must not follow it back. Cleared with everything else.
+        self.granted_abilities = []
         self.is_sub_card = False
         self.top_card = None
         self.meld_side = None

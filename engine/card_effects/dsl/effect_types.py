@@ -358,6 +358,35 @@ def _do_transform(state, sources, into_slug: str, player_id: int):
     _ek_transform(state, list(sources), perm, source_player_id=player_id)
 
 
+def apply_power_gain_replacements(state, amount, card=None):
+    """THE choke point for "an attack would GAIN {p}".
+
+    Flourish reads "the next time an attack would gain {p} this turn, instead it
+    gains that much plus 2" — a replacement on the GAIN, which has to sit between
+    deciding the amount and applying it. Power gains previously went straight
+    into combat.attack_power from two places with nothing replaceable between.
+
+    Two call sites is exactly the "hook every call site" shape that this whole
+    effort keeps finding, so it is one function and a test asserts BOTH paths go
+    through it. A third path added later that does not call this will silently
+    escape the replacement.
+    """
+    try:
+        amount = int(amount)
+    except (TypeError, ValueError):
+        return amount
+    if amount <= 0:
+        return amount
+    pending = getattr(state, "_power_gain_replacements", None)
+    if not pending:
+        return amount
+    for entry in list(pending):
+        amount += int(entry.get("bonus", 0) or 0)
+        pending.remove(entry)
+        break          # one-shot: "the NEXT time"
+    return amount
+
+
 def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     """Return a (card, event, state)->None callable."""
 
@@ -2386,6 +2415,57 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 _E._recalculate_attack_power(state)
         return _fn
 
+    if etype == "REPLACE_NEXT_POWER_GAIN":
+        # "The next time an attack would gain {p} this turn, INSTEAD it gains
+        # that much plus 2." A replacement on the gain, consumed by the first
+        # gain of the turn — see apply_power_gain_replacements.
+        try:
+            bonus = int(params.get("amount", 0))
+        except (TypeError, ValueError):
+            bonus = 0
+
+        def _fn(card, event, state, _b=bonus):
+            if not hasattr(state, "_power_gain_replacements"):
+                state._power_gain_replacements = []
+            state._power_gain_replacements.append({"bonus": _b})
+        return _fn
+
+    if etype in ("MAKE_NEXT_DAMAGE_UNPREVENTABLE", "UNPREVENTABLE_NEXT"):
+        # "The next <source> effect that would deal damage this turn CAN'T BE
+        # PREVENTED." DamageEvent.unpreventable already existed and effects.py
+        # already honoured it — nothing ever SET it, and the flag was read once
+        # before the replacement loop, so setting it mid-loop was ignored.
+        # Registered as a STANDARD replacement, which runs before PREVENTION.
+        source_slug = _norm_amt(params.get("source_slug") or params.get("source") or "")
+
+        def _fn(card, event, state, _slug=source_slug):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effects import ReplacementEffect, ReplacementType
+            cid = _controller_id(card)
+            used = {"done": False}
+
+            def _cond(ev, st, _s=_slug, _u=used, _cid=cid):
+                if _u["done"] or not isinstance(ev, dict):
+                    return False
+                if ev.get("type") != "damage" or (ev.get("amount") or 0) <= 0:
+                    return False
+                if ev.get("source_player_id") != _cid:
+                    return False
+                if _s:
+                    src = ev.get("damage_source_card") or ev.get("source_card")
+                    return _norm_amt(getattr(src, "slug", "") or "") == _s
+                return True
+
+            def _repl(ev, st, _u=used):
+                _u["done"] = True
+                ev["unpreventable"] = True
+                return ev
+
+            state.effect_manager.add_replacement(ReplacementEffect(
+                source_card=card, replacement_type=ReplacementType.STANDARD,
+                condition_fn=_cond, replace_fn=_repl, owner_id=cid))
+        return _fn
+
     if etype == "MODIFY_ATTACK":
         mod = params.get("mod", "add")
         amt = params.get("amount", 0)
@@ -2393,6 +2473,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             if not state.combat:
                 return
             val = _resolve_amount(_a, state, card)
+            if _mod not in ("set", "multiply"):
+                # A GAIN, so it is replaceable ("instead it gains that much
+                # plus 2"). Setting or multiplying is not a gain.
+                val = apply_power_gain_replacements(state, val, card)
             # WHILE_STATIC abilities re-run this on every _recalculate_attack_power
             # (event type 'recalculate_attack_power'); those must apply transiently
             # in the stage-8 window and NOT accumulate on power_mods.
@@ -2815,19 +2899,29 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # "is Draconic" / "is Illusionist in addition to its other class types"
         grant_classes = params.get("grant_classes") or (
             [params["grant_class"]] if params.get("grant_class") else [])
+        # A whole ABILITY granted to whichever card consumes this (see
+        # Card.granted_abilities). Raw dicts; compiled when they fire.
+        grant_abilities = params.get("grant_abilities") or (
+            [params["grant_ability"]] if params.get("grant_ability") else [])
 
         def _fn(card, event, state, _a=amount, _f=filter_specs, _oc=on_consume,
-                _kw=keywords, _uses=uses, _gc=grant_classes):
+                _kw=keywords, _uses=uses, _gc=grant_classes,
+                _ga=grant_abilities):
             from engine.card_effects.ability_keywords import _controller_id
             player = state.players[_controller_id(card)]
             if not hasattr(player, 'dsl_queued_card_mods'):
                 player.dsl_queued_card_mods = []
             player.dsl_queued_card_mods.append({
-                "amount": _resolve_amount(_a, state, card),
+                # RAW, not resolved. "Costs {r} less FOR EACH RUNECHANT YOU
+                # CONTROL" has to be counted when the card is PLAYED — Runechants
+                # are created and spent between queueing and playing — so
+                # resolving here would freeze a number that is already stale.
+                "amount": _a,
                 "filter": _f,
                 "on_consume": _oc,
                 "keywords": list(_kw),
                 "grant_classes": list(_gc),
+                "grant_abilities": list(_ga),
                 "uses": _uses,
             })
         return _fn
