@@ -1,6 +1,6 @@
 {
   "slug": "hold_the_line_blue",
-  "_comment": "Turn-event tracking: read ATTACKER_DRAWN_2_OR_MORE_CARDS — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
+  "_comment": "A defence reaction whose prevention was missing. The condition \u2014 the ATTACKING hero having drawn 2+ cards this turn \u2014 is a real gate: without it the card prevents 3 damage unconditionally, which is strictly stronger.",
   "abilities": [
     {
       "ability_type": "DEFENSE_REACTION",
@@ -9,12 +9,12 @@
           "type": "EVENT_THIS_TURN",
           "event": "draw",
           "count": 2,
-          "player": "OPPONENT"
+          "player": "ATTACKING"
         }
       ],
       "effects": [
         {
-          "type": "WARD",
+          "type": "PREVENT_DAMAGE",
           "amount": 3
         }
       ]

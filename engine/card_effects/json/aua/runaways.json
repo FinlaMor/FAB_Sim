@@ -1,10 +1,17 @@
 {
   "slug": "runaways",
-  "_comment": "Turn-event tracking: read HERO_TAKEN_DAMAGE_THIS_TURN — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
+  "_comment": "Was WARD, which is a different keyword entirely \u2014 ward is 'pay {r} to prevent', a cost the defender may decline, not a flat shield. 'Prevent the next N damage' is a one-shot replacement (CR 6.4). The activation restriction ('only if your hero has been dealt damage this turn') is a real gate and is kept.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
+      "conditions": [
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "damage",
+          "qualifier": "hero"
+        }
+      ],
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
@@ -13,15 +20,8 @@
       ],
       "effects": [
         {
-          "type": "WARD",
+          "type": "PREVENT_DAMAGE",
           "amount": 1
-        }
-      ],
-      "conditions": [
-        {
-          "type": "EVENT_THIS_TURN",
-          "event": "damage",
-          "qualifier": "hero"
         }
       ]
     }

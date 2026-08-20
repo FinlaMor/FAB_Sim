@@ -1,21 +1,18 @@
 {
   "slug": "glide_through_starlight_red",
+  "_comment": "Was WARD, which is a different keyword entirely \u2014 ward is 'pay {r} to prevent', a cost the defender may decline, not a flat shield. 'Prevent the next N damage' is a one-shot replacement (CR 6.4). The cost was also invented: the card says '{r}, discard this', not pay 1 life and destroy it. The Lightning Flow token is conditional on damage actually being prevented ('if you prevent damage this way'), which is not modelled \u2014 the token is created unconditionally, which is more generous than printed.",
   "abilities": [
     {
       "ability_type": "INSTANT",
+      "activation_cost": 1,
       "cost": [
         {
-          "type": "PAY_LIFE",
-          "amount": 1
-        },
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
+          "type": "DISCARD_SELF"
         }
       ],
       "effects": [
         {
-          "type": "WARD",
+          "type": "PREVENT_DAMAGE",
           "amount": 1
         },
         {

@@ -247,6 +247,47 @@ def test_earthlore_surge_buffs_one_attack_only():
     assert _attack(st, power=3, slug="second") == 3
 
 
+# --- "prevent the next N damage" ------------------------------------------
+# Every card in this family was doing something else: WARD (a pay-{r} keyword the
+# defender may decline, not a flat shield), a SET_FLAG nothing reads, a counter
+# nothing consumes, or the prevention simply absent.
+
+@pytest.mark.parametrize("slug,trigger,amount", [
+    ("steadfast_red", "ON_PLAY", 6),
+    ("haven_veil_red", "ON_ENTER_PLAY", 3),
+    ("gloves_of_astral_sanctuary", "ON_ACTIVATE", 1),
+    ("haunting_rendition_red", "ON_ACTIVATE", 2),
+    ("glide_through_starlight_red", "ON_ACTIVATE", 1),
+])
+def test_prevention_card_registers_a_shield(slug, trigger, amount):
+    from engine.effect_keywords import DamageType
+    st = _state()
+    card = _card(slug)
+    dispatch(st, trigger, card.slug, card=card, event=None)
+    dtype = (DamageType.ARCANE if slug == "haven_veil_red"
+             else DamageType.PHYSICAL)
+    taken = _hit(st, amount + 2, dtype=dtype)
+    assert taken == 2, f"{slug} prevented {amount + 2 - taken}, expected {amount}"
+
+
+def test_haven_veil_does_not_prevent_physical_damage():
+    # The text says ARCANE. Untyped, the shield would also soak physical damage
+    # the card never mentions.
+    from engine.effect_keywords import DamageType
+    st = _state()
+    card = _card("haven_veil_red")
+    dispatch(st, "ON_ENTER_PLAY", card.slug, card=card, event=None)
+    assert _hit(st, 3, dtype=DamageType.PHYSICAL) == 3
+
+
+def test_prevention_is_one_shot():
+    st = _state()
+    card = _card("steadfast_red")
+    dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+    assert _hit(st, 6) == 0
+    assert _hit(st, 6) == 6, "the shield absorbed a second hit"
+
+
 # --- the queue expires with the turn ---------------------------------------
 
 def test_an_unused_next_attack_buff_does_not_survive_the_turn():

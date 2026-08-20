@@ -1,8 +1,9 @@
 {
   "slug": "runebleed_robe",
+  "_comment": "Was a SET_FLAG that nothing reads, so the card did nothing at all. 'Prevent the next N damage' is a one-shot replacement (CR 6.4). Arcane-specific. The second cost destroyed a permanent filtered by HAS_KEYWORD 'Runechant' \u2014 a Runechant is a token SLUG, not a keyword, so that filter matched nothing and the cost could never be paid. Arcane Barrier 1 is a printed keyword, read from card data.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "cost": [
         {
@@ -11,34 +12,15 @@
         },
         {
           "type": "DESTROY_PERMANENT",
-          "target": "controlled",
-          "conditions": [
-            {
-              "type": "HAS_KEYWORD",
-              "keyword": "Runechant"
-            }
-          ]
+          "target": "chosen",
+          "slug": "runechant"
         }
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "RUNEBLEED_ROBE_ARCANE_BARRIER_ACTIVE"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "ARCANE_BARRIER",
+          "type": "PREVENT_DAMAGE",
           "amount": 1,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "RUNEBLEED_ROBE_ARCANE_BARRIER_ACTIVE"
-            }
-          ]
+          "damage_type": "arcane"
         }
       ]
     }

@@ -1,16 +1,12 @@
 {
   "slug": "steadfast_red",
+  "_comment": "Was a SET_FLAG plus a 6-counter, neither of which anything reads, so the card prevented nothing. 'By a source of your choice' is not modelled: the shield applies to the next damage dealt to your hero regardless of source, which is more permissive than printed. Stated rather than hidden.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "STEADFAST_ACTIVE"
-        },
-        {
-          "type": "PUT_COUNTER",
-          "counter": "STEADFAST",
+          "type": "PREVENT_DAMAGE",
           "amount": 6
         }
       ]

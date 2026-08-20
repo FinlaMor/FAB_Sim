@@ -1,23 +1,24 @@
 {
   "slug": "haven_veil_red",
+  "_comment": "Was a SET_FLAG that nothing reads, so the card did nothing at all. 'Prevent the next N damage' is a one-shot replacement (CR 6.4). The prevention is ARCANE-specific, which PREVENT_DAMAGE now honours; untyped it would also have blocked physical damage. The self-destroy is at the beginning of the ACTION PHASE (CR 4.3.1), not the start of the turn.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ENTER_PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "HAVEN_VEIL_ACTIVE"
+          "type": "PREVENT_DAMAGE",
+          "amount": 3,
+          "damage_type": "arcane"
         }
       ]
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
+      "trigger": "START_OF_ACTION_PHASE",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "HAVEN_VEIL_ACTIVE"
+          "type": "IS_ACTIVE_PLAYER"
         }
       ],
       "effects": [
