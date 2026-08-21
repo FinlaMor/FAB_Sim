@@ -121,6 +121,9 @@ ONE_SHOT_PRIMITIVES = (
 # for the one card that surfaced it and never swept for the others, leaving two
 # cards where the keyword did nothing. The lesson is the general one — a
 # mechanic added for one card has to be swept across every card that prints it.
+_NEXT_RE = re.compile(r"\b(?:the|your|their|its|his|her)\s+next\b", re.I)
+
+
 DECLARED_KEYWORDS = {
     "RUNE_GATE": r"\brune gate\b",
     "MATERIAL": r"\*\*material\*\*",
@@ -237,7 +240,12 @@ def audit(paths: list[Path], index: dict) -> dict[str, list[str]]:
                     f"({_decl}) but declares nothing — the keyword is inert")
 
         # "the next <thing> ... this turn" with no one-shot primitive anywhere.
-        if "the next" in text:
+        # "the next" / "your next" / "their next" / "its next" — the natural
+        # phrasings vary and the card means the same by all of them. Matching
+        # only "the next" reported ZERO defects for this class while 81 cards
+        # using "your next" were invisible. A pattern narrower than the language
+        # it audits produces a clean number and a dirty corpus.
+        if _NEXT_RE.search(text):
             abilities_json = json.dumps(raw.get("abilities", []))
             if not any(k in abilities_json for k in ONE_SHOT_PRIMITIVES):
                 shape = ("turn-long" if any(
