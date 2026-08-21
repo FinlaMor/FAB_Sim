@@ -1734,6 +1734,16 @@ def _recalculate_attack_power(state: GameState) -> None:
 
     # Stage 6: rebuild effective keywords from printed + staged effects + direct additions
     base_keywords: set = set(card.keywords or [])
+    # A keyword the card grants ITSELF conditionally is not also printed on it
+    # unconditionally. The card DB does not draw that distinction — Out Muscle
+    # ships as "GoAgain" though its text gates it — so without this the gate
+    # could never take the keyword away and the card simply always had it. The
+    # ability re-grants it below, on every recalculation, whenever its
+    # conditions hold.
+    from engine.card_effects.dsl.loader import conditional_keywords, _kw_key
+    _conditional = conditional_keywords(getattr(card, 'slug', '') or '')
+    if _conditional:
+        base_keywords = {k for k in base_keywords if _kw_key(k) not in _conditional}
     effective_keywords: set = mgr.recalculate(state, card, 'keywords', base_keywords)
     # Union with keywords added directly to combat this chain link
     effective_keywords = effective_keywords | set(combat.keyword_effects)
@@ -1790,7 +1800,18 @@ def _recalculate_attack_power(state: GameState) -> None:
     # Fire the static ability event so CARD_STATIC_ABILITIES and
     # KEYWORD_STATIC_ABILITIES can also apply (they modify combat.attack_power
     # and combat.keywords directly, which is fine — they run AFTER staged calc).
+    #
+    # Keyword grants made DURING this dispatch are transient. A WHILE_STATIC is
+    # a continuous ability: it must stop applying the moment its conditions stop
+    # holding. combat.keyword_effects is otherwise a set that only ever grows,
+    # so the first recalculation in which a condition held would pin the keyword
+    # on for the rest of the chain link — Out Muscle would keep go again after a
+    # defender arrived that takes it away. combat.keywords is rebuilt from
+    # scratch above on every recalculation, so restoring the set here leaves the
+    # grant visible for this pass and re-derived on the next.
+    _granted_before = set(combat.keyword_effects)
     state.event_manager.emit('recalculate_attack_power', state)
+    combat.keyword_effects = _granted_before
 
 def _resolve_damage(state: GameState) -> None:
     """Damage Step (7.5.2) — calculate and apply damage."""

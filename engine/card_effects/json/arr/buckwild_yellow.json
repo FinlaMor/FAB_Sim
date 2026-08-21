@@ -1,10 +1,14 @@
 {
   "slug": "buckwild_yellow",
-  "_comment": "\"If there is a card with 6 or more {p} in your pitch zone, this gets go again.\" Was REF_PITCH_IS with a pitch_power_gte key the condition never read — REF_PITCH_IS tests a REFERENCED card's PITCH VALUE and defaults to pitch 1, so it really asked \"is the referenced card red?\". Also granted go again via GRANT_SUBTYPE, but go again is a keyword, not a subtype.",
+  "_comment": "\"If there is a card with 6 or more {p} in your pitch zone, this gets go again.\" Was REF_PITCH_IS with a pitch_power_gte key the condition never read \u2014 REF_PITCH_IS tests a REFERENCED card's PITCH VALUE and defaults to pitch 1, so it really asked \"is the referenced card red?\". Also granted go again via GRANT_SUBTYPE, but go again is a keyword, not a subtype.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran, while the card DB lists the keyword as printed, so the card had it unconditionally. WHILE_STATIC re-evaluates the gate on every attack-power recalculation, and the printed copy is suppressed for any keyword a card grants itself conditionally.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CARD_IN_ZONE",
           "zone": "pitch",
@@ -13,7 +17,8 @@
       ],
       "effects": [
         {
-          "type": "GO_AGAIN"
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
         }
       ]
     }

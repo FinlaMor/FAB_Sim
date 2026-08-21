@@ -2,8 +2,12 @@
   "slug": "predatory_assault_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran, while the card DB lists the keyword as printed, so the card had it unconditionally. WHILE_STATIC re-evaluates the gate on every attack-power recalculation, and the printed copy is suppressed for any keyword a card grants itself conditionally.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "DISCARDED_CARD_POWER_GTE",
           "amount": 6
@@ -11,7 +15,8 @@
       ],
       "effects": [
         {
-          "type": "DOMINATE"
+          "type": "GAIN",
+          "keyword": "DOMINATE"
         }
       ]
     }

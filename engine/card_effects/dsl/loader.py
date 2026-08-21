@@ -171,6 +171,8 @@ def load_all_cards(json_dir: Path | None = None) -> int:
     global _CARDS, _LOADED
     _LOADED = True
     _CARDS.clear()
+    # Derived from _CARDS, so it must not outlive a reload.
+    _CONDITIONAL_KEYWORDS.clear()
     LOAD_ERRORS.clear()
     DUPLICATE_SLUGS.clear()
     seen_paths: dict[str, str] = {}
@@ -233,3 +235,62 @@ def get_card(slug: str) -> CardDef | None:
 def all_slugs() -> list[str]:
     """Return all loaded card slugs."""
     return list(_CARDS.keys())
+
+
+# Keyword names a card can GAIN through an ability, in the spellings the DSL and
+# the card DB each use. Compared after normalising to alphanumerics-lowercase,
+# so "GO_AGAIN", "Go Again" and "GoAgain" are one name.
+_GRANTABLE_KEYWORDS = frozenset({
+    "go_again", "dominate", "overpower", "intimidate", "piercing", "stealth",
+    "blade_break", "battleworn", "temper", "reprise", "phantasm",
+})
+
+_CONDITIONAL_KEYWORDS: dict[str, frozenset[str]] = {}
+
+
+def _kw_key(name) -> str:
+    return "".join(ch for ch in str(name or "") if ch.isalnum()).lower()
+
+
+def conditional_keywords(slug: str) -> frozenset[str]:
+    """Keywords this card grants ITSELF only while a condition holds.
+
+    The card DB's `keywords` list does not distinguish a keyword a card always
+    has from one it only gains under a condition: Out Muscle ships as
+    "GoAgain" and Over the Top as "Overpower", though both texts gate them.
+    The engine treats every printed keyword as unconditional, so the gate could
+    never take the keyword away — 18 cards had a free permanent buff, which is
+    worse than the dead static it came from, because a dead ability at least
+    does nothing.
+
+    A card's own JSON is the finer-grained source: an ability that GRANTS the
+    keyword under conditions is saying the keyword is conditional, so the
+    printed one must not also be applied. Only abilities gated on
+    SOURCE_IS_ATTACK count — that is what distinguishes "THIS gains go again"
+    from "your Illusionist attacks get go again" (Luminaris), where the printed
+    keyword belongs to some other card and the weapon's own listing is just the
+    DB flattening the sentence.
+
+    Returned normalised (alphanumeric, lowercase) for spelling-insensitive
+    comparison against card.keywords.
+    """
+    cached = _CONDITIONAL_KEYWORDS.get(slug)
+    if cached is not None:
+        return cached
+    found: set[str] = set()
+    card_def = get_card(slug)
+    if card_def is not None:
+        for ability in card_def.abilities:
+            if not ability.conditions:
+                continue
+            if not any((c.condition_type or "").upper() == "SOURCE_IS_ATTACK"
+                       for c in ability.conditions):
+                continue
+            for eff in ability.effects:
+                etype = (eff.effect_type or "").upper()
+                name = eff.params.get("keyword") if etype == "GAIN" else etype
+                if _kw_key(name) in {_kw_key(k) for k in _GRANTABLE_KEYWORDS}:
+                    found.add(_kw_key(name))
+    result = frozenset(found)
+    _CONDITIONAL_KEYWORDS[slug] = result
+    return result

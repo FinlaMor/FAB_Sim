@@ -382,15 +382,6 @@ def _kw(st):
     return {k.lower() for k in (st.combat.keywords or [])}
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "The card DB's `keywords` list includes keywords the card only gains "
-    "CONDITIONALLY: Out Muscle is listed as GoAgain and Over the Top as "
-    "Overpower, though both texts grant them only while a condition holds. The "
-    "engine treats every printed keyword as unconditional, so these cards have "
-    "the keyword ON at all times and the condition can never take it away — an "
-    "always-on buff, which is worse than the dead static it replaced. Fixing it "
-    "means teaching the engine that a keyword a card grants conditionally is "
-    "not also printed on it unconditionally. 18 implemented cards."))
 def test_over_the_top_gains_overpower_only_above_its_base():
     st = _state()
     card = _card("over_the_top_red")
@@ -410,15 +401,6 @@ def test_over_the_top_gains_overpower_only_above_its_base():
     assert "overpower" in _kw(st2)
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "The card DB's `keywords` list includes keywords the card only gains "
-    "CONDITIONALLY: Out Muscle is listed as GoAgain and Over the Top as "
-    "Overpower, though both texts grant them only while a condition holds. The "
-    "engine treats every printed keyword as unconditional, so these cards have "
-    "the keyword ON at all times and the condition can never take it away — an "
-    "always-on buff, which is worse than the dead static it replaced. Fixing it "
-    "means teaching the engine that a keyword a card grants conditionally is "
-    "not also printed on it unconditionally. 18 implemented cards."))
 @pytest.mark.parametrize("slug", ["out_muscle_blue", "out_muscle_red"])
 def test_out_muscle_loses_go_again_to_a_big_enough_defender(slug):
     st = _state()
@@ -580,3 +562,161 @@ def test_counter_lte_and_gte_read_the_card_not_a_stale_zone_key():
     lte = compile_condition("COUNTER_LTE", {"counter": "aim", "amount": 0})
     assert gte(card, None, st) is True
     assert lte(card, None, st) is False
+
+
+# ===========================================================================
+# Conditionally-granted keywords vs the printed keyword list
+# ===========================================================================
+# The card DB's `keywords` field does not distinguish a keyword a card ALWAYS
+# has from one it gains only under a condition. Out Muscle ships as "GoAgain",
+# Over the Top as "Overpower", though both texts gate them. Every printed
+# keyword was applied unconditionally, so the gate could never take one away —
+# 18 cards with a free permanent buff. That is worse than the dead static it
+# came from: a dead ability at least does nothing.
+
+
+def test_thump_gains_dominate_only_above_its_base_power():
+    st = _state()
+    card = _card("thump_blue")
+    _attack_with(st, card)
+    assert "dominate" not in _kw(st), \
+        "Thump had dominate at base power, with nothing added"
+
+    st2 = _state()
+    card2 = _card("thump_blue")
+    st2.combat = CombatState(attacker_id=1, link_id=1,
+                             attack_power=(card2.base_power or 0) + 2,
+                             attack_card=card2, keywords=[])
+    st2.combat.base_attack_power = card2.base_power or 0
+    st2.combat.power_mods.append(("add", 2))
+    E._recalculate_attack_power(st2)
+    assert "dominate" in _kw(st2)
+
+
+def test_buckwild_needs_a_six_power_card_in_pitch():
+    st = _state()
+    weak = _pitch(st, 1, "weak", pitch=1)
+    weak.power = 2
+    _attack_with(st, _card("buckwild_yellow"))
+    assert "go again" not in _kw(st)
+
+    st2 = _state()
+    big = _pitch(st2, 1, "big", pitch=1)
+    big.power = 6
+    _attack_with(st2, _card("buckwild_yellow"))
+    assert "go again" in _kw(st2)
+
+
+def test_a_granted_keyword_is_spelled_like_a_printed_one():
+    """Only "go again" was canonicalised; everything else was lowercased.
+
+    A GAIN of OVERPOWER produced "overpower" while the printed keyword produces
+    "Overpower" — two spellings of one keyword, and the exact-match checks see
+    only one of them.
+    """
+    from engine.card_effects.dsl.effect_types import canonical_keyword
+    assert canonical_keyword("GO_AGAIN") == "Go Again"
+    assert canonical_keyword("OVERPOWER") == "Overpower"
+    assert canonical_keyword("DOMINATE") == "Dominate"
+
+
+def test_a_conditional_grant_is_re_evaluated_every_recalculation():
+    """combat.keyword_effects only ever grew.
+
+    The first recalculation in which a condition held pinned the keyword on for
+    the rest of the chain link, so a WHILE_STATIC could turn a keyword ON but
+    never off — which is half of what "continuous" means.
+    """
+    st = _state()
+    card = _card("out_muscle_blue")
+    power = _attack_with(st, card)
+    assert "go again" in _kw(st)
+
+    big = Card(slug="big", name="Big", types=["Action"])
+    big.owner = big.controller = 2
+    big.power = power
+    st.combat.defending_cards.append(big)
+    E._recalculate_attack_power(st)
+    assert "go again" not in _kw(st)
+
+    # ...and back on again if the defender goes away, since nothing is spent.
+    st.combat.defending_cards.remove(big)
+    E._recalculate_attack_power(st)
+    assert "go again" in _kw(st)
+
+
+def test_unconditional_printed_keywords_are_untouched():
+    """The suppression must not reach a keyword the card really does print.
+
+    Only abilities gated on SOURCE_IS_ATTACK count, so "your Illusionist
+    attacks get go again" (Luminaris, where the keyword belongs to some other
+    card) and a plain printed **Go again** are both left alone.
+    """
+    from engine.card_effects.dsl.loader import conditional_keywords
+    for slug in ("luminaris", "perch_grapplers", "flex_claws_red",
+                 "loan_shark_yellow"):
+        assert conditional_keywords(slug) == frozenset(), \
+            f"{slug}'s printed keyword was wrongly treated as conditional"
+
+    st = _state()
+    card = _card("flex_claws_red")
+    _attack_with(st, card)
+    assert "goagain" in {k.lower().replace(" ", "") for k in st.combat.keywords}, \
+        "a genuinely printed Go again was suppressed"
+
+
+def test_no_card_both_prints_and_conditionally_grants_a_keyword():
+    """The corpus-wide sweep, because the defect was uniform.
+
+    Driven through the real recalculation with the DSL listeners NOT installed,
+    so no WHILE_STATIC can run. Whatever is in combat.keywords then is exactly
+    the base set the engine starts from — and a gated keyword must not be in
+    it, or the card has it no matter what its condition says.
+
+    Comparing the JSON to itself instead would prove nothing: subtracting the
+    gated set and then asking whether the gated set survived is empty by
+    construction.
+    """
+    import json as _json
+    from engine.card_effects.dsl.loader import conditional_keywords, _kw_key
+
+    idx = _json.load(open('card_data/slug_index.json', encoding='utf-8'))['by_slug']
+    unconditional = []
+    checked = 0
+    for slug in idx:
+        gated = conditional_keywords(slug)
+        if not gated or DB.get(slug) is None:
+            continue
+        checked += 1
+        bare = _make_state()              # deliberately no _setup_dsl_listeners
+        bare.card_db = DB
+        card = _card(slug)
+        power = card.base_power or 0
+        bare.combat = CombatState(attacker_id=1, link_id=1, attack_power=power,
+                                  attack_card=card, keywords=[])
+        bare.combat.base_attack_power = power
+        E._recalculate_attack_power(bare)
+        present = {_kw_key(k) for k in (bare.combat.keywords or [])}
+        if present & gated:
+            unconditional.append((slug, sorted(present & gated)))
+
+    assert checked >= 15,         f"the sweep found only {checked} gated cards — it is not looking"
+    assert not unconditional, (
+        f"{len(unconditional)} cards carry a gated keyword with no ability "
+        f"granting it: {sorted(unconditional)[:20]}")
+
+
+def test_the_sweep_would_catch_a_regression():
+    """Guard on the guard: with the suppression bypassed, the sweep must fail.
+
+    A sweep that passes whether or not the fix is present is not evidence, and
+    the version of this test I wrote first was exactly that.
+    """
+    from engine.card_effects.dsl.loader import conditional_keywords, _kw_key
+    card = _card("out_muscle_blue")
+    gated = conditional_keywords("out_muscle_blue")
+    assert gated, "out_muscle_blue is no longer a gated-keyword card"
+    printed = {_kw_key(k) for k in (card.keywords or [])}
+    assert printed & gated, (
+        "the card DB no longer lists Out Muscle's conditional keyword as "
+        "printed — the conflict this suppression exists for is gone")

@@ -317,6 +317,19 @@ def _norm_amt(value) -> str:
     return "".join(ch for ch in str(value or "") if ch.isalnum()).lower()
 
 
+def canonical_keyword(keyword: str) -> str:
+    """The card-data spelling of a keyword name written in DSL SHOUTING_CASE.
+
+    A granted keyword has to land in combat.keywords spelled the way a PRINTED
+    one does, because several checks compare exactly. Only "go again" was
+    canonicalised; everything else was lowercased, so a GAIN of OVERPOWER
+    produced "overpower" while the printed keyword produced "Overpower" — two
+    spellings of one keyword, and an exact-match check sees only one of them.
+    """
+    words = str(keyword or "").replace("_", " ").split()
+    return " ".join(w.capitalize() for w in words)
+
+
 def _amount_controller(state, card):
     """Whose things to count. The card's controller when known; otherwise the
     attacking player, so a count inside combat still resolves.
@@ -3096,9 +3109,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                              source_player_id=cid, target_player_id=cid)
             return _fn
         if keyword:
-            # Canonicalise go-again spellings so the resolution-step check
-            # (which matches "go again") recognises it.
-            kw = "Go Again" if keyword.lower().replace("_", " ") == "go again" else keyword.lower()
+            kw = canonical_keyword(keyword)
+
             def _fn(card, event, state, _kw=kw):
                 if state.combat and _kw not in (state.combat.keywords or []):
                     state.combat.grant_keyword(_kw)

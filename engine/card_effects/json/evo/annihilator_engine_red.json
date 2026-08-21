@@ -35,8 +35,12 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran, while the card DB lists the keyword as printed, so the card had it unconditionally. WHILE_STATIC re-evaluates the gate on every attack-power recalculation, and the printed copy is suppressed for any keyword a card grants itself conditionally. The Evo tiers are separate abilities because each names a different threshold; only the 'costs {r}{r}{r} less to play' tier is left unmodelled -- there is no board-state play-cost reduction, and it is flagged rather than approximated.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Evo",
@@ -51,8 +55,12 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran, while the card DB lists the keyword as printed, so the card had it unconditionally. WHILE_STATIC re-evaluates the gate on every attack-power recalculation, and the printed copy is suppressed for any keyword a card grants itself conditionally.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Evo",
