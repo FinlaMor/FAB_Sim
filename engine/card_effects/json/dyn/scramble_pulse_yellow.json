@@ -2,17 +2,20 @@
   "slug": "scramble_pulse_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. 'Equipment have -1{d} while defending this combat chain' names the defending EQUIPMENT; the condition was a bare IN_COMBAT.",
+      "conditions": [
+        {
+          "type": "DEFENDING_CARD_IS",
+          "equipment": true
+        }
+      ],
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_VALUE",
+          "type": "MODIFY_DEFENSE",
           "mod": "subtract",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "IN_COMBAT"
-            }
-          ]
+          "amount": 1
         }
       ]
     }

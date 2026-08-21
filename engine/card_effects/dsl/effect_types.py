@@ -1422,21 +1422,69 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # increasing it.
         mod = (params.get("mod") or "add").lower()
 
+        # Writing total_defense directly did not survive: _resolve_damage
+        # recomputes it as sum(card.defense) immediately before damage, so every
+        # adjustment to the defence total was discarded a moment after it was
+        # made. Recorded on combat.defense_mods, which the recalculation
+        # re-applies — the same shape power_mods already had on the attack side.
         def _fn(card, event, state, _a=amt, _m=mod):
-            if not state.combat:
+            combat = state.combat
+            if not combat:
                 return
-            current = getattr(state.combat, 'total_defense', 0) or 0
             delta = _resolve_amount(_a, state, card) if isinstance(_a, dict) else _a
             try:
                 delta = int(delta)
             except (TypeError, ValueError):
                 delta = 0
+            # A recalculation-time static must not accumulate: it re-runs on
+            # every pass and would stack with its own earlier applications.
+            if getattr(event, "type", None) != "recalculate_total_defense":
+                combat.defense_mods.append((_m, delta))
+            current = getattr(combat, 'total_defense', 0) or 0
             if _m in ("set", "="):
-                state.combat.total_defense = delta
+                combat.total_defense = delta
             elif _m in ("subtract", "sub", "minus", "-"):
-                state.combat.total_defense = max(0, current - delta)
+                combat.total_defense = max(0, current - delta)
             else:
-                state.combat.total_defense = current + delta
+                combat.total_defense = current + delta
+        return _fn
+
+    if etype == "MODIFY_DEFENSE":
+        # "This gets +1{d}" / "cards defending this get -1{d}" — the DEFENDING
+        # CARD's own value, as opposed to MODIFY_DEFENSE_VALUE, which moves the
+        # total. Applied during _recalculate_total_defense, which resets each
+        # defender to its base first, so a static may re-apply freely.
+        #
+        # The card modified is combat.defense_recalc_card, the defender being
+        # evaluated: a static on some OTHER object ("cards defending your
+        # Mechanologist attacks get -1{d}") has to say which defender it means,
+        # and its own source card is not it.
+        amt = params.get("amount", 0)
+        mod = (params.get("mod") or "add").lower()
+
+        def _fn(card, event, state, _a=amt, _m=mod):
+            combat = state.combat
+            if not combat:
+                return
+            target = getattr(combat, "defense_recalc_card", None)
+            if target is None:
+                # Outside a recalculation the only sensible subject is the
+                # ability's own card, which is the "THIS gets +1{d}" case.
+                target = card
+            if target is None:
+                return
+            delta = _resolve_amount(_a, state, card) if isinstance(_a, dict) else _a
+            try:
+                delta = int(delta)
+            except (TypeError, ValueError):
+                delta = 0
+            current = target.defense or 0
+            if _m in ("set", "="):
+                target.defense = max(0, delta)
+            elif _m in ("subtract", "sub", "minus", "-"):
+                target.defense = max(0, current - delta)
+            else:
+                target.defense = max(0, current + delta)
         return _fn
 
     if etype == "ADD_DEFEND":

@@ -1876,6 +1876,89 @@ def _recalculate_attack_power(state: GameState) -> None:
     state.event_manager.emit('recalculate_attack_power', state)
     combat.keyword_effects = _granted_before
 
+def _recalculate_total_defense(state: GameState) -> int:
+    """Recompute the defending total from the declared defenders (CR 7.5.2).
+
+    The defence side had no recalculation layer at all. `total_defense` was
+    written by whoever touched it last, and then _resolve_damage recomputed it
+    as sum(card.defense) immediately before damage — silently discarding every
+    MODIFY_DEFENSE_VALUE the chain link had applied. A card that reduced the
+    defending total simply did not.
+
+    This is the mirror of _recalculate_attack_power:
+
+      1. reset each defender to its printed {d}, then re-derive the per-card
+         adjustments that are not statics — a dynamic printed value
+         (DEFENSE_EQUALS) and the one-shot defence queue;
+      2. dispatch RECALC_DEFENSE once per defender, with the defender named on
+         the CombatState, so WHILE_STATIC abilities on the defender itself, on
+         either hero, and on any in-play permanent can adjust that card's {d};
+      3. sum, then apply combat.defense_mods, which are adjustments to the
+         TOTAL rather than to any one card.
+
+    Returns the total and leaves it on combat.total_defense.
+    """
+    from engine.card_effects.dsl import dispatch as _dsl_dispatch
+    from engine.play import _apply_dynamic_defense, _apply_queued_defense_mods
+    from engine.state import Event
+
+    combat = state.combat
+    if combat is None:
+        return 0
+
+    defender = state.players.get(3 - combat.attacker_id)
+
+    # Sources a defence static can live on: the defender itself is dispatched
+    # separately, so this is everything else that could carry one.
+    static_sources: list[Card] = []
+    seen: set[int] = set()
+    # The ATTACKING card first: "Equipment have -1{d} while defending this
+    # combat chain" is printed on Scramble Pulse, which is itself an attack
+    # action card, so it is never a permanent and would otherwise never be
+    # reached by this dispatch.
+    if combat.attack_card is not None:
+        static_sources.append(combat.attack_card)
+    for player in state.players.values():
+        if player.hero is not None:
+            static_sources.append(player.hero)
+        for zone in (player.permanents, player.head, player.chest, player.arms,
+                     player.legs, player.weapon1, player.weapon2):
+            static_sources.extend(zone.cards)
+
+    for card in combat.defending_cards:
+        if card.base_defense is not None:
+            card.defense = card.base_defense
+        _apply_dynamic_defense(state, card)
+        if defender is not None:
+            _apply_queued_defense_mods(state, card, defender)
+
+    event = Event(type='recalculate_total_defense', data={})
+    for card in combat.defending_cards:
+        combat.defense_recalc_card = card
+        for source in [card] + static_sources:
+            if id(source) in seen and source is not card:
+                continue
+            _dsl_dispatch(state, "RECALC_DEFENSE", source.slug,
+                          card=source, event=event)
+        seen.clear()
+    combat.defense_recalc_card = None
+
+    total = sum((c.defense or 0) for c in combat.defending_cards)
+    for mod, amount in combat.defense_mods:
+        if mod in ("set", "="):
+            total = amount
+        elif mod in ("subtract", "sub", "minus", "-"):
+            total = max(0, total - amount)
+        else:
+            total = total + amount
+
+    combat.total_defense = max(0, total)
+    combat.defending_equipment_defense = sum(
+        (c.defense or 0) for c in combat.defending_cards
+        if getattr(c, 'is_equipment', False))
+    return combat.total_defense
+
+
 def _resolve_damage(state: GameState) -> None:
     """Damage Step (7.5.2) — calculate and apply damage."""
     combat = state.combat
@@ -1885,8 +1968,7 @@ def _resolve_damage(state: GameState) -> None:
     # Recalculate attack power from continuous effects before damage
     _recalculate_attack_power(state)
 
-    total_defense = sum((c.defense or 0) for c in combat.defending_cards)
-    combat.total_defense = total_defense
+    total_defense = _recalculate_total_defense(state)
 
     # 7.5.2: net damage = attack power - total defense (min 0)
     net_damage = max(0, combat.attack_power - total_defense)

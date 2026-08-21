@@ -18,17 +18,21 @@
       ]
     },
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. CONTROLS_ATTACK_ACTION with cost_gte asked whether the controller HAS such a card, not whether the DEFENDER is one.",
       "conditions": [
         {
-          "type": "IS_ACTIVE_PLAYER"
+          "type": "DEFENDING_CARD_IS",
+          "cost_gte": 3,
+          "controlled_by": "SELF"
         }
       ],
       "effects": [
         {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
+          "type": "MODIFY_DEFENSE",
+          "mod": "add",
+          "amount": 3
         }
       ]
     }

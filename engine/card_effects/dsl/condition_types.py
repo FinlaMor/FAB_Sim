@@ -456,6 +456,62 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return _norm(zone) == _want
         return _apfz
 
+    if ctype in ("IS_DEFENDING_CARD", "DEFENDING_CARD_IS"):
+        # Describes the defender currently being evaluated by
+        # engine._recalculate_total_defense (combat.defense_recalc_card).
+        #
+        #   {"type":"IS_DEFENDING_CARD"}                       — this card is it
+        #   {"type":"DEFENDING_CARD_IS","subtype":"Attack",
+        #    "controlled_by":"ATTACKER"}                       — "your attack
+        #                                                        action cards"
+        #   {"type":"DEFENDING_CARD_IS","equipment":true}
+        #   {"type":"DEFENDING_CARD_IS","cost_gte":3}
+        #
+        # Every "while defending" static needs one of these, because the
+        # RECALC_DEFENSE dispatch reaches every source once per defender: with
+        # no way to name a defender, a static would apply to all of them.
+        self_only = ctype == "IS_DEFENDING_CARD"
+        want_types = [t.lower() for t in _as_list(
+            params, "card_type", "card_types", "types", "subtype", "subtypes")]
+        want_equipment = params.get("equipment")
+        cost_gte = params.get("cost_gte")
+        controlled_by = str(params.get("controlled_by")
+                            or params.get("player") or "").upper()
+
+        def _dci(c, e, s, _self=self_only, _t=want_types, _eq=want_equipment,
+                 _cge=cost_gte, _by=controlled_by):
+            combat = s.combat
+            if combat is None:
+                return False
+            target = getattr(combat, "defense_recalc_card", None)
+            if target is None:
+                return False
+            if _self:
+                return target is c
+            if _t:
+                traits = [x.lower() for x in (getattr(target, 'types', None) or [])]
+                traits += [x.lower() for x in (getattr(target, 'subtypes', None) or [])]
+                if not any(t in traits for t in _t):
+                    return False
+            if _eq is not None and bool(getattr(target, 'is_equipment', False)) is not bool(_eq):
+                return False
+            if _cge is not None and (getattr(target, 'cost', None) or 0) < _cge:
+                return False
+            if _by:
+                from engine.card_effects.ability_keywords import _controller_id
+                owner = getattr(target, 'controller', None)
+                if _by in ("ATTACKER", "ATTACKING"):
+                    if owner != combat.attacker_id:
+                        return False
+                elif _by in ("SELF", "YOU", "CONTROLLER"):
+                    if owner != _controller_id(c):
+                        return False
+                elif _by in ("DEFENDER", "DEFENDING", "OPPONENT"):
+                    if owner == combat.attacker_id:
+                        return False
+            return True
+        return _dci
+
     if ctype == "DEFENDING_CARD_COUNT":
         # "While this is defended by less than 2 NON-EQUIPMENT cards, it has
         # +1{p}" (Barraging Brawnhide, Stony Woottonhog). Both cards had this as

@@ -582,20 +582,38 @@ def test_pitching_records_colour_class_and_talent():
 
 
 def test_blackstone_greaves_can_now_fire():
-    """End-to-end on a card whose only ability was gated on an invented flag, so
-    it could never fire in any game since it was authored."""
-    from engine.card_effects.dsl.loader import get_card
+    """"If you've dealt arcane damage this turn, this gets +1{d}."
+
+    Was gated on an invented flag, so it could never fire in any game since it
+    was authored. Asserted through the real defence recalculation rather than
+    by reaching into abilities[0].effects[0].conditions[0]: that path broke the
+    moment the ability was reshaped, which tells you nothing about whether the
+    card works.
+    """
+    import engine.engine as E
+    from engine.card import Card
     from engine.effect_keywords import DamageType, deal_damage
+    from engine.state import CombatState
 
     load_all_cards()
-    cond = get_card("blackstone_greaves").abilities[0].effects[0].conditions[0]
     st = _make_state()
+    E._setup_dsl_listeners(st)
     card = _make_card(slug="blackstone_greaves", name="bg",
                       types=["Equipment"], subtypes=["Legs"])
-    card.owner = card.controller = 1
-    assert cond.fn(card, None, st) is False
-    deal_damage(st, 2, DamageType.ARCANE, 1, st.players[2].hero, "test")
-    assert cond.fn(card, None, st) is True
+    card.owner = card.controller = 2
+    card.defense = card.base_defense = 2
+
+    atk = Card(slug="atk", name="Atk", types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = 1
+    atk.power = atk.base_power = 5
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=5,
+                            attack_card=atk, keywords=[])
+    st.combat.base_attack_power = 5
+    st.combat.defending_cards.append(card)
+
+    assert E._recalculate_total_defense(st) == 2
+    deal_damage(st, 2, DamageType.ARCANE, 2, st.players[1].hero, "test")
+    assert E._recalculate_total_defense(st) == 3
 
 
 def test_create_records_token_category_not_just_slug():

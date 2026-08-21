@@ -1,21 +1,26 @@
 {
   "slug": "blackstone_greaves",
-  "_comment": "Turn-event tracking: read dealt_arcane_damage_this_turn — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
+  "_comment": "Turn-event tracking: read dealt_arcane_damage_this_turn \u2014 private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total.",
+      "conditions": [
+        {
+          "type": "IS_DEFENDING_CARD"
+        },
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "damage",
+          "qualifier": "arcane"
+        }
+      ],
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_VALUE",
+          "type": "MODIFY_DEFENSE",
           "mod": "add",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "EVENT_THIS_TURN",
-              "event": "damage",
-              "qualifier": "arcane"
-            }
-          ]
+          "amount": 1
         }
       ]
     }

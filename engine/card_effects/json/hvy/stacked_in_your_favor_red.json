@@ -2,17 +2,21 @@
   "slug": "stacked_in_your_favor_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "add",
-          "amount": 3
-        }
-      ],
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. The condition was a bare IN_COMBAT, which is true for every card in every combat and says nothing about which cards are defending.",
       "conditions": [
         {
-          "type": "IN_COMBAT"
+          "type": "DEFENDING_CARD_IS",
+          "subtype": "Attack",
+          "controlled_by": "SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE",
+          "mod": "add",
+          "amount": 3
         }
       ]
     },

@@ -848,3 +848,142 @@ def test_riptide_no_longer_carries_a_hand_destroying_effect():
         for eff in ability.effects:
             assert (eff.effect_type or "").upper() != "PUT_CARDS_BOTTOM", \
                 "Riptide still carries the hand-emptying effect"
+
+
+# ===========================================================================
+# The defence side had no recalculation layer at all
+# ===========================================================================
+# MODIFY_DEFENSE_VALUE wrote combat.total_defense, and _resolve_damage
+# recomputed that field as sum(card.defense) immediately before damage — so
+# every card that adjusted the defending total had its work discarded a moment
+# after doing it. A card meant to reduce the defence simply did not.
+
+
+def _combat_with_defenders(st, attack_power=6, defenders=(), pid=1):
+    atk = Card(slug="atk", name="Atk", types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = pid
+    atk.power = atk.base_power = attack_power
+    st.combat = CombatState(attacker_id=pid, link_id=1,
+                            attack_power=attack_power, attack_card=atk,
+                            keywords=[])
+    st.combat.base_attack_power = attack_power
+    for card in defenders:
+        st.combat.defending_cards.append(card)
+    return atk
+
+
+def _blocker(pid=2, defense=3, slug="blocker", types=("Action",),
+             subtypes=(), cost=0):
+    c = Card(slug=slug, name=slug, types=list(types), subtypes=list(subtypes))
+    c.owner = c.controller = pid
+    c.defense = c.base_defense = defense
+    c.cost = c.base_cost = cost
+    return c
+
+
+def test_a_defence_total_modifier_survives_to_the_damage_step():
+    from engine.card_effects.dsl.effect_types import compile_effect
+    st = _state()
+    atk = _combat_with_defenders(st, attack_power=6,
+                                 defenders=[_blocker(defense=3)])
+    st.combat.total_defense = 3
+    compile_effect("MODIFY_DEFENSE_VALUE", {"mod": "subtract", "amount": 3})(
+        atk, None, st)
+    life = st.players[2].life
+    E._resolve_damage(st)
+    assert st.combat.total_defense == 0
+    assert st.players[2].life == life - 6, \
+        "the defence reduction was discarded before damage was calculated"
+
+
+def test_basalt_boots_gains_defence_only_with_a_seismic_surge():
+    st = _state()
+    boots = _card("basalt_boots", 2)
+    base = boots.base_defense or 0
+    _combat_with_defenders(st, defenders=[boots])
+    assert E._recalculate_total_defense(st) == base
+
+    _token(st, 2, "seismic_surge", "Seismic Surge")
+    assert E._recalculate_total_defense(st) == base + 1
+
+
+def test_recalculation_resets_rather_than_accumulating():
+    """Run twice; a static that stacks on itself shows up as a doubled bonus."""
+    st = _state()
+    boots = _card("basalt_boots", 2)
+    base = boots.base_defense or 0
+    _token(st, 2, "seismic_surge", "Seismic Surge")
+    _combat_with_defenders(st, defenders=[boots])
+    first = E._recalculate_total_defense(st)
+    second = E._recalculate_total_defense(st)
+    assert first == second == base + 1, \
+        "the defence static accumulated across recalculations"
+
+
+def test_testament_of_valahai_tiers_are_exclusive():
+    """"...if you control six or more, INSTEAD this gets +4{d}"."""
+    st = _state()
+    card = _card("testament_of_valahai", 2)
+    base = card.base_defense or 0
+    _combat_with_defenders(st, defenders=[card])
+    assert E._recalculate_total_defense(st) == base
+
+    for i in range(3):
+        _token(st, 2, f"seismic_surge_{i}", "Seismic Surge",
+               subtypes=["Seismic Surge"])
+    assert E._recalculate_total_defense(st) == base + 2
+
+    for i in range(3, 6):
+        _token(st, 2, f"seismic_surge_{i}", "Seismic Surge",
+               subtypes=["Seismic Surge"])
+    assert E._recalculate_total_defense(st) == base + 4, \
+        "the two tiers stacked instead of replacing each other"
+
+
+def test_scramble_pulse_only_reduces_defending_equipment():
+    # Scramble Pulse is itself an attack ACTION card, so it is never a
+    # permanent — the defence recalculation has to reach the attacking card or
+    # this static has no source to be dispatched to.
+    st = _state()
+    pulse = _card("scramble_pulse_yellow", 1)
+    gear = _blocker(defense=3, slug="gear", types=["Equipment"])
+    hand_card = _blocker(defense=3, slug="from_hand")
+    st.combat = CombatState(attacker_id=1, link_id=1,
+                            attack_power=pulse.base_power or 0,
+                            attack_card=pulse, keywords=[])
+    st.combat.base_attack_power = pulse.base_power or 0
+    st.combat.defending_cards.extend([gear, hand_card])
+    # 3 + 3, with 1 off the equipment only.
+    assert E._recalculate_total_defense(st) == 5
+
+
+def test_stacked_in_your_favor_only_helps_its_controllers_attack_actions():
+    st = _state()
+    perm = _card("stacked_in_your_favor_red", 2)
+    perm.zone = "hand"
+    st.players[2].permanents.add(perm)
+    mine = _blocker(pid=2, defense=3, slug="mine", subtypes=["Attack"])
+    theirs = _blocker(pid=1, defense=3, slug="theirs", subtypes=["Attack"])
+    _combat_with_defenders(st, defenders=[mine, theirs])
+    assert E._recalculate_total_defense(st) == 3 + 3 + 3, \
+        "the +3 should apply to exactly one of the two defenders"
+
+
+def test_a_defence_static_does_not_run_during_an_attack_recalculation():
+    """combat.defense_recalc_card is None then.
+
+    MODIFY_DEFENSE would fall back to its own source card and quietly change
+    the {d} of a card that is not defending anything.
+    """
+    st = _state()
+    boots = _card("basalt_boots", 1)
+    boots.zone = "hand"
+    st.players[1].permanents.add(boots)
+    _token(st, 1, "seismic_surge", "Seismic Surge")
+    before = boots.defense
+    atk = Card(slug="atk", name="Atk", types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = 1
+    atk.power = atk.base_power = 3
+    _attack_with(st, atk)
+    assert boots.defense == before, \
+        "an attack recalculation changed a non-defending card's defence"

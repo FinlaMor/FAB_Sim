@@ -12,8 +12,13 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. Blade Break is a printed keyword and comes from card data.",
       "conditions": [
+        {
+          "type": "IS_DEFENDING_CARD"
+        },
         {
           "type": "CARD_IN_ZONE",
           "zone": "pitch",
@@ -23,7 +28,7 @@
       ],
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_VALUE",
+          "type": "MODIFY_DEFENSE",
           "mod": "add",
           "amount": 3
         }

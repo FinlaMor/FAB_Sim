@@ -162,7 +162,20 @@ def dispatch_event(card_def, event_type: str, card, event, state) -> None:
         # MODIFY_ATTACK lands in the stage-8 window (after the staged recalc)
         # and is not double-applied by unrelated dispatches. Conditions gate it.
         if atype == "WHILE_STATIC":
-            if event_type == "RECALC_ATTACK_POWER":
+            # RECALC_DEFENSE is the defence-side mirror, dispatched once per
+            # declared defender by engine._recalculate_total_defense. A card
+            # authored "while defending, this has +1{d}" has no attack-power
+            # recalculation to hang on, so before this it could not run at all.
+            #
+            # A WHILE_STATIC that names its recalculation runs only on that one.
+            # Letting a defence static also fire during an attack recalculation
+            # is not merely wasteful: combat.defense_recalc_card is None then,
+            # and MODIFY_DEFENSE would fall back to its own source card and
+            # quietly change the {d} of a card that is not defending anything.
+            # Omitting the trigger means the attack recalculation, which is what
+            # every WHILE_STATIC written before RECALC_DEFENSE existed meant.
+            wanted = (ability.trigger or "RECALC_ATTACK_POWER").upper()
+            if event_type == wanted:
                 run_ability(ability, card, event, state)
             continue
 

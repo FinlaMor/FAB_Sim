@@ -1210,6 +1210,17 @@ class CombatState:
     attack_source: Optional[Card] = None
     defending_cards: list[Card] = field(default_factory=list)
     total_defense: int = 0
+    # (mod, amount) adjustments to the defence TOTAL, the mirror of power_mods.
+    # MODIFY_DEFENSE_VALUE used to write total_defense directly, and
+    # _resolve_damage recomputes that field from sum(card.defense) — so every
+    # one of the 34 nodes that modify the defence total had its work discarded
+    # immediately before damage was calculated. Recorded here instead, and
+    # re-applied on every recalculation, the way power_mods already are.
+    defense_mods: list = field(default_factory=list)
+    # The defending card currently being evaluated by
+    # _recalculate_total_defense. "Cards defending this get -1{d}" is a static
+    # on some OTHER object, so it needs to know which defender it is looking at.
+    defense_recalc_card: Optional[Card] = None
     defending_equipment_defense: int = 0
     defender_used_hand_card: bool = False
     # Damage this attack actually dealt, AFTER defence — set when the hit

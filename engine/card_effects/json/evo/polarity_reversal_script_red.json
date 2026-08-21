@@ -37,18 +37,29 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. The class filter was authored under 'class', which ATTACK_CLASS_IN does not read, and it belonged to the ATTACK rather than the defender in any case.",
+      "conditions": [
+        {
+          "type": "DEFENDING_CARD_IS",
+          "card_type": "Action"
+        },
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Mechanologist"
+          ]
+        },
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        }
+      ],
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_VALUE",
+          "type": "MODIFY_DEFENSE",
           "mod": "subtract",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "ATTACK_CLASS_IN",
-              "class": "Mechanologist"
-            }
-          ]
+          "amount": 1
         }
       ]
     }

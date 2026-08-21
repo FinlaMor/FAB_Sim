@@ -3,25 +3,43 @@
   "_comment": "If you control 3+ Seismic Surge tokens, +2{d}; if 6+, INSTEAD +4{d}; Guardwell. Modeled as base +2 (at 3+) plus an additional +2 (at 6+) so it totals +2 at 3-5 and +4 at 6+. Prior JSON gave +2 (3+) AND +4 (6+) as separate statics -> +6 at 6+ (wrong); and CONTROLS_TOKEN_TYPE ignored 'amount' (fired at 1+). Both now correct: amount honored + additive branches.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. The two tiers are exclusive -- 'INSTEAD +4' -- and were authored as two +2s that would have stacked to +4 at six tokens by accident and given +2 too many in between. Both printings also said +2; the second is +4.",
       "conditions": [
+        {
+          "type": "IS_DEFENDING_CARD"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Seismic Surge",
           "amount": 3
+        },
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "CONTROLS_TOKEN_TYPE",
+            "token_type": "Seismic Surge",
+            "amount": 6
+          }
         }
       ],
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_VALUE",
+          "type": "MODIFY_DEFENSE",
           "mod": "add",
           "amount": 2
         }
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. The two tiers are exclusive -- 'INSTEAD +4' -- and were authored as two +2s that would have stacked to +4 at six tokens by accident and given +2 too many in between. Both printings also said +2; the second is +4.",
       "conditions": [
+        {
+          "type": "IS_DEFENDING_CARD"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Seismic Surge",
@@ -30,9 +48,9 @@
       ],
       "effects": [
         {
-          "type": "MODIFY_DEFENSE_VALUE",
+          "type": "MODIFY_DEFENSE",
           "mod": "add",
-          "amount": 2
+          "amount": 4
         }
       ]
     }
