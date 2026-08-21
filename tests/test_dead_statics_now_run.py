@@ -720,3 +720,131 @@ def test_the_sweep_would_catch_a_regression():
     assert printed & gated, (
         "the card DB no longer lists Out Muscle's conditional keyword as "
         "printed — the conflict this suppression exists for is gone")
+
+
+# ===========================================================================
+# ON_PLAY_ACTIVATE_ATTACK, ON_LEAVE_PLAY, ON_DEATH — three more dead triggers
+# ===========================================================================
+
+def _declare_attack(st, power=3, pid=1, from_weapon=False):
+    """Put an attack on the chain and emit 'attacking', as the engine does."""
+    from engine.state import Event
+    atk = Card(slug="atk", name="Atk", types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = pid
+    atk.power = atk.base_power = power
+    st.combat = CombatState(attacker_id=pid, link_id=1, attack_power=power,
+                            attack_card=atk, keywords=[])
+    st.combat.base_attack_power = power
+    st.combat.from_weapon = from_weapon
+    st.event_manager.emit(Event(type='attacking', card=atk.slug,
+                                data={'card': atk}), st)
+    E._apply_turn_attack_effects(st, atk)
+    E._register_card_continuous_effects(st, atk)
+    E._recalculate_attack_power(st)
+    return st.combat.attack_power
+
+
+def _put_token(st, slug, pid=1):
+    tok = _card(slug, pid)
+    tok.zone = "hand"
+    st.players[pid].permanents.add(tok)
+    return tok
+
+
+def test_runechant_deals_its_arcane_damage_and_is_spent():
+    st = _state()
+    _put_token(st, "runechant")
+    before = st.players[2].life
+    _declare_attack(st)
+    assert st.players[2].life == before - 1, "Runechant dealt no arcane damage"
+    assert not [c for c in st.players[1].permanents.cards
+                if c.slug == "runechant"], "Runechant did not destroy itself"
+
+
+def test_courage_adds_one_power():
+    st = _state()
+    _put_token(st, "courage")
+    assert _declare_attack(st, power=3) == 4
+
+
+def test_quicken_grants_go_again():
+    st = _state()
+    _put_token(st, "quicken")
+    _declare_attack(st)
+    assert "go again" in _kw(st)
+
+
+def test_three_tokens_stack():
+    """Each is a separate permanent, so all three fire on one attack."""
+    st = _state()
+    for slug in ("runechant", "courage", "quicken"):
+        _put_token(st, slug)
+    life = st.players[2].life
+    assert _declare_attack(st, power=3) == 4
+    assert "go again" in _kw(st)
+    assert st.players[2].life == life - 1
+    assert st.players[1].permanents.cards == [], \
+        "all three destroy themselves; some survived"
+
+
+def test_embodiment_of_lightning_ignores_weapon_attacks():
+    """Runechant/Courage/Quicken say "or activate a weapon attack".
+
+    Embodiment of Lightning does not — it reads "when you play an attack ACTION
+    card" — so the shared trigger has to be narrowed on that card.
+    """
+    st = _state()
+    _put_token(st, "embodiment_of_lightning")
+    _declare_attack(st, from_weapon=True)
+    assert "go again" not in _kw(st), "fired on a weapon attack"
+    assert [c for c in st.players[1].permanents.cards
+            if c.slug == "embodiment_of_lightning"], \
+        "destroyed itself on a weapon attack it does not care about"
+
+    st2 = _state()
+    _put_token(st2, "embodiment_of_lightning")
+    _declare_attack(st2, from_weapon=False)
+    assert "go again" in _kw(st2)
+
+
+@pytest.mark.parametrize("slug,token", [
+    ("silken_symphony", "might"),
+    ("phantasmal_haze_red", "spectral_shield"),
+    ("circular_flowtide_yellow", "lightning_flow"),
+])
+def test_leaving_the_arena_creates_what_the_card_says(slug, token):
+    from engine.effect_keywords import destroy
+    st = _state()
+    card = _card(slug)
+    card.zone = "hand"
+    st.players[1].permanents.add(card)
+    destroy(st, card, None)
+    assert token in [c.slug for c in st.players[1].permanents.cards], \
+        f"{slug} left the arena without creating a {token}"
+
+
+def test_robe_of_resourcefulness_gains_resources_on_leaving():
+    from engine.effect_keywords import destroy
+    st = _state()
+    card = _card("robe_of_resourcefulness")
+    card.zone = "hand"
+    st.players[1].permanents.add(card)
+    before = st.players[1].resources
+    destroy(st, card, None)
+    assert st.players[1].resources == before + 2
+
+
+def test_riptide_no_longer_carries_a_hand_destroying_effect():
+    """PUT_CARDS_BOTTOM bottom-decks EVERY card in the named zones.
+
+    It reads none of `amount`, `face_down` or `destination`, so Riptide's "you
+    may put A card from hand face down into your arsenal" would have emptied
+    the player's whole hand into their deck on every card played. The only
+    reason it never did is that its trigger was dead too.
+    """
+    from engine.card_effects.dsl.loader import get_card
+    cd = get_card("riptide")
+    for ability in cd.abilities:
+        for eff in ability.effects:
+            assert (eff.effect_type or "").upper() != "PUT_CARDS_BOTTOM", \
+                "Riptide still carries the hand-emptying effect"

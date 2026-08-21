@@ -3,19 +3,6 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
-      "effects": [
-        {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": 1,
-          "zone": "HAND",
-          "face_down": true,
-          "destination": "ARSenal"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
       "trigger": "ON_TRAP_TRIGGER",
       "effects": [
         {
@@ -25,5 +12,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Riptide's 'whenever you play a card from hand, you may put a card from hand face down into your arsenal' is NOT implemented. It was authored as PUT_CARDS_BOTTOM, which bottom-decks every card in hand and reads none of amount/face_down/destination -- so it would have destroyed the player's hand on every card played. Removed rather than approximated; there is no hand-to-arsenal effect yet. The second ability's trigger, ON_TRAP_TRIGGER, is not a trigger name at all and is still dead; the audit reports it."
 }

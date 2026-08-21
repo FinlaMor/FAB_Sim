@@ -1452,6 +1452,65 @@ def _setup_dsl_listeners(state: GameState) -> None:
         slug = event.card
         dispatch(game_state, "ON_ATTACK", slug, card=combat.attack_card, event=event)
 
+    def _dsl_play_activate_attack_listener(event, game_state: GameState) -> None:
+        # "When you play an attack action card or activate a weapon attack, ..."
+        # — Runechant, Courage, Quicken, Embodiment of Lightning. Four of the
+        # commonest tokens in the game, and ON_PLAY_ACTIVATE_ATTACK was
+        # dispatched by NOTHING, so all four sat in the arena doing nothing: no
+        # arcane damage, no +1{p}, no go again, and never destroying themselves.
+        #
+        # Dispatched on 'attacking' rather than on the play itself, because the
+        # effects need the attack to exist: "the attack gets +1{p}" and "the
+        # attack gains go again" both write to CombatState, and at play time
+        # there is no combat yet. The practical difference is an attack action
+        # countered before it reaches the chain, which would still have
+        # triggered these in paper.
+        #
+        # The trigger fires for weapon attacks too; a card that means only
+        # attack ACTION cards narrows it with an ATTACK_IS_WEAPON condition.
+        combat = game_state.combat
+        if not combat or not combat.attack_card:
+            return
+        attacker = game_state.players.get(combat.attacker_id)
+        if attacker is None:
+            return
+        for zone in _dsl_permanent_zones(attacker):
+            # list() because these abilities destroy their own source, which
+            # mutates the zone mid-iteration.
+            for card in list(zone.cards):
+                dispatch(game_state, "ON_PLAY_ACTIVATE_ATTACK", card.slug,
+                         card=card, event=event)
+
+    def _dsl_leaves_arena_listener(event, game_state: GameState) -> None:
+        # "When this leaves the arena, ..." — Spectral Shield creators, the
+        # Sigils, Robe of Resourcefulness. ON_LEAVE_PLAY was dispatched by
+        # nothing, so 14 cards' only ability never ran; several of them are
+        # Ward cards whose whole payoff is what they leave behind when the Ward
+        # destroys them.
+        #
+        # Rides the existing 'leaves_arena' event, which effect_keywords.destroy
+        # already emits. That covers leaving by destruction — the route these
+        # cards actually take — but NOT banishing or being returned to hand,
+        # which emit nothing of the kind. Stated because it is a real gap, not
+        # because it affects these fourteen.
+        card_obj = event.data.get('card') if isinstance(event.data, dict) else None
+        if card_obj is None:
+            return
+        dispatch(game_state, "ON_LEAVE_PLAY", card_obj.slug,
+                 card=card_obj, event=event)
+
+    def _dsl_destroyed_listener(event, game_state: GameState) -> None:
+        # "When this is destroyed, ..." — distinct from leaving the arena: a
+        # card can leave without being destroyed, and Ephemeral cards are
+        # destroyed without reaching a graveyard. Both were dead; a card names
+        # one or the other, so dispatching both here double-fires nothing.
+        card_obj = getattr(event, 'target', None)
+        if card_obj is None and isinstance(getattr(event, 'data', None), dict):
+            card_obj = event.data.get('card') or event.data.get('target')
+        if card_obj is None:
+            return
+        dispatch(game_state, "ON_DEATH", card_obj.slug, card=card_obj, event=event)
+
     def _dsl_pitch_listener(event, game_state: GameState) -> None:
         # "When this is pitched" — e.g. Riches of Trōpal-Dhani creates a Gold.
         card_obj = event.data.get('card') if isinstance(event.data, dict) else None
@@ -1614,6 +1673,10 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('hit', _dsl_hit_listener)
     state.event_manager.register('damage_dealt', _dsl_deal_damage_listener)
     state.event_manager.register('attacking', _dsl_attacking_listener)
+    state.event_manager.register('leaves_arena', _dsl_leaves_arena_listener)
+    state.event_manager.register('destroy', _dsl_destroyed_listener)
+    state.event_manager.register('attacking',
+                                 _dsl_play_activate_attack_listener)
     state.event_manager.register('start_of_turn', _dsl_start_of_turn_listener)
     state.event_manager.register('end_of_turn', _dsl_end_of_turn_listener)
     state.event_manager.register('start_of_end_phase', _dsl_start_of_end_phase_listener)

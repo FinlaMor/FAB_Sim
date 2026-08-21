@@ -4,15 +4,30 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "_comment": "Nothing dispatched the trigger. The destroy is also OPTIONAL -- 'you MAY destroy this. If you do, ...' -- and was written as an unconditional destroy plus an unconditional buff, so the player had no say and the equipment was spent whether or not they wanted it. Attack action cards only, not weapons.",
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        }
+      ],
       "effects": [
         {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        },
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
+          "type": "MAY",
+          "prompt": "Destroy Hard Knuckle to give this attack +1{p}?",
+          "effects": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "target": "self"
+            },
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 1
+            }
+          ]
         }
       ]
     }

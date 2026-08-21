@@ -2,50 +2,32 @@
   "slug": "moon_chakra_red",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "ability_type": "PLAY",
+      "_comment": "Was TRIGGERED on ON_PLAY_ACTIVATE_ATTACK. Moon Chakra is an INSTANT whose text -- 'the next time you would be dealt damage this turn, prevent 3; if you've transcended, instead prevent 5' -- has nothing to do with playing an attack. It resolves when the card is played. The two amounts are one choice, not two stacked preventions, so it is a branch.",
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_DEFEND",
-            "conditions": [
-              {
-                "type": "EVENT_THIS_TURN",
-                "event": "transcend"
-              }
-            ],
-            "effects": [
-              {
-                "type": "PREVENT_DAMAGE",
-                "amount": 5
-              }
-            ]
-          }
-        },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_DEFEND",
-            "conditions": [
-              {
-                "type": "NOT",
-                "condition": {
-                  "type": "EVENT_THIS_TURN",
-                  "event": "transcend"
-                }
-              }
-            ],
-            "effects": [
-              {
-                "type": "PREVENT_DAMAGE",
-                "amount": 3
-              }
-            ]
-          }
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "transcend"
+            }
+          ],
+          "then": [
+            {
+              "type": "PREVENT_DAMAGE",
+              "amount": 5
+            }
+          ],
+          "else": [
+            {
+              "type": "PREVENT_DAMAGE",
+              "amount": 3
+            }
+          ]
         }
       ]
     }
   ],
-  "_comment": "'If you've transcended this turn' now reads the turn event recorded by the canonical transcend (CR 8.5.48a). Was a private flag — and the flag names were misspelled inconsistently (TRANSCEDED / TRANSCEDED_THIS_TURN), so the cards could not even have collided into working by accident."
+  "_comment": "'If you've transcended this turn' now reads the turn event recorded by the canonical transcend (CR 8.5.48a). Was a private flag \u2014 and the flag names were misspelled inconsistently (TRANSCEDED / TRANSCEDED_THIS_TURN), so the cards could not even have collided into working by accident."
 }

@@ -5,6 +5,15 @@
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "_comment": "Nothing dispatched ON_PLAY_ACTIVATE_ATTACK, so this token sat in the arena doing nothing. It reads 'when you play an attack ACTION card', unlike Runechant/Courage/Quicken which also cover weapon attacks -- hence the weapon exclusion.",
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        }
+      ],
       "effects": [
         {
           "type": "DESTROY_SELF"

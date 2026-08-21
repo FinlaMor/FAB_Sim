@@ -204,6 +204,17 @@ def _undispatched_triggers() -> set[str]:
 
 UNDISPATCHED_TRIGGERS = _undispatched_triggers()
 
+def _known_triggers() -> set[str]:
+    try:
+        sys.path.insert(0, str(ROOT))
+        from engine.card_effects.dsl.trigger_types import TRIGGER_TO_EVENT
+    except Exception:
+        return set()
+    return set(TRIGGER_TO_EVENT)
+
+
+KNOWN_TRIGGERS = _known_triggers()
+
 
 def _walk(node, fn):
     if isinstance(node, dict):
@@ -307,7 +318,16 @@ def audit(paths: list[Path], index: dict) -> dict[str, list[str]]:
 
         for i, ability in enumerate(raw.get("abilities") or []):
             _trig = (ability.get("trigger") or "").upper()
-            if _trig and _trig in UNDISPATCHED_TRIGGERS:
+            # A trigger name that is not in TRIGGER_TO_EVENT at all is worse
+            # than one whose event is unwired: dispatch_event falls back to the
+            # raw string, so it silently never matches anything and the loader
+            # accepts it without complaint.
+            if _trig and _trig not in KNOWN_TRIGGERS:
+                found.append(
+                    f"ability[{i}] trigger {_trig} is not a trigger name — "
+                    "dispatch falls back to the raw string, which matches "
+                    "nothing")
+            elif _trig and _trig in UNDISPATCHED_TRIGGERS:
                 found.append(
                     f"ability[{i}] trigger {_trig} — no engine code emits that "
                     "event, so the ability never fires")
