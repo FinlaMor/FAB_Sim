@@ -16,20 +16,7 @@
           "flag": "CRUSH_FLAG"
         }
       ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "CRUSH_FLAG"
-        }
-      ],
-      "effects": [
-        {
-          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
-        }
-      ]
     }
-  ]
+  ],
+  "_comment": "'Attack action cards they control can't gain {p} during their next action phase' is NOT implemented: it is a power-gain replacement scoped to the OPPONENT'S NEXT TURN. It was authored as RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT under a FLAG_SET nothing sets -- a defender restriction standing in for a power-gain restriction. The Crush trigger is intact."
 }

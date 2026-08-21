@@ -17,23 +17,7 @@
           "keyword": "GO_AGAIN"
         }
       ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "ONLY_PLAY_FROM_ARSENAL"
-        },
-        {
-          "type": "DURING_TURN"
-        }
-      ],
-      "effects": [
-        {
-          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
-        }
-      ]
     }
-  ]
+  ],
+  "_comment": "'Until end of turn, you may only play cards from arsenal' is NOT implemented: it is a turn-scoped restriction on PLAY legality, and there is no hook for one. It was authored as RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT, which restricts DEFENDERS -- an unrelated and wrong effect. The draw-3 half is intact."
 }

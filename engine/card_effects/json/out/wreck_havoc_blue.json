@@ -2,19 +2,6 @@
   "slug": "wreck_havoc_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "IN_COMBAT"
-        }
-      ],
-      "effects": [
-        {
-          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
-        }
-      ]
-    },
-    {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
       "conditions": [
@@ -34,5 +21,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'Defense reactions can't be played to this chain link' is NOT implemented: defence reactions are played in the reaction step, which has no restriction hook, and the defend step already excludes them (CR 7.3.2a). It was authored as RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT, which restricts ORDINARY defenders instead -- a real and wrong restriction in place of a missing one. Removed rather than approximated."
 }

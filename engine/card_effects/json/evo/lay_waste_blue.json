@@ -2,10 +2,12 @@
   "slug": "lay_waste_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
+      "_comment": "Was a plain STATIC (dispatched by nothing) whose effect was RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT -- Headbutt's 'can't be defended by NON-HEAD EQUIPMENT'. This card says equipment cannot defend it AT ALL, which under the old effect became 'head equipment may defend it' -- a restriction that let through exactly the case the card forbids most.",
       "effects": [
         {
-          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"
+          "type": "RESTRICT_DEFENDERS",
+          "equipment": true
         }
       ]
     }

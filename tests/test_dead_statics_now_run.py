@@ -987,3 +987,124 @@ def test_a_defence_static_does_not_run_during_an_attack_recalculation():
     _attack_with(st, atk)
     assert boots.defense == before, \
         "an attack recalculation changed a non-defending card's defence"
+
+
+# ===========================================================================
+# "This can't be defended by X" — one boolean for six different mechanics
+# ===========================================================================
+# combat.head_equipment_only was added for Headbutt. Eight cards then used
+# RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT to say "can't be defended by equipment",
+# "can't be defended by cheap attack actions", "defense reactions can't be
+# played", "opponents can't play instants", "you may only play from arsenal",
+# and "attack actions can't gain power" — every one of them silently becoming
+# "head equipment only".
+
+
+def _defence_setup(st, attacker_slug, defender_gear=(), defender_hand=()):
+    """Play an attack, then ask what the defender may legally block with."""
+    from engine.actions import get_defendable_cards
+    from engine.card_effects.dsl import dispatch
+    atk = _card(attacker_slug, 1)
+    st.active_player = 1
+    st.combat = CombatState(attacker_id=1, link_id=1,
+                            attack_power=atk.base_power or 0,
+                            attack_card=atk, keywords=[])
+    st.combat.base_attack_power = atk.base_power or 0
+    for slot, card in defender_gear:
+        card.owner = card.controller = 2
+        st.players[2].zone_by_name(slot).add(card)
+    for card in defender_hand:
+        card.owner = card.controller = 2
+        st.players[2].hand.add(card)
+    dispatch(st, "ON_PLAY", atk.slug, card=atk, event=None)
+    return {c.slug for c in get_defendable_cards(st)}
+
+
+def _gear(slot, slug, defense=2):
+    subtype = {"head": "Head", "chest": "Chest", "arms": "Arms",
+               "legs": "Legs"}[slot]
+    c = Card(slug=slug, name=slug, types=["Equipment"], subtypes=[subtype])
+    c.defense = c.base_defense = defense
+    return c
+
+
+def _hand_card(slug, defense=2, cost=0, subtypes=("Attack",)):
+    c = Card(slug=slug, name=slug, types=["Action"], subtypes=list(subtypes))
+    c.defense = c.base_defense = defense
+    c.cost = c.base_cost = cost
+    return c
+
+
+@pytest.mark.parametrize("slug", ["lay_waste_blue", "out_pace_red"])
+def test_cant_be_defended_by_equipment_excludes_the_head_slot_too(slug):
+    """The old effect kept HEAD equipment legal — the exact case it forbids."""
+    st = _state()
+    legal = _defence_setup(
+        st, slug,
+        defender_gear=[("head", _gear("head", "helm")),
+                       ("legs", _gear("legs", "boots"))],
+        defender_hand=[_hand_card("blocker")])
+    assert "helm" not in legal, "head equipment defended a card that bars equipment"
+    assert "boots" not in legal
+    assert "blocker" in legal, "a hand card was blocked by an equipment-only rule"
+
+
+def test_heavy_artillery_restricts_by_cost_not_by_equipment_slot():
+    st = _state()
+    # No Evos equipped: X is 0, so nothing has cost < 0 and everything defends.
+    legal = _defence_setup(
+        st, "heavy_artillery_red",
+        defender_gear=[("head", _gear("head", "helm"))],
+        defender_hand=[_hand_card("cheap", cost=0),
+                       _hand_card("dear", cost=3)])
+    assert {"helm", "cheap", "dear"} <= legal
+
+    st2 = _state()
+    # EQUIPPED, not merely controlled: "the number of Evos you have EQUIPPED"
+    # counts the equipment slots, which are not the permanents zone.
+    for slot, subtype in (("chest", "Chest"), ("arms", "Arms")):
+        evo = Card(slug=f"evo_{slot}", name="Evo", types=["Equipment"],
+                   subtypes=[subtype, "Evo"])
+        evo.owner = evo.controller = 1
+        st2.players[1].zone_by_name(slot).add(evo)
+    legal2 = _defence_setup(
+        st2, "heavy_artillery_red",
+        defender_gear=[("head", _gear("head", "helm"))],
+        defender_hand=[_hand_card("cheap", cost=0),
+                       _hand_card("dear", cost=3)])
+    assert "cheap" not in legal2, "cost 0 < 2 Evos should not be able to defend"
+    assert "dear" in legal2, "cost 3 is not less than 2"
+    assert "helm" in legal2, "equipment is unaffected; the card restricts attacks"
+
+
+def test_headbutts_own_restriction_still_works():
+    """The legacy boolean is still honoured, so nothing that set it broke."""
+    from engine.actions import get_defendable_cards
+    st = _state()
+    st.active_player = 1
+    atk = Card(slug="atk", name="Atk", types=["Action"], subtypes=["Attack"])
+    atk.owner = atk.controller = 1
+    atk.power = atk.base_power = 3
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=3,
+                            attack_card=atk, keywords=[])
+    for slot, slug in (("head", "helm"), ("legs", "boots")):
+        g = _gear(slot, slug)
+        g.owner = g.controller = 2
+        st.players[2].zone_by_name(slot).add(g)
+    st.combat.head_equipment_only = True
+    legal = {c.slug for c in get_defendable_cards(st)}
+    assert legal == {"helm"}
+
+
+def test_unimplemented_restrictions_are_absent_not_approximated():
+    """Four cards said something else entirely; a wrong restriction is worse
+    than a missing one, because it actually fires."""
+    from engine.card_effects.dsl.loader import get_card
+    for slug in ("wreck_havoc_blue", "wreck_havoc_yellow", "three_of_a_kind_red",
+                 "step_between_red", "chokeslam_yellow"):
+        cd = get_card(slug)
+        for ability in cd.abilities:
+            for eff in ability.effects:
+                assert (eff.effect_type or "").upper() not in (
+                    "RESTRICT_DEFENDERS", "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"), \
+                    f"{slug} still restricts defenders, which is not what it says"

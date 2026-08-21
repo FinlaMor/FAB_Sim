@@ -2812,12 +2812,45 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 card.subtypes = subs
         return _fn
 
-    if etype == "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT":
-        # Headbutt: "This can't be defended by non-head equipment." Set on the
-        # active combat while this card attacks; get_defendable_cards honours it.
-        def _fn(card, event, state):
-            if state.combat is not None:
-                state.combat.head_equipment_only = True
+    if etype in ("RESTRICT_DEFENDERS", "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"):
+        # "This can't be defended by <X>." The filter names the cards that may
+        # NOT defend; get_defendable_cards drops anything matching it.
+        #
+        #   {"type":"RESTRICT_DEFENDERS","equipment":true}       — Lay Waste
+        #   {"type":"RESTRICT_DEFENDERS","non_head_equipment":true} — Headbutt
+        #   {"type":"RESTRICT_DEFENDERS","subtype":"Attack",
+        #    "cost_lt":{"type":"COUNT_PERMANENT","subtype":"Evo",
+        #               "zone":"EQUIPMENT"}}                     — Heavy Artillery
+        #
+        # RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT stays as sugar for Headbutt's
+        # filter, but it is no longer the only shape available — eight cards had
+        # used it to mean six different things, because it was all there was.
+        spec = {k: v for k, v in params.items() if k != "type"}
+        # Headbutt's spelling with no filter of its own means its own filter.
+        # Written as a membership test rather than `etype == "..."`, which the
+        # shadowed-type scan reads as a SECOND registration of the name — and
+        # that check earns its false positives: a duplicate handler is dead code
+        # that cards silently route past.
+        _is_headbutt_sugar = etype.endswith("HEAD_EQUIPMENT")
+        if _is_headbutt_sugar and not spec:
+            spec = {"non_head_equipment": True}
+
+        def _fn(card, event, state, _spec=spec):
+            combat = state.combat
+            if combat is None:
+                return
+            resolved = dict(_spec)
+            # A threshold may be an expression ("cost less than X, where X is
+            # the number of Evos you have equipped"), and it is fixed at the
+            # moment the restriction is created.
+            for key in ("cost_lt", "cost_lte", "cost_gt", "cost_gte"):
+                if isinstance(resolved.get(key), dict):
+                    try:
+                        resolved[key] = int(_resolve_amount(resolved[key], state, card))
+                    except (TypeError, ValueError):
+                        resolved.pop(key)
+            if resolved not in combat.defender_restrictions:
+                combat.defender_restrictions.append(resolved)
         return _fn
 
     if etype == "CRUSH_MINUS_DEF_OPP_HEAD":

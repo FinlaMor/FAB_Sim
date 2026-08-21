@@ -2,31 +2,6 @@
   "slug": "step_between_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "OR",
-          "conditions": [
-            {
-              "type": "IN_COMBAT",
-              "source": "self"
-            },
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "stack",
-              "card": "self"
-            }
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT",
-          "opponent": true
-        }
-      ]
-    },
-    {
       "ability_type": "INSTANT",
       "activation_cost": 1,
       "cost": [
@@ -46,5 +21,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'While this is attacking or on the stack, opponents can't play or activate instants' is NOT implemented: there is no play-legality restriction hook for an opponent's instants. It was authored as RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT, which restricts DEFENDERS instead."
 }

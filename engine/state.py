@@ -1210,6 +1210,17 @@ class CombatState:
     attack_source: Optional[Card] = None
     defending_cards: list[Card] = field(default_factory=list)
     total_defense: int = 0
+    # "This can't be defended by <X>" — one filter per restriction, each naming
+    # cards that may NOT be declared as defenders.
+    #
+    # There used to be a single boolean, head_equipment_only, added for
+    # Headbutt. Eight cards then reached for RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT
+    # to express six different things — "can't be defended by equipment",
+    # "can't be defended by attack action cards with cost less than X",
+    # "defense reactions can't be played to this chain link", "opponents can't
+    # play instants" — none of which it says, and all of which it silently
+    # turned into "head equipment only".
+    defender_restrictions: list = field(default_factory=list)
     # (mod, amount) adjustments to the defence TOTAL, the mirror of power_mods.
     # MODIFY_DEFENSE_VALUE used to write total_defense directly, and
     # _resolve_damage recomputes that field from sum(card.defense) — so every

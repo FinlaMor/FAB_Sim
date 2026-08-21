@@ -852,6 +852,57 @@ def _defend_restriction_met(state: GameState, card: Card) -> bool:
     return True
 
 
+def _restriction_blocks(state: GameState, card: Card, slot_name: str | None) -> bool:
+    """True when a combat restriction forbids this card from defending.
+
+    Each entry in combat.defender_restrictions names cards that may NOT defend:
+
+        equipment           any equipment
+        non_head_equipment  equipment outside the head slot (Headbutt)
+        card_type/subtype   a type or subtype ("Attack", "Action")
+        cost_lt / cost_lte / cost_gt / cost_gte
+                            a cost threshold, already resolved to a number
+    """
+    combat = state.combat
+    if combat is None:
+        return False
+    is_equipment = bool(getattr(card, 'is_equipment', False))
+    traits = {t.lower() for t in (getattr(card, 'types', None) or [])}
+    traits |= {t.lower() for t in (getattr(card, 'subtypes', None) or [])}
+    cost = getattr(card, 'cost', None) or 0
+
+    for rule in combat.defender_restrictions:
+        if rule.get("equipment") and not is_equipment:
+            continue
+        if rule.get("non_head_equipment"):
+            if not is_equipment or slot_name == "head":
+                continue
+        wanted = [t.lower() for t in _as_list_restriction(rule)]
+        if wanted and not (traits & set(wanted)):
+            continue
+        if "cost_lt" in rule and not cost < rule["cost_lt"]:
+            continue
+        if "cost_lte" in rule and not cost <= rule["cost_lte"]:
+            continue
+        if "cost_gt" in rule and not cost > rule["cost_gt"]:
+            continue
+        if "cost_gte" in rule and not cost >= rule["cost_gte"]:
+            continue
+        return True
+    return False
+
+
+def _as_list_restriction(rule: dict) -> list:
+    out = []
+    for key in ("card_type", "card_types", "subtype", "subtypes", "types"):
+        val = rule.get(key)
+        if isinstance(val, str):
+            out.append(val)
+        elif isinstance(val, (list, tuple)):
+            out.extend(val)
+    return out
+
+
 def get_defendable_cards(state: GameState) -> list[Card]:
     """Return all cards the defender may use to defend (hand cards + equipment)."""
     combat = state.combat
@@ -873,10 +924,16 @@ def get_defendable_cards(state: GameState) -> list[Card]:
             continue
         if not _defend_restriction_met(state, card):
             continue
+        # "This can't be defended by <X>" — a restriction the ATTACK imposes,
+        # as opposed to _defend_restriction_met, which is the card's own "may
+        # only defend if ..." clause.
+        if _restriction_blocks(state, card, None):
+            continue
         defendable_cards.append(card)
 
-    # Headbutt (CR 8.x): "can't be defended by non-head equipment" — only the
-    # head slot may contribute equipment (hand-card blockers are unaffected).
+    # Headbutt (CR 8.x): "can't be defended by non-head equipment" — expressed
+    # as a defender restriction like every other "can't be defended by"; the
+    # legacy boolean is still honoured so nothing that set it directly breaks.
     head_only = getattr(combat, 'head_equipment_only', False)
     for slot_name in ("head", "chest", "arms", "legs"):
         if head_only and slot_name != "head":
@@ -890,6 +947,8 @@ def get_defendable_cards(state: GameState) -> list[Card]:
         if not equip_card.has_defense:
             continue
         if not _defend_restriction_met(state, equip_card):
+            continue
+        if _restriction_blocks(state, equip_card, slot_name):
             continue
         defendable_cards.append(equip_card)
 
