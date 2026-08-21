@@ -112,6 +112,21 @@ ONE_SHOT_PRIMITIVES = (
 )
 
 
+# Keywords implemented as DECLARED statics: the engine reads the declaration off
+# the CardDef rather than resolving an effect, so a card that PRINTS the keyword
+# but declares nothing gets nothing — and looks complete, because the other
+# printed keywords on it are read from card data and work fine.
+#
+# Found by asking "how confident am I in these cards": Rune Gate was implemented
+# for the one card that surfaced it and never swept for the others, leaving two
+# cards where the keyword did nothing. The lesson is the general one — a
+# mechanic added for one card has to be swept across every card that prints it.
+DECLARED_KEYWORDS = {
+    "RUNE_GATE": r"\brune gate\b",
+    "MATERIAL": r"\*\*material\*\*",
+}
+
+
 def _walk(node, fn):
     if isinstance(node, dict):
         fn(node)
@@ -211,6 +226,15 @@ def audit(paths: list[Path], index: dict) -> dict[str, list[str]]:
                     f"ability[{i}] INSTANT but the text has no 'Instant -' "
                     f"activated ability ({type_text or 'unknown type'}) — "
                     "an Instant CARD resolving on play is PLAY")
+
+        # A printed keyword whose implementation is a DECLARED static, with no
+        # declaration in the card's own JSON.
+        _abilities_json = json.dumps(raw.get("abilities", []))
+        for _decl, _pat in DECLARED_KEYWORDS.items():
+            if re.search(_pat, text, re.I) and _decl not in _abilities_json:
+                found.append(
+                    f"prints a keyword implemented as a declared static "
+                    f"({_decl}) but declares nothing — the keyword is inert")
 
         # "the next <thing> ... this turn" with no one-shot primitive anywhere.
         if "the next" in text:

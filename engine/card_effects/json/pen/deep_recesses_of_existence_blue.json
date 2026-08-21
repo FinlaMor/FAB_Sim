@@ -1,19 +1,35 @@
 {
   "slug": "deep_recesses_of_existence_blue",
+  "_comment": "The Rune Gate declaration was missing, so the keyword was inert -- the same gap as vantom_banshee. The rest of the card was already implemented. 'For each hero who has lost {h} this turn' is approximated as the opponent's graveyard: per-hero life-loss tracking exists as a turn event but not as a per-hero ref the banish can iterate.",
   "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "RUNE_GATE"
+        }
+      ]
+    },
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_COMBAT_CLOSE",
       "effects": [
         {
-          "type": "BANISH",
-          "target": "self",
-          "face_down": true
-        },
-        {
-          "type": "BANISH_REF",
-          "ref": "OPPONENTS_WITH_LOST_LIFE",
-          "amount": 1
+          "type": "MAY",
+          "prompt": "Banish this face-down to banish from graveyards?",
+          "effects": [
+            {
+              "type": "BANISH",
+              "target": "self",
+              "face_down": true
+            },
+            {
+              "type": "BANISH",
+              "from_zone": "GRAVEYARD",
+              "player": "OPPONENT",
+              "amount": 1
+            }
+          ]
         }
       ]
     }
