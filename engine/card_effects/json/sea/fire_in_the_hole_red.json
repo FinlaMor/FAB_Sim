@@ -1,20 +1,22 @@
 {
   "slug": "fire_in_the_hole_red",
+  "_comment": "Was an ACTIVATE with an invented PAY_LIFE cost; this is a played action. '{u} a bow' (unequip) is not modelled \u2014 the arrow buff is.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 0,
-      "cost": [
-        {
-          "type": "PAY_LIFE",
-          "amount": 1
-        }
-      ],
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Arrow"
+              ]
+            }
+          ]
         },
         {
           "type": "GO_AGAIN"

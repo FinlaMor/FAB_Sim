@@ -1,55 +1,41 @@
 {
   "slug": "war_cry_of_themis_yellow",
+  "_comment": "Was a STATIC. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. The second, unrelated INSTANT ability is preserved.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 4,
-          "conditions": [
-            {
-              "type": "AND",
-              "conditions": [
-                {
-                  "type": "DURING_TURN"
-                },
-                {
-                  "type": "ATTACK_CLASS_IN",
-                  "class": "Angel"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Angel"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     },
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
+      "activation_cost": 0,
       "cost": [
         {
           "type": "DISCARD_SELF"
-        },
-        {
-          "type": "BANISH_NAMED_GRAVEYARD_OPTIONAL",
-          "amount": "X"
         }
       ],
       "effects": [
         {
           "type": "FLIP_REF",
-          "target": "X",
-          "zone": "BANISHED"
+          "ref": "banished",
+          "to_zone": "banished"
         }
       ]
     }

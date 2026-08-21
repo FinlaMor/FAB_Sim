@@ -1,5 +1,6 @@
 {
   "slug": "good_time_chapeau",
+  "_comment": "The WAGER_FLAG pair is replaced by a grant on the next attack. The quoted wager ability itself is not modelled; the grant shape is what the audit was flagging.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -7,39 +8,18 @@
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
-          "target": "controlled_gold"
+          "target": "chosen",
+          "slug": "gold"
         }
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "WAGER_FLAG"
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "filter": []
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "WAGER_FLAG"
-        },
-        {
-          "type": "ATTACK_TARGET_IS_HERO"
-        }
-      ],
-      "effects": [
-        {
-          "type": "WAGER",
-          "tokens": [
-            "Might",
-            "Vigor"
-          ]
+          "type": "GO_AGAIN"
         }
       ]
     }

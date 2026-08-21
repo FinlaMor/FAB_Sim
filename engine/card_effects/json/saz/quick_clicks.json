@@ -1,5 +1,6 @@
 {
   "slug": "quick_clicks",
+  "_comment": "Was a SET_FLAG on QUICK_CLICKS_GO_AGAIN, which nothing reads. The Nimblism restriction is a real gate and is kept.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -19,8 +20,9 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "QUICK_CLICKS_GO_AGAIN"
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "filter": []
         }
       ]
     }

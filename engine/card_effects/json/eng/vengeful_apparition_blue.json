@@ -1,5 +1,6 @@
 {
   "slug": "vengeful_apparition_blue",
+  "_comment": "Was a SET_FLAG plus a STATIC applying MODIFY_ATTACK to a token \u2014 power, not timing. The card grants instant TIMING to your next 0-cost aura. The '+1{p} counter if you do' rider is not modelled: it depends on the grant having been used, which the queue does not report back. Ward 1 is printed.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -8,38 +9,25 @@
         {
           "type": "NOT",
           "condition": {
-            "type": "CONTROLS_TOKEN_TYPE",
-            "token_type": "Illusionist"
+            "type": "CONTROLS_SUBTYPE",
+            "subtype": "Aura",
+            "card_class": "Illusionist"
           }
         }
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "VENGEFUL_APPARITION_AURA_PLAYABLE"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "VENGEFUL_APPARITION_AURA_PLAYABLE"
-        }
-      ],
-      "effects": [
-        {
-          "type": "APPLY_CONTINUOUS",
-          "effect": {
-            "type": "MODIFY_ATTACK",
-            "mod": "add",
-            "amount": 1
-          },
-          "target": {
-            "type": "TOKEN",
-            "token_type": "Aura"
-          }
+          "type": "GRANT_INSTANT_TIMING",
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Aura"
+            },
+            {
+              "type": "CARD_COST_LTE",
+              "amount": 0
+            }
+          ]
         }
       ]
     }

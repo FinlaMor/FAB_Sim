@@ -1,40 +1,32 @@
 {
   "slug": "blessing_of_savagery_blue",
+  "_comment": "Was a SET_FLAG plus a second START_OF_TURN trigger reading it. The base-power cap is part of which attack qualifies, and was dropped entirely \u2014 without it the buff lands on the first attack of any size.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
         },
         {
-          "type": "SET_FLAG",
-          "flag": "BLESSING_OF_SAVAGERY_ACTIVE"
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACK_BASE_POWER_GTE",
+              "amount": 6
+            }
+          ]
         }
       ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "BLESSING_OF_SAVAGERY_ACTIVE"
-        },
-        {
-          "type": "SELF_ATTACK_POWER_GTE",
-          "amount": 6
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
-        }
-      ],
-      "trigger": "START_OF_TURN"
     }
   ]
 }

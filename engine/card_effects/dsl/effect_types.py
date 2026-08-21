@@ -2834,6 +2834,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             })
         return _fn
 
+    if etype in ("GRANT_INSTANT_TIMING", "PLAY_NEXT_AS_INSTANT"):
+        # "You may play your next <X> this turn AS THOUGH IT WERE AN INSTANT."
+        # Instant TIMING, not an instant ability: the card skips the action-speed
+        # restriction. One-shot, filtered the same way the other queues are.
+        filter_specs = params.get("filter", [])
+
+        def _fn(card, event, state, _f=filter_specs):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = state.players[_controller_id(card)]
+            if not hasattr(player, 'dsl_instant_timing_grants'):
+                player.dsl_instant_timing_grants = []
+            player.dsl_instant_timing_grants.append({"filter": _f})
+        return _fn
+
     if etype in ("MODIFY_NEXT_DEFENSE", "GRANT_NEXT_DEFENSE"):
         # "The next action card they defend with this combat chain gets -1{d}",
         # "the next action card you defend with gets +1{d}". A card used to

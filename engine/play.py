@@ -255,6 +255,14 @@ def _legality_check(state, card, player_id) -> bool:
     is_ins = "instant" in _types_lower
 
     legal_flag = True
+    # "You may play your next <X> this turn AS THOUGH IT WERE AN INSTANT."
+    # A queued one-shot grants instant TIMING to one card, which means skipping
+    # the action-speed restriction rather than adding an ability. Checked before
+    # the action gate so the grant can lift it.
+    if _consume_instant_timing_grant(state, card, player_id, check_only=True):
+        is_act = False
+        is_ins = True
+
     if is_act:
         legal_flag &= _action_legal_check(state, card, player_id)
     if is_ar:
@@ -769,6 +777,25 @@ def _defense_reaction_legal_check(state, card, player_id) -> bool:
     # 8.1.3c A defense reaction card/activated ability is considered to be a reaction card/ability.
     return True
 
+def _consume_instant_timing_grant(state, card, player_id, check_only=False) -> bool:
+    """Does a queued "play your next <X> as though it were an instant" cover this?
+
+    Stored on the player as a filter, matched the same way the other one-shot
+    queues match. `check_only` is used by the legality path, which runs many
+    times per decision and must not spend the grant just by ASKING; the grant is
+    consumed when the card is actually played.
+    """
+    queued = getattr(state.players.get(player_id), 'dsl_instant_timing_grants', None)
+    if not queued or card is None:
+        return False
+    for grant in list(queued):
+        if _cost_mod_matches(state, grant, card):
+            if not check_only:
+                queued.remove(grant)
+            return True
+    return False
+
+
 def _instant_legal_check(state, card, player_id) -> bool:
     # CR 8.1.6: Requirements for playing/activating a card with the "instant" keyword
     can_play_or_activate = True
@@ -874,6 +901,8 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     )
 
     _record_reaction_on_link(state, action.player_id, _reaction_kinds(card=card))
+    # Spend an instant-timing grant now that the card is genuinely being played.
+    _consume_instant_timing_grant(state, card, action.player_id)
 
     # CR 8.3.27a: a card played from the banished zone using rune gate is
     # considered RUNE GATED, and its controller to have rune gated. Both are

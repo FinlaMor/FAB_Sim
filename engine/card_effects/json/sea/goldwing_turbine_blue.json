@@ -1,21 +1,20 @@
 {
   "slug": "goldwing_turbine_blue",
+  "_comment": "Was a STATIC. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 1,
-          "conditions": [
-            {
-              "type": "DURING_TURN",
-              "player": "self"
-            },
+          "filter": [
             {
               "type": "ATTACK_CLASS_IN",
-              "class": "Mechanologist"
+              "classes": [
+                "Mechanologist"
+              ]
             }
           ]
         },

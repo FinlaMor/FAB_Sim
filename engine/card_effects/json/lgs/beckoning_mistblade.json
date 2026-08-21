@@ -1,9 +1,11 @@
 {
   "slug": "beckoning_mistblade",
+  "_comment": "The ON_HIT buff filtered on Assassin/Dagger, which the card does not say \u2014 it says the next BLUE attack. CARD_IS_COLOR asks the attack card's own colour, which is what the queue filter is evaluated against.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
       "activation_cost": 2,
+      "per_turn": 1,
       "effects": [
         {
           "type": "GO_AGAIN"
@@ -15,30 +17,23 @@
       "trigger": "ON_HIT",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 1,
-          "conditions": [
+          "filter": [
             {
-              "type": "ATTACK_CLASS_IN",
-              "class": "Assassin"
-            },
-            {
-              "type": "ATTACK_SUBTYPE_IN",
-              "subtype": "Dagger"
+              "type": "CARD_IS_COLOR",
+              "color": "blue"
             }
           ]
         },
         {
-          "type": "GO_AGAIN",
-          "conditions": [
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "filter": [
             {
-              "type": "ATTACK_CLASS_IN",
-              "class": "Assassin"
-            },
-            {
-              "type": "ATTACK_SUBTYPE_IN",
-              "subtype": "Dagger"
+              "type": "CARD_IS_COLOR",
+              "color": "blue"
             }
           ]
         }

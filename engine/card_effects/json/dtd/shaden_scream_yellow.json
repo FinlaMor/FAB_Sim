@@ -1,5 +1,6 @@
 {
   "slug": "shaden_scream_yellow",
+  "_comment": "Was MODIFY_ATTACK on the current attack. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. The cost is a random BANISH from hand, not a discard; the nearest available cost is a random discard, so the card is approximated there \u2014 the card leaves hand either way, but ends in the wrong zone.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -10,15 +11,15 @@
       ],
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 4,
-          "conditions": [
+          "filter": [
             {
               "type": "ATTACK_CLASS_IN",
               "classes": [
-                "brute",
-                "shadow"
+                "Brute",
+                "Shadow"
               ]
             }
           ]

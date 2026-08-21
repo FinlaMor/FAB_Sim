@@ -1,41 +1,26 @@
 {
   "slug": "sizzle_red",
+  "_comment": "Was a STATIC. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 3,
-          "conditions": [
-            {
-              "type": "DURING_TURN",
-              "player": "self"
-            },
-            {
-              "type": "OR",
-              "conditions": [
-                {
-                  "type": "ATTACK_CLASS_IN",
-                  "class": "Lightning"
-                },
-                {
-                  "type": "ATTACK_CLASS_IN",
-                  "class": "Elemental"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Lightning",
+                "Elemental"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

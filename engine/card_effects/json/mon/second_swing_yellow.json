@@ -1,27 +1,28 @@
 {
   "slug": "second_swing_yellow",
-  "_comment": "Turn-event tracking: read ATTACKED_WITH_WEAPON_THIS_TURN — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN.",
+  "_comment": "Was a STATIC. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. The buff is conditional on having attacked with a weapon this turn, which the attack turn event records.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "EVENT_THIS_TURN",
-          "event": "attack",
-          "qualifier": "weapon"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 3
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "attack",
+              "qualifier": "weapon"
+            }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_NEXT_ATTACK",
+              "mod": "add",
+              "amount": 3,
+              "filter": []
+            }
+          ]
+        },
         {
           "type": "GO_AGAIN"
         }

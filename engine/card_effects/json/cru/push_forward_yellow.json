@@ -1,52 +1,39 @@
 {
   "slug": "push_forward_yellow",
-  "_comment": "Turn-event tracking: read HAS_ATTACKED_WITH_WEAPON — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN.",
+  "_comment": "Colour variant of push_forward_red; +2{p}. Was two STATICs, neither of which runs.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "IN_COMBAT",
-          "condition": "ATTACK_IS_WEAPON"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "IN_COMBAT",
-          "condition": "ATTACK_IS_WEAPON"
+          "amount": 2,
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
         },
         {
-          "type": "AND",
-          "conditions": [
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
             {
               "type": "EVENT_THIS_TURN",
               "event": "attack",
               "qualifier": "weapon"
             }
+          ],
+          "then": [
+            {
+              "type": "GRANT_NEXT_ATTACK",
+              "keyword": "Dominate",
+              "filter": []
+            }
           ]
-        }
-      ],
-      "effects": [
+        },
         {
-          "type": "DOMINATE"
+          "type": "GO_AGAIN"
         }
       ]
     }

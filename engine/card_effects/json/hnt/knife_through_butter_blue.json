@@ -1,35 +1,43 @@
 {
   "slug": "knife_through_butter_blue",
+  "_comment": "Was an ACTIVATE, but this is a played action. Two clauses: a one-shot +2{p} on the next dagger attack, and a TURN-LONG grant to attacks against a marked hero \u2014 the second is deliberately not a one-shot ('whenever you attack ... this turn').",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 1,
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 2,
-          "conditions": [
+          "filter": [
             {
-              "type": "ATTACK_TYPE_IN",
-              "types": [
-                "dagger"
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Dagger"
               ]
             }
           ]
         },
         {
-          "type": "GO_AGAIN",
-          "conditions": [
-            {
-              "type": "ATTACK_TARGET_IS_HERO",
-              "conditions": [
-                {
-                  "type": "OPPONENT_IS_MARKED"
-                }
-              ]
-            }
-          ]
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "trigger": {
+            "trigger_type": "ON_ATTACK",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              },
+              {
+                "type": "OPPONENT_IS_MARKED"
+              }
+            ],
+            "effects": [
+              {
+                "type": "GAIN",
+                "keyword": "GO_AGAIN"
+              }
+            ]
+          }
         },
         {
           "type": "GO_AGAIN"

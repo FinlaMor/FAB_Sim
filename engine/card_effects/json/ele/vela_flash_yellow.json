@@ -1,9 +1,9 @@
 {
   "slug": "vela_flash_yellow",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: VELA_FLASH_FUSION_ACTIVE.",
+  "_comment": "Was a STATIC (dispatched by nothing) wrapping an INJECT_TRIGGER whose inner effect was ACTIVATE -- not a real shape. 'Play your next <X> this turn AS THOUGH IT WERE AN INSTANT' grants instant TIMING to one card -- it skips the action-speed restriction rather than gaining an ability. Was a SET_FLAG nothing reads. GRANT_INSTANT_TIMING queues a one-shot, matched the way the other queues match and spent when the card is actually PLAYED: the legality path asks many times per decision and must not spend a grant merely by asking.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "conditions": [
         {
           "type": "FLAG_SET",
@@ -12,27 +12,17 @@
       ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_PLAY_ACTIVATE_ATTACK",
-            "conditions": [
-              {
-                "type": "NOT",
-                "condition": {
-                  "type": "ATTACK_SUBTYPE_IN",
-                  "subtypes": [
-                    "Attack"
-                  ]
-                }
-              }
-            ],
-            "effects": [
-              {
-                "type": "ACTIVATE",
-                "activation_cost": 0
-              }
-            ]
-          }
+          "type": "GRANT_INSTANT_TIMING",
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
+            },
+            {
+              "type": "CARD_IS_ATTACK",
+              "value": false
+            }
+          ]
         }
       ]
     }

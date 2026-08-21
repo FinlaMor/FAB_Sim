@@ -1,26 +1,23 @@
 {
   "slug": "twist_and_turn_blue",
+  "_comment": "The ON_HIT trigger granted go again to whatever attacked, not to the buffed dagger. The 'attack an additional time' clause is not modelled; the +2{p} is.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "ATTACK_TYPE_IN",
-          "types": [
-            "dagger"
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Dagger"
+              ]
+            }
           ]
-        }
-      ],
-      "effects": [
+        },
         {
           "type": "GO_AGAIN"
         }

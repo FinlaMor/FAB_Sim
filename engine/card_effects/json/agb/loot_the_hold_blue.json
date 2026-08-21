@@ -1,46 +1,32 @@
 {
   "slug": "loot_the_hold_blue",
+  "_comment": "Was a STATIC wrapping an INJECT_TRIGGER, so nothing ran. The quoted ability belongs to the next Pirate ally attack, granted to that card rather than injected for the whole turn.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "ATTACK_CLASS_IN",
-          "classes": [
-            "pirate"
-          ]
-        },
-        {
-          "type": "IS_ACTIVE_PLAYER"
-        }
-      ],
-      "effects": [
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_HIT",
-            "target": {
-              "filter": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zones": [
-                    "hero"
-                  ]
-                }
-              ]
-            },
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {
+              "type": "CARD_IS_CLASS",
+              "card_class": "Pirate"
+            }
+          ],
+          "grant_ability": {
+            "ability_type": "TRIGGERED",
+            "trigger": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
             "effects": [
               {
                 "type": "DISCARD",
-                "amount": 1
+                "amount": 1,
+                "player": "OPPONENT"
               },
               {
                 "type": "CREATE_TOKEN",
@@ -49,6 +35,9 @@
               }
             ]
           }
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

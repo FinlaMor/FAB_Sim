@@ -1,38 +1,37 @@
 {
   "slug": "diced_red",
+  "_comment": "An attack reaction with TWO effects: +1{p} to the dagger attack being made now, and a one-shot +3{p} on the NEXT dagger attack. The second was a STATIC and never ran.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "conditions": [
-        {
-          "type": "ATTACK_TYPE_IN",
-          "attack_type": "Dagger"
-        }
-      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtypes": [
+              "Dagger"
+            ]
+          }
+        ]
+      },
       "effects": [
         {
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "DURING_TURN"
         },
         {
-          "type": "ATTACK_TYPE_IN",
-          "attack_type": "Dagger"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Dagger"
+              ]
+            }
+          ]
         }
       ]
     }

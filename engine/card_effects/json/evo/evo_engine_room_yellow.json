@@ -1,22 +1,26 @@
 {
   "slug": "evo_engine_room_yellow",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Was MODIFY_ATTACK_POWER_PER_UNIQUE_AURA with an unread duration -- an aura-counting POWER effect, nothing to do with this card. 'Your next weapon attack this turn costs {r} less to ACTIVATE' is a one-shot cost reduction.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "per_turn": 1,
       "cost": [
         {
-          "type": "DESTROY_PERMANENT",
-          "target": "under_this"
+          "type": "BANISH_FROM_UNDER_SELF"
         }
       ],
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
-          "amount": -1,
-          "duration": "this_turn"
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Weapon"
+            }
+          ]
         }
       ]
     }

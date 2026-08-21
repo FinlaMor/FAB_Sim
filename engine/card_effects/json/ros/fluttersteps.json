@@ -1,22 +1,19 @@
 {
   "slug": "fluttersteps",
+  "_comment": "'Play your next <X> this turn AS THOUGH IT WERE AN INSTANT' grants instant TIMING to one card -- it skips the action-speed restriction rather than gaining an ability. Was a SET_FLAG nothing reads. GRANT_INSTANT_TIMING queues a one-shot, matched the way the other queues match and spent when the card is actually PLAYED: the legality path asks many times per decision and must not spend a grant merely by asking. Ward 1 is a printed keyword.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_DEATH",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "PLAY_AURA_AS_INSTANT"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "WARD",
-          "amount": 1
+          "type": "GRANT_INSTANT_TIMING",
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Aura"
+            }
+          ]
         }
       ]
     }

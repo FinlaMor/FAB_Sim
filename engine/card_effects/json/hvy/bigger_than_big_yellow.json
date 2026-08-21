@@ -1,38 +1,30 @@
 {
   "slug": "bigger_than_big_yellow",
+  "_comment": "The +4{p} was MODIFY_ATTACK at the start of the turn, when there is no attack. The quoted wager ability is granted to the attack itself rather than injected for the turn, so it belongs to that one attack.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
         },
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 4,
-          "conditions": [
+          "filter": [
             {
               "type": "ATTACK_CLASS_IN",
-              "class": "Guardian"
-            }
-          ]
-        },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_ATTACK",
-          "conditions": [
-            {
-              "type": "ATTACK_CLASS_IN",
-              "class": "Guardian"
-            }
-          ],
-          "effects": [
-            {
-              "type": "WAGER",
-              "token": "Might"
+              "classes": [
+                "Guardian"
+              ]
             }
           ]
         }

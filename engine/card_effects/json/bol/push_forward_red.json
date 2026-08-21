@@ -1,30 +1,39 @@
 {
   "slug": "push_forward_red",
+  "_comment": "Two separate one-shots: the weapon buff is unconditional, the dominate is conditional on having already attacked with a weapon this turn \u2014 which the attack turn event records.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 3,
-          "conditions": [
+          "filter": [
             {
               "type": "ATTACK_IS_WEAPON"
             }
           ]
         },
         {
-          "type": "DOMINATE",
-          "conditions": [
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
             {
-              "type": "ATTACK_IS_WEAPON"
+              "type": "EVENT_THIS_TURN",
+              "event": "attack",
+              "qualifier": "weapon"
+            }
+          ],
+          "then": [
+            {
+              "type": "GRANT_NEXT_ATTACK",
+              "keyword": "Dominate",
+              "filter": []
             }
           ]
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

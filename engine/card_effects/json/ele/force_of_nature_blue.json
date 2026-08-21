@@ -1,44 +1,47 @@
 {
   "slug": "force_of_nature_blue",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FORCE_OF_NATURE_FUSED.",
+  "_comment": "The fused branch was a STATIC and never ran. The hit-triggered draw is turn-scoped ('whenever ... this turn'), so it stays a turn hook rather than becoming a one-shot.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "ATTACK_POWER_GT_BASE"
-        }
-      ],
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "DRAW",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_POWER_GT_BASE"
+              }
+            ],
+            "effects": [
+              {
+                "type": "DRAW",
+                "amount": 1
+              }
+            ]
+          }
+        },
         {
-          "type": "FLAG_SET",
-          "flag": "fused_force_of_nature_blue"
-        }
-      ],
-      "effects": [
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "FLAG_SET",
+              "flag": "fused_force_of_nature_blue"
+            }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_NEXT_ATTACK",
+              "mod": "add",
+              "amount": 1,
+              "filter": []
+            }
+          ]
+        },
         {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

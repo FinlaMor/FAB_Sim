@@ -1,12 +1,23 @@
 {
   "slug": "brand_with_cinderclaw_blue",
+  "_comment": "Had only GO_AGAIN -- the card's actual effect was missing. 'Your next attack this combat chain IS DRACONIC in addition to its other card types' is a CLASS grant, ADDED to the card's own classes rather than substituted.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "grant_class": "Draconic",
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Attack"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

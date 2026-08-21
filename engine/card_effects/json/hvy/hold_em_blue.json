@@ -1,34 +1,25 @@
 {
   "slug": "hold_em_blue",
+  "_comment": "The ON_HIT trigger filtered on class 'hero', which is not a class. The wager clause is not modelled (it is a granted ability with a 'you may' on a specific token); the +1{p} is.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
-      "conditions": [
-        {
-          "type": "ATTACK_CLASS_IN",
-          "classes": [
-            "hero"
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 1
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Warrior"
+              ]
+            }
+          ]
         },
         {
-          "type": "WAGER",
-          "token": "Vigor"
+          "type": "GO_AGAIN"
         }
       ]
     }

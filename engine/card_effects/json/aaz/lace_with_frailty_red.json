@@ -1,44 +1,23 @@
 {
   "slug": "lace_with_frailty_red",
+  "_comment": "Was an ON_HIT trigger buffing the CURRENT attack \u2014 the buff belongs to the NEXT arrow attack. The quoted Frailty ability is granted to that attack via Card.granted_abilities.",
   "abilities": [
-    {
-      "ability_type": "TRIGGERED",
-      "conditions": [
-        {
-          "type": "ATTACK_TYPE_IN",
-          "types": [
-            "Arrow"
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 3
-        }
-      ],
-      "trigger": "ON_HIT"
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "ATTACK_TARGET_IS_HERO"
-        }
-      ],
-      "effects": [
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Frailty",
-          "token": "frailty"
-        }
-      ]
-    },
     {
       "ability_type": "PLAY",
       "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Arrow"
+              ]
+            }
+          ]
+        },
         {
           "type": "GO_AGAIN"
         }

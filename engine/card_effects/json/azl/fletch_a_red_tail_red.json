@@ -1,43 +1,20 @@
 {
   "slug": "fletch_a_red_tail_red",
+  "_comment": "The arrow filter was missing entirely, so the +4 would have gone to any attack. The aim-counter clause grants a defence-modifying ability to that attack and is not modelled; omitted rather than applied unconditionally, which would be stronger than printed.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 4,
-          "conditions": [
+          "filter": [
             {
-              "type": "DURING_TURN"
-            }
-          ]
-        },
-        {
-          "type": "APPLY_CONTINUOUS",
-          "effects": [
-            {
-              "type": "MODIFY_DEFENSE_VALUE",
-              "amount": -1,
-              "conditions": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zones": [
-                    "hand"
-                  ],
-                  "subtypes": [
-                    "red"
-                  ]
-                }
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Arrow"
               ]
-            }
-          ],
-          "conditions": [
-            {
-              "type": "COUNTER_GTE",
-              "counter": "aim",
-              "amount": 1
             }
           ]
         },

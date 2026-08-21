@@ -1,41 +1,33 @@
 {
   "slug": "point_of_engagement_yellow",
+  "_comment": "Was an ACTIVATE on a played action. The dagger buff is a one-shot; the marked-hero bonus is turn-long, so it stays a turn hook.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 0,
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 2,
-          "conditions": [
+          "filter": [
             {
-              "type": "ATTACK_TYPE_IN",
-              "types": [
-                "dagger"
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Dagger"
               ]
-            },
-            {
-              "type": "DURING_TURN"
             }
           ]
         },
         {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
+          "type": "MODIFY_ATTACKS_THIS_TURN",
           "amount": 1,
-          "conditions": [
+          "mod": "add",
+          "filter": [
             {
-              "type": "ATTACK_TARGET_IS_HERO",
-              "conditions": [
-                {
-                  "type": "OPPONENT_IS_MARKED"
-                }
-              ]
+              "type": "ATTACK_TARGET_IS_HERO"
             },
             {
-              "type": "DURING_TURN"
+              "type": "OPPONENT_IS_MARKED"
             }
           ]
         },

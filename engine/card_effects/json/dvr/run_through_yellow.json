@@ -1,37 +1,36 @@
 {
   "slug": "run_through_yellow",
+  "_comment": "Same shape as diced_red: go again to the sword attack being made now, and a one-shot +2{p} on the next one.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "conditions": [
-        {
-          "type": "ATTACK_SUBTYPE_IN",
-          "subtype": "Sword"
-        }
-      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtypes": [
+              "Sword"
+            ]
+          }
+        ]
+      },
       "effects": [
         {
           "type": "GAIN",
           "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "DURING_TURN"
         },
         {
-          "type": "ATTACK_SUBTYPE_IN",
-          "subtype": "Sword"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 2
+          "amount": 2,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Sword"
+              ]
+            }
+          ]
         }
       ]
     }

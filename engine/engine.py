@@ -936,6 +936,8 @@ def _end_phase_iter(state: GameState) -> None:
         player.dsl_queued_card_mods = []
     if hasattr(player, 'dsl_queued_defense_mods'):
         player.dsl_queued_defense_mods = []
+    if hasattr(player, 'dsl_instant_timing_grants'):
+        player.dsl_instant_timing_grants = []
     # "This turn" — an unused power-gain replacement expires with the turn.
     if getattr(state, '_power_gain_replacements', None):
         state._power_gain_replacements = []

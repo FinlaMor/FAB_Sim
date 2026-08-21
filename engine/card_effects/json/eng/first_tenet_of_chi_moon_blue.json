@@ -1,38 +1,36 @@
 {
   "slug": "first_tenet_of_chi_moon_blue",
+  "_comment": "Was a STATIC (dispatched by nothing) whose condition also asked ATTACK_CLASS_IN 'Blue' \u2014 a COLOUR, not a class. The quoted ability is granted to the next blue attack itself via Card.granted_abilities, so it belongs to that one attack rather than firing for every attack this turn.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "IS_ACTIVE_PLAYER"
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {
+              "type": "CARD_IS_COLOR",
+              "color": "blue"
+            },
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Attack"
+            }
+          ],
+          "grant_ability": {
+            "ability_type": "TRIGGERED",
+            "trigger": "ON_ATTACK",
+            "effects": [
+              {
+                "type": "DRAW",
+                "amount": 1
+              }
+            ]
+          }
         },
         {
-          "type": "ATTACK_CLASS_IN",
-          "classes": [
-            "Blue"
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_ATTACK",
-          "effects": [
-            {
-              "type": "DRAW",
-              "amount": 1
-            }
-          ]
+          "type": "GO_AGAIN"
         }
       ]
     }

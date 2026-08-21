@@ -1,50 +1,43 @@
 {
   "slug": "condemn_to_slaughter_yellow",
+  "_comment": "Was MODIFY_ATTACK on the current attack. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. The second clause used MAY_DESTROY_SILVERS_TO_EQUIP \u2014 another card's bespoke effect \u2014 for 'you may destroy an aura you control'.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 2,
-          "conditions": [
+          "filter": [
             {
               "type": "ATTACK_CLASS_IN",
               "classes": [
-                "runeblade"
+                "Runeblade"
               ]
-            },
-            {
-              "type": "DURING_TURN"
             }
           ]
         },
         {
-          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
-          "target": {
-            "filter": [
-              {
-                "type": "CONTROLS_TOKEN_TYPE",
-                "token_types": [
-                  "aura"
-                ]
-              }
-            ]
-          },
+          "type": "MAY",
+          "prompt": "Destroy an aura you control?",
+          "conditions": [
+            {
+              "type": "CONTROLS_SUBTYPE",
+              "subtype": "Aura"
+            }
+          ],
           "effects": [
             {
-              "type": "DESTROY_TOKEN",
-              "target": {
-                "filter": [
-                  {
-                    "type": "CONTROLS_TOKEN_TYPE",
-                    "token_types": [
-                      "aura"
-                    ]
-                  }
-                ]
-              }
+              "type": "DESTROY_PERMANENT",
+              "target": "chosen",
+              "subtype": "Aura"
+            },
+            {
+              "type": "DESTROY_PERMANENT",
+              "target": "chosen",
+              "player": "OPPONENT",
+              "subtype": "Aura"
             }
           ]
         },

@@ -1,40 +1,31 @@
 {
   "slug": "warriors_valor_blue",
+  "_comment": "Was a STATIC. The quoted ability ('When this hits, it gets go again') is granted to the card itself via Card.granted_abilities \u2014 the queues carry values, not abilities.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "DURING_TURN"
-        },
-        {
-          "type": "ATTACK_IS_WEAPON"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 1
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
         },
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_HIT",
-            "effects": [
-              {
-                "type": "GO_AGAIN"
-              }
-            ]
-          }
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

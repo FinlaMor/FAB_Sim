@@ -1,14 +1,13 @@
 {
   "slug": "sharp_incline_red",
+  "_comment": "The Sharpen half was a PUT_COUNTER with an invented SELECT_FROM_REF target; SHARPEN is a real keyword that puts +1{p} counters on a sword you control. The conditional cost reduction on the next attack with THAT sword is not modelled: the queue filters by card properties, not by identity with a previously chosen card.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "PUT_COUNTER",
-          "counter": "plus_1_power",
-          "target": "SELECT_FROM_REF",
-          "ref": "swords",
+          "type": "SHARPEN",
+          "subtype": "Sword",
           "amount": 1
         },
         {

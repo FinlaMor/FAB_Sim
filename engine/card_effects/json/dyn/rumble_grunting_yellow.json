@@ -1,52 +1,31 @@
 {
   "slug": "rumble_grunting_yellow",
+  "_comment": "Was a SET_FLAG plus a STATIC. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. Same play restriction as the red version.",
   "abilities": [
     {
       "ability_type": "PLAY",
-      "additional_cost": [
-        {
-          "type": "DISCARD_CARD",
-          "conditions": [
-            {
-              "type": "DISCARDED_CARD_POWER_GTE",
-              "amount": 6
-            }
-          ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "RUMBLE_GRUNTING_ACTIVE"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "RUMBLE_GRUNTING_ACTIVE"
-        },
-        {
-          "type": "IS_ACTIVE_PLAYER"
-        },
-        {
-          "type": "ATTACK_CLASS_IN",
-          "classes": [
-            "Brute"
-          ]
+          "type": "EVENT_THIS_TURN",
+          "event": "discard"
         }
       ],
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Brute"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

@@ -1,8 +1,10 @@
 {
   "slug": "longdraw_half_glove",
+  "_comment": "An activated equipment ability; the costs are preserved and the buff becomes the one-shot it is.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
+      "activation_cost": 0,
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
@@ -15,14 +17,14 @@
       ],
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 4,
-          "conditions": [
+          "filter": [
             {
               "type": "ATTACK_SUBTYPE_IN",
               "subtypes": [
-                "arrow"
+                "Arrow"
               ]
             }
           ]

@@ -1,19 +1,16 @@
 {
   "slug": "act_of_glory_blue",
+  "_comment": "Was MODIFY_ATTACK on the CURRENT attack, fired when this LEAVES the arena \u2014 there is no current attack at that moment, so it did nothing. Suspense is a printed keyword.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_LEAVE_PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 4,
-          "conditions": [
-            {
-              "type": "DURING_TURN"
-            }
-          ]
+          "filter": []
         }
       ]
     }

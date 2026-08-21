@@ -1,18 +1,20 @@
 {
   "slug": "fire_tenet_strike_first_blue",
+  "_comment": "'This COMBAT CHAIN', not this turn \u2014 scope CHAIN, so the buff is dropped when the chain closes rather than waiting for a Draconic attack in some later chain. Draconic is a TALENT, which ATTACK_CLASS_IN now matches.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 1,
-          "conditions": [
+          "scope": "CHAIN",
+          "filter": [
             {
-              "type": "ATTACK_SUBTYPE_IN",
-              "subtypes": [
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
                 "Draconic"
               ]
             }

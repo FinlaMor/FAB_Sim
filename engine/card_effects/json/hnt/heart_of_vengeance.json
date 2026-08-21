@@ -1,9 +1,9 @@
 {
   "slug": "heart_of_vengeance",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Was a SET_FLAG plus a STATIC using PAY_OR_DAMAGE \u2014 an unrelated effect \u2014 for a COST REDUCTION. 'Your next attack this turn that targets Arakni costs {r} less' is a one-shot on the play-time queue. The Arakni-target restriction is NOT modelled: the queue filters on the card being played, and who it will target is not known then. Stated because it makes the reduction more permissive than printed.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "cost": [
         {
@@ -13,28 +13,14 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "HEART_OF_VENGEANCE_ACTIVE"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "HEART_OF_VENGEANCE_ACTIVE"
-        },
-        {
-          "type": "ATTACK_TARGET_IS_HERO",
-          "hero": "Arakni"
-        }
-      ],
-      "effects": [
-        {
-          "type": "PAY_OR_DAMAGE",
-          "resource": "RESOURCE_POINTS",
-          "amount": 1
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Attack"
+            }
+          ]
         }
       ]
     }

@@ -1,48 +1,37 @@
 {
   "slug": "buckle_blue",
+  "_comment": "The +1 and dominate were applied to the CURRENT attack (none at resolution). The quoted equipment-destroying ability is not modelled: it needs a -1{d}-counter filter on the opponent's equipment, which does not exist. Omitted rather than granted unconditionally.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 1
-        },
-        {
-          "type": "DOMINATE"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "ATTACK_CLASS_IN",
-          "classes": [
-            "Guardian"
-          ]
-        },
-        {
-          "type": "ATTACK_TARGET_IS_HERO"
-        }
-      ],
-      "effects": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "opponent_equipment",
-          "conditions": [
+          "amount": 1,
+          "filter": [
             {
-              "type": "COUNTER_GTE",
-              "counter": "-1",
-              "amount": 1
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
             }
           ]
+        },
+        {
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Dominate",
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

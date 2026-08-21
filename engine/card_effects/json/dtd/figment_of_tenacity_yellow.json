@@ -1,13 +1,15 @@
 {
   "slug": "figment_of_tenacity_yellow",
+  "_comment": "Was a SET_FLAG on DOMINATE_NEXT_ATTACK, which nothing reads.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ENTER_PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "DOMINATE_NEXT_ATTACK"
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Dominate",
+          "filter": []
         }
       ]
     }

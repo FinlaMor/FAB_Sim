@@ -1,6 +1,6 @@
 {
   "slug": "cogwerx_base_arms",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED_THIS_TURN.",
+  "_comment": "The steam counter and the boost restriction are real gates and are kept; only the buff shape changes. 'boosted_this_turn' is a genuine engine marker, so the FLAG_SET reading it was already correct.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -14,7 +14,7 @@
       ]
     },
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 1,
       "per_turn": 1,
       "conditions": [
@@ -23,21 +23,26 @@
           "flag": "boosted_this_turn"
         }
       ],
+      "cost": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ],
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 1,
-          "target": {
-            "filter": [
-              {
-                "type": "ATTACK_CLASS_IN",
-                "classes": [
-                  "mechanologist"
-                ]
-              }
-            ]
-          }
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Mechanologist"
+              ]
+            }
+          ]
         }
       ]
     }

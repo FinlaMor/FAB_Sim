@@ -109,6 +109,8 @@ ONE_SHOT_PRIMITIVES = (
     "APPLY_REPLACEMENT",
     # replacements on things other than damage
     "REPLACE_NEXT_POWER_GAIN", "MAKE_NEXT_DAMAGE_UNPREVENTABLE",
+    # instant TIMING granted to one card
+    "GRANT_INSTANT_TIMING", "PLAY_NEXT_AS_INSTANT",
 )
 
 
@@ -122,6 +124,27 @@ ONE_SHOT_PRIMITIVES = (
 # cards where the keyword did nothing. The lesson is the general one — a
 # mechanic added for one card has to be swept across every card that prints it.
 _NEXT_RE = re.compile(r"\b(?:the|your|their|its|his|her)\s+next\b", re.I)
+
+
+# "their next TURN" / "their next ACTION PHASE" is TURN SCOPE, carried by
+# Player.next_turn_effects, and is a different mechanic from a one-shot queue.
+# Excluding it stops the check reporting 17 correctly-implemented cards. A false
+# positive costs a wasted investigation and teaches people to distrust the audit,
+# which is worse than the finding is worth.
+_NEXT_TURN_RE = re.compile(
+    r"\b(?:the|your|their|its|his|her)\s+next\s+(?:turn|action\s+phase)\b",
+    re.I)
+
+# A plain STATIC ability is dispatched by NOTHING: ABILITY_TYPE_TO_EVENT has no
+# entry for it, so dispatch_event never matches one. Its only readers are the
+# declarative effects below, which the engine consults directly off the CardDef
+# (play._static_effect_types, play._apply_dynamic_defense,
+# ability_keywords.material_grants). Any OTHER effect under a STATIC is dead code
+# that looks implemented — 145 cards when first measured, the largest single
+# defect class found in this corpus.
+DECLARATIVE_STATIC_EFFECTS = frozenset({
+    "PLAYABLE_FROM_BANISHED", "DEFENSE_EQUALS", "RUNE_GATE", "MATERIAL",
+})
 
 
 DECLARED_KEYWORDS = {
@@ -230,6 +253,17 @@ def audit(paths: list[Path], index: dict) -> dict[str, list[str]]:
                     f"activated ability ({type_text or 'unknown type'}) — "
                     "an Instant CARD resolving on play is PLAY")
 
+        for i, ability in enumerate(raw.get("abilities") or []):
+            if (ability.get("ability_type") or "").upper() != "STATIC":
+                continue
+            kinds = {(e.get("type") or "").upper()
+                     for e in (ability.get("effects") or [])}
+            stray = kinds - DECLARATIVE_STATIC_EFFECTS
+            if kinds and stray:
+                found.append(
+                    f"ability[{i}] STATIC with {sorted(stray)} — nothing "
+                    "dispatches a plain STATIC, so these effects never run")
+
         # A printed keyword whose implementation is a DECLARED static, with no
         # declaration in the card's own JSON.
         _abilities_json = json.dumps(raw.get("abilities", []))
@@ -245,7 +279,7 @@ def audit(paths: list[Path], index: dict) -> dict[str, list[str]]:
         # only "the next" reported ZERO defects for this class while 81 cards
         # using "your next" were invisible. A pattern narrower than the language
         # it audits produces a clean number and a dirty corpus.
-        if _NEXT_RE.search(text):
+        if _NEXT_RE.search(_NEXT_TURN_RE.sub("", text)):
             abilities_json = json.dumps(raw.get("abilities", []))
             if not any(k in abilities_json for k in ONE_SHOT_PRIMITIVES):
                 shape = ("turn-long" if any(

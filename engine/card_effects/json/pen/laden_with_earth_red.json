@@ -1,33 +1,35 @@
 {
   "slug": "laden_with_earth_red",
+  "_comment": "Was MODIFY_ATTACK on the current attack. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. Earth Bond checks what was PITCHED to play this, which the pitch turn event records.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": []
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_PLAY",
-      "conditions": [
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "pitch",
+              "qualifier": "earth"
+            }
+          ],
+          "then": [
+            {
+              "type": "CREATE_TOKEN",
+              "token_type": "Embodiment of Earth",
+              "token": "embodiment_of_earth"
+            }
+          ]
+        },
         {
-          "type": "REF_PITCH_IS",
-          "pitch": "earth"
-        }
-      ],
-      "effects": [
-        {
-          "type": "CREATE_TOKEN",
-          "token": "embodiment_of_earth"
+          "type": "GO_AGAIN"
         }
       ]
     }

@@ -1,49 +1,38 @@
 {
   "slug": "precision_press_blue",
+  "_comment": "Was a SET_FLAG plus a STATIC. Piercing carries an amount, so it is granted as 'Piercing 1' rather than a bare keyword.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "PRECISION_PRESS_ACTIVE"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "PRECISION_PRESS_ACTIVE"
-        },
-        {
-          "type": "OR",
-          "conditions": [
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "filter": [
             {
-              "type": "ATTACK_TYPE_IN",
-              "attack_type": "Sword"
-            },
-            {
-              "type": "ATTACK_TYPE_IN",
-              "attack_type": "Dagger"
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Sword",
+                "Dagger"
+              ]
             }
           ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
         },
         {
-          "type": "GAIN",
-          "keyword": "PIERCING",
-          "amount": 1
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Piercing 1",
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Sword",
+                "Dagger"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

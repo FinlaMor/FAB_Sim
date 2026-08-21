@@ -1,9 +1,10 @@
 {
   "slug": "goldkiss_rum",
-  "_comment": "Instant - {t} your hero, destroy this: your next action this turn gets go again. The tap-hero cost and the 'hero can't {u} this turn unless Pirate' rider are not modeled; the destroy-self cost and the next-action go-again grant ARE.",
+  "_comment": "Was a SET_FLAG on next_action_go_again. The grant is a one-shot on the next action card played. The Pirate {u} restriction is not modelled.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
+      "activation_cost": 0,
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
@@ -12,9 +13,15 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "next_action_go_again",
-          "scope": "CURRENT"
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
+            }
+          ]
         }
       ]
     }

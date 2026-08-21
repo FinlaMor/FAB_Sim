@@ -1,42 +1,31 @@
 {
   "slug": "driving_blade_yellow",
+  "_comment": "Was a SET_FLAG plus a STATIC \u2014 the STATIC is dispatched by nothing, so neither the +2 nor the granted go again ever applied.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "DRIVING_BLADE_ACTIVE"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "DRIVING_BLADE_ACTIVE"
-        },
-        {
-          "type": "DURING_TURN"
-        },
-        {
-          "type": "ATTACK_IS_WEAPON"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 2
+          "amount": 2,
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GRANT_NEXT_ATTACK",
+          "keyword": "Go Again",
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }

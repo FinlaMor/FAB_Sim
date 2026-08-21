@@ -1,55 +1,22 @@
 {
   "slug": "plow_through_red",
+  "_comment": "Was a STATIC, so neither the +3 nor the injected trigger ran. The quoted 'if defended by an attack action card' clause is not modelled; the weapon buff is.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "DURING_TURN",
-          "player": "self"
-        },
-        {
-          "type": "IN_COMBAT",
-          "player": "self"
-        },
-        {
-          "type": "ATTACK_IS_WEAPON",
-          "player": "self"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
+          "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
-          "amount": 3
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
         },
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_DEFEND",
-            "conditions": [
-              {
-                "type": "ATTACK_IS_WEAPON",
-                "player": "self"
-              }
-            ],
-            "effects": [
-              {
-                "type": "MODIFY_ATTACK",
-                "mod": "add",
-                "amount": 1
-              }
-            ]
-          }
+          "type": "GO_AGAIN"
         }
       ]
     }
