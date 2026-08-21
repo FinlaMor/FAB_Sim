@@ -11,12 +11,21 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The condition also asked CARD_IN_ZONE banished -- 'is there an action card sitting in my banished zone', which is true almost always and says nothing about the attack being made. The card is about where the ATTACK was played FROM, which is ATTACK_PLAYED_FROM_ZONE.",
       "conditions": [
         {
-          "type": "CARD_IN_ZONE",
-          "zone": "BANISHED",
-          "card_type": "ACTION"
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "ATTACK_TYPE_IN",
+          "types": [
+            "Attack"
+          ]
+        },
+        {
+          "type": "ATTACK_PLAYED_FROM_ZONE",
+          "zone": "banished"
         }
       ],
       "effects": [

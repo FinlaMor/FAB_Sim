@@ -2,11 +2,14 @@
   "slug": "over_the_top_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The condition was SELF_ATTACK_POWER_GTE 6, an absolute number. 'If this has {p} greater than its BASE' compares the card to itself.",
       "conditions": [
         {
-          "type": "SELF_ATTACK_POWER_GTE",
-          "amount": 6
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "ATTACK_POWER_GT_BASE"
         }
       ],
       "effects": [

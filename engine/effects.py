@@ -299,6 +299,60 @@ class EffectManager:
 
     # -- Prevention effect builders --
 
+    @staticmethod
+    def _keyword_amount(card: Card, kw_raw: str, kw_base: str) -> int:
+        """How much a Ward / Arcane Barrier / Spellvoid / Quell / Arcane Shelter
+        prevents.
+
+        The number was read off the END OF THE KEYWORD STRING, and no keyword in
+        the corpus carries one: the card DB stores the bare name ("ArcaneBarrier")
+        and puts the number in the text ("**Arcane Barrier 2**"). So every one of
+        the 191 cards with one of these keywords prevented ZERO — and Ward is not
+        optional, so those cards destroyed themselves to prevent nothing, which is
+        strictly worse than leaving the keyword unimplemented.
+
+        Three sources, most specific first:
+          1. a DSL STATIC declaring the keyword with an `amount` — the same
+             declarative shape MATERIAL and RUNE_GATE already use, and the job
+             those (previously dead) ARCANE_BARRIER/WARD statics were written for;
+          2. the number in the card's own text, which carries it for 172 of 191;
+          3. the keyword string itself, for tokens built as "Arcane Barrier 1"
+             (token_meta.py does spell those out).
+        """
+        import re
+
+        from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+
+        declared = _dsl_get_card(getattr(card, "slug", "") or "")
+        if declared is not None:
+            want = kw_base.replace(" ", "_").upper()
+            for ability in declared.abilities:
+                if (ability.ability_type or "").upper() != "STATIC":
+                    continue
+                for eff in ability.effects:
+                    if (getattr(eff, "effect_type", "") or "").upper() != want:
+                        continue
+                    try:
+                        amount = int(eff.params.get("amount"))
+                    except (TypeError, ValueError):
+                        continue
+                    # amount 0 is a mis-authored declaration, not "prevents
+                    # nothing" — fall through to the text rather than honour it.
+                    if amount > 0:
+                        return amount
+
+        text = (getattr(card, "functional_text", None)
+                or getattr(card, "base_functional_text", None)
+                or getattr(card, "text_box", None) or "")
+        # "**Arcane Barrier 2**" — allow the markdown emphasis between the name
+        # and the number.
+        m = re.search(kw_base.replace(" ", r"\s*") + r"\**\s*(\d+)", text, re.I)
+        if m:
+            return int(m.group(1))
+
+        m = re.search(r"(\d+)$", kw_raw.strip())
+        return int(m.group(1)) if m else 0
+
     def register_prevention_effects(self, card: Card, state: GameState) -> None:
         """Register prevention replacement effects from a card's keywords.
         Called when a card enters the arena or becomes public."""
@@ -309,8 +363,10 @@ class EffectManager:
             kw_spaced = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', kw.strip())
             kw_lower = kw_spaced.lower()
             kw_base = re.sub(r'\s+\d+$', '', kw_lower).strip()
-            num_match = re.search(r'(\d+)$', kw)
-            amount = int(num_match.group(1)) if num_match else 0
+            if kw_base not in ("ward", "arcane barrier", "spellvoid", "quell",
+                               "arcane shelter"):
+                continue
+            amount = self._keyword_amount(card, kw, kw_base)
 
             if kw_base == "ward":
                 self.add_replacement(_make_ward(card, amount))

@@ -274,7 +274,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         def _ati(c, e, s, _types=types):
             if not s.combat or not getattr(s.combat, 'attack_card', None):
                 return False
-            card_types = [x.lower() for x in (getattr(s.combat.attack_card, 'types', None) or [])]
+            atk = s.combat.attack_card
+            # Types AND subtypes together, as CARD_IN_ZONE's filter already
+            # does. "Attack" is a SUBTYPE in this card data — an attack action
+            # card is types=['Action'], subtypes=['Attack'] — so the 10 nodes
+            # asking for "Attack", "Weapon", "Dagger" or "Arrow" were testing a
+            # list those words never appear in, and were false for every attack
+            # in the game.
+            card_types = [x.lower() for x in (getattr(atk, 'types', None) or [])]
+            card_types += [x.lower() for x in (getattr(atk, 'subtypes', None) or [])]
             return any(t in card_types for t in _types)
         return _ati
 
@@ -399,17 +407,97 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # The current attack's printed BASE power vs a threshold ("an attack with
         # base {p} N or less/greater"). Reads the base recorded when the attack was
         # declared, not the pumped live value.
+        #
+        # The threshold may be an amount EXPRESSION rather than a number:
+        # "while their base {p} is less than the number of Draconic chain links
+        # you control" (Spreading Flames) is a comparison against a live count,
+        # and a fixed number cannot say it.
         amount = params.get("amount", 0)
         lte = ctype == "ATTACK_BASE_POWER_LTE"
-        def _abp(c, e, s, _a=amount, _lte=lte):
+        strict = bool(params.get("strict"))
+
+        def _abp(c, e, s, _a=amount, _lte=lte, _strict=strict):
             combat = s.combat
             if combat is None:
                 return False
             base = getattr(combat, "base_attack_power", None)
             if base is None:
                 base = getattr(getattr(combat, "attack_card", None), "base_power", 0) or 0
-            return base <= _a if _lte else base >= _a
+            if isinstance(_a, dict):
+                from engine.card_effects.dsl.effect_types import _resolve_amount
+                try:
+                    threshold = int(_resolve_amount(_a, s, c))
+                except (TypeError, ValueError):
+                    return False
+            else:
+                threshold = _a
+            if _lte:
+                return base < threshold if _strict else base <= threshold
+            return base > threshold if _strict else base >= threshold
         return _abp
+
+    if ctype in ("ATTACK_PLAYED_FROM_ZONE", "ATTACK_PLAYED_FROM"):
+        # "Attack action cards played FROM YOUR BANISHED ZONE get +3{p}"
+        # (Baalghor). PLAYED_FROM_ZONE asks about the ability's SOURCE card; on a
+        # hero static the source is the hero, which was never played from
+        # anywhere. This asks about the card currently attacking.
+        #
+        #   {"type":"ATTACK_PLAYED_FROM_ZONE","zone":"banished"}
+        want = _norm(params.get("zone") or params.get("from_zone") or "")
+
+        def _apfz(c, e, s, _want=want):
+            if not _want or not s.combat:
+                return False
+            atk = getattr(s.combat, "attack_card", None)
+            if atk is None:
+                return False
+            zone = (getattr(atk, "played_from_zone", "") or ''
+                    or getattr(atk, "prev_zone", "") or '')
+            return _norm(zone) == _want
+        return _apfz
+
+    if ctype == "DEFENDING_CARD_COUNT":
+        # "While this is defended by less than 2 NON-EQUIPMENT cards, it has
+        # +1{p}" (Barraging Brawnhide, Stony Woottonhog). Both cards had this as
+        # a DEFENDER_USED_HAND_CARD check, which is a boolean about hand cards
+        # and cannot count, plus — on one of them — RESTRICT_DEFENSE_TO_HEAD_-
+        # EQUIPMENT used as a CONDITION, which is an effect name.
+        #
+        #   {"type":"DEFENDING_CARD_COUNT","amount":2,"comparison":"lt",
+        #    "equipment":false}
+        #
+        # `equipment` filters the cards counted: false counts only non-equipment,
+        # true only equipment, omitted counts every declared defender.
+        #
+        # `power_gte_attack` counts only defenders whose {p} is at least the
+        # attack's, for "while this ISN'T defended by a card with equal or
+        # greater {p}" (Out Muscle) — a comparison against the live attack, so
+        # no fixed number can stand in for it.
+        try:
+            need = int(params.get("amount", 1))
+        except (TypeError, ValueError):
+            need = 1
+        comparison = _norm(params.get("comparison") or "gte")
+        equipment = params.get("equipment")
+        vs_attack_power = bool(params.get("power_gte_attack"))
+        _OPS = {"gte": lambda a, b: a >= b, "gt": lambda a, b: a > b,
+                "lte": lambda a, b: a <= b, "lt": lambda a, b: a < b,
+                "eq": lambda a, b: a == b, "neq": lambda a, b: a != b}
+
+        def _dcc(c, e, s, _n=need, _cmp=comparison, _eq=equipment,
+                 _vsp=vs_attack_power):
+            if not s.combat:
+                return False
+            cards = getattr(s.combat, "defending_cards", None) or []
+            if _eq is not None:
+                cards = [d for d in cards
+                         if bool(getattr(d, "is_equipment", False)) is bool(_eq)]
+            if _vsp:
+                atk_power = getattr(s.combat, "attack_power", 0) or 0
+                cards = [d for d in cards
+                         if (getattr(d, "power", None) or 0) >= atk_power]
+            return _OPS.get(_cmp, _OPS["gte"])(len(cards), _n)
+        return _dcc
 
     if ctype in ("ATTACK_ORDINAL_EQ", "ATTACK_ORDINAL_GTE"):
         # The current attack's ordinal this turn ("your second attack each turn"):
@@ -534,9 +622,21 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # `value` (default True) is the expected answer, matching IS_ACTIVE_PLAYER:
         # value:false means "NOT played from arsenal". It was unread, so a card
         # asking for the negative got the positive - the opposite branch entirely.
+        #
+        # Two attributes carry this fact. play.py stamps `played_from_zone`
+        # explicitly at the moment of play; Zone.add sets `prev_zone` on every
+        # move, so it is the last zone rather than the played-from zone. They
+        # agree during an attack (arsenal → combat chain), but a card put onto
+        # the chain by any other route has only one of them. Prefer the explicit
+        # stamp and fall back to the generic one, so neither path reads as "not
+        # played from arsenal" when it was.
         want = params.get("value", True)
-        return lambda c, e, s, _w=want: (
-            (getattr(c, 'prev_zone', '') or '').lower() == 'arsenal') is bool(_w)
+
+        def _pfa(c, e, s, _w=want):
+            zone = (getattr(c, 'played_from_zone', '') or ''
+                    or getattr(c, 'prev_zone', '') or '')
+            return (zone.lower() == 'arsenal') is bool(_w)
+        return _pfa
 
     if ctype == "IS_ACTIVE_PLAYER":
         # `value` (default True) is the expected answer: value:false means "it is
@@ -672,15 +772,39 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
 
         return _ciz
 
-    if ctype == "COUNTER_GTE":
-        ctype2 = (params.get("counter_type") or params.get("counter")
-                  or params.get("type") or "")
-        min_val = params.get("min", params.get("amount", 1))
-        def _cge(c, e, s, _ct=ctype2, _min=min_val):
+    if ctype in ("COUNTER_GTE", "COUNTER_LTE", "COUNTER_EQ"):
+        # How many counters of a kind are on THIS card.
+        #
+        # There was no LTE or EQ, so "when this has NO steam counters, destroy
+        # it" was written as COUNTER_GTE 0 — true for every card at all times.
+        # Teklo Core destroyed itself at the start of every turn regardless of
+        # its counters, which is the opposite of what it says.
+        #
+        # effect_put_counter writes BOTH a card-level tally and a player-level
+        # one keyed by (slug, ZONE, kind). The player-level key goes stale the
+        # moment the card changes zone — an aim counter put on a card in the
+        # arsenal is unfindable once it moves to the combat chain — so the
+        # card's own tally is the authority and the player-level dict is only a
+        # fallback for counters recorded before the card carried them.
+        kind = (params.get("counter_type") or params.get("counter")
+                or params.get("type") or "")
+        threshold = params.get("min", params.get("amount", 1))
+        kindop = ctype
+
+        def _counter_cmp(c, e, s, _ct=kind, _n=threshold, _op=kindop):
             from engine.card_effects.ability_keywords import _controller_id
-            key = (c.slug, c.zone, _ct)
-            return s.players[_controller_id(c)].counters.get(key, 0) >= _min
-        return _cge
+            have = (getattr(c, "counters", None) or {}).get(_ct)
+            if have is None:
+                cid = _controller_id(c)
+                player = s.players.get(cid) if cid is not None else None
+                have = (player.counters.get((c.slug, c.zone, _ct), 0)
+                        if player is not None else 0)
+            if _op == "COUNTER_LTE":
+                return have <= _n
+            if _op == "COUNTER_EQ":
+                return have == _n
+            return have >= _n
+        return _counter_cmp
 
     if ctype == "FLAG_SET":
         flag = params.get("flag", "")

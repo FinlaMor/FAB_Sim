@@ -2,15 +2,6 @@
   "slug": "doomsaying_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "GO_AGAIN"
-        }
-      ]
-    },
-    {
       "ability_type": "TRIGGERED",
       "trigger": "END_OF_TURN",
       "conditions": [
@@ -33,5 +24,5 @@
       ]
     }
   ],
-  "_comment": "X = doom counters on this, via COUNT_COUNTERS. Was the bare string 'doom', which resolved to 0 so the destroy silently did nothing."
+  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Go again). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had."
 }

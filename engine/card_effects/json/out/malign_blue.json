@@ -2,20 +2,13 @@
   "slug": "malign_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The effects were WARD with ward_type 'STEALTH' and ARCANE_BARRIER 0, on a card that prints neither keyword. Stealth IS printed and comes from card data; the ability the card actually has is the unpreventable damage.",
       "effects": [
         {
-          "type": "WARD",
-          "ward_type": "STEALTH"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "ARCANE_BARRIER",
-          "amount": 0
+          "type": "MAKE_NEXT_DAMAGE_UNPREVENTABLE",
+          "source_slug": "malign_blue"
         }
       ]
     }

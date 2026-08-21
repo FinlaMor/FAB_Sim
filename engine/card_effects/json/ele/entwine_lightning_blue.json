@@ -1,10 +1,14 @@
 {
   "slug": "entwine_lightning_blue",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSION.",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" \u2014 all lowercase. Was: FUSION.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. ",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "FLAG_SET",
           "flag": "fused_entwine_lightning_blue"

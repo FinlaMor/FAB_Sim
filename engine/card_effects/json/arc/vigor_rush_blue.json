@@ -2,8 +2,12 @@
   "slug": "vigor_rush_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. ",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "EVENT_THIS_TURN",
           "event": "play",

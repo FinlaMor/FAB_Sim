@@ -2,18 +2,24 @@
   "slug": "chart_a_course_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "DURING_TURN",
-          "turn": "second"
-        }
-      ],
+      "ability_type": "PLAY",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. It was also DURING_TURN with turn:'second', an invented parameter DURING_TURN does not read. 'Your SECOND attack this turn' is an ordinal, and the card is in the graveyard by the time that attack happens -- so it is a turn-scoped continuous effect gated on the ordinal, not a static on a card that is no longer anywhere.",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 3
+          "type": "APPLY_CONTINUOUS",
+          "target": "PLAYER_ATTACKS",
+          "span": "THIS_TURN",
+          "filter": {
+            "type": "ATTACK_ORDINAL_EQ",
+            "amount": 2
+          },
+          "modifications": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 3
+            }
+          ]
         }
       ]
     },

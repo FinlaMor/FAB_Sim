@@ -2,8 +2,12 @@
   "slug": "droplet_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack. count=2 because playing Droplet itself records a play:blue marker, so 'ANOTHER blue card' is the second one.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "EVENT_THIS_TURN",
           "event": "play",

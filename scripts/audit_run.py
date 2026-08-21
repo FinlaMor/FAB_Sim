@@ -144,6 +144,19 @@ _NEXT_TURN_RE = re.compile(
 # defect class found in this corpus.
 DECLARATIVE_STATIC_EFFECTS = frozenset({
     "PLAYABLE_FROM_BANISHED", "DEFENSE_EQUALS", "RUNE_GATE", "MATERIAL",
+    # The prevention keywords are declarative too, as of the fix to
+    # EffectManager._keyword_amount: their N is read off a STATIC declaration,
+    # then the card text, then the keyword string. It used to be read ONLY off
+    # the keyword string, which never carries a number — so every Ward,
+    # Arcane Barrier, Spellvoid, Quell and Arcane Shelter in the corpus
+    # prevented zero. These statics were the declaration all along; they were
+    # simply not being read.
+    "WARD", "ARCANE_BARRIER", "SPELLVOID", "QUELL", "ARCANE_SHELTER",
+})
+
+
+PREVENTION_KEYWORD_STATICS = frozenset({
+    "WARD", "ARCANE_BARRIER", "SPELLVOID", "QUELL", "ARCANE_SHELTER",
 })
 
 
@@ -151,6 +164,45 @@ DECLARED_KEYWORDS = {
     "RUNE_GATE": r"\brune gate\b",
     "MATERIAL": r"\*\*material\*\*",
 }
+
+
+def _undispatched_triggers() -> set[str]:
+    """JSON trigger names whose engine event NOTHING ever dispatches.
+
+    Same failure as the dead STATIC, one level up: the trigger name is in
+    TRIGGER_TO_EVENT, so the card loads and looks implemented, but no engine
+    code ever emits that event, so dispatch_event is never called with it and
+    the ability cannot fire. ON_ENTER_PLAY alone accounted for 25 cards --
+    including Loan Shark, whose entire point is "when this enters the arena,
+    create 2 Gold tokens".
+
+    Derived by scanning engine/ for each event name rather than hard-coded, so
+    the list cannot go stale the moment someone wires one of them up. A name
+    built dynamically would be missed, which is why the finding says the
+    ability "appears to be dispatched by nothing" and is worth one grep to
+    confirm, not an automatic verdict.
+    """
+    try:
+        sys.path.insert(0, str(ROOT))
+        from engine.card_effects.dsl.trigger_types import TRIGGER_TO_EVENT
+    except Exception:
+        return set()
+    src = []
+    for path in (ROOT / "engine").rglob("*.py"):
+        if path.name == "trigger_types.py":
+            continue
+        try:
+            src.append(path.read_text(encoding="utf-8", errors="ignore"))
+        except OSError:
+            continue
+    blob = "\n".join(src)
+    quoted = '["\']'
+    dead_events = {ev for ev in set(TRIGGER_TO_EVENT.values())
+                   if not re.search(quoted + re.escape(ev) + quoted, blob)}
+    return {t for t, ev in TRIGGER_TO_EVENT.items() if ev in dead_events}
+
+
+UNDISPATCHED_TRIGGERS = _undispatched_triggers()
 
 
 def _walk(node, fn):
@@ -254,11 +306,27 @@ def audit(paths: list[Path], index: dict) -> dict[str, list[str]]:
                     "an Instant CARD resolving on play is PLAY")
 
         for i, ability in enumerate(raw.get("abilities") or []):
+            _trig = (ability.get("trigger") or "").upper()
+            if _trig and _trig in UNDISPATCHED_TRIGGERS:
+                found.append(
+                    f"ability[{i}] trigger {_trig} — no engine code emits that "
+                    "event, so the ability never fires")
+
+        for i, ability in enumerate(raw.get("abilities") or []):
             if (ability.get("ability_type") or "").upper() != "STATIC":
                 continue
             kinds = {(e.get("type") or "").upper()
                      for e in (ability.get("effects") or [])}
             stray = kinds - DECLARATIVE_STATIC_EFFECTS
+            # A prevention-keyword declaration is only a declaration if the card
+            # actually PRINTS that keyword. malign_blue declared "WARD" and
+            # "ARCANE_BARRIER 0" and prints neither — treating the effect name
+            # alone as proof would excuse exactly the kind of invented ability
+            # this check exists to find.
+            _kws_squashed = kws.replace(" ", "")
+            for _kw in kinds & PREVENTION_KEYWORD_STATICS:
+                if _kw.replace("_", "").lower() not in _kws_squashed:
+                    stray.add(_kw)
             if kinds and stray:
                 found.append(
                     f"ability[{i}] STATIC with {sorted(stray)} — nothing "

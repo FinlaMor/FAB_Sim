@@ -2,8 +2,12 @@
   "slug": "arakni_web_of_deceit",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches. This is a HERO static over 'YOUR attacks', so it takes ATTACK_CONTROLLED_BY_YOU rather than SOURCE_IS_ATTACK -- the buffed card is the attack, not the hero.",
       "conditions": [
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
         {
           "type": "ATTACK_HAS_KEYWORD",
           "keyword": "STEALTH"

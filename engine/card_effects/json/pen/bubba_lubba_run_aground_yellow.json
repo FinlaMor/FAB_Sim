@@ -2,12 +2,14 @@
   "slug": "bubba_lubba_run_aground_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "_comment": "Was a plain STATIC, so the counters were never placed. 'Enters the arena with N counters' happens ONCE, when it enters -- an ON_ENTER_PLAY trigger, not a continuous static, which would have kept adding counters had it run at all.",
       "effects": [
         {
           "type": "PUT_COUNTER",
           "target": "self",
-          "counter_type": "POWER",
+          "counter": "power",
           "amount": 1
         }
       ]

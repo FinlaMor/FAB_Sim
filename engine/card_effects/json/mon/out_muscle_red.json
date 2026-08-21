@@ -2,19 +2,17 @@
   "slug": "out_muscle_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The condition was NOT(DEFENDS_WITH_OTHER_HAND_CARD) with a nested SELF_ATTACK_POWER_GTE that DEFENDS_WITH_OTHER_HAND_CARD does not read -- a fixed power threshold standing in for a comparison against the live attack. The card asks whether any DEFENDER has {p} at least equal to the attack's, which is what DEFENDING_CARD_COUNT power_gte_attack counts.",
       "conditions": [
         {
-          "type": "NOT",
-          "condition": {
-            "type": "DEFENDS_WITH_OTHER_HAND_CARD",
-            "conditions": [
-              {
-                "type": "SELF_ATTACK_POWER_GTE",
-                "amount": 6
-              }
-            ]
-          }
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "DEFENDING_CARD_COUNT",
+          "amount": 0,
+          "comparison": "eq",
+          "power_gte_attack": true
         }
       ],
       "effects": [

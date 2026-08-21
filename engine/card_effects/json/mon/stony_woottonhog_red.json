@@ -2,21 +2,17 @@
   "slug": "stony_woottonhog_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The conditions were a DEFENDER_USED_HAND_CARD check -- a boolean about hand cards that cannot count -- wrapped in a DURING_TURN, and one of them listed RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT as a CONDITION, which is an EFFECT name and has no condition compiler at all. DEFENDING_CARD_COUNT counts the declared defenders and can exclude equipment, which is what the card says.",
       "conditions": [
         {
-          "type": "AND",
-          "conditions": [
-            {
-              "type": "DURING_TURN",
-              "player": "self"
-            },
-            {
-              "type": "DEFENDER_USED_HAND_CARD",
-              "amount": 2,
-              "equipment": false
-            }
-          ]
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "DEFENDING_CARD_COUNT",
+          "amount": 2,
+          "comparison": "lt",
+          "equipment": false
         }
       ],
       "effects": [

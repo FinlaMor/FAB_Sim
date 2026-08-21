@@ -18,18 +18,42 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The condition counted PERMANENTS with a 'Draconic' subtype. Draconic CHAIN LINKS are resolved attacks, not permanents -- nothing in play has that subtype, so the condition could not have been true.",
       "conditions": [
         {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_type": "Draconic",
-          "amount": 2
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "CONTROLS_CHAIN_LINKS",
+          "amount": 2,
+          "attribute": "Draconic"
         }
       ],
       "effects": [
         {
           "type": "GAIN",
           "keyword": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "_comment": "The '...and \"When this hits a hero, mark them\"' half of the same sentence was missing entirely.",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
+        {
+          "type": "CONTROLS_CHAIN_LINKS",
+          "amount": 2,
+          "attribute": "Draconic"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MARK"
         }
       ]
     }

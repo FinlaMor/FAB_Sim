@@ -2,11 +2,11 @@
   "slug": "old_leather_and_vim_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack. The conditions ALSO required a Toughness token outside the OR, so 'a Toughness OR Vigor token' had silently become 'a Toughness token, and also one of those two' -- Vigor alone did not qualify.",
       "conditions": [
         {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_type": "Toughness"
+          "type": "SOURCE_IS_ATTACK"
         },
         {
           "type": "OR",

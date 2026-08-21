@@ -243,6 +243,34 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
                 n += 1
             return n
 
+        if atype in ("COUNT_DEFENDING", "COUNT_DEFENDERS"):
+            # "X is the number of equipment defending it" (Panel Beater, Fender
+            # Bender), "for each card with 6 or more {p} defending it" (Power of
+            # Make Believe). Five cards expressed this as
+            # MODIFY_ATTACK_POWER_PER_UNIQUE_AURA — an effect that counts
+            # distinct AURA NAMES in the arena and has nothing to do with
+            # defenders — because there was no way to count them.
+            #
+            #   {"type":"COUNT_DEFENDING","equipment":true}
+            #   {"type":"COUNT_DEFENDING","power_gte":6}
+            combat = state.combat
+            if not combat:
+                return 0
+            cards = getattr(combat, "defending_cards", None) or []
+            want_equipment = amount.get("equipment")
+            if want_equipment is not None:
+                cards = [d for d in cards
+                         if bool(getattr(d, "is_equipment", False)) is bool(want_equipment)]
+            power_gte = amount.get("power_gte")
+            if power_gte is not None:
+                try:
+                    threshold = int(power_gte)
+                except (TypeError, ValueError):
+                    threshold = 0
+                cards = [d for d in cards
+                         if (getattr(d, "power", None) or 0) >= threshold]
+            return len(cards)
+
         # "the number of times you've boosted this <turn|combat chain>".
         # ability_keywords.boost already appends one "boosted_this_turn" marker
         # PER boost precisely so it can be counted, not just tested.
@@ -2092,6 +2120,37 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 put_object(state, obj, "deck", destination_player_id=dest_pid,
                            source_player_id=cid,
                            position=("top" if _pos == "top" else None))
+        return _fn
+
+    if etype in ("TAP", "TAP_SELF", "TAP_TARGET"):
+        # "{t} them" / "tap this". Goes through effect_keywords.tap (CR 8.5.55)
+        # rather than setting card.tapped, so the TapEvent is emitted and a
+        # replacement effect can intercept it — and so "already tapped" fails
+        # rather than silently succeeding.
+        #
+        #   {"type":"TAP","target":"OPPONENT_HERO"}    — "{t} them"
+        #   {"type":"TAP","target":"SELF"}             — the source card
+        #
+        # TAP_SELF is the spelling one card authored; it was never an effect
+        # type, so the whole of goon_battery_blue failed to LOAD and every
+        # ability on it, not just this one, was absent from the game.
+        target = str(params.get("target")
+                     or ("SELF" if etype == "TAP_SELF" else "OPPONENT_HERO")).upper()
+
+        def _fn(card, event, state, _t=target):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import tap as _tap
+            cid = _controller_id(card)
+            if _t in ("SELF", "THIS", "SOURCE"):
+                obj = card
+            elif _t in ("OPPONENT_HERO", "DEFENDING_HERO", "THEM", "OPPONENT"):
+                obj = state.players[3 - cid].hero
+            elif _t in ("YOUR_HERO", "OWN_HERO"):
+                obj = state.players[cid].hero
+            else:
+                return
+            if obj is not None:
+                _tap(state, obj, source_player_id=cid)
         return _fn
 
     if etype == "TAP_REF":

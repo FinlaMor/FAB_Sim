@@ -3,15 +3,6 @@
   "abilities": [
     {
       "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
       "conditions": [
         {
           "type": "CONTROLS_ATTACK_ACTION",
@@ -41,5 +32,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Deleted: an unconditional GAIN of Go Again on a card that PRINTS **Go again**. Printed keywords come from card data and already work, so this static was a duplicate of something that happens anyway -- and it was dead besides."
 }

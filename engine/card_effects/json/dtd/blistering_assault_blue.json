@@ -2,10 +2,15 @@
   "slug": "blistering_assault_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The condition was REF_PITCH_IS, which tests a REFERENCED card's pitch VALUE -- there is no referenced card here. 'A yellow card in your pitch zone' is a zone count.",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
           "color": "yellow"
         }
       ],

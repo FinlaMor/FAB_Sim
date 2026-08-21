@@ -2,11 +2,15 @@
   "slug": "goon_beatdown_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack.",
       "conditions": [
         {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
           "type": "CONTROLS_TOKEN_TYPE",
-          "token_type": "aura",
+          "token_type": "Aura",
           "amount": 3
         }
       ],
@@ -21,9 +25,15 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
+      "_comment": "The 3-aura gate applies to the granted trigger too; it was missing, so this booed on every hit.",
       "conditions": [
         {
           "type": "ATTACK_TARGET_IS_HERO"
+        },
+        {
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Aura",
+          "amount": 3
         }
       ],
       "effects": [

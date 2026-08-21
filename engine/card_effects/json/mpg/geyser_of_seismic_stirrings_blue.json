@@ -2,22 +2,27 @@
   "slug": "geyser_of_seismic_stirrings_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "_comment": "Was a plain STATIC, so the counters were never placed. 'Enters the arena with N counters' happens ONCE, when it enters -- an ON_ENTER_PLAY trigger, not a continuous static, which would have kept adding counters had it run at all.",
       "effects": [
         {
           "type": "PUT_COUNTER",
+          "target": "self",
           "counter": "energy",
           "amount": 1
         }
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The condition was COUNTER_GTE energy 1 -- it destroyed the card while it still HAD an energy counter, the exact inverse of 'when it has NONE, destroy it'. The check is one turn late: there is no state-based-action trigger to hang a continuous check on.",
       "conditions": [
         {
-          "type": "COUNTER_GTE",
+          "type": "COUNTER_LTE",
           "counter": "energy",
-          "amount": 1
+          "amount": 0
         }
       ],
       "effects": [

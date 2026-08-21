@@ -2,11 +2,14 @@
   "slug": "teklo_core_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "_comment": "Was a plain STATIC, so the counters were never placed. 'Enters the arena with N counters' happens ONCE, when it enters -- an ON_ENTER_PLAY trigger, not a continuous static, which would have kept adding counters had it run at all.",
       "effects": [
         {
           "type": "PUT_COUNTER",
-          "counter_type": "steam",
+          "target": "self",
+          "counter": "steam",
           "amount": 2
         }
       ]
@@ -37,10 +40,11 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
+      "_comment": "COUNTER_GTE 0 is true for every card at all times, so this destroyed Teklo Core at the start of every turn regardless of its steam counters. 'When it has NO steam counters' is COUNTER_LTE 0.",
       "conditions": [
         {
-          "type": "COUNTER_GTE",
-          "counter_type": "steam",
+          "type": "COUNTER_LTE",
+          "counter": "steam",
           "amount": 0
         }
       ],

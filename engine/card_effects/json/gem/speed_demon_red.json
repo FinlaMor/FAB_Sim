@@ -1,6 +1,6 @@
 {
   "slug": "speed_demon_red",
-  "_comment": "Scrap cost added (CR 8.3.32). 'If it scrapped a HYPER DRIVER' asks what was SCRAPPED, not merely that this card scrapped — so SCRAPPED takes `name`, and the scrap cost records both identities (this card's slug and the scrapped card's slug/name). Was the invented flag 'SCRAPPED_HYPER_DRIVER'. Scrap is authored as the CARD-LEVEL `cost` (a play-time additional cost) rather than a separate empty PLAY ability: an ability existing only to carry a cost has no effects, which is a no-op by the hygiene rule and rightly flagged. Card-level `cost` compiles to play_cost, which engine/play.py checks and pays.",
+  "_comment": "Scrap cost added (CR 8.3.32). 'If it scrapped a HYPER DRIVER' asks what was SCRAPPED, not merely that this card scrapped \u2014 so SCRAPPED takes `name`, and the scrap cost records both identities (this card's slug and the scrapped card's slug/name). Was the invented flag 'SCRAPPED_HYPER_DRIVER'. Scrap is authored as the CARD-LEVEL `cost` (a play-time additional cost) rather than a separate empty PLAY ability: an ability existing only to carry a cost has no effects, which is a no-op by the hygiene rule and rightly flagged. Card-level `cost` compiles to play_cost, which engine/play.py checks and pays.",
   "cost": {
     "type": "SCRAP",
     "play_activate": "PLAY",
@@ -8,8 +8,12 @@
   },
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Hyper Driver"

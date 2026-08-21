@@ -2,11 +2,21 @@
   "slug": "panel_beater_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The effect was MODIFY_ATTACK_POWER_PER_UNIQUE_AURA, which counts distinct AURA NAMES in the arena. This card counts the EQUIPMENT DEFENDING IT, which is not that. Five cards reached for that effect because there was no way to count what they meant.",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        }
+      ],
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
-          "amount": 1
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": {
+            "type": "COUNT_DEFENDING",
+            "equipment": true
+          }
         }
       ]
     }

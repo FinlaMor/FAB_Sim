@@ -29,15 +29,7 @@
           ]
         }
       ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "BLOOD_DEBT_FLAG"
-        }
-      ]
     }
-  ]
+  ],
+  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Blood Debt). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had."
 }

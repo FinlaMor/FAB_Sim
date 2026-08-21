@@ -30,15 +30,7 @@
           }
         }
       ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
     }
-  ]
+  ],
+  "_comment": "Deleted: an unconditional GAIN of Go Again on a card that PRINTS **Go again**. Printed keywords come from card data and already work, so this static was a duplicate of something that happens anyway -- and it was dead besides."
 }

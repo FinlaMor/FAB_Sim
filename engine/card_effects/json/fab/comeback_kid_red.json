@@ -1,6 +1,6 @@
 {
   "slug": "comeback_kid_red",
-  "_comment": "When this attacks a hero, if you have less {h} than them, the crowd cheers you. If you've been cheered this turn, this gets +1{p}. Was SET_FLAG/FLAG_SET on a private flag — red used CROWD_CHEERS and blue CROWD_CHEERS_ACTIVE, so neither could see a cheer from the other or from any other source.",
+  "_comment": "When this attacks a hero, if you have less {h} than them, the crowd cheers you. If you've been cheered this turn, this gets +1{p}. Was SET_FLAG/FLAG_SET on a private flag \u2014 red used CROWD_CHEERS and blue CROWD_CHEERS_ACTIVE, so neither could see a cheer from the other or from any other source.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -20,8 +20,12 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "IS_CHEERED"
         }

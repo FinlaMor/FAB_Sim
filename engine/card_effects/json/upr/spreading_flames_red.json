@@ -2,8 +2,12 @@
   "slug": "spreading_flames_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The base-power clause was SELF_ATTACK_POWER_GTE 1 -- a fixed threshold of one, satisfied by every attack in the game, against the LIVE power rather than the base. The card compares base {p} to a live COUNT of Draconic chain links, so the threshold has to be an amount expression.",
       "conditions": [
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
         {
           "type": "ATTACK_CLASS_IN",
           "classes": [
@@ -11,11 +15,12 @@
           ]
         },
         {
-          "type": "ATTACK_CONTROLLED_BY_YOU"
-        },
-        {
-          "type": "SELF_ATTACK_POWER_GTE",
-          "amount": 1
+          "type": "ATTACK_BASE_POWER_LTE",
+          "strict": true,
+          "amount": {
+            "type": "COUNT_CHAIN_LINKS",
+            "talent": "Draconic"
+          }
         }
       ],
       "effects": [

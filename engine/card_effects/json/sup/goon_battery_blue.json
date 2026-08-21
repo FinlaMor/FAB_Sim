@@ -2,8 +2,12 @@
   "slug": "goon_battery_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Aura",
@@ -15,22 +19,27 @@
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "_comment": "Was an INJECT_TRIGGER inside the dead STATIC, and its effect was TAP_SELF -- not an effect type at all, so the ENTIRE card failed to load and none of its abilities existed. '{t} them' taps the hero it hit.",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
         },
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_HIT",
-            "conditions": [
-              {
-                "type": "ATTACK_TARGET_IS_HERO"
-              }
-            ],
-            "effects": [
-              {
-                "type": "TAP_SELF"
-              }
-            ]
-          }
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Aura",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "TAP",
+          "target": "OPPONENT_HERO"
         }
       ]
     }

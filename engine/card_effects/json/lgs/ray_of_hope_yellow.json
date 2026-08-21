@@ -2,20 +2,26 @@
   "slug": "ray_of_hope_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "ATTACK_CLASS_IN",
-          "classes": [
-            "shadow"
-          ]
-        }
-      ],
+      "ability_type": "PLAY",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The condition asked ATTACK_CLASS_IN 'shadow' -- the class of YOUR ATTACK. The card is about the hero being attacked. Same graveyard problem as Chart a Course, so the same turn-scoped shape.",
       "effects": [
         {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
+          "type": "APPLY_CONTINUOUS",
+          "target": "PLAYER_ATTACKS",
+          "span": "THIS_TURN",
+          "filter": {
+            "type": "TARGET_HERO_CLASS_IN",
+            "classes": [
+              "Shadow"
+            ]
+          },
+          "modifications": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 1
+            }
+          ]
         }
       ]
     },

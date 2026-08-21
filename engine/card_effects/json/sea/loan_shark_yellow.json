@@ -1,16 +1,7 @@
 {
   "slug": "loan_shark_yellow",
-  "_comment": "NO_GOLD_CREATED_OR_STOLEN_THIS_TURN was set by nothing. It is a NEGATIVE condition over two events: create was already recorded, steal was not, so effect_steal_token now records it. 'Lose 2{h} UNLESS you discard a card' is not an additional cost of the trigger -- authoring it as one would have blocked the destroy too, and would have made discarding mandatory; it is a choice offered after the destroy.",
+  "_comment": "Deleted: an unconditional GAIN of Go Again on a card that PRINTS **Go again**. Printed keywords come from card data and already work, so this static was a duplicate of something that happens anyway -- and it was dead besides.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    },
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ENTER_PLAY",

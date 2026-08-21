@@ -2,17 +2,17 @@
   "slug": "little_big_foot_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack. The cost filter was authored as 'card_condition', a key CARD_IN_ZONE does not read, so it counted EVERY card in the pitch zone regardless of cost. cost_gte is the key that is read.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CARD_IN_ZONE",
           "zone": "pitch",
           "amount": 2,
-          "comparison": "gte",
-          "card_condition": {
-            "type": "COST_GTE",
-            "amount": 3
-          }
+          "cost_gte": 3
         }
       ],
       "effects": [

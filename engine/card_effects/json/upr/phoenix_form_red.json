@@ -2,8 +2,12 @@
   "slug": "phoenix_form_red",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Phoenix Flames",
@@ -18,8 +22,12 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Phoenix Flames",
@@ -35,8 +43,13 @@
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "_comment": "Was an INJECT_TRIGGER under a dead STATIC. A gated TRIGGERED ability is the same thing without the injection step.",
       "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Phoenix Flames",
@@ -45,22 +58,8 @@
       ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "ability_type": "TRIGGERED",
-            "trigger": "ON_HIT",
-            "conditions": [
-              {
-                "type": "ATTACK_TARGET_IS_HERO"
-              }
-            ],
-            "effects": [
-              {
-                "type": "DRAW",
-                "amount": 3
-              }
-            ]
-          }
+          "type": "DRAW",
+          "amount": 3
         }
       ]
     }

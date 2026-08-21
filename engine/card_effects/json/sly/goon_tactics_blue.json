@@ -2,8 +2,12 @@
   "slug": "goon_tactics_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. WHILE_STATIC is re-evaluated on every attack-power recalculation. SOURCE_IS_ATTACK confines it to this card's own attack.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Aura",
@@ -15,23 +19,27 @@
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": 3
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "_comment": "Was an INJECT_TRIGGER inside the dead STATIC.",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
         },
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_HIT",
-            "conditions": [
-              {
-                "type": "ATTACK_TARGET_IS_HERO"
-              }
-            ],
-            "effects": [
-              {
-                "type": "DESTROY_REF",
-                "ref": "OPPONENT_DECK_TOP"
-              }
-            ]
-          }
+          "type": "CONTROLS_TOKEN_TYPE",
+          "token_type": "Aura",
+          "amount": 3
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_REF",
+          "ref": "OPPONENT_DECK_TOP"
         }
       ]
     }

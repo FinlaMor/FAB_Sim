@@ -58,6 +58,14 @@ def _has_permanent_subtype(card: Card) -> bool:
     return bool(subtypes & _PERMANENT_SUBTYPES)
 
 
+# The arena zones, per Card.is_in_arena (CR 3.1.2a). A card moving BETWEEN
+# these has not entered the arena, so it must not re-fire an entry trigger.
+_ARENA_ZONE_NAMES = frozenset({
+    'arms', 'chest', 'combat chain', 'head', 'hero', 'legs', 'permanents',
+    'weapon',
+})
+
+
 class ZoneEntryResult:
     """Outcome of a zone entry rule check."""
     ALLOW = "allow"
@@ -281,6 +289,25 @@ class Zone:
                     getattr(card, "types", None) or [],
                     getattr(card, "subtypes", None) or [],
                 )
+
+            # "When this ENTERS THE ARENA, ..." (Loan Shark: "create 2 Gold
+            # tokens"). ON_ENTER_PLAY was in TRIGGER_TO_EVENT, so cards loaded
+            # and looked implemented, but NO engine code ever emitted the event
+            # — 25 cards whose entry trigger could not fire. Dispatched here for
+            # the same reason the markers above are recorded here: Zone.add is
+            # the one place every route into the arena passes through, so
+            # hooking the call sites instead would silently miss paths.
+            #
+            # Guarded on an actual arena entry from somewhere else: a card
+            # moving between arena sub-zones has not entered the arena, and
+            # re-adding one already present is not an entry at all.
+            if (card.is_in_arena and self.player is not None
+                    and (card.prev_zone or "").lower() not in _ARENA_ZONE_NAMES):
+                _st = getattr(self, "state", None)
+                if _st is not None:
+                    from engine.card_effects.dsl import dispatch as _dsl_dispatch
+                    _dsl_dispatch(_st, "ON_ENTER_PLAY", card.slug,
+                                  card=card, event=None)
 
             # "If an activated ability or ACTION CARD EFFECT puts this face up
             # into a zone FROM YOUR DECK, ..." (Back Alley Breakline). Every

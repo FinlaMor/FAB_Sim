@@ -38,15 +38,7 @@
           "amount": 1
         }
       ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "GO_AGAIN"
-        }
-      ]
     }
-  ]
+  ],
+  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Go again). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had."
 }

@@ -2,22 +2,31 @@
   "slug": "tough_as_a_rok_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. Both halves of the sentence were separate statics, so the card had its printed base power in every game state, which is neither of the two values it names.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "HEALTH_LT_OPP"
         }
       ],
       "effects": [
         {
-          "type": "SET_BASE_POWER",
+          "type": "MODIFY_ATTACK",
+          "mod": "set",
           "amount": 6
         }
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. Both halves of the sentence were separate statics, so the card had its printed base power in every game state, which is neither of the two values it names.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "NOT",
           "condition": {
@@ -27,7 +36,8 @@
       ],
       "effects": [
         {
-          "type": "SET_BASE_POWER",
+          "type": "MODIFY_ATTACK",
+          "mod": "set",
           "amount": 0
         }
       ]

@@ -16,8 +16,12 @@
       "trigger": "ON_ATTACK"
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. ",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "PLAYED_FROM_ARSENAL"
         }
