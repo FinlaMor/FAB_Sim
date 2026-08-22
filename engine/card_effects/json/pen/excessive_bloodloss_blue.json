@@ -12,9 +12,9 @@
         {
           "type": "IF",
           "condition": {
-            "type": "CARD_IN_ZONE",
-            "zone": "OPPONENT_GRAVEYARD",
-            "card_type": "RED"
+            "type": "REF_PITCH_IS",
+            "ref": "banished",
+            "color": "red"
           },
           "effects": [
             {
@@ -25,5 +25,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The IF tested CARD_IN_ZONE(OPPONENT_GRAVEYARD, card_type=RED) -- 'RED' is a colour, not a card type, and the banished card is what the text asks about. CONDITIONAL did not read 'condition' either, so the repeat happened every time regardless. Now gated on the colour of the card that was banished."
 }

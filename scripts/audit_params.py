@@ -50,18 +50,34 @@ JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
 
 # Keys the LOADER consumes before params is ever built (see loader._compile_*),
 # plus annotation keys that are documentation, not data.
-STRUCTURAL_KEYS = {
-    "type", "conditions", "condition", "effects", "effect", "modes",
-    "cost", "additional_cost", "alternative_cost", "target", "filter",
-    "choose", "choose_max", "optional", "trigger", "ability_type",
-    "slug", "abilities", "setup", "activation_cost", "per_turn",
-    "cost_modifiers", "once_per_turn",
-}
+#
+# This is TWO lists, not one, because the loader consumes different keys at the
+# two levels and a single flat list gives effect nodes the ability level's
+# exemptions. That is not hypothetical: "target" sat in the flat list, so this
+# audit — whose whole job is unread parameters — skipped the most consequential
+# parameter there is. It hid 33 cards whose BANISH named a zone and a player and
+# got neither, 17 of which banished from their OWN deck while the card said the
+# opponent's.
+# Only nodes carrying a "type" key are audited, and abilities key on
+# "ability_type" instead — so every node that reaches audit_node is an effect,
+# condition or cost node, and ability-level exemptions never applied to
+# anything. Carrying them in the same set only ever leaked to effect nodes.
+#
+# At effect/condition/cost level the loader pops exactly one key, "conditions"
+# (loader._compile_effect), and hands everything else to the compiler as params.
+# So everything else must be read by the handler or it is dead. In particular
+# "target" and "filter" are ordinary params here: each effect that wants them
+# has to read them itself, and most do not.
+STRUCTURAL_KEYS = {"type", "conditions"}
+
+#: Sentinel in a type's read-set meaning "this handler consumes params wholesale,
+#: so every key on it is read". Not a real parameter name.
+WHOLESALE = "*"
 
 # Nested-effect keys: their VALUES are effect/condition specs compiled
 # separately, so the inner nodes get audited on their own.
 NESTED_KEYS = {"then", "else", "else_effects", "when", "if", "on_success",
-               "on_consume", "conditions", "effects", "modes", "filter"}
+               "on_consume", "conditions", "effects", "modes"}
 
 
 def _dispatch_params(path: Path, var: str) -> dict[str, set[str]]:
@@ -126,6 +142,28 @@ def _dispatch_params(path: Path, var: str) -> dict[str, set[str]]:
                       and node.value.id == "params"
                       and not isinstance(node.slice, ast.Constant)):
                     indirect = True
+                # Wholesale consumption: `{k: v for k, v in params.items()}`,
+                # `dict(params)`, `**params`. The block reads EVERY key, so no
+                # parameter on it can be unread. RESTRICT_DEFENDERS builds its
+                # filter this way and the literal-only scan reported its
+                # "equipment" key as dead on two cards that work — a false
+                # positive in a report this long is not a small cost, it is how
+                # someone learns to stop believing the report.
+                elif (isinstance(node, ast.Attribute)
+                      and node.attr in ("items", "keys", "values")
+                      and isinstance(node.value, ast.Name)
+                      and node.value.id == "params"):
+                    keys.add(WHOLESALE)
+                elif (isinstance(node, ast.keyword) and node.arg is None
+                      and isinstance(node.value, ast.Name)
+                      and node.value.id == "params"):
+                    keys.add(WHOLESALE)
+                elif (isinstance(node, ast.Call)
+                      and isinstance(node.func, ast.Name)
+                      and node.func.id == "dict"
+                      and any(isinstance(a, ast.Name) and a.id == "params"
+                              for a in node.args)):
+                    keys.add(WHOLESALE)
         if indirect:
             for stmt in body:
                 for node in ast.walk(stmt):
@@ -296,6 +334,13 @@ INERT: dict[tuple[str, str], tuple[frozenset[str], str]] = {
     # the audit marks it consumed without honouring it, which is the same lie as
     # an allowlist entry that is not true, and hides the next real defect on
     # that key.
+    # The counter effects act on the source card, so a target naming the source
+    # is what already happens. Any OTHER target on them is a real defect — those
+    # 13 nodes name an aura, an ally, an equipment or a named permanent and get
+    # the source card instead.
+    ("PUT_COUNTER", "target"):       (frozenset({"self", "this"}), "acts on the source card"),
+    ("REMOVE_COUNTER", "target"):    (frozenset({"self", "this"}), "acts on the source card"),
+    ("REMOVE_COUNTERS", "target"):   (frozenset({"self", "this"}), "acts on the source card"),
     ("MOVE_REF", "from"):            (frozenset({"revealed_cards", "graveyard",
                                                  "deck", "hand", "arsenal"}),
                                       "origin comes from the card"),
@@ -333,6 +378,8 @@ def audit_node(node: dict, index: dict[str, set[str]],
     known = index.get(ntype.upper())
     if known is None:
         return []          # unknown type — that is audit_run.py's job, not this
+    if WHOLESALE in known:
+        return []          # handler consumes params wholesale; nothing is unread
     bad = []
     for key, value in node.items():
         if key in STRUCTURAL_KEYS or key in NESTED_KEYS or key.startswith("_"):

@@ -1,23 +1,5 @@
 {
   "slug": "heat_seeker_red",
-  "abilities": [
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "effects": [
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "END_OF_TURN",
-            "effects": [
-              {
-                "type": "PUT_TOP_DECK_BOTTOM",
-                "zone": "arsenal"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  ]
+  "abilities": [],
+  "_comment": "NOT implemented, and removed rather than left as a crash. 'When this hits, at the beginning of your end phase, put the top card of your deck face up into your arsenal' was authored as PUT_TOP_DECK_BOTTOM with zone=arsenal -- a type that does not exist, and whose name says the BOTTOM OF THE DECK, the opposite destination. Being nested inside an INJECT_TRIGGER it compiled lazily, so it raised ValueError at the end phase of any turn this hit. There is no deck-to-arsenal effect to express it with yet; PUT_ARSENAL_BOTTOM moves the other way."
 }

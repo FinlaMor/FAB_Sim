@@ -376,6 +376,86 @@ def _first(params, *keys, default=None):
     return default
 
 
+#: Zone words a card may use in a BANISH target, mapped to the BANISH handler's
+#: own from_zone vocabulary. Spellings vary because cards were authored by hand:
+#: "TOP_CARD" and "DECK_TOP" both mean the top of the deck, and "hero_graveyard"
+#: is just the graveyard with the controller named twice.
+_BANISH_TARGET_ZONES = {
+    "top_deck": "TOP_DECK", "topdeck": "TOP_DECK", "deck_top": "TOP_DECK",
+    "top_card": "TOP_DECK", "top": "TOP_DECK", "deck": "DECK",
+    "hand": "HAND", "graveyard": "GRAVEYARD", "arsenal": "ARSENAL",
+    "soul": "SOUL",
+}
+
+#: Words naming whose zone it is. "hero" reads as the controller's own — a card
+#: saying "hero_graveyard" means its own side.
+_BANISH_TARGET_OPPONENT = ("opponent", "their", "defending", "enemy")
+_BANISH_TARGET_SELF = ("self", "your", "hero", "my", "own")
+
+
+def _record_banished(cards: list) -> None:
+    """Store what a BANISH just banished, so "if it's blue" has something to ask.
+
+    Several cards read "banish the top card of their deck. If it's <colour>,
+    ..." and BANISH recorded nothing at all, so the follow-up test had no
+    subject and could only ever be answered from thin air. "banished" is the
+    single most recent card (or the list, when more than one); "banished_cards"
+    accumulates across the whole ability for "another card with the same
+    colour" wordings.
+    """
+    if not cards:
+        return
+    from engine.context import get_ref, set_ref
+    set_ref("banished", cards[0] if len(cards) == 1 else list(cards))
+    prior = get_ref("banished_cards")
+    set_ref("banished_cards", (list(prior) if isinstance(prior, list) else [])
+            + list(cards))
+
+
+def _banish_target_spec(target) -> tuple[str | None, str | None]:
+    """Read a BANISH "target" into (player, from_zone), either possibly None.
+
+    Returns None for a part the target does not name, so the caller keeps its
+    own default rather than a guess. A target this cannot parse — "INSTANT" is a
+    card type, not a zone — yields (None, None) and stays visible to
+    scripts/audit_params.py instead of being silently resolved to something
+    plausible.
+    """
+    if not target:
+        return (None, None)
+
+    player = zone = None
+    words: list[str] = []
+
+    if isinstance(target, dict):
+        controller = target.get("controller") or target.get("player")
+        if isinstance(controller, str):
+            words.append(controller)
+        for key in ("type", "zone", "from_zone"):
+            value = target.get(key)
+            if isinstance(value, str):
+                words.append(value)
+    elif isinstance(target, str):
+        words.append(target)
+    else:
+        return (None, None)
+
+    blob = "_".join(words).strip().lower()
+    if any(w in blob for w in _BANISH_TARGET_OPPONENT):
+        player = "OPPONENT"
+    elif any(w in blob for w in _BANISH_TARGET_SELF):
+        player = "SELF"
+
+    # Longest zone alias first: "top_deck" must win over the "deck" inside it,
+    # or "their top deck" resolves to a prompted choice from the whole deck.
+    for alias in sorted(_BANISH_TARGET_ZONES, key=len, reverse=True):
+        if alias in blob:
+            zone = _BANISH_TARGET_ZONES[alias]
+            break
+
+    return (player, zone)
+
+
 def _do_transform(state, sources, into_slug: str, player_id: int):
     """CR 8.5.36c — create the named token, then put the sources under it.
 
@@ -581,8 +661,19 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "BANISH":
         amt = params.get("amount", 1)
-        from_zone = params.get("from_zone", "TOP_DECK")
-        player_target = params.get("player", "SELF")
+        # "target" is how 33 cards name WHOSE zone and WHICH zone to banish
+        # from, and it was not read at all — so every one of them fell back to
+        # the defaults below, TOP_DECK and SELF. That is not a weakened effect,
+        # it is an inverted one: "banish the top card of THEIR deck" milled the
+        # controller's OWN deck, and "banish a card from their graveyard" hit
+        # the controller's deck instead. Seventeen cards were hurting the
+        # player who played them.
+        #
+        # Explicit "player"/"from_zone" still win — they are the spelling the
+        # handler already read, so cards authored against it keep their meaning.
+        _t_player, _t_zone = _banish_target_spec(params.get("target"))
+        from_zone = params.get("from_zone") or _t_zone or "TOP_DECK"
+        player_target = params.get("player") or _t_player or "SELF"
         # "banish it face down" — hidden information, and not available to the
         # effects that reference banished cards. Dropping it banished face UP.
         face_down = bool(params.get("face_down"))
@@ -625,27 +716,36 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     return True
 
             _ZONES = {"TOP_DECK": "deck", "DECK": "deck", "HAND": "hand",
-                      "GRAVEYARD": "graveyard", "ARSENAL": "arsenal"}
+                      "GRAVEYARD": "graveyard", "ARSENAL": "arsenal",
+                      # Soul is a real zone on Player and two cards banish from
+                      # it; without it they fell through to "unknown zone" and
+                      # banished nothing.
+                      "SOUL": "soul"}
             zone_name = _ZONES.get(fz)
             if zone_name is None:
                 return
             player = state.players[tid]
+            banished = []
             if fz in ("TOP_DECK", "DECK"):
                 # From the top of the deck nothing is chosen — it is whatever is
                 # there — so a cost limit filters rather than prompts.
                 for t in [c for c in player.deck.cards[:_a] if _ok(c)]:
                     _ek_banish(state, t, tid, origin_zone="deck", face_down=_fd)
-                return
-            for _ in range(_a):
-                pool = [c for c in getattr(player, zone_name).cards if _ok(c)]
-                if not pool:
-                    return
-                pick = _ask_player(state, tid, [c.slug for c in pool],
-                                   context=f"Choose a card to banish from {zone_name}")
-                target = next((c for c in pool if c.slug == pick), None)
-                if target is None:
-                    return
-                _ek_banish(state, target, tid, origin_zone=zone_name, face_down=_fd)
+                    banished.append(t)
+            else:
+                for _ in range(_a):
+                    pool = [c for c in getattr(player, zone_name).cards if _ok(c)]
+                    if not pool:
+                        break
+                    pick = _ask_player(state, tid, [c.slug for c in pool],
+                                       context=f"Choose a card to banish from {zone_name}")
+                    target = next((c for c in pool if c.slug == pick), None)
+                    if target is None:
+                        break
+                    _ek_banish(state, target, tid, origin_zone=zone_name,
+                               face_down=_fd)
+                    banished.append(target)
+            _record_banished(banished)
         return _fn
 
     if etype == "CHARGE":
@@ -2233,7 +2333,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # turns it into an effect-level gate, which would skip the whole branch and
         # never reach `else`). Inner specs are compiled lazily so an unimplemented
         # inner type defers to fire-time rather than breaking load.
-        when_raw = params.get("when", params.get("if", []))
+        # "condition" is the third natural spelling of the test, and it was not
+        # read — so six cards supplied a condition, got an EMPTY when-list, and
+        # `ok` stayed True: the `then` branch ran every single time. An
+        # unread test on a branch is the worst shape of unread parameter, because
+        # the effect still happens and looks intended.
+        when_raw = _first(params, "when", "if", "condition", default=[])
+        # A single condition may be given bare rather than in a list.
+        if isinstance(when_raw, dict):
+            when_raw = [when_raw]
         then_raw = params.get("then", params.get("effects", []))
         else_raw = params.get("else", params.get("else_effects", []))
         def _fn(card, event, state, _w=when_raw, _t=then_raw, _e=else_raw):

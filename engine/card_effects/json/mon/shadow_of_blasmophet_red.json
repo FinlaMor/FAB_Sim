@@ -35,13 +35,11 @@
           "effects": [
             {
               "type": "BANISH"
-            },
-            {
-              "type": "SHUFFLE_DECK"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "SHUFFLE_DECK is not an effect type. It sat inside a lazily-compiled branch, so it did not fail at load -- it raised ValueError the moment the search resolved. SEARCH_DECK already shuffles at the end of every search, so the node was redundant as well as fatal."
 }

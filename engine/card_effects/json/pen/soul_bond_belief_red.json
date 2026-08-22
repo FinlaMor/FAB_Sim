@@ -6,18 +6,23 @@
       "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "REVEAL_TOP_DECK"
+          "type": "REVEAL_TOP_DECK",
+          "amount": 1,
+          "into": "revealed"
         },
         {
           "type": "CONDITIONAL",
           "condition": {
             "type": "REF_PITCH_IS",
-            "pitch": "yellow"
+            "ref": "revealed",
+            "color": "yellow"
           },
           "effects": [
             {
-              "type": "PUT_REF_IN_ZONE",
-              "zone": "SOUL"
+              "type": "MOVE_REF",
+              "ref": "revealed",
+              "to_zone": "soul",
+              "player": "SELF"
             },
             {
               "type": "MODIFY_ATTACK",
@@ -28,5 +33,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "REVEAL_TOP_DECK stored nothing (no 'into'), and the test was REF_PITCH_IS with pitch='yellow' -- pitch is an int, so that comparison was False for every card in the game. With CONDITIONAL not reading 'condition', the card put the revealed card into the soul and took +1{p} every attack regardless of colour. The 'put it into your soul' effect was PUT_REF_IN_ZONE, which is not an effect type at all -- CONDITIONAL compiles its inner effects lazily, so this did not fail at load, it raised ValueError the moment the branch ran. And since the branch ran unconditionally, that was every attack. Now MOVE_REF, which exists."
 }

@@ -1557,7 +1557,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         def _ref_pitch(c, e, s, _r=ref, _w=want):
             from engine.context import get_ref
             target = get_ref(_r)
-            if target is None or isinstance(target, list):
+            # Refs that name one card are still STORED as a list by the effects
+            # that set them (REVEAL_TOP_DECK always stores a list). Refusing a
+            # one-element list made "reveal the top card, if it's yellow" answer
+            # False no matter what was revealed.
+            if isinstance(target, list):
+                if len(target) != 1:
+                    return False
+                target = target[0]
+            if target is None:
                 return False
             return (getattr(target, "pitch", None) or 0) == _w
         return _ref_pitch

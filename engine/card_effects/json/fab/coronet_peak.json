@@ -1,15 +1,22 @@
 {
   "slug": "coronet_peak",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). The activated ability was then authored as BANISH target=opponent, but the card banishes nothing -- it is 'target hero discards a card unless they pay {r}', which is exactly PAY_OR_ELSE. While BANISH ignored its target this only banished the controller's own top card; once BANISH honoured the target it would have banished the OPPONENT's, which looks right and is not. Blade Break is a printed keyword and needs no ability here.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
       "activation_cost": 3,
       "effects": [
         {
-          "type": "BANISH",
-          "target": "opponent",
-          "amount": 1
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 1,
+          "on_failure": [
+            {
+              "type": "DISCARD",
+              "player": "OPPONENT",
+              "amount": 1
+            }
+          ]
         }
       ]
     }

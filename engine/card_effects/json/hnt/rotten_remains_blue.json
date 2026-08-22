@@ -1,5 +1,6 @@
 {
   "slug": "rotten_remains_blue",
+  "_comment": "Only partly implemented, and said so rather than left looking complete. The card is 'you MAY banish a card with 1{p} from EACH hero's graveyard. If you do, this gets +1{p}, then repeat this process.' Three parts are missing: BANISH resolves one player, so 'each hero's graveyard' banishes only the controller's; BANISH filters on cost, not {p}, so 'a card with 1{p}' is unfiltered; and the banish is not optional, so the +1{p} is unconditional instead of riding an 'if you do'. Honouring the target at least moved it off the controller's DECK, which is where it was banishing from before.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",

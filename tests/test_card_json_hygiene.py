@@ -41,11 +41,21 @@ _BOLD = re.compile(r"\*\*.*?\*\*")
 # that does the wrong thing. Removing an entry is the definition of done for
 # the primitive it names.
 #
-# Currently empty. It briefly held embrace_adversity and overcome_adversity
-# ("this may only defend an attack if ..."), which are now implemented by the
-# DEFEND_RESTRICTION ability type — enforced in actions.get_defendable_cards,
-# the path engine._defend_step actually uses.
-KNOWN_UNIMPLEMENTED: set[str] = set()
+# It briefly held embrace_adversity and overcome_adversity ("this may only
+# defend an attack if ..."), which are now implemented by the DEFEND_RESTRICTION
+# ability type — enforced in actions.get_defendable_cards, the path
+# engine._defend_step actually uses.
+KNOWN_UNIMPLEMENTED: set[str] = {
+    # "put the top card of your deck face up into your arsenal". Authored as
+    # PUT_TOP_DECK_BOTTOM — a type that does not exist, and whose name says the
+    # BOTTOM OF THE DECK, the opposite destination. It sat inside an
+    # INJECT_TRIGGER, so it compiled lazily and raised ValueError at the end
+    # phase of any turn this hit rather than failing at load. Removed rather
+    # than left as a crash; there is no deck-to-arsenal effect to write it with
+    # (PUT_ARSENAL_BOTTOM moves the other way). Definition of done: that
+    # primitive exists and this entry goes.
+    "heat_seeker_red",
+}
 
 
 def _card_files() -> list[Path]:

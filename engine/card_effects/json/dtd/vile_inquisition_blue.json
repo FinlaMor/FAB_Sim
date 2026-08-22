@@ -17,19 +17,20 @@
         {
           "type": "CONDITIONAL_EFFECT",
           "condition": {
-            "type": "CARD_IN_ZONE",
-            "zone": "opponent_top_deck",
+            "type": "REF_PITCH_IS",
+            "ref": "banished",
             "color": "blue"
           },
           "effects": [
             {
               "type": "LOSE_LIFE",
-              "amount": 1
+              "amount": 1,
+              "player": "OPPONENT"
             }
           ]
         }
       ]
     }
   ],
-  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Blood Debt). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had."
+  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Blood Debt). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had. The CONDITIONAL_EFFECT tested CARD_IN_ZONE on a zone spelling CARD_IN_ZONE does not know, so it could only ever be False -- and since CONDITIONAL did not read 'condition' at all, the branch ran unconditionally anyway. It now asks about the card BANISH actually banished. The life loss is the TARGET hero's, not the caster's."
 }

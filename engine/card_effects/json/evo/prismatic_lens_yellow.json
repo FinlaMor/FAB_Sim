@@ -1,6 +1,6 @@
 {
   "slug": "prismatic_lens_yellow",
-  "_comment": "Crank. \"At the start of your turn, destroy this UNLESS you remove a steam counter from it\" \u2014 mutually exclusive, but the JSON ran DESTROY_PERMANENT and REMOVE_COUNTER unconditionally, so it destroyed itself every turn AND spent the counter. Now a PAY_OR_ELSE whose cost is the counter. STILL SIMPLIFIED: the activated ability's \"Mechanologist item OF THE SAME COLOR\" is hardcoded yellow, and its nested filter uses singular subtype/class keys that CARD_IN_ZONE does not read (it reads filter_types / card_class), so that search filter is inert.",
+  "_comment": "Crank. \"At the start of your turn, destroy this UNLESS you remove a steam counter from it\" — mutually exclusive, but the JSON ran DESTROY_PERMANENT and REMOVE_COUNTER unconditionally, so it destroyed itself every turn AND spent the counter. Now a PAY_OR_ELSE whose cost is the counter. STILL SIMPLIFIED: the activated ability's \"Mechanologist item OF THE SAME COLOR\" is hardcoded yellow, and its nested filter uses singular subtype/class keys that CARD_IN_ZONE does not read (it reads filter_types / card_class), so that search filter is inert. The 'put it on top of your deck' step was a nested PUT_TOP_DECK, which is not an effect type -- lazily compiled, so it raised ValueError whenever the ability was activated rather than failing at load. SEARCH_BANISH_FACE_DOWN already takes the destination, so it says deck_top directly.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -55,12 +55,7 @@
               "color": "yellow"
             }
           ],
-          "effects": [
-            {
-              "type": "PUT_TOP_DECK",
-              "target": "searched_card"
-            }
-          ]
+          "destination": "deck_top"
         }
       ]
     }

@@ -155,8 +155,23 @@ def test_regression_count_does_not_grow():
             findings += 1
     # ACTIVE findings only: a key whose value is the default anyway is redundant,
     # not broken, and counting those invites churning correct cards.
-    assert findings <= 77, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 77). "
+    #
+    # This ceiling went 77 -> 163 without a single card getting worse. The audit
+    # kept ONE flat STRUCTURAL_KEYS list of "keys the loader consumes", and
+    # "target" was in it — but at effect level the loader pops only
+    # "conditions". So every effect naming a target was exempt from the one
+    # check that would have caught it, and the number this pins was measuring
+    # the detector's blind spot as much as the corpus.
+    #
+    # Raising a threshold to make a test pass is normally how a regression gets
+    # laundered into the baseline. It is the right move ONLY here, where the
+    # rise is the detector seeing more, and the evidence is that BANISH's
+    # unread target was milling its own controller's deck on 17 cards. Do not
+    # raise it again without that kind of evidence: a rise from a corpus change
+    # is a new family, and belongs in the compiler where it closes every card
+    # at once.
+    assert findings <= 163, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 163). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )
