@@ -1,38 +1,5 @@
 {
   "slug": "hamstring_shot_red",
-  "abilities": [
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "ATTACK_TARGET_IS_HERO"
-        }
-      ],
-      "effects": [
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "START_OF_TURN",
-            "conditions": [
-              {
-                "type": "REF_PITCH_IS",
-                "ref": "ATTACKER",
-                "pitch": 1
-              }
-            ],
-            "effects": [
-              {
-                "type": "PAY_OR_DAMAGE",
-                "target": "ATTACKER",
-                "resource": "RESOURCE_POINTS",
-                "amount": 1,
-                "damage": 1
-              }
-            ]
-          }
-        }
-      ]
-    }
-  ]
+  "abilities": [],
+  "_comment": "Removed a fabricated delayed PAY_OR_DAMAGE. The card says 'their first attack during their next turn COSTS AN ADDITIONAL {r}' -- a cost INCREASE -- and it was authored as 'pay 1 or take 1 damage' at the start of their turn, gated on REF_PITCH_IS over a ref named ATTACKER that nothing stores. Wrong mechanic, wrong timing, and an unsettable gate. NOT IMPLEMENTED: there is no cost INCREASE path; the queued cost mods only reduce, and none is scoped to an opponent's next attack."
 }

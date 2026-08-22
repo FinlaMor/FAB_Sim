@@ -84,6 +84,17 @@ KNOWN_UNIMPLEMENTED: set[str] = {
     # reads plus a STATIC applying -1{d}, a defence penalty found nowhere in the
     # card's text.
     "blanch_yellow",
+    # "Their first attack during their next turn costs an additional {r}."
+    # There is no cost INCREASE path: the queued cost mods only reduce, and none
+    # is scoped to an opponent's next attack. It had been a delayed
+    # "pay 1 or take 1 damage" gated on a ref nothing stores.
+    "hamstring_shot_red",
+    # "When this defends, effects don't trigger when an attack hits this chain
+    # link unless the attacking hero pays {r}" — a trigger-suppression
+    # replacement gated on an optional payment by the OPPONENT. Also "can only
+    # be played from arsenal", a play-legality restriction. It had been a
+    # PAY_OR_DAMAGE dealing 1 damage, which is neither.
+    "tripwire_trap_red",
 }
 
 

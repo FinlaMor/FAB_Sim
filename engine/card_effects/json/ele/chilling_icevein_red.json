@@ -1,6 +1,6 @@
 {
   "slug": "chilling_icevein_red",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSED.",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSED. The effect was PAY_OR_DAMAGE -- pay or take damage -- where the card says 'they DISCARD A CARD unless they pay {r}'. That is PAY_OR_ELSE with a DISCARD, the same shape as coronet_peak and winters_bite_yellow. Its target 'hero' and its resource_cost/damage_amount keys were unread anyway. The fusion gate is left in place and is CORRECTLY inert: fusion is not implemented, so fused_<slug> is never set, and the card only does this if it was fused. Inert in the safe direction.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -13,10 +13,16 @@
       ],
       "effects": [
         {
-          "type": "PAY_OR_DAMAGE",
-          "target": "hero",
-          "resource_cost": 1,
-          "damage_amount": 1
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 1,
+          "on_failure": [
+            {
+              "type": "DISCARD",
+              "player": "OPPONENT",
+              "amount": 1
+            }
+          ]
         }
       ]
     }

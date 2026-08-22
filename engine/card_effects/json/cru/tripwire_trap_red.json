@@ -1,16 +1,5 @@
 {
   "slug": "tripwire_trap_red",
-  "abilities": [
-    {
-      "ability_type": "DEFENSE_REACTION",
-      "trigger": "ON_DEFEND",
-      "effects": [
-        {
-          "type": "PAY_OR_DAMAGE",
-          "amount": 1,
-          "target": "attacker"
-        }
-      ]
-    }
-  ]
+  "abilities": [],
+  "_comment": "Removed a PAY_OR_DAMAGE that deals damage where the card suppresses TRIGGERS. NOT IMPLEMENTED: 'When this defends, effects don't trigger when an attack hits this chain link unless the attacking hero pays {r}' -- a trigger-suppression replacement gated on an optional payment by the OPPONENT, and nothing in the engine can suppress on-hit triggers conditionally. Also not implemented: 'can only be played from arsenal', a play-legality restriction. Dealing 1 damage instead is not an approximation of either."
 }
