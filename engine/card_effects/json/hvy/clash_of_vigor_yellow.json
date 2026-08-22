@@ -7,14 +7,16 @@
       "effects": [
         {
           "type": "CLASH",
-          "target": "attacker"
-        },
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Vigor",
-          "token": "vigor"
+          "on_winner": [
+            {
+              "action": "create_token",
+              "who": "WINNER",
+              "token": "vigor"
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'The WINNER creates a <X> token' was authored as a CLASH followed by an UNCONDITIONAL CREATE_TOKEN, so the controller got the token whether they won the clash or lost it -- the clash decided nothing. CLASH already takes on_winner outcome specs; the token now rides one. The 'target' on the CLASH was unread and named the attacking hero, which is the default anyway; where it was a filter it read ATTACK_CLASS_IN classes=['hero'], and 'hero' is not a class."
 }

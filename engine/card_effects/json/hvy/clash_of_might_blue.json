@@ -7,25 +7,16 @@
       "effects": [
         {
           "type": "CLASH",
-          "target": {
-            "filter": [
-              {
-                "type": "ATTACK_CLASS_IN",
-                "classes": [
-                  "hero"
-                ]
-              }
-            ]
-          },
-          "on_win": [
+          "on_winner": [
             {
-              "type": "CREATE_TOKEN",
-              "token_type": "Might",
+              "action": "create_token",
+              "who": "WINNER",
               "token": "might"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'The WINNER creates a Might token' was authored as on_win (CLASH reads on_winner) holding a nested {'type':'CREATE_TOKEN'} where CLASH expects an outcome spec {'action':'create_token','who':...}. Two mismatches on one node, so the token was never created at all -- unlike its five siblings, which created it unconditionally. The unread 'target' filter read ATTACK_CLASS_IN classes=['hero'], and 'hero' is not a class."
 }

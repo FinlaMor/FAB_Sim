@@ -334,6 +334,12 @@ INERT: dict[tuple[str, str], tuple[frozenset[str], str]] = {
     # the audit marks it consumed without honouring it, which is the same lie as
     # an allowlist entry that is not true, and hides the next real defect on
     # that key.
+    # INTIMIDATE always intimidates the opposing hero (3 - controller), which is
+    # what "intimidate target hero" means on all three Bad Breath printings.
+    ("INTIMIDATE", "target"):        (frozenset({"hero", "opponent"}), "always the opposing hero"),
+    # PREVENT_DAMAGE shields the CONTROLLER — "the next time YOUR HERO would be
+    # dealt damage". Naming the player changes nothing.
+    ("PREVENT_DAMAGE", "target"):    (frozenset({"player", "self", "hero"}), "shields the controller"),
     # The counter effects act on the source card, so a target naming the source
     # is what already happens. Any OTHER target on them is a real defect — those
     # 13 nodes name an aura, an ally, an equipment or a named permanent and get

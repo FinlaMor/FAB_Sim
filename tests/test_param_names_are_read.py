@@ -185,8 +185,11 @@ def test_regression_count_does_not_grow():
     # 132 -> 120: DISCARD / SET_FLAG / PUT_CARDS_BOTTOM named the OPPONENT under
     # "target" and did it to the caster. PUT_CARDS_BOTTOM had no `player` param
     # at all and moved the whole zone.
-    assert findings <= 120, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 120). "
+    # 120 -> 106: the clash cycle, plus INTIMIDATE/PREVENT_DAMAGE targets
+    # declared INERT (they always hit the opposing hero / shield the
+    # controller, so naming it changes nothing).
+    assert findings <= 106, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 106). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

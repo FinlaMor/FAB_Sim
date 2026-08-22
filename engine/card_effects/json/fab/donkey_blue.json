@@ -10,8 +10,7 @@
           "amount": 1
         },
         {
-          "type": "CLASH",
-          "target": "defender"
+          "type": "WAGER"
         }
       ],
       "target": {
@@ -25,5 +24,6 @@
         ]
       }
     }
-  ]
+  ],
+  "_comment": "Was a CLASH targeting 'defender'. The card WAGERS (CR 8.5.46), which is a different mechanic: a clash is resolved immediately by revealing cards, a wager rides the attack and is settled at chain-link resolution by whether it hit. NOT IMPLEMENTED: 'the winner destroys a card in their own arsenal' -- WAGER only carries a PRIZE TOKEN, and a non-token payoff has to come back through ON_WAGER_RESOLVED, which this card would need an ability for. Recorded rather than approximated with a clash that settles at the wrong time."
 }
