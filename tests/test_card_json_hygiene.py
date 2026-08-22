@@ -63,6 +63,14 @@ KNOWN_UNIMPLEMENTED: set[str] = {
     # rather than left as the opposite of the text. Definition of done: a
     # source-scoped prevention bypass exists and this entry goes.
     "malign_yellow",
+    # "If you've created a Seismic Surge this turn, this gets spellvoid 3."
+    # Prevention keywords are registered ONCE from card.keywords
+    # (EffectManager.register_prevention_effects, called at game start and on
+    # token creation), so a CONDITIONAL prevention keyword has no path — nothing
+    # re-registers when the condition becomes true. It had been authored as
+    # GRANT_SUBTYPE "Spellvoid", and Spellvoid is a keyword, not a subtype.
+    # Definition of done: conditional prevention re-registration exists.
+    "volcanic_vice",
 }
 
 

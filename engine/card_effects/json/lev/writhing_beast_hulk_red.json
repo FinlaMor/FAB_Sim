@@ -5,7 +5,7 @@
       "ability_type": "PLAY",
       "additional_cost": [
         {
-          "type": "BANISH_NAMED_GRAVEYARD_OPTIONAL",
+          "type": "BANISH_RANDOM_FROM_GRAVEYARD",
           "amount": 3
         }
       ],
@@ -14,21 +14,14 @@
           "type": "DOMINATE",
           "conditions": [
             {
-              "type": "FLAG_SET",
-              "flag": "BLOOD_DEBT_FLAG"
+              "type": "REF_POWER_GTE",
+              "ref": "banished_cards",
+              "amount": 6
             }
           ]
         }
       ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "BLOOD_DEBT_FLAG"
-        }
-      ]
     }
-  ]
+  ],
+  "_comment": "Three defects. The DOMINATE was gated on FLAG_SET 'BLOOD_DEBT_FLAG', and Blood Debt is a PRINTED KEYWORD with nothing to do with the condition -- the card says 'if a card with 6 OR MORE {p} is banished this way'. That flag was set by a plain STATIC, which nothing dispatches, so dominate could never apply; had the static run it would have applied ALWAYS. And the cost was BANISH_NAMED_GRAVEYARD_OPTIONAL -- 'you MAY banish a NAMED card' -- where the card says banish 3 RANDOM cards, mandatorily. The cost now records what it banished so the power test has something to read."
 }

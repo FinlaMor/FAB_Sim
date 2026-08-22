@@ -1,23 +1,5 @@
 {
   "slug": "volcanic_vice",
-  "_comment": "Turn-event tracking: read SEISMIC_SURGE_CREATED — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
-  "abilities": [
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "EVENT_THIS_TURN",
-          "event": "create",
-          "qualifier": "seismic_surge"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GRANT_SUBTYPE",
-          "subtype": "Spellvoid",
-          "amount": 3
-        }
-      ]
-    }
-  ]
+  "_comment": "Turn-event tracking: read SEISMIC_SURGE_CREATED — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it. Removed a plain STATIC granting GRANT_SUBTYPE 'Spellvoid' -- Spellvoid is a KEYWORD, not a subtype, so even a dispatched static would have added a subtype no rule reads. NOT IMPLEMENTED: 'if you've created a Seismic Surge this turn, this gets spellvoid 3'. Prevention keywords are registered ONCE from card.keywords (EffectManager.register_prevention_effects, called at game start and on token creation), so a CONDITIONAL prevention keyword has no path -- there is no re-registration when the condition becomes true. The turn-event half is fine and would work the moment that path exists.",
+  "abilities": []
 }

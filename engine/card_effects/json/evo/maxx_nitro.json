@@ -1,6 +1,6 @@
 {
   "slug": "maxx_nitro",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED_THIS_TURN.",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED_THIS_TURN. Removed a plain STATIC granting GRANT_SUBTYPE 'crank' to Hyper Drivers -- crank is a KEYWORD, not a subtype. NOT IMPLEMENTED: 'Hyper Drivers you control get crank'. The hyper_driver token ships with NO keywords, so this is a real grant and not a duplicate of a printed one, but it is a continuous grant to OTHER permanents and the only grant machinery here is turn-scoped and applies to cards as they are PLAYED. The token-creating activated ability is intact.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -21,16 +21,6 @@
               "amount": 2
             }
           ]
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GRANT_SUBTYPE",
-          "subtype": "crank",
-          "target": "Hyper Driver"
         }
       ]
     }

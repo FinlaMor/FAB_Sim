@@ -182,6 +182,40 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
                                getattr(target, "name", None))
         return can_pay, pay
 
+    if ctype == "BANISH_RANDOM_FROM_GRAVEYARD":
+        # "As an additional cost to play this, banish N RANDOM cards from your
+        # graveyard." Mandatory and unchosen, unlike
+        # BANISH_NAMED_GRAVEYARD_OPTIONAL ("you MAY banish <named>") which is
+        # what the one card needing this had been given.
+        #
+        # Records what it banished under the same `banished_cards` ref the
+        # BANISH effect uses, so "if a card with 6 or more {p} is banished THIS
+        # WAY" has something to ask about. run_ability pushes the reference
+        # scope before paying additional costs, so the effects see it.
+        import random as _random
+        try:
+            amount = max(0, int(params.get("amount", 1)))
+        except (TypeError, ValueError):
+            amount = 1
+
+        def can_pay(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            return len(state.players[_controller_id(card)].graveyard.cards) >= _a
+
+        def pay(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.card_effects.dsl.effect_types import _record_banished
+            from engine.effect_keywords import banish as _banish
+            cid = _controller_id(card)
+            pool = list(state.players[cid].graveyard.cards)
+            if len(pool) < _a:
+                return
+            picked = _random.sample(pool, _a)
+            for obj in picked:
+                _banish(state, obj, cid, origin_zone="graveyard")
+            _record_banished(picked)
+        return can_pay, pay
+
     if ctype == "BANISH_NAMED_GRAVEYARD_OPTIONAL":
         # "You may banish [slug_contains] from your graveyard. If you do, [bonus via flag]."
         # Always payable (optional). Sets a turn flag if a matching card was banished.

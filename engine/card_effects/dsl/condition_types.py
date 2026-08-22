@@ -1676,6 +1676,36 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return hit is bool(_v)
         return _ref_type
 
+    if ctype in ("REF_POWER_GTE", "REF_POWER_LTE"):
+        # "If a card with 6 or more {p} is banished this way" — a power test on
+        # what a preceding effect or COST stored, not on the source card. Any
+        # entry in a list ref satisfies it, since the text asks whether such a
+        # card was among them.
+        threshold = params.get("amount", params.get("value", 0))
+        ref = params.get("ref", "banished_cards")
+        want_gte = ctype.endswith("GTE")
+
+        def _ref_power(c, e, s, _r=ref, _n=threshold, _gte=want_gte):
+            from engine.context import get_ref
+            found = get_ref(_r)
+            if found is None:
+                return False
+            pool = found if isinstance(found, list) else [found]
+            try:
+                limit = int(_n)
+            except (TypeError, ValueError):
+                return False
+            for obj in pool:
+                power = getattr(obj, "power", None)
+                if power is None:
+                    power = getattr(obj, "base_power", None)
+                if power is None:
+                    continue
+                if (power >= limit) if _gte else (power <= limit):
+                    return True
+            return False
+        return _ref_power
+
     if ctype in ("REF_MATCHES_OTHER", "REF_SHARES_WITH_OTHER"):
         # "whenever this banishes a card AND THIS HAS BANISHED ANOTHER card with
         # the same colour / the same name". The list ref accumulates everything
