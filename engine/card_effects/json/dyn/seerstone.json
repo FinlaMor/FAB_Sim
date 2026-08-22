@@ -7,7 +7,8 @@
       "effects": [
         {
           "type": "LOOK_AT",
-          "target": "TOP_DECK"
+          "zone": "DECK_TOP",
+          "player": "SELF"
         },
         {
           "type": "PUT_CARDS_BOTTOM",
@@ -21,5 +22,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "LOOK_AT defaults to the OPPONENT and its 'target' was unread, so 'look at the top card of YOUR deck' was looking at the opponent's -- not a dead effect, an information leak pointing the wrong way. The target named a zone but never a player, and the shared target parser refuses to guess one, so the card now says player SELF outright."
 }

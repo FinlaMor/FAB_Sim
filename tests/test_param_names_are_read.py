@@ -174,8 +174,11 @@ def test_regression_count_does_not_grow():
     # 163 -> 153: the counter effects (PUT_COUNTER / REMOVE_COUNTER /
     # REMOVE_COUNTERS) now read their target, closing twelve cards that were
     # putting their counters on the source card.
-    assert findings <= 153, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 153). "
+    # 153 -> 148: LOOK_AT now reads its target through the same parser BANISH
+    # uses, closing twelve more -- five of which were reading the OPPONENT's
+    # deck where the card says "your deck".
+    assert findings <= 148, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 148). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

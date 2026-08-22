@@ -1,6 +1,6 @@
 {
   "slug": "helmsmans_peak",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). LOOK_AT defaults to the OPPONENT and its 'target' was unread, so 'look at the top card of YOUR deck' was looking at the opponent's -- not a dead effect, an information leak pointing the wrong way. The target named a zone but never a player, and the shared target parser refuses to guess one, so the card now says player SELF outright.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -8,9 +8,8 @@
       "effects": [
         {
           "type": "LOOK_AT",
-          "target": {
-            "type": "TOP_DECK"
-          }
+          "zone": "DECK_TOP",
+          "player": "SELF"
         }
       ]
     }

@@ -376,11 +376,11 @@ def _first(params, *keys, default=None):
     return default
 
 
-#: Zone words a card may use in a BANISH target, mapped to the BANISH handler's
-#: own from_zone vocabulary. Spellings vary because cards were authored by hand:
-#: "TOP_CARD" and "DECK_TOP" both mean the top of the deck, and "hero_graveyard"
-#: is just the graveyard with the controller named twice.
-_BANISH_TARGET_ZONES = {
+#: Zone words a card may use in an effect's "target", mapped to canonical zone
+#: names. Spellings vary because cards were authored by hand: "TOP_CARD" and
+#: "DECK_TOP" both mean the top of the deck, and "hero_graveyard" is just the
+#: graveyard with the controller named twice.
+_TARGET_ZONES = {
     "top_deck": "TOP_DECK", "topdeck": "TOP_DECK", "deck_top": "TOP_DECK",
     "top_card": "TOP_DECK", "top": "TOP_DECK", "deck": "DECK",
     "hand": "HAND", "graveyard": "GRAVEYARD", "arsenal": "ARSENAL",
@@ -388,9 +388,11 @@ _BANISH_TARGET_ZONES = {
 }
 
 #: Words naming whose zone it is. "hero" reads as the controller's own — a card
-#: saying "hero_graveyard" means its own side.
-_BANISH_TARGET_OPPONENT = ("opponent", "their", "defending", "enemy")
-_BANISH_TARGET_SELF = ("self", "your", "hero", "my", "own")
+#: saying "hero_graveyard" means its own side. The opponent words are tested
+#: FIRST, because "defending_hero_hand" contains "hero" too and would otherwise
+#: resolve to the wrong player.
+_TARGET_OPPONENT = ("opponent", "their", "defending", "enemy")
+_TARGET_SELF = ("self", "your", "hero", "my", "own")
 
 
 #: Where a counter target may live. "ARENA" is every permanent (auras, items,
@@ -547,8 +549,12 @@ def _record_banished(cards: list) -> None:
             + list(cards))
 
 
-def _banish_target_spec(target) -> tuple[str | None, str | None]:
-    """Read a BANISH "target" into (player, from_zone), either possibly None.
+def _zone_target_spec(target) -> tuple[str | None, str | None]:
+    """Read an effect's "target" into (player, zone), either possibly None.
+
+    Shared by BANISH and LOOK_AT, which is the point: they were given the same
+    handful of spellings by the same authors, and a second parser would drift
+    from this one the first time a new one appeared.
 
     Returns None for a part the target does not name, so the caller keeps its
     own default rather than a guess. A target this cannot parse — "INSTANT" is a
@@ -576,16 +582,16 @@ def _banish_target_spec(target) -> tuple[str | None, str | None]:
         return (None, None)
 
     blob = "_".join(words).strip().lower()
-    if any(w in blob for w in _BANISH_TARGET_OPPONENT):
+    if any(w in blob for w in _TARGET_OPPONENT):
         player = "OPPONENT"
-    elif any(w in blob for w in _BANISH_TARGET_SELF):
+    elif any(w in blob for w in _TARGET_SELF):
         player = "SELF"
 
     # Longest zone alias first: "top_deck" must win over the "deck" inside it,
     # or "their top deck" resolves to a prompted choice from the whole deck.
-    for alias in sorted(_BANISH_TARGET_ZONES, key=len, reverse=True):
+    for alias in sorted(_TARGET_ZONES, key=len, reverse=True):
         if alias in blob:
-            zone = _BANISH_TARGET_ZONES[alias]
+            zone = _TARGET_ZONES[alias]
             break
 
     return (player, zone)
@@ -806,7 +812,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         #
         # Explicit "player"/"from_zone" still win — they are the spelling the
         # handler already read, so cards authored against it keep their meaning.
-        _t_player, _t_zone = _banish_target_spec(params.get("target"))
+        _t_player, _t_zone = _zone_target_spec(params.get("target"))
         from_zone = params.get("from_zone") or _t_zone or "TOP_DECK"
         player_target = params.get("player") or _t_player or "SELF"
         # "banish it face down" — hidden information, and not available to the
@@ -2225,8 +2231,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         #           filter) is stored unwrapped, otherwise a list
         #   filter: optional {keyword, face_down, subtype} — a filter always
         #           scans the whole zone and always stores a list
-        zone = params.get("zone", "DECK_TOP").upper()
-        who = params.get("player", "OPPONENT").upper()
+        # "target" is how 12 cards name the zone and whose it is, and it was not
+        # read — so all of them fell through to the defaults, DECK_TOP and
+        # OPPONENT. Five say "look at the top card of YOUR deck" and were
+        # looking at the opponent's: not a dead effect, an information leak in
+        # the wrong direction.
+        #
+        # The parser is shared with BANISH: the same authors gave both effects
+        # the same handful of spellings, and a second one would drift from it.
+        # Its canonical TOP_DECK is spelled DECK_TOP in this handler's own zone
+        # map, so it is translated rather than either name being "fixed".
+        _t_player, _t_zone = _zone_target_spec(params.get("target"))
+        if _t_zone == "TOP_DECK":
+            _t_zone = "DECK_TOP"
+        zone = str(params.get("zone") or _t_zone or "DECK_TOP").upper()
+        who = str(params.get("player") or _t_player or "OPPONENT").upper()
         amount = params.get("amount", 1)
         into = params.get("into", "looked")
         filt = params.get("filter") or {}

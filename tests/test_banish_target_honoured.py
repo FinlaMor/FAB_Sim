@@ -18,7 +18,7 @@ import pytest
 
 import engine.engine as E
 from engine.card import CardDB
-from engine.card_effects.dsl.effect_types import _banish_target_spec
+from engine.card_effects.dsl.effect_types import _zone_target_spec
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 from tests.conftest import _make_state
 
@@ -175,7 +175,7 @@ def test_banish_from_your_own_named_zone_not_your_deck(slug, zone):
     ({"zone": "arsenal", "controller": "opponent"}, ("OPPONENT", "ARSENAL")),
 ])
 def test_target_spec_parses_every_spelling_in_the_corpus(target, expected):
-    assert _banish_target_spec(target) == expected
+    assert _zone_target_spec(target) == expected
 
 
 @pytest.mark.parametrize("target", ["INSTANT", {"filter": []}, None, 7])
@@ -186,7 +186,7 @@ def test_unparseable_target_yields_no_guess(target):
     would hide it from scripts/audit_params.py, which is the only thing that
     will ever bring it back up.
     """
-    assert _banish_target_spec(target) == (None, None)
+    assert _zone_target_spec(target) == (None, None)
 
 
 def test_explicit_from_zone_and_player_still_win():
