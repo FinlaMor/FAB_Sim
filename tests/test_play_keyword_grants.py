@@ -182,3 +182,94 @@ def test_neither_card_still_uses_a_dead_static(slug):
     raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
     types = [(a.get("ability_type") or "").upper() for a in raw.get("abilities") or []]
     assert "STATIC" not in types, types
+
+
+# ── a hero's permanent static, re-established each turn ────────────────────
+def test_teklovossen_grants_go_again_to_mechanologist_attacks():
+    """"Your Mechanologist attack action cards get go again."
+
+    A hero's PERMANENT static, expressed with the turn-scoped grant list: it is
+    cleared in the end phase, so the hero re-establishes it at the start of each
+    of its controller's turns. Attack action cards are only playable on your own
+    turn, so that covers the whole window.
+    """
+    from engine.card_effects.dsl.interpreter import run_ability
+    from engine.card_effects.dsl.loader import get_card
+
+    st = _state()
+    st.active_player = 1
+    hero = _card("teklovossen_the_mechropotent")
+    run_ability(get_card("teklovossen_the_mechropotent").abilities[2],
+                hero, None, st)
+
+    grants = getattr(st.players[1], "dsl_play_keyword_grants", [])
+    assert grants, "the hero granted nothing"
+    assert str(grants[0]["keyword"]).lower().replace("_", " ") == "go again"
+
+    # ATTACK go again is decided from combat.keywords in the resolution step,
+    # not from the non-attack layer path -- so the grant has to reach the attack
+    # recalculation too, or it misses every card this text is about.
+    from engine.state import CombatState
+    mech = _card("wounded_bull_red")
+    mech.classes = ["Mechanologist"]
+    mech.keywords = []
+    power = mech.base_power or 0
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=power,
+                            attack_card=mech, keywords=[])
+    st.combat.base_attack_power = power
+    E._apply_turn_attack_effects(st, mech)
+    E._register_card_continuous_effects(st, mech)
+    E._recalculate_attack_power(st)
+    assert any(str(k).lower().replace("_", " ") == "go again"
+               for k in st.combat.keywords), (
+        f"the grant did not reach the attack's keywords: {st.combat.keywords}")
+
+
+def test_teklovossen_does_not_grant_to_other_classes():
+    from engine.card_effects.dsl.interpreter import run_ability
+    from engine.card_effects.dsl.loader import get_card
+    from engine.play import _cost_mod_matches
+
+    st = _state()
+    st.active_player = 1
+    run_ability(get_card("teklovossen_the_mechropotent").abilities[2],
+                _card("teklovossen_the_mechropotent"), None, st)
+    grant = st.players[1].dsl_play_keyword_grants[0]
+
+    mech = _card(INSTANT)
+    mech.classes = ["Mechanologist"]
+    mech.types = ["Action"]
+    mech.subtypes = ["Attack"]
+    other = _card(INSTANT)
+    other.classes = ["Guardian"]
+    other.types = ["Action"]
+    other.subtypes = ["Attack"]
+
+    assert _cost_mod_matches(st, grant, mech) is True
+    assert _cost_mod_matches(st, grant, other) is False, (
+        "it granted go again to a non-Mechanologist card")
+
+
+def test_teklovossen_no_longer_grants_a_fabricated_defence_bonus():
+    """"This counts as having 4 Evos equipped" was MODIFY_DEFENSE_VALUE +4."""
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
+    raw = json.loads(next(root.rglob("teklovossen_the_mechropotent.json"))
+                     .read_text(encoding="utf-8"))
+
+    found = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            if node.get("type") == "MODIFY_DEFENSE_VALUE":
+                found.append(node)
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(raw.get("abilities", []))
+    assert not found, f"the fabricated +4{{d}} is back: {found}"

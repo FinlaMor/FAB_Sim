@@ -1831,6 +1831,19 @@ def _recalculate_attack_power(state: GameState) -> None:
     effective_keywords: set = mgr.recalculate(state, card, 'keywords', base_keywords)
     # Union with keywords added directly to combat this chain link
     effective_keywords = effective_keywords | set(combat.keyword_effects)
+    # Turn-scoped grants to cards you PLAY ("your Mechanologist attack action
+    # cards get go again"). ATTACK go again is decided from combat.keywords in
+    # _resolution_step, NOT from the non-attack layer path in resolve_stack, so
+    # a grant that only reached the latter would silently miss every attack —
+    # which is exactly the kind of card that has this text.
+    _grants = getattr(state.players.get(combat.attacker_id),
+                      "dsl_play_keyword_grants", None) or []
+    if _grants:
+        from engine.play import _cost_mod_matches
+        for grant in _grants:
+            kw = grant.get("keyword")
+            if kw and _cost_mod_matches(state, grant, card):
+                effective_keywords = effective_keywords | {kw}
     combat.keywords = list(effective_keywords)
 
     # Stages 7-8: recalculate effective power via staged effects
