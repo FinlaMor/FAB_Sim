@@ -6,7 +6,7 @@
       "trigger": "START_OF_TURN_IN_GRAVEYARD",
       "effects": [
         {
-          "type": "DESTROY_REF",
+          "type": "DESTROY_PERMANENT",
           "target": "self"
         },
         {
@@ -27,5 +27,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. The card destroys ITSELF, which DESTROY_PERMANENT does directly -- destroy() resolves the card's own zone."
 }

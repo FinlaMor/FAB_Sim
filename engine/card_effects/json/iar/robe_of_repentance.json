@@ -12,21 +12,22 @@
       ],
       "effects": [
         {
-          "type": "BANISH_REF",
+          "type": "FLIP_MATCHING",
+          "face_up": false,
           "target": {
+            "controller": "SELF",
+            "zone": "BANISHED",
+            "amount": 1,
             "filter": [
               {
-                "type": "CARD_IN_ZONE",
-                "zone": "BANISHED",
-                "keywords": [
-                  "blood_debt"
-                ]
+                "type": "HAS_KEYWORD",
+                "keyword": "BloodDebt"
               }
             ]
-          },
-          "action": "FACE_DOWN"
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. Same wrong action: 'Turn a card with blood debt in YOUR banished zone face-down' is a flip, not a banish."
 }

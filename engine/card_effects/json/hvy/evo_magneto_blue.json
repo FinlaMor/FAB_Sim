@@ -7,25 +7,10 @@
         {
           "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
           "amount": 1
-        },
-        {
-          "type": "BANISH_REF",
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zones": [
-                  "arsenal"
-                ],
-                "cost_gte": 0,
-                "cost_lte": 1,
-                "controlled_by": "opponent"
-              }
-            ]
-          }
         }
       ],
       "trigger": "ON_DEFEND"
     }
-  ]
+  ],
+  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. NOT IMPLEMENTED, and removed rather than left as a node that runs and does nothing: 'you may destroy a card UNDER it' needs the cards a transform put beneath a permanent, and the engine has no representation of cards under an object. The 'if you do, gain control of target item' rider depends on it and is absent for the same reason."
 }

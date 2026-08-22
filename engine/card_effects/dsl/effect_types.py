@@ -399,7 +399,9 @@ _TARGET_SELF = ("self", "your", "hero", "my", "own")
 #: allies, tokens); equipment and weapons are separate zones on Player and are
 #: NOT covered by Player.equipment (which is head/chest/arms/legs only), so a
 #: card saying "equipment, items, and/or weapons" has to name them.
-_OBJECT_TARGET_ZONES = ("ARENA", "EQUIPMENT", "WEAPON", "ARSENAL", "HERO")
+_OBJECT_TARGET_ZONES = ("ARENA", "EQUIPMENT", "WEAPON", "ARSENAL", "HERO",
+                        "DECK_TOP", "DECK", "GRAVEYARD", "BANISHED", "HAND",
+                        "SOUL", "PITCH")
 
 
 def _object_zone_cards(player, zone: str) -> list:
@@ -414,6 +416,14 @@ def _object_zone_cards(player, zone: str) -> list:
         return list(player.arsenal.cards)
     if zone == "HERO":
         return [player.hero] if player.hero is not None else []
+    # DECK_TOP is the top card only, and is deliberately NOT the same pool as
+    # DECK: "destroy the top card of their deck" must not become a prompt to
+    # choose any card in it, which is both a different effect and an
+    # information leak.
+    if zone == "DECK_TOP":
+        return list(player.deck.cards[:1])
+    if zone in ("DECK", "GRAVEYARD", "BANISHED", "HAND", "SOUL", "PITCH"):
+        return list(getattr(player, zone.lower()).cards)
     return []
 
 
@@ -1997,6 +2007,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             effect_deal_damage(state, 3 - cid, _amt, dagger, damage_type="generic")
             # "the dagger has hit" — fire its ON_HIT (not destroyed).
             _dsl_dispatch(state, "ON_HIT", dagger.slug, card=dagger, event=None)
+            # Bite adds "Destroy the dagger", which needs to name WHICH dagger
+            # was chosen. Recording it lets a following DESTROY_REF say so
+            # without this effect growing a destroy of its own — and without
+            # Bite borrowing DAGGER_DEALS_DAMAGE_AND_DESTROY, which carries
+            # Flick Knives' "isn't on the active chain link" restriction that
+            # Bite does not have.
+            from engine.context import set_ref
+            set_ref("dagger", dagger)
         return _fn
 
     if etype == "DAGGER_DEALS_DAMAGE_AND_DESTROY":
@@ -2405,6 +2423,24 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             for obj in (target if isinstance(target, list) else [target]):
                 for _ in range(_a):
                     effect_put_counter(state, obj, _ct)
+        return _fn
+
+    if etype == "FLIP_MATCHING":
+        # "Turn a card in their banished zone face-down." FLIP_REF needs an
+        # earlier effect to have stored the card, and these cards have none —
+        # they were authored as BANISH_REF, which both names the wrong action
+        # (they turn a card over, they do not banish it) and reads a ref nobody
+        # set, so nothing happened at all.
+        face_up = params.get("face_up", False)
+        target_fn = _compile_object_target(_object_target_spec(params.get("target")))
+
+        def _fn(card, event, state, _up=face_up, _tf=target_fn):
+            if _tf is None:
+                return
+            for obj in _tf(card, event, state):
+                obj.is_public = bool(_up)
+                if hasattr(obj, "face_down"):
+                    obj.face_down = not bool(_up)
         return _fn
 
     if etype == "FLIP_REF":

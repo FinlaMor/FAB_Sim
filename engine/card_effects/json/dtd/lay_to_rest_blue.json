@@ -1,6 +1,6 @@
 {
   "slug": "lay_to_rest_blue",
-  "_comment": "'When this attacks a SHADOW HERO' is about the DEFENDING hero, so it is ATTACK_TARGET_IS_HERO hero_type Shadow — ATTACK_CLASS_IN asked about the attacking CARD's class, which is always Light here. Also ATTACK_REACTION on an Action - Attack never fires.",
+  "_comment": "'When this attacks a SHADOW HERO' is about the DEFENDING hero, so it is ATTACK_TARGET_IS_HERO hero_type Shadow — ATTACK_CLASS_IN asked about the attacking CARD's class, which is always Light here. Also ATTACK_REACTION on an Action - Attack never fires. Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. It also named the wrong ACTION: 'turn a card in their banished zone FACE-DOWN' does not banish anything -- the card is already banished. Turning it face down hides it from the effects that reference banished cards, which is the whole point.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -29,9 +29,13 @@
       ],
       "effects": [
         {
-          "type": "BANISH_REF",
-          "target": "opponent_banished",
-          "face_down": true
+          "type": "FLIP_MATCHING",
+          "face_up": false,
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "BANISHED",
+            "amount": 1
+          }
         }
       ]
     }

@@ -180,8 +180,10 @@ def test_regression_count_does_not_grow():
     # 148 -> 142: DESTROY_TOKEN was standing in for six different destroy
     # effects; the eight cards now use DESTROY_PERMANENT, DESTROY_MATCHING or
     # DESTROY_DEFENDING as their text requires.
-    assert findings <= 142, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 142). "
+    # 142 -> 132: DESTROY_REF/BANISH_REF nodes handed a "target" acted on a ref
+    # no earlier effect in the ability ever set, so all ten did nothing at all.
+    assert findings <= 132, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 132). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

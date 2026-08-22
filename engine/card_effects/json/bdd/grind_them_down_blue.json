@@ -12,10 +12,15 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_REF",
-          "target": "OPPONENT_TOP_DECK"
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "DECK_TOP",
+            "amount": 1
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. 'Destroy the top card of the deck' is a zone, and DECK_TOP is deliberately the top card only -- resolving it to the whole deck would turn it into a prompt to choose any card, a different effect and an information leak."
 }

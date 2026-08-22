@@ -19,10 +19,11 @@
         },
         {
           "type": "DESTROY_REF",
-          "target": "DAGGER"
+          "ref": "dagger"
         }
       ],
       "trigger": "ON_ATTACK"
     }
-  ]
+  ],
+  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. 'Destroy the dagger' means the one chosen by the preceding DAGGER_DEALS_DAMAGE, which now records it under the 'dagger' ref. Deliberately NOT switched to DAGGER_DEALS_DAMAGE_AND_DESTROY: that carries Flick Knives' 'isn't on the active chain link' restriction, which Bite does not have, and a restriction the card does not print is worse than none because it fires."
 }
