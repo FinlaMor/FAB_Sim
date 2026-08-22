@@ -1,36 +1,5 @@
 {
   "slug": "blanch_yellow",
-  "abilities": [
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "ATTACK_TARGET_IS_HERO"
-        }
-      ],
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "BLANCH_FLAG"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "BLANCH_FLAG"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "subtract",
-          "amount": 1
-        }
-      ]
-    }
-  ]
+  "abilities": [],
+  "_comment": "Removed both abilities. The ON_HIT set BLANCH_FLAG, a flag nothing reads, and the second was a plain STATIC applying MODIFY_DEFENSE_VALUE -1 -- a defence penalty found nowhere in the card's text. NOT IMPLEMENTED: 'cards they own lose all colors until the end of their next turn'. Colour drives pitch value and every colour-gated condition in the corpus; there is no mechanism for suppressing it, and a -1{d} standing in for it is not an approximation of anything."
 }

@@ -1077,17 +1077,27 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                            position=("top" if _top else None))
         return _fn
 
-    if etype == "PUT_SELF_BOTTOM_DECK":
-        # Remove this card from its current zone and put it on the bottom of its owner's deck.
-        # Used for replacement effects like Drone of Brutality.
-        def _fn(card, event, state):
+    if etype in ("PUT_SELF_BOTTOM_DECK", "PUT_SELF_IN_ZONE"):
+        # Move THIS card to a zone of its controller's.
+        #
+        # PUT_SELF_BOTTOM_DECK hard-coded "deck" and did not read `zone`, so
+        # "when this hits, put it into your SOUL" put the card on the bottom of
+        # the DECK instead — a card meant to fuel soul-count effects went back
+        # into the deck to be drawn again. The bottom-deck spelling is kept
+        # because replacement effects like Drone of Brutality use it and mean it.
+        zone = _first(params, "zone", "to_zone", "destination",
+                      default=("deck" if etype == "PUT_SELF_BOTTOM_DECK" else "soul"))
+        zone = str(zone).lower()
+        position = params.get("position")
+
+        def _fn(card, event, state, _z=zone, _pos=position):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import put_object
             pid = _controller_id(card)
             # position=None → zone default (append = bottom, cards[-1])
-            put_object(state, card, "deck",
+            put_object(state, card, _z,
                        destination_player_id=pid, source_player_id=pid,
-                       position=None)
+                       position=_pos)
         return _fn
 
     if etype == "SEARCH_BANISH_FACE_DOWN":

@@ -1,26 +1,7 @@
 {
   "slug": "kassai_cintari_sellsword",
-  "_comment": "Turn-event tracking: read ATTACKED_TWICE_WITH_WEAPONS — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN.",
+  "_comment": "Turn-event tracking: read ATTACKED_TWICE_WITH_WEAPONS — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN. Removed a plain STATIC holding PAY_OR_DAMAGE 1 -- the card has no pay-or-damage clause at all. NOT IMPLEMENTED: 'Your second sword attack each turn costs {r} less', which needs the same board/ordinal-driven play-cost reduction the Evo tier cards are tracked for. SIMPLIFIED: the Copper clause is 'at the beginning of your end phase, IF you have attacked 2 or more times with weapons this turn, create a Copper FOR EACH weapon attack that HIT' -- it creates exactly one, unconditionally, because no turn event records weapon attacks or which of them hit.",
   "abilities": [
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "DURING_TURN",
-          "player": "self"
-        },
-        {
-          "type": "ATTACK_IS_WEAPON",
-          "attack_number": 2
-        }
-      ],
-      "effects": [
-        {
-          "type": "PAY_OR_DAMAGE",
-          "amount": 1
-        }
-      ]
-    },
     {
       "ability_type": "TRIGGERED",
       "trigger": "END_OF_TURN",

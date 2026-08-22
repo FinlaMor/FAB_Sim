@@ -71,6 +71,19 @@ KNOWN_UNIMPLEMENTED: set[str] = {
     # GRANT_SUBTYPE "Spellvoid", and Spellvoid is a keyword, not a subtype.
     # Definition of done: conditional prevention re-registration exists.
     "volcanic_vice",
+    # "The SECOND attack action card with 2 or less base {p} you play each turn
+    # has +1{p} and 'Damage that would be dealt by this can't be prevented.'"
+    # Two absent mechanics: an ordinal over qualifying cards PLAYED each turn,
+    # and unpreventable damage scoped to a source (the same gap malign_yellow
+    # is tracked for). It had been a STATIC granting +1{p} and a WARD the card
+    # does not have.
+    "tiger_stripe_shuko",
+    # "Cards they own lose all colors until the end of their next turn."
+    # Colour drives pitch value and every colour-gated condition in the corpus,
+    # and there is no mechanism for suppressing it. It had been a flag nothing
+    # reads plus a STATIC applying -1{d}, a defence penalty found nowhere in the
+    # card's text.
+    "blanch_yellow",
 }
 
 

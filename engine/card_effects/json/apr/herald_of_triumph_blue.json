@@ -2,31 +2,15 @@
   "slug": "herald_of_triumph_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "subtract",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "DEFENDING",
-              "card_type": "ATTACK_ACTION"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
       "effects": [
         {
-          "type": "PUT_SELF_BOTTOM_DECK",
-          "zone": "SOUL"
+          "type": "PUT_SELF_IN_ZONE",
+          "zone": "soul"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'When this hits, put it into your SOUL' was PUT_SELF_BOTTOM_DECK with a zone the effect did not read -- it hard-coded 'deck', so a card meant to fuel soul-count effects went back into the DECK to be drawn again. NOT IMPLEMENTED: 'Attack action cards get -1{p} while defending this.' It was authored as MODIFY_DEFENSE_VALUE, which moves {d}, not {p}; there is no modifier for a DEFENDING card's power. Phantasm is printed."
 }
