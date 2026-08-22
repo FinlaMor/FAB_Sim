@@ -8,8 +8,8 @@
           "type": "MAY",
           "cost": [
             {
-              "type": "TAP_SELF",
-              "target": "ALLY"
+              "type": "TAP_PERMANENT",
+              "subtype": "Ally"
             }
           ],
           "effects": [
@@ -23,5 +23,6 @@
       ],
       "trigger": "ON_DEFEND"
     }
-  ]
+  ],
+  "_comment": "MAY did not read its `cost`, so the prompt was FREE and the bonus unconditional -- the card was strictly stronger than printed. The cost also tapped the WRONG CARD: 'you may {t} an ALLY you control' was TAP_SELF, which taps the source, and its 'target':'ALLY' was unread -- so Hoist 'Em Up tapped itself and got +1{d} regardless of whether the player had an ally at all."
 }

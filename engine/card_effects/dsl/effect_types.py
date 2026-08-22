@@ -2818,11 +2818,32 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # effect with its own inverted condition, and there is nothing to invert
         # against: the choice is not recorded anywhere.
         alts = _compile_block(params.get("else") or params.get("else_effects"))
+        # "You may PAY {r}. If you do, this gets +1{p}." The cost was not read,
+        # so the prompt was free and the bonus unconditional — the card was
+        # strictly stronger than printed. A cost inside a MAY is not the same as
+        # an ability-level cost: it gates the OPTION, not the ability, so it
+        # belongs here rather than in AbilityDef.costs.
+        from engine.card_effects.dsl.cost_types import compile_cost
+        cost_specs = params.get("cost") or params.get("costs") or []
+        if isinstance(cost_specs, dict):
+            cost_specs = [cost_specs]
+        costs = [compile_cost(str(c.get("type") or "").upper(),
+                              {k: v for k, v in c.items() if k != "type"})
+                 for c in cost_specs if isinstance(c, dict)]
 
-        def _fn(card, event, state, _s=subs, _p=prompt, _alt=alts):
+        def _fn(card, event, state, _s=subs, _p=prompt, _alt=alts, _costs=costs):
             from engine.card_effects.ability_keywords import ask_yes_no, _controller_id
             cid = _controller_id(card)
-            chosen = _s if ask_yes_no(state, cid, context=_p) else _alt
+            # Not payable => the option is not on the table, and the else block
+            # (the "unless you ..." penalty) is what happens.
+            payable = all(check is None or check(card, event, state)
+                          for check, _pay in _costs)
+            take_it = payable and ask_yes_no(state, cid, context=_p)
+            if take_it:
+                for _check, pay in _costs:
+                    if pay is not None:
+                        pay(card, event, state)
+            chosen = _s if take_it else _alt
             for fn, gates in chosen:
                 if fn is None:
                     continue

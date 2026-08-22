@@ -14,7 +14,7 @@
           "type": "MAY",
           "cost": [
             {
-              "type": "PAY_LIFE",
+              "type": "PAY_RESOURCES",
               "amount": 1
             }
           ],
@@ -30,5 +30,5 @@
       "trigger": "ON_ATTACK"
     }
   ],
-  "_comment": "NEEDS_NEW_DSL: 'When this is DEFENDED BY 1 or more cards, you may pay {r}' needs a trigger for defenders being declared against this attack (not ON_DEFEND, which is this card defending). ability_type corrected to TRIGGERED/ON_ATTACK to make it reachable; the timing is approximate."
+  "_comment": "NEEDS_NEW_DSL: 'When this is DEFENDED BY 1 or more cards, you may pay {r}' needs a trigger for defenders being declared against this attack (not ON_DEFEND, which is this card defending). ability_type corrected to TRIGGERED/ON_ATTACK to make it reachable; the timing is approximate. MAY did not read its `cost`, so the prompt was FREE and the bonus unconditional -- the card was strictly stronger than printed. The cost was also the wrong RESOURCE: 'you may pay {r}' is one resource point, and it was authored as PAY_LIFE 1."
 }

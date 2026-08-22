@@ -230,6 +230,43 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             card.tapped = True
         return can_pay, pay
 
+    if ctype == "TAP_PERMANENT":
+        # "{t} an ALLY you control" — tapping something OTHER than the source.
+        # TAP_SELF taps the card paying the cost, and a "target" on it is not
+        # read, so a card asking to tap an ally was tapping itself. `subtype`
+        # names what may be tapped; without one, any untapped permanent will do.
+        subtype = str(params.get("subtype") or params.get("target") or "").lower()
+
+        def _candidates(card, state, _sub):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            if cid not in state.players:
+                return []
+            out = []
+            for c in state.players[cid].permanents.cards:
+                if getattr(c, "tapped", False):
+                    continue
+                if _sub and _sub not in [s.lower() for s in (getattr(c, "subtypes", None) or [])] \
+                        and _sub not in [t.lower() for t in (getattr(c, "types", None) or [])]:
+                    continue
+                out.append(c)
+            return out
+
+        def can_pay(card, event, state, _sub=subtype):
+            return bool(_candidates(card, state, _sub))
+
+        def pay(card, event, state, _sub=subtype):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            pool = _candidates(card, state, _sub)
+            if not pool:
+                return
+            cid = _controller_id(card)
+            pick = _ask_player(state, cid, [c.slug for c in pool],
+                               context=f"Tap which {_sub or 'permanent'}?")
+            chosen = next((c for c in pool if c.slug == pick), pool[0])
+            chosen.tapped = True
+        return can_pay, pay
+
     if ctype == "PAY_LIFE":
         amount = params.get("amount", 1)
         # Coerce a stray/dynamic string amount to an int so the life comparison and
