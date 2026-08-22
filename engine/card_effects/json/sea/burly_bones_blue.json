@@ -29,11 +29,11 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "OVERPOWER"
+          "type": "GAIN",
+          "keyword": "Overpower"
         }
       ]
     }
   ],
-  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. 'Destroy the top card of the deck' is a zone, and DECK_TOP is deliberately the top card only -- resolving it to the whole deck would turn it into a prompt to choose any card, a different effect and an information leak."
+  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. 'Destroy the top card of the deck' is a zone, and DECK_TOP is deliberately the top card only -- resolving it to the whole deck would turn it into a prompt to choose any card, a different effect and an information leak. 'This gets **overpower**' was a SET_FLAG named OVERPOWER. SET_FLAG appends the string to current_turn_effects, and the defend path reads combat.keywords -- nothing anywhere reads a flag by that name, so the keyword was never granted. GAIN is the keyword grant, and effect_types.canonical_keyword title-cases it so it matches the exact 'Overpower' test in engine._defend_step."
 }

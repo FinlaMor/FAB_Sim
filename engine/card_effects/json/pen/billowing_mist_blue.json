@@ -1,33 +1,15 @@
 {
   "slug": "billowing_mist_blue",
-  "_comment": "Turn-event tracking: read created_ephemeral_this_turn — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN.",
+  "_comment": "Turn-event tracking: read created_ephemeral_this_turn — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN. 'Your next attack this turn gets +1{p}' was a plain STATIC, which nothing dispatches -- MODIFY_NEXT_ATTACK queues a one-shot and only needs to run when the card is played. NOT IMPLEMENTED: 'the next time you would create a card with ephemeral this turn, instead create that many plus 1' is a REPLACEMENT on token creation. It was authored as an ON_TOKEN_CREATED trigger creating 2 more, which is an extra creation rather than a replaced one -- and gated on a condition that reads the very event it fires on. Removed rather than left creating tokens the card does not.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "effects": [
         {
           "type": "MODIFY_NEXT_ATTACK",
           "mod": "add",
           "amount": 1,
           "filter": []
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_TOKEN_CREATED",
-      "conditions": [
-        {
-          "type": "EVENT_THIS_TURN",
-          "event": "create",
-          "qualifier": "ephemeral"
-        }
-      ],
-      "effects": [
-        {
-          "type": "CREATE_TOKEN",
-          "name": "ephemeral",
-          "amount": 2
         }
       ]
     }

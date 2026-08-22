@@ -8,29 +8,25 @@
           "type": "CREATE_TOKEN",
           "token_type": "Quicken",
           "token": "quicken"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
         }
       ]
     },
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "GO_AGAIN"
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "go again"
         }
       ],
       "effects": [
         {
-          "type": "SELECT_FROM_REF",
-          "ref": "hero_or_ally",
-          "amount": 1
+          "type": "TAP",
+          "target": "OPPONENT_HERO"
         }
-      ],
-      "trigger": "ON_DEFEND"
+      ]
     }
-  ]
+  ],
+  "_comment": "Three defects. The PLAY half GAINed Go Again, which the card PRINTS -- a duplicate of something that already works. The defend trigger was gated on FLAG_SET 'GO_AGAIN', an invented flag nothing sets, where the card says 'when this defends an ATTACK WITH go again' -- a property of the attack, which ATTACK_HAS_KEYWORD reads off combat.keywords. And its effect was SELECT_FROM_REF on a ref named 'hero_or_ally' that nothing stores, where the card says '{t} target hero or ally'. SIMPLIFIED: taps the opposing hero rather than offering a choice of hero or ally, and the Quicken token is created under the controller's control rather than a chosen hero's."
 }

@@ -12,10 +12,11 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "OVERPOWER"
+          "type": "GAIN",
+          "keyword": "Overpower"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'This gets **overpower**' was a SET_FLAG named OVERPOWER. SET_FLAG appends the string to current_turn_effects, and the defend path reads combat.keywords -- nothing anywhere reads a flag by that name, so the keyword was never granted. GAIN is the keyword grant, and effect_types.canonical_keyword title-cases it so it matches the exact 'Overpower' test in engine._defend_step."
 }
