@@ -427,6 +427,76 @@ def _object_zone_cards(player, zone: str) -> list:
     return []
 
 
+def _hand_card_filter(params):
+    """Build a predicate for "discard a <kind of> card", or None for no filter.
+
+    One vocabulary shared by the DISCARD effect and the DISCARD_CARD cost,
+    because the cards use the same words for both and each had its own partial
+    reading: the cost knew only type_filter/class_filter, the effect knew
+    nothing at all. A filter nobody reads is not a weakened effect — the discard
+    still happens, on a card the text excludes, and on the COST side can_pay
+    said yes whenever the hand was non-empty, so cards were playable when their
+    cost could not actually be paid.
+
+        {"color": "yellow"}                  colour of the card
+        {"card_type": "Instant"}             type OR subtype (Attack is a subtype)
+        {"card_name": "Phoenix Flame"}       by name or slug
+        {"keyword": "watery grave"}          a printed keyword
+        {"class_filter": "Assassin"}         class, the cost's original spelling
+        {"filter": [ <DSL condition specs> ]} anything else
+    """
+    from engine.card_effects.dsl.condition_types import compile_condition
+
+    def _norm(v):
+        return "".join(ch for ch in str(v).lower() if ch.isalnum())
+
+    color = _first(params, "color", "colour")
+    kind = _first(params, "card_type", "type_filter", "subtype")
+    name = _first(params, "card_name", "name")
+    keyword = _first(params, "keyword")
+    klass = _first(params, "class_filter", "card_class")
+    specs = [compile_condition((f.get("type") or "none"), f)
+             for f in (params.get("filter") or []) if isinstance(f, dict)]
+    if not any((color, kind, name, keyword, klass)) and not specs:
+        return None
+
+    def _matches(c, state=None, _co=color, _k=kind, _n=name, _kw=keyword,
+                 _cl=klass, _sp=specs):
+        if _co:
+            # Card.color is None on a real card until something sets it; the
+            # PRINTED colour lives on base_color (raw_color before that). A
+            # colour filter reading only .color matched nothing at all.
+            have = (getattr(c, "color", None) or getattr(c, "base_color", None)
+                    or getattr(c, "raw_color", None) or "")
+            if _norm(have) != _norm(_co):
+                return False
+        if _k:
+            have = {_norm(x) for x in (getattr(c, "types", None) or [])}
+            have |= {_norm(x) for x in (getattr(c, "subtypes", None) or [])}
+            if _norm(_k) not in have:
+                return False
+        if _n and _norm(_n) not in (_norm(getattr(c, "name", "") or ""),
+                                    _norm(getattr(c, "slug", "") or "")):
+            return False
+        if _kw:
+            have = {_norm(x) for x in (getattr(c, "keywords", None) or [])}
+            if _norm(_kw) not in have:
+                return False
+        if _cl:
+            have = {_norm(x) for x in (getattr(c, "classes", None) or [])}
+            if _norm(_cl) not in have:
+                return False
+        for fn in _sp:
+            # Ordinary DSL conditions, evaluated with the CANDIDATE as the card
+            # argument — the same contract _compile_object_target's filters use.
+            # State is threaded through by the caller rather than passed as
+            # None, so a condition that reads the game state still works.
+            if fn is not None and not fn(c, None, state):
+                return False
+        return True
+    return _matches
+
+
 def _object_target_spec(target):
     """Normalise an effect's "target" to the canonical dict, or None.
 
@@ -861,8 +931,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         amt = params.get("amount", 1)
         player_target = params.get("player", "SELF")
         random_discard = params.get("random", False)
+        # "discard a YELLOW card" / "an INSTANT card" / "a card with WATERY
+        # GRAVE" — read nowhere, so every one of them discarded hand position 0
+        # whether it matched or not.
+        matches = _hand_card_filter(params)
 
-        def _fn(card, event, state, _a=amt, _pt=player_target, _rand=random_discard):
+        def _fn(card, event, state, _a=amt, _pt=player_target,
+                _rand=random_discard, _m=matches):
             from engine.card_effects.ability_keywords import effect_discard, _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
@@ -878,7 +953,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     n = max(0, int(n))
                 except (TypeError, ValueError):
                     n = 1
-            effect_discard(state, tid, n, random_discard=_rand)
+            bound = None if _m is None else (lambda c, _s=state: _m(c, _s))
+            discarded = effect_discard(state, tid, n, random_discard=_rand,
+                                       matches=bound)
+            # "If you do, draw a card" — a filtered discard can find nothing,
+            # and an empty hand discards nothing, so the payoff needs to know.
+            if discarded:
+                from engine.context import set_ref
+                set_ref("discarded", discarded[0] if len(discarded) == 1
+                        else list(discarded))
         return _fn
 
     if etype == "OPT":

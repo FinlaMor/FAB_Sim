@@ -3,13 +3,13 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "END_OF_TURN",
+      "trigger": "BEGINNING_OF_END_PHASE",
       "conditions": [
         {
           "type": "CARD_IN_ZONE",
           "zone": "pitch",
           "color": "yellow",
-          "amount": 2
+          "count_gte": 2
         }
       ],
       "effects": [
@@ -22,7 +22,8 @@
       ]
     },
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "ACTION",
+      "activation_cost": 0,
       "cost": [
         {
           "type": "DISCARD_CARD",
@@ -36,11 +37,10 @@
           "target": "self"
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }
   ],
-  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. The card destroys ITSELF, which DESTROY_PERMANENT does directly -- destroy() resolves the card's own zone."
+  "_comment": "\"Discard 2 cards with YELLOW color strips\" -- the colour was a key DISCARD_CARD did not read, so the cost discarded 2 RANDOM cards of any colour and can_pay returned true on any two cards in hand: the ability was activatable with no yellow cards at all. Costs must block legality. The end-phase trigger was END_OF_TURN; the card says AT THE BEGINNING OF EACH END PHASE. Its gate used 'amount' where CARD_IN_ZONE reads count_gte, so it asked for the zone to contain cards rather than for TWO of them. Still approximated, and said so rather than left looking finished: the trigger fires for the controller only, where the card says EACH hero, and 'any hero may activate this ability' has no representation -- activation is controller-only."
 }

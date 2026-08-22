@@ -1,32 +1,36 @@
 {
   "slug": "tricorn_of_saltwater_death",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
       "effects": [
         {
-          "type": "DISCARD",
-          "conditions": [
+          "type": "MAY",
+          "effects": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "hand",
-              "keyword": "WATERY_GRAVE"
-            }
-          ]
-        },
-        {
-          "type": "DRAW",
-          "conditions": [
+              "type": "DISCARD",
+              "keyword": "WateryGrave",
+              "amount": 1,
+              "player": "SELF"
+            },
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "hand",
-              "keyword": "WATERY_GRAVE"
+              "type": "CONDITIONAL",
+              "condition": {
+                "type": "REF_EXISTS",
+                "ref": "discarded"
+              },
+              "effects": [
+                {
+                  "type": "DRAW",
+                  "amount": 1
+                }
+              ]
             }
           ]
         }
-      ],
-      "trigger": "ON_DEFEND"
+      ]
     }
-  ]
+  ],
+  "_comment": "\"You may discard a card WITH WATERY GRAVE. IF YOU DO, draw a card.\" The keyword was expressed as an effect-level `conditions` gate -- CARD_IN_ZONE zone:hand keyword:WATERY_GRAVE -- which asks whether SUCH A CARD IS SOMEWHERE IN HAND and then discards hand position 0, which need not be that card. The same gate was repeated on the DRAW, so the draw fired whenever a watery-grave card was merely HELD, whatever was actually discarded. It is a filter on WHICH card, not a gate. Also removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text; the generator hallucinated it from Blade Break equipment (27 cards corpus-wide)."
 }

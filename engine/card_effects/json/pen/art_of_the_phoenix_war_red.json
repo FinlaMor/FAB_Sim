@@ -6,24 +6,28 @@
       "additional_cost": [
         {
           "type": "DISCARD_CARD",
-          "card_name": "phoenix_flame_red"
+          "card_name": "Phoenix Flame",
+          "amount": 1
         }
       ],
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "modifications": [
+          "type": "MODIFY_ATTACKS_THIS_TURN",
+          "mod": "add",
+          "amount": 1,
+          "player": "SELF",
+          "filter": [
             {
-              "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
-              "mod": "add",
-              "amount": 1,
-              "filter": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "MYHAND",
-                  "card_class": "Draconic"
-                }
-              ]
+              "type": "CARD_IS_TALENT",
+              "talent": "Draconic"
+            },
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Attack"
+            },
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Action"
             }
           ]
         },
@@ -33,5 +37,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Two clauses, two wrong effects. \"As an additional cost, discard a PHOENIX FLAME\": the DISCARD_CARD cost read only type_filter/class_filter, so a cost naming the card BY NAME had no filter at all -- the discard became RANDOM, and can_pay said yes whenever the hand held anything, making the card playable when its cost could not be paid. \"Draconic ATTACK ACTION CARDS you control get +1{p} THIS TURN\" was MODIFY_ATTACK_POWER_PER_UNIQUE_AURA, which counts distinct AURA NAMES in the arena, filtered on cards in hand -- a different effect measuring a different thing. MODIFY_ATTACKS_THIS_TURN is the turn-scoped, per-attack-filtered modifier this needs; it is re-applied to every matching attack rather than consumed by the first. Draconic is a TALENT, not a class -- this card's own class is NotClassed."
 }

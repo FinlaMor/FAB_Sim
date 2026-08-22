@@ -207,8 +207,21 @@ def test_regression_count_does_not_grow():
     # Below -- can be gated on it. The rest were the wrong effect: "the
     # ATTACKING hero puts a card" fell back to SELF, and "your revealed card"
     # meant the CLASH reveal, not a card in hand.
-    assert findings <= 69, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 69). "
+    # 69 -> 64: the discard family. DISCARD read no filter at all and
+    # DISCARD_CARD read only type_filter/class_filter, so "discard a YELLOW
+    # card" / "an INSTANT card" / "a Phoenix Flame" all discarded hand position
+    # 0 -- effect_discard took cards[0] with no choice offered to anyone. On the
+    # COST side an unread filter also made can_pay say yes on any non-empty
+    # hand, so cards were playable when their cost could not be paid. One
+    # vocabulary now serves both (_hand_card_filter).
+    #
+    # Part of that drop is the AUDIT seeing more, not the corpus changing:
+    # a block that hands `params` to a shared helper now gets credited with the
+    # keys the HELPER reads, including across a module boundary. Without it the
+    # scan went blind exactly where the compiler was factored properly, and
+    # reported 8 correct cards.
+    assert findings <= 64, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 64). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

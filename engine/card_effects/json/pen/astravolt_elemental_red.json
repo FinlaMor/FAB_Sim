@@ -10,18 +10,31 @@
           "effects": [
             {
               "type": "DISCARD",
-              "card_type": "Instant"
+              "card_type": "Instant",
+              "amount": 1,
+              "player": "SELF"
             },
             {
-              "type": "DRAW"
-            },
-            {
-              "type": "CREATE_TOKEN",
-              "token": "embodiment_of_lightning"
+              "type": "CONDITIONAL",
+              "condition": {
+                "type": "REF_EXISTS",
+                "ref": "discarded"
+              },
+              "effects": [
+                {
+                  "type": "DRAW",
+                  "amount": 1
+                },
+                {
+                  "type": "CREATE_TOKEN",
+                  "token": "embodiment_of_lightning"
+                }
+              ]
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"You may discard an INSTANT card. IF YOU DO, draw a card and create an Embodiment of Lightning token.\" card_type was not read by DISCARD, so it discarded hand position 0 whether it was an instant or not, and the draw plus the token happened regardless -- accepting the MAY was pure profit paid for with an arbitrary card. The payoff is now gated on a matching card actually being discarded."
 }

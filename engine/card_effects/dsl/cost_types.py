@@ -68,43 +68,40 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         return can_pay, pay
 
     if ctype == "DISCARD_CARD":
-        # Discard cost with an optional type or class filter (e.g. "discard an
-        # Assassin card"). When filtered, the controller chooses which matching
-        # card to discard; unfiltered discards are random.
+        # Discard cost with an optional filter (e.g. "discard an Assassin card",
+        # "discard a Phoenix Flame", "discard 2 cards with yellow color
+        # strips"). The controller chooses which matching card to discard.
+        #
+        # Only type_filter and class_filter were read, so a cost naming the card
+        # by NAME or by COLOUR had no filter at all — and an unfiltered cost
+        # here is not merely weaker, it is a different card in two ways: the
+        # discard became RANDOM, and can_pay said yes whenever the hand was
+        # non-empty, so the card was playable when its cost could not actually
+        # be paid. Costs must block play legality.
+        #
+        # The filter vocabulary is shared with the DISCARD effect
+        # (effect_types._hand_card_filter) because the cards use the same words
+        # for both.
+        from engine.card_effects.dsl.effect_types import _hand_card_filter
         amount = params.get("amount", 1)
-        type_filter = params.get("type_filter", "")
-        class_filter = params.get("class_filter", "")
+        matches = _hand_card_filter(params)
 
-        def _matches(c, _tf=type_filter, _cf=class_filter):
-            if _tf and _tf.upper() not in [t.upper() for t in (getattr(c, 'types', None) or [])]:
-                return False
-            if _cf and _cf.upper() not in [x.upper() for x in (getattr(c, 'classes', None) or [])]:
-                return False
-            return True
-
-        def can_pay(card, event, state, _a=amount):
+        def can_pay(card, event, state, _a=amount, _m=matches):
             from engine.card_effects.ability_keywords import _controller_id
             hand = state.players[_controller_id(card)].hand
-            if type_filter or class_filter:
-                return len([c for c in hand.cards if _matches(c)]) >= _a
-            return len(hand.cards) >= _a
+            if _m is None:
+                return len(hand.cards) >= _a
+            return len([c for c in hand.cards if _m(c, state)]) >= _a
 
-        def pay(card, event, state, _a=amount):
-            from engine.card_effects.ability_keywords import _controller_id, _ask_player, effect_discard
-            from engine.effect_keywords import discard as _ek_discard
+        def pay(card, event, state, _a=amount, _m=matches):
+            from engine.card_effects.ability_keywords import _controller_id, effect_discard
             cid = _controller_id(card)
-            if not (type_filter or class_filter):
-                effect_discard(state, cid, _a, random_discard=True)
-                return
-            hand = state.players[cid].hand
-            for _ in range(_a):
-                eligible = [c for c in hand.cards if _matches(c)]
-                if not eligible:
-                    break
-                pick = _ask_player(state, cid, [c.slug for c in eligible],
-                                   context="Choose a card to discard as a cost")
-                chosen = next((c for c in eligible if c.slug == pick), eligible[0])
-                _ek_discard(state, chosen, card, origin="hand")
+            # Unfiltered stays random: "discard a card" as a cost is paid by a
+            # card the player picks, but the corpus's unfiltered uses were
+            # authored as random and changing that is a separate question.
+            bound = None if _m is None else (lambda c, _s=state: _m(c, _s))
+            effect_discard(state, cid, _a, random_discard=(_m is None),
+                           matches=bound)
         return can_pay, pay
 
     if ctype == "REVEAL_CARD_COST_GTE":

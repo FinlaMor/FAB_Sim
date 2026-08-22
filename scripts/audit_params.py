@@ -80,6 +80,27 @@ NESTED_KEYS = {"then", "else", "else_effects", "when", "if", "on_success",
                "on_consume", "conditions", "effects", "modes"}
 
 
+def _strip_docstrings(body):
+    """Drop docstring statements from a body, at every nesting level.
+
+    Only the leading string-expression of a function counts as a docstring, so
+    this walks nested FunctionDefs rather than filtering every bare string.
+    """
+    for stmt in body:
+        for node in ast.walk(stmt):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef,
+                                 ast.ClassDef, ast.Module)):
+                inner = getattr(node, "body", None)
+                if (inner and isinstance(inner[0], ast.Expr)
+                        and isinstance(inner[0].value, ast.Constant)
+                        and isinstance(inner[0].value.value, str)):
+                    node.body = inner[1:] or [ast.Pass()]
+    return [st for st in body
+            if not (isinstance(st, ast.Expr)
+                    and isinstance(st.value, ast.Constant)
+                    and isinstance(st.value.value, str))]
+
+
 def _dispatch_params(path: Path, var: str) -> dict[str, set[str]]:
     """Map each registered type name -> the params.get() keys its block reads.
 
@@ -108,7 +129,36 @@ def _dispatch_params(path: Path, var: str) -> dict[str, set[str]]:
                             found.append(elt.value)
         return found
 
-    def keys_read(body) -> set[str]:
+    # Module-level helpers, so a block that hands `params` to one can be
+    # credited with the keys the HELPER reads. _hand_card_filter(params) is
+    # shared by the DISCARD effect and the DISCARD_CARD cost precisely so the
+    # two agree on what "discard a yellow card" means; without this the scan
+    # sees no literals at the call site and reports every card using the shared
+    # vocabulary. The same trap the helper(params, "a", "b") rule below was
+    # added for — a detector that goes blind when the code it inspects is
+    # factored into a shared function is worse than no detector.
+    module_funcs = {n.name: n for n in ast.walk(tree)
+                    if isinstance(n, ast.FunctionDef)}
+    # A helper can also be IMPORTED — cost_types.DISCARD_CARD shares
+    # effect_types._hand_card_filter so the cost and the effect agree on what
+    # "discard a yellow card" means. Resolve those too, or the audit is blind
+    # exactly where the compiler is most correct.
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ImportFrom) or not node.module:
+            continue
+        src = ROOT / (node.module.replace(".", "/") + ".py")
+        if not src.is_file():
+            continue
+        try:
+            other = ast.parse(src.read_text(encoding="utf-8"))
+        except SyntaxError:
+            continue
+        wanted = {a.name for a in node.names}
+        for fn in ast.walk(other):
+            if isinstance(fn, ast.FunctionDef) and fn.name in wanted:
+                module_funcs.setdefault(fn.name, fn)
+
+    def keys_read(body, _seen=None) -> set[str]:
         """Every params.get("k") / params["k"] literal inside this block.
 
         Some blocks read params INDIRECTLY through a local helper:
@@ -125,6 +175,13 @@ def _dispatch_params(path: Path, var: str) -> dict[str, set[str]]:
         manufacture one, and a silent false positive here would send someone to
         "fix" a card that is already correct.
         """
+        seen = _seen or frozenset()
+        # A DOCSTRING is a string constant like any other, and the indirect-read
+        # path below adds every string literal it can see. Descending into a
+        # helper therefore swept that helper's prose into the read set --
+        # which does not just make the report unreadable, it WIDENS the set with
+        # arbitrary text and so suppresses real findings. Strip them first.
+        body = [st for st in _strip_docstrings(body)]
         keys: set[str] = set()
         indirect = False
         for stmt in body:
@@ -198,6 +255,13 @@ def _dispatch_params(path: Path, var: str) -> dict[str, set[str]]:
                     for arg in node.args[1:]:
                         if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
                             keys.add(arg.value)
+                    # helper(params) with no key literals: the names it reads
+                    # are inside the helper, so descend into it. Guarded against
+                    # recursion by the visited set.
+                    fn = (module_funcs.get(node.func.id)
+                          if isinstance(node.func, ast.Name) else None)
+                    if fn is not None and fn.name not in seen:
+                        keys |= keys_read(fn.body, seen | {fn.name})
         return keys
 
     for func in [n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)]:

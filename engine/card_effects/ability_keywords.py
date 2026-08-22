@@ -1535,14 +1535,38 @@ def _fire_on_discard(state, player_id: int, discarded_card=None) -> None:
             pass
 
 
-def effect_discard(state, player_id: int, count: int = 1, random_discard: bool = False) -> list:
+def effect_discard(state, player_id: int, count: int = 1,
+                   random_discard: bool = False, matches=None) -> list:
+    """Discard `count` cards from a player's hand, returning what was discarded.
+
+    THE DISCARDING PLAYER CHOOSES. "They discard a card" is their decision in
+    FAB, and this took player.hand.cards[0] — the first card in hand — for every
+    non-random discard in the corpus. Nobody ever chose, so the decision never
+    reached the agent and never reached the recorder.
+
+    `matches` is an optional predicate for "discard a YELLOW card" / "an INSTANT
+    card" / "a Phoenix Flame". Those filters were expressed on the cards and
+    read nowhere, so a filtered discard hit whatever sat at index 0 whether it
+    matched or not. Only matching cards are offered, and a filtered discard with
+    no match discards nothing rather than falling back to an illegal card.
+
+    Returns the cards actually discarded so a caller can gate an "if you do".
+    """
     import random as _random
     discarded = []
     player = state.players[player_id]
     for _ in range(count):
-        if not player.hand.cards:
+        pool = [c for c in player.hand.cards if matches is None or matches(c)]
+        if not pool:
             break
-        card = _random.choice(player.hand.cards) if random_discard else player.hand.cards[0]
+        if random_discard:
+            card = _random.choice(pool)
+        elif len(pool) == 1:
+            card = pool[0]
+        else:
+            pick = _ask_player(state, player_id, [c.slug for c in pool],
+                               context="Choose a card to discard")
+            card = next((c for c in pool if c.slug == pick), pool[0])
         _ek_discard(state, card, None, origin='hand')
         _fire_on_discard(state, player_id, card)
         discarded.append(card)

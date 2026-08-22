@@ -1130,6 +1130,26 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return ((getattr(c, "counters", None) or {}).get(_ct, 0) or 0) > 0
         return _has_counter
 
+    if ctype in ("HAS_BASE_DEFENSE", "NO_BASE_DEFENSE"):
+        # "choose a card WITHOUT BASE {d}" — an attack action with no printed
+        # defence, not one whose defence is low. BASE_DEFENSE_LTE cannot say it:
+        # a card with no {d} has base_defense None, which that condition treats
+        # as missing and falls back to the current defence.
+        #
+        # The one card that needs it wrote ATTACK_HAS_KEYWORD keyword
+        # "BASE_DEFENSE" — there is no such keyword, so the test was false for
+        # every card in the game.
+        want = ctype == "HAS_BASE_DEFENSE"
+        if "value" in params:
+            want = bool(params.get("value"))
+
+        def _has_base_def(c, e, s, _w=want):
+            base = getattr(c, "base_defense", None)
+            if base is None:
+                base = getattr(c, "raw_defense", None)
+            return (base is not None) is _w
+        return _has_base_def
+
     if ctype in ("BASE_DEFENSE_LTE", "BASE_DEFENSE_GTE"):
         # "a Guardian off-hand you control with 2 or less base {d}" — the
         # PRINTED defence, not the current one, so counters already on the card

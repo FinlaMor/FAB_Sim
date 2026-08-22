@@ -6,19 +6,7 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
-          "type": "AND",
-          "conditions": [
-            {
-              "type": "ATTACK_TARGET_IS_HERO"
-            },
-            {
-              "type": "NOT",
-              "condition": {
-                "type": "ATTACK_HAS_KEYWORD",
-                "keyword": "BASE_DEFENSE"
-              }
-            }
-          ]
+          "type": "ATTACK_TARGET_IS_HERO"
         }
       ],
       "effects": [
@@ -27,35 +15,31 @@
           "target": "OPPONENT_HAND"
         },
         {
-          "type": "SELECT_FROM_REF",
-          "ref": "OPPONENT_HAND",
-          "conditions": [
+          "type": "DISCARD",
+          "player": "OPPONENT",
+          "amount": 1,
+          "filter": [
             {
-              "type": "NOT",
-              "condition": {
-                "type": "CARD_IN_ZONE",
-                "zone": "OPPONENT_HAND",
-                "conditions": [
-                  {
-                    "type": "HAS_KEYWORD",
-                    "keyword": "BASE_DEFENSE"
-                  }
-                ]
-              }
+              "type": "NO_BASE_DEFENSE"
             }
-          ],
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_EXISTS",
+            "ref": "discarded"
+          },
           "effects": [
             {
-              "type": "DISCARD",
-              "target": "SELECTED_CARD"
-            },
-            {
               "type": "DRAW",
-              "amount": 1
+              "amount": 1,
+              "player": "SELF"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"When this hits a hero, look at their hand and choose a card WITHOUT BASE {d}. If you do, THEY discard it and YOU draw a card.\" Every part aimed somewhere else. 'Without base {d}' was ATTACK_HAS_KEYWORD keyword:'BASE_DEFENSE' -- there is no such keyword, so the test was false for every card in the game -- and it gated the whole ability rather than filtering which card. The SELECT_FROM_REF around it carried `conditions` and `effects` that it does not read, so its whole body was unreachable. The DISCARD inside named target:'SELECTED_CARD', a key DISCARD does not read, and defaulted to player SELF: had it been reachable, the ATTACKER would have discarded their own card. NO_BASE_DEFENSE is a new condition because a card with no printed {d} has base_defense None, which BASE_DEFENSE_LTE treats as missing and falls back to current defence. The LOOK_AT was briefly dropped in this rewrite on the reasoning that a filtered discard implies looking. That was wrong twice: 'look at their hand' is a real game action whose INFORMATION consequences a recorder and an agent both need to see, and an earlier fix in this same effort had already corrected this card's LOOK_AT from the opponent's DECK to their HAND. Removing it silently undid that."
 }

@@ -2,25 +2,19 @@
   "slug": "carrion_crown",
   "abilities": [
     {
-      "ability_type": "PLAY",
-      "additional_cost": [
+      "ability_type": "ACTION",
+      "activation_cost": 0,
+      "cost": [
         {
           "type": "DISCARD_CARD",
-          "target": "hand",
-          "filter": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "HAND",
-              "subtype": "Ally"
-            }
-          ]
+          "card_type": "Ally",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_SELF"
         }
       ],
       "effects": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        },
         {
           "type": "DRAW",
           "amount": 1
@@ -30,5 +24,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Discard an ALLY, destroy this: Draw a card.\" The ally requirement was a `filter` list the cost does not read, holding CARD_IN_ZONE -- a condition that COUNTS cards in a zone rather than testing one candidate, so it could not have worked as a filter either. With no filter the cost discarded a RANDOM card and, worse, can_pay returned true whenever the hand was non-empty: the ability was activatable with no ally at all. Costs must block legality. 'Ally' is matched as a type, which is what the shared hand filter reads."
 }

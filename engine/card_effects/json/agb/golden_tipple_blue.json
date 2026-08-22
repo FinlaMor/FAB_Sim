@@ -3,28 +3,32 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "effects": [
         {
           "type": "DISCARD",
-          "color": "yellow"
+          "color": "yellow",
+          "amount": 1,
+          "player": "SELF"
         },
         {
-          "type": "DRAW",
-          "amount": 1
-        },
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Gold",
-          "token": "gold"
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_EXISTS",
+            "ref": "discarded"
+          },
+          "effects": [
+            {
+              "type": "DRAW",
+              "amount": 1
+            },
+            {
+              "type": "CREATE_TOKEN",
+              "token": "gold"
+            }
+          ]
         }
-      ],
-      "conditions": [
-        {
-          "type": "DISCARDED_CARD_POWER_GTE",
-          "amount": 1
-        }
-      ],
-      "trigger": "ON_ATTACK"
+      ]
     },
     {
       "ability_type": "PLAY",
@@ -34,5 +38,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"You may discard a YELLOW card. IF YOU DO, draw a card and create a Gold token.\" The colour was a key the DISCARD effect did not read, so it discarded hand position 0 whatever colour it was -- and effect_discard picked cards[0] with no choice offered at all. The gate on the whole ability was DISCARDED_CARD_POWER_GTE 1, which asks about the discarded card's POWER, a question this card never asks; the real gate is 'if you do', which is whether a yellow card was found and discarded. 'You may' needs no MAY wrapper here: a filtered discard with no matching card discards nothing and the payoff does not fire, and with a match the payoff is pure upside."
 }
