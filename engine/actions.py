@@ -858,6 +858,10 @@ def _restriction_blocks(state: GameState, card: Card, slot_name: str | None) -> 
     Each entry in combat.defender_restrictions names cards that may NOT defend:
 
         equipment           any equipment
+        from_hand           a card defending from HAND (Benji: "can't be
+                            defended by cards from hand"). The hand loop passes
+                            slot_name=None and the equipment loop passes a slot,
+                            so the two are already distinguishable here.
         non_head_equipment  equipment outside the head slot (Headbutt)
         card_type/subtype   a type or subtype ("Attack", "Action")
         cost_lt / cost_lte / cost_gt / cost_gte
@@ -873,6 +877,8 @@ def _restriction_blocks(state: GameState, card: Card, slot_name: str | None) -> 
 
     for rule in combat.defender_restrictions:
         if rule.get("equipment") and not is_equipment:
+            continue
+        if rule.get("from_hand") and (is_equipment or slot_name is not None):
             continue
         if rule.get("non_head_equipment"):
             if not is_equipment or slot_name == "head":

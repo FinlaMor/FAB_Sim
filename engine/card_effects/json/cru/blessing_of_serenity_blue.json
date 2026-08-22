@@ -2,28 +2,16 @@
   "slug": "blessing_of_serenity_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "modifications": [
-            {
-              "type": "PREVENT_DAMAGE",
-              "amount": 1,
-              "target": "PLAYER",
-              "conditions": [
-                {
-                  "type": "DURING_TURN",
-                  "player": "SELF"
-                },
-                {
-                  "type": "IN_COMBAT"
-                }
-              ]
-            }
-          ]
+          "type": "PREVENT_DAMAGE",
+          "amount": 1,
+          "target": "PLAYER",
+          "damage_type": "physical"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "PREVENT_DAMAGE was buried in an APPLY_CONTINUOUS inside a plain STATIC, so the shield was never registered. It is already a one-shot replacement effect (CR 6.4.10) consumed by the next matching damage, which is exactly what 'the NEXT TIME your hero would be dealt {p} damage this turn' means -- it needs no continuous wrapper, only to run when the card is played. Its DURING_TURN and IN_COMBAT conditions were nested where nothing compiles them."
 }

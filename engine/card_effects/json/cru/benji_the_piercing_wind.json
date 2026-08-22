@@ -2,24 +2,24 @@
   "slug": "benji_the_piercing_wind",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACKER_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "ATTACK_IS_NOT_WEAPON"
+        },
+        {
+          "type": "ATTACK_BASE_POWER_LTE",
+          "amount": 2
+        }
+      ],
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "modifications": [
-            {
-              "type": "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT",
-              "filter": [
-                {
-                  "type": "ATTACK_IS_NOT_WEAPON"
-                },
-                {
-                  "type": "ATTACK_PITCH_POWER_LTE",
-                  "amount": 2
-                }
-              ]
-            }
-          ]
+          "type": "RESTRICT_DEFENDERS",
+          "from_hand": true
         }
       ]
     },
@@ -52,5 +52,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The restriction was a RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT inside an APPLY_CONTINUOUS inside a plain STATIC -- dead three ways over, and naming the wrong restriction besides: the card says 'can't be defended by CARDS FROM HAND', which is close to the opposite of 'head equipment only'. Its power test was ATTACK_PITCH_POWER_LTE, which reads the attack's PITCH value, not its {p}. A restriction is created when a qualifying attack is declared, so it is an ON_ATTACK trigger rather than a continuous effect."
 }
