@@ -17,23 +17,6 @@
       ]
     },
     {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_type": "Evo",
-          "amount": 2
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "subtract",
-          "amount": 3
-        }
-      ]
-    },
-    {
       "ability_type": "WHILE_STATIC",
       "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran, while the card DB lists the keyword as printed, so the card had it unconditionally. WHILE_STATIC re-evaluates the gate on every attack-power recalculation, and the printed copy is suppressed for any keyword a card grants itself conditionally. The Evo tiers are separate abilities because each names a different threshold; only the 'costs {r}{r}{r} less to play' tier is left unmodelled -- there is no board-state play-cost reduction, and it is flagged rather than approximated.",
       "conditions": [
@@ -75,5 +58,5 @@
       ]
     }
   ],
-  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy all cards defending this' names the cards declared as defenders on this chain link -- combat state, not a zone and not the arena, so no object-target spec can express it."
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy all cards defending this' names the cards declared as defenders on this chain link -- combat state, not a zone and not the arena, so no object-target spec can express it. Removed the 'costs {r}{r}{r} less to play' tier. It was a plain STATIC holding MODIFY_ATTACK subtract 3 -- a POWER penalty, not a cost reduction, so had anything dispatched it the card would have LOST 3{p} instead of costing less. NOT IMPLEMENTED: a play-cost reduction driven by board state (Evos equipped). The queued cost mods are one-shots created by an effect; there is no continuous 'this costs less while X' path. The other three tiers -- the on-hit destroy at 1+, overpower at 3+, +3{p} at 4+ -- are live, and CONTROLS_TOKEN_TYPE does reach equipment slots and match the Evo SUBTYPE, so their gates are real."
 }
