@@ -1,10 +1,10 @@
 {
   "slug": "silver_palms",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). Triggered on START_OF_TURN with a NOT-active-player condition, and START_OF_TURN is dispatched only to the TURN PLAYER's permanents -- so the event never arrived and the condition was never even evaluated. Now START_OF_ANY_TURN, which reaches both players' permanents. ",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
+      "trigger": "START_OF_ANY_TURN",
       "conditions": [
         {
           "type": "OR",

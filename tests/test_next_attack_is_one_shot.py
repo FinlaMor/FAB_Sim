@@ -504,12 +504,26 @@ def _defend(st, defender_id=2, defense=3, slug="blocker", types=("Action",)):
     return st.combat.total_defense
 
 
+def _begin_opponents_turn(st, defender_id=2):
+    """Start the turn of the player who is NOT the token's controller.
+
+    Driven through the real listener rather than dispatching the DSL trigger
+    by name: toughness fires "at the start of each OTHER hero's turn", and
+    START_OF_TURN is delivered only to the TURN PLAYER's permanents. Naming the
+    trigger directly bypasses exactly the dispatch this card depends on, so the
+    test would pass while the card never fired in a real game.
+    """
+    import engine.engine as _E
+    _E._setup_dsl_listeners(st)
+    st.active_player = 3 - defender_id
+    st.event_manager.emit('start_of_turn', st)
+
+
 def test_toughness_buffs_the_next_block():
     st = _state()
     token = _card("toughness", owner=2)
     st.players[2].permanents.add(token)
-    st.active_player = 1                       # the opponent's turn has begun
-    dispatch(st, "START_OF_TURN", token.slug, card=token, event=None)
+    _begin_opponents_turn(st)                  # the opponent's turn has begun
     assert _defend(st, defender_id=2, defense=3) == 4
 
 
@@ -517,8 +531,7 @@ def test_toughness_buffs_one_block_only():
     st = _state()
     token = _card("toughness", owner=2)
     st.players[2].permanents.add(token)
-    st.active_player = 1
-    dispatch(st, "START_OF_TURN", token.slug, card=token, event=None)
+    _begin_opponents_turn(st)
     assert _defend(st, defender_id=2, defense=3, slug="first") == 4
     assert _defend(st, defender_id=2, defense=3, slug="second") == 3,         "every block was buffed, not the next one"
 

@@ -3,187 +3,170 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "trigger": "START_OF_ANY_TURN",
       "conditions": [
         {
-          "type": "FLAG_SET",
-          "flag": "DRAWN_FROM_AURA"
+          "type": "IS_ACTIVE_PLAYER",
+          "value": false
         }
       ],
       "effects": [
         {
-          "type": "DRAW",
-          "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "DRAWN_FROM_AURA",
-          "value": false
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "GAINED_RESOURCE_FROM_AURA"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "RESOURCE_POINTS",
-          "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "GAINED_RESOURCE_FROM_AURA",
-          "value": false
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "GAINED_LIFE_FROM_AURA"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "LIFE",
-          "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "GAINED_LIFE_FROM_AURA",
-          "value": false
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "GAINED_ATTACK_FROM_AURA"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "GAINED_ATTACK_FROM_AURA",
-          "value": false
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "they draw a card",
+              "effects": [
+                {
+                  "type": "DRAW",
+                  "amount": 1,
+                  "player": "OPPONENT"
+                },
+                {
+                  "type": "PUT_COUNTER",
+                  "target": "self",
+                  "counter": "draw",
+                  "amount": 1
+                }
+              ]
+            },
+            {
+              "name": "they gain {r}",
+              "effects": [
+                {
+                  "type": "GAIN",
+                  "asset": "RESOURCE_POINTS",
+                  "amount": 1,
+                  "player": "OPPONENT"
+                },
+                {
+                  "type": "PUT_COUNTER",
+                  "target": "self",
+                  "counter": "resource",
+                  "amount": 1
+                }
+              ]
+            },
+            {
+              "name": "they gain 1{h}",
+              "effects": [
+                {
+                  "type": "GAIN",
+                  "asset": "HEALTH",
+                  "amount": 1,
+                  "player": "OPPONENT"
+                },
+                {
+                  "type": "PUT_COUNTER",
+                  "target": "self",
+                  "counter": "life",
+                  "amount": 1
+                }
+              ]
+            },
+            {
+              "name": "their next attack gains +1{p}",
+              "effects": [
+                {
+                  "type": "MODIFY_NEXT_ATTACK",
+                  "mod": "add",
+                  "amount": 1
+                },
+                {
+                  "type": "PUT_COUNTER",
+                  "target": "self",
+                  "counter": "power",
+                  "amount": 1
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "COUNTER_GTE",
+              "counter": "draw",
+              "amount": 1
+            }
+          ],
+          "then": [
+            {
+              "type": "DRAW",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "COUNTER_GTE",
+              "counter": "resource",
+              "amount": 1
+            }
+          ],
+          "then": [
+            {
+              "type": "GAIN",
+              "asset": "RESOURCE_POINTS",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "COUNTER_GTE",
+              "counter": "life",
+              "amount": 1
+            }
+          ],
+          "then": [
+            {
+              "type": "GAIN",
+              "asset": "HEALTH",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "COUNTER_GTE",
+              "counter": "power",
+              "amount": 1
+            }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_NEXT_ATTACK",
+              "mod": "add",
+              "amount": 1
+            }
+          ]
+        },
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
         }
       ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "DRAWN_FROM_AURA"
-        }
-      ],
-      "effects": [
-        {
-          "type": "DRAW",
-          "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "DRAWN_FROM_AURA",
-          "value": false
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "GAINED_RESOURCE_FROM_AURA"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "RESOURCE_POINTS",
-          "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "GAINED_RESOURCE_FROM_AURA",
-          "value": false
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "GAINED_LIFE_FROM_AURA"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "LIFE",
-          "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "GAINED_LIFE_FROM_AURA",
-          "value": false
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN_IN_GRAVEYARD",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "GAINED_ATTACK_FROM_AURA"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "GAINED_ATTACK_FROM_AURA",
-          "value": false
-        }
-      ]
     }
-  ]
+  ],
+  "_comment": "Rebuilt. It had NINE abilities: four payoff clauses DUPLICATED as four more (so the payoff would have doubled), each gated on FLAG_SET of a flag its own effects SET -- an ability that can only run after it has already run -- and no implementation at all of the half that gives the opponent something, which is what should have recorded those flags.\n\nFlags could not have carried this anyway: current_turn_effects is emptied every turn, and this card records what happened on the OPPONENT'S turn to pay out on YOURS. The record has to live on the card, so it is counters, which persist until the card leaves.\n\nThe giving half also could not fire: it is 'at the start of each OTHER hero's turn', and START_OF_TURN only reaches the turn player's permanents. It now uses START_OF_ANY_TURN.\n\nSIMPLIFIED: 'their next attack this turn gains +1{p}' should buff the OPPONENT's next attack, but MODIFY_NEXT_ATTACK queues on the CONTROLLER and takes no player, so that mode buffs the wrong hero. Said plainly rather than papered over -- it was briefly written as GRANT_NEXT_ATTACK with an empty keyword, which queues a grant of \"\" and does nothing at all, and a silent no-op is the worse of the two."
 }

@@ -2,28 +2,16 @@
   "slug": "flowing_stormstrike_red",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 1,
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "FLOWING_STORMSTRIKE_ACTIVATED_THIS_TURN",
-          "count": 2,
-          "comparison": "lt"
-        }
-      ],
       "effects": [
         {
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "FLOWING_STORMSTRIKE_ACTIVATED_THIS_TURN",
-          "increment": true
         }
-      ]
+      ],
+      "per_turn": 2
     },
     {
       "ability_type": "TRIGGERED",
@@ -36,5 +24,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'Twice per Turn Instant' was hand-rolled as a FLAG_SET condition with count:2/comparison:'lt' plus a SET_FLAG with increment:true -- and FLAG_SET reads neither count nor comparison, and SET_FLAG does not read increment. So the condition was just 'is this flag set', gated on the flag the ability's OWN effects set: the ability could only be used after it had already been used, i.e. never. `per_turn` is the real field, enforced by play.py through has_per_turn_limit/activations. The ability is also an INSTANT, not a plain ACTIVATE, so it can be used during combat -- which is the only time '+1{p} to this' means anything."
 }

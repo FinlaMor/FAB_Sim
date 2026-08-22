@@ -11,6 +11,12 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "END_OF_TURN":              "END_OF_TURN",
     "BEGINNING_OF_END_PHASE":   "BEGINNING_OF_END_PHASE",
     "START_OF_TURN":            "START_OF_TURN",
+    # "At the start of EACH hero's turn" / "each OTHER hero's turn". Dispatched
+    # to BOTH players' permanents; START_OF_TURN reaches only the turn player's,
+    # so a card keyed to the opponent's turn never received the event and its
+    # condition was never even evaluated.
+    "START_OF_ANY_TURN":        "START_OF_ANY_TURN",
+    "START_OF_EACH_TURN":       "START_OF_ANY_TURN",
     "ON_ACTIVATE":              "ON_ACTIVATE",
     "ON_DEATH":                 "ON_DEATH",
     "ON_ENTER_PLAY":            "ON_ENTER_PLAY",

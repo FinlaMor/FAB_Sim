@@ -1,10 +1,10 @@
 {
   "slug": "toughness",
-  "_comment": "Generic Aura token. 'The next action card you DEFEND with this turn gets +1{d}' \u2014 a defending card passes through neither the attack queue nor the play-time queue, which is why the defence queue exists. Triggers at the start of the OPPONENT'S turn, which is when you will be defending.",
+  "_comment": "Generic Aura token. 'The next action card you DEFEND with this turn gets +1{d}' — a defending card passes through neither the attack queue nor the play-time queue, which is why the defence queue exists. Triggers at the start of the OPPONENT'S turn, which is when you will be defending. Triggered on START_OF_TURN with a NOT-active-player condition, and START_OF_TURN is dispatched only to the TURN PLAYER's permanents -- so the event never arrived and the condition was never even evaluated. Now START_OF_ANY_TURN, which reaches both players' permanents. This is a generic Aura token many cards create, so it was dead wherever it appeared.",
   "abilities": [
     {
       "ability_type": "STATIC_TRIGGERED",
-      "trigger": "START_OF_TURN",
+      "trigger": "START_OF_ANY_TURN",
       "conditions": [
         {
           "type": "IS_ACTIVE_PLAYER",

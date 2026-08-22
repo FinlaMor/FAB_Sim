@@ -1409,6 +1409,21 @@ def _setup_dsl_listeners(state: GameState) -> None:
         for zone in _dsl_permanent_zones(player):
             for card in list(zone.cards):
                 dispatch(game_state, "START_OF_TURN", card.slug, card=card)
+        # "At the start of EACH OTHER hero's turn" — a separate event, dispatched
+        # to BOTH players' permanents, because START_OF_TURN above only reaches
+        # the turn player's and so could never deliver it.
+        #
+        # Deliberately a new trigger rather than broadening START_OF_TURN: 23
+        # abilities use that one with no active-player condition at all, meaning
+        # "your turn", and they would start firing twice a round. Cards that
+        # mean every turn say so, and narrow it with IS_ACTIVE_PLAYER.
+        for pid in (game_state.active_player, 3 - game_state.active_player):
+            owner = game_state.players.get(pid)
+            if owner is None:
+                continue
+            for zone in _dsl_permanent_zones(owner):
+                for card in list(zone.cards):
+                    dispatch(game_state, "START_OF_ANY_TURN", card.slug, card=card)
         # "While this is in your graveyard, at the start of your turn …" — a
         # separate event so only graveyard-static abilities respond (Blacktek
         # Whisperers), never arena statics whose card happens to be in the yard.
