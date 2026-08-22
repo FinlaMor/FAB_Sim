@@ -544,6 +544,39 @@ def _compile_object_target(spec):
     return _fn
 
 
+def _effect_player_id(state, card, spec, event=None) -> int | None:
+    """Which player an effect's `player` names.
+
+    Most effects resolve SELF/OPPONENT relative to the CONTROLLER, each with
+    their own copy of the same expression. Two more relations exist and had no
+    spelling at all:
+
+      ACTIVE / TURN_PLAYER   whose turn it is — "at the beginning of EACH hero's
+                             action phase, THEY draw a card" means the hero whose
+                             phase it is, not the card's controller.
+      EVENT_PLAYER / DREW    the player the event is about — "whenever a HERO
+                             draws a card, THEY lose 1{h}" means whoever drew.
+
+    Without these, a card whose text says "they" could only ever be written as
+    the controller or their opponent, which is right half the time by accident.
+    """
+    from engine.card_effects.ability_keywords import _controller_id
+    cid = _controller_id(card)
+    want = str(spec or "SELF").upper()
+    if want in ("OPPONENT", "DEFENDING", "DEFENDER", "THEM"):
+        return (3 - cid) if cid in (1, 2) else None
+    if want in ("ACTIVE", "TURN_PLAYER", "ACTIVE_PLAYER"):
+        return getattr(state, "active_player", cid)
+    if want in ("EVENT_PLAYER", "DREW", "TRIGGERING", "THEY"):
+        data = getattr(event, "data", None)
+        if isinstance(data, dict):
+            for key in ("draw_player", "player_id", "target_player_id"):
+                if data.get(key) is not None:
+                    return data[key]
+        return getattr(state, "active_player", cid)
+    return cid
+
+
 def _record_banished(cards: list) -> None:
     """Store what a BANISH just banished, so "if it's blue" has something to ask.
 
@@ -732,10 +765,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 tid = data.get(key)
                 if tid is None:
                     return
-            elif _t in ("OPPONENT", "DEFENDING", "DEFENDER"):
-                tid = 3 - cid
             else:
-                tid = cid
+                tid = _effect_player_id(state, card, _t, event)
+                if tid is None:
+                    return
             effect_lose_life(state, tid, _resolve_amount(_a, state, card)
                              if isinstance(_a, dict) else _a)
         return _fn
@@ -776,9 +809,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         amt = params.get("amount", 1)
         player_target = params.get("player", "SELF")
         def _fn(card, event, state, _a=amt, _pt=player_target):
-            from engine.card_effects.ability_keywords import effect_draw, _controller_id
-            cid = _controller_id(card)
-            tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            from engine.card_effects.ability_keywords import effect_draw
+            tid = _effect_player_id(state, card, _pt, event)
+            if tid is None:
+                return
             # Draw counts are usually ints, but candidate JSON authors dynamic
             # markers ("intellect", "hand_size", "CHAIN_HIT_COUNT"). Resolve the
             # ones we can; an unknown marker draws 0 rather than crashing draw().

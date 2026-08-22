@@ -1532,6 +1532,20 @@ def _setup_dsl_listeners(state: GameState) -> None:
             return
         dispatch(game_state, "ON_DEATH", card_obj.slug, card=card_obj, event=event)
 
+    def _dsl_draw_listener(event, game_state: GameState) -> None:
+        # "Whenever a hero draws a card during an action phase, they lose 1{h}."
+        # ON_DRAW was not a trigger name at all, so dispatch fell back to the raw
+        # string and matched nothing. The draw event already carries which player
+        # drew; permanents on BOTH sides can care, since the card says "a hero",
+        # not "you".
+        data = event.data if isinstance(event.data, dict) else {}
+        if data.get("draw_player") is None:
+            return
+        for pid in list(game_state.players):
+            for zone in _dsl_permanent_zones(game_state.players[pid]):
+                for card in list(zone.cards):
+                    dispatch(game_state, "ON_DRAW", card.slug, card=card, event=event)
+
     def _dsl_pitch_listener(event, game_state: GameState) -> None:
         # "When this is pitched" — e.g. Riches of Trōpal-Dhani creates a Gold.
         card_obj = event.data.get('card') if isinstance(event.data, dict) else None
@@ -1702,6 +1716,7 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('end_of_turn', _dsl_end_of_turn_listener)
     state.event_manager.register('start_of_end_phase', _dsl_start_of_end_phase_listener)
     state.event_manager.register('card_pitched', _dsl_pitch_listener)
+    state.event_manager.register('draw', _dsl_draw_listener)
     state.event_manager.register('defend', _dsl_defend_listener)
     state.event_manager.register('combat_chain_close', _dsl_combat_close_listener)
     state.event_manager.register('start_of_game', _dsl_start_of_game_listener)

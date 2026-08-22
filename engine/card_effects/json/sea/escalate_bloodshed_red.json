@@ -13,47 +13,22 @@
       "effects": [
         {
           "type": "LOSE_LIFE",
-          "amount": 1
+          "amount": 1,
+          "player": "EVENT_PLAYER"
         }
       ]
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
-      "conditions": [
-        {
-          "type": "DURING_TURN",
-          "phase": "ACTION_PHASE"
-        }
-      ],
+      "trigger": "START_OF_ACTION_PHASE",
       "effects": [
         {
           "type": "DRAW",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
-      "conditions": [
-        {
-          "type": "DURING_TURN",
-          "phase": "END_PHASE"
-        },
-        {
-          "type": "NOT",
-          "condition": {
-            "type": "ATTACK_IS_WEAPON"
-          }
-        }
-      ],
-      "effects": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
+          "amount": 1,
+          "player": "ACTIVE"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Rebuilt. ON_DRAW was not a trigger name at all -- dispatch fell back to the raw string and matched nothing -- so 'whenever a hero draws a card during an action phase, THEY lose 1{h}' never fired. It is now a real trigger, dispatched to BOTH players' permanents because the card says 'a hero', not 'you'.\n\nBoth surviving clauses say 'they', which had no spelling: DRAW and LOSE_LIFE resolved only SELF/OPPONENT relative to the CONTROLLER, so 'they' could only be written as one of those and would be right half the time by accident. player EVENT_PLAYER reads draw_player off the event; player ACTIVE is whose phase it is.\n\nThe second and third clauses had ALSO been written as START_OF_TURN gated on DURING_TURN(ACTION_PHASE) and DURING_TURN(END_PHASE) -- conditions that are false at the start of a turn, since the start phase is neither.\n\nNOT IMPLEMENTED: 'At the beginning of each hero's end phase, if a WEAPON DID NOT ATTACK this turn, destroy this.' No turn event records weapon attacks, which is the same gap kassai_cintari_sellsword is tracked for. Removed rather than left as an unconditional self-destroy at end of turn, which is what it was."
 }

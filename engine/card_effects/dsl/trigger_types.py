@@ -24,6 +24,10 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "START_OF_COMBAT":          "START_OF_COMBAT",
     "END_OF_COMBAT":            "END_OF_COMBAT",
     "ON_DISCARD":               "ON_DISCARD",
+    # "Whenever a hero draws a card ..." — dispatched to BOTH players'
+    # permanents, since the text says "a hero" rather than "you". The event
+    # carries draw_player, which effects read via player: "EVENT_PLAYER".
+    "ON_DRAW":                  "ON_DRAW",
     "ON_PLAY_ACTIVATE_ATTACK":  "ON_PLAY_ACTIVATE_ATTACK",
     "ON_PITCH":                 "ON_PITCH",
     "ON_DEFEND":                "ON_DEFEND",
