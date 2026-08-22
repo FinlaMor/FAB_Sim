@@ -161,21 +161,21 @@ def test_an_unresolvable_target_falls_back_to_the_source():
     """A target shape the resolver does not recognise must not silently pick
     some other object — it keeps the old behaviour and stays reported by
     scripts/audit_params.py."""
-    from engine.card_effects.dsl.effect_types import _counter_target_spec
+    from engine.card_effects.dsl.effect_types import _object_target_spec
 
     for target in ("controlled_aura_with_ward", "ally", "opponent", "self",
                    {"type": "CARD"}, None, 7):
-        assert _counter_target_spec(target) is None, target
+        assert _object_target_spec(target) is None, target
 
 
 def test_the_canonical_shape_is_recognised():
-    from engine.card_effects.dsl.effect_types import _counter_target_spec
+    from engine.card_effects.dsl.effect_types import _object_target_spec
 
     for target in ({"controller": "OPPONENT", "zone": "EQUIPMENT"},
                    {"zones": ["EQUIPMENT", "WEAPON"]},
                    {"name": "Treasure Island"},
                    {"filter": [{"type": "CARD_IS_TYPE", "card_type": "Aura"}]}):
-        assert _counter_target_spec(target) == target
+        assert _object_target_spec(target) == target
 
 
 def test_base_defense_condition_reads_the_printed_value():

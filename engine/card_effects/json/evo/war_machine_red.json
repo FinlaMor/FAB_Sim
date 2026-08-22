@@ -12,8 +12,12 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_TOKEN",
-          "target": "arsenal"
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "ARSENAL",
+            "amount": "ALL"
+          }
         }
       ]
     },
@@ -74,5 +78,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy all cards in THEIR arsenal' is not a permanent and not a token: it is a zone. Nothing in the arsenal was ever reachable."
 }

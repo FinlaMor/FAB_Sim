@@ -12,8 +12,7 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_TOKEN",
-          "target": "defending"
+          "type": "DESTROY_DEFENDING"
         }
       ]
     },
@@ -75,5 +74,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy all cards defending this' names the cards declared as defenders on this chain link -- combat state, not a zone and not the arena, so no object-target spec can express it."
 }

@@ -41,7 +41,10 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_TOKEN"
+          "type": "DESTROY_PERMANENT",
+          "subtype": "Aura",
+          "token": true,
+          "player": "ANY"
         },
         {
           "type": "GO_AGAIN"
@@ -49,5 +52,5 @@
       ]
     }
   ],
-  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. 'an ally you control' is a type filter over the arena. The PUT_COUNTER half targets self ('enters the arena with a +1{p} counter') and was already correct."
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. 'an ally you control' is a type filter over the arena. The PUT_COUNTER half targets self ('enters the arena with a +1{p} counter') and was already correct. Was a DESTROY_TOKEN naming no token at all. DESTROY_TOKEN destroys ONE token of a named slug the CONTROLLER controls, and returns immediately when the slug is empty -- so it destroyed nothing. 'Destroy an aura token' names no controller, so either side's is a legal choice."
 }

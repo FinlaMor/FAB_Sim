@@ -15,7 +15,9 @@
           "counter": "doom"
         },
         {
-          "type": "DESTROY_TOKEN",
+          "type": "DESTROY_PERMANENT",
+          "subtype": "Aura",
+          "player": "EACH",
           "amount": {
             "type": "COUNT_COUNTERS",
             "counter": "doom"
@@ -24,5 +26,5 @@
       ]
     }
   ],
-  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Go again). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had."
+  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Go again). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had. Was a DESTROY_TOKEN naming no token at all. DESTROY_TOKEN destroys ONE token of a named slug the CONTROLLER controls, and returns immediately when the slug is empty -- so it destroyed nothing. 'each hero destroys X auras THEY control' is DESTROY_PERMANENT over both players. APPROXIMATED: the count is applied to the pooled candidates rather than X from each hero separately, so with auras on both sides the split can differ from the card."
 }

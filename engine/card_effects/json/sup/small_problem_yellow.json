@@ -25,10 +25,12 @@
       "trigger": "ON_CRUSH",
       "effects": [
         {
-          "type": "DESTROY_TOKEN",
-          "target": "OPPONENT_CONTROLLED_AURA"
+          "type": "DESTROY_PERMANENT",
+          "subtype": "Aura",
+          "player": "OPPONENT"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy an aura THEY control' -- the pool was the controller's own permanents, so even with a slug it aimed at the wrong player."
 }

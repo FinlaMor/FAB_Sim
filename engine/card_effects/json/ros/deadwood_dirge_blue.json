@@ -5,8 +5,9 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "DESTROY_TOKEN",
-          "target": "self"
+          "type": "DESTROY_PERMANENT",
+          "subtype": "Aura",
+          "player": "SELF"
         },
         {
           "type": "CREATE_TOKEN",
@@ -24,5 +25,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'Destroy an aura you control' is exactly DESTROY_PERMANENT with a subtype; the player was already right, but the slug was empty so it destroyed nothing."
 }

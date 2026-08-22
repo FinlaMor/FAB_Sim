@@ -177,8 +177,11 @@ def test_regression_count_does_not_grow():
     # 153 -> 148: LOOK_AT now reads its target through the same parser BANISH
     # uses, closing twelve more -- five of which were reading the OPPONENT's
     # deck where the card says "your deck".
-    assert findings <= 148, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 148). "
+    # 148 -> 142: DESTROY_TOKEN was standing in for six different destroy
+    # effects; the eight cards now use DESTROY_PERMANENT, DESTROY_MATCHING or
+    # DESTROY_DEFENDING as their text requires.
+    assert findings <= 142, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 142). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

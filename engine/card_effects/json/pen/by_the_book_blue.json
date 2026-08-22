@@ -3,17 +3,19 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "START_OF_TURN",
+      "trigger": "START_OF_ACTION_PHASE",
       "conditions": [
         {
-          "type": "IN_COMBAT"
+          "type": "IS_ACTIVE_PLAYER"
         }
       ],
       "effects": [
         {
-          "type": "DESTROY_TOKEN"
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a DESTROY_TOKEN naming no token at all. DESTROY_TOKEN destroys ONE token of a named slug the CONTROLLER controls, and returns immediately when the slug is empty -- so it destroyed nothing. It also fired on START_OF_TURN gated on IN_COMBAT, neither of which the card says: 'at the beginning of YOUR ACTION PHASE' is START_OF_ACTION_PHASE for the active player (CR 4.3.1), and the start phase happens earlier. NOT IMPLEMENTED: 'Heroes can't draw cards during action phases' -- a draw-legality restriction on both players, which has no hook."
 }

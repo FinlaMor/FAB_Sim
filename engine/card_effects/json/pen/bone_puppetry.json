@@ -31,14 +31,25 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_TOKEN"
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "SELF",
+            "zone": "ARENA",
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Ally"
+              }
+            ]
+          }
         },
         {
           "type": "DISCARD",
-          "amount": 0,
+          "amount": "ALL",
           "player": "SELF"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a DESTROY_TOKEN naming no token at all. DESTROY_TOKEN destroys ONE token of a named slug the CONTROLLER controls, and returns immediately when the slug is empty -- so it destroyed nothing. 'destroy IT' means the ally this card returned, and a ref cannot carry across to a delayed trigger in another ability -- reference scopes are per ability execution. APPROXIMATED as an Ally you control, and said so. The 'discard your hand' half was DISCARD with amount 0, which discards nothing, so the whole downside of the card was absent; DISCARD now reads amount 'ALL'."
 }

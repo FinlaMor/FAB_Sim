@@ -16,16 +16,21 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_TOKEN",
-          "target": "equipment",
-          "conditions": [
-            {
-              "type": "CONTROLS_TOKEN_TYPE",
-              "token_type": "equipment"
-            }
-          ]
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "EQUIPMENT",
+            "amount": "ALL",
+            "filter": [
+              {
+                "type": "HAS_COUNTER",
+                "counter": "DEFENSE"
+              }
+            ]
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy all equipment they control WITH -1{d} COUNTERS' -- a counter filter over the opponent's equipment slots. Equipment is not in permanents, so the old pool could not have contained it."
 }

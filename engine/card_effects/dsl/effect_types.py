@@ -395,14 +395,14 @@ _TARGET_OPPONENT = ("opponent", "their", "defending", "enemy")
 _TARGET_SELF = ("self", "your", "hero", "my", "own")
 
 
-#: Where a counter target may live. "ARENA" is every permanent (auras, items,
+#: Where an object target may live. "ARENA" is every permanent (auras, items,
 #: allies, tokens); equipment and weapons are separate zones on Player and are
 #: NOT covered by Player.equipment (which is head/chest/arms/legs only), so a
 #: card saying "equipment, items, and/or weapons" has to name them.
-_COUNTER_TARGET_ZONES = ("ARENA", "EQUIPMENT", "WEAPON", "ARSENAL", "HERO")
+_OBJECT_TARGET_ZONES = ("ARENA", "EQUIPMENT", "WEAPON", "ARSENAL", "HERO")
 
 
-def _counter_zone_cards(player, zone: str) -> list:
+def _object_zone_cards(player, zone: str) -> list:
     zone = (zone or "ARENA").upper()
     if zone == "ARENA":
         return list(player.permanents.cards)
@@ -417,8 +417,8 @@ def _counter_zone_cards(player, zone: str) -> list:
     return []
 
 
-def _counter_target_spec(target):
-    """Normalise a counter effect's "target" to the canonical dict, or None.
+def _object_target_spec(target):
+    """Normalise an effect's "target" to the canonical dict, or None.
 
     None means "the source card", which is what these effects have always done
     and is right for the twelve nodes that say "self" — honouring those would
@@ -439,8 +439,12 @@ def _counter_target_spec(target):
     return None
 
 
-def _compile_counter_target(spec):
-    """Compile a canonical counter target into fn(card, event, state) -> [Card].
+def _compile_object_target(spec):
+    """Compile a canonical object target into fn(card, event, state) -> [Card].
+
+    Shared by the counter effects and DESTROY_MATCHING. Nothing about it is
+    counter-specific: it answers "which objects does this card mean", which is
+    the question every one of these effects was getting wrong.
 
     PUT_COUNTER / REMOVE_COUNTER / REMOVE_COUNTERS acted on the source card and
     ignored "target" entirely, so "put a +1{p} counter on target aura with ward
@@ -494,7 +498,7 @@ def _compile_counter_target(spec):
         pool = []
         for pid in pids:
             for zone in _z:
-                pool.extend(_counter_zone_cards(state.players[pid], zone))
+                pool.extend(_object_zone_cards(state.players[pid], zone))
 
         if _n:
             def _flat(text):
@@ -780,11 +784,24 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         amt = params.get("amount", 1)
         player_target = params.get("player", "SELF")
         random_discard = params.get("random", False)
+
         def _fn(card, event, state, _a=amt, _pt=player_target, _rand=random_discard):
             from engine.card_effects.ability_keywords import effect_discard, _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
-            effect_discard(state, tid, _a, random_discard=_rand)
+            # "discard your HAND" has no number, and was being written as
+            # amount 0 — which discards nothing, so the card's whole cost
+            # vanished. Spelling it out beats a magic 99: the count is however
+            # many cards are actually held.
+            if str(_a).upper() in ("ALL", "HAND"):
+                n = len(state.players[tid].hand.cards)
+            else:
+                n = _resolve_amount(_a, state, card)
+                try:
+                    n = max(0, int(n))
+                except (TypeError, ValueError):
+                    n = 1
+            effect_discard(state, tid, n, random_discard=_rand)
         return _fn
 
     if etype == "OPT":
@@ -1307,7 +1324,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # a weakened effect: "put a -1{d} counter on an equipment they control"
         # put it on the attacking card instead. A target naming the source
         # ("self") is what already happened and stays a no-op here.
-        target_fn = _compile_counter_target(_counter_target_spec(params.get("target")))
+        target_fn = _compile_object_target(_object_target_spec(params.get("target")))
 
         def _fn(card, event, state, _ct=ctype, _a=amt, _tf=target_fn, _add=adding):
             from engine.card_effects.ability_keywords import (
@@ -1552,6 +1569,44 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 put_object(state, card_to_move, "deck",
                            destination_player_id=tid, source_player_id=tid,
                            position=None)
+        return _fn
+
+    if etype == "DESTROY_DEFENDING":
+        # "Destroy all cards defending this." The defenders are combat state —
+        # not a zone and not the arena — so no object-target spec can name them.
+        # Authored as DESTROY_TOKEN with target "defending", which destroyed a
+        # token of the empty slug: nothing, on the wrong side.
+        def _fn(card, event, state):
+            from engine.effect_keywords import destroy as _ek_destroy
+            combat = state.combat
+            if combat is None:
+                return
+            for obj in list(getattr(combat, "defending_cards", None) or []):
+                # The defending HERO is not a card that can be destroyed.
+                if getattr(obj, "is_hero", False):
+                    continue
+                _ek_destroy(state, obj, card)
+        return _fn
+
+    if etype == "DESTROY_MATCHING":
+        # "Destroy all equipment THEY control with -1{d} counters", "destroy all
+        # cards in their arsenal", "destroy a defense reaction card in their
+        # arsenal". These were authored as DESTROY_TOKEN, which is hard-wired to
+        # the CONTROLLER's permanents and matches a token by slug — so they
+        # destroyed the wrong player's things, or (naming no slug at all)
+        # nothing.
+        #
+        # DESTROY_PERMANENT covers "destroy a <subtype> you control" and is
+        # right for the three that are exactly that. This is for the rest: a
+        # zone other than the arena, or a filter richer than a subtype.
+        target_fn = _compile_object_target(_object_target_spec(params.get("target")))
+
+        def _fn(card, event, state, _tf=target_fn):
+            from engine.effect_keywords import destroy as _ek_destroy
+            if _tf is None:
+                return
+            for obj in _tf(card, event, state):
+                _ek_destroy(state, obj, card)
         return _fn
 
     if etype == "DESTROY_TOKEN":
@@ -3540,7 +3595,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # namespaces by name, so the cost's reading masked the effect's gap.
         ctype = params.get("counter_type") or params.get("counter") or ""
         amt = params.get("amount", 1)
-        target_fn = _compile_counter_target(_counter_target_spec(params.get("target")))
+        target_fn = _compile_object_target(_object_target_spec(params.get("target")))
 
         def _fn(card, event, state, _ct=ctype, _a=amt, _tf=target_fn):
             from engine.card_effects.ability_keywords import effect_remove_counter

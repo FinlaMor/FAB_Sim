@@ -12,19 +12,14 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_TOKEN",
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zones": [
-                  "aura_tokens"
-                ]
-              }
-            ]
-          }
+          "type": "DESTROY_PERMANENT",
+          "subtype": "Aura",
+          "player": "OPPONENT",
+          "token": true,
+          "amount": 99
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy ALL aura TOKENS they control' -- all three of those (count, token-only, opponent) were unreachable through DESTROY_TOKEN."
 }

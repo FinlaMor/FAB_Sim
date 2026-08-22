@@ -1067,6 +1067,20 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return _w in have
         return _is_type
 
+    if ctype == "HAS_COUNTER":
+        # "all equipment they control WITH -1{d} counters" — presence, not a
+        # threshold. COUNTER_GTE with amount 1 says the same thing, but the
+        # cards say "with X counters" and reading that spelling is what stops
+        # the next author inventing a third one.
+        kind = (params.get("counter") or params.get("counter_type")
+                or params.get("kind") or "")
+
+        def _has_counter(c, e, s, _ct=kind):
+            if not _ct:
+                return False
+            return ((getattr(c, "counters", None) or {}).get(_ct, 0) or 0) > 0
+        return _has_counter
+
     if ctype in ("BASE_DEFENSE_LTE", "BASE_DEFENSE_GTE"):
         # "a Guardian off-hand you control with 2 or less base {d}" — the
         # PRINTED defence, not the current one, so counters already on the card
