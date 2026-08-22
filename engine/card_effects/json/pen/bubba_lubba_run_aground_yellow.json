@@ -48,5 +48,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. 'an ally you control' is a type filter over the arena. The PUT_COUNTER half targets self ('enters the arena with a +1{p} counter') and was already correct."
 }

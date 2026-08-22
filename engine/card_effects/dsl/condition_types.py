@@ -1067,6 +1067,31 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return _w in have
         return _is_type
 
+    if ctype in ("BASE_DEFENSE_LTE", "BASE_DEFENSE_GTE"):
+        # "a Guardian off-hand you control with 2 or less base {d}" — the
+        # PRINTED defence, not the current one, so counters already on the card
+        # do not change whether it is a legal target.
+        #
+        # BASE_DEFENSE_LTE was the only invented condition type in the corpus.
+        # It went unnoticed because it sat nested inside an effect's "target"
+        # dict, where conditions are never compiled — so the type name was
+        # never looked up and the usual load-time failure never fired.
+        threshold = params.get("amount", params.get("value", 0))
+        want_lte = ctype.endswith("LTE")
+
+        def _base_def(c, e, s, _n=threshold, _lte=want_lte):
+            from engine.card_effects.dsl.effect_types import _resolve_amount
+            base = getattr(c, "base_defense", None)
+            if base is None:
+                base = getattr(c, "defense", None)
+            try:
+                base = int(base)
+                limit = int(_resolve_amount(_n, s, c))
+            except (TypeError, ValueError):
+                return False
+            return base <= limit if _lte else base >= limit
+        return _base_def
+
     if ctype in ("CARD_IS_ATTACK", "SELF_IS_ATTACK"):
         # "the next NON-ATTACK action card you play" — value:false is the whole
         # point of the card, so the flag is read rather than assumed True.

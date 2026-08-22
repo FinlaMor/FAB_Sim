@@ -393,6 +393,141 @@ _BANISH_TARGET_OPPONENT = ("opponent", "their", "defending", "enemy")
 _BANISH_TARGET_SELF = ("self", "your", "hero", "my", "own")
 
 
+#: Where a counter target may live. "ARENA" is every permanent (auras, items,
+#: allies, tokens); equipment and weapons are separate zones on Player and are
+#: NOT covered by Player.equipment (which is head/chest/arms/legs only), so a
+#: card saying "equipment, items, and/or weapons" has to name them.
+_COUNTER_TARGET_ZONES = ("ARENA", "EQUIPMENT", "WEAPON", "ARSENAL", "HERO")
+
+
+def _counter_zone_cards(player, zone: str) -> list:
+    zone = (zone or "ARENA").upper()
+    if zone == "ARENA":
+        return list(player.permanents.cards)
+    if zone == "EQUIPMENT":
+        return list(player.equipment)
+    if zone == "WEAPON":
+        return list(player.weapon1.cards) + list(player.weapon2.cards)
+    if zone == "ARSENAL":
+        return list(player.arsenal.cards)
+    if zone == "HERO":
+        return [player.hero] if player.hero is not None else []
+    return []
+
+
+def _counter_target_spec(target):
+    """Normalise a counter effect's "target" to the canonical dict, or None.
+
+    None means "the source card", which is what these effects have always done
+    and is right for the twelve nodes that say "self" — honouring those would
+    change nothing, so they are left on the original path rather than routed
+    through a resolver that could only reproduce it.
+
+    Anything that is NOT the canonical dict and NOT "self" is refused rather
+    than guessed at. The card is then still reported by
+    scripts/audit_params.py, which is the only thing that will bring it back
+    up; resolving it to something plausible would hide it for good.
+    """
+    if isinstance(target, dict) and any(
+            k in target for k in ("controller", "zone", "zones", "name", "filter")):
+        return target
+    # Everything else — "self", the bespoke strings ("controlled_aura_with_ward",
+    # "ally", "opponent", ...) and the older dict shapes — falls back to the
+    # source card, which is the behaviour that was already there.
+    return None
+
+
+def _compile_counter_target(spec):
+    """Compile a canonical counter target into fn(card, event, state) -> [Card].
+
+    PUT_COUNTER / REMOVE_COUNTER / REMOVE_COUNTERS acted on the source card and
+    ignored "target" entirely, so "put a +1{p} counter on target aura with ward
+    you control" put it on the action card, and "put a -1{d} counter on an
+    equipment THEY control" put it on the attacker.
+
+    The twelve cards involved had each invented their own vocabulary for the
+    target — "controlled_aura_with_ward", "ally", "equipment", "opponent",
+    "TREASURE_ISLAND", and four incompatible dict shapes. Teaching the compiler
+    those strings would encode the guesses one card at a time, which is how one
+    boolean ended up standing in for six unrelated mechanics. So there is ONE
+    shape, and the cards are written to it:
+
+        {"controller": "SELF"|"OPPONENT"|"ANY",   default SELF
+         "zone":       "ARENA"|"EQUIPMENT"|"WEAPON"|"ARSENAL"|"HERO",
+         "zones":      [...],                     several of the above
+         "name":       "Treasure Island",         match by card name or slug
+         "amount":     n | "ALL",                 how many to affect
+         "filter":     [ <ordinary DSL condition specs> ]}
+
+    `filter` entries are ordinary conditions evaluated with the CANDIDATE as the
+    card argument, so "an item you control with crank" is HAS_KEYWORD and "a
+    Guardian off-hand" is CARD_IS_CLASS — reusing every condition type that
+    already exists rather than growing an eleventh vocabulary here.
+    """
+    if not isinstance(spec, dict):
+        return None
+
+    controller = str(spec.get("controller") or "SELF").upper()
+    zones = spec.get("zones") or [spec.get("zone") or "ARENA"]
+    zones = [str(z).upper() for z in zones]
+    want_name = spec.get("name")
+    limit = spec.get("amount", 1)
+    from engine.card_effects.dsl.condition_types import compile_condition
+    filters = [compile_condition((f.get("type") or "none"), f)
+               for f in (spec.get("filter") or []) if isinstance(f, dict)]
+
+    def _fn(card, event, state, _c=controller, _z=zones, _n=want_name,
+            _lim=limit, _f=filters):
+        from engine.card_effects.ability_keywords import _ask_player, _controller_id
+        cid = _controller_id(card)
+        if cid not in state.players:
+            return []
+        if _c == "OPPONENT":
+            pids = [3 - cid]
+        elif _c in ("ANY", "ALL", "EACH"):
+            pids = [cid, 3 - cid]
+        else:
+            pids = [cid]
+
+        pool = []
+        for pid in pids:
+            for zone in _z:
+                pool.extend(_counter_zone_cards(state.players[pid], zone))
+
+        if _n:
+            def _flat(text):
+                return "".join(ch for ch in str(text).lower() if ch.isalnum())
+            wanted = _flat(_n)
+            pool = [c for c in pool
+                    if wanted in (_flat(getattr(c, "name", "") or ""),
+                                  _flat(getattr(c, "slug", "") or ""))]
+        for fn in _f:
+            if fn is not None:
+                pool = [c for c in pool if fn(c, event, state)]
+        if not pool:
+            return []
+
+        if str(_lim).upper() in ("ALL", "EACH"):
+            return pool
+        count = _resolve_amount(_lim, state, card)
+        try:
+            count = max(0, int(count))
+        except (TypeError, ValueError):
+            count = 1
+
+        chosen = []
+        remaining = list(pool)
+        for _ in range(min(count, len(remaining))):
+            pick = _ask_player(state, cid, [c.slug for c in remaining],
+                               context="Choose a card to put/remove counters on")
+            obj = next((c for c in remaining if c.slug == pick), remaining[0])
+            chosen.append(obj)
+            remaining.remove(obj)
+        return chosen
+
+    return _fn
+
+
 def _record_banished(cards: list) -> None:
     """Store what a BANISH just banished, so "if it's blue" has something to ask.
 
@@ -1155,23 +1290,34 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                             effect_put_counter(state, made_token, str(kind), qty)
         return _fn
 
-    if etype == "PUT_COUNTER":
+    if etype in ("PUT_COUNTER", "REMOVE_COUNTER"):
         # Cards author the counter kind under EITHER "counter_type" or "counter";
         # only "counter_type" was read, so ~47 usages put an empty-typed counter.
         ctype = params.get("counter_type") or params.get("counter") or ""
         amt = params.get("amount", 1)
-        def _fn(card, event, state, _ct=ctype, _a=amt):
-            from engine.card_effects.ability_keywords import effect_put_counter
-            for _ in range(_a):
-                effect_put_counter(state, card, _ct)
-        return _fn
+        adding = etype == "PUT_COUNTER"
+        # "target" was not read at all, so the counter always landed on the
+        # SOURCE card. On the twelve cards that name another object that is not
+        # a weakened effect: "put a -1{d} counter on an equipment they control"
+        # put it on the attacking card instead. A target naming the source
+        # ("self") is what already happened and stays a no-op here.
+        target_fn = _compile_counter_target(_counter_target_spec(params.get("target")))
 
-    if etype == "REMOVE_COUNTER":
-        ctype = params.get("counter_type") or params.get("counter") or ""
-        amt = params.get("amount", 1)
-        def _fn(card, event, state, _ct=ctype, _a=amt):
-            from engine.card_effects.ability_keywords import effect_remove_counter
-            effect_remove_counter(state, card, _ct, _a)
+        def _fn(card, event, state, _ct=ctype, _a=amt, _tf=target_fn, _add=adding):
+            from engine.card_effects.ability_keywords import (
+                effect_put_counter, effect_remove_counter)
+            targets = _tf(card, event, state) if _tf is not None else [card]
+            n = _resolve_amount(_a, state, card)
+            try:
+                n = max(0, int(n))
+            except (TypeError, ValueError):
+                n = 1
+            for obj in targets:
+                if _add:
+                    for _ in range(n):
+                        effect_put_counter(state, obj, _ct)
+                else:
+                    effect_remove_counter(state, obj, _ct, n)
         return _fn
 
     if etype == "WARD":
@@ -3370,11 +3516,23 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "REMOVE_COUNTERS":
-        ctype = params.get("counter_type", "")
+        # "counter" is the other spelling and was unread HERE, though the COST
+        # of the same name reads it — and audit_params merges the two
+        # namespaces by name, so the cost's reading masked the effect's gap.
+        ctype = params.get("counter_type") or params.get("counter") or ""
         amt = params.get("amount", 1)
-        def _fn(card, event, state, _ct=ctype, _a=amt):
+        target_fn = _compile_counter_target(_counter_target_spec(params.get("target")))
+
+        def _fn(card, event, state, _ct=ctype, _a=amt, _tf=target_fn):
             from engine.card_effects.ability_keywords import effect_remove_counter
-            effect_remove_counter(state, card, _ct, _a)
+            targets = _tf(card, event, state) if _tf is not None else [card]
+            n = _resolve_amount(_a, state, card)
+            try:
+                n = max(0, int(n))
+            except (TypeError, ValueError):
+                n = 1
+            for obj in targets:
+                effect_remove_counter(state, obj, _ct, n)
         return _fn
 
     if etype == "CHOOSE":

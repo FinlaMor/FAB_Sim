@@ -8,9 +8,14 @@
         {
           "type": "PUT_COUNTER",
           "counter": "GOLD",
-          "target": "TREASURE_ISLAND"
+          "target": {
+            "controller": "SELF",
+            "zone": "ARENA",
+            "name": "Treasure Island"
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. Treasure Island is a named permanent, so the target matches it by name in the controller's arena."
 }

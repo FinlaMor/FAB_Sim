@@ -51,14 +51,27 @@ def test_exemptions_match_what_the_loader_pops():
 
 
 def test_an_unread_target_is_reported():
-    """End to end: a node whose handler ignores `target` must be reported."""
-    index = A.build_index()
-    assert "target" not in index["PUT_COUNTER"], (
-        "PUT_COUNTER now reads target — update this test's example")
+    """End to end: a node whose handler ignores `target` must be reported.
 
-    found = A.audit_node({"type": "PUT_COUNTER", "counter": "steam",
-                          "target": {"type": "CARD"}}, index)
-    assert any("target" in f for f in found), found
+    The example is DERIVED, not named. It was hardcoded to PUT_COUNTER, which
+    then learned to read its target — so the guard failed for the best possible
+    reason, and would have needed re-pointing at a fresh victim every time one
+    was fixed. A guard that has to be rewritten each time the code improves is
+    one someone eventually deletes.
+    """
+    index = A.build_index()
+    # The index carries an empty-string key (a bare "" constant picked up by the
+    # AST walk). It is harmless for auditing — audit_node skips nodes with no
+    # type — but it is not a probe subject.
+    candidates = sorted(t for t, keys in index.items()
+                        if t and t.isupper()
+                        and A.WHOLESALE not in keys and "target" not in keys)
+    if not candidates:
+        pytest.skip("every registered type now reads `target` — nothing to probe")
+
+    victim = candidates[0]
+    found = A.audit_node({"type": victim, "target": {"type": "CARD"}}, index)
+    assert any("target" in f for f in found), (victim, found)
 
 
 def test_a_read_param_is_not_reported():

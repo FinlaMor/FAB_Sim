@@ -170,8 +170,12 @@ def test_regression_count_does_not_grow():
     # raise it again without that kind of evidence: a rise from a corpus change
     # is a new family, and belongs in the compiler where it closes every card
     # at once.
-    assert findings <= 163, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 163). "
+    #
+    # 163 -> 153: the counter effects (PUT_COUNTER / REMOVE_COUNTER /
+    # REMOVE_COUNTERS) now read their target, closing twelve cards that were
+    # putting their counters on the source card.
+    assert findings <= 153, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 153). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

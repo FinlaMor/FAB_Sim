@@ -42,5 +42,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. Both halves name an aura you control -- the cost removes a suspense counter from one, the effect may put one on another."
 }

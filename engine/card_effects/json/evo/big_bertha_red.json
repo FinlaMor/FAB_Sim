@@ -1,6 +1,6 @@
 {
   "slug": "big_bertha_red",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED.",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED. The counter effect named a target and the compiler read none of it, so the counter went on the source card. ",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -16,9 +16,14 @@
           "type": "PUT_COUNTER",
           "counter": "steam",
           "target": {
-            "type": "CARD",
-            "subtype": "Hyper Driver",
-            "controller": "self"
+            "controller": "SELF",
+            "zone": "ARENA",
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Hyper Driver"
+              }
+            ]
           }
         }
       ]

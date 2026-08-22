@@ -9,18 +9,22 @@
           "type": "PUT_COUNTER",
           "counter": "steam",
           "target": {
-            "type": "CARD",
-            "zone": "arsenal",
-            "controller": "self",
-            "conditions": [
+            "controller": "SELF",
+            "zone": "ARENA",
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Item"
+              },
               {
                 "type": "HAS_KEYWORD",
-                "keyword": "crank"
+                "keyword": "Crank"
               }
             ]
           }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. Its target also said zone 'arsenal', which is wrong regardless: items you control are permanents in the ARENA. And the 'with crank' test was nested inside the target dict, where nothing compiles it -- effect-level 'conditions' are popped by the loader, but a target's are just inert data."
 }

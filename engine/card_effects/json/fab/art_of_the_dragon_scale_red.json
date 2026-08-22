@@ -26,7 +26,10 @@
                 "counter": "DEFENSE",
                 "mod": "subtract",
                 "amount": 1,
-                "target": "equipment"
+                "target": {
+                  "controller": "OPPONENT",
+                  "zone": "EQUIPMENT"
+                }
               },
               {
                 "type": "CONDITIONAL",
@@ -47,5 +50,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The counter effect named a target ('equipment') and the compiler read none of it, so the -1{d} counter went on the ATTACKING card -- a debuff aimed at the defender landing on the attacker, where it could never destroy the equipment the card is about. The node is nested inside the INJECT_TRIGGER, so it is the trigger's effect that carries the target. STILL WRONG, and said so rather than left looking finished: 'then if it has 0{d}, destroy it' is authored as COUNTER_GTE amount 0, which is true for every card at all times, and DESTROY_REF does not read its 'target' either -- so the destroy half fires unconditionally on whatever ref happens to be set."
 }

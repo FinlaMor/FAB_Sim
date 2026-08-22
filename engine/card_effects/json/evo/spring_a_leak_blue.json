@@ -8,17 +8,25 @@
         {
           "type": "REMOVE_COUNTERS",
           "target": {
+            "controller": "OPPONENT",
+            "zones": [
+              "EQUIPMENT",
+              "WEAPON",
+              "ARENA"
+            ],
             "filter": [
               {
-                "type": "CONTROLS_TOKEN_TYPE",
-                "token_types": [
-                  "steam"
-                ]
+                "type": "COUNTER_GTE",
+                "counter": "steam",
+                "amount": 1
               }
             ]
-          }
+          },
+          "counter": "steam",
+          "amount": 99
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. It also named no counter kind at all, so it removed counters of the empty type -- a no-op even once the target was right."
 }

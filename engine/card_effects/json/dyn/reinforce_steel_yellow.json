@@ -8,11 +8,12 @@
           "type": "REMOVE_COUNTER",
           "counter": "-1d",
           "target": {
-            "type": "SELF",
-            "conditions": [
+            "controller": "SELF",
+            "zone": "EQUIPMENT",
+            "filter": [
               {
-                "type": "CONTROLS_TOKEN_TYPE",
-                "subtype": "Guardian"
+                "type": "CARD_IS_CLASS",
+                "card_class": "Guardian"
               },
               {
                 "type": "HAS_KEYWORD",
@@ -27,5 +28,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. Its filter was nested inside the target dict as 'conditions', which nothing compiles -- so BASE_DEFENSE_LTE, the only invented condition type in the whole corpus, sat there unnoticed because it was never reached."
 }

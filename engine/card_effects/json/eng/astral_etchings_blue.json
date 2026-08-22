@@ -8,7 +8,20 @@
           "type": "PUT_COUNTER",
           "counter": "power",
           "amount": 1,
-          "target": "controlled_aura_with_ward"
+          "target": {
+            "controller": "SELF",
+            "zone": "ARENA",
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Aura"
+              },
+              {
+                "type": "HAS_KEYWORD",
+                "keyword": "Ward"
+              }
+            ]
+          }
         }
       ],
       "conditions": [
@@ -18,5 +31,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. 'target aura with ward you control' is two ordinary conditions over the arena, not a bespoke 'controlled_aura_with_ward' word."
 }
