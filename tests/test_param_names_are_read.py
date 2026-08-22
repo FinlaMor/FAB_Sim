@@ -194,8 +194,8 @@ def test_regression_count_does_not_grow():
     # 96 -> 94: MAY now reads its `cost`. It did not, so "you may pay {r}. If
     # you do, +1{p}" was free and unconditional -- the card strictly stronger
     # than printed.
-    assert findings <= 94, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 94). "
+    assert findings <= 93, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 93). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

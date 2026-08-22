@@ -13,28 +13,36 @@
         {
           "type": "BANISH",
           "target": "OPPONENT_TOP_DECK"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_BANISH",
-      "conditions": [
+        },
         {
-          "type": "NOT",
-          "condition": {
-            "type": "ATTACK_SUBTYPE_IN",
-            "subtype": "Attack"
-          }
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "HEALTH",
-          "amount": 1
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "REF_IS_TYPE",
+              "ref": "banished",
+              "types": [
+                "Action"
+              ]
+            },
+            {
+              "type": "REF_IS_TYPE",
+              "ref": "banished",
+              "types": [
+                "Attack"
+              ],
+              "value": false
+            }
+          ],
+          "then": [
+            {
+              "type": "GAIN",
+              "asset": "HEALTH",
+              "amount": 1
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The payoff was a second ability triggered on ON_BANISH, which is not a trigger name -- dispatch falls back to the raw string and matches nothing, so it never ran. 'Whenever THIS banishes' means the banish this card just did, so it is a CONDITIONAL in the SAME ability, reading the `banished` ref BANISH now records. No new engine event needed. The test was NOT(ATTACK_SUBTYPE_IN Attack), and ATTACK_SUBTYPE_IN asks about the CURRENT ATTACK, not the banished card -- so it read the attacking card's own subtypes. 'Non-attack action' is two claims: it IS an action and is NOT an attack."
 }

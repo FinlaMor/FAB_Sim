@@ -1614,6 +1614,78 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return (getattr(target, "pitch", None) or 0) == _w
         return _ref_pitch
 
+    if ctype in ("REF_IS_TYPE", "REF_TYPE_IS"):
+        # Test the TYPE of a card a previous effect stored under "ref" —
+        # "whenever this banishes a REACTION or INSTANT card", "a NON-ATTACK
+        # ACTION card". Types and subtypes both count, as CARD_IS_TYPE does,
+        # because "Action" is a type while "Attack" is a subtype and cards use
+        # either word for the same idea.
+        #
+        # `value: false` inverts it, which is what "non-attack" needs; writing
+        # that as a NOT around this condition works too, but the cards say
+        # "non-X" as one word and reading it here keeps them literal.
+        wanted = params.get("types") or params.get("card_types")
+        if not wanted:
+            wanted = [params.get("type_name") or params.get("card_type")
+                      or params.get("subtype") or ""]
+        wanted = [_norm(t) for t in wanted if t]
+        ref = params.get("ref", "banished")
+        want_match = params.get("value", True)
+
+        def _ref_type(c, e, s, _r=ref, _w=wanted, _v=want_match):
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if isinstance(target, list):
+                target = target[-1] if len(target) == 1 else (target[-1] if target else None)
+            if target is None or not _w:
+                return False
+            have = {_norm(x) for x in (getattr(target, "types", None) or [])}
+            have |= {_norm(x) for x in (getattr(target, "subtypes", None) or [])}
+            # "non-attack ACTION" is two claims: it IS an action and is NOT an
+            # attack. A bare list would read as "any of these", so the negated
+            # form requires every named type to be absent.
+            hit = any(w in have for w in _w)
+            return hit is bool(_v)
+        return _ref_type
+
+    if ctype in ("REF_MATCHES_OTHER", "REF_SHARES_WITH_OTHER"):
+        # "whenever this banishes a card AND THIS HAS BANISHED ANOTHER card with
+        # the same colour / the same name". The list ref accumulates everything
+        # the card has banished; this asks whether the most recent one matches
+        # any EARLIER entry on the named property.
+        #
+        # "another" is why the last entry is compared against the others rather
+        # than the whole list against itself: a single banished card trivially
+        # matches itself, which would make the condition always true.
+        ref = params.get("ref", "banished_cards")
+        prop = _norm(params.get("property") or params.get("by") or "color")
+
+        def _matches(c, e, s, _r=ref, _p=prop):
+            from engine.context import get_ref
+            pool = get_ref(_r)
+            if not isinstance(pool, list) or len(pool) < 2:
+                return False
+            latest, earlier = pool[-1], pool[:-1]
+
+            # Pitch 1/2/3 is the colour when the card carries no colour string.
+            # Defined here rather than reused from REF_PITCH_IS, whose copy is
+            # local to that branch.
+            pitch_colour = {1: "red", 2: "yellow", 3: "blue"}
+
+            def _key(card_obj):
+                if _p in ("color", "colour", "pitch"):
+                    return (getattr(card_obj, "color", None)
+                            or pitch_colour.get(getattr(card_obj, "pitch", None)))
+                if _p in ("name", "card_name"):
+                    return _norm(getattr(card_obj, "name", "") or "")
+                return _norm(str(getattr(card_obj, _p, "") or ""))
+
+            key = _key(latest)
+            if key in (None, ""):
+                return False
+            return any(_key(other) == key for other in earlier)
+        return _matches
+
     if ctype == "REF_EXISTS":
         ref = params.get("ref", "looked")
         def _ref_exists(c, e, s, _r=ref):

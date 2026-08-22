@@ -13,36 +13,39 @@
         {
           "type": "BANISH",
           "target": "OPPONENT_TOP_DECK"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_BANISH",
-      "conditions": [
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "BANISHED",
-          "card_type": "REACTION"
         },
         {
-          "type": "OR",
-          "conditions": [
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_IS_TYPE",
+            "ref": "banished",
+            "types": [
+              "AttackReaction",
+              "DefenseReaction",
+              "Instant"
+            ]
+          },
+          "when": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "BANISHED",
-              "card_type": "INSTANT"
+              "type": "REF_IS_TYPE",
+              "ref": "banished",
+              "types": [
+                "AttackReaction",
+                "DefenseReaction",
+                "Instant"
+              ]
+            }
+          ],
+          "then": [
+            {
+              "type": "GAIN",
+              "asset": "HEALTH",
+              "amount": 1
             }
           ]
         }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "HEALTH",
-          "amount": 1
-        }
       ]
     }
-  ]
+  ],
+  "_comment": "The payoff was a second ability triggered on ON_BANISH, which is not a trigger name -- dispatch falls back to the raw string and matches nothing, so it never ran. 'Whenever THIS banishes' means the banish this card just did, so it is a CONDITIONAL in the SAME ability, reading the `banished` ref BANISH now records. No new engine event needed. The test was CARD_IN_ZONE(REACTION) plus OR(CARD_IN_ZONE(INSTANT)); a conditions list is AND-ed, so it demanded BOTH a reaction AND an instant -- an AND wearing an OR's clothes. The type list names the REAL printed types: FAB has no bare 'Reaction' type -- they are AttackReaction and DefenseReaction, spelled without a space -- so a list saying 'Reaction' would match nothing and turn 'always paid off' into 'never pays off'."
 }

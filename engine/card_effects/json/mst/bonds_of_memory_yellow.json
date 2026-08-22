@@ -23,30 +23,31 @@
             "type": "GRAVEYARD",
             "controller": "opponent"
           }
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_BANISH",
-      "conditions": [
-        {
-          "type": "REF_EXISTS",
-          "ref": "BANISHED_CARDS"
         },
         {
-          "type": "REF_PITCH_IS",
-          "ref": "BANISHED_CARDS",
-          "pitch": 1
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "HEALTH_POINTS",
-          "amount": 1
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_MATCHES_OTHER",
+            "ref": "banished_cards",
+            "property": "name"
+          },
+          "when": [
+            {
+              "type": "REF_MATCHES_OTHER",
+              "ref": "banished_cards",
+              "property": "name"
+            }
+          ],
+          "then": [
+            {
+              "type": "GAIN",
+              "asset": "HEALTH",
+              "amount": 1
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The payoff was a second ability triggered on ON_BANISH, which is not a trigger name -- dispatch falls back to the raw string and matches nothing, so it never ran. 'Whenever THIS banishes' means the banish this card just did, so it is a CONDITIONAL in the SAME ability, reading the `banished` ref BANISH now records. No new engine event needed. 'Another card with the same NAME' was written as REF_PITCH_IS pitch:1. Pitch 1 is red; it has nothing to do with names."
 }

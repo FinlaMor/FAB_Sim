@@ -36,35 +36,35 @@
               }
             ]
           }
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_BANISH",
-      "conditions": [
+        },
         {
-          "type": "CARD_IN_ZONE",
-          "zones": [
-            "BANISHED"
-          ],
-          "filter": [
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_IS_TYPE",
+            "ref": "banished",
+            "types": [
+              "Action"
+            ]
+          },
+          "when": [
             {
-              "type": "SUBTYPE_IN",
-              "subtypes": [
+              "type": "REF_IS_TYPE",
+              "ref": "banished",
+              "types": [
                 "Action"
               ]
             }
+          ],
+          "then": [
+            {
+              "type": "GAIN",
+              "asset": "HEALTH",
+              "amount": 1
+            }
           ]
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "asset": "HEALTH_POINTS",
-          "amount": 1
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The payoff was a second ability triggered on ON_BANISH, which is not a trigger name -- dispatch falls back to the raw string and matches nothing, so it never ran. 'Whenever THIS banishes' means the banish this card just did, so it is a CONDITIONAL in the SAME ability, reading the `banished` ref BANISH now records. No new engine event needed. The test was CARD_IN_ZONE with `zones` and `filter`, neither of which that condition reads."
 }
