@@ -1005,24 +1005,36 @@ def test_teklovossen_esteemed_magnate_draw_card():
     assert len(st.players[1].hand.cards) >= n0
 
 # --- winters_bite_yellow ---
-def test_winters_bite_yellow_play_discard():
-    # A play ability fires on ON_PLAY; assert the observable result (here a card discarded)
+# These two were generated from the card's JSON, not from the card, and the JSON
+# was wrong twice over: "TARGET HERO discards a card unless they pay {r}{r}" had
+# been authored as an unconditional DISCARD on the CASTER, plus an invented
+# PAY_LIFE 2. So the generated tests asserted that the caster discards their own
+# card and loses 2 life -- faithfully certifying both defects.
+#
+# A test generated from an implementation cannot detect that the implementation
+# disagrees with the card. Rewritten against the printed text.
+def test_winters_bite_yellow_makes_the_target_hero_discard():
     st = _make_state(); st.card_db = DB
     card = _card("winters_bite_yellow")
     st.players[1].hand.cards.append(card)
-    st.players[1].hand.cards.append(_card("dummy_card"))  # Add a dummy card to discard
-    before_discard_count = len(st.players[1].hand.cards)
+    st.players[2].resources = 0          # cannot pay, so they discard
+    # owner=2 matters: effect_keywords.discard resolves WHOSE discard it is from
+    # the card's own owner, not from the player_id it was handed.
+    st.players[2].hand.cards.append(_card("wounded_bull_red", owner=2))
+    before_theirs = len(st.players[2].hand.cards)
+    before_mine = len(st.players[1].hand.cards)
     dispatch(st, "ON_PLAY", "winters_bite_yellow", card=card, event=None)
-    assert len(st.players[1].hand.cards) == before_discard_count - 1
+    assert len(st.players[2].hand.cards) == before_theirs - 1
+    assert len(st.players[1].hand.cards) == before_mine, "the caster discarded"
 
-def test_winters_bite_yellow_play_life_cost():
-    # A play ability fires on ON_PLAY; assert the observable result (here life cost)
+def test_winters_bite_yellow_costs_the_caster_no_life():
     st = _make_state(); st.card_db = DB
     card = _card("winters_bite_yellow")
     st.players[1].hand.cards.append(card)
     before_life = st.players[1].health
     dispatch(st, "ON_PLAY", "winters_bite_yellow", card=card, event=None)
-    assert st.players[1].health == before_life - 2
+    assert st.players[1].health == before_life, (
+        "the card has no life cost; the {r}{r} is the OPPONENT's payment")
 
 # --- burn_away_red ---
 def test_burn_away_red_banish_phoenix_flame():

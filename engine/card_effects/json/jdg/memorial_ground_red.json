@@ -5,22 +5,27 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "PUT_CARDS_BOTTOM",
-          "target": "GRAVEYARD",
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "GRAVEYARD",
-              "conditions": [
-                {
-                  "type": "ATTACK_COST_LTE",
-                  "amount": 2
-                }
-              ]
-            }
-          ]
+          "type": "MOVE_MATCHING",
+          "to_zone": "deck",
+          "position": "top",
+          "target": {
+            "controller": "SELF",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Attack"
+              },
+              {
+                "type": "CARD_COST_LTE",
+                "amount": 2
+              }
+            ]
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was PUT_CARDS_BOTTOM, which is the wrong DIRECTION -- the card says 'on TOP of your deck' -- and moves the WHOLE zone, so it would have bottomed the entire graveyard. Its 'target' and nested conditions were unread anyway, and the cost filter used ATTACK_COST_LTE, which tests the CURRENT COMBAT's attack card, not the candidate in the graveyard. Now MOVE_MATCHING with CARD_COST_LTE, which does test the candidate."
 }

@@ -1,6 +1,6 @@
 {
   "slug": "mulch_red",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSED.",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: FUSED. Named the OPPONENT under 'target', which the handler does not read, so it fell back to the CONTROLLER. PUT_CARDS_BOTTOM had no 'player' param at all and moves the WHOLE zone, so this emptied the caster's own hand AND arsenal to the bottom of their deck -- for a card that bottoms ONE card of the opponent's.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -19,7 +19,7 @@
           "type": "PUT_CARDS_BOTTOM",
           "amount": 1,
           "zone": "arsenal",
-          "target": "opponent"
+          "player": "OPPONENT"
         }
       ]
     }

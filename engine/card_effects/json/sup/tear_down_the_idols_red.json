@@ -38,11 +38,11 @@
       "effects": [
         {
           "type": "DISCARD",
-          "target": "opponent",
-          "amount": 1
+          "amount": 1,
+          "player": "OPPONENT"
         }
       ]
     }
   ],
-  "_comment": "'When this attacks a Revered hero, intimidate' is TRIGGERED/ON_ATTACK; ATTACK_REACTION on a Reviled Action - Attack card never fires. The second clause (ON_HIT) was already correct."
+  "_comment": "'When this attacks a Revered hero, intimidate' is TRIGGERED/ON_ATTACK; ATTACK_REACTION on a Reviled Action - Attack card never fires. The second clause (ON_HIT) was already correct. Named the OPPONENT under 'target', which the handler does not read, so it fell back to the CONTROLLER. 'THEY discard a card' -- so the caster was discarding their own."
 }

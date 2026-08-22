@@ -2272,19 +2272,54 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # "zone" (5 nodes) was not read, so those fell through to the DEFAULT
         # hand+arsenal — a card meant to bottom its revealed cards was emptying
         # the player's hand instead. A wrong default is more damaging than none.
-        from_zones = _first(params, "from_zones", "zones", "zone", "from_zone",
-                            default=["hand", "arsenal"])
+        # "target" is a fifth spelling of the same two facts — whose cards, and
+        # from where — and it was unread, so "put a card from THEIR arsenal on
+        # the bottom of THEIR deck" emptied the CONTROLLER's own hand and
+        # arsenal instead. There was no `player` param at all to fall back on.
+        _t_player, _t_zone = _zone_target_spec(params.get("target"))
+        from_zones = _first(params, "from_zones", "zones", "zone", "from_zone")
+        if from_zones is None:
+            from_zones = ([_t_zone.lower()] if _t_zone else ["hand", "arsenal"])
         if isinstance(from_zones, str):
             from_zones = [from_zones]
         from_zones = [str(z).lower() for z in from_zones]
-        def _fn(card, event, state, _zones=from_zones):
-            from engine.card_effects.ability_keywords import _controller_id
-            player = state.players[_controller_id(card)]
+        who = str(params.get("player") or _t_player or "SELF").upper()
+        # "put A CARD on the bottom" is not "put every card in the zone on the
+        # bottom". Defaulting to everything is right for the Inertia token
+        # (hand + arsenal → bottom) and wrong for the cards that name one.
+        count = params.get("amount", params.get("count"))
+
+        def _fn(card, event, state, _zones=from_zones, _w=who, _n=count):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            cid = _controller_id(card)
+            tid = (3 - cid) if _w in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            player = state.players[tid]
+            limit = None
+            if _n is not None and str(_n).upper() not in ("ALL", "EACH"):
+                try:
+                    limit = max(0, int(_resolve_amount(_n, state, card)))
+                except (TypeError, ValueError):
+                    limit = None
+            moved = 0
             for zone_name in _zones:
                 zone = getattr(player, zone_name, None)
                 if zone is None:
                     continue
-                for c in list(zone.cards):
+                pool = list(zone.cards)
+                if limit is not None:
+                    # The card's controller chooses which one moves, even when
+                    # the cards belong to the opponent.
+                    while pool and moved < limit:
+                        pick = _ask_player(state, cid, [c.slug for c in pool],
+                                           context=f"Choose a card to put on the "
+                                                   f"bottom of the deck from {zone_name}")
+                        obj = next((c for c in pool if c.slug == pick), pool[0])
+                        pool.remove(obj)
+                        zone.remove(obj)
+                        player.deck.add_bottom(obj)
+                        moved += 1
+                    continue
+                for c in pool:
                     zone.remove(c)
                     player.deck.add_bottom(c)
         return _fn
@@ -2510,6 +2545,27 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             set_ref(_into, chosen)
             if _rest:
                 set_ref(_rest, [c for c in pool if c not in chosen])
+        return _fn
+
+    if etype == "MOVE_MATCHING":
+        # Move chosen objects to a zone, where the choice is a target spec
+        # rather than a ref an earlier effect stored. MOVE_REF covers "then put
+        # IT on the bottom"; this covers "put target <card matching X> from
+        # <zone> on top of your deck", which has no earlier effect to reference.
+        to_zone = _first(params, "to_zone", "to", "destination", default="deck")
+        position = _first(params, "position", "order", default="bottom")
+        target_fn = _compile_object_target(_object_target_spec(params.get("target")))
+
+        def _fn(card, event, state, _z=to_zone, _pos=position, _tf=target_fn):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import put_object
+            if _tf is None:
+                return
+            cid = _controller_id(card)
+            for obj in _tf(card, event, state):
+                put_object(state, obj, destination_zone=str(_z).lower(),
+                           destination_player_id=getattr(obj, "owner", cid),
+                           position=str(_pos).lower())
         return _fn
 
     if etype in ("PUT_REF_BOTTOM", "PUT_REF_TOP"):

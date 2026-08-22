@@ -15,10 +15,11 @@
       "effects": [
         {
           "type": "DISCARD",
-          "target": "OPPONENT",
-          "amount": 1
+          "amount": 1,
+          "player": "OPPONENT"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Named the OPPONENT under 'target', which the handler does not read, so it fell back to the CONTROLLER. 'THEY discard a card' -- so the caster was discarding their own."
 }

@@ -3,17 +3,18 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "additional_cost": [
-        {
-          "type": "PAY_LIFE",
-          "amount": 2
-        }
-      ],
       "effects": [
         {
-          "type": "DISCARD",
-          "target": "hero",
-          "amount": 1
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            {
+              "type": "DISCARD",
+              "player": "OPPONENT",
+              "amount": 1
+            }
+          ]
         }
       ]
     },
@@ -26,5 +27,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Named the OPPONENT under 'target', which the handler does not read, so it fell back to the CONTROLLER. It is also not an unconditional discard: 'unless they pay {r}{r}' is PAY_OR_ELSE, the same shape as coronet_peak. And the PAY_LIFE 2 additional cost was invented -- the card has no life cost; that is the OPPONENT's resource payment, not the caster's life."
 }

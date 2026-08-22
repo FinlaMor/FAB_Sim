@@ -182,8 +182,11 @@ def test_regression_count_does_not_grow():
     # DESTROY_DEFENDING as their text requires.
     # 142 -> 132: DESTROY_REF/BANISH_REF nodes handed a "target" acted on a ref
     # no earlier effect in the ability ever set, so all ten did nothing at all.
-    assert findings <= 132, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 132). "
+    # 132 -> 120: DISCARD / SET_FLAG / PUT_CARDS_BOTTOM named the OPPONENT under
+    # "target" and did it to the caster. PUT_CARDS_BOTTOM had no `player` param
+    # at all and moved the whole zone.
+    assert findings <= 120, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 120). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )
