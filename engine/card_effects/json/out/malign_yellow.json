@@ -1,14 +1,5 @@
 {
   "slug": "malign_yellow",
-  "abilities": [
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "WARD",
-          "ward_type": "UNPREVENTABLE"
-        }
-      ]
-    }
-  ]
+  "abilities": [],
+  "_comment": "Deleted a fabricated STATIC granting WARD with ward_type 'UNPREVENTABLE'. Malign has NO Ward -- its text is 'Stealth' plus 'Damage that would be dealt by Malign can't be prevented'. Ward is a real prevention keyword the engine reads declaratively, so this gave the card a shield it does not have while ALSO failing to implement the unpreventable-damage clause it does have. NOT IMPLEMENTED: unpreventable damage needs the damage pipeline to skip prevention for a named source. Stealth is printed and works."
 }

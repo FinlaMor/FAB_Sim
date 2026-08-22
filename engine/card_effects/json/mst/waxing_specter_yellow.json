@@ -1,9 +1,9 @@
 {
   "slug": "waxing_specter_yellow",
-  "_comment": "Turn-event tracking: read PITCHED_BLUE_CARD_THIS_TURN — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
+  "_comment": "Turn-event tracking: read PITCHED_BLUE_CARD_THIS_TURN — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it. The counter clause was a plain STATIC, which nothing dispatches. 'This ENTERS THE ARENA with a +1{p} counter' happens ONCE, on entry -- an ON_ENTER_PLAY trigger. As a continuous static it would have added a counter on every re-evaluation had it run at all. The Ward 2 static stays: Ward is one of the DECLARATIVE statics the engine reads straight off the CardDef.",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
       "conditions": [
         {
           "type": "EVENT_THIS_TURN",
@@ -15,9 +15,11 @@
         {
           "type": "PUT_COUNTER",
           "counter": "power",
-          "amount": 1
+          "amount": 1,
+          "target": "self"
         }
-      ]
+      ],
+      "trigger": "ON_ENTER_PLAY"
     },
     {
       "ability_type": "STATIC",

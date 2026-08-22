@@ -12,32 +12,17 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "LIGHTNING_GREAVES_ACTIVE"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "LIGHTNING_GREAVES_ACTIVE"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN",
-          "conditions": [
+          "type": "GRANT_KEYWORD_TO_PLAYED",
+          "keyword": "go again",
+          "filter": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "HAND",
-              "card_type": "INSTANT"
+              "type": "CARD_IS_TYPE",
+              "card_type": "Instant"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'Instant cards you play this turn get go again' was a SET_FLAG plus a flag-gated STATIC. Nothing dispatches a plain STATIC, so the flag was set and read by nothing. It is a turn-scoped grant to every matching card PLAYED -- not the NEXT one, and not an attack -- which is what GRANT_KEYWORD_TO_PLAYED is. Arcane Barrier 1 and Battleworn are printed keywords and need no ability."
 }

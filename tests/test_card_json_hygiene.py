@@ -55,6 +55,14 @@ KNOWN_UNIMPLEMENTED: set[str] = {
     # (PUT_ARSENAL_BOTTOM moves the other way). Definition of done: that
     # primitive exists and this entry goes.
     "heat_seeker_red",
+    # "Damage that would be dealt by Malign can't be prevented." Needs the
+    # damage pipeline to skip prevention for a NAMED SOURCE, which no primitive
+    # expresses. It had been authored as a STATIC granting WARD with
+    # ward_type "UNPREVENTABLE" — giving the card a prevention shield it does
+    # not have while still not implementing the clause it does have. Removed
+    # rather than left as the opposite of the text. Definition of done: a
+    # source-scoped prevention bypass exists and this entry goes.
+    "malign_yellow",
 }
 
 

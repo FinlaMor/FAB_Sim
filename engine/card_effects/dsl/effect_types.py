@@ -3627,6 +3627,35 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 condition_fn=_cond, replace_fn=_repl, owner_id=cid))
         return _fn
 
+    if etype == "GRANT_KEYWORD_TO_PLAYED":
+        # "Instant cards you play THIS TURN get go again", "Until end of turn,
+        # face up arrow cards played from arsenal gain go again."
+        #
+        # Distinct from GRANT_NEXT_ATTACK in both directions: it covers EVERY
+        # matching card for the rest of the turn rather than the next one, and
+        # it applies when a card is PLAYED rather than when an attack is
+        # declared. Both cards using it had been written as a SET_FLAG plus a
+        # flag-gated STATIC — and nothing dispatches a plain STATIC, so the
+        # flag was set and read by nothing.
+        #
+        # The grant is turn-scoped state on the player, matched by the same
+        # filter mechanism as the cost reductions, and consulted by
+        # engine._resolve_layer where a played card's effective keywords decide
+        # whether it returns an action point.
+        keyword = params.get("keyword", "")
+        kw = ("Go Again" if str(keyword).lower().replace("_", " ") == "go again"
+              else keyword)
+        filter_specs = params.get("filter", [])
+
+        def _fn(card, event, state, _kw=kw, _filt=filter_specs):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = state.players[_controller_id(card)]
+            if not hasattr(player, "dsl_play_keyword_grants"):
+                player.dsl_play_keyword_grants = []
+            player.dsl_play_keyword_grants.append({"keyword": _kw,
+                                                   "filter": _filt})
+        return _fn
+
     if etype in ("GRANT_NEXT_ATTACK", "GRANT_NEXT_ATTACK_KEYWORD"):
         # "Your next attack this turn gets <keyword>" (Agility token, Driving
         # Blade). Queued on the same one-shot list as MODIFY_NEXT_ATTACK and

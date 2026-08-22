@@ -12,37 +12,20 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "PERCH_GRAPPLERS_ACTIVE"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "PERCH_GRAPPLERS_ACTIVE"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ],
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "PERCH_GRAPPLERS_ACTIVE"
-        },
-        {
-          "type": "CARD_IN_ZONE",
-          "zone": "arsenal",
-          "condition": "FACE_UP",
-          "card_type": "arrow"
+          "type": "GRANT_KEYWORD_TO_PLAYED",
+          "keyword": "go again",
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_type": "Arrow"
+            },
+            {
+              "type": "PLAYED_FROM_ARSENAL"
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Same SET_FLAG-plus-dead-STATIC shape as lightning_greaves. Worse: the ACTIVATE was itself gated on FLAG_SET of the flag IT SETS, so the ability could only be used after it had already been used -- it could never be activated at all. Blade Break is printed."
 }

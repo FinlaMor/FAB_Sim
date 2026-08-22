@@ -2,22 +2,6 @@
   "slug": "stonewall_confidence_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "CONTROLS_ATTACK_ACTION",
-          "cost_gte": 3
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "mod": "add",
-          "amount": 3
-        }
-      ]
-    },
-    {
       "ability_type": "WHILE_STATIC",
       "trigger": "RECALC_DEFENSE",
       "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. CONTROLS_ATTACK_ACTION with cost_gte asked whether the controller HAS such a card, not whether the DEFENDER is one.",
@@ -37,5 +21,5 @@
       ]
     }
   ],
-  "_comment": "Deleted: an unconditional GAIN of Go Again on a card that PRINTS **Go again**. Printed keywords come from card data and already work, so this static was a duplicate of something that happens anyway -- and it was dead besides."
+  "_comment": "Deleted: an unconditional GAIN of Go Again on a card that PRINTS **Go again**. Printed keywords come from card data and already work, so this static was a duplicate of something that happens anyway -- and it was dead besides. Removed the original dead STATIC, which was left in place beside the WHILE_STATIC that replaced it -- a duplicate of the same clause, one live and one dispatched by nothing."
 }

@@ -1,6 +1,6 @@
 {
   "slug": "companion_of_the_claw_yellow",
-  "_comment": "Turn-event tracking: read PITCHED_BLUE_CARD — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
+  "_comment": "Turn-event tracking: read PITCHED_BLUE_CARD — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it. Deleted an unconditional GAIN of Go Again on a card that PRINTS **Go again**. Printed keywords come from card data and already work, so the static duplicated something that happens anyway -- and being a plain STATIC it was dead besides.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -17,14 +17,6 @@
           "type": "CREATE_TOKEN",
           "token": "crouching_tiger",
           "zone": "HAND"
-        }
-      ]
-    },
-    {
-      "ability_type": "STATIC",
-      "effects": [
-        {
-          "type": "GO_AGAIN"
         }
       ]
     }

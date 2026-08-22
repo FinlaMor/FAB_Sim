@@ -932,6 +932,12 @@ def _end_phase_iter(state: GameState) -> None:
     # with the turn, exactly like the attack mods above.
     if hasattr(player, 'dsl_queued_cost_mods'):
         player.dsl_queued_cost_mods = []
+    # "Instant cards you play THIS TURN get go again" ends with the turn too.
+    # Unlike the queues above these are not consumed on use — they apply to
+    # every matching card — so the turn boundary is the ONLY thing that ends
+    # them, and forgetting it would make the grant permanent.
+    if hasattr(player, 'dsl_play_keyword_grants'):
+        player.dsl_play_keyword_grants = []
     if hasattr(player, 'dsl_queued_card_mods'):
         player.dsl_queued_card_mods = []
     if hasattr(player, 'dsl_queued_defense_mods'):
@@ -2299,6 +2305,20 @@ def resolve_stack(game_state: GameState) -> None:
         effective_kws = game_state.continuous_effect_manager.recalculate(
             game_state, card, 'keywords', base_kws)
         _ga_strings = {"Go Again", "Go again", "go again"}
+        # "Instant cards you play this turn get go again" — a turn-scoped grant
+        # to every matching card PLAYED, which is neither a printed keyword nor
+        # a continuous effect on the card, so neither branch above sees it.
+        # Cards using it had a SET_FLAG plus a flag-gated STATIC, and nothing
+        # dispatches a plain STATIC: the flag was set and read by nothing.
+        if not (effective_kws & _ga_strings) and not card.has_go_again:
+            from engine.play import _cost_mod_matches
+            for grant in getattr(game_state.players[entry.player_id],
+                                 "dsl_play_keyword_grants", None) or []:
+                if str(grant.get("keyword", "")).lower().replace("_", " ") != "go again":
+                    continue
+                if _cost_mod_matches(game_state, grant, card):
+                    effective_kws = effective_kws | {"Go Again"}
+                    break
         has_effective_go_again = bool(effective_kws & _ga_strings) or card.has_go_again
         # Spinal Crush (WTR): suppress go again for the affected player's
         # action cards / activated abilities this turn.
