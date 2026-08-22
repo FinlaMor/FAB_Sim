@@ -977,6 +977,34 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return n >= _n
         return _hand_size
 
+    if ctype in ("BOOST_BANISHED_IS", "ATTACK_BOOST_BANISHED_IS"):
+        # "If an ITEM OR EQUIPMENT was banished from boosting this, this gets
+        # +1{p}." Distinct from CARD_WAS_BOOSTED, which says only that a boost
+        # happened — it cannot tell a boost that banished a weapon from one that
+        # banished an action. boost() records the banished cards on the card it
+        # boosted, for the same reason it records was_boosted there: a turn
+        # marker cannot tell one attack's boost from another's.
+        wanted = params.get("types") or params.get("card_types")
+        if not wanted:
+            wanted = [params.get("type_name") or params.get("card_type") or ""]
+        wanted = [_norm(t) for t in wanted if t]
+        on_attack = ctype.startswith("ATTACK_")
+
+        def _boost_banished(c, e, s, _w=wanted, _atk=on_attack):
+            target = c
+            if _atk:
+                combat = getattr(s, "combat", None)
+                target = getattr(combat, "attack_card", None) if combat else None
+            if target is None or not _w:
+                return False
+            for banished in getattr(target, "boost_banished", None) or []:
+                have = {_norm(x) for x in (getattr(banished, "types", None) or [])}
+                have |= {_norm(x) for x in (getattr(banished, "subtypes", None) or [])}
+                if any(w in have for w in _w):
+                    return True
+            return False
+        return _boost_banished
+
     if ctype in ("ATTACK_WAS_BOOSTED", "ATTACK_WAS_CHARGED",
                  "CARD_WAS_BOOSTED", "CARD_WAS_CHARGED"):
         # "The next attack you BOOST this turn gets +4{p}", "the next attack you

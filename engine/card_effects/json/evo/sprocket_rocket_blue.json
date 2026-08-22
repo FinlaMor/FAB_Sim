@@ -2,11 +2,18 @@
   "slug": "sprocket_rocket_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_ATTACK_POWER",
       "conditions": [
         {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_type": "ITEM_OR_EQUIPMENT"
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "BOOST_BANISHED_IS",
+          "types": [
+            "Item",
+            "Equipment"
+          ]
         }
       ],
       "effects": [
@@ -17,5 +24,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a plain STATIC, which nothing dispatches, so the +1{p} never applied. Its condition was CONTROLS_TOKEN_TYPE with token_type 'ITEM_OR_EQUIPMENT' -- an invented token type, and controlling a token has nothing to do with what boosting banished. 'If an item or equipment was BANISHED FROM BOOSTING this' asks about the banished card's TYPE, which CARD_WAS_BOOSTED cannot answer either: it says only that a boost happened. boost() now records what it banished on the card it boosted, and the pump is a WHILE_STATIC on the attack-power recalculation, confined to this card's own attack by SOURCE_IS_ATTACK."
 }

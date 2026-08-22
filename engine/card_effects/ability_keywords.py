@@ -473,6 +473,14 @@ def boost(card: Card, state: GameState) -> bool:
         # turn gets +4{p}" is about which attack was boosted, and a turn marker
         # cannot tell one attack from another.
         card.was_boosted = True
+        # WHAT was banished, not just THAT something was: "if an item or
+        # equipment was banished from boosting this, this gets +1{p}" asks about
+        # the banished card's type, and was_boosted cannot answer it. Recorded
+        # on the boosted card because a turn marker cannot tell one attack's
+        # boost from another's — the same reason was_boosted lives here.
+        if not hasattr(card, "boost_banished") or card.boost_banished is None:
+            card.boost_banished = []
+        card.boost_banished.append(top)
         controller.current_turn_effects.append("boosted_this_turn")
         controller.class_counters["boosted_this_turn"] = True
         # ... and a CHAIN-scoped tally. "this combat chain" is narrower than
