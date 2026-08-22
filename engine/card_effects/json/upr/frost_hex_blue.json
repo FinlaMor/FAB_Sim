@@ -2,8 +2,12 @@
   "slug": "frost_hex_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
       "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        },
         {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Frostbite"
@@ -11,19 +15,15 @@
       ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "END_OF_TURN",
-            "effects": [
-              {
-                "type": "DEAL_ARCANE",
-                "amount": 1,
-                "target": "self"
-              }
-            ]
+          "type": "DEAL_ARCANE",
+          "target": "self",
+          "amount": {
+            "type": "COUNT_PERMANENT",
+            "slug": "frostbite"
           }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a plain STATIC holding an INJECT_TRIGGER, and nothing dispatches a plain STATIC -- so the trigger was never injected and the granted ability never existed. The granted ability lives on the Frostbites, but its whole effect is 'at the beginning of YOUR end phase, deal 1 arcane to you' per Frostbite -- so the specialization itself can carry it, counting them. SIMPLIFIED: dealt as ONE instance of N rather than N instances of 1, which differs under Arcane Barrier and per-instance prevention. Counted by SLUG, not subtype: the Frostbite token's subtype is 'Aura' and Frostbite is its NAME, so a subtype count returned zero."
 }

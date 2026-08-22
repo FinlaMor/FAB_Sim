@@ -2,7 +2,8 @@
   "slug": "shimmering_specter_yellow",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
       "conditions": [
         {
           "type": "OR",
@@ -20,17 +21,11 @@
       ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_LEAVE_PLAY",
-          "effects": [
-            {
-              "type": "CREATE_TOKEN",
-              "token_type": "Spectral Shield",
-              "token": "spectral_shield"
-            }
-          ]
+          "type": "CREATE_TOKEN",
+          "token": "spectral_shield"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a plain STATIC holding an INJECT_TRIGGER, and nothing dispatches a plain STATIC -- so the trigger was never injected and the granted ability never existed. This one is not a granted ability at all -- 'when THIS leaves the arena' is its own trigger, with 'while this is attacking or defending' as a condition on it. ON_LEAVE_PLAY is dispatched by the leaves_arena listener."
 }

@@ -754,11 +754,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "DEAL_ARCANE":
         amt = params.get("amount", 0)
         tgt = params.get("target", "OPPONENT")
+
         def _fn(card, event, state, _a=amt, _t=tgt):
             from engine.card_effects.ability_keywords import effect_deal_arcane, _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
-            effect_deal_arcane(state, tid, _a, card)
+            # "deal X arcane, where X is the number of Frostbites you control" —
+            # an expression amount was passed through unresolved, and the damage
+            # pipeline compares amount against an int, so it raised TypeError
+            # mid-resolution rather than dealing anything.
+            n = _resolve_amount(_a, state, card)
+            try:
+                n = max(0, int(n))
+            except (TypeError, ValueError):
+                n = 0
+            effect_deal_arcane(state, tid, n, card)
         return _fn
 
     # ── cards ──────────────────────────────────────────────────────────────

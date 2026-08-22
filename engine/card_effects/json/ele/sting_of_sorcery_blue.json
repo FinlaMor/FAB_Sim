@@ -2,30 +2,32 @@
   "slug": "sting_of_sorcery_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "conditions": [
+        {
+          "type": "NOT",
+          "condition": {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        }
+      ],
       "effects": [
         {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_ATTACK",
-          "effects": [
-            {
-              "type": "DEAL_ARCANE",
-              "amount": 1
-            }
-          ],
-          "target": {
-            "filter": [
-              {
-                "type": "CONTROLS_ATTACK_ACTION"
-              }
-            ]
-          }
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "OPPONENT"
         }
       ]
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "END_OF_TURN",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
         {
           "type": "DESTROY_PERMANENT",
@@ -33,5 +35,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Was a plain STATIC holding an INJECT_TRIGGER, and nothing dispatches a plain STATIC -- so the trigger was never injected and the granted ability never existed. Its INJECT_TRIGGER also named ON_ATTACK, which is dispatched only to the ATTACKING CARD's slug -- an aura granting an ability to other cards can never receive it. ON_PLAY_ACTIVATE_ATTACK reaches every permanent the attacker controls, which is exactly the hook a granting permanent needs; the weapon half is excluded because the card says attack ACTION cards. Its 'destroy this' was END_OF_TURN, but the card says the beginning of the END PHASE."
 }
