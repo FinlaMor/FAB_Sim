@@ -12,11 +12,12 @@
       "effects": [
         {
           "type": "SEARCH_DECK",
-          "target": "Runeblade Aura",
-          "cost": "X",
           "max_cost": 2,
           "put_into": "arena",
-          "shuffle": true
+          "shuffle": true,
+          "subtype": "Aura",
+          "card_class": "Runeblade",
+          "destination": "arena"
         },
         {
           "type": "GAIN",
@@ -30,5 +31,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "SEARCH_DECK's 'target' named 'Runeblade Aura', which is a description, not a card name -- and the key was unread, so the search matched ANY card in the deck and fetched whatever came first. It is a subtype plus a class. STILL SIMPLIFIED: 'with cost X or less' is hardcoded max_cost 2; X is the amount actually paid and there is no x-cost expression on this node."
 }

@@ -13,7 +13,6 @@
       "effects": [
         {
           "type": "RETURN_TO_HAND",
-          "target": "CARD",
           "conditions": [
             {
               "type": "CARD_IN_ZONE",
@@ -21,9 +20,21 @@
               "card_type": "ACTION",
               "card_class": "Earth"
             }
-          ]
+          ],
+          "target": {
+            "controller": "SELF",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_CLASS",
+                "card_class": "Elemental"
+              }
+            ]
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "RETURN_TO_HAND returned THIS card -- the source -- and read no target, so 'Return target Earth action card or Earth instant card from your graveyard' returned the Plume itself. SIMPLIFIED: filtered to the class rather than 'Earth action OR Earth instant', which needs an OR over two type+talent pairs on the candidate."
 }

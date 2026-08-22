@@ -25,21 +25,11 @@
       "effects": [
         {
           "type": "SEARCH_DECK",
-          "conditions": [
-            {
-              "type": "HAS_KEYWORD",
-              "keyword": "BloodDebt"
-            }
-          ],
-          "target": "single",
-          "effects": [
-            {
-              "type": "BANISH"
-            }
-          ]
+          "keyword": "BloodDebt",
+          "action": "banish"
         }
       ]
     }
   ],
-  "_comment": "SHUFFLE_DECK is not an effect type. It sat inside a lazily-compiled branch, so it did not fail at load -- it raised ValueError the moment the search resolved. SEARCH_DECK already shuffles at the end of every search, so the node was redundant as well as fatal."
+  "_comment": "SHUFFLE_DECK is not an effect type. It sat inside a lazily-compiled branch, so it did not fail at load -- it raised ValueError the moment the search resolved. SEARCH_DECK already shuffles at the end of every search, so the node was redundant as well as fatal. Its search then named target 'single' (not a card), put the blood-debt test in effect-level 'conditions' -- which the loader turns into a gate on the SOURCE card, asking whether Shadow of Blasmophet itself has blood debt -- and expressed 'banish it' as a nested 'effects' list SEARCH_DECK does not read. So it searched for any card and put it in HAND. Now a keyword filter with action=banish."
 }

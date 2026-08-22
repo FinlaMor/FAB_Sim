@@ -983,16 +983,39 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "RETURN_TO_HAND":
-        # Return this card to the controller's hand. A "zone" parameter names the
-        # SOURCE, which put_object resolves from the card itself; it is declared
-        # inert in scripts/audit_params.py rather than touched here, so the
-        # reason is recorded instead of hidden behind a no-op read.
-        def _fn(card, event, state):
+        # Return a card to a hand. A "zone" parameter names the SOURCE, which
+        # put_object resolves from the card itself; it is declared inert in
+        # scripts/audit_params.py rather than touched here, so the reason is
+        # recorded instead of hidden behind a no-op read.
+        #
+        # Without a target this returns THIS card, which is right for the
+        # bounce-self cards and wrong for the four that name something else:
+        # "return a Phoenix Flame from your graveyard to your hand" was
+        # returning Inflame itself. A ref (from a preceding LOOK/SEARCH) takes
+        # precedence over a target spec, since it names one specific card.
+        ref = params.get("ref")
+        target_fn = _compile_object_target(_object_target_spec(params.get("target")))
+        to_owner = bool(params.get("to_owner"))
+
+        def _fn(card, event, state, _r=ref, _tf=target_fn, _owner=to_owner):
             from engine.card_effects.ability_keywords import _controller_id
+            from engine.context import get_ref
             from engine.effect_keywords import put_object
             cid = _controller_id(card)
-            put_object(state, target_card=card, destination_zone="hand",
-                       destination_player_id=cid, source_player_id=cid)
+            if _r:
+                found = get_ref(_r)
+                objects = ([] if not found
+                           else (list(found) if isinstance(found, list) else [found]))
+            elif _tf is not None:
+                objects = _tf(card, event, state)
+            else:
+                objects = [card]
+            for obj in objects:
+                # "to its OWNER's hand" — a card banished from the opponent's
+                # arsenal goes back to them, not to the player who bounced it.
+                dest = getattr(obj, "owner", cid) if _owner else cid
+                put_object(state, target_card=obj, destination_zone="hand",
+                           destination_player_id=dest, source_player_id=cid)
         return _fn
 
     if etype in ("PUT_HAND_CARD_BOTTOM", "PUT_HAND_CARD_TOP"):
@@ -1117,10 +1140,24 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         from_ref = params.get("from_ref")
 
         card_class = params.get("card_class") or params.get("class")
+        # "Search your deck for A PHOENIX FLAME" names one specific card, and
+        # there was no way to say so -- six cards put the name in "target",
+        # which is unread, so the search matched ANY card and fetched whatever
+        # was on top of the eligible list. A search that names a card and
+        # returns a different one is worse than a search that fails.
+        want_name = _first(params, "name", "card_name", "target")
+        if isinstance(want_name, dict):
+            want_name = None      # a filter spec, not a name
+        # "search your deck for a card with BLOOD DEBT". Authored as effect-level
+        # "conditions", which the loader turns into a gate evaluated against the
+        # SOURCE card -- so it asked whether Shadow of Blasmophet itself has
+        # blood debt, not whether the card being searched for does.
+        want_keyword = _first(params, "keyword", "with_keyword")
 
         def _fn(card, event, state, _ft=filter_types, _fsc=filter_slug_contains,
                 _sub=subtype, _max=max_cost, _dest=destination, _n=count,
-                _ref=from_ref, _cls=card_class):
+                _ref=from_ref, _cls=card_class, _name=want_name,
+                _kw=want_keyword):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import shuffle as effect_shuffle
             cid = _controller_id(card)
@@ -1136,6 +1173,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 eligible = [c for c in eligible if any(t in (c.types or []) for t in _ft)]
             if _fsc:
                 eligible = [c for c in eligible if _fsc in c.slug]
+            if _kw:
+                def _kw_norm(text):
+                    return "".join(ch for ch in str(text).lower() if ch.isalnum())
+                wanted_kw = _kw_norm(_kw)
+                eligible = [c for c in eligible
+                            if any(_kw_norm(k) == wanted_kw
+                                   for k in (getattr(c, "keywords", None) or []))]
+            if _name:
+                def _flat(text):
+                    return "".join(ch for ch in str(text).lower() if ch.isalnum())
+                wanted = _flat(_name)
+                eligible = [c for c in eligible
+                            if wanted in (_flat(getattr(c, "name", "") or ""),
+                                          _flat(getattr(c, "slug", "") or ""))]
             if _sub:
                 want = str(_sub).lower()
                 eligible = [c for c in eligible

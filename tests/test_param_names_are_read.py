@@ -188,8 +188,11 @@ def test_regression_count_does_not_grow():
     # 120 -> 106: the clash cycle, plus INTIMIDATE/PREVENT_DAMAGE targets
     # declared INERT (they always hit the opposing hero / shield the
     # controller, so naming it changes nothing).
-    assert findings <= 106, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 106). "
+    # 106 -> 96: effects that name ONE card. SEARCH_DECK gained name/keyword
+    # filters, RETURN_TO_HAND gained a target/ref (it returned the SOURCE), and
+    # the BANISH_FROM_GRAVEYARD cost gained a name.
+    assert findings <= 96, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 96). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

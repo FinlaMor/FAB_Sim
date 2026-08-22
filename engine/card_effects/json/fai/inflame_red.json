@@ -15,8 +15,13 @@
       "effects": [
         {
           "type": "RETURN_TO_HAND",
-          "target": "Phoenix Flame",
-          "zone": "GRAVEYARD"
+          "zone": "GRAVEYARD",
+          "target": {
+            "controller": "SELF",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "name": "Phoenix Flame"
+          }
         }
       ]
     },
@@ -29,5 +34,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "RETURN_TO_HAND returned THIS card -- the source -- and read no target, so 'return a PHOENIX FLAME from your graveyard' returned Inflame itself."
 }

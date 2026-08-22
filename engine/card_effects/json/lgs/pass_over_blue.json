@@ -3,24 +3,25 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "cost": [
-        {
-          "type": "BANISH_FROM_GRAVEYARD",
-          "target": "opponent"
-        }
-      ],
       "effects": [
         {
-          "type": "TRANSFORM_HERO",
+          "type": "BANISH",
+          "target": "OPPONENT_GRAVEYARD",
+          "amount": 1
+        },
+        {
+          "type": "TRANSCEND",
           "conditions": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "HAND",
-              "color": "blue"
+              "type": "EVENT_THIS_TURN",
+              "event": "play",
+              "qualifier": "blue",
+              "count": 2
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'Banish target card from an opposing hero's graveyard' was modelled as a COST, and BANISH_FROM_GRAVEYARD always pays from the CONTROLLER's graveyard. Two errors at once: it is the card's EFFECT, not a cost, so the card was unplayable whenever the caster's own graveyard was empty; and it banished from the wrong player. The transcend was TRANSFORM_HERO gated on 'a blue card in HAND', which is not what the card says -- 'if you've PLAYED another blue card THIS TURN' is a turn event, and play.py records plays with their colour, so count 2 is 'another' given this card is itself blue."
 }

@@ -452,29 +452,38 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         else:
             card_types = list(card_types_raw)
         amount = params.get("amount", 1)
-        def can_pay(card, event, state, _types=card_types, _a=amount):
+        # "banish A PHOENIX FLAME from your graveyard" names one card, and the
+        # filter was card TYPE only — so any card in the graveyard paid a cost
+        # the card says only one specific card can pay.
+        want_name = params.get("name") or params.get("card_name")
+
+        def _eligible(card, state, _types, _name):
             from engine.card_effects.ability_keywords import _controller_id
             gy = state.players[_controller_id(card)].graveyard.cards
-            eligible = [
+            out = [
                 c for c in gy
                 if not _types or any(
                     t.upper() in [x.upper() for x in (getattr(c, 'types', None) or [])]
                     for t in _types
                 )
             ]
-            return len(eligible) >= _a
-        def pay(card, event, state, _types=card_types, _a=amount):
+            if _name:
+                def _flat(text):
+                    return "".join(ch for ch in str(text).lower() if ch.isalnum())
+                wanted = _flat(_name)
+                out = [c for c in out
+                       if wanted in (_flat(getattr(c, "name", "") or ""),
+                                     _flat(getattr(c, "slug", "") or ""))]
+            return out
+
+        def can_pay(card, event, state, _types=card_types, _a=amount, _name=want_name):
+            return len(_eligible(card, state, _types, _name)) >= _a
+
+        def pay(card, event, state, _types=card_types, _a=amount, _name=want_name):
             from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(card)
             gy = state.players[cid].graveyard.cards
-            eligible = [
-                c for c in gy
-                if not _types or any(
-                    t.upper() in [x.upper() for x in (getattr(c, 'types', None) or [])]
-                    for t in _types
-                )
-            ]
-            for c in eligible[:_a]:
+            for c in _eligible(card, state, _types, _name)[:_a]:
                 gy.remove(c)
                 state.players[cid].banished.add(c)
         return can_pay, pay

@@ -909,7 +909,12 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         #   {"type":"EVENT_THIS_TURN","event":"pitch","qualifier":"blue"}
         #   {"type":"EVENT_THIS_TURN","event":"draw","count":2}
         #
-        # `event` is one of damage / pitch / banish / draw / create. `qualifier`
+        # `event` is one of damage / pitch / banish / draw / create / play /
+        # roll / charge / transcend — the full set is whatever engine code passes
+        # to effect_keywords._record_turn_event, and "play" in particular carries
+        # slug, name, types, subtypes, classes, talents and COLOUR as qualifiers
+        # (see play.py), so "if you've played another blue card this turn" is
+        # expressible and was previously assumed not to be. `qualifier`
         # narrows it (a damage type, a colour, a class, a talent, a token slug,
         # a card type); omit it to ask coarsely. `count` is >= N occurrences.
         # These replace 154 hand-rolled private flags across 169 cards, none of

@@ -3,12 +3,6 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "additional_cost": [
-        {
-          "type": "BANISH_FROM_GRAVEYARD",
-          "target": "self"
-        }
-      ],
       "effects": [
         {
           "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
@@ -22,5 +16,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Removed a fabricated BANISH_FROM_GRAVEYARD additional cost. The card says 'You may PLAY Mutated Mass FROM YOUR BANISHED ZONE' -- a play-from-zone permission, not a cost. Modelled as a cost it made the card UNPLAYABLE whenever the graveyard was empty, and banished a card from it when it was not. A wrong cost is worse than a wrong effect: it blocks legality."
 }

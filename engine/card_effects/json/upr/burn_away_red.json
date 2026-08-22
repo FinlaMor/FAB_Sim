@@ -6,7 +6,7 @@
       "additional_cost": [
         {
           "type": "BANISH_FROM_GRAVEYARD",
-          "target": "Phoenix Flame"
+          "name": "Phoenix Flame"
         }
       ],
       "effects": [
@@ -21,5 +21,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The additional cost is 'banish A PHOENIX FLAME from your graveyard', and the cost filters by card TYPE only -- the name sat in an unread 'target', so ANY card in the graveyard paid it."
 }
