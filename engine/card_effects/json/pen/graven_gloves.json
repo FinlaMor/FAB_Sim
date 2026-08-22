@@ -1,17 +1,10 @@
 {
   "slug": "graven_gloves",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
+  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). The graveyard clause was a plain STATIC, which nothing dispatches, though the effect it needed (MAY_DESTROY_SILVERS_TO_EQUIP) and the trigger it needed (START_OF_TURN_IN_GRAVEYARD, dispatched to the active player's graveyard) both already existed. Its IN_GRAVEYARD and IS_ACTIVE_PLAYER conditions are dropped because that trigger already means both.\n\nThe equip clause tested NOT(IN_GRAVEYARD), which is TRUE even when the card is equipped FROM the graveyard -- by the time ON_EQUIP fires it has already left. 'From anywhere other than your graveyard' is about where it CAME FROM, so it is PLAYED_FROM_ZONE, which now falls back to prev_zone because equipping is not playing and never stamps played_from_zone.",
   "abilities": [
     {
-      "ability_type": "STATIC",
-      "conditions": [
-        {
-          "type": "IN_GRAVEYARD"
-        },
-        {
-          "type": "IS_ACTIVE_PLAYER"
-        }
-      ],
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
       "effects": [
         {
           "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
@@ -26,13 +19,15 @@
         {
           "type": "NOT",
           "condition": {
-            "type": "IN_GRAVEYARD"
+            "type": "PLAYED_FROM_ZONE",
+            "zone": "graveyard"
           }
         }
       ],
       "effects": [
         {
           "type": "PUT_COUNTER",
+          "target": "self",
           "counter": "-1d",
           "amount": 1
         }

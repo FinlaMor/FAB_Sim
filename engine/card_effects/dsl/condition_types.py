@@ -1280,7 +1280,14 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         def _played_from(c, e, s, _want=want):
             if not _want:
                 return False
-            return _norm(getattr(c, "played_from_zone", "") or "") == _want
+            if _norm(getattr(c, "played_from_zone", "") or "") == _want:
+                return True
+            # EQUIPPING is not playing, so play.py never stamps played_from_zone
+            # for it — but "when this is equipped from anywhere other than your
+            # graveyard" still has to know where it came from. Zone.add keeps
+            # prev_zone for every move, which covers equips. Same fallback
+            # PLAYED_FROM_ARSENAL uses, and for the same reason.
+            return _norm(getattr(c, "prev_zone", "") or "") == _want
         return _played_from
 
     if ctype == "LAST_CHAIN_ATTACK":
