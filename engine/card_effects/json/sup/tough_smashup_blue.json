@@ -6,17 +6,30 @@
       "trigger": "ON_DEFEND",
       "effects": [
         {
-          "type": "CLASH"
+          "type": "CLASH",
+          "on_winner": [
+            {
+              "action": "create_token",
+              "who": "WINNER",
+              "token": "toughness",
+              "number": 1
+            }
+          ]
         },
         {
-          "type": "CREATE_TOKEN",
-          "token_type": "TOUGHNESS"
-        },
-        {
-          "type": "PUT_HAND_CARD_BOTTOM",
-          "target": "revealed"
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "MOVE_REF",
+              "ref": "clash_revealed_self",
+              "to_zone": "deck",
+              "position": "bottom",
+              "player": "OWNER"
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Clash with the attacking hero. THE WINNER creates a Toughness token. You may put YOUR REVEALED CARD on the bottom of its owner's deck.\" Both payoffs went to the wrong place. The token was a bare CREATE_TOKEN after the clash, so the controller got it whoever won -- including when they lost -- which is the opposite of a clash card. And \"your revealed card\" was PUT_HAND_CARD_BOTTOM target:\"revealed\": the wrong zone (a card from HAND, not the clash reveal), the wrong card, and 'target' is not a parameter it reads anyway. CLASH now names the two revealed cards as refs; the alternative already there, reveal_dest:\"bottom\", bottoms BOTH of them unconditionally, which is neither \"yours\" nor \"you may\"."
 }

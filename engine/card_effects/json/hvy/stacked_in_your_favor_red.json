@@ -34,9 +34,12 @@
         },
         {
           "type": "PUT_HAND_CARD_BOTTOM",
-          "position": "top"
+          "to": "top",
+          "optional": false,
+          "amount": 1
         }
-      ]
+      ],
+      "_comment": "\"put a card from your hand ON TOP of your deck\" was authored with position:\"top\"; the effect reads \"to\", so the card went to the BOTTOM -- the opposite end of the deck, and for a card whose point is setting up the next draw, the opposite effect. It was also optional by default while the text is mandatory. \"position\" is now read as well, since it is the natural third spelling."
     }
   ]
 }

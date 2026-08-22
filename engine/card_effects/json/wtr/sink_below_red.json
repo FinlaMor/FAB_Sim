@@ -6,13 +6,24 @@
       "effects": [
         {
           "type": "PUT_HAND_CARD_BOTTOM",
-          "optional": "TRUE",
-          "conditional_effect": {
-            "type": "DRAW",
-            "amount": 1
-          }
+          "optional": true,
+          "amount": 1
+        },
+        {
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_EXISTS",
+            "ref": "bottomed_from_hand"
+          },
+          "effects": [
+            {
+              "type": "DRAW",
+              "amount": 1
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"You may put a card from your hand on the bottom of your deck. IF YOU DO, draw a card.\" The draw was authored as a 'conditional_effect' key on PUT_HAND_CARD_BOTTOM, which reads no such parameter -- so the whole payoff half of the card was absent and Sink Below only ever bottomed a card. 'If you do' cannot be inferred from a non-empty hand either, because the effect is optional and declining is a legal choice, so PUT_HAND_CARD_BOTTOM now records what it moved and the draw is gated on that. 'optional' was also the STRING \"TRUE\" rather than the boolean; that happened to be truthy, which is why it was invisible."
 }

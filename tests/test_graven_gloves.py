@@ -54,6 +54,18 @@ def _counters(card, kind):
     return (getattr(card, "counters", None) or {}).get(kind, 0)
 
 
+def _minus_d(card):
+    """How many -1{d} counters are on the card, whatever key they landed under.
+
+    These tests read card.counters["-1d"] directly until defence counters were
+    routed through the keyword path that actually reduces {d} — which stores
+    them under "minus_defense". A test pinned to the spelling of an internal
+    key certifies the implementation, not the card, and this one went red on a
+    change that made the counter start working."""
+    from engine.card_effects.ability_keywords import defense_counters
+    return defense_counters(card)
+
+
 def test_equipped_from_the_graveyard_takes_no_counter():
     """The case the card excludes, and the case NOT(IN_GRAVEYARD) got wrong."""
     st = _state()
@@ -61,8 +73,10 @@ def test_equipped_from_the_graveyard_takes_no_counter():
 
     run_ability(get_card("graven_gloves").abilities[1], gloves, None, st)
 
-    assert _counters(gloves, "-1d") == 0, (
+    assert _minus_d(gloves) == 0, (
         "it took a -1{d} counter when equipped FROM the graveyard")
+    assert gloves.defense == gloves.base_defense, (
+        f"its {{d}} dropped to {gloves.defense} from {gloves.base_defense}")
 
 
 def test_equipped_from_anywhere_else_takes_a_counter():
@@ -71,8 +85,11 @@ def test_equipped_from_anywhere_else_takes_a_counter():
 
     run_ability(get_card("graven_gloves").abilities[1], gloves, None, st)
 
-    assert _counters(gloves, "-1d") == 1, (
+    assert _minus_d(gloves) == 1, (
         "equipping from inventory did not put a -1{d} counter on it")
+    assert gloves.defense == gloves.base_defense - 1, (
+        f"the counter did not reduce its {{d}}: {gloves.defense} of "
+        f"{gloves.base_defense}")
 
 
 def test_the_counter_goes_on_the_gloves():
@@ -85,7 +102,7 @@ def test_the_counter_goes_on_the_gloves():
 
     run_ability(get_card("graven_gloves").abilities[1], gloves, None, st)
 
-    assert _counters(other, "-1d") == 0
+    assert _minus_d(other) == 0
 
 
 def test_the_graveyard_clause_uses_a_trigger_that_is_dispatched():

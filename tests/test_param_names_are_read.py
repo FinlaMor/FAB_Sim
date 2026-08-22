@@ -194,8 +194,21 @@ def test_regression_count_does_not_grow():
     # 96 -> 94: MAY now reads its `cost`. It did not, so "you may pay {r}. If
     # you do, +1{p}" was free and unconditional -- the card strictly stronger
     # than printed.
-    assert findings <= 82, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 82). "
+    # 82 -> 73: the targeting tail. TAP, FLIP_REF and MODIFY_DEFENSE_VALUE now
+    # take the canonical object target, and that target grew "ref" and
+    # "record_as" so "put a counter on IT" can name the object the previous
+    # effect acted on instead of repeating the search. PUT_ARSENAL_BOTTOM read
+    # neither its face_up filter nor, on four cards, the fact that it defaults
+    # to the OPPONENT's arsenal and moves cards the wrong way -- those now use
+    # the new PUT_INTO_ARSENAL.
+    # 73 -> 69: the deck-bottom family. PUT_HAND_CARD_BOTTOM now reads
+    # "position" (a card saying ON TOP put its card on the BOTTOM) and records
+    # what it moved, so "if you do, draw a card" -- absent entirely on Sink
+    # Below -- can be gated on it. The rest were the wrong effect: "the
+    # ATTACKING hero puts a card" fell back to SELF, and "your revealed card"
+    # meant the CLASH reveal, not a card in hand.
+    assert findings <= 69, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 69). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

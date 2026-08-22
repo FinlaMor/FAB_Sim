@@ -8,8 +8,16 @@
           "type": "MODIFY_DEFENSE_VALUE",
           "mod": "add",
           "amount": 3,
-          "target": "defending_action_card",
-          "max_targets": 1
+          "target": {
+            "zone": "DEFENDING",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Action"
+              }
+            ]
+          }
         },
         {
           "type": "CROWD_CHEER"
@@ -17,5 +25,5 @@
       ]
     }
   ],
-  "_comment": "Up to one target defending action card gets +3{d} this turn. The crowd cheers you. The cheer was SET_FLAG THE_CROWD_CHEERS, a private flag nothing else read."
+  "_comment": "\"Up to one target defending ACTION CARD gets +3{d} this turn.\" The +3 was applied to the defending TOTAL with neither the target nor max_targets read, so a block made entirely of equipment -- where the card has no legal target at all -- still got +3{d}. With a target the two agree whenever an action card is defending and part company exactly where the card is restrictive. \"Up to one\" is modelled as \"one if there is a legal target, none otherwise\" rather than as a prompt: +3{d} on a card you chose to defend with is never a downside, so declining is never correct play."
 }

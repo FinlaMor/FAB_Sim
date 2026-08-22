@@ -1,22 +1,5 @@
 {
   "slug": "celestial_reprimand_yellow",
-  "abilities": [
-    {
-      "ability_type": "PLAY",
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "target": "opponent",
-          "amount": -2,
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "defending",
-              "card_name": "Herald"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "abilities": [],
+  "_comment": "\"Target card defending an attack with Herald in its name gets -2{p} this combat chain.\" NOT implemented, and deliberately empty rather than left as what was there: MODIFY_DEFENSE_VALUE amount -2 with no 'mod', which the compiler reads as ADD -- so a card printed as a penalty was raising the DEFENDING TOTAL by 2, helping the player it is aimed at. Two things are missing. (1) There is no primitive that modifies a specific object's {p} for a duration; MODIFY_ATTACK moves the attack total, and SET_BASE_POWER is permanent and unscoped. (2) The gate is on the ATTACK's name containing 'Herald'; it was authored as CARD_IN_ZONE zone:'defending' card_name:'Herald', which asks whether a DEFENDING card is named Herald -- the wrong side of the combat -- and CARD_IN_ZONE does not read 'card_name' anyway, so it was true whenever anything was defending. Worth flagging for whoever implements it: '-2{p} on a DEFENDING card' is inert under the current rules engine, since a defending card's {p} is never consulted; confirm the printed text against a physical card before building a primitive for it."
 }

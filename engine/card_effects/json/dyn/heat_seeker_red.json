@@ -1,5 +1,26 @@
 {
   "slug": "heat_seeker_red",
-  "abilities": [],
-  "_comment": "NOT implemented, and removed rather than left as a crash. 'When this hits, at the beginning of your end phase, put the top card of your deck face up into your arsenal' was authored as PUT_TOP_DECK_BOTTOM with zone=arsenal -- a type that does not exist, and whose name says the BOTTOM OF THE DECK, the opposite destination. Being nested inside an INJECT_TRIGGER it compiled lazily, so it raised ValueError at the end phase of any turn this hit. There is no deck-to-arsenal effect to express it with yet; PUT_ARSENAL_BOTTOM moves the other way."
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger": "BEGINNING_OF_END_PHASE",
+            "effects": [
+              {
+                "type": "PUT_INTO_ARSENAL",
+                "from": "DECK_TOP",
+                "player": "SELF",
+                "face_up": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "\"When this hits, at the beginning of your end phase, put the top card of your deck face up into your arsenal.\" Was authored as PUT_TOP_DECK_BOTTOM with zone=arsenal -- a type that does not exist, and whose name says the BOTTOM OF THE DECK, the opposite destination. Nested inside the INJECT_TRIGGER it compiled lazily, so instead of failing at load it raised ValueError at the end phase of any turn this hit. It was removed and tracked in KNOWN_UNIMPLEMENTED until PUT_INTO_ARSENAL existed; three other cards (both Blessing of Focus printings, and Sunkwater Exoshell's mirror direction) turned out to need the same primitive."
 }

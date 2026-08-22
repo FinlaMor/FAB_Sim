@@ -6,18 +6,41 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
-          "type": "ATTACK_CLASS_IN",
+          "type": "TARGET_HERO_CLASS_IN",
           "classes": [
-            "pirate"
+            "Pirate"
           ]
         }
       ],
       "effects": [
         {
-          "type": "TAP_REF",
-          "target": "ATTACKER"
+          "type": "TAP",
+          "target": {
+            "controller": "OPPONENT",
+            "zones": [
+              "HERO",
+              "ARENA"
+            ],
+            "amount": 1,
+            "filter": [
+              {
+                "type": "OR",
+                "any": [
+                  {
+                    "type": "CARD_IS_TYPE",
+                    "card_type": "Hero"
+                  },
+                  {
+                    "type": "CARD_IS_TYPE",
+                    "card_type": "Ally"
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"When this hits a PIRATE HERO, {t} them or an ally they control.\" Both halves named the wrong thing. The gate was ATTACK_CLASS_IN pirate, which asks whether the ATTACK CARD is a Pirate card -- this card is a Pirate attack, so the gate was true whoever it hit, and the class of the hero being hit was never checked at all. The effect was TAP_REF over a ref named 'ATTACKER' that nothing anywhere stores, so it tapped nothing. \"Them or an ally they control\" is a choice between objects, so it is an object target over the opponent's HERO and ARENA zones rather than one of TAP's fixed shorthands."
 }

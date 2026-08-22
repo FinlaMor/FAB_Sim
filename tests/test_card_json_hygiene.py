@@ -46,15 +46,6 @@ _BOLD = re.compile(r"\*\*.*?\*\*")
 # ability type — enforced in actions.get_defendable_cards, the path
 # engine._defend_step actually uses.
 KNOWN_UNIMPLEMENTED: set[str] = {
-    # "put the top card of your deck face up into your arsenal". Authored as
-    # PUT_TOP_DECK_BOTTOM — a type that does not exist, and whose name says the
-    # BOTTOM OF THE DECK, the opposite destination. It sat inside an
-    # INJECT_TRIGGER, so it compiled lazily and raised ValueError at the end
-    # phase of any turn this hit rather than failing at load. Removed rather
-    # than left as a crash; there is no deck-to-arsenal effect to write it with
-    # (PUT_ARSENAL_BOTTOM moves the other way). Definition of done: that
-    # primitive exists and this entry goes.
-    "heat_seeker_red",
     # "Damage that would be dealt by Malign can't be prevented." Needs the
     # damage pipeline to skip prevention for a NAMED SOURCE, which no primitive
     # expresses. It had been authored as a STATIC granting WARD with
@@ -95,6 +86,17 @@ KNOWN_UNIMPLEMENTED: set[str] = {
     # be played from arsenal", a play-legality restriction. It had been a
     # PAY_OR_DAMAGE dealing 1 damage, which is neither.
     "tripwire_trap_red",
+    # "Target card defending an attack with Herald in its name gets -2{p} this
+    # combat chain." Nothing modifies a specific object's {p} for a duration:
+    # MODIFY_ATTACK moves the attack total, SET_BASE_POWER is permanent and
+    # unscoped. It had been MODIFY_DEFENSE_VALUE -2 with no "mod", which the
+    # compiler reads as ADD — a card printed as a penalty was raising the
+    # DEFENDING TOTAL by 2, helping the player it is aimed at. Its gate was also
+    # on the wrong side of the combat (whether a DEFENDING card is named
+    # Herald, rather than the attack). Definition of done: a duration-scoped
+    # per-object power modifier exists — but confirm the printed text first,
+    # since -2{p} on a defending card is inert under FAB's rules.
+    "celestial_reprimand_yellow",
 }
 
 

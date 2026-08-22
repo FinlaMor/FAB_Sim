@@ -84,9 +84,15 @@ def test_dragon_scale_debuffs_the_opponents_equipment_not_the_attacker():
     finally:
         pop_refs()
 
-    assert _counters(theirs, "DEFENSE") >= 1, "the opponent's equipment was not debuffed"
-    assert _counters(source, "DEFENSE") == 0, "the counter landed on the attacking card"
-    assert _counters(mine, "DEFENSE") == 0, "the counter landed on the caster's own equipment"
+    # Asserted on the counter KIND string ("DEFENSE") until the card was
+    # rewritten to the "-1d" kind that the defence recalculation actually
+    # subtracts. A test pinned to the spelling of an internal key certifies the
+    # implementation, not the card — so it asks the observable question
+    # instead: whose equipment got worse at defending.
+    from engine.card_effects.ability_keywords import defense_counters
+    assert defense_counters(theirs) >= 1, "the opponent's equipment was not debuffed"
+    assert defense_counters(source) == 0, "the counter landed on the attacking card"
+    assert defense_counters(mine) == 0, "the counter landed on the caster's own equipment"
 
 
 def test_astral_etchings_buffs_a_warded_aura_not_the_action_card():

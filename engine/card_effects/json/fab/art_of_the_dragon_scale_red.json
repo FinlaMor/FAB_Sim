@@ -23,25 +23,25 @@
             "effects": [
               {
                 "type": "PUT_COUNTER",
-                "counter": "DEFENSE",
-                "mod": "subtract",
+                "counter": "-1d",
                 "amount": 1,
                 "target": {
                   "controller": "OPPONENT",
-                  "zone": "EQUIPMENT"
+                  "zone": "EQUIPMENT",
+                  "amount": 1
                 }
               },
               {
                 "type": "CONDITIONAL",
                 "condition": {
-                  "type": "COUNTER_GTE",
-                  "counter": "DEFENSE",
+                  "type": "REF_DEFENSE_LTE",
+                  "ref": "countered",
                   "amount": 0
                 },
                 "effects": [
                   {
                     "type": "DESTROY_REF",
-                    "target": "equipment"
+                    "ref": "countered"
                   }
                 ]
               }
@@ -51,5 +51,5 @@
       ]
     }
   ],
-  "_comment": "The counter effect named a target ('equipment') and the compiler read none of it, so the -1{d} counter went on the ATTACKING card -- a debuff aimed at the defender landing on the attacker, where it could never destroy the equipment the card is about. The node is nested inside the INJECT_TRIGGER, so it is the trigger's effect that carries the target. STILL WRONG, and said so rather than left looking finished: 'then if it has 0{d}, destroy it' is authored as COUNTER_GTE amount 0, which is true for every card at all times, and DESTROY_REF does not read its 'target' either -- so the destroy half fires unconditionally on whatever ref happens to be set."
+  "_comment": "Every clause of this card acted on the wrong object. The -1{d} counter named a target ('equipment') that the compiler did not read, so the debuff aimed at the defender landed on the ATTACKING card. The 'then if it has 0{d}' test was COUNTER_GTE amount 0 against the source -- true for every card at all times -- and DESTROY_REF read neither its 'target' nor any ref, so the destroy fired unconditionally on whatever ref happened to be set. Now: PUT_COUNTER records what it counted under the ref 'countered', and both the test and the destroy read that object. The counter kind is '-1d' rather than DEFENSE+mod:subtract because the sign is part of the kind, and because '-1d' is what the defence recalc subtracts."
 }

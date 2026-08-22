@@ -470,35 +470,58 @@ def test_head_jab_red_go_again():
     assert len(st.players[1].arsenal.cards) == before
 
 # --- sunkwater_exoshell ---
+# These two were generated against the card as implemented, not as printed:
+# both set up an EMPTY arsenal and asserted the deck shrinks and the hand grows.
+# The card reads "put a face-up card from your arsenal on the bottom of your
+# deck. IF YOU DO, draw a card ...", so with an empty arsenal it must do
+# neither. They failed when the card was fixed, which is the right way round.
 def test_sunkwater_exoshell_defend_puts_card_on_bottom_of_deck():
     st = _make_state(); st.card_db = DB
     card = _card("sunkwater_exoshell")
     st.players[1].chest.cards.append(card)
-    stock_deck(st, 1, n=2)  # Ensure there are at least 2 cards in the deck
-
-    # Capture the current deck size before the defend
+    stock_deck(st, 1, n=2)
+    # An ACTION card: only deck cards may enter an arsenal (CR 3.9.2), so
+    # equipment used as fodder is silently routed to the graveyard instead.
+    fodder = _card("brutal_assault_red")
+    st.players[1].arsenal.add(fodder)
+    fodder.is_public = True          # after add(), which stamps arsenal face down
     before_deck_size = len(st.players[1].deck.cards)
 
-    # Dispatch the defend event
     dispatch(st, "ON_DEFEND", "sunkwater_exoshell", card=card)
 
-    # Assert that the deck size has decreased by 1
-    assert len(st.players[1].deck.cards) == before_deck_size - 1
+    assert fodder in st.players[1].deck.cards
+    # the arsenal card went to the deck, then one card was drawn out of it
+    assert len(st.players[1].deck.cards) == before_deck_size
 
 def test_sunkwater_exoshell_defend_draws_a_card():
     st = _make_state(); st.card_db = DB
     card = _card("sunkwater_exoshell")
     st.players[1].chest.cards.append(card)
-    stock_deck(st, 1, n=2)  # Ensure there are at least 2 cards in the deck
-
-    # Capture the current hand size before the defend
+    stock_deck(st, 1, n=2)
+    fodder = _card("brutal_assault_red")   # a deck card; see CR 3.9.2 above
+    st.players[1].arsenal.add(fodder)
+    fodder.is_public = True
     before_hand_size = len(st.players[1].hand.cards)
 
-    # Dispatch the defend event
     dispatch(st, "ON_DEFEND", "sunkwater_exoshell", card=card)
 
-    # Assert that the hand size has increased by 1
     assert len(st.players[1].hand.cards) == before_hand_size + 1
+
+def test_sunkwater_exoshell_does_not_draw_with_an_empty_arsenal():
+    """"IF YOU DO" — the payoff is not free. This is the case the two tests
+    above used to assert the opposite of."""
+    st = _make_state(); st.card_db = DB
+    card = _card("sunkwater_exoshell")
+    st.players[1].chest.cards.append(card)
+    stock_deck(st, 1, n=2)
+    st.players[1].arsenal.cards = []
+    before_hand_size = len(st.players[1].hand.cards)
+    before_deck_size = len(st.players[1].deck.cards)
+
+    dispatch(st, "ON_DEFEND", "sunkwater_exoshell", card=card)
+
+    assert len(st.players[1].hand.cards) == before_hand_size
+    assert len(st.players[1].deck.cards) == before_deck_size
 
 # --- skull_crack_red ---
 def test_skull_crack_red_on_discard_gain_resource():

@@ -1947,6 +1947,7 @@ def _recalculate_total_defense(state: GameState) -> int:
 
     Returns the total and leaves it on combat.total_defense.
     """
+    from engine.card_effects.ability_keywords import defense_counters as _defense_counters
     from engine.card_effects.dsl import dispatch as _dsl_dispatch
     from engine.play import _apply_dynamic_defense, _apply_queued_defense_mods
     from engine.state import Event
@@ -1976,7 +1977,12 @@ def _recalculate_total_defense(state: GameState) -> int:
 
     for card in combat.defending_cards:
         if card.base_defense is not None:
-            card.defense = card.base_defense
+            # -1{d} counters are permanent modifications to the OBJECT, not
+            # one-shot mods, so they have to survive the reset that the one-shot
+            # mods below require. Without this the reset restored the printed
+            # {d} and a Battleworn/Temper/Guardwell equipment defended at full
+            # value on its next combat, every time.
+            card.defense = card.base_defense - _defense_counters(card)
         _apply_dynamic_defense(state, card)
         if defender is not None:
             _apply_queued_defense_mods(state, card, defender)

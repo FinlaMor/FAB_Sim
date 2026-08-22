@@ -15,26 +15,27 @@
         },
         {
           "type": "REVEAL_TOP_DECK",
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "deck",
-              "card_type": "arrow"
-            }
-          ],
+          "amount": 1,
+          "into": "revealed"
+        },
+        {
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_IS_TYPE",
+            "ref": "revealed",
+            "card_type": "Arrow"
+          },
           "effects": [
             {
-              "type": "PUT_ARSENAL_BOTTOM",
-              "card_type": "arrow",
-              "face_up": true
-            },
-            {
-              "type": "PUT_COUNTER",
-              "counter_type": "aim"
+              "type": "PUT_INTO_ARSENAL",
+              "ref": "revealed",
+              "face_up": true,
+              "counter": "aim"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Reveal the top card of your deck. If it's an arrow, put it FACE UP INTO YOUR ARSENAL with an aim counter.\" Two separate reasons this did nothing. REVEAL_TOP_DECK does not read a nested 'effects' list -- it stores the revealed cards under 'into' and returns -- so everything after the reveal was unreachable. And what was nested there was PUT_ARSENAL_BOTTOM, which moves a card OUT of the arsenal onto the bottom of the deck and defaults to the OPPONENT's arsenal: the exact opposite direction, on the wrong player. It was reached for because it was the only arsenal effect that existed; PUT_INTO_ARSENAL is the one this text needs, and heat_seeker_red needed it too."
 }

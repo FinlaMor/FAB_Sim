@@ -1100,6 +1100,22 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return _w in have
         return _is_type
 
+    if ctype in ("CARD_IS_FACE_DOWN", "CARD_IS_FACE_UP"):
+        # "a FACE DOWN arrow in your arsenal". The one card that needed this
+        # wrote REF_PITCH_IS with pitch "face_up" — a condition about PITCH
+        # COLOUR, which is never the string "face_up", so it was false for
+        # every card and the filter matched nothing.
+        want_down = ctype.endswith("DOWN")
+
+        def _face(c, e, s, _down=want_down):
+            down = bool(getattr(c, "face_down", False))
+            if not down and getattr(c, "is_public", None) is False:
+                # Arsenal and banished-face-down track visibility via is_public;
+                # face_down is not set on every path that hides a card.
+                down = True
+            return down is _down
+        return _face
+
     if ctype == "HAS_COUNTER":
         # "all equipment they control WITH -1{d} counters" — presence, not a
         # threshold. COUNTER_GTE with amount 1 says the same thing, but the
@@ -1138,6 +1154,30 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                 return False
             return base <= limit if _lte else base >= limit
         return _base_def
+
+    if ctype in ("DEFENSE_LTE", "DEFENSE_GTE"):
+        # "When this defends, IF IT HAS 6 OR MORE {d}" — the CURRENT defence,
+        # counters and pumps included, which is the whole point of a card whose
+        # own text can push it over the line. The card that needed this wrote
+        # COUNTER_GTE counter:"DEFENSE" amount:6, which asks for six DEFENCE
+        # COUNTERS — a number that is zero on a fresh card and only ever goes
+        # up when something DEBUFFS it, so the gate was false exactly when the
+        # card is strong and could only become true by being weakened.
+        threshold = params.get("amount", params.get("value", 0))
+        want_lte = ctype.endswith("LTE")
+
+        def _cur_def(c, e, s, _n=threshold, _lte=want_lte):
+            from engine.card_effects.dsl.effect_types import _resolve_amount
+            value = getattr(c, "defense", None)
+            if value is None:
+                value = getattr(c, "base_defense", None)
+            try:
+                value = int(value)
+                limit = int(_resolve_amount(_n, s, c))
+            except (TypeError, ValueError):
+                return False
+            return value <= limit if _lte else value >= limit
+        return _cur_def
 
     if ctype in ("CARD_IS_ATTACK", "SELF_IS_ATTACK"):
         # "the next NON-ATTACK action card you play" — value:false is the whole
@@ -1712,6 +1752,38 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                     return True
             return False
         return _ref_power
+
+    if ctype in ("REF_DEFENSE_LTE", "REF_DEFENSE_GTE"):
+        # "put a -1{d} counter on an equipment they control. THEN IF IT HAS
+        # 0{d}, destroy it." The test is on the object the previous effect acted
+        # on, not on the source card — the only card that authored it wrote
+        # COUNTER_GTE 0 against the source, which is true for every card at all
+        # times, so the destroy half fired unconditionally.
+        #
+        # Reads the CURRENT {d}, which is where the counter it just took shows
+        # up; base_defense is the printed value and would never reach 0.
+        threshold = params.get("amount", params.get("value", 0))
+        ref = params.get("ref", "countered")
+        want_gte = ctype.endswith("GTE")
+
+        def _ref_defense(c, e, s, _r=ref, _n=threshold, _gte=want_gte):
+            from engine.context import get_ref
+            found = get_ref(_r)
+            if found is None:
+                return False
+            pool = found if isinstance(found, list) else [found]
+            try:
+                limit = int(_n)
+            except (TypeError, ValueError):
+                return False
+            for obj in pool:
+                value = getattr(obj, "defense", None)
+                if value is None:
+                    continue
+                if (value >= limit) if _gte else (value <= limit):
+                    return True
+            return False
+        return _ref_defense
 
     if ctype in ("REF_MATCHES_OTHER", "REF_SHARES_WITH_OTHER"):
         # "whenever this banishes a card AND THIS HAS BANISHED ANOTHER card with

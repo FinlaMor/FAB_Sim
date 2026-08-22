@@ -441,7 +441,8 @@ def _object_target_spec(target):
     up; resolving it to something plausible would hide it for good.
     """
     if isinstance(target, dict) and any(
-            k in target for k in ("controller", "zone", "zones", "name", "filter")):
+            k in target for k in ("controller", "zone", "zones", "name",
+                                  "filter", "ref")):
         return target
     # Everything else — "self", the bespoke strings ("controlled_aura_with_ward",
     # "ally", "opponent", ...) and the older dict shapes — falls back to the
@@ -472,6 +473,10 @@ def _compile_object_target(spec):
          "zone":       "ARENA"|"EQUIPMENT"|"WEAPON"|"ARSENAL"|"HERO",
          "zones":      [...],                     several of the above
          "name":       "Treasure Island",         match by card name or slug
+         "ref":        "flipped",                 what an earlier effect stored,
+                                                  INSTEAD of a zone search
+         "record_as":  "flipped",                 store the chosen objects under
+                                                  this ref for a later effect
          "amount":     n | "ALL",                 how many to affect
          "filter":     [ <ordinary DSL condition specs> ]}
 
@@ -488,13 +493,22 @@ def _compile_object_target(spec):
     zones = [str(z).upper() for z in zones]
     want_name = spec.get("name")
     limit = spec.get("amount", 1)
+    # "put an aim counter on IT" — the object a preceding effect acted on. The
+    # alternative is to repeat the zone search and hope it lands on the same
+    # card, which is what one card did: it re-searched for "a face-up arrow in
+    # arsenal" after flipping one, and could just as easily have counted a
+    # different arrow that was already face up.
+    from_ref = spec.get("ref")
+    # The mirror: name what this target chose so the NEXT effect can say "it".
+    record_as = spec.get("record_as")
     from engine.card_effects.dsl.condition_types import compile_condition
     filters = [compile_condition((f.get("type") or "none"), f)
                for f in (spec.get("filter") or []) if isinstance(f, dict)]
 
     def _fn(card, event, state, _c=controller, _z=zones, _n=want_name,
-            _lim=limit, _f=filters):
+            _lim=limit, _f=filters, _ref=from_ref, _rec=record_as):
         from engine.card_effects.ability_keywords import _ask_player, _controller_id
+        from engine.context import get_ref, set_ref
         cid = _controller_id(card)
         if cid not in state.players:
             return []
@@ -506,9 +520,14 @@ def _compile_object_target(spec):
             pids = [cid]
 
         pool = []
-        for pid in pids:
-            for zone in _z:
-                pool.extend(_object_zone_cards(state.players[pid], zone))
+        if _ref:
+            found = get_ref(_ref)
+            if found is not None:
+                pool = list(found) if isinstance(found, list) else [found]
+        else:
+            for pid in pids:
+                for zone in _z:
+                    pool.extend(_object_zone_cards(state.players[pid], zone))
 
         if _n:
             def _flat(text):
@@ -524,6 +543,8 @@ def _compile_object_target(spec):
             return []
 
         if str(_lim).upper() in ("ALL", "EACH"):
+            if _rec:
+                set_ref(_rec, pool[0] if len(pool) == 1 else list(pool))
             return pool
         count = _resolve_amount(_lim, state, card)
         try:
@@ -535,10 +556,12 @@ def _compile_object_target(spec):
         remaining = list(pool)
         for _ in range(min(count, len(remaining))):
             pick = _ask_player(state, cid, [c.slug for c in remaining],
-                               context="Choose a card to put/remove counters on")
+                               context="Choose a target card")
             obj = next((c for c in remaining if c.slug == pick), remaining[0])
             chosen.append(obj)
             remaining.remove(obj)
+        if _rec:
+            set_ref(_rec, chosen[0] if len(chosen) == 1 else list(chosen))
         return chosen
 
     return _fn
@@ -1080,6 +1103,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                   or str(params.get("to", "BOTTOM")).upper() == "TOP")
         optional = params.get("optional", True)
         amount = params.get("amount", 1)
+        # "position" is the natural third spelling of "to" and was not read, so
+        # a card saying ON TOP OF YOUR DECK put its card on the BOTTOM — the
+        # opposite end, and for a card whose point is setting up the next draw,
+        # the opposite effect.
+        if str(params.get("position", "")).upper() == "TOP":
+            to_top = True
         def _fn(card, event, state, _pt=player_target, _top=to_top, _opt=optional,
                 _a=amount):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id, DECLINE
@@ -1109,6 +1138,12 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 put_object(state, target, "deck",
                            destination_player_id=tid, source_player_id=tid,
                            position=("top" if _top else None))
+                # "You MAY put a card from your hand on the bottom of your deck.
+                # IF YOU DO, draw a card." The payoff has to know whether the
+                # optional half happened; declining and having an empty hand
+                # both mean it did not.
+                from engine.context import set_ref
+                set_ref("bottomed_from_hand", target)
         return _fn
 
     if etype in ("PUT_SELF_BOTTOM_DECK", "PUT_SELF_IN_ZONE"):
@@ -1450,12 +1485,27 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 n = max(0, int(n))
             except (TypeError, ValueError):
                 n = 1
+            from engine.card_effects.ability_keywords import (
+                DEFENSE_COUNTER_KINDS, _apply_defense_counter)
             for obj in targets:
                 if _add:
+                    if _ct in DEFENSE_COUNTER_KINDS:
+                        # A -1{d} counter has to go on through the keyword path,
+                        # or it is pure bookkeeping: effect_put_counter records
+                        # the counter and nothing reduces the card's {d}, so
+                        # every card that authored one had no effect at all.
+                        _apply_defense_counter(state=state, card=obj, count=n)
+                        continue
                     for _ in range(n):
                         effect_put_counter(state, obj, _ct)
                 else:
                     effect_remove_counter(state, obj, _ct, n)
+            # "put a counter on X. Then if IT ...": the follow-up needs to know
+            # which object was counted. Without a ref the only thing a later
+            # effect could test was the source card.
+            if targets:
+                from engine.context import set_ref
+                set_ref("countered", targets[0] if len(targets) == 1 else list(targets))
         return _fn
 
     if etype == "WARD":
@@ -1656,34 +1706,115 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     effect_gain_life(state, pid, _gl * matching)
         return _fn
 
+    if etype in ("PUT_INTO_ARSENAL", "PUT_ARSENAL"):
+        # Deck (or a ref) INTO the arsenal — the opposite direction to
+        # PUT_ARSENAL_BOTTOM, which is what four cards reached for because it
+        # was the only arsenal effect that existed. It moves a card OUT of the
+        # arsenal and defaults to the OPPONENT's, so "put it face up into YOUR
+        # arsenal" was milling the opponent's arsenal instead.
+        #
+        #   {"type":"PUT_INTO_ARSENAL","from":"DECK_TOP","face_up":true}
+        #   {"type":"PUT_INTO_ARSENAL","ref":"revealed","counter":"aim"}
+        #
+        # The arsenal holds one card and Zone.add drops the overflow, so putting
+        # a card into an occupied arsenal is a silent no-op rather than a
+        # replacement — which is why this reports what it moved under the ref
+        # "arsenaled" for an "if you do" to test.
+        ref = params.get("ref")
+        source_zone = str(_first(params, "from", "from_zone", "source",
+                                 default="DECK_TOP")).upper()
+        face_up = params.get("face_up", True)
+        counter = _first(params, "counter", "counter_type", "add_counter")
+        who = str(params.get("player", "SELF")).upper()
+
+        def _fn(card, event, state, _r=ref, _sz=source_zone, _up=face_up,
+                _ct=counter, _w=who):
+            from engine.card_effects.ability_keywords import (
+                _controller_id, effect_put_counter)
+            from engine.context import get_ref, set_ref
+            from engine.effect_keywords import put_object
+            cid = _controller_id(card)
+            pid = (3 - cid) if _w in ("OPPONENT", "THEM") else cid
+            player = state.players.get(pid)
+            if player is None:
+                return
+            if _r:
+                found = get_ref(_r)
+                if found is None:
+                    return
+                pool = list(found) if isinstance(found, list) else [found]
+            elif _sz in ("DECK_TOP", "TOP_OF_DECK", "DECK"):
+                pool = player.deck.cards[:1]
+            else:
+                return
+            if not pool:
+                return
+            moved = pool[0]
+            put_object(state, moved, "arsenal", destination_player_id=pid,
+                       source_player_id=pid)
+            if moved not in player.arsenal.cards:
+                # The arsenal was full; nothing moved, so nothing is reported.
+                return
+            moved.is_public = bool(_up)
+            if hasattr(moved, "face_down"):
+                moved.face_down = not bool(_up)
+            if _ct:
+                effect_put_counter(state, moved, str(_ct))
+            set_ref("arsenaled", moved)
+        return _fn
+
     if etype == "PUT_ARSENAL_BOTTOM":
         # Put the target player's arsenal card on the bottom of their deck.
+        #
+        # The default is OPPONENT because the three Disable printings — "put a
+        # card from THEIR arsenal on the bottom of THEIR deck" — were the first
+        # users. That makes silence mean "the opponent", so a card that says
+        # "YOUR arsenal" and omits the key hits the wrong player: that is what
+        # sunkwater_exoshell did, bottoming the opponent's card and then failing
+        # its own "if you do".
         player_target = params.get("player", "OPPONENT")
         # A "card_type" filter restricts WHICH arsenal card is bottomed; it was
         # unread, so those nodes bottomed whatever happened to be there.
         want_type = _first(params, "card_type", "card_types", "filter_types")
+        # "put a FACE-UP card from your arsenal on the bottom" — arsenal cards
+        # are face down by default, so this is a real restriction and not
+        # decoration. Unread, it bottomed a face-down card the text excludes.
+        want_face_up = params.get("face_up")
 
-        def _fn(card, event, state, _pt=player_target, _wt=want_type):
+        def _fn(card, event, state, _pt=player_target, _wt=want_type,
+                _fu=want_face_up):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import put_object
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
             arsenal = getattr(player, 'arsenal', None)
-            if _wt and arsenal is not None:
+            if arsenal is None or not getattr(arsenal, 'cards', None):
+                return
+            pool = list(arsenal.cards)
+            if _wt:
                 wants = {str(t).lower() for t in
                          ([_wt] if isinstance(_wt, str) else _wt)}
-                if not any(wants & {t.lower() for t in
+                pool = [c for c in pool
+                        if wants & {t.lower() for t in
                                     (getattr(c, "types", None) or [])
-                                    + (getattr(c, "subtypes", None) or [])}
-                           for c in arsenal.cards):
-                    return
-            if arsenal and hasattr(arsenal, 'cards') and arsenal.cards:
-                card_to_move = arsenal.cards[0]
+                                    + (getattr(c, "subtypes", None) or [])}]
+            if _fu is not None:
+                pool = [c for c in pool
+                        if bool(getattr(c, "is_public", False)) is bool(_fu)]
+            if pool:
+                card_to_move = pool[0]
                 # position=None → zone default (append = bottom, cards[-1])
                 put_object(state, card_to_move, "deck",
                            destination_player_id=tid, source_player_id=tid,
                            position=None)
+                # "IF YOU DO, draw a card" has to test whether a card actually
+                # moved, not whether the arsenal was non-empty — the filters
+                # above mean those are different questions, and the card that
+                # asks it ("put a FACE-UP card ...") is exactly the one where
+                # they differ.
+                from engine.context import set_ref
+                set_ref("bottomed", card_to_move)
         return _fn
 
     if etype == "DESTROY_DEFENDING":
@@ -1843,6 +1974,75 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # doing nothing: a card meant to REDUCE the defending total was
         # increasing it.
         mod = (params.get("mod") or "add").lower()
+
+        # "UP TO ONE TARGET DEFENDING ACTION CARD gets +3{d}" is not the same
+        # effect as "the defending total gets +3", and every node here was the
+        # latter. With one defender the numbers agree; they part company exactly
+        # where the card is restrictive — a +3 meant for a defending ACTION card
+        # was applied to a block made entirely of equipment, which has no legal
+        # target at all.
+        #
+        #   "target": {"zone": "DEFENDING", "amount": 1, "filter": [...]}
+        #
+        # The DEFENDING pool is the declared defenders, so it is written here
+        # rather than through _object_zone_cards (which is per-player zones and
+        # has no notion of a combat).
+        raw_target = params.get("target")
+        target_spec = raw_target if isinstance(raw_target, dict) else None
+        from engine.card_effects.dsl.condition_types import compile_condition as _cc
+        target_filters = [_cc((f.get("type") or "none"), f)
+                          for f in ((target_spec or {}).get("filter") or [])
+                          if isinstance(f, dict)]
+        target_limit = (target_spec or {}).get("amount", 1)
+
+        if target_spec is not None:
+            def _fn_target(card, event, state, _a=amt, _m=mod,
+                           _f=target_filters, _lim=target_limit):
+                from engine.card_effects.ability_keywords import (
+                    _ask_player, _controller_id)
+                combat = state.combat
+                if not combat:
+                    return
+                delta = _resolve_amount(_a, state, card)
+                try:
+                    delta = int(delta)
+                except (TypeError, ValueError):
+                    return
+                pool = list(getattr(combat, "defending_cards", None) or [])
+                for fn in _f:
+                    if fn is not None:
+                        pool = [c for c in pool if fn(c, event, state)]
+                if not pool:
+                    # "UP TO one target" with no legal target does nothing. The
+                    # untargeted version raised the total anyway.
+                    return
+                if str(_lim).upper() in ("ALL", "EACH"):
+                    chosen = pool
+                else:
+                    try:
+                        count = max(0, int(_resolve_amount(_lim, state, card)))
+                    except (TypeError, ValueError):
+                        count = 1
+                    chosen, remaining = [], list(pool)
+                    cid = _controller_id(card)
+                    for _ in range(min(count, len(remaining))):
+                        pick = _ask_player(state, cid,
+                                           [c.slug for c in remaining],
+                                           context="Choose a defending card")
+                        obj = next((c for c in remaining if c.slug == pick),
+                                   remaining[0])
+                        chosen.append(obj)
+                        remaining.remove(obj)
+                for obj in chosen:
+                    if _m in ("set", "="):
+                        obj.defense = delta
+                    elif _m in ("subtract", "sub", "minus", "-"):
+                        obj.defense = max(0, (obj.defense or 0) - delta)
+                    else:
+                        obj.defense = (obj.defense or 0) + delta
+                combat.total_defense = sum((c.defense or 0)
+                                           for c in combat.defending_cards)
+            return _fn_target
 
         # Writing total_defense directly did not survive: _resolve_damage
         # recomputes it as sum(card.defense) immediately before damage, so every
@@ -2234,6 +2434,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 winner = ev.winner_id
                 winners.append(winner)
                 revealed = {cid: ev.card1, opp: ev.card2}
+                # "You may put YOUR revealed card on the bottom of its owner's
+                # deck" is about one specific card, and reveal_dest:"bottom"
+                # bottoms BOTH unconditionally. Naming them lets a card act on
+                # whichever one it means, optionally.
+                from engine.context import set_ref
+                if ev.card1 is not None:
+                    set_ref("clash_revealed_self", ev.card1)
+                if ev.card2 is not None:
+                    set_ref("clash_revealed_opponent", ev.card2)
                 loser = None
                 if winner is not None:
                     loser = opp if winner == cid else cid
@@ -2586,14 +2795,26 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "FLIP_REF":
         # Turn a referenced face-down card face-up (or vice versa). Arsenal and
         # banished-face-down cards track visibility via is_public.
+        # "Turn a face down arrow in your arsenal face up" chooses the card
+        # itself — there is no earlier effect to have stored it — so this takes
+        # the canonical object target as well as a ref. Three cards named a
+        # target here and got neither: the ref defaulted to "chosen", which
+        # nothing had set, and the effect returned without flipping anything.
+        raw_target = params.get("target")
+        object_fn = (_compile_object_target(_object_target_spec(raw_target))
+                     if isinstance(raw_target, dict) else None)
         ref = params.get("ref", "chosen")
         face_up = params.get("face_up", True)
-        def _fn(card, event, state, _r=ref, _up=face_up):
+        def _fn(card, event, state, _r=ref, _up=face_up, _of=object_fn):
             from engine.context import get_ref
-            target = get_ref(_r)
-            if not target:
-                return
-            for obj in (target if isinstance(target, list) else [target]):
+            if _of is not None:
+                objects = _of(card, event, state)
+            else:
+                target = get_ref(_r)
+                if not target:
+                    return
+                objects = target if isinstance(target, list) else [target]
+            for obj in objects:
                 obj.is_public = bool(_up)
                 if hasattr(obj, "face_down"):
                     obj.face_down = not bool(_up)
@@ -2712,13 +2933,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # TAP_SELF is the spelling one card authored; it was never an effect
         # type, so the whole of goon_battery_blue failed to LOAD and every
         # ability on it, not just this one, was absent from the game.
-        target = str(params.get("target")
+        # "{t} THEM OR AN ALLY THEY CONTROL" is a choice between objects, which
+        # no fixed string can name. A dict target is the canonical object spec
+        # every other targeting effect now takes, so the card picks from a pool
+        # rather than being pinned to one of the shorthands below.
+        raw_target = params.get("target")
+        object_fn = (_compile_object_target(_object_target_spec(raw_target))
+                     if isinstance(raw_target, dict) else None)
+        target = str(raw_target
                      or ("SELF" if etype == "TAP_SELF" else "OPPONENT_HERO")).upper()
 
-        def _fn(card, event, state, _t=target):
+        def _fn(card, event, state, _t=target, _of=object_fn):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import tap as _tap
             cid = _controller_id(card)
+            if _of is not None:
+                for obj in _of(card, event, state):
+                    if obj is not None:
+                        _tap(state, obj, source_player_id=cid)
+                return
             if _t in ("SELF", "THIS", "SOURCE"):
                 obj = card
             elif _t in ("OPPONENT_HERO", "DEFENDING_HERO", "THEM", "OPPONENT"):
@@ -3409,9 +3642,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             head = opp.head.cards[0] if opp.head.cards else None
             if head is None:
                 return
-            head.counters["minus_defense"] = head.counters.get("minus_defense", 0) + 1
-            head.defense = (head.defense or 0) - 1
-            head.base_defense = (head.base_defense or 0) - 1
+            # Was also decrementing base_defense — the PRINTED value — which
+            # is the only thing the defence recalc resets to, so a second
+            # Crush permanently rewrote the card. The counter is the record.
+            from engine.card_effects.ability_keywords import _apply_defense_counter
+            _apply_defense_counter(head, state, 1)
             if (head.defense or 0) <= 0:
                 _destroy(state, head, card)
         return _fn

@@ -1,6 +1,5 @@
 {
   "slug": "sunkwater_exoshell",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -8,18 +7,40 @@
       "effects": [
         {
           "type": "PUT_ARSENAL_BOTTOM",
+          "player": "SELF",
+          "face_up": true,
           "amount": 1
         },
         {
-          "type": "DRAW",
-          "amount": 1
-        },
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
-          "amount": 1,
-          "duration": "END_OF_TURN"
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_EXISTS",
+            "ref": "bottomed"
+          },
+          "effects": [
+            {
+              "type": "DRAW",
+              "amount": 1
+            },
+            {
+              "type": "MODIFY_DEFENSE_VALUE",
+              "mod": "add",
+              "amount": 1,
+              "target": {
+                "zone": "DEFENDING",
+                "amount": "ALL",
+                "filter": [
+                  {
+                    "type": "SELF_IS_TYPE",
+                    "card_type": "Equipment"
+                  }
+                ]
+              }
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"put a face-up card from your arsenal on the bottom of your deck. IF YOU DO, draw a card and this gets +1{d}.\" The 'if you do' was not modelled: with an empty arsenal the card drew and buffed anyway, which is the payoff without the cost. Gating on \"is your arsenal non-empty\" is not the same question either -- with a FACE-DOWN card in arsenal the arsenal is non-empty and nothing is bottomed -- so PUT_ARSENAL_BOTTOM records what it moved and the gate is REF_EXISTS over that. The +1{d} also went to the defending TOTAL rather than to THIS card. And PUT_ARSENAL_BOTTOM defaults to OPPONENT -- the three Disable printings were its first users -- so with no 'player' key this card bottomed the OPPONENT's arsenal card, which is why its own 'if you do' could never be satisfied. 'A FACE-UP card' is a real restriction too: arsenal cards are face down by default. Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability earlier: the card has no intimidate text; the generator hallucinated it from Blade Break equipment (27 cards corpus-wide)."
 }

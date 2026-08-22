@@ -1,6 +1,6 @@
 {
   "slug": "disarm_yellow",
-  "_comment": "\"When this attacks, if you've been cheered this turn, create a Toughness token.\" The cheer check was FLAG_SET on a private CHEERED_THIS_TURN flag that no card ever set — a fourth spelling alongside CROWD_CHEERS, CROWD_CHEERS_ACTIVE and THE_CROWD_CHEERS — so it never fired. Now reads the shared cheer state via IS_CHEERED.",
+  "_comment": "\"When this attacks, if you've been cheered this turn, create a Toughness token.\" The cheer check was FLAG_SET on a private CHEERED_THIS_TURN flag that no card ever set \u2014 a fourth spelling alongside CROWD_CHEERS, CROWD_CHEERS_ACTIVE and THE_CROWD_CHEERS \u2014 so it never fired. Now reads the shared cheer state via IS_CHEERED. The defend half was inverted twice over. \"The ATTACKING HERO puts a card from their hand on the bottom of their deck\" was PUT_HAND_CARD_BOTTOM target:\"opponent\" -- a key the effect does not read -- so it fell back to player SELF and the DEFENDER discarded from their own hand: a card that punishes the attacker punished its controller instead. It was also optional by default, though the text is mandatory. And \"if it has 6 or more {d}\" was COUNTER_GTE counter:\"DEFENSE\" amount:6, which asks for six DEFENCE COUNTERS -- zero on a fresh card, and rising only when something DEBUFFS it, so the gate was false exactly when the card is strong.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -22,15 +22,16 @@
       "trigger": "ON_DEFEND",
       "conditions": [
         {
-          "type": "COUNTER_GTE",
-          "counter": "DEFENSE",
+          "type": "DEFENSE_GTE",
           "amount": 6
         }
       ],
       "effects": [
         {
           "type": "PUT_HAND_CARD_BOTTOM",
-          "target": "opponent"
+          "player": "OPPONENT",
+          "optional": false,
+          "amount": 1
         }
       ]
     }

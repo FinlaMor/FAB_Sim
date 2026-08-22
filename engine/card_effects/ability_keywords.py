@@ -204,9 +204,36 @@ def _remove_from_current_zone(card: Card, state: GameState) -> bool:
 
 
 
+#: Every spelling a -1{d} counter is stored under. The keyword path wrote
+#: "minus_defense", the DSL's PUT_COUNTER writes whatever the card JSON says
+#: ("-1d", "DEFENSE"), and CRUSH_MINUS_DEF_OPP_HEAD wrote a fourth. Reading
+#: only one of them is how the same counter could be both applied and invisible.
+DEFENSE_COUNTER_KINDS = ("minus_defense", "-1d", "-1{d}", "DEFENSE")
+
+
+def defense_counters(card) -> int:
+    """How many -1{d} counters are on *this object*.
+
+    Per-object, not per (slug, zone): two copies of the same equipment wear
+    their counters independently, and an object keeps them when it changes
+    zones. The player-level tally _apply_defense_counter also maintains is
+    keyed by slug and zone and cannot express either.
+    """
+    counters = getattr(card, "counters", None) or {}
+    return sum(int(counters.get(kind, 0) or 0) for kind in DEFENSE_COUNTER_KINDS)
+
+
 def _apply_defense_counter(card: Card, state: GameState, count: int = 1) -> None:
-    """Apply -1{d} counters to a card. Manages the effect list cleanly."""
+    """Apply -1{d} counters to a card. Manages the effect list cleanly.
+
+    The card-level tally is the authoritative one — it is what
+    engine._recalculate_total_defense re-applies after resetting a defender to
+    its printed {d}. Without it those counters were erased by the reset, so
+    Battleworn, Temper and Guardwell equipment defended for full value again on
+    the very next combat and the downside keywords cost nothing.
+    """
     controller = _get_controller(state, card)
+    card.counters["minus_defense"] = card.counters.get("minus_defense", 0) + count
     key = (card.slug, card.zone, "minus_defense")
     controller.counters[key] = controller.counters.get(key, 0) + count
     # Remove stale counter effect, add fresh one (card.effects holds CardEffect objects)
@@ -219,8 +246,11 @@ def _apply_defense_counter(card: Card, state: GameState, count: int = 1) -> None
     card.effects.append(CardEffect(prop="defense", stage=7, substage=5, fn=_apply))
     # Also update card.defense immediately so keyword tests and out-of-engine
     # callers see the correct value without waiting for the engine recalc pass.
+    # Derived from the CARD's tally, so this agrees with what the recalc will
+    # compute rather than with a per-player key two copies of the same
+    # equipment would share.
     if card.base_defense is not None:
-        card.defense = _apply(card.base_defense)
+        card.defense = card.base_defense - defense_counters(card)
 
 
 def _pitch_for_cost(controller: Player, amount: int, state: GameState,

@@ -2,7 +2,7 @@
   "slug": "platinum_amulet_blue",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "cost": [
         {
@@ -15,9 +15,13 @@
           "type": "MODIFY_DEFENSE_VALUE",
           "mod": "add",
           "amount": 1,
-          "duration": "end_of_turn"
+          "target": {
+            "zone": "DEFENDING",
+            "amount": 1
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"TARGET DEFENDING CARD gets +1{d} until end of turn.\" The +1 went to the defending TOTAL and 'duration' was not read. Now it goes on the chosen defending card. The card was also ACTIVATE where the printing says Instant. Remaining gap, stated rather than papered over: the +1 lasts the combat chain, not the turn -- a defending card that survives to block again in a later chain link this turn loses it. There is no per-card until-end-of-turn defence duration to hang it on; a defending card almost always goes to the graveyard when the chain closes, so the two differ only for equipment."
 }
