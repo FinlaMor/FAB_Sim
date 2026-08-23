@@ -8,17 +8,24 @@
         {
           "type": "CARD_IN_ZONE",
           "zone": "arsenal",
-          "amount": 0
+          "player": "SELF",
+          "count_eq": 0
         }
       ],
       "effects": [
         {
-          "type": "SEARCH_DECK",
-          "amount": 1,
-          "destination": "arsenal",
-          "face_down": true
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "PUT_INTO_ARSENAL",
+              "from": "HAND",
+              "player": "SELF",
+              "face_up": false
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"If this hits and you have NO CARDS IN YOUR ARSENAL, you may put a card FROM YOUR HAND face down into your arsenal.\" It was SEARCH_DECK -- the DECK, not the hand, and a tutor rather than a move -- with 'face_down' unread, and it was mandatory where the card says \"you may\". The hand-to-arsenal move now exists (PUT_INTO_ARSENAL from:\"HAND\").\n\nThe gate was CARD_IN_ZONE amount:0. 'amount' is a legacy alias for count_gte, so that asked for \"zero or more cards in your arsenal\" -- true in every state, the exact opposite of the restriction. Zero is meaningless as a lower bound, so CARD_IN_ZONE now reads a bare amount:0 as \"exactly none\"; the two other cards in the corpus that author it (threadbare_tunic, invigorating_light_blue) both mean \"no cards\" too."
 }

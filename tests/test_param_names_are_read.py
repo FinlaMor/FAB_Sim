@@ -238,8 +238,13 @@ def test_regression_count_does_not_grow():
     # what both cards needing it say. They now share _permanent_filter.
     # DESTROY_TOKEN gained max_destroy and records what it took, so "for each
     # destroyed this way" can count it instead of assuming the maximum.
-    assert findings <= 51, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 51). "
+    # 51 -> 48: SEARCH_DECK now reads a nested `filter` dict and the plain
+    # "card_type" spelling, so a search that names what it wants stops matching
+    # ANY card. Two deeper bugs came out with them: "deck_top" is not a ZONE, so
+    # every "put it on top" silently left the card where it was; and the shuffle
+    # ran AFTER the placement, randomising the card back into the deck.
+    assert findings <= 48, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 48). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

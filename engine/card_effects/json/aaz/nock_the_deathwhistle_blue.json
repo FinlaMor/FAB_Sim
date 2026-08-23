@@ -6,17 +6,8 @@
       "effects": [
         {
           "type": "SEARCH_DECK",
-          "filter": {
-            "type": "CARD_IN_ZONE",
-            "zones": [
-              "deck"
-            ],
-            "subtypes": [
-              "arrow"
-            ]
-          },
+          "subtype": "Arrow",
           "amount": 1,
-          "reveal": true,
           "put_on_top": true
         },
         {
@@ -25,15 +16,8 @@
         {
           "type": "GO_AGAIN"
         }
-      ],
-      "conditions": [
-        {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_types": [
-            "Azalea"
-          ]
-        }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Search your deck for an ARROW card, reveal it, then shuffle your deck and put it on top of your deck.\" The arrow restriction was a nested `filter` dict holding a CARD_IN_ZONE -- a key SEARCH_DECK does not read, and a condition that COUNTS cards in a zone rather than testing a candidate, so it could not have worked as a filter either. With no filter the search matched ANY card and fetched whatever was first: a search that names a card and returns a different one is worse than a search that fails.\n\nThe whole ability was also gated on CONTROLS_TOKEN_TYPE \"Azalea\". \"Azalea Specialization\" is a DECKBUILDING restriction -- the card may only go in an Azalea deck, which slug_index records under legalHeroes -- not a game state to test, and Azalea is a hero, not a token you control. The gate was false in every game, so the card did nothing at all."
 }

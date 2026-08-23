@@ -812,6 +812,13 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # count_gte: >= N cards match; "amount" is a legacy alias for count_gte
         count_gte = params.get("count_gte", params.get("amount"))
         count_eq  = params.get("count_eq")
+        # "if you have NO cards in hand / in your arsenal / in your soul" is
+        # authored as amount: 0 by all three cards that say it, and as a >=
+        # threshold that is TRUE FOR EVERY STATE — the exact opposite of the
+        # restriction each card is stating. Zero is meaningless as a lower
+        # bound, so "exactly none" is the only reading that is not vacuous.
+        if count_eq is None and count_gte == 0 and "count_gte" not in params:
+            count_gte, count_eq = None, 0
         _PITCH_COLOR = {1: "red", 2: "yellow", 3: "blue"}
 
         # "a card in THEIR graveyard" — 7 nodes author `player`, which was not

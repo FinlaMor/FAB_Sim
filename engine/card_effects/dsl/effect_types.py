@@ -1357,6 +1357,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # — so every such card either searched for the wrong thing or invented
         # parameters that did nothing.
         subtype = params.get("subtype")
+        # A nested `filter` (a condition dict or a list of them) and the plain
+        # "card_type" spelling were both unread, so a search that names what it
+        # is looking for matched ANY card and fetched whatever was first.
+        nested_filter = params.get("filter")
+        if isinstance(nested_filter, dict):
+            for key in ("subtypes", "subtype", "card_type", "card_types",
+                        "filter_types"):
+                if nested_filter.get(key):
+                    got = nested_filter[key]
+                    subtype = subtype or (got[0] if isinstance(got, list) else got)
+                    break
+        if not subtype:
+            subtype = _first(params, "card_type", "card_types")
+            if isinstance(subtype, list):
+                subtype = subtype[0] if subtype else None
         max_cost = params.get("max_cost")            # int or amount expression
         # "action": "BANISH" and "put_on_top"/"put_into_hand"/"put_into" are all
         # ways of naming the DESTINATION, and none were read — so every one of
@@ -1449,6 +1464,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
             from engine.card_effects.ability_keywords import ask_optional, FAIL_TO_FIND
             from engine.effect_keywords import put_object
+            chosen = []
             for _ in range(max(limit, 0)):
                 if not eligible:
                     break
@@ -1462,14 +1478,32 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 if target is None:
                     break
                 eligible.remove(target)
+                chosen.append(target)
+
+            # "Search your deck for an arrow card, reveal it, THEN SHUFFLE your
+            # deck AND put it on top." The shuffle comes BEFORE the placement,
+            # and it was running after — so a card placed on top was immediately
+            # randomised back into the deck. The old order made the whole effect
+            # a no-op that could pass a test by luck, since a shuffle sometimes
+            # leaves the card where it was.
+            effect_shuffle(state, cid)
+
+            for target in chosen:
                 # Assign ownership before the move so put_object resolves dest correctly.
                 target.owner = cid
                 target.controller = cid
+                # "deck_top" / "top_deck" is not a ZONE — put_object looks the
+                # destination up by name on the Player and finds nothing, so
+                # every "search your deck ... and put it ON TOP" left the card
+                # wherever the shuffle had put it. It is the deck with a
+                # position.
+                _zone, _pos = _dest, None
+                if str(_dest).lower() in ("deck_top", "top_deck", "top"):
+                    _zone, _pos = "deck", "top"
                 # is_public=True: searched cards are revealed when they move.
-                put_object(state, target, _dest,
+                put_object(state, target, _zone,
                            destination_player_id=cid, source_player_id=cid,
-                           is_public=True)
-            effect_shuffle(state, cid)
+                           is_public=True, position=_pos)
         return _fn
 
     if etype == "SEARCH_GRAVEYARD":

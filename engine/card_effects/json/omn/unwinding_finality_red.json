@@ -10,25 +10,7 @@
           "amount": 1
         }
       ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_BECOME",
-      "conditions": [
-        {
-          "type": "HAS_KEYWORD",
-          "keyword": "Fragment"
-        }
-      ],
-      "effects": [
-        {
-          "type": "SEARCH_DECK",
-          "card_type": "Instant",
-          "card_class": "Lightning",
-          "amount": 1,
-          "destination": "TOP_DECK"
-        }
-      ]
     }
-  ]
+  ],
+  "_comment": "\"When this hits, draw a card\" is implemented.\n\n\"Whenever this FRAGMENTS, you may put a Lightning INSTANT card from your GRAVEYARD on top of your deck\" is NOT, and is removed rather than left doing something else. It was SEARCH_DECK with card_type \"Instant\" unread -- so it searched the DECK, not the graveyard, for ANY card and put it on top: a tutor from the wrong zone with no filter, which is strictly stronger than the printed card and not the same effect. Its trigger was ON_BECOME gated on HAS_KEYWORD \"Fragment\", which asks whether the card HAS the keyword (it always does) rather than whether it fragmented.\n\nFragment has no implementation anywhere in the engine -- no trigger, no keyword handler, and the comprehensive rules in docs/ref do not mention it, so it postdates that document. Definition of done: a fragment event exists and this clause comes back, as a graveyard-to-deck-top move (which MOVE_MATCHING already expresses) gated on it."
 }
