@@ -579,7 +579,7 @@ def _object_target_spec(target):
     """
     if isinstance(target, dict) and any(
             k in target for k in ("controller", "zone", "zones", "name",
-                                  "filter", "ref")):
+                                  "name_ref", "filter", "ref")):
         return target
     # Everything else — "self", the bespoke strings ("controlled_aura_with_ward",
     # "ally", "opponent", ...) and the older dict shapes — falls back to the
@@ -629,6 +629,11 @@ def _compile_object_target(spec):
     zones = spec.get("zones") or [spec.get("zone") or "ARENA"]
     zones = [str(z).upper() for z in zones]
     want_name = spec.get("name")
+    # "cards WITH THAT NAME" — the name was chosen by a player, so it cannot be
+    # a literal in the JSON. Read from the ref, falling back to the source
+    # card's own store for a later ability on the same object (a reference
+    # scope lasts one ability execution).
+    name_ref = spec.get("name_ref")
     limit = spec.get("amount", 1)
     # "put an aim counter on IT" — the object a preceding effect acted on. The
     # alternative is to repeat the zone search and hope it lands on the same
@@ -643,12 +648,22 @@ def _compile_object_target(spec):
                for f in (spec.get("filter") or []) if isinstance(f, dict)]
 
     def _fn(card, event, state, _c=controller, _z=zones, _n=want_name,
-            _lim=limit, _f=filters, _ref=from_ref, _rec=record_as):
+            _lim=limit, _f=filters, _ref=from_ref, _rec=record_as,
+            _nref=name_ref):
         from engine.card_effects.ability_keywords import _ask_player, _controller_id
         from engine.context import get_ref, set_ref
         cid = _controller_id(card)
         if cid not in state.players:
             return []
+        if _nref:
+            found_name = get_ref(_nref)
+            if found_name is None:
+                found_name = (getattr(card, "dsl_chosen", None) or {}).get(_nref)
+            if not found_name:
+                # Nothing was named, so "cards with that name" names nothing —
+                # returning the unfiltered pool would hit every card in the zone.
+                return []
+            _n = found_name
         if _c == "OPPONENT":
             pids = [3 - cid]
         elif _c in ("ANY", "ALL", "EACH"):
@@ -1552,10 +1567,28 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "MARK":
-        def _fn(card, event, state):
+        # CR 9.3 — marking always lands on an OPPOSING hero, which is why the
+        # nine cards saying "mark target opposing hero" need no target at all.
+        # "Mark target ARAKNI" is the exception: it names WHICH hero, and with
+        # the target unread it marked whoever was opposite regardless.
+        want_hero = params.get("hero") or params.get("hero_name")
+        raw_target = params.get("target")
+        if want_hero is None and isinstance(raw_target, str):
+            cleaned = raw_target.lower().replace("target", "").strip()
+            if cleaned and cleaned not in ("opponent", "opposing", "them",
+                                           "opposing hero", "hero", "self"):
+                want_hero = cleaned
+
+        def _fn(card, event, state, _h=want_hero):
             from engine.card_effects.ability_keywords import effect_mark, _controller_id
             cid = _controller_id(card)
-            effect_mark(state, 3 - cid)
+            target_id = 3 - cid
+            if _h:
+                hero = state.players[target_id].hero if target_id in state.players else None
+                name = (getattr(hero, "name", "") or "") + " " + (getattr(hero, "slug", "") or "")
+                if _h.lower() not in name.lower():
+                    return
+            effect_mark(state, target_id)
         return _fn
 
     if etype == "REVEAL_HAND_MARK_IF_TYPE":
@@ -4439,6 +4472,61 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 n = 1
             for obj in targets:
                 effect_remove_counter(state, obj, _ct, n)
+        return _fn
+
+    if etype in ("CHOOSE_VALUE", "NAME_A_CARD", "CHOOSE_COLOR"):
+        # "As you play this, CHOOSE A COLOR" / "name a card" — a player choice
+        # of an abstract VALUE, remembered for a later clause to read. Distinct
+        # from CHOOSE, which picks between EFFECT options: the two cards that
+        # said choice_type were authored as CHOOSE with no `options`, so the
+        # handler returned immediately and neither card did anything at all.
+        #
+        #   {"type":"CHOOSE_VALUE","choice_type":"COLOR","into":"chosen_color"}
+        #   {"type":"CHOOSE_VALUE","choice_type":"CARD_NAME","into":"named_card"}
+        kind = str(_first(params, "choice_type", "kind", default="COLOR")).upper()
+        into = params.get("into") or ("named_card" if kind in ("CARD_NAME", "NAME")
+                                      else "chosen_color")
+        apply_to_self = bool(params.get("apply_to_self"))
+
+        def _fn(card, event, state, _k=kind, _into=into, _self=apply_to_self):
+            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+            from engine.context import set_ref
+            cid = _controller_id(card)
+            if _k in ("CARD_NAME", "NAME"):
+                # Any card name in the game is nameable, so the options are the
+                # names the player can actually see and act on: their own cards
+                # plus everything already public.
+                seen = []
+                for pid, player in state.players.items():
+                    for zone in player.all_zones():
+                        for c in zone.cards:
+                            if pid == cid or getattr(c, "is_public", False):
+                                name = getattr(c, "name", None)
+                                if name and name not in seen:
+                                    seen.append(name)
+                if not seen:
+                    return
+                choice = _ask_player(state, cid, seen, context="Name a card")
+            else:
+                choice = _ask_player(state, cid, ["red", "yellow", "blue"],
+                                     context="Choose a colour")
+            set_ref(_into, choice)
+            # A reference scope lasts one ability execution, and "name a card"
+            # is read by LATER abilities on the same permanent ("whenever a card
+            # with that name is banished WHILE THIS IS IN THE ARENA"). So the
+            # choice is also stamped on the object, which is what actually
+            # remembers it.
+            store = dict(getattr(card, "dsl_chosen", None) or {})
+            store[_into] = choice
+            card.dsl_chosen = store
+            if _self and _k not in ("CARD_NAME", "NAME"):
+                # "THIS gets the chosen color." Colour is what every
+                # colour-reading condition in the corpus asks about (they read
+                # `color` first, then base_color), so setting it is what makes
+                # the choice mean anything. The card's printed PITCH value is a
+                # separate quantity and the text does not mention it, so it is
+                # deliberately left alone rather than guessed at.
+                card.color = str(choice).capitalize()
         return _fn
 
     if etype == "CHOOSE":

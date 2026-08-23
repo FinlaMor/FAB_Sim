@@ -5,15 +5,16 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "CHOOSE",
+          "type": "CHOOSE_VALUE",
           "choice_type": "COLOR",
-          "player": "SELF"
+          "into": "chosen_color",
+          "apply_to_self": true
         },
         {
-          "type": "GRANT_SUBTYPE",
-          "subtype": "YELLOW"
+          "type": "GO_AGAIN"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"As you play this, CHOOSE A COLOR. This gets the chosen color.\" It was CHOOSE with a choice_type -- but CHOOSE picks between EFFECT OPTIONS, and with no `options` list the handler returns immediately, so the card did nothing. It was followed by GRANT_SUBTYPE \"YELLOW\": a colour is not a subtype, and hard-coding yellow is not a choice. CHOOSE_VALUE is the missing primitive -- a player choice of an abstract VALUE, remembered for a later clause to read.\n\nStated rather than assumed: the choice sets card.color, which is what every colour-reading condition in the corpus asks about (they read `color` first, then base_color). The card's printed PITCH value is a separate quantity and the text does not mention it, so it is left alone."
 }

@@ -1,6 +1,5 @@
 {
   "slug": "vow_of_vengeance",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
@@ -13,9 +12,10 @@
       "effects": [
         {
           "type": "MARK",
-          "target": "target Arakni"
+          "hero": "Arakni"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Destroy this: MARK TARGET ARAKNI.\" The target was the literal string \"target Arakni\", which MARK does not read -- it always marks the opposing hero -- so this marked whoever was opposite, Arakni or not. Marking always lands on an opposing hero (CR 9.3), which is why the nine cards saying \"mark target opposing hero\" need no target at all; this one is the exception because it names WHICH hero. Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability earlier: the card has no intimidate text; the generator hallucinated it from Blade Break equipment (27 cards corpus-wide)."
 }

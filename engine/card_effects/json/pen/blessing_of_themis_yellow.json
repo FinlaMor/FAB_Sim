@@ -2,30 +2,31 @@
   "slug": "blessing_of_themis_yellow",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ENTER_PLAY",
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "CHOOSE",
-          "choice_type": "CARD_NAME",
-          "target": "self",
-          "player": "SELF"
+          "type": "GO_AGAIN"
         }
       ]
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_BECOME",
-      "conditions": [
-        {
-          "type": "REF_EXISTS",
-          "target": "banished"
-        }
-      ],
+      "trigger": "ON_ENTER_PLAY",
       "effects": [
         {
-          "type": "FLIP_REF",
-          "target": "banished"
+          "type": "CHOOSE_VALUE",
+          "choice_type": "CARD_NAME",
+          "into": "named_card"
+        },
+        {
+          "type": "FLIP_MATCHING",
+          "face_up": false,
+          "target": {
+            "controller": "ANY",
+            "zone": "BANISHED",
+            "amount": "ALL",
+            "name_ref": "named_card"
+          }
         }
       ]
     },
@@ -34,9 +35,11 @@
       "trigger": "START_OF_TURN",
       "effects": [
         {
-          "type": "PUT_SELF_BOTTOM_DECK"
+          "type": "PUT_SELF_IN_ZONE",
+          "zone": "soul"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"When this enters the arena, NAME A CARD. Turn all cards with that name in banished zones face-down. ... At the start of your turn, put this into your SOUL.\"\n\nThe naming was CHOOSE with a choice_type and no `options`, so the handler returned immediately and nothing was ever named. The flip was a second ability on ON_BECOME whose FLIP_REF and REF_EXISTS both named a ref (\"banished\") that no effect on this card sets -- so it was gated on nothing and acted on nothing. And the last clause was PUT_SELF_BOTTOM_DECK where the card says the SOUL: the bottom of the deck is a different zone with different consequences (soul count feeds other cards; a deck card is drawn again).\n\nA reference scope lasts ONE ability execution, so the named card is also stamped on the object; that is what lets a later clause read it.\n\nNOT implemented, and recorded rather than approximated: \"whenever a card with that name is banished WHILE THIS IS IN THE ARENA, turn that card face-down\". effect_keywords.banish() already emits its event, so the hook exists, but there is no ON_BANISH trigger name wired to the DSL. Definition of done: that trigger exists and this clause becomes a FLIP_MATCHING over the banished card, gated on name_ref."
 }

@@ -243,8 +243,14 @@ def test_regression_count_does_not_grow():
     # ANY card. Two deeper bugs came out with them: "deck_top" is not a ZONE, so
     # every "put it on top" silently left the card where it was; and the shuffle
     # ran AFTER the placement, randomising the card back into the deck.
-    assert findings <= 48, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 48). "
+    # 48 -> 44: CHOOSE_VALUE. CHOOSE picks between EFFECT OPTIONS; two cards
+    # used it to mean "pick an abstract VALUE and remember it" and, with no
+    # `options` list, the handler returned immediately so neither card did
+    # anything. MARK also gained a hero name -- it always marks the opposing
+    # hero, which is right for the nine cards saying "target opposing hero" and
+    # wrong for the one that names WHICH hero.
+    assert findings <= 44, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 44). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

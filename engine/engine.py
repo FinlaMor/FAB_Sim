@@ -172,15 +172,7 @@ def new_game(
     # 9.3.3: global listener — when a marked hero is hit, remove marked condition.
     # Registered AFTER card triggers so on-hit effects (e.g. Mark of the Black Widow)
     # can check is_marked before it's cleared.
-    def _clear_marked_on_hit(event, game_state):
-        if not game_state.combat:
-            return
-        defender_id = 3 - game_state.combat.attacker_id
-        defender = game_state.players[defender_id]
-        if defender.marked:
-            defender.marked = False
-
-    event_mngr.register('hit', _clear_marked_on_hit)
+    event_mngr.register('hit', clear_marked_on_hit)
 
     from engine.recorder import notify as _rec_notify
     _rec_notify(state, 'on_game_start')
@@ -1339,6 +1331,30 @@ def _setup_material_statics(state: GameState) -> None:
 #: hits you this turn". Read at the single ON_HIT dispatch point
 #: (_dsl_hit_listener) so there is one place suppression can happen.
 HIT_TRIGGERS_SUPPRESSED = "hit_triggers_suppressed"
+
+
+def clear_marked_on_hit(event, game_state: GameState) -> None:
+    """CR 9.3.3 — a marked hero being hit removes the marked condition.
+
+    "When a marked hero is HIT by a source controlled by an opponent, the marked
+    condition of that hero is REMOVED as part of the hit event."
+
+    There are TWO marked stores on Player: class_counters["marked"], which
+    effect_keywords.mark() writes and every condition reads, and a plain
+    `marked` bool that NOTHING ever sets. This listener read the bool, so it was
+    always False and the condition was NEVER CLEARED — a marked hero stayed
+    marked for the rest of the game and every "if they are marked" payoff kept
+    paying out.
+
+    Module level rather than a closure inside start_game so a test can exercise
+    the real listener instead of a copy of it.
+    """
+    if not game_state.combat:
+        return
+    defender = game_state.players[3 - game_state.combat.attacker_id]
+    if defender.class_counters.get("marked", 0):
+        defender.class_counters["marked"] = 0
+    defender.marked = False
 
 
 def _setup_dsl_listeners(state: GameState) -> None:
