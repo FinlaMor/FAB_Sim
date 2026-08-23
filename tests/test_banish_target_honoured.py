@@ -149,13 +149,27 @@ def test_banish_from_their_soul():
     ("blossoming_spellblade_red", "graveyard"),
 ])
 def test_banish_from_your_own_named_zone_not_your_deck(slug, zone):
-    """"from your hand"/"from your graveyard" — not the top of your deck."""
+    """"from your hand"/"from your graveyard" — not the top of your deck.
+
+    Runs the whole ABILITY rather than picking the BANISH effect out of the
+    top-level list. A card may legitimately wrap it — painful_passage_red's
+    banish is optional and sits inside a MAY — and a guard that only walks the
+    top level goes quiet exactly when the card is authored more precisely.
+    """
+    from engine.card_effects.dsl.interpreter import run_ability
+
     st = _state()
     _stock(st, 1, "deck", 4)
     _stock(st, 1, zone, 3)
+    # blossoming_spellblade_red gates its banish on having been FUSED. Calling
+    # the effect fn directly (as this test used to) walks straight past that;
+    # running the ability honours it, so the marker has to be set or the card
+    # correctly does nothing.
+    st.players[1].current_turn_effects.append(f"fused_{slug}")
     before = _counts(st)
 
-    _banish_effects(slug)[0].fn(_card(slug, owner=1), None, st)
+    for ability in get_card(slug).abilities:
+        run_ability(ability, _card(slug, owner=1), None, st)
 
     assert len(getattr(st.players[1], zone).cards) == before[(1, zone)] - 1
     assert len(st.players[1].deck.cards) == before[(1, "deck")], (

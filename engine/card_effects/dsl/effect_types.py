@@ -4346,10 +4346,19 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         asset = params.get("asset")
         keyword = params.get("keyword")
         amt = params.get("amount", 0)
+        # "THEY draw a card, THEY gain {r}, THEY gain 1{h}" — every asset gain
+        # resolved to the CONTROLLER, so a card handing resources to the
+        # OPPONENT handed them to itself. `player` was authored and unread.
+        who = params.get("player", "SELF")
+        # "they gain +1{i} UNTIL END OF TURN" — unread, so an intellect gain
+        # that should last a turn was permanent.
+        duration = str(params.get("duration") or "").upper()
         if asset:
-            def _fn(card, event, state, _asset=asset, _a=amt):
+            def _fn(card, event, state, _asset=asset, _a=amt, _w=who, _d=duration):
                 from engine.card_effects.ability_keywords import _controller_id
-                cid = _controller_id(card)
+                cid = _effect_player_id(state, card, _w, event)
+                if cid is None:
+                    cid = _controller_id(card)
                 val = _resolve_amount(_a, state, card)
                 if _asset == "RESOURCE_POINTS":
                     from engine.card_effects.ability_keywords import effect_gain_resources
@@ -4369,6 +4378,27 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     from engine.effect_keywords import gain as _ek_gain, AssetType as _AssetType
                     _ek_gain(state, _AssetType.CHI, val,
                              source_player_id=cid, target_player_id=cid)
+                elif _asset in ("INTELLECT", "INTELLECT_POINTS"):
+                    # Intellect is a Player stat with no gain() asset type, so
+                    # it fell through every branch above and did nothing — and
+                    # the card that needs it authored the keyword form, which
+                    # grants "INTELLECT" to the combat's KEYWORD list instead.
+                    player = state.players.get(cid)
+                    if player is None:
+                        return
+                    try:
+                        n = int(val)
+                    except (TypeError, ValueError):
+                        return
+                    player.intellect += n
+                    if _d in ("END_OF_TURN", "THIS_TURN", "TURN"):
+                        # Restored in the end-phase cleanup. Without this the
+                        # gain is permanent, which for intellect means a
+                        # permanently larger draw-up every turn after.
+                        pending = list(getattr(player, "dsl_pending_stat_restores",
+                                               None) or [])
+                        pending.append(("intellect", n))
+                        player.dsl_pending_stat_restores = pending
             return _fn
         if keyword:
             kw = canonical_keyword(keyword)

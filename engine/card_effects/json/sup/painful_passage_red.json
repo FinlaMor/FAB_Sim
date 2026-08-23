@@ -5,29 +5,69 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "BANISH",
-          "target": "HAND",
-          "conditions": [
+          "type": "MAY",
+          "effects": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "HAND",
-              "card_type": "ACTION"
-            }
-          ],
-          "additional_effects": [
-            {
-              "type": "MODIFY_ATTACK",
-              "mod": "add",
-              "amount": 3
+              "type": "BANISH",
+              "amount": 1,
+              "target": {
+                "controller": "SELF",
+                "zone": "HAND",
+                "amount": 1,
+                "filter": [
+                  {
+                    "type": "CARD_IS_TYPE",
+                    "card_type": "Attack"
+                  },
+                  {
+                    "type": "CARD_IS_TYPE",
+                    "card_type": "Action"
+                  }
+                ]
+              }
             },
             {
-              "type": "GAIN",
-              "keyword": "GO_AGAIN",
-              "duration": "END_OF_TURN"
+              "type": "CONDITIONAL",
+              "condition": {
+                "type": "REF_EXISTS",
+                "ref": "banished"
+              },
+              "effects": [
+                {
+                  "type": "CHOOSE",
+                  "amount": 1,
+                  "options": [
+                    {
+                      "name": "+3{p}",
+                      "effects": [
+                        {
+                          "type": "MODIFY_NEXT_ATTACK",
+                          "mod": "add",
+                          "amount": 3,
+                          "uses": 1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "go again",
+                      "effects": [
+                        {
+                          "type": "GRANT_KEYWORD_TO_PLAYED",
+                          "keyword": "Go Again"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
+        },
+        {
+          "type": "GO_AGAIN"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"You MAY banish an attack action card from your hand. IF YOU DO, IT gets +3{p} OR go again until end of turn.\" The payoff was a list under `additional_effects` on the BANISH node -- a key BANISH does not read -- so both halves were unreachable and the card only banished. It was also mandatory, and the banish target was the bare string \"HAND\" gated on an effect-level CARD_IN_ZONE, which asks whether SUCH A CARD IS SOMEWHERE IN HAND and then banishes whatever the target parser resolves; the restriction belongs on WHICH card, not on whether the effect runs.\n\n\"+3{p} OR go again\" is a choice between two effects, which is what CHOOSE is for -- the previous authoring applied BOTH.\n\nApproximation stated rather than hidden: \"IT\" is the banished card, and the buff is queued as \"your next attack this turn\" rather than pinned to that object. A banished attack action can only come back and be played by another effect, and the queue matches on card properties; the object-scoped pin added for sharp_incline_red is on the COST queue, not this one."
 }

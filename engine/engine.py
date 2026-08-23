@@ -936,6 +936,13 @@ def _end_phase_iter(state: GameState) -> None:
         player.dsl_queued_defense_mods = []
     if hasattr(player, 'dsl_instant_timing_grants'):
         player.dsl_instant_timing_grants = []
+    # "they gain +1{i} UNTIL END OF TURN" — a Player STAT gain with a duration.
+    # Intellect has no gain() asset type and so no expiry machinery of its own;
+    # without this the gain is permanent, which for intellect means a
+    # permanently larger draw-up on every later turn.
+    for _stat, _delta in list(getattr(player, 'dsl_pending_stat_restores', None) or []):
+        setattr(player, _stat, getattr(player, _stat, 0) - _delta)
+    player.dsl_pending_stat_restores = []
     # "This turn" — an unused power-gain replacement expires with the turn.
     if getattr(state, '_power_gain_replacements', None):
         state._power_gain_replacements = []

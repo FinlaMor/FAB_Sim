@@ -249,8 +249,15 @@ def test_regression_count_does_not_grow():
     # anything. MARK also gained a hero name -- it always marks the opposing
     # hero, which is right for the nine cards saying "target opposing hero" and
     # wrong for the one that names WHICH hero.
-    assert findings <= 44, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 44). "
+    # 44 -> 42: GAIN resolved every asset to the CONTROLLER, so "THEY gain {r}"
+    # handed the resource to the card's own controller -- an inversion. It also
+    # had no intellect asset (the card that needs it used the KEYWORD branch,
+    # which grants to the combat's keyword list) and no duration, so an
+    # until-end-of-turn intellect gain would have been permanent. BANISH gained
+    # the "if you do" payoff its one user had authored under a key it does not
+    # read.
+    assert findings <= 42, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 42). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )
