@@ -3,6 +3,7 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
       "conditions": [
         {
           "type": "DEFENDS_WITH_OTHER_HAND_CARD"
@@ -12,21 +13,31 @@
         {
           "type": "MODIFY_DEFENSE_VALUE",
           "mod": "add",
-          "amount": 1
+          "amount": 1,
+          "target": {
+            "zone": "DEFENDING",
+            "amount": "ALL",
+            "filter": [
+              {
+                "type": "CARD_IS_NAMED",
+                "name": "Right Behind You"
+              }
+            ]
+          }
         },
         {
           "type": "LOOK_AT",
           "zone": "DECK_TOP",
-          "player": "SELF"
+          "player": "SELF",
+          "into": "looked"
         },
         {
           "type": "PUT_CARDS_BOTTOM",
-          "target": "top_deck",
+          "ref": "looked",
           "optional": true
         }
-      ],
-      "trigger": "ON_DEFEND"
+      ]
     }
   ],
-  "_comment": "LOOK_AT defaults to the OPPONENT and its 'target' was unread, so 'look at the top card of YOUR deck' was looking at the opponent's -- not a dead effect, an information leak pointing the wrong way. The target named a zone but never a player, and the shared target parser refuses to guess one, so the card now says player SELF outright."
+  "_comment": "LOOK_AT defaults to the OPPONENT and its 'target' was unread, so \"look at the top card of YOUR deck\" was looking at the opponent's -- not a dead effect, an information leak pointing the wrong way. The target named a zone but never a player, and the shared target parser refuses to guess one, so the card now says player SELF outright. The bottoming half then named the zone as \"top_deck\", which is not a Player attribute, so getattr found nothing and the card bottomed NOTHING -- and it was mandatory where the text says \"you MAY put it on the bottom\". \"It\" is the card just looked at, so this reads the ref LOOK_AT stores rather than re-deriving a zone. The +1{d} also went to the defending TOTAL rather than to THIS card."
 }

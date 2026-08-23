@@ -2,26 +2,27 @@
   "slug": "seerstone",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "ACTION",
       "activation_cost": 3,
       "effects": [
         {
           "type": "LOOK_AT",
           "zone": "DECK_TOP",
-          "player": "SELF"
+          "player": "SELF",
+          "into": "looked"
         },
         {
           "type": "PUT_CARDS_BOTTOM",
-          "amount": 1,
+          "ref": "looked",
           "optional": true
         },
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Ponder",
-          "token": "ponder"
+          "token": "ponder",
+          "amount": 1
         }
       ]
     }
   ],
-  "_comment": "LOOK_AT defaults to the OPPONENT and its 'target' was unread, so 'look at the top card of YOUR deck' was looking at the opponent's -- not a dead effect, an information leak pointing the wrong way. The target named a zone but never a player, and the shared target parser refuses to guess one, so the card now says player SELF outright."
+  "_comment": "LOOK_AT defaults to the OPPONENT and its 'target' was unread, so \"look at the top card of YOUR deck\" was looking at the opponent's -- not a dead effect, an information leak pointing the wrong way. The target named a zone but never a player, and the shared target parser refuses to guess one, so the card now says player SELF outright. The bottoming half named NO zone, so it fell through to PUT_CARDS_BOTTOM's hand+arsenal default: activating Seerstone put a card from your HAND and a card from your ARSENAL on the bottom of your deck, mandatorily, instead of the card it had just looked at. A wrong default is more damaging than none. \"It\" is the looked-at card, so this reads the ref LOOK_AT stores, and \"you may\" is honoured."
 }

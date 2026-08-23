@@ -2685,12 +2685,46 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # bottom". Defaulting to everything is right for the Inertia token
         # (hand + arsenal → bottom) and wrong for the cards that name one.
         count = params.get("amount", params.get("count"))
+        # "Look at the top card of your deck. YOU MAY put IT on the bottom."
+        # Two things neither of the cards saying that could express. `ref`
+        # bottoms the object a preceding effect stored (LOOK_AT stores under
+        # "looked"): naming the zone instead does not work, because "top_deck"
+        # is not a Player attribute — one card bottomed nothing at all, and the
+        # other, naming no zone, fell through to the hand+arsenal default and
+        # bottomed a card from EACH. And `optional` was unread, so "you may"
+        # was mandatory.
+        from_ref = _first(params, "ref", "target_ref", "cards")
+        optional = bool(params.get("optional"))
 
-        def _fn(card, event, state, _zones=from_zones, _w=who, _n=count):
-            from engine.card_effects.ability_keywords import _ask_player, _controller_id
+        def _fn(card, event, state, _zones=from_zones, _w=who, _n=count,
+                _ref=from_ref, _opt=optional):
+            from engine.card_effects.ability_keywords import (
+                DECLINE, _ask_player, _controller_id, ask_yes_no)
             cid = _controller_id(card)
             tid = (3 - cid) if _w in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
+            if _ref:
+                from engine.context import get_ref
+                found = get_ref(_ref)
+                if found is None:
+                    return
+                objects = list(found) if isinstance(found, list) else [found]
+                if not objects:
+                    return
+                if _opt and not ask_yes_no(
+                        state, cid, context="Put it on the bottom of the deck?"):
+                    return
+                for obj in objects:
+                    owner = state.players.get(getattr(obj, "owner", tid), player)
+                    src = getattr(owner, (getattr(obj, "zone", "") or "").lower(),
+                                  None)
+                    if src is not None:
+                        src.remove(obj)
+                    owner.deck.add_bottom(obj)
+                return
+            if _opt and not ask_yes_no(
+                    state, cid, context="Put a card on the bottom of the deck?"):
+                return
             limit = None
             if _n is not None and str(_n).upper() not in ("ALL", "EACH"):
                 try:

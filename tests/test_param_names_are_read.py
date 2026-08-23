@@ -225,8 +225,15 @@ def test_regression_count_does_not_grow():
     # question to "is this zone non-empty". It now reads the exact spellings
     # (cost, power), face_up, a card NAME, a nested `filter` dict, and
     # player: ANY for "in any arsenal" / "each hero's graveyard".
-    assert findings <= 59, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 59). "
+    # 59 -> 55: "put IT on the bottom" cannot be spelled as a zone.
+    # PUT_CARDS_BOTTOM knew only how to name a zone and move everything in it,
+    # so seerstone fell through to the hand+arsenal DEFAULT (bottoming a card
+    # from each), right_behind_you named "top_deck" -- not a Player attribute --
+    # and bottomed nothing, and phantasmaclasm hid the whole thing inside a
+    # SELECT_FROM_REF `effects` list it does not read. It now takes a `ref` and
+    # honours `optional`.
+    assert findings <= 55, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 55). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

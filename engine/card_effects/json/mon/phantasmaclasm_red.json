@@ -6,24 +6,28 @@
       "effects": [
         {
           "type": "LOOK_AT",
-          "target": "OPPONENT_HAND"
+          "target": "OPPONENT_HAND",
+          "into": "looked"
         },
         {
           "type": "SELECT_FROM_REF",
-          "ref": "OPPONENT_HAND",
-          "effects": [
-            {
-              "type": "PUT_CARDS_BOTTOM",
-              "amount": 1,
-              "target_ref": "SELECTED"
-            },
-            {
-              "type": "DRAW",
-              "amount": 1
-            }
-          ]
+          "ref": "looked",
+          "min": 1,
+          "max": 1,
+          "into": "chosen"
+        },
+        {
+          "type": "PUT_CARDS_BOTTOM",
+          "ref": "chosen",
+          "player": "OPPONENT"
+        },
+        {
+          "type": "DRAW",
+          "amount": 1,
+          "player": "OPPONENT"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Look at the defending hero's hand and CHOOSE a card. THEY put it on the bottom of THEIR deck then THEY draw a card.\" The choose-and-bottom was a SELECT_FROM_REF carrying an `effects` list it does not read, so its whole body was unreachable and the card only looked. Inside it, PUT_CARDS_BOTTOM named target_ref \"SELECTED\" -- neither a key it reads nor a ref anything sets. The DRAW had no player and so would have gone to the CASTER; the card says they draw, which is the compensation that makes the effect fair. SELECT_FROM_REF reads the ref LOOK_AT stores and puts the choice under \"chosen\", which the two effects after it read."
 }
