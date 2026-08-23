@@ -3,15 +3,32 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_CARD_PLAYED",
+      "effects": [
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "PUT_INTO_ARSENAL",
+              "from": "HAND",
+              "player": "SELF",
+              "face_up": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
       "trigger": "ON_TRAP_TRIGGER",
       "effects": [
         {
           "type": "DEAL_GENERIC",
           "amount": 1,
-          "target": "ATTACKER"
+          "target": "OPPONENT"
         }
       ]
     }
   ],
-  "_comment": "Riptide's 'whenever you play a card from hand, you may put a card from hand face down into your arsenal' is NOT implemented. It was authored as PUT_CARDS_BOTTOM, which bottom-decks every card in hand and reads none of amount/face_down/destination -- so it would have destroyed the player's hand on every card played. Removed rather than approximated; there is no hand-to-arsenal effect yet. The second ability's trigger, ON_TRAP_TRIGGER, is not a trigger name at all and is still dead; the audit reports it."
+  "_comment": "Both abilities are now implemented. \"Whenever you play a card from hand, you may put a card from hand FACE DOWN into your arsenal\" had been removed: it was authored as PUT_CARDS_BOTTOM, which bottom-decks the whole hand and reads none of amount/face_down/destination, so it would have destroyed the player's hand on every card played. PUT_INTO_ARSENAL now takes from:\"HAND\" (the player chooses which card, unlike the deck-top form where the card is determined) and ON_CARD_PLAYED already dispatches to the hero.\n\n\"Whenever a TRAP you control TRIGGERS, deal 1 damage to the attacking hero\" was on ON_TRAP_TRIGGER, which was not a trigger name. CR 8.2.7 retired trap as a functional subtype, so there is no trap machinery to hang it on: a trap is an ordinary card carrying the Trap subtype, and \"triggers\" means one of its abilities RESOLVES. The event is now dispatched from interpreter._run_ability past every gate, so a trap whose condition failed does not count.\n\nThe damage target is the OPPONENT: Riptide's traps are Defense Reactions, so a trap triggering means Riptide is defending and the attacking hero is the opponent. Stated because 'the attacking hero' and 'the opponent' coincide here but are not the same idea."
 }

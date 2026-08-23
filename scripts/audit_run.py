@@ -40,6 +40,15 @@ VALID_ABILITY_TYPES = {
     "PLAY", "ACTION", "MODAL", "ATTACK_REACTION", "DEFENSE_REACTION", "ACTIVATE",
     "INSTANT", "TRIGGERED", "STATIC", "STATIC_TRIGGERED", "DELAYED_TRIGGERED",
     "WHILE_STATIC", "REPLACEMENT", "COST_MODIFIER", "DEFEND_RESTRICTION",
+    # Declarative, like DEFEND_RESTRICTION: its conditions say WHEN and its
+    # params say WHOSE zone, so it carries no effects. Read by
+    # play._apply_conditional_freezes, which clears and re-derives it on every
+    # legality pass — a "while" condition cannot be a one-shot freeze.
+    "FREEZE_WHILE",
+    # Also declarative: conditions say WHEN, params say WHICH permanents and
+    # what they become. Read by play._apply_granted_attack_statics and offered
+    # by _add_granted_permanent_attacks.
+    "GRANT_ATTACK_WHILE",
 }
 # Turn-effect markers engine code actually writes. Anything else must be set by
 # the same card, or the ability can never fire.

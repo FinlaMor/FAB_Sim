@@ -1335,6 +1335,12 @@ def _setup_material_statics(state: GameState) -> None:
         apply_fn=_power, persistent=True, source_slug='__material__'))
 
 
+#: Turn-scoped marker on a player meaning "effects don't trigger if an attack
+#: hits you this turn". Read at the single ON_HIT dispatch point
+#: (_dsl_hit_listener) so there is one place suppression can happen.
+HIT_TRIGGERS_SUPPRESSED = "hit_triggers_suppressed"
+
+
 def _setup_dsl_listeners(state: GameState) -> None:
     """Load DSL card definitions and register event listeners that call dispatch().
 
@@ -1349,6 +1355,19 @@ def _setup_dsl_listeners(state: GameState) -> None:
     def _dsl_hit_listener(event, game_state: GameState) -> None:
         combat = game_state.combat
         if not combat or not combat.attack_card:
+            return
+        # "Effects don't trigger IF AN ATTACK HITS YOU this turn" (Dense Blue
+        # Mist) / "effects don't trigger when an attack hits this chain link"
+        # (Tripwire Trap, described in CR §926 in exactly these terms). The
+        # DAMAGE still happens — only the triggered layers are suppressed — so
+        # this returns before any dispatch rather than cancelling the hit.
+        #
+        # Two scopes, because the two cards mean different things: a turn-scoped
+        # marker on the player being hit, and a chain-link flag on the combat.
+        _defender = game_state.players.get(3 - combat.attacker_id)
+        if (getattr(combat, "suppress_hit_triggers", False)
+                or (_defender is not None
+                    and HIT_TRIGGERS_SUPPRESSED in _defender.current_turn_effects)):
             return
         slug = combat.attack_card.slug
         # Fire DSL ON_HIT abilities for the attack card

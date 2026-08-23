@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from engine.card import CardDB, Card
 from engine.card_effects.dsl import dispatch, get_card
+from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import load_all_cards
 from tests.conftest import _make_state as _base_make_state
 load_all_cards()
@@ -1086,36 +1087,48 @@ def test_burn_away_red_modify_attack():
     assert st.combat.attack_power == 2  # Assuming base attack power is 0
 
 # --- inspire_lightning_yellow ---
-def test_inspire_lightning_yellow_on_fuse():
-    # "If Inspire Lightning was fused, deal 2 arcane damage to target hero"
+# Both generated tests here dispatched "ON_FUSE" - an event that does not exist
+# and should not: fusion (CR 8.3.17) is an optional ADDITIONAL COST paid as the
+# card is played, not a trigger. They were also byte-for-byte duplicates of each
+# other. The real path is the marker ability_keywords.fusion records.
+def _fuse(st, card, pid=1):
+    """Mark the card as having been fused, the way ability_keywords.fusion does."""
+    st.players[pid].current_turn_effects.append(f"fused_{card.slug}")
+
+
+def test_inspire_lightning_deals_two_arcane_when_fused():
     st = _make_state(); st.card_db = DB
     card = _card("inspire_lightning_yellow")
-    st.players[1].arsenal.cards.append(card)
-    
-    # Capture the initial health of the opponent hero
+    _fuse(st, card)
     before_health = st.players[2].health
-    
-    # Dispatch the ON_FUSE event
-    dispatch(st, "ON_FUSE", "inspire_lightning_yellow", card=card, event=None)
-    
-    # Assert that the opponent hero's health has decreased by 2
+
+    run_ability(get_card("inspire_lightning_yellow").abilities[0], card, None, st)
+
     assert st.players[2].health == before_health - 2
 
-# Additional test to ensure the card's effect is applied correctly
-def test_inspire_lightning_yellow_fuses_correctly():
-    # Setup a state where the card is in the arsenal and can be fused
+
+def test_inspire_lightning_does_nothing_unfused():
+    """"IF Inspire Lightning WAS FUSED" - fusion is optional, so the unfused
+    case is the common one."""
     st = _make_state(); st.card_db = DB
     card = _card("inspire_lightning_yellow")
-    st.players[1].arsenal.cards.append(card)
-    
-    # Capture the initial health of the opponent hero
     before_health = st.players[2].health
-    
-    # Dispatch the ON_FUSE event
-    dispatch(st, "ON_FUSE", "inspire_lightning_yellow", card=card, event=None)
-    
-    # Assert that the opponent hero's health has decreased by 2
-    assert st.players[2].health == before_health - 2
+
+    run_ability(get_card("inspire_lightning_yellow").abilities[0], card, None, st)
+
+    assert st.players[2].health == before_health
+
+
+def test_fusion_records_the_marker_the_card_gates_on():
+    """The gate and the keyword have to agree on the spelling, or the card is
+    silently unconditional-off."""
+    import json as _json
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
+    raw = _json.loads(next(root.rglob("inspire_lightning_yellow.json"))
+                      .read_text(encoding="utf-8"))
+    gates = [c.get("flag") for a in raw["abilities"] for c in a.get("conditions", [])]
+    assert "fused_inspire_lightning_yellow" in gates, gates
 
 # --- evasive_leap_red ---
 def test_evasive_leap_red_smoke():

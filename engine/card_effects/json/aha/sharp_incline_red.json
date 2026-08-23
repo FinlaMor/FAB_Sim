@@ -1,6 +1,5 @@
 {
   "slug": "sharp_incline_red",
-  "_comment": "The Sharpen half was a PUT_COUNTER with an invented SELECT_FROM_REF target; SHARPEN is a real keyword that puts +1{p} counters on a sword you control. The conditional cost reduction on the next attack with THAT sword is not modelled: the queue filters by card properties, not by identity with a previously chosen card.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -11,9 +10,27 @@
           "amount": 1
         },
         {
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_HAS_COUNTER",
+            "ref": "sharpened",
+            "counter": "power",
+            "amount": 1
+          },
+          "effects": [
+            {
+              "type": "MODIFY_NEXT_CARD_COST",
+              "amount": 1,
+              "uses": 1,
+              "object_ref": "sharpened"
+            }
+          ]
+        },
+        {
           "type": "GO_AGAIN"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"SHARPEN target sword you control. If IT has 1 or more +1{p} counters, your next attack WITH IT this turn costs {r} less to activate.\" The second sentence was not modelled at all: the queued cost reduction matches on card PROPERTIES, which cannot distinguish one sword from an identical one, so there was no way to say \"with IT\". Three small pieces close it -- SHARPEN records the sword it sharpened under the ref \"sharpened\"; MODIFY_NEXT_CARD_COST takes an object_ref and pins its queue entry to that object's object_id; and _cost_mod_matches honours it. The activation path already runs through _calculate_resource_cost and _pay_costs, so the reduction reaches a weapon activation and is consumed once.\n\nThe gate needed a new condition too: \"if IT has counters\" is about the SWORD, and HAS_COUNTER reads the SOURCE card -- here the action card itself, which never carries power counters, so the gate would have been false whatever the sword looked like."
 }

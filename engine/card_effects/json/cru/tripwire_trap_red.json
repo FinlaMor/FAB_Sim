@@ -1,5 +1,24 @@
 {
   "slug": "tripwire_trap_red",
-  "abilities": [],
-  "_comment": "Removed a PAY_OR_DAMAGE that deals damage where the card suppresses TRIGGERS. NOT IMPLEMENTED: 'When this defends, effects don't trigger when an attack hits this chain link unless the attacking hero pays {r}' -- a trigger-suppression replacement gated on an optional payment by the OPPONENT, and nothing in the engine can suppress on-hit triggers conditionally. Also not implemented: 'can only be played from arsenal', a play-legality restriction. Dealing 1 damage instead is not an approximation of either."
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 1,
+          "on_failure": [
+            {
+              "type": "SUPPRESS_HIT_TRIGGERS",
+              "scope": "CHAIN",
+              "player": "SELF"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "\"When this defends, effects don't trigger when an attack hits this chain link UNLESS the attacking hero pays {r}.\" CR sec.926 describes this card in exactly those terms: the hit effect produces no triggered layer. It had been a PAY_OR_DAMAGE dealing 1 damage, which is neither the payment structure nor the effect, and it sat in KNOWN_UNIMPLEMENTED waiting for trigger suppression to exist. Suppression is chain-link scoped here (a flag on the combat) where Dense Blue Mist's is turn scoped (a marker on the player), which is why SUPPRESS_HIT_TRIGGERS takes a scope.\n\nStill not modelled, and said so rather than left looking finished: \"this can only be played from arsenal\" is a play-legality restriction with no hook. The card is reachable from hand, which makes it more permissive than printed."
 }

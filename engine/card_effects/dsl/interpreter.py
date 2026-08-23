@@ -87,6 +87,28 @@ def _run_ability(ability, card, event, state) -> None:
     # Past every gate — this ability is genuinely resolving, not just matched.
     _track_ability(card, ability)
 
+    # "Whenever a TRAP YOU CONTROL TRIGGERS, ..." (Riptide). CR 8.2.7 retired
+    # trap as a functional subtype keyword, so a trap is an ordinary card — in
+    # practice a Defense Reaction — that happens to carry the Trap subtype, and
+    # "triggers" means one of its abilities actually resolves. That is exactly
+    # here: past the target filter, the costs, the conditions and the
+    # once-per-turn gate, so a trap whose condition FAILED does not count as
+    # having triggered.
+    #
+    # Dispatched to the controller's hero and permanents, not to the trap, since
+    # the payoff lives on another card.
+    _subtypes = getattr(card, "subtypes", None) or []
+    if any(str(t).lower() == "trap" for t in _subtypes):
+        from engine.card_effects.ability_keywords import _controller_id
+        from engine.card_effects.dsl import dispatch as _dsl_dispatch
+        _cid = _controller_id(card)
+        _owner = state.players.get(_cid) if _cid in getattr(state, "players", {}) else None
+        if _owner is not None:
+            _listeners = ([_owner.hero] if _owner.hero is not None else [])                          + list(_owner.permanents.cards)
+            for _listener in _listeners:
+                _dsl_dispatch(state, "ON_TRAP_TRIGGER", _listener.slug,
+                              card=_listener, event=event)
+
     # MODAL abilities ("Choose N"): the controller picks modes, each of which
     # is a compiled EffectDef. Non-modal abilities run their effects in order.
     if getattr(ability, 'modes', None):

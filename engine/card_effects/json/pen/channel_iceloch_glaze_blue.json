@@ -2,35 +2,29 @@
   "slug": "channel_iceloch_glaze_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "modifications": [
-            {
-              "type": "FREEZE",
-              "filter": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "ARSENAL",
-                  "player": "OPPONENT"
-                }
-              ]
-            }
-          ],
-          "conditions": [
+          "type": "GO_AGAIN"
+        }
+      ]
+    },
+    {
+      "ability_type": "FREEZE_WHILE",
+      "player": "OPPONENT",
+      "zone": "ARSENAL",
+      "conditions": [
+        {
+          "type": "OR",
+          "any": [
             {
               "type": "CONTROLS_TOKEN_TYPE",
-              "token_type": "FROSTBITE"
+              "token_type": "Frostbite",
+              "player": "OPPONENT"
             },
             {
-              "type": "OR",
-              "conditions": [
-                {
-                  "type": "CONTROLS_TOKEN_TYPE",
-                  "token_type": "FROZEN"
-                }
-              ]
+              "type": "CONTROLS_FROZEN_PERMANENT",
+              "player": "OPPONENT"
             }
           ]
         }
@@ -38,41 +32,64 @@
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "END_OF_TURN",
+      "trigger": "BEGINNING_OF_END_PHASE",
       "effects": [
         {
           "type": "PUT_COUNTER",
-          "counter": "FLOW",
-          "target": "self"
+          "counter": "flow",
+          "amount": 1
         },
         {
-          "type": "PAY_OR_ELSE",
-          "player": "SELF",
-          "resources": 0,
-          "on_failure": [
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "CARD_IN_ZONE",
+            "zone": "pitch",
+            "player": "SELF",
+            "card_class": "Ice",
+            "count_gte": {
+              "type": "COUNT_COUNTERS",
+              "counter": "flow",
+              "target": "self"
+            }
+          },
+          "then": [
+            {
+              "type": "MAY",
+              "effects": [
+                {
+                  "type": "PUT_CARDS_BOTTOM",
+                  "player": "SELF",
+                  "zone": "pitch",
+                  "amount": {
+                    "type": "COUNT_COUNTERS",
+                    "counter": "flow",
+                    "target": "self"
+                  },
+                  "filter": [
+                    {
+                      "type": "CARD_IS_CLASS",
+                      "card_class": "Ice"
+                    }
+                  ]
+                }
+              ],
+              "else": [
+                {
+                  "type": "DESTROY_PERMANENT",
+                  "target": "self"
+                }
+              ]
+            }
+          ],
+          "else": [
             {
               "type": "DESTROY_PERMANENT",
               "target": "self"
-            }
-          ],
-          "on_success": [
-            {
-              "type": "PUT_CARDS_BOTTOM",
-              "player": "SELF",
-              "zone": "PITCH",
-              "cards": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "PITCH",
-                  "player": "SELF",
-                  "card_class": "ICE"
-                }
-              ],
-              "amount": 1
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Three clauses, all now implemented.\n\n\"Cards in opponents' arsenals are FROZEN WHILE they control a Frostbite or a frozen permanent\" was an APPLY_CONTINUOUS on a plain STATIC -- which nothing dispatches -- and freeze itself was inert end to end: effect_keywords.freeze() wrote card.counters['__frozen__'] and cleared it again, but NOTHING read it, there was no DSL FREEZE effect at all, and no implemented card froze anything. CR 8.5.34 says a frozen object cannot be played and its abilities cannot be activated; play._legality_check now enforces that, which is the one gate both playing and activating pass through.\n\n\"WHILE\" is why this is a FREEZE_WHILE static rather than a FREEZE effect: the condition is true or false from moment to moment, so a one-shot freeze would lock the arsenal once and never release it. play._apply_conditional_freezes clears and re-derives it on every legality pass, under a separate marker from the discrete freeze counter -- that counter is paired with duration bookkeeping and would accumulate without bound if a continuous effect re-applied it.\n\nIts gate asked CONTROLS_TOKEN_TYPE 'FROSTBITE' about the SOURCE's controller (the card says THEY) and OR'd it with CONTROLS_TOKEN_TYPE 'FROZEN', which is not a token type; frozen-ness lives on the object, so it needed its own condition.\n\n\"Channel Ice - at the beginning of your end phase, put a flow counter on this, then DESTROY IT UNLESS you put an Ice card from your pitch zone on the bottom of your deck FOR EACH FLOW COUNTER on it\" was PAY_OR_ELSE with resources 0 -- a cost of nothing, so always paid and never destroyed -- whose on_success bottomed exactly one card however many counters had accumulated. The trigger was END_OF_TURN where the card says the BEGINNING of the end phase."
 }

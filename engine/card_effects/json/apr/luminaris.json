@@ -2,35 +2,46 @@
   "slug": "luminaris",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "GRANT_ATTACK_WHILE",
+      "power": 1,
+      "activation_cost": 0,
+      "per_turn": 1,
+      "filter": [
+        {
+          "type": "CARD_IS_TYPE",
+          "card_type": "Aura"
+        },
+        {
+          "type": "CARD_IS_CLASS",
+          "card_class": "Illusionist"
+        }
+      ],
       "conditions": [
         {
           "type": "DURING_TURN",
-          "player": "self"
-        },
-        {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_type": "Illusionist"
-        }
-      ],
-      "effects": [
-        {
-          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
-          "mod": "set",
-          "amount": 1
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "player": "SELF",
+          "phase": "ACTION"
         }
       ]
     },
     {
-      "ability_type": "STATIC",
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_ATTACK_POWER",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "color": "yellow"
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Illusionist"
+          ]
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "color": "yellow",
+          "player": "SELF"
         }
       ],
       "effects": [
@@ -40,5 +51,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"During your action phase, ILLUSIONIST AURAS YOU CONTROL ARE WEAPONS with 1 base {p} and 'Once per Turn Action - 0: Attack'. If there is a yellow card in your pitch zone, your Illusionist attacks get go again.\"\n\nClause 1 changes what OTHER permanents ARE, which needed three things at once: a base {p} an aura has no printed field for, an activated attack that ACTION GENERATION will offer, and both of them stopping when the condition stops. It had been MODIFY_ATTACK_POWER_PER_UNIQUE_AURA mod:\"set\" amount:1 -- an effect that COUNTS distinct aura names in the arena, not a type change -- on a plain STATIC, which nothing dispatches, gated on CONTROLS_TOKEN_TYPE \"Illusionist\", which is not a token type. GRANT_ATTACK_WHILE is declarative and re-derived on every legality pass, for the same reason the conditional freeze is: \"during your action phase\" is true and false repeatedly within a turn, and a one-shot grant would leave the auras permanently armed. The per-turn allowance is initialised only when a permanent NEWLY enters the grant, so re-deriving mid-turn does not hand back an attack that was already used.\n\nClause 2 was also a plain STATIC, and its gate was REF_PITCH_IS color:\"yellow\" -- which tests a card a previous effect STORED, and no effect on this card stores one -- rather than the contents of the pitch zone. As a WHILE_STATIC on RECALC_ATTACK_POWER the grant reaches the live combat, which is where GAIN keyword puts it."
 }

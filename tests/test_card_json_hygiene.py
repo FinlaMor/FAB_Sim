@@ -28,7 +28,11 @@ SLUG_INDEX = ROOT / "card_data" / "slug_index.json"
 # the JSON entry acting as a declaration.
 # DEFEND_RESTRICTION carries conditions only: it gates whether the card may be
 # declared as a defender at all, so it has nothing to resolve.
-NO_EFFECTS_REQUIRED = {"COST_MODIFIER", "REPLACEMENT", "DEFEND_RESTRICTION"}
+NO_EFFECTS_REQUIRED = {"COST_MODIFIER", "REPLACEMENT", "DEFEND_RESTRICTION",
+                       # FREEZE_WHILE is declarative: the conditions say WHEN
+                       # and its params say WHOSE zone, so it has nothing to
+                       # resolve. Read by play._apply_conditional_freezes.
+                       "FREEZE_WHILE", "GRANT_ATTACK_WHILE"}
 
 # Bold runs are keyword markup (**Ward 1**, **Go again**). A card whose entire
 # functional text is keywords needs no DSL effects — the engine implements
@@ -80,12 +84,6 @@ KNOWN_UNIMPLEMENTED: set[str] = {
     # is scoped to an opponent's next attack. It had been a delayed
     # "pay 1 or take 1 damage" gated on a ref nothing stores.
     "hamstring_shot_red",
-    # "When this defends, effects don't trigger when an attack hits this chain
-    # link unless the attacking hero pays {r}" — a trigger-suppression
-    # replacement gated on an optional payment by the OPPONENT. Also "can only
-    # be played from arsenal", a play-legality restriction. It had been a
-    # PAY_OR_DAMAGE dealing 1 damage, which is neither.
-    "tripwire_trap_red",
     # "Target card defending an attack with Herald in its name gets -2{p} this
     # combat chain." Nothing modifies a specific object's {p} for a duration:
     # MODIFY_ATTACK moves the attack total, SET_BASE_POWER is permanent and

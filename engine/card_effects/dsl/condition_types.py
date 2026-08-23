@@ -295,6 +295,32 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return any(st in card_subs for st in _subs)
         return _asi
 
+    if ctype in ("PITCHED_FOR_THIS", "PITCHED_TO_PLAY_THIS"):
+        # "If a CHI was pitched to play this, ..." — the cards pitched to pay
+        # for THIS card, which play._pitch_for_cost stamps on it. Distinct from
+        # the pitch ZONE (which holds everything pitched this turn) and from
+        # combat.pitched_for_attack (which is the activate path only).
+        #
+        #   {"type":"PITCHED_FOR_THIS","subtype":"Chi"}
+        want_sub = _norm(params.get("subtype") or params.get("card_type") or "")
+        want_col = _norm(params.get("color") or params.get("colour") or "")
+
+        def _pitched(c, e, s, _sub=want_sub, _col=want_col):
+            for pc in (getattr(c, "pitched_for_this", None) or []):
+                if _sub:
+                    have = {_norm(x) for x in (getattr(pc, "subtypes", None) or [])}
+                    have |= {_norm(x) for x in (getattr(pc, "types", None) or [])}
+                    if _sub not in have:
+                        continue
+                if _col:
+                    colour = (getattr(pc, "color", None)
+                              or getattr(pc, "base_color", None) or "")
+                    if _norm(colour) != _col:
+                        continue
+                return True
+            return False
+        return _pitched
+
     if ctype == "ATTACK_PITCH_POWER_GTE":
         # True if a card with printed power >= amount was pitched to pay for the
         # current attack (CR "pitched to attack with this"). Reads
@@ -855,10 +881,21 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                                                   _norm(getattr(card, 'slug', '') or '')):
                         continue
                     count += 1
+            # "an Ice card ... FOR EACH FLOW COUNTER on it" — the threshold is
+            # itself a count, so it has to be resolved rather than compared as a
+            # raw dict (which is never equal to an int, so the gate was always
+            # false).
+            from engine.card_effects.dsl.effect_types import _resolve_amount
             if _neq is not None:
-                return count == _neq
+                try:
+                    return count == int(_resolve_amount(_neq, s, c))
+                except (TypeError, ValueError):
+                    return False
             if _nge is not None:
-                return count >= _nge
+                try:
+                    return count >= int(_resolve_amount(_nge, s, c))
+                except (TypeError, ValueError):
+                    return False
             return count >= 1  # default: at least one matching card
 
         return _ciz
@@ -1150,6 +1187,31 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                 down = True
             return down is _down
         return _face
+
+    if ctype in ("REF_HAS_COUNTER", "REF_COUNTER_GTE"):
+        # "Sharpen target sword. IF IT HAS 1 or more +1{p} counters, ..." — a
+        # counter test on the object a preceding effect stored, not on the
+        # source card. HAS_COUNTER reads the source, which for Sharp Incline is
+        # the action card itself and never carries power counters, so the gate
+        # was false whatever the sword looked like.
+        kind = (params.get("counter") or params.get("counter_type")
+                or params.get("kind") or "power")
+        ref = params.get("ref", "sharpened")
+        threshold = params.get("amount", params.get("value", 1))
+
+        def _ref_counter(c, e, s, _ct=kind, _r=ref, _n=threshold):
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if isinstance(target, list):
+                target = target[-1] if target else None
+            if target is None:
+                return False
+            have = (getattr(target, "counters", None) or {}).get(_ct, 0) or 0
+            try:
+                return have >= int(_n)
+            except (TypeError, ValueError):
+                return False
+        return _ref_counter
 
     if ctype == "HAS_COUNTER":
         # "all equipment they control WITH -1{d} counters" — presence, not a
@@ -1561,13 +1623,46 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             "eq": lambda a, b: a == b, "neq": lambda a, b: a != b,
         }
 
-        def _ctt(c, e, s, _wants=wants, _n=need, _cmp=comparison, _vs=vs_opponent):
+        # "while THEY control a Frostbite" — the count is about the OPPONENT,
+        # not the source's controller. Without this the only readings available
+        # were "I control N" and the vs_opponent comparison.
+        _whose = str(_first_present(params, "player", "controller",
+                                    default="SELF")).upper()
+
+        def _ctt(c, e, s, _wants=wants, _n=need, _cmp=comparison, _vs=vs_opponent,
+                 _w=_whose):
             from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(c)
+            if _w in ("OPPONENT", "THEM", "DEFENDING", "DEFENDER"):
+                cid = 3 - cid
             mine = _count_for(s.players[cid], _wants)
             other = _count_for(s.players[3 - cid], _wants) if _vs else _n
             return _OPS.get(_cmp, _OPS["gte"])(mine, other)
         return _ctt
+
+    if ctype in ("CONTROLS_FROZEN_PERMANENT", "CONTROLS_FROZEN"):
+        # "... or a FROZEN PERMANENT". Frozen-ness lives on the object as a
+        # counter, so this is the only way to ask about it; there was no
+        # condition for it at all, and the card that needs it had authored
+        # CONTROLS_TOKEN_TYPE "FROZEN" — not a token type.
+        who = str(_first_present(params, "player", "controller",
+                                 default="SELF")).upper()
+
+        def _cfp(c, e, s, _w=who):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.play import CONTINUOUS_FREEZE
+            cid = _controller_id(c)
+            if _w in ("OPPONENT", "THEM", "DEFENDING", "DEFENDER"):
+                cid = 3 - cid
+            player = s.players.get(cid)
+            if player is None:
+                return False
+            for obj in player.arena_cards:
+                counters = getattr(obj, "counters", None) or {}
+                if counters.get("__frozen__", 0) > 0 or counters.get(CONTINUOUS_FREEZE, 0) > 0:
+                    return True
+            return False
+        return _cfp
 
     if ctype in ("CONTROLS_CHAIN_LINKS", "CHAIN_LINKS_CONTROLLED_GTE"):
         # "control N or more chain links you control", optionally restricted to

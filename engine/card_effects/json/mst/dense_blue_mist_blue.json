@@ -2,46 +2,30 @@
   "slug": "dense_blue_mist_blue",
   "abilities": [
     {
-      "ability_type": "STATIC",
+      "ability_type": "PLAY",
       "effects": [
         {
-          "type": "MODIFY_ATTACK_POWER_PER_UNIQUE_AURA",
+          "type": "MODIFY_ATTACKS_THIS_TURN",
           "mod": "subtract",
           "amount": 1,
-          "aura_type": "DENSE_BLUE_MIST_AURA"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_PITCH",
-      "conditions": [
+          "player": "OPPONENT"
+        },
         {
-          "type": "REF_PITCH_IS",
-          "ref": "CHI"
-        }
-      ],
-      "effects": [
-        {
-          "type": "SET_FLAG",
-          "flag": "CHI_PITCHED_FOR_DENSE_BLUE_MIST"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_DEFEND",
-      "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "CHI_PITCHED_FOR_DENSE_BLUE_MIST"
-        }
-      ],
-      "effects": [
-        {
-          "type": "WARD"
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "PITCHED_FOR_THIS",
+            "subtype": "Chi"
+          },
+          "effects": [
+            {
+              "type": "SUPPRESS_HIT_TRIGGERS",
+              "scope": "TURN",
+              "player": "SELF"
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Attacks that target you this turn get -1{p}. If a CHI WAS PITCHED to play this, effects don't trigger if an attack hits you this turn.\"\n\nClause 1 was a plain STATIC -- which nothing dispatches -- holding MODIFY_ATTACK_POWER_PER_UNIQUE_AURA, an effect that counts distinct AURA NAMES in the arena, with an invented aura_type. MODIFY_ATTACKS_THIS_TURN already says exactly this: it queues a turn-scoped per-attack hook on a player and _apply_turn_attack_effects reads the hook off the ATTACKING player, so putting it on the OPPONENT is \"attacks that target you\".\n\nClause 2 was an ON_PITCH trigger setting a private flag plus an ON_DEFEND ability granting WARD. WARD is damage PREVENTION, not trigger suppression, so the card was given a shield it does not have while the clause it does have went unimplemented; and the pitch gate was REF_PITCH_IS ref:\"CHI\", which tests a referenced card's pitch COLOUR. Suppression is now a flag read at the single ON_HIT dispatch point -- the damage still happens, only the triggered layers are suppressed -- and \"pitched to play THIS\" is answerable because play._pitch_for_cost stamps the cards it took onto the card being played."
 }

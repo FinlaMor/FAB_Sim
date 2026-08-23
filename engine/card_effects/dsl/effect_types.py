@@ -1895,6 +1895,16 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 pool = list(found) if isinstance(found, list) else [found]
             elif _sz in ("DECK_TOP", "TOP_OF_DECK", "DECK"):
                 pool = player.deck.cards[:1]
+            elif _sz == "HAND":
+                # "Put a card FROM HAND face down into your arsenal" — the
+                # player chooses which, unlike the deck-top form where the card
+                # is determined. Optional callers wrap this in a MAY.
+                pool = list(player.hand.cards)
+                if len(pool) > 1:
+                    from engine.card_effects.ability_keywords import _ask_player
+                    pick = _ask_player(state, pid, [c.slug for c in pool],
+                                       context="Choose a card to put into your arsenal")
+                    pool = [next((c for c in pool if c.slug == pick), pool[0])]
             else:
                 return
             if not pool:
@@ -2709,6 +2719,64 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                         fn(card, event, state)
             else:
                 effect_deal_damage(state, cid, _d, card, damage_type="generic")
+        return _fn
+
+    if etype in ("FREEZE", "UNFREEZE"):
+        # CR 8.5.34 / 8.5.37. There was no FREEZE effect at all, so none of the
+        # 30 corpus cards that freeze could be written — and the keyword itself
+        # was inert until _legality_check started reading the counter.
+        #
+        #   {"type":"FREEZE","target":{...}}   the canonical object target
+        #   {"type":"FREEZE","ref":"chosen"}   what an earlier effect stored
+        unfreeze = etype == "UNFREEZE"
+        ref = params.get("ref")
+        target_fn = _compile_object_target(_object_target_spec(params.get("target")))
+
+        def _fn(card, event, state, _un=unfreeze, _r=ref, _tf=target_fn):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.context import get_ref
+            from engine.effect_keywords import freeze as _freeze, unfreeze as _unfreeze
+            cid = _controller_id(card)
+            if _r:
+                found = get_ref(_r)
+                objects = ([] if found is None
+                           else (list(found) if isinstance(found, list) else [found]))
+            elif _tf is not None:
+                objects = _tf(card, event, state)
+            else:
+                objects = []
+            for obj in objects:
+                if _un:
+                    _unfreeze(state, obj)
+                else:
+                    _freeze(state, obj, source_player_id=cid)
+        return _fn
+
+    if etype in ("SUPPRESS_HIT_TRIGGERS", "HIT_EFFECTS_DONT_TRIGGER"):
+        # "Effects don't trigger if an attack hits you this turn" / "... when an
+        # attack hits this chain link". Suppression of the TRIGGERED LAYERS
+        # only: the damage is dealt as normal, which is why this is a flag read
+        # at the ON_HIT dispatch point rather than anything that touches the
+        # damage pipeline.
+        #
+        #   scope:  "TURN" (default) — a marker on the player being hit
+        #           "CHAIN"          — a flag on the current combat
+        #   player: "SELF" (default) | "OPPONENT" — who is protected
+        scope = str(params.get("scope") or "TURN").upper()
+        who = str(params.get("player") or "SELF").upper()
+
+        def _fn(card, event, state, _scope=scope, _w=who):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.engine import HIT_TRIGGERS_SUPPRESSED
+            cid = _controller_id(card)
+            pid = (3 - cid) if _w in ("OPPONENT", "THEM") else cid
+            if _scope == "CHAIN":
+                if state.combat is not None:
+                    state.combat.suppress_hit_triggers = True
+                return
+            player = state.players.get(pid)
+            if player is not None and HIT_TRIGGERS_SUPPRESSED not in player.current_turn_effects:
+                player.current_turn_effects.append(HIT_TRIGGERS_SUPPRESSED)
         return _fn
 
     if etype == "PAY_OR_ELSE":
@@ -4069,14 +4137,33 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         grant_abilities = params.get("grant_abilities") or (
             [params["grant_ability"]] if params.get("grant_ability") else [])
 
+        # "Your next attack WITH IT this turn costs {r} less to activate" — the
+        # queue matches on card PROPERTIES, which cannot distinguish one sword
+        # from an identical one. `object_ref` names an object a preceding effect
+        # stored (SHARPEN stores "sharpened") and pins the entry to THAT object.
+        object_ref = params.get("object_ref")
+
         def _fn(card, event, state, _a=amount, _f=filter_specs, _oc=on_consume,
                 _kw=keywords, _uses=uses, _gc=grant_classes,
-                _ga=grant_abilities):
+                _ga=grant_abilities, _oref=object_ref):
             from engine.card_effects.ability_keywords import _controller_id
             player = state.players[_controller_id(card)]
             if not hasattr(player, 'dsl_queued_card_mods'):
                 player.dsl_queued_card_mods = []
+            object_id = None
+            if _oref:
+                from engine.context import get_ref
+                found = get_ref(_oref)
+                if isinstance(found, list):
+                    found = found[0] if found else None
+                if found is None:
+                    # The object this was about does not exist, so there is
+                    # nothing to reduce. Queueing an unpinned entry here would
+                    # silently widen it to every card the filter matches.
+                    return
+                object_id = getattr(found, "object_id", None)
             player.dsl_queued_card_mods.append({
+                "object_id": object_id,
                 # RAW, not resolved. "Costs {r} less FOR EACH RUNECHANT YOU
                 # CONTROL" has to be counted when the card is PLAYED — Runechants
                 # are created and spent between queueing and playing — so
@@ -4401,6 +4488,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                           if want in [x.lower() for x in (getattr(c, "subtypes", None) or [])]]
             if not candidates:
                 return
+            # "Sharpen target sword you control. If IT has 1 or more +1{p}
+            # counters, your next attack WITH IT this turn costs {r} less."
+            # Everything after the first sentence is about the SAME object, and
+            # the only way to say so is to name it.
             if len(candidates) == 1:
                 target = candidates[0]
             else:
@@ -4416,6 +4507,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 effect_put_counter(state, target, "power", 1)
                 _record_turn_event(state, cid, "sharpen",
                                    getattr(target, "slug", None))
+            from engine.context import set_ref
+            set_ref("sharpened", target)
         return _fn
 
     if etype == "WAGER":

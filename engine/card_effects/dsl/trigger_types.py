@@ -57,6 +57,12 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     # Dispatched from Zone.add, which is where the destination zone and the
     # face-up-ness are both known.
     "ON_PUT_FACEUP_IN_ARSENAL": "ON_PUT_FACEUP_IN_ARSENAL",
+    # "Whenever a trap you control triggers" — dispatched from
+    # interpreter._run_ability when an ability on a card with the Trap subtype
+    # resolves past every gate. CR 8.2.7 retired trap as a functional subtype,
+    # so there is no trap-specific machinery to hang this on; the ability
+    # resolving IS the trap triggering.
+    "ON_TRAP_TRIGGER":          "ON_TRAP_TRIGGER",
     "ON_DEAL_DAMAGE":           "ON_DEAL_DAMAGE",
     "RECALC_ATTACK_POWER":      "RECALC_ATTACK_POWER",
     # The defence-side mirror, dispatched once per declared defender by

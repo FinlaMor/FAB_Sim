@@ -2,14 +2,21 @@
   "slug": "inspire_lightning_yellow",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_FUSE",
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "fused_inspire_lightning_yellow"
+        }
+      ],
       "effects": [
         {
           "type": "DEAL_ARCANE",
-          "amount": 2
+          "amount": 2,
+          "target": "OPPONENT"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"If Inspire Lightning was FUSED, deal 2 arcane damage to target hero.\" Authored as a TRIGGERED ability on ON_FUSE, which is not a trigger name -- and never should be. Fusion (CR 8.3.17) is an optional ADDITIONAL COST paid as the card is played, not an event: there is nothing to trigger on. The keyword is already implemented -- ability_keywords.fusion runs from the card's printed Fusion keyword on play and records the marker \"fused_<slug>\" in current_turn_effects precisely so a clause like this one can gate on it. So the mechanic was present all along and the card was reaching for a trigger instead of the gate."
 }

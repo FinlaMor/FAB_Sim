@@ -56,6 +56,7 @@ def available_actions(state, player_id) -> list[Action]:
     # Weapon attacks (CR 1.6.2b): offered from the weapon zones during the
     # turn player's action phase.
     _add_weapon_attacks(state, player_id, affordable_actions)
+    _add_granted_permanent_attacks(state, player_id, affordable_actions)
 
     # Hero activated/instant abilities defined in the DSL (e.g. Kayo's Instant).
     _add_hero_dsl_activations(state, player_id, affordable_actions)
@@ -105,6 +106,119 @@ def _add_weapon_attacks(state, player_id, affordable_actions) -> None:
             cost = _calculate_resource_cost(state, action)
             if can_pay_cost(player.hand.cards, cost, player.resources):
                 affordable_actions.append(action)
+
+
+#: Marker for a permanent that is currently a weapon by grant rather than by
+#: printing. Its presence is what _add_granted_permanent_attacks offers from,
+#: and what tells the re-derivation pass which stats it put there to take back.
+GRANTED_ATTACK = "__granted_attack__"
+
+
+def _apply_granted_attack_statics(state) -> None:
+    """Re-derive every GRANT_ATTACK_WHILE static in play.
+
+    "During your action phase, Illusionist auras you control ARE WEAPONS with 1
+    base {p} and 'Once per Turn Action - 0: Attack'" (Luminaris) changes what
+    other permanents ARE, for as long as a condition holds. Three things have to
+    happen for that to be real: the aura needs a base {p} it has no printed
+    field for, it needs to be offered as an attack by action generation, and
+    both have to STOP when the condition stops.
+
+    Re-derived rather than applied once, for the same reason the conditional
+    freeze is: "during your action phase" is true and false repeatedly within a
+    turn, and a one-shot grant would leave auras permanently armed.
+
+    The per-turn allowance is initialised only when a permanent NEWLY enters the
+    grant, so a re-derivation mid-turn does not hand back a used attack.
+    """
+    from engine.card_effects.dsl.condition_types import compile_condition as _cc
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+
+    granted_now: set[int] = set()
+    for pid, owner in state.players.items():
+        for source in list(owner.arena_cards):
+            cd = _dsl_get_card(getattr(source, "slug", "") or "")
+            if cd is None:
+                continue
+            for ability in cd.abilities:
+                if (ability.ability_type or "").upper() != "GRANT_ATTACK_WHILE":
+                    continue
+                if not all(c.fn is None or c.fn(source, None, state)
+                           for c in ability.conditions):
+                    continue
+                spec = (getattr(ability, "params", None) or {})
+                filters = [_cc((f.get("type") or "none"), f)
+                           for f in (spec.get("filter") or []) if isinstance(f, dict)]
+                power = spec.get("power", 1)
+                per_turn = spec.get("per_turn", 1)
+                cost = spec.get("activation_cost", 0)
+                for obj in list(state.players[pid].permanents.cards):
+                    if not all(fn is None or fn(obj, None, state) for fn in filters):
+                        continue
+                    granted_now.add(id(obj))
+                    newly = GRANTED_ATTACK not in (getattr(obj, "counters", None) or {})
+                    if newly:
+                        # Remember what the object was, so lapsing restores IT
+                        # rather than a blanket default. An Illusionist aura
+                        # with an activated ability of its own matches this
+                        # filter too, and wiping activation_cost/per-turn to
+                        # None/False would silently break that ability the
+                        # moment the grant ended.
+                        obj._granted_attack_restore = (
+                            obj.base_power, obj.power, obj.activation_cost,
+                            obj.has_per_turn_limit, obj.activations)
+                        obj.activations = per_turn
+                    obj.counters[GRANTED_ATTACK] = 1
+                    obj.base_power = power
+                    obj.power = power
+                    obj.activation_cost = cost
+                    obj.has_per_turn_limit = bool(per_turn)
+
+    # Take back what this pass put there, wherever it no longer applies.
+    for owner in state.players.values():
+        for obj in list(owner.permanents.cards):
+            counters = getattr(obj, "counters", None) or {}
+            if GRANTED_ATTACK in counters and id(obj) not in granted_now:
+                counters.pop(GRANTED_ATTACK, None)
+                saved = getattr(obj, "_granted_attack_restore", None)
+                if saved is not None:
+                    (obj.base_power, obj.power, obj.activation_cost,
+                     obj.has_per_turn_limit, obj.activations) = saved
+                    obj._granted_attack_restore = None
+                else:
+                    obj.base_power = obj.raw_power
+                    obj.power = obj.raw_power
+
+
+def _add_granted_permanent_attacks(state, player_id, affordable_actions) -> None:
+    """Offer attacks from permanents that are weapons by grant (Luminaris).
+
+    Mirrors _add_weapon_attacks' gates — action phase, empty stack, an action
+    point — but deliberately NOT weapon_exhausted: that flag is about the
+    once-per-turn weapon attack, and these are separate objects with their own
+    per-turn allowance.
+    """
+    from engine.actions import can_pay_cost
+    player = state.players[player_id]
+    if state.active_player != player_id:
+        return
+    if state.step != Step.ACTION or state.stack_entries:
+        return
+    if player.action_points <= 0:
+        return
+
+    for obj in list(player.permanents.cards):
+        if GRANTED_ATTACK not in (getattr(obj, "counters", None) or {}):
+            continue
+        if getattr(obj, "tapped", False) or getattr(obj, "exhausted", False):
+            continue
+        if obj.has_per_turn_limit and (obj.activations or 0) <= 0:
+            continue
+        action = Action(type=ActionType.ACTIVATE_CARD, player_id=player_id,
+                        card=obj, attack_source=obj, is_attack_proxy=True)
+        cost = _calculate_resource_cost(state, action)
+        if can_pay_cost(player.hand.cards, cost, player.resources):
+            affordable_actions.append(action)
 
 
 def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
@@ -242,6 +356,19 @@ def _add_hand_instant_activations(state, player_id, affordable_actions) -> None:
 def _legality_check(state, card, player_id) -> bool:
     if card is None:
         return True
+
+    # CR 8.5.34: "To freeze an object, that object CANNOT BE PLAYED and its
+    # abilities CANNOT BE ACTIVATED for the duration of the effect."
+    #
+    # effect_keywords.freeze() has always written card.counters['__frozen__']
+    # and cleared it again at the right time, but NOTHING read it — so freezing
+    # was pure bookkeeping and a frozen card could be played and activated
+    # normally. This is the one gate both playing and activating pass through,
+    # which is why it belongs here rather than in either caller.
+    _counters = getattr(card, "counters", None) or {}
+    if _counters.get("__frozen__", 0) > 0 or _counters.get(CONTINUOUS_FREEZE, 0) > 0:
+        return False
+
     types = card.types or []
 
     # card.types (parsed from the printed type line) is authoritative. Do NOT
@@ -489,6 +616,12 @@ def _cost_mod_matches(state, mod, card) -> bool:
     attack action" are all the same mechanism rather than one regex each.
     """
     from engine.card_effects.dsl.condition_types import compile_condition as _cc
+    # "Your next attack WITH IT costs {r} less" — pinned to ONE object. Card
+    # properties cannot express it: a second copy of the same sword matches
+    # every property filter, and so would have consumed the reduction.
+    want_id = mod.get('object_id')
+    if want_id is not None and getattr(card, 'object_id', None) != want_id:
+        return False
     for spec in mod.get('filter', []) or []:
         fn = _cc(spec.get('type', 'none'), spec)
         if fn is not None and not fn(card, None, state):
@@ -650,9 +783,62 @@ def _self_playable_from_banished(card, state=None, player=None) -> bool:
     return False
 
 
+#: Transient marker for a freeze that comes from a WHILE condition rather than
+#: a discrete freeze effect. Kept separate from the real "__frozen__" counter on
+#: purpose: that counter is paired with duration bookkeeping (an unfreeze
+#: subscription), and a continuous effect re-evaluated on every legality pass
+#: would accumulate it without bound and never let go.
+CONTINUOUS_FREEZE = "__frozen_while__"
+
+
+def _apply_conditional_freezes(state) -> None:
+    """Re-evaluate every FREEZE_WHILE static in play (CR 8.5.34).
+
+    "Cards in opponents' arsenals are frozen WHILE they control a Frostbite or
+    a frozen permanent" is true or false from moment to moment, so it cannot be
+    a one-shot freeze: the card that says it would freeze an arsenal once and
+    never release it. Recomputed from scratch each pass — cleared first, then
+    re-applied — which is what makes it a continuous effect rather than an
+    accumulating one.
+    """
+    from engine.card_effects.dsl.condition_types import compile_condition as _cc
+    from engine.card_effects.dsl.effect_types import _object_zone_cards
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+
+    for p in state.players.values():
+        for zone in p.all_zones():
+            for c in zone.cards:
+                if (getattr(c, "counters", None) or {}).pop(CONTINUOUS_FREEZE, None):
+                    pass
+
+    for pid, owner in state.players.items():
+        for source in list(owner.arena_cards):
+            cd = _dsl_get_card(getattr(source, "slug", "") or "")
+            if cd is None:
+                continue
+            for ability in cd.abilities:
+                if (ability.ability_type or "").upper() != "FREEZE_WHILE":
+                    continue
+                if not all(c.fn is None or c.fn(source, None, state)
+                           for c in ability.conditions):
+                    continue
+                spec = (getattr(ability, "params", None) or {})
+                who = str(spec.get("player") or "OPPONENT").upper()
+                zone_name = str(spec.get("zone") or "ARSENAL").upper()
+                targets = ([3 - pid] if who in ("OPPONENT", "THEM")
+                           else [pid] if who == "SELF" else list(state.players))
+                for tid in targets:
+                    if tid not in state.players:
+                        continue
+                    for obj in _object_zone_cards(state.players[tid], zone_name):
+                        obj.counters[CONTINUOUS_FREEZE] = 1
+
+
 def recalculate_playable(state, player_id):
     player = state.players[player_id]
     mgr = state.continuous_effect_manager
+    _apply_conditional_freezes(state)
+    _apply_granted_attack_statics(state)
 
     for card in player.hand.cards + player.arsenal.cards:
         # Block cards have no play cost (raw_cost is None) — they can only be used for blocking.
@@ -1380,6 +1566,15 @@ def _pitch_for_cost(state: GameState, action: Action, needed_cost: int,
         if not hasattr(action, 'pitched_cards') or action.pitched_cards is None:
             action.pitched_cards = []
         action.pitched_cards.append(card)
+        # "IF A CHI WAS PITCHED TO PLAY THIS, ..." — a PLAY ability resolves
+        # after the cost is paid and never sees the Action, and only the
+        # ACTIVATE branch carries pitched_cards onto the stack entry. Stamping
+        # the played card is what lets a PLAY clause ask the question at all.
+        # Cleared by Card.reset() with the rest of the runtime state.
+        _played = getattr(action, 'card', None)
+        if _played is not None:
+            existing = list(getattr(_played, 'pitched_for_this', None) or [])
+            _played.pitched_for_this = existing + [card]
         pitch_val = card.base_pitch or card.pitch or 0
         if for_chi:
             player.chi += pitch_val
