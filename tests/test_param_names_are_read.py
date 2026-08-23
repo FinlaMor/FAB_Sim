@@ -256,8 +256,14 @@ def test_regression_count_does_not_grow():
     # until-end-of-turn intellect gain would have been permanent. BANISH gained
     # the "if you do" payoff its one user had authored under a key it does not
     # read.
-    assert findings <= 42, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 42). "
+    # 42 -> 38: four cards selected from refs nothing anywhere sets
+    # ("MYGRAVEYARD", "MYHAND", "arsenal", "REVEALED"), so every one did nothing.
+    # What they need is an object target over a zone. ADD_DEFEND gained one (it
+    # could only add the SOURCE card), SEARCH_DECK gained `player` (no way to
+    # say WHOSE deck, so a card raiding the opponent's raided its own), and
+    # COUNT_REF's card_type now checks subtypes as CARD_IS_TYPE does.
+    assert findings <= 38, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 38). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

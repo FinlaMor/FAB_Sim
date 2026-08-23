@@ -147,6 +147,10 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
             cost_gte = amount.get("cost_gte")
             want_sub = _norm_amt(amount.get("subtype"))
             want_type = _norm_amt(amount.get("card_type") or amount.get("type_name"))
+            # "a RUNEBLADE attack action card revealed this way" — there was no
+            # class filter, so the count was too generous in any deck holding
+            # attack actions of another class.
+            want_class = _norm_amt(amount.get("card_class") or amount.get("class"))
             n = 0
             for c in pool:
                 if power_gte is not None and (getattr(c, "power", None) or 0) < power_gte:
@@ -155,7 +159,19 @@ def _resolve_amount(amount: Any, state, card=None) -> int | float:
                     continue
                 if want_sub and want_sub not in {_norm_amt(x) for x in (getattr(c, "subtypes", None) or [])}:
                     continue
-                if want_type and want_type not in {_norm_amt(x) for x in (getattr(c, "types", None) or [])}:
+                if want_type:
+                    # Types AND subtypes, as CARD_IS_TYPE does: "Attack" is a
+                    # SUBTYPE while "Action" is a type, and cards use either
+                    # word for the same idea. Checking only `types` here made
+                    # card_type:"Attack" count nothing — an inconsistency
+                    # between two spellings of the same question.
+                    have = {_norm_amt(x) for x in (getattr(c, "types", None) or [])}
+                    have |= {_norm_amt(x) for x in (getattr(c, "subtypes", None) or [])}
+                    if want_type not in have:
+                        continue
+                if want_class and want_class not in {
+                        _norm_amt(x) for x in ((getattr(c, "classes", None) or [])
+                                               + (getattr(c, "talents", None) or []))}:
                     continue
                 n += 1
             return n
@@ -1422,14 +1438,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # SOURCE card -- so it asked whether Shadow of Blasmophet itself has
         # blood debt, not whether the card being searched for does.
         want_keyword = _first(params, "keyword", "with_keyword")
+        # "search THEIR deck for any number of Inner Chi and banish them" —
+        # whose deck is searched was not expressible at all, so a card that
+        # raids the opponent's deck raided its own.
+        whose = str(params.get("player") or "SELF").upper()
 
         def _fn(card, event, state, _ft=filter_types, _fsc=filter_slug_contains,
                 _sub=subtype, _max=max_cost, _dest=destination, _n=count,
                 _ref=from_ref, _cls=card_class, _name=want_name,
-                _kw=want_keyword):
+                _kw=want_keyword, _who=whose):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import shuffle as effect_shuffle
             cid = _controller_id(card)
+            if _who in ("OPPONENT", "THEM", "DEFENDING", "DEFENDER"):
+                cid = 3 - cid
             controller = state.players[cid]
             if _ref:
                 from engine.context import get_ref
@@ -2375,14 +2397,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # `defense` sets its {d} for this chain link before it is credited to
         # total defense.
         defense = params.get("defense")
-        def _fn(card, event, state, _d=defense):
+        # "You may add AN ACTION CARD FROM YOUR ARSENAL to the active chain link
+        # as a defending card" — a DIFFERENT object, not the source. With no
+        # target this could only ever add the card whose ability it is, so the
+        # one card that names another added itself instead (and its own
+        # authoring, SELECT_FROM_REF over a ref nothing sets, added nothing).
+        raw_target = params.get("target")
+        object_fn = (_compile_object_target(_object_target_spec(raw_target))
+                     if isinstance(raw_target, dict) else None)
+
+        def _fn(card, event, state, _d=defense, _of=object_fn):
             if not state.combat:
                 return
-            if _d is not None:
-                card.defense = _d
-                card.base_defense = _d
             from engine.effect_keywords import add_defend
-            add_defend(state, card)
+            targets = _of(card, event, state) if _of is not None else [card]
+            for obj in targets:
+                if _d is not None:
+                    obj.defense = _d
+                    obj.base_defense = _d
+                add_defend(state, obj)
         return _fn
 
     if etype == "RETURN_DR_FROM_GRAVEYARD":

@@ -15,17 +15,23 @@
           "type": "MAY",
           "effects": [
             {
-              "type": "SELECT_FROM_REF",
-              "ref": "arsenal",
-              "filter": {
-                "card_type": "ACTION"
-              },
-              "player": "SELF",
-              "target": "chain_link_defense"
+              "type": "ADD_DEFEND",
+              "target": {
+                "controller": "SELF",
+                "zone": "ARSENAL",
+                "amount": 1,
+                "filter": [
+                  {
+                    "type": "CARD_IS_TYPE",
+                    "card_type": "Action"
+                  }
+                ]
+              }
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Destroy this: You may add AN ACTION CARD FROM YOUR ARSENAL to the active chain link as a defending card.\" It was SELECT_FROM_REF over a ref \"arsenal\" that no effect sets, with its filter as a dict it does not read and a target 'chain_link_defense' it does not read either -- so nothing was selected and nothing was added. ADD_DEFEND is the effect that does this, and it added the SOURCE card only; it now takes the canonical object target, because this card adds a DIFFERENT object."
 }

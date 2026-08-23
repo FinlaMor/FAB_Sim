@@ -6,36 +6,29 @@
       "effects": [
         {
           "type": "REVEAL_TOP_DECK",
-          "amount": 3
+          "amount": 3,
+          "into": "revealed"
         },
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Runechant",
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "REVEALED",
-              "card_type": "ACTION",
-              "classes": [
-                "Runeblade"
-              ]
-            }
-          ]
+          "token": "runechant",
+          "amount": {
+            "type": "COUNT_REF",
+            "ref": "revealed",
+            "card_type": "Attack",
+            "card_class": "Runeblade"
+          }
         },
         {
           "type": "REORDER_REF",
-          "ref": "REVEALED",
-          "zone": "DECK"
-        }
-      ]
-    },
-    {
-      "ability_type": "ACTIVATE",
-      "effects": [
+          "ref": "revealed",
+          "player": "SELF"
+        },
         {
           "type": "GO_AGAIN"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Reveal the top 3 cards of your deck. Create a Runechant token FOR EACH Runeblade attack action card revealed this way, then put the cards on top of your deck IN ANY ORDER.\"\n\nREVEAL_TOP_DECK stored nothing (no `into`), so the two clauses that talk about \"the cards revealed this way\" had nothing to talk about. The token creation was a single CREATE_TOKEN gated on CARD_IN_ZONE zone:\"REVEALED\" -- not a zone -- where the card says FOR EACH, a count and not a gate: it made one token, or none. And REORDER_REF defaults its player to OPPONENT, so reordering \"your deck\" looked at the opponent's, found none of the revealed cards there and returned.\n\nCOUNT_REF's card_type checked only `types` while CARD_IS_TYPE checks types AND subtypes -- and \"Attack\" is a SUBTYPE, so card_type:\"Attack\" counted nothing. The two spellings of the same question now agree. It also had no class filter, so the RUNEBLADE restriction could not be expressed and the count was too generous in any deck holding attack actions of another class."
 }

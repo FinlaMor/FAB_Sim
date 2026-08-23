@@ -392,6 +392,12 @@ INERT: dict[tuple[str, str], tuple[frozenset[str], str]] = {
     ("SEARCH_DECK", "face_up"):      (frozenset({"true"}), "moves with is_public=True"),
     # "put them back in any order" needs no effect: revealing never moved them.
     ("PUT_CARDS_BOTTOM", "order"):   (frozenset({"any"}), "reveal does not move cards"),
+    # ADD_DEFEND adds the SOURCE card unless handed an object target, so
+    # "self" is what already happens. A dict target is a real one.
+    ("ADD_DEFEND", "target"):        (frozenset({"self"}), "adds the source card"),
+    # REORDER_REF only ever reorders a DECK — that is the whole effect — so
+    # naming the deck as the zone says nothing the handler does not already do.
+    ("REORDER_REF", "zone"):         (frozenset({"deck"}), "only reorders decks"),
     # These name the card's CURRENT zone, which put_object resolves from the
     # card itself. Naming it changes nothing. They are recorded here rather than
     # "read" with a bare params.get() in the compiler — touching a key to quiet

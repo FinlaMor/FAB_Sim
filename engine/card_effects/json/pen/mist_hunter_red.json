@@ -6,36 +6,22 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
-          "type": "ATTACK_CLASS_IN",
+          "type": "TARGET_HERO_CLASS_IN",
           "classes": [
-            "mystic"
+            "Mystic"
           ]
         }
       ],
       "effects": [
         {
           "type": "SEARCH_DECK",
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zones": [
-                  "deck"
-                ],
-                "subtypes": [
-                  "Inner Chi"
-                ]
-              }
-            ]
-          },
+          "player": "OPPONENT",
+          "card_name": "Inner Chi",
+          "amount": 4,
           "action": "BANISH"
-        },
-        {
-          "type": "REORDER_REF",
-          "ref": "deck",
-          "action": "SHUFFLE"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"When this hits a MYSTIC HERO, search THEIR deck for any number of Inner Chi and banish them. Then shuffle.\" Four things were wrong. The gate was ATTACK_CLASS_IN [\"mystic\"], which asks whether the ATTACK CARD is Mystic rather than the hero being hit -- the same defect walk_the_plank had. SEARCH_DECK had no way to name WHOSE deck, so a card that raids the opponent's raided its own; it now takes `player`. The card was identified by subtypes [\"Inner Chi\"], but Inner Chi is a NAME (its subtype is Chi). And the trailing REORDER_REF action:\"SHUFFLE\" is not what REORDER_REF does -- it reorders a deck by player choice -- while SEARCH_DECK already shuffles at the end, so the clause was both wrong and redundant.\n\n\"Any number\" is capped at 4, the number of Inner Chi a deck may legally contain; SEARCH_DECK offers a fail-to-find at each step, so the player can stop earlier."
 }

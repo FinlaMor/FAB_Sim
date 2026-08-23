@@ -1103,6 +1103,31 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return bool(getattr(target, _attr, False))
         return _was
 
+    if ctype in ("CARD_COST_EQ", "CARD_COST_IS"):
+        # "target aura WITH COST X from your graveyard" — an EQUALITY, and one
+        # whose right-hand side belongs to the SOURCE card, not the candidate.
+        # Writing it as CARD_COST_LTE + CARD_COST_GTE over {"type":"X"} does not
+        # work: inside an object-target filter the candidate is passed as the
+        # card argument, so _resolve_amount reads x_paid off the CARD BEING
+        # TESTED (always 0) instead of the card that paid the X.
+        #
+        # current_effect_source() is what the interpreter pushes for exactly
+        # this kind of question.
+        want = params.get("amount", params.get("value", 0))
+
+        def _cost_eq(c, e, s, _w=want):
+            from engine.card_effects.dsl.effect_types import _resolve_amount
+            from engine.context import current_effect_source
+            source = current_effect_source() or c
+            cost = getattr(c, "cost", None)
+            if cost is None:
+                cost = getattr(c, "raw_cost", None)
+            try:
+                return int(cost) == int(_resolve_amount(_w, s, source))
+            except (TypeError, ValueError):
+                return False
+        return _cost_eq
+
     if ctype in ("CARD_COST_LTE", "CARD_COST_GTE"):
         # THIS card's printed cost. The ATTACK_COST_* family asks about the
         # attack on the chain, which for a play-time filter is either absent or

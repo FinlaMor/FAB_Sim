@@ -2,44 +2,37 @@
   "slug": "beckoning_haunt",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 0,
+      "ability_type": "ACTION",
+      "activation_cost": 1,
       "cost": [
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
-        },
-        {
-          "type": "PITCH",
-          "amount": 2
-        },
-        {
-          "type": "PAY_RESOURCES",
-          "resources": 1
         }
       ],
       "effects": [
         {
-          "type": "CHOOSE",
-          "options": [
-            {
-              "type": "SELECT_FROM_REF",
-              "ref": "MYGRAVEYARD",
-              "filter": [
-                {
-                  "type": "SUBTYPE_IN",
-                  "subtype": "Aura"
+          "type": "RETURN_TO_HAND",
+          "target": {
+            "controller": "SELF",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Aura"
+              },
+              {
+                "type": "CARD_COST_EQ",
+                "amount": {
+                  "type": "X"
                 }
-              ],
-              "max": 1
-            }
-          ]
-        },
-        {
-          "type": "PUT_REF_TOP",
-          "ref": "MYHAND"
+              }
+            ]
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"{x}{x}{r}, destroy this: Return TARGET AURA WITH COST X from your GRAVEYARD to your HAND.\" Nothing about this worked. The CHOOSE held options as raw effect dicts rather than {name, effects} blocks, so opt.get(\"effects\") was empty and the option did nothing. Inside it, SELECT_FROM_REF read a ref \"MYGRAVEYARD\" that no effect sets. And the follow-up was PUT_REF_TOP ref \"MYHAND\" -- an effect that puts a ref on top of a DECK, over a second ref nothing sets, where the card returns the aura to HAND. The PAY_RESOURCES cost also named its amount under 'resources', which that cost does not read.\n\n\"Cost X\" is an EQUALITY against the X paid, and needed a new condition. Writing it as CARD_COST_LTE plus CARD_COST_GTE over {\"type\":\"X\"} does not work: inside an object-target filter the CANDIDATE is passed as the card argument, so _resolve_amount reads x_paid off the card being TESTED -- always 0 -- rather than off the card that paid the X. CARD_COST_EQ reads the source through context.current_effect_source(), which the interpreter pushes for exactly this."
 }
