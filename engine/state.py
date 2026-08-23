@@ -314,6 +314,19 @@ class Zone:
             # part of that sentence is known only here: the previous zone,
             # whether the card is face up, and — via the effect context —
             # whether a card effect rather than a game rule moved it.
+            # "When this is put FACE UP into your ARSENAL, ..." — unlike the
+            # clause below it does not care where the card came from, so it
+            # cannot be expressed as ON_PUT_FACEUP_FROM_DECK. The card that
+            # needs it was authored on ON_ENTER_PLAY, and an arsenal is not the
+            # arena, so it never fired at all. Zone.add is the only place that
+            # knows both the destination zone and the face-up-ness.
+            if self.name == "arsenal" and next_is_public:
+                _st = getattr(self, "state", None)
+                if _st is not None:
+                    from engine.card_effects.dsl import dispatch as _dsl_dispatch
+                    _dsl_dispatch(_st, "ON_PUT_FACEUP_IN_ARSENAL", card.slug,
+                                  card=card, event=None)
+
             if (card.prev_zone == "deck" and next_is_public
                     and source == "effect" and self.name != "deck"):
                 _st = getattr(self, "state", None)

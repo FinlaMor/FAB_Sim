@@ -6,28 +6,31 @@
       "trigger": "ON_HIT",
       "effects": [
         {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": 1,
-          "conditions": [
+          "type": "MAY",
+          "effects": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "hand",
-              "cost": 0
-            }
-          ]
-        },
-        {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "hand",
-              "cost": 1
+              "type": "MOVE_MATCHING",
+              "to_zone": "permanents",
+              "target": {
+                "controller": "SELF",
+                "zone": "HAND",
+                "amount": 1,
+                "filter": [
+                  {
+                    "type": "CARD_IS_TYPE",
+                    "card_type": "Item"
+                  },
+                  {
+                    "type": "CARD_COST_LTE",
+                    "amount": 1
+                  }
+                ]
+              }
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"When this hits, you may put an ITEM WITH COST 0 OR 1 from your hand INTO THE ARENA.\" It was two PUT_CARDS_BOTTOM nodes -- the BOTTOM OF THE DECK, the opposite of the arena -- each gated on CARD_IN_ZONE zone:hand cost:0 / cost:1, and 'cost' was not a key CARD_IN_ZONE read (it reads cost_gte/cost_lte), so both gates asked only whether the hand was non-empty. The result was that hitting with Metex put TWO arbitrary cards from your hand on the bottom of your deck: not a weaker version of the printed effect but a punishing one, and mandatory where the card says 'you may'. Boost is a printed keyword."
 }

@@ -5,37 +5,36 @@
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "APPLY_CONTINUOUS",
-          "modifications": [
+          "type": "FLIP_REF",
+          "face_up": true,
+          "target": {
+            "controller": "ANY",
+            "zone": "ARSENAL",
+            "amount": "ALL"
+          }
+        },
+        {
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "CARD_IN_ZONE",
+            "zone": "arsenal",
+            "color": "yellow",
+            "face_up": true,
+            "player": "ANY"
+          },
+          "effects": [
             {
-              "type": "TURN_ARSENAL_FACE_UP",
-              "player": "SELF"
-            },
-            {
-              "type": "TURN_ARSENAL_FACE_UP",
-              "player": "OPPONENT"
+              "type": "CREATE_TOKEN",
+              "token": "gold",
+              "amount": 2
             }
           ]
         },
         {
-          "type": "CONDITIONAL_EFFECT",
-          "when": [
-            {
-              "type": "CARD_IN_ZONE",
-              "zone": "ARSENAL",
-              "card_class": "YELLOW",
-              "face_up": true
-            }
-          ],
-          "then": [
-            {
-              "type": "CREATE_TOKEN",
-              "token_slug": "gold",
-              "amount": 2
-            }
-          ]
+          "type": "GO_AGAIN"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Turn ALL cards in ALL arsenals face-up. Then if there's a FACE-UP YELLOW card in ANY arsenal, create 2 Gold tokens.\" The flip was two APPLY_CONTINUOUS modifications of type TURN_ARSENAL_FACE_UP -- a type that exists nowhere in the engine. Stored as continuous-effect data rather than compiled, it never failed to load and never did anything, so the card's main clause was absent. The gate then asked for card_class \"YELLOW\": yellow is a COLOUR, no card has it as a class, so it matched nothing and the tokens could never be created either -- and its 'face_up' was a key CARD_IN_ZONE did not read. Both halves also looked only at the CONTROLLER's arsenal where the card says ANY. Go again was missing entirely."
 }

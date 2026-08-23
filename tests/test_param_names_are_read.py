@@ -220,8 +220,13 @@ def test_regression_count_does_not_grow():
     # keys the HELPER reads, including across a module boundary. Without it the
     # scan went blind exactly where the compiler was factored properly, and
     # reported 8 correct cards.
-    assert findings <= 64, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 64). "
+    # 64 -> 59: CARD_IN_ZONE. It counts cards and defaults to "at least one",
+    # so a filter it does not read does not disable the gate -- it widens the
+    # question to "is this zone non-empty". It now reads the exact spellings
+    # (cost, power), face_up, a card NAME, a nested `filter` dict, and
+    # player: ANY for "in any arsenal" / "each hero's graveyard".
+    assert findings <= 59, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 59). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

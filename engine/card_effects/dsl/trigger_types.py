@@ -52,6 +52,11 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     # zone from your deck" — dispatched from Zone.add, the only place that
     # knows all of: previous zone, face-up-ness, and effect-vs-rule source.
     "ON_PUT_FACEUP_FROM_DECK":  "ON_PUT_FACEUP_FROM_DECK",
+    # "When this is put face up into your arsenal" — origin-agnostic, unlike
+    # ON_PUT_FACEUP_FROM_DECK, which the card above needs to be from the deck.
+    # Dispatched from Zone.add, which is where the destination zone and the
+    # face-up-ness are both known.
+    "ON_PUT_FACEUP_IN_ARSENAL": "ON_PUT_FACEUP_IN_ARSENAL",
     "ON_DEAL_DAMAGE":           "ON_DEAL_DAMAGE",
     "RECALC_ATTACK_POWER":      "RECALC_ATTACK_POWER",
     # The defence-side mirror, dispatched once per declared defender by

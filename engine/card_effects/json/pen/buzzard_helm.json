@@ -11,29 +11,36 @@
         },
         {
           "type": "DISCARD_RANDOM",
-          "player": "SELF"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_DEFEND",
-      "effects": [
-        {
-          "type": "MODIFY_DEFENSE_VALUE",
+          "player": "SELF",
           "amount": 1
-        }
-      ],
-      "conditions": [
+        },
         {
-          "type": "CARD_IN_ZONE",
-          "zone": "HAND",
-          "filter": {
-            "power_gte": 6
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_POWER_GTE",
+            "ref": "discarded",
+            "amount": 6
           },
-          "player": "SELF"
+          "effects": [
+            {
+              "type": "MODIFY_DEFENSE_VALUE",
+              "mod": "add",
+              "amount": 1,
+              "target": {
+                "zone": "DEFENDING",
+                "amount": "ALL",
+                "filter": [
+                  {
+                    "type": "SELF_IS_TYPE",
+                    "card_type": "Equipment"
+                  }
+                ]
+              }
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Draw a card then discard a random card. IF A CARD WITH 6 OR MORE {p} IS DISCARDED THIS WAY, this gets +1{d}.\" The payoff was a SEPARATE ON_DEFEND ability gated on CARD_IN_ZONE zone:HAND filter:{power_gte:6} -- three things wrong at once. It asks whether such a card is IN HAND, not whether one was discarded, and those differ precisely when the random discard misses. 'filter' as a nested dict was not a key CARD_IN_ZONE read, so there was no power test at all and the condition reduced to 'is your hand non-empty' -- +1{d} on essentially every defend. And being a separate ability it could not see what the first one discarded. DISCARD_RANDOM now records what it took; the gate reads that. The +1{d} also went to the defending TOTAL rather than to this card. Temper is a printed keyword."
 }

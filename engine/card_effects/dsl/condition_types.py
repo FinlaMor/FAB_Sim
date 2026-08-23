@@ -732,17 +732,38 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # usages) — read both. Optional filters: cost_gte/cost_lte, filter_types,
         # and `color` (red/yellow/blue via pitch 1/2/3, ~14 usages) which was
         # previously ignored.
+        # A nested `filter` dict is a fourth way to spell the same options
+        # ({"filter": {"power_gte": 6}}); it was not read, so those nodes had NO
+        # filter at all — and a dropped filter here does not disable the
+        # condition, it makes it match ANY card in the zone.
+        nested = params.get("filter")
+        if isinstance(nested, dict):
+            params = {**nested, **{k: v for k, v in params.items()
+                                   if k != "filter"}}
         zones = params.get("zones")
         if not zones:
             zones = [params.get("zone", "")]
         zones = [z.lower() for z in zones if z]
-        cost_gte = params.get("cost_gte")
-        cost_lte = params.get("cost_lte")
+        # Cards say "with cost 0", "with 1{p}" as often as they say "or more".
+        # The exact spellings were unread, so those nodes matched on cost/power
+        # not at all.
+        exact_cost = params.get("cost")
+        cost_gte = params.get("cost_gte", exact_cost)
+        cost_lte = params.get("cost_lte", exact_cost)
         # "a card with 6 or more {p} in your pitch zone" — authored as
         # power_gte, or as pitch_power_gte on the wrong condition entirely
         # (REF_PITCH_IS, which tests a referenced card's PITCH VALUE).
-        power_gte = params.get("power_gte", params.get("pitch_power_gte"))
-        power_lte = params.get("power_lte")
+        exact_power = params.get("power")
+        power_gte = params.get("power_gte", params.get("pitch_power_gte",
+                                                       exact_power))
+        power_lte = params.get("power_lte", exact_power)
+        # "a FACE-UP yellow card in any arsenal" — arsenal and banished cards
+        # track visibility, so this is a real restriction rather than decoration.
+        want_face_up = params.get("face_up")
+        # "a card named X in your arsenal". Authored as "card", which was
+        # unread, so the condition asked only whether the zone was non-empty.
+        want_name = _first_present(params, "card_name", "card", "name",
+                                   default=None)
         # filter_types / card_type / subtypes / subtype all name the same thing
         # here: the matcher below already checks types AND subtypes together.
         # 47 nodes author one of the unread spellings, and a dropped filter does
@@ -775,15 +796,21 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         def _ciz(c, e, s, _zs=zones, _cge=cost_gte, _cle=cost_lte, _ft=filter_types,
                  _col=color, _nge=count_gte, _neq=count_eq,
                  _cc=card_class, _kws=want_kws, _pge=power_gte, _ple=power_lte,
-                 _who=who):
+                 _who=who, _fu=want_face_up, _nm=want_name):
             from engine.card_effects.ability_keywords import _controller_id
             _cid = _controller_id(c)
-            _pid = (3 - _cid) if _who in ("OPPONENT", "DEFENDING", "DEFENDER") else _cid
-            if _pid not in s.players:
-                return False
-            player = s.players[_pid]
+            # "in ANY arsenal" / "each hero's graveyard" — both players' zones.
+            if _who in ("ANY", "ALL", "EACH", "BOTH"):
+                _pids = [pid for pid in (_cid, 3 - _cid) if pid in s.players]
+            else:
+                _pid = (3 - _cid) if _who in ("OPPONENT", "DEFENDING", "DEFENDER") else _cid
+                if _pid not in s.players:
+                    return False
+                _pids = [_pid]
             count = 0
-            for _z in _zs:
+            for _pid in _pids:
+              player = s.players[_pid]
+              for _z in _zs:
                 zone_obj = getattr(player, _z, None)
                 if zone_obj is None:
                     continue
@@ -799,7 +826,10 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                         if not any(t in card_types for t in _ft):
                             continue
                     if _col:
+                        # Card.color is None on a real card until something sets
+                        # it; the PRINTED colour is on base_color.
                         card_color = (getattr(card, 'color', None)
+                                      or getattr(card, 'base_color', None)
                                       or _PITCH_COLOR.get(getattr(card, 'pitch', None)))
                         if (card_color or "").lower() != _col:
                             continue
@@ -819,6 +849,11 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                         have = {_norm(k) for k in (getattr(card, 'keywords', None) or [])}
                         if not any(_norm(k) in have for k in _kws):
                             continue
+                    if _fu is not None and bool(getattr(card, 'is_public', False)) is not bool(_fu):
+                        continue
+                    if _nm and _norm(_nm) not in (_norm(getattr(card, 'name', '') or ''),
+                                                  _norm(getattr(card, 'slug', '') or '')):
+                        continue
                     count += 1
             if _neq is not None:
                 return count == _neq
@@ -1326,6 +1361,23 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             # Playing "both" plays each half, so each half's ability applies.
             return side == _want or side == "both"
         return _meld_side
+
+    if ctype in ("CARD_IS_NAMED", "CARD_NAME_IN"):
+        # The candidate card's own name — the per-card counterpart of
+        # ATTACK_NAME_IN, which reads combat.attack_card and so cannot answer
+        # "is THIS card a Swift Shot" in a play-time filter. Matches on name or
+        # slug, and strips the colour suffix so one entry covers every printing.
+        import re as _re
+        wants = {_norm(v) for v in _as_list(params, "names", "name", "card_name")
+                 if v}
+
+        def _named(c, e, s, _w=wants):
+            if not _w:
+                return False
+            slug = _re.sub(r'_(red|yellow|blue)$', '', getattr(c, 'slug', '') or '')
+            return (_norm(slug) in _w
+                    or _norm(getattr(c, 'name', '') or '') in _w)
+        return _named
 
     if ctype in ("PLAYED_FROM_ZONE", "PLAYED_FROM"):
         # "You may play Rift Bind from your banished zone. IF YOU DO, it gains

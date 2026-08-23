@@ -1,6 +1,6 @@
 {
   "slug": "rotten_remains_blue",
-  "_comment": "Only partly implemented, and said so rather than left looking complete. The card is 'you MAY banish a card with 1{p} from EACH hero's graveyard. If you do, this gets +1{p}, then repeat this process.' Three parts are missing: BANISH resolves one player, so 'each hero's graveyard' banishes only the controller's; BANISH filters on cost, not {p}, so 'a card with 1{p}' is unfiltered; and the banish is not optional, so the +1{p} is unconditional instead of riding an 'if you do'. Honouring the target at least moved it off the controller's DECK, which is where it was banishing from before.",
+  "_comment": "Only partly implemented, and said so rather than left looking complete. The card is \"you MAY banish a card with 1{p} from EACH hero's graveyard. If you do, this gets +1{p}, then repeat this process.\" Still missing: BANISH resolves one player, so \"each hero's graveyard\" banishes only the controller's; the banish is not optional, so the +1{p} is unconditional instead of riding an \"if you do\"; and the repeat has no representation. Fixed here: the {p} filter was authored as power:1, a key CARD_IN_ZONE did not read, so \"a card with 1{p}\" was no filter at all -- it asked only whether the graveyard was non-empty. Also removed an INJECT_TRIGGER holding a bare trigger NAME and no effects, which was the 'repeat this process' clause: it compiled to a trigger that injects nothing, so it did not implement the repeat and cannot be mistaken for it.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -21,10 +21,6 @@
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": 1
-        },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_ATTACK"
         }
       ]
     }

@@ -4149,9 +4149,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
 
     if etype == "DISCARD_RANDOM":
         amt = params.get("amount", 1)
-        def _fn(card, event, state, _a=amt):
+        who = str(params.get("player", "SELF")).upper()
+
+        def _fn(card, event, state, _a=amt, _w=who):
             from engine.card_effects.ability_keywords import effect_discard, _controller_id
-            effect_discard(state, _controller_id(card), _a, random_discard=True)
+            cid = _controller_id(card)
+            tid = (3 - cid) if _w in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            got = effect_discard(state, tid, _a, random_discard=True)
+            # "If a card with 6 or more {p} IS DISCARDED THIS WAY" — the payoff
+            # asks about the card that was actually discarded. The card that
+            # needs it asked CARD_IN_ZONE instead, i.e. whether such a card was
+            # merely IN HAND, which is a different question and one that stays
+            # true after the discard misses.
+            if got:
+                from engine.context import set_ref
+                set_ref("discarded", got[0] if len(got) == 1 else list(got))
         return _fn
 
     if etype == "REMOVE_COUNTERS":
