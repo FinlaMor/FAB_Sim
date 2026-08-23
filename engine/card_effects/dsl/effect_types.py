@@ -497,6 +497,73 @@ def _hand_card_filter(params):
     return _matches
 
 
+def _permanent_filter(params):
+    """Build a predicate for "destroy a <kind of> permanent", or None.
+
+    Shared by the DESTROY_PERMANENT effect and the cost of the same name,
+    because the cards use the same words for both and each read a DIFFERENT
+    subset: the effect knew `subtype`, the cost knew `slug`/`permanent_type`,
+    and NEITHER knew `asset` — which is how "destroy X GOLD you control" came to
+    destroy X arbitrary permanents, and, as a cost, to be payable with any
+    permanent at all.
+
+        {"asset": "GOLD"}            a token, by printed name or slug
+        {"slug": "gold"}             by slug
+        {"subtype": "Aura"}          by subtype
+        {"permanent_type": "Item"}   by type
+        {"target": "ITEM"}           the same, in the spelling two cards use
+        {"token": true}              tokens only (false: non-tokens only)
+        {"max_cost": 2}              printed cost at most N
+    """
+    def _norm(v):
+        return "".join(ch for ch in str(v).lower() if ch.isalnum())
+
+    named = _first(params, "asset", "slug", "token_slug", "token_name")
+    subtype = _first(params, "subtype", "permanent_type")
+    # "target" holds "self"/"controlled" (not a filter) on most cards and a TYPE
+    # name on the two that reach for it that way.
+    raw_target = params.get("target")
+    if (isinstance(raw_target, str)
+            and raw_target.lower() not in ("", "self", "this", "source",
+                                           "controlled", "controlled_permanent")):
+        subtype = subtype or raw_target
+    want_token = params.get("token")
+    max_cost = params.get("max_cost")
+    if named is None and subtype is None and want_token is None and max_cost is None:
+        return None
+
+    def _matches(c, state=None, _nm=named, _sub=subtype, _tok=want_token,
+                 _max=max_cost):
+        if _nm and _norm(_nm) not in (_norm(getattr(c, "slug", "") or ""),
+                                      _norm(getattr(c, "name", "") or "")):
+            return False
+        if _sub:
+            have = {_norm(x) for x in (getattr(c, "subtypes", None) or [])}
+            have |= {_norm(x) for x in (getattr(c, "types", None) or [])}
+            if _norm(_sub) not in have:
+                return False
+        if _tok is not None and bool(getattr(c, "is_token", False)) is not bool(_tok):
+            return False
+        if _max is not None:
+            cost = getattr(c, "raw_cost", None)
+            if cost is None:
+                cost = getattr(c, "cost", None)
+            try:
+                cost = int(cost)
+            except (TypeError, ValueError):
+                # A token has no printed cost; "cost X or less" is satisfied by
+                # a costless permanent rather than excluding it.
+                cost = 0
+            limit = _resolve_amount(_max, state, c) if state is not None else _max
+            try:
+                if cost > int(limit):
+                    return False
+            except (TypeError, ValueError):
+                return False
+        return True
+    return _matches
+
+
 def _object_target_spec(target):
     """Normalise an effect's "target" to the canonical dict, or None.
 
@@ -1946,19 +2013,37 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # matching normalises both rather than comparing slugs only.
         token_slug = _first(params, "token", "token_type", "token_slug",
                             "token_name", default="")
+        # "Destroy UP TO 3 Might tokens. Create a Toughness token FOR EACH TOKEN
+        # DESTROYED THIS WAY." Both halves were wrong in the same direction:
+        # this destroyed exactly ONE (max_destroy was unread) while the create
+        # side made three unconditionally. Strictly better than printed.
+        limit = _first(params, "max_destroy", "amount", "count", default=1)
 
-        def _fn(card, event, state, _slug=token_slug):
+        def _fn(card, event, state, _slug=token_slug, _n=limit):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import destroy as _ek_destroy
             if not _slug:
                 return
             want = _norm_amt(_slug)
             player = state.players[_controller_id(card)]
-            tok = next((c for c in player.permanents.cards
-                        if _norm_amt(getattr(c, "slug", "")) == want
-                        or _norm_amt(getattr(c, "name", "")) == want), None)
-            if tok is not None:
+            try:
+                n = max(0, int(_resolve_amount(_n, state, card)))
+            except (TypeError, ValueError):
+                n = 1
+            destroyed = []
+            for _ in range(n):
+                tok = next((c for c in player.permanents.cards
+                            if _norm_amt(getattr(c, "slug", "")) == want
+                            or _norm_amt(getattr(c, "name", "")) == want), None)
+                if tok is None:
+                    break
                 _ek_destroy(state, tok, None)
+                destroyed.append(tok)
+            # "for each token destroyed this way" needs the count, and "up to"
+            # means it can be fewer than asked for.
+            from engine.context import set_ref
+            set_ref("destroyed", list(destroyed))
+            set_ref("destroyed_count", len(destroyed))
         return _fn
 
     if etype in ("DESTROY_PERMANENT", "DESTROY_SELF"):
@@ -1973,12 +2058,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         max_cost = params.get("max_cost")   # int or an amount expression
         want_token = params.get("token")    # True: tokens only; False: non-tokens only
         count = params.get("amount", params.get("count", 1))
-        optional = bool(params.get("optional") or params.get("up_to"))
+        # "Destroy UP TO X items" — "max" is the third spelling of up_to and was
+        # unread, so the card destroyed exactly X with no option to stop.
+        optional = bool(params.get("optional") or params.get("up_to")
+                        or params.get("max"))
+        # One vocabulary shared with the cost of the same name; see
+        # _permanent_filter for why neither of them could say "a Gold".
+        matches = _permanent_filter(params)
 
         def _fn(card, event, state, _t=target, _sub=subtype, _whose=whose,
-                _max=max_cost, _tok=want_token, _n=count, _opt=optional):
+                _max=max_cost, _tok=want_token, _n=count, _opt=optional,
+                _m=matches):
             from engine.effect_keywords import destroy as _ek_destroy
-            if _t == "self" and not _sub and _max is None and _tok is None:
+            if (_t == "self" and not _sub and _max is None and _tok is None
+                    and _m is None):
                 # destroy() resolves the card's actual zone itself.
                 _ek_destroy(state, card, None)
                 return
@@ -2012,6 +2105,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             want = (_sub or "").lower()
 
             def _eligible(c):
+                if _m is not None and not _m(c, state):
+                    return False
                 if want and want not in [s.lower() for s in (getattr(c, "subtypes", None) or [])]:
                     return False
                 if _tok is not None and bool(getattr(c, "is_token", False)) is not bool(_tok):
@@ -2031,12 +2126,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                         return False
                 return True
 
+            destroyed = []
             for _ in range(max(limit, 0)):
                 cands = [c for pid in pids
                          for c in state.players[pid].permanents.cards
                          if _eligible(c)]
                 if not cands:
-                    return
+                    break
                 if len(cands) == 1 and not _opt:
                     chosen = cands[0]
                 else:
@@ -2044,9 +2140,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     pick = _ask_player(state, cid, options,
                                        context=f"Choose a {_sub or 'permanent'} to destroy")
                     if pick == "none":
-                        return
+                        break
                     chosen = next((c for c in cands if c.slug == pick), cands[0])
                 _ek_destroy(state, chosen, card)
+                destroyed.append(chosen)
+            if destroyed:
+                from engine.context import set_ref
+                set_ref("destroyed", list(destroyed))
         return _fn
 
     if etype == "MODIFY_DEFENSE_VALUE":

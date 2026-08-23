@@ -232,8 +232,14 @@ def test_regression_count_does_not_grow():
     # and bottomed nothing, and phantasmaclasm hid the whole thing inside a
     # SELECT_FROM_REF `effects` list it does not read. It now takes a `ref` and
     # honours `optional`.
-    assert findings <= 55, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 55). "
+    # 55 -> 51: DESTROY_PERMANENT exists as both an effect and a cost, and the
+    # two read DIFFERENT subsets of one vocabulary -- the effect knew `subtype`,
+    # the cost knew `slug`/`permanent_type`, and NEITHER knew `asset`, which is
+    # what both cards needing it say. They now share _permanent_filter.
+    # DESTROY_TOKEN gained max_destroy and records what it took, so "for each
+    # destroyed this way" can count it instead of assuming the maximum.
+    assert findings <= 51, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 51). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

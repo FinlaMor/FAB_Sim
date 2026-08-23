@@ -2,23 +2,26 @@
   "slug": "scurv_stowaway",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 1,
+      "ability_type": "ACTION",
+      "activation_cost": 0,
       "cost": [
         {
+          "type": "TAP_SELF"
+        },
+        {
           "type": "DESTROY_PERMANENT",
-          "target": "controlled",
-          "asset": "GOLD"
+          "asset": "gold",
+          "amount": 1
         }
       ],
       "effects": [
         {
           "type": "CREATE_TOKEN",
-          "token": "goldkiss_rum"
+          "token": "goldkiss_rum",
+          "amount": 1
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     },
@@ -39,5 +42,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"{t}, destroy a GOLD you control: Create a Goldkiss Rum token.\" Same defect as Raise an Army: 'asset' is not a key the DESTROY_PERMANENT cost reads, so the ability was activatable with no Gold and paying it destroyed an arbitrary permanent. The {t} half of the cost was missing entirely and the activation cost was 1 where the card charges no resources -- it costs a tap and a Gold."
 }

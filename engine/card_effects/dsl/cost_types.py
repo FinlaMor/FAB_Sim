@@ -17,16 +17,26 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
 
     # Cost amounts are always numeric (resources/life/cards to pay). Candidate
     # JSON occasionally authors them as strings — either an integer literal
-    # ("2") or a dynamic marker ("UP_TO_3", "RUNECHANTS_CONTROLLED") that the
-    # simple cost branches here don't resolve. Both blow up in arithmetic/slicing
-    # (resources >= "2", cards[:"2"]). No cost branch interprets a marker, so
-    # coerce once: integer literal -> its int; any other string -> 0 (a
-    # trivially-payable cost) rather than crashing a live game.
+    # ("2") or a dynamic marker ("X", "UP_TO_3", "RUNECHANTS_CONTROLLED") that
+    # the simple cost branches here don't resolve. Both blow up in
+    # arithmetic/slicing (resources >= "2", cards[:"2"]), so coerce once:
+    # integer literal -> its int; any other string -> 0 rather than crashing a
+    # live game.
+    #
+    # "No cost branch interprets a marker" was the original reason for
+    # flattening to 0, and it is no longer true: DESTROY_PERMANENT resolves its
+    # count through _resolve_amount. Flattening made "destroy X Gold" destroy
+    # ZERO and cost nothing — a mandatory additional cost that is free. The raw
+    # value is kept under "_amount_raw" for branches that CAN resolve it; the
+    # rest still see 0, which is a latent trap for the next author rather than a
+    # live defect (raise_an_army_yellow is the only card in the corpus with a
+    # dynamic cost amount today).
     if isinstance(params.get("amount"), str):
+        raw_amount = params["amount"]
         try:
-            params = {**params, "amount": int(params["amount"])}
+            params = {**params, "amount": int(raw_amount)}
         except (TypeError, ValueError):
-            params = {**params, "amount": 0}
+            params = {**params, "amount": 0, "_amount_raw": raw_amount}
 
     # ── mandatory additional costs ─────────────────────────────────────────
 
@@ -319,52 +329,77 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         return can_pay, pay
 
     if ctype == "DESTROY_PERMANENT":
-        target = params.get("target", "")        # "self" -> destroy the activating card itself
-        perm_type = params.get("permanent_type", "")
-        slug_filter = params.get("slug", "")
-
+        # "As an additional cost to play this, destroy X GOLD you control",
+        # "{t}, destroy a Gold you control: ...".
+        #
+        # This read only `slug` and `permanent_type`, and neither of the two
+        # cards using it says either -- both say `asset`. With no filter the
+        # cost is not merely weaker: can_pay was true whenever the player
+        # controlled ANY permanent, so the card was playable with no Gold at
+        # all, and paying it destroyed an arbitrary permanent instead. It also
+        # ignored `amount`, so "destroy X" destroyed one. Costs must block play
+        # legality.
+        #
+        # The filter vocabulary is shared with the EFFECT of the same name
+        # (effect_types._permanent_filter); the two read different subsets of it
+        # before and neither read `asset`.
+        target = params.get("target", "")        # "self" -> destroy the payer
         if target == "self":
-            # Destroy the card that is paying this cost (e.g. equipment that destroys itself).
-            # destroy() resolves the card's actual zone (chest/head/items/...), so this works
-            # for equipment in slot zones as well as permanents.
+            # destroy() resolves the card's actual zone (chest/head/items/...),
+            # so this works for equipment in slot zones as well as permanents.
             def can_pay(card, event, state):
                 return True  # card must exist to be activating
+
             def pay(card, event, state):
                 from engine.effect_keywords import destroy as _ek_destroy
                 _ek_destroy(state, card, None)
             return can_pay, pay
 
-        def can_pay(card, event, state, _pt=perm_type, _sl=slug_filter):
+        from engine.card_effects.dsl.effect_types import (
+            _permanent_filter, _resolve_amount)
+        matches = _permanent_filter(params)
+        # "_amount_raw" survives compile_cost's string->0 coercion; see the
+        # note at the top of this function for why that coercion exists and why
+        # a branch that resolves dynamic amounts must not use its output.
+        amount = params.get("_amount_raw",
+                            params.get("amount", params.get("count", 1)))
+
+        def _pool(card, state, _m=matches):
             from engine.card_effects.ability_keywords import _controller_id
             pid = _controller_id(card)
             permanents = getattr(state.players[pid], 'permanents', None)
             if permanents is None:
-                return False
-            candidates = permanents.cards
-            if _sl:
-                candidates = [c for c in candidates if c.slug == _sl]
-            elif _pt:
-                candidates = [c for c in candidates
-                              if _pt.upper() in [t.upper() for t in (getattr(c, 'types', None) or [])]]
-            return len(candidates) > 0
-        def pay(card, event, state, _pt=perm_type, _sl=slug_filter):
-            from engine.card_effects.ability_keywords import _controller_id
-            pid = _controller_id(card)
-            permanents = getattr(state.players[pid], 'permanents', None)
-            if not permanents:
-                return
-            candidates = permanents.cards
-            if _sl:
-                candidates = [c for c in candidates if c.slug == _sl]
-            elif _pt:
-                candidates = [c for c in candidates
-                              if _pt.upper() in [t.upper() for t in (getattr(c, 'types', None) or [])]]
-            if candidates:
-                try:
-                    from engine.effect_keywords import destroy as _ek_destroy
-                    _ek_destroy(state, candidates[0], None)
-                except (ImportError, Exception):
-                    permanents.cards.remove(candidates[0])
+                return pid, []
+            cards = list(permanents.cards)
+            if _m is not None:
+                cards = [c for c in cards if _m(c, state)]
+            return pid, cards
+
+        def _wanted(card, state, _a=amount):
+            try:
+                return max(0, int(_resolve_amount(_a, state, card)))
+            except (TypeError, ValueError):
+                return 1
+
+        def can_pay(card, event, state):
+            _pid, cands = _pool(card, state)
+            return len(cands) >= _wanted(card, state)
+
+        def pay(card, event, state):
+            from engine.card_effects.ability_keywords import _ask_player
+            from engine.effect_keywords import destroy as _ek_destroy
+            pid, cands = _pool(card, state)
+            for _ in range(_wanted(card, state)):
+                if not cands:
+                    return
+                if len(cands) == 1:
+                    chosen = cands[0]
+                else:
+                    pick = _ask_player(state, pid, [c.slug for c in cands],
+                                       context="Choose a permanent to destroy as a cost")
+                    chosen = next((c for c in cands if c.slug == pick), cands[0])
+                cands.remove(chosen)
+                _ek_destroy(state, chosen, card)
         return can_pay, pay
 
     if ctype == "BANISH_FROM_UNDER_SELF":

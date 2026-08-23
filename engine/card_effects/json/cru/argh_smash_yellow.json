@@ -6,24 +6,26 @@
       "effects": [
         {
           "type": "ROLL",
-          "player": "SELF"
+          "player": "SELF",
+          "faces": 6
         },
         {
           "type": "DESTROY_PERMANENT",
-          "target": "ITEM",
-          "player": "OPPONENT",
+          "subtype": "Item",
+          "player": "ANY",
+          "up_to": true,
           "amount": {
             "type": "HALF",
             "value": {
               "type": "ROLL_RESULT"
             }
-          },
-          "max": true
+          }
         },
         {
           "type": "GO_AGAIN"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Roll a 6 sided die. Destroy UP TO X ITEMS, where X is half the number rolled, rounded down.\" The item restriction was written as target:\"ITEM\", which DESTROY_PERMANENT reads as a target keyword rather than a subtype, so there was no filter and it destroyed X arbitrary permanents. \"Up to\" was written as max:true, a third spelling of up_to that was unread, so it destroyed exactly X with no option to stop. And it was scoped to the OPPONENT where the card says items, unqualified. The die had no face count either."
 }

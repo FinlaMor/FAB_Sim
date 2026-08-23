@@ -6,15 +6,19 @@
       "effects": [
         {
           "type": "DESTROY_TOKEN",
-          "token_type": "Might",
+          "token": "might",
           "max_destroy": 3
         },
         {
           "type": "CREATE_TOKEN",
-          "token_type": "Toughness",
-          "amount": 3
+          "token": "toughness",
+          "amount": {
+            "type": "COUNT_REF",
+            "ref": "destroyed"
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Destroy UP TO 3 Might tokens. Create a Toughness token FOR EACH TOKEN DESTROYED THIS WAY.\" Both halves were wrong in the same direction, so the card was strictly better than printed: DESTROY_TOKEN did not read max_destroy and destroyed exactly ONE, while CREATE_TOKEN made THREE Toughness unconditionally -- three tokens for one. DESTROY_TOKEN now destroys up to N and records what it took, and the create side counts that instead of assuming the maximum."
 }

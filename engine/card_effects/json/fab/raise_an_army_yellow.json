@@ -6,8 +6,7 @@
       "additional_cost": [
         {
           "type": "DESTROY_PERMANENT",
-          "target": "controlled",
-          "asset": "GOLD",
+          "asset": "gold",
           "amount": "X"
         }
       ],
@@ -18,10 +17,10 @@
           "amount": "X"
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"As an additional cost to play this, destroy X GOLD you control.\" The cost named the Gold under 'asset', which the DESTROY_PERMANENT COST does not read -- it reads slug and permanent_type -- so there was no filter: can_pay was true whenever the player controlled ANY permanent, and paying destroyed an arbitrary one. The card was playable with no Gold at all, and playing it ate something else. It also ignored 'amount', so \"destroy X\" destroyed one. Costs must block play legality. The effect and the cost of this name now share one filter vocabulary (_permanent_filter); they read different subsets before and neither read 'asset'."
 }
