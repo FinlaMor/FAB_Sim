@@ -263,6 +263,38 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             state.players[cid].deck.cards.append(target)
         return can_pay, pay
 
+    if ctype == "CHARGE":
+        # CR 8.5.29 — "charge your hero's soul" as a COST, not an effect.
+        # v_for_valor_yellow reads "{r}, destroy this, CHARGE your hero's soul:
+        # Target attack gains +2{p}". Modelling that as an ON_PLAY effect makes
+        # the reaction legal with an EMPTY HAND -- the ability resolves and the
+        # cost is simply never paid, which is the one thing a cost must never
+        # allow. It also charged hand position 0 with nobody choosing.
+        amount = params.get("amount", 1)
+
+        def can_pay(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            return len(state.players[_controller_id(card)].hand.cards) >= _a
+
+        def pay(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import (
+                _ask_player, _controller_id)
+            from engine.effect_keywords import charge as _ek_charge
+            cid = _controller_id(card)
+            for _ in range(_a):
+                hand = state.players[cid].hand.cards
+                if not hand:
+                    return
+                if len(hand) == 1:
+                    chosen = hand[0]
+                else:
+                    pick = _ask_player(state, cid, [c.slug for c in hand],
+                                       context="Choose a card to charge to your "
+                                               "hero's soul")
+                    chosen = next((c for c in hand if c.slug == pick), hand[0])
+                _ek_charge(state, chosen, cid, source_player_id=cid)
+        return can_pay, pay
+
     if ctype == "TAP_SELF":
         # {t}: tap the activating card (hero/permanent). Payable if not tapped.
         def can_pay(card, event, state):

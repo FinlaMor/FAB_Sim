@@ -1,6 +1,6 @@
 {
   "slug": "biting_blade_red",
-  "_comment": "Reprise (CR 8.4.3) is an EXISTING condition backed by combat.defender_used_hand_card — the card invented DEFENDED_WITH_HAND_CARD instead. The reprise half was also ability_type STATIC on an Attack Reaction card, so it could not have fired even with the flag set. 'Weapons you control gain +1{p} until end of turn' is MODIFY_ATTACKS_THIS_TURN filtered to weapon attacks, not a MODIFY_ATTACK on the current attack.",
+  "_comment": "Reprise (CR 8.4.3) is an EXISTING condition backed by combat.defender_used_hand_card \u2014 the card invented DEFENDED_WITH_HAND_CARD instead. The reprise half was also ability_type STATIC on an Attack Reaction card, so it could not have fired even with the flag set. 'Weapons you control gain +1{p} until end of turn' is MODIFY_ATTACKS_THIS_TURN filtered to weapon attacks, not a MODIFY_ATTACK on the current attack. \"Target WEAPON attack\" -- the ability had no target filter at all, so it pumped ANY attack, not just a weapon attack. Found by sweeping cards whose text says \"target weapon attack\" for an ability with effects and no weapon filter.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
@@ -10,7 +10,14 @@
           "mod": "add",
           "amount": 3
         }
-      ]
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        ]
+      }
     },
     {
       "ability_type": "ATTACK_REACTION",

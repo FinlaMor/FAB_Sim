@@ -5,7 +5,7 @@
       "ability_type": "ATTACK_REACTION",
       "conditions": [
         {
-          "type": "DEFENDS_WITH_OTHER_HAND_CARD"
+          "type": "REPRISE"
         }
       ],
       "effects": [
@@ -26,5 +26,6 @@
         ]
       }
     }
-  ]
+  ],
+  "_comment": "Did nothing at all, for TWO independent reasons. (1) The Reprise clause was DEFENDS_WITH_OTHER_HAND_CARD, which asks whether THIS CARD is defending alongside another hand card (Right Behind You). This is an ATTACK REACTION played by the attacker, so it is never defending and the gate was false in every state. REPRISE (CR 8.4.3) is the real condition, backed by combat.defender_used_hand_card. (2) Its target filter was ATTACK_SUBTYPE_IN subtypes:[\"weapon\"], but a weapon's subtypes are ['TwoHanded','Hammer'] -- Weapon is a TYPE -- so the filter matched no attack either. ATTACK_SUBTYPE_IN now reads types and subtypes alike."
 }

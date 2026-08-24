@@ -879,6 +879,24 @@ def _damage_target_player(state, controller_id: int, target: str) -> int:
     return controller_id
 
 
+class _ConditionProbe:
+    """A minimal stand-in card used to ask a compiled condition about a PLAYER.
+
+    Conditions resolve their player via _controller_id(card), so asking "does
+    THIS hero have a card in their arsenal" for each hero in turn needs an
+    object whose controller is that hero.
+    """
+
+    __slots__ = ("controller", "owner", "slug", "types", "subtypes", "zone")
+
+    def __init__(self, player_id):
+        self.controller = self.owner = player_id
+        self.slug = ""
+        self.types = []
+        self.subtypes = []
+        self.zone = None
+
+
 def _matches_type_or_subtype(card, wanted) -> bool:
     """Does this card carry any of `wanted` as a TYPE or a SUBTYPE?
 
@@ -1347,13 +1365,29 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "CHARGE":
-        def _fn(card, event, state):
-            from engine.card_effects.ability_keywords import effect_charge, _controller_id
+        # CR 8.5.29. Nobody chose WHICH card: hand position 0 was charged, so a
+        # player could lose the card they most wanted to keep. The one card in
+        # the corpus that says "charge" says it as a COST, and that spelling
+        # lives in cost_types.py where it can block legality.
+        amount = params.get("amount", 1)
+
+        def _fn(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import (
+                _ask_player, _controller_id)
+            from engine.effect_keywords import charge as _ek_charge
             cid = _controller_id(card)
-            player = state.players[cid]
-            if player.hand.cards:
-                chosen = player.hand.cards[0]
-                effect_charge(state, cid, chosen)
+            for _ in range(max(0, int(_a or 0))):
+                hand = state.players[cid].hand.cards
+                if not hand:
+                    return
+                if len(hand) == 1:
+                    chosen = hand[0]
+                else:
+                    pick = _ask_player(state, cid, [c.slug for c in hand],
+                                       context="Choose a card to charge to your "
+                                               "hero's soul")
+                    chosen = next((c for c in hand if c.slug == pick), hand[0])
+                _ek_charge(state, chosen, cid, source_player_id=cid)
         return _fn
 
     # ── attack / combat ────────────────────────────────────────────────────
@@ -4395,12 +4429,42 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # fell through to the deck default and took the top card instead of the
         # graveyard card the text names.
         source = _first(params, "source", "zone", "from_zone", default="deck")
+        # "THEN DISCARD" is in the NAME, so it fired for every card using this
+        # type -- including the two Promise of Plenty variants, whose text says
+        # nothing about discarding. Both players were made to discard at random,
+        # a symmetric invented downside that hurt the caster too. Codex of
+        # Frailty and Inertia DO discard, so the default stays True and the
+        # cards that do not say it turn it off.
+        do_discard = params.get("discard", True)
+        # The handler already stamps the card face down (and arsenal.add does
+        # too), so `face_down` names what happens -- read it anyway rather than
+        # declaring it inert, because an exemption is a claim about behaviour
+        # that goes stale, and a card saying face_down:false deserves an answer.
+        face_down = bool(params.get("face_down", True))
+        # "each hero WHO DOESN'T HAVE A CARD IN THEIR ARSENAL" is the built-in
+        # arsenal-limit check below; a card spelling it out explicitly gets it
+        # compiled and applied per player rather than silently ignored.
+        cond_spec = params.get("condition")
+        cond_fn = None
+        if isinstance(cond_spec, dict) and cond_spec.get("type"):
+            from engine.card_effects.dsl.condition_types import compile_condition
+            cond_fn = compile_condition(cond_spec["type"], cond_spec)
 
-        def _fn(card, event, state, _src=source):
+        def _fn(card, event, state, _src=source, _disc=do_discard,
+                _fd=face_down, _cond=cond_fn):
             from engine.card_effects.ability_keywords import _ask_player, effect_discard
             for pid, player in state.players.items():
                 if len(player.arsenal.cards) >= getattr(player, 'arsenal_limit', 1):
                     continue
+                if _cond is not None:
+                    # The gate asks about THIS hero, so it is evaluated with a
+                    # stand-in whose controller is that player.
+                    probe = _ConditionProbe(pid)
+                    try:
+                        if not _cond(probe, event, state):
+                            continue
+                    except Exception:
+                        pass
                 target = None
                 if _src == "graveyard":
                     attacks = [c for c in player.graveyard.cards
@@ -4422,9 +4486,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 if target is None:
                     continue
                 player.arsenal.add(target)
-                target.face_down = True
-                target.is_public = False
-                if player.hand.cards:  # "each hero that does, discards a card"
+                target.face_down = _fd
+                target.is_public = not _fd
+                if _disc and player.hand.cards:
+                    # "each hero that does, discards a card"
                     effect_discard(state, pid, 1, random_discard=True)
         return _fn
 

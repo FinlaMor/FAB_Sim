@@ -294,12 +294,25 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _ati
 
     if ctype == "ATTACK_SUBTYPE_IN":
-        subtypes = [v.lower() for v in _as_list(params, "subtypes", "subtype")]
+        # Types AND subtypes, for the third time in this audit. A WEAPON's
+        # subtypes are ['TwoHanded', 'Hammer'] -- "Weapon" is a TYPE. A
+        # subtypes-only reading made ironsong_response_blue's "target WEAPON
+        # attack" filter false for every attack in the game, so the card did
+        # nothing at all. Cards name either and mean the same thing by it.
+        subtypes = [v.lower() for v in _as_list(params, "subtypes", "subtype",
+                                                "types", "type")]
+
         def _asi(c, e, s, _subs=subtypes):
             if not s.combat or not getattr(s.combat, 'attack_card', None):
                 return False
-            card_subs = [x.lower() for x in (getattr(s.combat.attack_card, 'subtypes', None) or [])]
-            return any(st in card_subs for st in _subs)
+            ac = s.combat.attack_card
+            have = {x.lower() for x in (getattr(ac, 'subtypes', None) or [])}
+            have |= {x.lower() for x in (getattr(ac, 'types', None) or [])}
+            # A weapon ATTACK is flagged on the combat, which is the reliable
+            # signal when the attack card is not the weapon object itself.
+            if getattr(s.combat, 'from_weapon', False):
+                have.add("weapon")
+            return any(st in have for st in _subs)
         return _asi
 
     if ctype in ("PITCHED_FOR_THIS", "PITCHED_TO_PLAY_THIS"):

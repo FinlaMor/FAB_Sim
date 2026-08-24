@@ -1,5 +1,6 @@
 {
   "slug": "v_for_valor_yellow",
+  "_comment": "\"{r}, destroy this, CHARGE your hero's soul: Target attack gains +2{p}\" -- the charge is part of the COST, not an effect. Authored as an ON_PLAY effect it made the reaction legal with an EMPTY HAND: the ability resolved and the cost was simply never paid. CHARGE also took hand position 0 with nobody choosing, so a player could lose the card they most wanted to keep. CR 8.5.29.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
@@ -11,13 +12,13 @@
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
+        },
+        {
+          "type": "CHARGE",
+          "amount": 1
         }
       ],
       "effects": [
-        {
-          "type": "CHARGE",
-          "target": "hero_soul"
-        },
         {
           "type": "MODIFY_ATTACK",
           "mod": "add",

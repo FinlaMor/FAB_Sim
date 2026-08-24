@@ -318,8 +318,18 @@ def test_regression_count_does_not_grow():
     # untyped, so it gained a scope and a damage_type. DESTROY_ARSENAL now
     # reads `target` as the spelling of WHOSE arsenal -- it named the default
     # on the one card using it, but "self" would have hit the opponent.
-    assert findings <= 17, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 17). "
+    # 17 -> 14: two wrong-effect defects.
+    # v_for_valor_yellow reads "{r}, destroy this, CHARGE your hero's soul:" --
+    # the charge is a COST. As an ON_PLAY effect the reaction was legal with an
+    # EMPTY HAND: it resolved, the attack got +2{p}, and the cost was never
+    # paid. CHARGE also took hand position 0 with nobody choosing.
+    # Both Promise of Plenty variants sat on
+    # EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD, whose tail makes each hero
+    # discard AT RANDOM. Their text never mentions discarding, so the card
+    # inflicted a symmetric invented downside that hurt the caster too. The
+    # discard is now opt-out (Codex of Frailty and Inertia do say it).
+    assert findings <= 14, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 14). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

@@ -9,7 +9,8 @@
           "type": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD",
           "zone": "deck",
           "amount": 1,
-          "face_down": true
+          "face_down": true,
+          "discard": false
         }
       ]
     },
@@ -31,5 +32,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The effect type ends in THEN_DISCARD and made EACH HERO discard a card at random. This card's text says nothing about discarding -- it is purely \"each hero who doesn't have a card in their arsenal puts the top card of their deck face down into their arsenal\". A symmetric invented downside that hurt the caster too, so discard is off. The \"who doesn't have a card in their arsenal\" gate is the handler's own arsenal-limit check; the explicit `condition` spelling of it was redundant and is dropped."
 }

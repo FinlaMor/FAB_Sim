@@ -1,6 +1,6 @@
 {
   "slug": "glint_the_quicksilver_blue",
-  "_comment": "Reprise (CR 8.4.3) is an EXISTING condition; the card invented REPRISE_FLAG. The reprise half was also ability_type DEFENSE_REACTION on a Warrior ATTACK Reaction card — the wrong card type entirely, so it never fired.",
+  "_comment": "Reprise (CR 8.4.3) is an EXISTING condition; the card invented REPRISE_FLAG. The reprise half was also ability_type DEFENSE_REACTION on a Warrior ATTACK Reaction card \u2014 the wrong card type entirely, so it never fired. \"Target WEAPON attack\" -- the ability had no target filter at all, so it pumped ANY attack, not just a weapon attack. Found by sweeping cards whose text says \"target weapon attack\" for an ability with effects and no weapon filter.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
@@ -9,7 +9,14 @@
           "type": "GAIN",
           "keyword": "GO_AGAIN"
         }
-      ]
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        ]
+      }
     },
     {
       "ability_type": "ATTACK_REACTION",
