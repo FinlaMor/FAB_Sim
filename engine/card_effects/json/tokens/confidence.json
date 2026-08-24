@@ -1,0 +1,21 @@
+{
+  "slug": "confidence",
+  "_comment": "Aura token. No JSON existed anywhere, so create_token's require_card raised MissingCardImplementation and ABORTED THE GAME the moment Pleiades' crowd-cheer trigger or pleiades_superstar's clash win resolved. UNIMPLEMENTED: \"the next attack card you play this turn can't be defended by more than 2 non-block cards\" -- there is no defender-count restriction hook, so only the self-destroy is modelled.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

@@ -7,7 +7,8 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Frailty",
-          "token": "frailty"
+          "token": "frailty",
+          "player": "OPPONENT"
         },
         {
           "type": "GAIN",
@@ -30,5 +31,6 @@
       ],
       "trigger": "ON_DEFEND"
     }
-  ]
+  ],
+  "_comment": "\"Create a Frailty token under TARGET HERO's control\". CREATE_TOKEN defaults to SELF, so the -1{p} debuff landed on its own controller. The printed text technically allows targeting either hero; the choice is not modelled and it targets the opponent, which is the only sensible play. Note quickening_sand_blue reads the same way but creates QUICKEN, a BENEFIT, so its default-to-self is correct and it is deliberately left alone."
 }

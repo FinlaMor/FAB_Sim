@@ -36,9 +36,11 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Inertia",
-          "token": "inertia"
+          "token": "inertia",
+          "player": "OPPONENT"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"create an Inertia token under THEIR control\" -- the hero that was hit. CREATE_TOKEN defaults to SELF, so this debuff landed on the ATTACKER: Inertia bottoms your hand and arsenal at end of turn, so the card punished the player who played it."
 }

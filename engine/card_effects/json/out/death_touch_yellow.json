@@ -1,21 +1,54 @@
 {
   "slug": "death_touch_yellow",
+  "_comment": "Two defects. \"a Frailty, Inertia, OR Bloodrot Pox token\" is a CHOICE OF ONE; the JSON created ALL THREE. And \"under THEIR control\" is the hero that was hit, while CREATE_TOKEN defaults to SELF -- so it stacked three debuffs on the ATTACKER. \"Death Touch can't be played from hand\" is a play-legality restriction with no hook, and is not modelled.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
       "effects": [
         {
-          "type": "CREATE_TOKEN",
-          "token_type": "Frailty"
-        },
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Inertia"
-        },
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "Bloodrot Pox"
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "Frailty",
+              "effects": [
+                {
+                  "type": "CREATE_TOKEN",
+                  "token_type": "Frailty",
+                  "token": "frailty",
+                  "player": "OPPONENT"
+                }
+              ]
+            },
+            {
+              "name": "Inertia",
+              "effects": [
+                {
+                  "type": "CREATE_TOKEN",
+                  "token_type": "Inertia",
+                  "token": "inertia",
+                  "player": "OPPONENT"
+                }
+              ]
+            },
+            {
+              "name": "Bloodrot Pox",
+              "effects": [
+                {
+                  "type": "CREATE_TOKEN",
+                  "token_type": "Bloodrot Pox",
+                  "token": "bloodrot_pox",
+                  "player": "OPPONENT"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
