@@ -221,6 +221,19 @@ def _dispatch_params(path: Path, var: str) -> dict[str, set[str]]:
                       and any(isinstance(a, ast.Name) and a.id == "params"
                               for a in node.args)):
                     keys.add(WHOLESALE)
+                # compile_condition(inner_t, params) — the block hands the WHOLE
+                # params dict to another dispatcher whose type is chosen at
+                # runtime, so the keys it reads are the INNER type's, not this
+                # one's. NOT's flattened form does exactly this, and reporting
+                # fyendals_spring_tunic's counter_type/min as unread was a false
+                # positive on a card that demonstrably works.
+                elif (isinstance(node, ast.Call)
+                      and isinstance(node.func, ast.Name)
+                      and node.func.id in ("compile_condition", "compile_effect",
+                                           "compile_cost")
+                      and any(isinstance(a, ast.Name) and a.id == "params"
+                              for a in node.args)):
+                    keys.add(WHOLESALE)
         if indirect:
             for stmt in body:
                 for node in ast.walk(stmt):

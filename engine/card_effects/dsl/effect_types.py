@@ -1213,9 +1213,30 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # "banish a card with cost N or less" — an unread limit banished any
         # card at all, so a restricted effect became an unrestricted one.
         cost_limit = params.get("cost_limit", params.get("max_cost"))
+        # "you MAY banish an attack action card from your hand WITH COST LESS
+        # THAN ..." — the kind of card is a full DSL filter, and it is authored
+        # on the target dict alongside the zone. Reusing _hand_card_filter means
+        # "an Instant", "a yellow card" and a raw condition list all mean here
+        # what they mean at every other filtered choice.
+        _tspec = params.get("target")
+        _fparams = dict(_tspec) if isinstance(_tspec, dict) else {}
+        for _k in ("filter", "card_type", "card_types", "card_name", "color",
+                   "keyword", "class_filter", "subtype", "subtypes"):
+            if _k in params:
+                _fparams[_k] = params[_k]
+        card_filter = _hand_card_filter(_fparams) if _fparams else None
+        # "You MAY banish" — without this the banish is compulsory, which for a
+        # cost ("if you do, ...") silently forces the player to pay.
+        optional = bool(_first(params, "optional", "may", "up_to",
+                               default=False))
+        # Where the banished card should be REMEMBERED, for the "if you do"
+        # clause that follows. BANISH always sets the `banished` ref; a named
+        # one survives alongside it.
+        record_as = params.get("record_as")
 
         def _fn(card, event, state, _a=amt, _fz=from_zone, _pt=player_target,
-                _fd=face_down, _cl=cost_limit):
+                _fd=face_down, _cl=cost_limit, _filter=card_filter,
+                _opt=optional, _rec=record_as):
             from engine.card_effects.ability_keywords import _ask_player, _controller_id
             from engine.effect_keywords import banish as _ek_banish
             cid = _controller_id(card)
@@ -1238,6 +1259,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     cap = None
 
             def _ok(c, _cap=cap):
+                if _filter is not None and not _filter(c, state):
+                    return False
                 if _cap is None:
                     return True
                 cost = getattr(c, "raw_cost", None)
@@ -1270,8 +1293,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     pool = [c for c in getattr(player, zone_name).cards if _ok(c)]
                     if not pool:
                         break
-                    pick = _ask_player(state, tid, [c.slug for c in pool],
+                    options = [c.slug for c in pool] + (["none"] if _opt else [])
+                    pick = _ask_player(state, tid, options,
                                        context=f"Choose a card to banish from {zone_name}")
+                    if pick == "none":
+                        break
                     target = next((c for c in pool if c.slug == pick), None)
                     if target is None:
                         break
@@ -1279,6 +1305,9 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                                face_down=_fd)
                     banished.append(target)
             _record_banished(banished)
+            if _rec and banished:
+                from engine.context import set_ref
+                set_ref(_rec, banished[0] if len(banished) == 1 else list(banished))
         return _fn
 
     if etype == "CHARGE":
@@ -3979,6 +4008,52 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             inv.remove(target)
             target.is_public = True
             controller.hand.add(target)
+        return _fn
+
+    if etype in ("GRANT_PLAY_FROM_BANISHED", "PLAYABLE_FROM_BANISHED_REF"):
+        # "If you do, it gets +1{p} and you MAY PLAY IT THIS TURN" — the payoff
+        # half of a banish-then-play card, acting on the card the BANISH just
+        # took rather than re-searching the zone for something that matches.
+        #
+        # mounting_anger_red re-filtered the whole banished zone for each half,
+        # so with two eligible cards sitting there it could pump one and
+        # unlock a different one. `player.playable_from_banished` is the list
+        # play.py actually consults; SET_FLAG appends a STRING to
+        # current_turn_effects and nothing reads it, so the card's own "you may
+        # play it" clause reached the game state nowhere at all.
+        ref_name = _first(params, "ref", "record_as", "target_ref",
+                          default="banished")
+        power_mod = _first(params, "power_mod", "power", "amount", default=0)
+
+        def _fn(card, event, state, _ref=ref_name, _pm=power_mod):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.context import get_ref
+            cid = _controller_id(card)
+            if cid not in state.players:
+                return
+            target = get_ref(_ref)
+            if isinstance(target, list):
+                targets = list(target)
+            elif target is None:
+                return
+            else:
+                targets = [target]
+            try:
+                bump = int(_resolve_amount(_pm, state, card))
+            except (TypeError, ValueError):
+                bump = 0
+            for obj in targets:
+                if obj is None:
+                    continue
+                if bump:
+                    # The card is not on the chain yet, so a combat-scoped power
+                    # modifier has nothing to attach to; the bump has to travel
+                    # with the OBJECT until it is played.
+                    for attr in ("base_power", "power"):
+                        cur = getattr(obj, attr, None)
+                        if cur is not None:
+                            setattr(obj, attr, cur + bump)
+                state.players[cid].playable_from_banished.append(obj)
         return _fn
 
     if etype == "BANISH_OPP_TOP_GRANT_PLAY":

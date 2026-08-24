@@ -279,8 +279,75 @@ def test_regression_count_does_not_grow():
     # hero" (3 cards) and zap_clappers' "the ATTACKING hero" burned their own
     # side; that vocabulary is now one shared resolver, because DEAL_GENERIC
     # held a second copy of it.
-    assert findings <= 28, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 28). "
+    # 28 -> 27: a FALSE POSITIVE, not a fix. NOT's flattened form hands the
+    # WHOLE params dict to compile_condition(inner_type, params), so the keys
+    # belong to the INNER type. The scan only recognised forwarding when
+    # `params` was the FIRST argument, so fyendals_spring_tunic's
+    # counter_type/min read as dead on a card that demonstrably works. A false
+    # positive in a report this long is how someone learns to stop believing it.
+    # 27 -> 26: mounting_anger_red. "You may banish an attack action card from
+    # your hand with cost LESS THAN your Draconic chain links. If you do, it
+    # gains +1{p} and you may play it this turn." MODIFY_ATTACK reads no
+    # target, and SET_FLAG appends a STRING to current_turn_effects that
+    # nothing reads -- play.py consults player.playable_from_banished -- so
+    # neither payoff half reached the game state, and both re-filtered the
+    # WHOLE banished zone rather than the card just banished.
+    assert findings <= 26, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 26). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )
+
+
+# --- the NOT exemption has to be EARNED --------------------------------------
+
+def test_a_flattened_NOT_really_forwards_its_params_to_the_inner_condition():
+    """audit_params stops reporting NOT's keys because the handler forwards
+    `params` wholesale. That exemption is only honest if the forwarding works:
+    an exemption granted to a handler that DROPS the keys would hide exactly
+    the defect the audit exists to find.
+
+    fyendals_spring_tunic: "at the start of your turn, if this has FEWER THAN 3
+    energy counters". Drop counter_type/min and the gate answers about the
+    wrong counter, or about none.
+    """
+    import copy
+
+    from engine.card import CardDB
+    from engine.card_effects.dsl.condition_types import compile_condition
+    from engine.card_effects.dsl.loader import load_all_cards
+    from tests.conftest import _make_state
+
+    load_all_cards()
+    db = CardDB()
+    state = _make_state()
+    state.card_db = db
+    tunic = copy.deepcopy(db.get("fyendals_spring_tunic"))
+    tunic.owner = tunic.controller = 1
+
+    fn = compile_condition("NOT", {"inner_type": "COUNTER_GTE",
+                                   "counter_type": "energy", "min": 3})
+
+    assert fn(tunic, None, state) is True, "an empty tunic did not satisfy it"
+    tunic.counters["energy"] = 2
+    assert fn(tunic, None, state) is True, "2 is fewer than 3"
+    tunic.counters["energy"] = 3
+    assert fn(tunic, None, state) is False, (
+        "3 energy counters still read as \"fewer than 3\" — the inner "
+        "condition never saw counter_type/min")
+
+
+def test_the_forwarding_is_detected_from_the_source_not_hardcoded():
+    """A hand-written allowlist of forwarding types goes stale silently. The
+    scan derives them, so this pins that NOT is derived rather than named."""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+    import audit_params as A
+
+    index = A.build_index()
+    assert A.WHOLESALE in index.get("NOT", set())
+    src = (Path(__file__).resolve().parent.parent / "scripts"
+           / "audit_params.py").read_text(encoding="utf-8")
+    assert '"NOT"' not in src, (
+        "the forwarding list is hardcoded; it will go stale silently")

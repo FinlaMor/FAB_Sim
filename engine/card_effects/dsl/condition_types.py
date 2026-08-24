@@ -1166,13 +1166,25 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                 return False
         return _cost_eq
 
-    if ctype in ("CARD_COST_LTE", "CARD_COST_GTE", "COST_LTE", "COST_GTE"):
+    if ctype in ("CARD_COST_LTE", "CARD_COST_GTE", "COST_LTE", "COST_GTE",
+                 "CARD_COST_LT", "CARD_COST_GT", "COST_LT", "COST_GT"):
         # THIS card's printed cost. The ATTACK_COST_* family asks about the
         # attack on the chain, which for a play-time filter is either absent or
         # a different card entirely.
+        #
+        # The comparison is derived from the SUFFIX. Spelling it as
+        # `cost <= n if kind == "CARD_COST_LTE" else cost >= n` meant the
+        # COST_LTE alias -- which is not that one string -- took the >= branch,
+        # so urgent_delivery_yellow's "with cost LESS THAN OR EQUAL TO the
+        # number of times you've boosted" matched exactly the expensive items
+        # the text excludes. An alias that compiles but compares backwards is
+        # worse than no alias: the card works, visibly, on the wrong cards.
+        # LT/GT are the strict forms ("cost LESS THAN the number of Draconic
+        # chain links"), which nothing could previously express.
         limit = params.get("amount", params.get("cost"))
+        _op = ctype.rsplit("_", 1)[1]
 
-        def _card_cost(c, e, s, _lim=limit, _kind=ctype):
+        def _card_cost(c, e, s, _lim=limit, _op=_op):
             n = _numeric_amount(_lim, s, c)
             if n is None:
                 return False
@@ -1183,7 +1195,13 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                 cost = int(cost or 0)
             except (TypeError, ValueError):
                 cost = 0
-            return cost <= n if _kind == "CARD_COST_LTE" else cost >= n
+            if _op == "LTE":
+                return cost <= n
+            if _op == "LT":
+                return cost < n
+            if _op == "GT":
+                return cost > n
+            return cost >= n
         return _card_cost
 
     if ctype in ("CARD_HAS_EFFECT", "CARD_DEALS"):

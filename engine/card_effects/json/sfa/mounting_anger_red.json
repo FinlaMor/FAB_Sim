@@ -1,5 +1,6 @@
 {
   "slug": "mounting_anger_red",
+  "_comment": "X = Draconic chain links you control, counted from ChainLink.talents via COUNT_CHAIN_LINKS. Both payoff halves re-filtered the WHOLE banished zone instead of acting on the card just banished, so with two eligible cards sitting there it could pump one and unlock a different one -- and neither reached the game state anyway: MODIFY_ATTACK reads no target, and SET_FLAG appends a STRING to current_turn_effects that nothing looks at, while play.py consults player.playable_from_banished. The cost bound is \"LESS THAN\", not \"or equal to\"; CARD_COST_LT is the strict form. \"You may banish\" is optional, and \"if you do\" means the payoff must not fire when nothing was banished.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -7,65 +8,34 @@
       "effects": [
         {
           "type": "BANISH",
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zone": "HAND"
-              },
-              {
-                "type": "ATTACK_TYPE_IN",
-                "types": [
-                  "Attack"
-                ]
-              },
-              {
-                "type": "ATTACK_COST_LTE",
-                "amount": {
-                  "type": "COUNT_CHAIN_LINKS",
-                  "talent": "Draconic"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
           "amount": 1,
+          "optional": true,
+          "record_as": "mounting_anger_card",
           "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zone": "BANISHED"
-              },
-              {
-                "type": "ATTACK_TYPE_IN",
-                "types": [
-                  "Attack"
-                ]
+            "player": "SELF",
+            "zone": "HAND"
+          },
+          "card_type": "Attack",
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_types": [
+                "Action"
+              ]
+            },
+            {
+              "type": "CARD_COST_LT",
+              "amount": {
+                "type": "COUNT_CHAIN_LINKS",
+                "talent": "Draconic"
               }
-            ]
-          }
+            }
+          ]
         },
         {
-          "type": "SET_FLAG",
-          "flag": "CAN_PLAY_BANISHED_ATTACK",
-          "value": true,
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zone": "BANISHED"
-              },
-              {
-                "type": "ATTACK_TYPE_IN",
-                "types": [
-                  "Attack"
-                ]
-              }
-            ]
-          }
+          "type": "GRANT_PLAY_FROM_BANISHED",
+          "ref": "mounting_anger_card",
+          "power_mod": 1
         }
       ]
     },
@@ -77,6 +47,5 @@
         }
       ]
     }
-  ],
-  "_comment": "X = Draconic chain links you control, counted from ChainLink.talents via COUNT_CHAIN_LINKS. Was the bare string 'DRACONIC_CHAIN_LINKS_CONTROLLED', which ATTACK_COST_LTE compared against an int -> TypeError mid-resolution, not merely a no-op."
+  ]
 }
