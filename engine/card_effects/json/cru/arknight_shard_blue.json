@@ -1,15 +1,10 @@
 {
   "slug": "arknight_shard_blue",
+  "_comment": "\"When THIS is pitched, create a Runechant token.\" The gate was REF_PITCH_IS, which asks about the PITCH VALUE of a card a PREVIOUS effect stored under a ref -- and it reads `ref`, not `name`. Nothing had set the default ref, so the condition was false in every state and the token was never created. ON_PITCH already dispatches against this card's own definition, so \"this is pitched\" needs no condition at all.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_PITCH",
-      "conditions": [
-        {
-          "type": "REF_PITCH_IS",
-          "name": "arknight_shard_blue"
-        }
-      ],
       "effects": [
         {
           "type": "CREATE_TOKEN",

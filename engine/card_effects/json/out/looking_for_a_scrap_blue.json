@@ -1,23 +1,38 @@
 {
   "slug": "looking_for_a_scrap_blue",
+  "_comment": "\"You MAY banish a card WITH 1{p} from your graveyard. WHEN YOU DO, this gains +1{p} and go again.\" pitch_power was unread, so ANY graveyard card paid a cost only a 1-power card can pay -- on the cost side that legalises a play whose cost cannot be met. The \"may\" was compulsory and the payoff ungated, so the bonus applied whether or not anything was banished.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "additional_cost": [
         {
           "type": "BANISH_FROM_GRAVEYARD",
-          "pitch_power": 1
+          "pitch_power": 1,
+          "optional": true,
+          "flag": "looking_for_a_scrap_banished"
         }
       ],
       "effects": [
         {
           "type": "MODIFY_ATTACK",
           "mod": "add",
-          "amount": 1
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "looking_for_a_scrap_banished"
+            }
+          ]
         },
         {
           "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "keyword": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "FLAG_SET",
+              "flag": "looking_for_a_scrap_banished"
+            }
+          ]
         }
       ]
     }

@@ -879,6 +879,23 @@ def _damage_target_player(state, controller_id: int, target: str) -> int:
     return controller_id
 
 
+def _matches_type_or_subtype(card, wanted) -> bool:
+    """Does this card carry any of `wanted` as a TYPE or a SUBTYPE?
+
+    "Instant" is a type while "Ally" and "Attack" are subtypes, and a card
+    naming either means the same thing by it. Two search effects each carried
+    their OWN copy of a types-only reading -- the same one-fact-two-stores
+    shape this audit keeps finding -- so "search your deck for an ALLY" and
+    "return an ALLY from your graveyard" both matched nothing at all.
+    """
+    if not wanted:
+        return True
+    want = {str(t).lower() for t in wanted}
+    have = {str(t).lower() for t in (getattr(card, "types", None) or [])}
+    have |= {str(t).lower() for t in (getattr(card, "subtypes", None) or [])}
+    return bool(want & have)
+
+
 def _names_self(raw) -> bool:
     """Does this target/ref spelling mean "this card"?
 
@@ -1646,7 +1663,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             else:
                 eligible = list(controller.deck.cards)
             if _ft:
-                eligible = [c for c in eligible if any(t in (c.types or []) for t in _ft)]
+                eligible = [c for c in eligible
+                            if _matches_type_or_subtype(c, _ft)]
             if _fsc:
                 eligible = [c for c in eligible if _fsc in c.slug]
             if _kw:
@@ -1734,10 +1752,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # public, ordered zone, so there is no shuffle afterward. Filters:
         #   slug_contains / name_contains — substring match (case-insensitive);
         #   filter_types — any of these card types.
-        filter_types = params.get("filter_types", None)
+        _raw_ft = _first(params, "filter_types", "card_types", "card_type",
+                         "types", "type", "subtypes", "subtype")
+        filter_types = ([_raw_ft] if isinstance(_raw_ft, str)
+                        else list(_raw_ft) if _raw_ft else None)
         slug_contains = params.get("slug_contains", None)
         name_contains = params.get("name_contains", None)
-        def _fn(card, event, state, _ft=filter_types, _sc=slug_contains, _nc=name_contains):
+        # WHERE the card goes. "put it into hand" is the common case and stays
+        # the default, but two cards say something else and had no way to say
+        # it: "shuffle an instant card from your graveyard into your DECK" and
+        # "return an ally from your graveyard to the ARENA". Shuffling follows
+        # from the deck destination unless a card overrides it.
+        destination = str(_first(params, "destination", "to_zone", "to",
+                                 default="hand")).lower()
+        shuffle = params.get("shuffle")
+        if shuffle is None:
+            shuffle = destination in ("deck", "deck_bottom", "deck_top")
+
+        def _fn(card, event, state, _ft=filter_types, _sc=slug_contains,
+                _nc=name_contains, _dest=destination, _shuf=shuffle):
             from engine.card_effects.ability_keywords import (
                 _controller_id, ask_optional, FAIL_TO_FIND)
             from engine.effect_keywords import put_object
@@ -1745,7 +1778,8 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             controller = state.players[cid]
             eligible = list(controller.graveyard.cards)
             if _ft:
-                eligible = [c for c in eligible if any(t in (c.types or []) for t in _ft)]
+                eligible = [c for c in eligible
+                            if _matches_type_or_subtype(c, _ft)]
             if _sc:
                 eligible = [c for c in eligible if _sc.lower() in c.slug.lower()]
             if _nc:
@@ -1761,9 +1795,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             if target is not None:
                 target.owner = cid
                 target.controller = cid
-                put_object(state, target, "hand",
+                _zone = {"arena": "permanents", "deck_top": "deck",
+                         "deck_bottom": "deck"}.get(_dest, _dest)
+                put_object(state, target, _zone,
                            destination_player_id=cid, source_player_id=cid,
                            is_public=True)
+                if _shuf:
+                    from engine.effect_keywords import shuffle as _ek_shuffle
+                    _ek_shuffle(state, cid)
         return _fn
 
     if etype == "AMP":

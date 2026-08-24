@@ -301,8 +301,17 @@ def test_regression_count_does_not_grow():
     # and no target, RETURN_TO_HAND fell through to "return THIS card", so
     # "return a card from your ARSENAL" bounced the equipment it had just
     # destroyed as a cost and left the arsenal untouched.
-    assert findings <= 23, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 23). "
+    # 23 -> 19: graveyard searches that could only ever reach HAND. Two search
+    # effects each carried their OWN types-only copy of the type filter, so
+    # "an ALLY" -- a SUBTYPE -- matched nothing in the game. bone_puppetry's
+    # "return an ally from your graveyard TO THE ARENA" was
+    # RETURN_DR_FROM_GRAVEYARD (a DEFENSE REACTION, to HAND), and
+    # ominous_excavation_blue's "shuffle an instant into your deck" was a
+    # banish-a-trap-and-make-it-playable. looking_for_a_scrap_blue's unread
+    # pitch_power let ANY graveyard card pay a cost only a 1-power card can
+    # pay -- on the COST side that legalises an unplayable play.
+    assert findings <= 19, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 19). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )

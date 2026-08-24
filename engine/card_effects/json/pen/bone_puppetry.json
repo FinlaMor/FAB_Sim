@@ -9,8 +9,11 @@
           "type": "MAY",
           "effects": [
             {
-              "type": "RETURN_DR_FROM_GRAVEYARD",
-              "target_zone": "ALLY"
+              "type": "SEARCH_GRAVEYARD",
+              "filter_types": [
+                "Ally"
+              ],
+              "destination": "arena"
             },
             {
               "type": "SET_FLAG",
@@ -51,5 +54,5 @@
       ]
     }
   ],
-  "_comment": "Was a DESTROY_TOKEN naming no token at all. DESTROY_TOKEN destroys ONE token of a named slug the CONTROLLER controls, and returns immediately when the slug is empty -- so it destroyed nothing. 'destroy IT' means the ally this card returned, and a ref cannot carry across to a delayed trigger in another ability -- reference scopes are per ability execution. APPROXIMATED as an Ally you control, and said so. The 'discard your hand' half was DISCARD with amount 0, which discards nothing, so the whole downside of the card was absent; DISCARD now reads amount 'ALL'."
+  "_comment": "\"Return an ALLY from your graveyard TO THE ARENA.\" It was RETURN_DR_FROM_GRAVEYARD, which returns a DEFENSE REACTION card to HAND -- wrong card type and wrong destination, and target_zone:'ALLY' was the only hint. SEARCH_GRAVEYARD is the may-fail-to-find graveyard search and now takes a destination and matches SUBTYPES, which is what 'Ally' is. Earlier: was a DESTROY_TOKEN naming no token at all, so it destroyed nothing; 'destroy IT' means the ally this card returned, and a ref cannot cross into a delayed trigger in another ability -- reference scopes are per ability execution -- so that half is APPROXIMATED as an Ally you control. The 'discard your hand' half was DISCARD with amount 0, so the whole downside of the card was absent."
 }

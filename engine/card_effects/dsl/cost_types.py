@@ -559,8 +559,18 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         # filter was card TYPE only — so any card in the graveyard paid a cost
         # the card says only one specific card can pay.
         want_name = params.get("name") or params.get("card_name")
+        # "banish a card WITH 1{p} from your graveyard" — an unread power
+        # requirement let ANY card in the graveyard pay a cost the text says
+        # only a 1-power card can pay. On the cost side that is not a weakened
+        # effect: it legalises a play whose cost cannot actually be met.
+        want_power = params.get("pitch_power", params.get("power"))
+        # "You MAY banish ..." — an optional additional cost never blocks the
+        # play; the payoff is gated on whether it was actually paid, via the
+        # same turn flag BANISH_NAMED_GRAVEYARD_OPTIONAL uses.
+        optional = bool(params.get("optional"))
+        paid_flag = params.get("flag", "banished_from_graveyard")
 
-        def _eligible(card, state, _types, _name):
+        def _eligible(card, state, _types, _name, _power=want_power):
             from engine.card_effects.ability_keywords import _controller_id
             gy = state.players[_controller_id(card)].graveyard.cards
             out = [
@@ -577,18 +587,51 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
                 out = [c for c in out
                        if wanted in (_flat(getattr(c, "name", "") or ""),
                                      _flat(getattr(c, "slug", "") or ""))]
+            if _power is not None:
+                try:
+                    need = int(_power)
+                except (TypeError, ValueError):
+                    need = None
+                if need is not None:
+                    out = [c for c in out
+                           if (getattr(c, "power", None)
+                               if getattr(c, "power", None) is not None
+                               else getattr(c, "base_power", None)) == need]
             return out
 
-        def can_pay(card, event, state, _types=card_types, _a=amount, _name=want_name):
+        def can_pay(card, event, state, _types=card_types, _a=amount,
+                    _name=want_name, _opt=optional):
+            if _opt:
+                return True
             return len(_eligible(card, state, _types, _name)) >= _a
 
-        def pay(card, event, state, _types=card_types, _a=amount, _name=want_name):
-            from engine.card_effects.ability_keywords import _controller_id
+        def pay(card, event, state, _types=card_types, _a=amount,
+                _name=want_name, _opt=optional, _flag=paid_flag):
+            from engine.card_effects.ability_keywords import (
+                _controller_id, ask_optional)
             cid = _controller_id(card)
             gy = state.players[cid].graveyard.cards
-            for c in _eligible(card, state, _types, _name)[:_a]:
+            eligible = _eligible(card, state, _types, _name)
+            if _opt:
+                # "You MAY banish ... WHEN YOU DO, this gains +1{p} and go
+                # again." Paying it unasked hands the player a cost they did
+                # not choose; skipping the flag hands them the bonus for free.
+                if not eligible:
+                    return
+                pick = ask_optional(state, cid, [c.slug for c in eligible],
+                                    context="Banish a card from your graveyard "
+                                            "as an additional cost?")
+                if pick is None:
+                    return
+                chosen = [next((c for c in eligible if c.slug == pick),
+                               eligible[0])]
+            else:
+                chosen = eligible[:_a]
+            for c in chosen:
                 gy.remove(c)
                 state.players[cid].banished.add(c)
+            if chosen and _flag:
+                state.players[cid].current_turn_effects.append(_flag)
         return can_pay, pay
 
     if ctype == "PAY_RESOURCES":

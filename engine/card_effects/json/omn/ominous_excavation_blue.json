@@ -1,24 +1,28 @@
 {
   "slug": "ominous_excavation_blue",
-  "_comment": "Generic destroyed-this-turn tracking: this read AURA_DESTROYED_THIS_TURN, a flag nothing ever set, so the clause could never fire. effect_keywords.destroy now records \"destroyed_this_turn:<slug|type|subtype>\" for whatever was destroyed, and DESTROYED_THIS_TURN reads it by name.",
+  "_comment": "Generic destroyed-this-turn tracking: this read AURA_DESTROYED_THIS_TURN, a flag nothing ever set. effect_keywords.destroy now records \"destroyed_this_turn:<slug|type|subtype>\" and DESTROYED_THIS_TURN reads it by name. The first clause was BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE -- a different effect on a different card type in a different zone, which also made the card playable from banish. The text is \"you may SHUFFLE an INSTANT card from your graveyard INTO YOUR DECK\"; SEARCH_GRAVEYARD is already the may-fail-to-find search and now takes a destination.",
   "abilities": [
     {
       "ability_type": "INSTANT",
       "effects": [
         {
-          "type": "BANISH_TRAP_FROM_GRAVEYARD_PLAYABLE",
-          "card_type": "Instant"
+          "type": "SEARCH_GRAVEYARD",
+          "filter_types": [
+            "Instant"
+          ],
+          "destination": "deck",
+          "shuffle": true
         },
         {
           "type": "CREATE_TOKEN",
           "token_type": "Ponder",
+          "token": "ponder",
           "conditions": [
             {
               "type": "DESTROYED_THIS_TURN",
               "name": "aura"
             }
-          ],
-          "token": "ponder"
+          ]
         }
       ]
     }
