@@ -593,6 +593,23 @@ def _object_target_spec(target):
     scripts/audit_params.py, which is the only thing that will bring it back
     up; resolving it to something plausible would hide it for good.
     """
+    # A fifth spelling: {"type": "TOP_DECK", "controller": "opponent"} uses
+    # `type` to name the ZONE. Such a dict was already accepted as canonical (it
+    # has `controller`) but carried no `zone`, so it fell through to the ARENA
+    # default — five cards saying "banish the top card of THEIR DECK" were
+    # banishing from their arena instead. Silent, and the wrong zone.
+    #
+    # Only a `type` that NAMES A ZONE is read this way. A dict whose type is
+    # anything else ({"type": "CARD"}) is still refused below, which is what
+    # keeps an unparseable target visible to scripts/audit_params.py rather than
+    # resolved to a plausible guess.
+    if isinstance(target, dict) and "zone" not in target and "zones" not in target:
+        named = str(target.get("type") or "").upper()
+        if named in _OBJECT_TARGET_ZONES or named in ("TOP_CARD", "TOP_DECK"):
+            target = {k: v for k, v in target.items() if k != "type"}
+            target["zone"] = ("DECK_TOP" if named in ("TOP_CARD", "TOP_DECK")
+                              else named)
+
     if isinstance(target, dict) and any(
             k in target for k in ("controller", "zone", "zones", "name",
                                   "name_ref", "filter", "ref")):

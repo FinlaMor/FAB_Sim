@@ -11,18 +11,29 @@
       ],
       "effects": [
         {
-          "type": "REVEAL_TOP_DECK",
-          "target": "opponent"
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "FLIP_MATCHING",
+              "face_up": true,
+              "target": {
+                "controller": "OPPONENT",
+                "zone": "ARSENAL",
+                "amount": 1
+              }
+            }
+          ]
         },
         {
           "type": "DESTROY_MATCHING",
           "target": {
             "controller": "OPPONENT",
             "zone": "ARSENAL",
+            "amount": 1,
             "filter": [
               {
                 "type": "CARD_IS_TYPE",
-                "card_type": "Defense Reaction"
+                "card_type": "DefenseReaction"
               }
             ]
           }
@@ -30,5 +41,5 @@
       ]
     }
   ],
-  "_comment": "'Defense reactions can't be played to this chain link' is NOT implemented: defence reactions are played in the reaction step, which has no restriction hook, and the defend step already excludes them (CR 7.3.2a). It was authored as RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT, which restricts ORDINARY defenders instead -- a real and wrong restriction in place of a missing one. Removed rather than approximated. Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy a defense reaction card in their arsenal' -- an arsenal card matching a type, on the opponent's side."
+  "_comment": "\"When this hits a hero, you may turn a card in THEIR ARSENAL FACE UP, then destroy a defense reaction in their arsenal.\" The flip was REVEAL_TOP_DECK -- the top of a DECK, not a card in an arsenal, and a different zone entirely -- and its 'target' was unread, so it revealed the CONTROLLER's own deck. It was also mandatory where the card says \"you may\"; the flip is what makes the destroy possible, so being forced to reveal is a real difference. The type is DefenseReaction (no space): \"Defense Reaction\" matches nothing.\n\n\"Defense reactions can't be played to this chain link\" is NOT implemented: defence reactions are played in the reaction step, which has no restriction hook, and the defend step already excludes them (CR 7.3.2a). It had been RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT, which restricts ORDINARY defenders -- a real and wrong restriction in place of a missing one."
 }

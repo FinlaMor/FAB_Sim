@@ -13,11 +13,12 @@
         {
           "type": "BANISH",
           "target": {
-            "type": "TOP_CARD",
-            "controller": "opponent"
+            "controller": "opponent",
+            "zone": "DECK_TOP"
           }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Its target named the zone under a `type` key -- {\"type\":\"TOP_DECK\",\"controller\":\"opponent\"} -- a fifth spelling. That dict IS accepted as a canonical target (it has `controller`) but carries no `zone`, so it fell through to the ARENA default: a card saying \"banish the top card of THEIR DECK\" banished from their arena instead. The compiler now reads a zone named that way, and the card says `zone` outright."
 }

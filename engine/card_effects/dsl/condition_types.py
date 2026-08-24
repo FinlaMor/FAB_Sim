@@ -103,6 +103,13 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
     if ctype in ("none", "NONE", ""):
         return None
 
+    # Dispatch on an UPPERCASE name. Every branch below is written in upper
+    # case, so a card authoring "TalentContainsAny" fell through the whole
+    # chain to the unknown-type error — an invented type as far as the
+    # compiler is concerned, purely because of its casing. Normalising here
+    # closes the class rather than adding a mixed-case alias per card.
+    ctype = ctype.upper()
+
     # Threshold "amount" authored as an integer-literal string ("4") crashes the
     # numeric comparisons in *_GTE/_LTE conditions. Coerce a pure-integer string
     # to int once here; leave any non-numeric marker untouched.
@@ -304,9 +311,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         #   {"type":"PITCHED_FOR_THIS","subtype":"Chi"}
         want_sub = _norm(params.get("subtype") or params.get("card_type") or "")
         want_col = _norm(params.get("color") or params.get("colour") or "")
+        # "If a LIGHTNING card was pitched to play this" (Lightning Bond) — the
+        # bond keywords name a CLASS or TALENT, which this could not ask about.
+        want_cls = _norm(params.get("card_class") or params.get("class")
+                         or params.get("talent") or "")
 
-        def _pitched(c, e, s, _sub=want_sub, _col=want_col):
+        def _pitched(c, e, s, _sub=want_sub, _col=want_col, _cls=want_cls):
             for pc in (getattr(c, "pitched_for_this", None) or []):
+                if _cls and _cls not in _card_traits(pc):
+                    continue
                 if _sub:
                     have = {_norm(x) for x in (getattr(pc, "subtypes", None) or [])}
                     have |= {_norm(x) for x in (getattr(pc, "types", None) or [])}
@@ -1128,7 +1141,7 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                 return False
         return _cost_eq
 
-    if ctype in ("CARD_COST_LTE", "CARD_COST_GTE"):
+    if ctype in ("CARD_COST_LTE", "CARD_COST_GTE", "COST_LTE", "COST_GTE"):
         # THIS card's printed cost. The ATTACK_COST_* family asks about the
         # attack on the chain, which for a play-time filter is either absent or
         # a different card entirely.
@@ -1177,31 +1190,45 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return False
         return _has_effect
 
-    if ctype in ("CARD_IS_CLASS", "CARD_IS_TALENT", "SELF_IS_CLASS"):
+    if ctype in ("CARD_IS_CLASS", "CARD_IS_TALENT", "SELF_IS_CLASS",
+                 "CLASS_IN"):
         # Asks about THIS card's class/talent. The ATTACK_* family asks about the
         # attack on the chain, which is a different object — using one where the
         # other is meant silently answers about the wrong card. Needed by the
         # play-time "next card you play" queue, whose filters run against the
         # card being played rather than against combat.
-        want = _norm(params.get("card_class") or params.get("class")
-                     or params.get("talent") or "")
+        # Plural spellings too: the cards that reached for CLASS_IN and
+        # TalentContainsAny pass `classes` / `talents` LISTS. Reading only the
+        # singular left `want` empty, which makes the condition False for every
+        # card — a filter that matches nothing rather than one that matches the
+        # named class.
+        wants = [_norm(v) for v in _as_list(
+            params, "card_class", "class", "classes", "class_in",
+            "talent", "talents") if v]
 
-        def _is_class(c, e, s, _w=want):
-            return bool(_w) and _w in _card_traits(c)
+        def _is_class(c, e, s, _w=wants):
+            if not _w:
+                return False
+            have = _card_traits(c)
+            return any(w in have for w in _w)
         return _is_class
 
-    if ctype in ("CARD_IS_TYPE", "SELF_IS_TYPE"):
+    if ctype in ("CARD_IS_TYPE", "SELF_IS_TYPE", "SUBTYPE_IN"):
         # Types AND subtypes: "Attack" is a SUBTYPE while "Action" is a type, and
         # a card naming either means the same thing by it.
-        want = _norm(params.get("card_type") or params.get("type_name")
-                     or params.get("subtype") or "")
+        # Plural spellings too (SUBTYPE_IN passes `subtypes`). Reading only the
+        # singular left `want` empty, and an empty want returns False for every
+        # card — a filter matching NOTHING rather than the named type.
+        wants = [_norm(v) for v in _as_list(
+            params, "card_type", "type_name", "subtype", "subtypes",
+            "card_types", "filter_types") if v]
 
-        def _is_type(c, e, s, _w=want):
+        def _is_type(c, e, s, _w=wants):
             if not _w:
                 return False
             have = {_norm(x) for x in (getattr(c, "types", None) or [])}
             have |= {_norm(x) for x in (getattr(c, "subtypes", None) or [])}
-            return _w in have
+            return any(w in have for w in _w)
         return _is_type
 
     if ctype in ("CARD_IS_FACE_DOWN", "CARD_IS_FACE_UP"):
@@ -1456,7 +1483,7 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return side == _want or side == "both"
         return _meld_side
 
-    if ctype in ("CARD_IS_NAMED", "CARD_NAME_IN"):
+    if ctype in ("CARD_IS_NAMED", "CARD_NAME_IN", "SAME_NAME"):
         # The candidate card's own name — the per-card counterpart of
         # ATTACK_NAME_IN, which reads combat.attack_card and so cannot answer
         # "is THIS card a Swift Shot" in a play-time filter. Matches on name or
@@ -1983,6 +2010,28 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                     return True
             return False
         return _ref_defense
+
+    if ctype in ("SAME_COLOR_AS", "SAME_COLOUR_AS"):
+        # "banish a card with THE SAME COLOR AS the banished card" — a
+        # comparison against an object a preceding effect stored, not a literal
+        # colour. REF_MATCHES_OTHER compares entries WITHIN one ref list, which
+        # is a different question.
+        ref = _first_present(params, "reference", "ref", default="banished")
+
+        def _same_colour(c, e, s, _r=ref):
+            from engine.context import get_ref
+            other = get_ref(_r)
+            if isinstance(other, list):
+                other = other[-1] if other else None
+            if other is None:
+                return False
+
+            def _col(x):
+                return _norm(getattr(x, "color", None)
+                             or getattr(x, "base_color", None) or "")
+            mine, theirs = _col(c), _col(other)
+            return bool(mine) and mine == theirs
+        return _same_colour
 
     if ctype in ("REF_MATCHES_OTHER", "REF_SHARES_WITH_OTHER"):
         # "whenever this banishes a card AND THIS HAS BANISHED ANOTHER card with

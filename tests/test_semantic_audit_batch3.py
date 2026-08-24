@@ -498,10 +498,20 @@ def test_empty_combinator_is_not_a_truth_value():
 def test_invalid_nested_condition_now_fails_at_load():
     """The empty-combinator bug meant inner conditions were never compiled, so
     invalid types inside OR/AND escaped the load gate entirely — a PHP
-    identifier (TalentContainsAny) reached a shipped card that way."""
+    identifier (TalentContainsAny) reached a shipped card that way.
+
+    TalentContainsAny is STILL invalid and deliberately so: it is a foreign
+    camelCase identifier that leaked in from generated data, not a spelling a
+    human would choose, and keeping the load gate strict about it is what
+    surfaced the second copy of it nested inside arc_bending_red's effect
+    filter. (Plausible human spellings — SUBTYPE_IN, CLASS_IN, COST_LTE — are
+    aliased in the compiler instead; see test_no_unknown_type_names.py.)
+    """
     import pytest
     with pytest.raises(ValueError):
         compile_condition("OR", {"conditions": [{"type": "TalentContainsAny"}]})
+    with pytest.raises(ValueError):
+        compile_condition("OR", {"conditions": [{"type": "NoSuchConditionType"}]})
 
 
 # ------------------------------------------------ generic turn-event tracking

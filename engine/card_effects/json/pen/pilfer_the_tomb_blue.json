@@ -4,30 +4,40 @@
     {
       "ability_type": "MODAL",
       "choose": 1,
+      "choose_max": 2,
       "modes": [
         {
-          "type": "BANISH_REF",
-          "target": "opponent",
-          "zone": "GRAVEYARD",
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "card_type": "INSTANT"
-            }
-          ]
+          "type": "BANISH",
+          "amount": 1,
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Instant"
+              }
+            ]
+          }
         },
         {
-          "type": "BANISH_REF",
-          "target": "opponent",
-          "zone": "GRAVEYARD",
-          "conditions": [
-            {
-              "type": "CARD_IN_ZONE",
-              "card_type": "YELLOW"
-            }
-          ]
+          "type": "BANISH",
+          "amount": 1,
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_COLOR",
+                "color": "yellow"
+              }
+            ]
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"CHOOSE 1 OR BOTH; banish target INSTANT from an opposing hero's graveyard / banish target YELLOW CARD from an opposing hero's graveyard.\" Three things. `choose: 1` with no choose_max made \"or both\" impossible -- the card could only ever take one mode. Both modes were BANISH_REF, which acts on a ref an earlier effect stored and no effect here stores one, so neither mode did anything. And their restrictions were effect-level `conditions`, which gate WHETHER the effect runs rather than filtering WHICH card it takes -- with card_type \"YELLOW\", which is a COLOUR and matches no type at all."
 }

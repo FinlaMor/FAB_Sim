@@ -8,40 +8,42 @@
         {
           "type": "NOT",
           "condition": {
-            "type": "REF_EXISTS",
-            "ref": "COMBATCHAINLINK"
+            "type": "PLAYED_FROM_ZONE",
+            "zone": "combat chain"
           }
         }
       ],
       "effects": [
         {
           "type": "BANISH",
-          "target": "TOP_DECK"
+          "amount": 1,
+          "target": {
+            "controller": "SELF",
+            "zone": "DECK_TOP",
+            "amount": 1
+          }
         },
         {
           "type": "LOSE_LIFE",
-          "amount": 1
+          "amount": 1,
+          "player": "SELF"
         },
         {
-          "type": "CONDITIONAL_EFFECT",
-          "when": [
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_POWER_GTE",
+            "ref": "banished",
+            "amount": 6
+          },
+          "effects": [
             {
-              "type": "ATTACK_POWER_GTE",
-              "amount": 6
-            }
-          ],
-          "then": [
-            {
-              "type": "RETURN_TO_HAND"
-            }
-          ],
-          "else": [
-            {
-              "type": "PUT_SELF_BOTTOM_DECK"
+              "type": "RETURN_TO_HAND",
+              "ref": "banished"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"If this is put into a graveyard from anywhere other than the combat chain, banish the top card of your deck and lose 1{h}. IF IT has 6 or more {p}, put IT into your hand, otherwise REPEAT THIS PROCESS.\"\n\nEvery \"it\" pointed at the wrong object. The power test was ATTACK_POWER_GTE, which asks about the attack on the chain -- this card is being put into a GRAVEYARD, so there need not be one -- where \"it\" is the card just banished; that is REF_POWER_GTE over the ref BANISH records. RETURN_TO_HAND with no ref returns the SOURCE, so the branch would have put Beast Within itself into hand rather than the banished card. And the gate was NOT(REF_EXISTS \"COMBATCHAINLINK\"), a ref nothing sets, so NOT(nothing) was TRUE in every state -- including the one case the card excludes.\n\nNOT implemented, and removed rather than replaced with something else: \"otherwise, REPEAT THIS PROCESS\" is a loop, and there is no repeat primitive. The `else` branch had been PUT_SELF_BOTTOM_DECK, which is neither the repeat nor anything the card says. Definition of done: a bounded REPEAT effect exists and the else branch becomes one."
 }

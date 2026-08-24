@@ -9,22 +9,29 @@
           "amount": 3
         },
         {
-          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
-          "target": "Lightning Flow",
-          "conditions": [
+          "type": "MAY",
+          "effects": [
             {
-              "type": "CONTROLS_TOKEN_TYPE",
-              "token_type": "Lightning Flow"
-            }
-          ],
-          "effects_if_destroyed": [
+              "type": "DESTROY_PERMANENT",
+              "asset": "lightning_flow",
+              "amount": 1
+            },
             {
-              "type": "GAIN",
-              "keyword": "GO_AGAIN"
+              "type": "CONDITIONAL",
+              "condition": {
+                "type": "REF_EXISTS",
+                "ref": "destroyed"
+              },
+              "effects": [
+                {
+                  "type": "GO_AGAIN"
+                }
+              ]
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Amp 3. You may destroy a LIGHTNING FLOW you control. IF YOU DO, this gets go again.\" It was MAY_DESTROY_SILVERS_TO_EQUIP -- a bespoke effect for Blacktek Whisperers' graveyard static (\"destroy N Silvers you control, then EQUIP this from the graveyard\"), which reads neither the 'target' naming what to destroy nor the 'effects_if_destroyed' holding the payoff. So this card destroyed Silvers if it had any, tried to equip an Action card, and never granted go again. DESTROY_PERMANENT names the token by asset and records what it destroyed, which is what \"if you do\" reads."
 }

@@ -262,8 +262,16 @@ def test_regression_count_does_not_grow():
     # could only add the SOURCE card), SEARCH_DECK gained `player` (no way to
     # say WHOSE deck, so a card raiding the opponent's raided its own), and
     # COUNT_REF's card_type now checks subtypes as CARD_IS_TYPE does.
-    assert findings <= 38, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 38). "
+    # 38 -> 34: the modal/target batch. BANISH_REF and REVEAL_TOP_DECK were the
+    # wrong effects for "banish target X from an opposing graveyard" and "turn a
+    # card in their arsenal face up"; MAY_DESTROY_SILVERS_TO_EQUIP is a bespoke
+    # effect for a different card entirely.
+    # 34 -> 33: arc_bending_red's Lightning Bond was an ACTIVATE ability with a
+    # PITCH cost -- an ability you activate by pitching, which is not what a
+    # bond is. A bond is a condition ON PLAY about what paid for the card, and
+    # PITCHED_FOR_THIS now reads a class/talent as well as a subtype.
+    assert findings <= 33, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 33). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )
