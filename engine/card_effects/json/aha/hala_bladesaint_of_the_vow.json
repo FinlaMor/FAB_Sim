@@ -1,23 +1,23 @@
 {
   "slug": "hala_bladesaint_of_the_vow",
+  "_comment": "\"**Action** - {r}{r}{r}, {t}: Sharpen target sword you control. Go again.\" The sharpen was a GAIN of a keyword named SHARPEN (sharpen is an EFFECT, not a keyword -- that only appended a string to combat.keywords) or a bare MODIFY_ATTACK. The cost was also wrong in both directions: it charged an invented PITCH of a hand card and never tapped, while the printed cost is {r}{r}{r} plus {t}.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
       "activation_cost": 3,
       "cost": [
         {
-          "type": "PITCH",
-          "amount": 1
+          "type": "TAP_SELF"
         }
       ],
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "SHARPEN"
+          "type": "SHARPEN",
+          "subtype": "Sword",
+          "amount": 1
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "GO_AGAIN"
         }
       ]
     }

@@ -1,22 +1,27 @@
 {
   "slug": "edict_of_steel_red",
+  "_comment": "\"Sharpen target sword you control\" was STEAL_AURA_TOKEN -- it stole a token from the OPPONENT and sharpened nothing. A real SHARPEN effect exists. The follow-up \"if IT has 1 or more +1{p} counters\" is about the sword just sharpened, not about this action card, so it is REF_COUNTER_GTE on the `sharpened` ref that SHARPEN sets; COUNTER_GTE read the source card, which never carries power counters.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "STEAL_AURA_TOKEN"
+          "type": "SHARPEN",
+          "subtype": "Sword",
+          "amount": 1
         },
         {
           "type": "CREATE_TOKEN",
           "token_type": "Flurry",
+          "token": "flurry",
           "conditions": [
             {
-              "type": "COUNTER_GTE",
+              "type": "REF_COUNTER_GTE",
+              "ref": "sharpened",
+              "counter": "power",
               "amount": 1
             }
-          ],
-          "token": "flurry"
+          ]
         },
         {
           "type": "GO_AGAIN"

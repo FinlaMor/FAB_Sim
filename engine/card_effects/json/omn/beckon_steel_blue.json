@@ -1,31 +1,41 @@
 {
   "slug": "beckon_steel_blue",
+  "_comment": "\"Target sword attack gets 'When this hits, SHARPEN this sword. Then if the sword has 3 or more +1{p} counters, ATTACK with it'.\" BOTH clauses are inside the on-hit; the JSON sharpened immediately on resolution instead. The counter was PUT_COUNTER of a kind literally named \"SHARPEN\", which is not the kind SHARPEN uses (\"power\", the kind _recalculate_attack_power already adds), so the 3-counter gate could never see it either.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
-      "effects": [
-        {
-          "type": "PUT_COUNTER",
-          "counter": "SHARPEN",
-          "amount": 1
-        },
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": {
-            "trigger_type": "ON_HIT",
-            "conditions": [
-              {
-                "type": "COUNTER_GTE",
-                "counter": "SHARPEN",
-                "amount": 3
-              }
-            ],
-            "effects": [
-              {
-                "type": "ATTACK"
-              }
+      "target": {
+        "filter": [
+          {
+            "type": "WEAPON_SUBTYPE_IN",
+            "subtypes": [
+              "sword"
             ]
           }
+        ]
+      },
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": "ON_HIT",
+          "effects": [
+            {
+              "type": "SHARPEN",
+              "subtype": "Sword",
+              "amount": 1
+            },
+            {
+              "type": "ATTACK",
+              "conditions": [
+                {
+                  "type": "REF_COUNTER_GTE",
+                  "ref": "sharpened",
+                  "counter": "power",
+                  "amount": 3
+                }
+              ]
+            }
+          ]
         }
       ]
     }

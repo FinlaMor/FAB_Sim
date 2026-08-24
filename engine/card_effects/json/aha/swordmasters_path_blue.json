@@ -1,6 +1,6 @@
 {
   "slug": "swordmasters_path_blue",
-  "_comment": "NEEDS_NEW_DSL: the 'sharpen an additional time' clause needs the sharpen mechanic, which does not exist (was the invented flag SHARPEN_FLAG). The +1 sword clause is implemented.",
+  "_comment": "The \"sharpen an additional time\" clause was left unimplemented (the _comment said NEEDS_NEW_DSL) after an invented SHARPEN_FLAG was removed. It is a replacement on the sharpen, now SHARPEN_EXTRA_NEXT_TIME: a turn-scoped marker the next SHARPEN consumes, expiring with the turn through the existing current_turn_effects cleanup.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -17,6 +17,10 @@
               ]
             }
           ]
+        },
+        {
+          "type": "SHARPEN_EXTRA_NEXT_TIME",
+          "amount": 1
         },
         {
           "type": "GO_AGAIN"

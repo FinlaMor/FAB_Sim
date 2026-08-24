@@ -5071,12 +5071,42 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                             if isinstance(_a, dict) else _a)
             except (TypeError, ValueError):
                 times = 1
+            # "The next time you would sharpen a sword this turn, instead
+            # sharpen it an ADDITIONAL time" (swordmasters_path_blue). Held as
+            # a turn-scoped marker so the existing end-phase cleanup of
+            # current_turn_effects expires it -- no new engine bookkeeping, and
+            # no way for it to leak into the next turn. Consumed once.
+            marker = "sharpen_extra"
+            if marker in player.current_turn_effects:
+                player.current_turn_effects.remove(marker)
+                times += 1
             for _ in range(max(times, 0)):
                 effect_put_counter(state, target, "power", 1)
                 _record_turn_event(state, cid, "sharpen",
                                    getattr(target, "slug", None))
             from engine.context import set_ref
             set_ref("sharpened", target)
+        return _fn
+
+    if etype in ("SHARPEN_EXTRA_NEXT_TIME", "REPLACE_NEXT_SHARPEN"):
+        # "The next time you would sharpen a sword this turn, instead sharpen
+        # it an additional time." A replacement on the sharpen, consumed by the
+        # next SHARPEN. Stored as a turn-scoped marker (see SHARPEN) so it
+        # expires with the turn through machinery that already exists.
+        amount = params.get("amount", 1)
+
+        def _fn(card, event, state, _a=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            cid = _controller_id(card)
+            if cid not in state.players:
+                return
+            try:
+                n = int(_resolve_amount(_a, state, card)
+                        if isinstance(_a, dict) else _a)
+            except (TypeError, ValueError):
+                n = 1
+            for _ in range(max(n, 0)):
+                state.players[cid].current_turn_effects.append("sharpen_extra")
         return _fn
 
     if etype == "WAGER":

@@ -1,8 +1,19 @@
 {
   "slug": "sharpening_sparks_red",
+  "_comment": "\"Target sword attack gets +2{p} and 'When this hits, SHARPEN this sword'.\" The injected on-hit set a flag named SHARPENED that nothing reads, so no counter was ever placed and nothing asking \"has this been sharpened this turn\" could see it. SHARPEN is the real effect and records the turn event.",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "WEAPON_SUBTYPE_IN",
+            "subtypes": [
+              "sword"
+            ]
+          }
+        ]
+      },
       "effects": [
         {
           "type": "MODIFY_ATTACK",
@@ -14,22 +25,13 @@
           "trigger": "ON_HIT",
           "effects": [
             {
-              "type": "SET_FLAG",
-              "flag": "SHARPENED"
+              "type": "SHARPEN",
+              "subtype": "Sword",
+              "amount": 1
             }
           ]
         }
-      ],
-      "target": {
-        "filter": [
-          {
-            "type": "WEAPON_SUBTYPE_IN",
-            "subtypes": [
-              "sword"
-            ]
-          }
-        ]
-      }
+      ]
     }
   ]
 }
