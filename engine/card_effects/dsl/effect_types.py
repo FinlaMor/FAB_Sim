@@ -2894,8 +2894,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "DESTROY_ARSENAL":
-        # Destroy the target player's arsenal card.
-        player_target = params.get("player", "OPPONENT")
+        # Destroy the target player's arsenal card. `target` is the other
+        # spelling of WHOSE arsenal; it happened to name the default on the one
+        # card that used it, but a card writing "self" would silently have hit
+        # the opponent instead.
+        player_target = _first(params, "player", "target", default="OPPONENT")
         def _fn(card, event, state, _pt=player_target):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import destroy
@@ -3964,27 +3967,53 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # before the replacement loop, so setting it mid-loop was ignored.
         # Registered as a STANDARD replacement, which runs before PREVENTION.
         source_slug = _norm_amt(params.get("source_slug") or params.get("source") or "")
+        # "{p} damage can't be prevented THIS COMBAT CHAIN" is not "the NEXT
+        # damage": it holds for every hit on the chain, and only for PHYSICAL
+        # damage. step_between_red authored that clause as WARD, which PREVENTS
+        # damage -- the exact opposite of what the card says.
+        scope = str(_first(params, "scope", "duration",
+                           default="next")).lower()
+        want_type = _norm_amt(_first(params, "damage_type", "type", default=""))
 
-        def _fn(card, event, state, _slug=source_slug):
+        def _fn(card, event, state, _slug=source_slug, _scope=scope,
+                _wt=want_type):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effects import ReplacementEffect, ReplacementType
             cid = _controller_id(card)
             used = {"done": False}
 
-            def _cond(ev, st, _s=_slug, _u=used, _cid=cid):
-                if _u["done"] or not isinstance(ev, dict):
+            # A chain-scoped clause has to stop when the chain does. The combat
+            # object is captured by identity: once state.combat is a different
+            # object (or None) the chain it named is over.
+            chain = id(getattr(state, "combat", None)) if _scope in (
+                "combat_chain", "chain", "this_combat_chain") else None
+
+            def _cond(ev, st, _s=_slug, _u=used, _cid=cid, _sc=_scope,
+                      _chain=chain, _t=_wt):
+                if not isinstance(ev, dict):
+                    return False
+                if _chain is not None:
+                    if id(getattr(st, "combat", None)) != _chain:
+                        return False
+                elif _u["done"]:
                     return False
                 if ev.get("type") != "damage" or (ev.get("amount") or 0) <= 0:
                     return False
                 if ev.get("source_player_id") != _cid:
                     return False
+                if _t:
+                    dt = ev.get("damage_type")
+                    if _norm_amt(getattr(dt, "value", dt)) != _t:
+                        return False
                 if _s:
                     src = ev.get("damage_source_card") or ev.get("source_card")
                     return _norm_amt(getattr(src, "slug", "") or "") == _s
                 return True
 
-            def _repl(ev, st, _u=used):
-                _u["done"] = True
+            def _repl(ev, st, _u=used, _sc=_scope):
+                # A chain-scoped clause must NOT burn itself on the first hit.
+                if _sc not in ("combat_chain", "chain", "this_combat_chain"):
+                    _u["done"] = True
                 ev["unpreventable"] = True
                 return ev
 

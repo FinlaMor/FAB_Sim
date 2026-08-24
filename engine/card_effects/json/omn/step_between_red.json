@@ -1,5 +1,6 @@
 {
   "slug": "step_between_red",
+  "_comment": "\"{p} damage CAN'T BE PREVENTED this combat chain\" was authored as WARD -- which PREVENTS damage, the exact opposite of what the card says, so the clause helped the defender instead of the attacker. DamageEvent.unpreventable already existed and effects.py already honours it (Ward cannot prevent unpreventable damage); MAKE_NEXT_DAMAGE_UNPREVENTABLE was one-shot and untyped, so it now takes a scope and a damage_type. UNIMPLEMENTED: 'While this is attacking or on the stack, opponents can't play or activate instants' -- there is no play-legality restriction hook for an opponent's instants. It was previously authored as RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT, which restricts DEFENDERS instead.",
   "abilities": [
     {
       "ability_type": "INSTANT",
@@ -16,11 +17,11 @@
           "amount": 1
         },
         {
-          "type": "WARD",
-          "duration": "combat_chain"
+          "type": "MAKE_NEXT_DAMAGE_UNPREVENTABLE",
+          "scope": "combat_chain",
+          "damage_type": "physical"
         }
       ]
     }
-  ],
-  "_comment": "'While this is attacking or on the stack, opponents can't play or activate instants' is NOT implemented: there is no play-legality restriction hook for an opponent's instants. It was authored as RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT, which restricts DEFENDERS instead."
+  ]
 }

@@ -310,8 +310,16 @@ def test_regression_count_does_not_grow():
     # banish-a-trap-and-make-it-playable. looking_for_a_scrap_blue's unread
     # pitch_power let ANY graveyard card pay a cost only a 1-power card can
     # pay -- on the COST side that legalises an unplayable play.
-    assert findings <= 19, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 19). "
+    # 19 -> 17: step_between_red's "{p} damage CAN'T BE PREVENTED this combat
+    # chain" was authored as WARD -- which PREVENTS damage. The clause helped
+    # the DEFENDER against the very attack it exists to push through.
+    # DamageEvent.unpreventable and effects.py's refusal to let Ward touch it
+    # both already existed; MAKE_NEXT_DAMAGE_UNPREVENTABLE was one-shot and
+    # untyped, so it gained a scope and a damage_type. DESTROY_ARSENAL now
+    # reads `target` as the spelling of WHOSE arsenal -- it named the default
+    # on the one card using it, but "self" would have hit the opponent.
+    assert findings <= 17, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 17). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )
