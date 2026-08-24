@@ -436,9 +436,11 @@ INERT: dict[tuple[str, str], tuple[frozenset[str], str]] = {
     ("MOVE_REF", "zone"):            (frozenset({"deck", "hand", "graveyard",
                                                  "arsenal", "banished"}),
                                       "origin comes from the card"),
-    ("RETURN_TO_HAND", "zone"):      (frozenset({"graveyard", "arena", "deck",
-                                                 "banished", "permanents"}),
-                                      "origin comes from the card"),
+    # ("RETURN_TO_HAND", "zone") was declared inert on the grounds that the
+    # origin comes from the card. That holds only when the card is already
+    # known; with no ref and no target the zone is the ONLY thing saying WHICH
+    # card, and the effect fell through to "return THIS card". It is read now,
+    # so the entry is gone rather than left standing as a stale exemption.
 }
 
 

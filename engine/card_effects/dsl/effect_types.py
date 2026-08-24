@@ -879,6 +879,25 @@ def _damage_target_player(state, controller_id: int, target: str) -> int:
     return controller_id
 
 
+def _names_self(raw) -> bool:
+    """Does this target/ref spelling mean "this card"?
+
+    The ref family (FLIP_REF, MOVE_REF, BANISH_REF, ...) resolves its object
+    from a NAMED REF that an earlier effect stored. Three cards instead wrote
+    `"target": "self"` for wordings whose object is the source card itself --
+    "turn IT face-down", "put IT into your hero's soul". A bare string is not a
+    canonical target dict, so the object lookup was skipped and the ref fell
+    back to its default ("chosen"/"looked"), which nothing had set. Each of
+    those cards did nothing at all.
+
+    "self" is the natural word for it and appears throughout the corpus in
+    other effects, so it is recognised here rather than rewritten away in the
+    three cards -- the next author will reach for the same word.
+    """
+    return (isinstance(raw, str)
+            and raw.strip().lower() in ("self", "this", "this_card", "source"))
+
+
 def _deal_arcane_to_objects(state, card, amount, kind, max_targets,
                             ally_player="OPPONENT"):
     """Arcane damage to ALLIES (and, for "any target", heroes too).
@@ -1377,10 +1396,16 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "RETURN_TO_HAND":
-        # Return a card to a hand. A "zone" parameter names the SOURCE, which
-        # put_object resolves from the card itself; it is declared inert in
-        # scripts/audit_params.py rather than touched here, so the reason is
-        # recorded instead of hidden behind a no-op read.
+        # Return a card to a hand.
+        #
+        # A "zone" parameter names the SOURCE to choose FROM. That was treated
+        # as inert on the grounds that put_object resolves the origin from the
+        # card itself -- true when the card is already known, and false when
+        # the zone is the only thing that says WHICH card. patch_the_hole is
+        # "Destroy this: return a card from your ARSENAL to your hand", and
+        # with no ref and no target it fell through to "return THIS card",
+        # bouncing the equipment it had just destroyed and leaving the arsenal
+        # untouched.
         #
         # Without a target this returns THIS card, which is right for the
         # bounce-self cards and wrong for the four that name something else:
@@ -1390,8 +1415,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         ref = params.get("ref")
         target_fn = _compile_object_target(_object_target_spec(params.get("target")))
         to_owner = bool(params.get("to_owner"))
+        from_zone = params.get("zone") or params.get("from_zone")
 
-        def _fn(card, event, state, _r=ref, _tf=target_fn, _owner=to_owner):
+        def _fn(card, event, state, _r=ref, _tf=target_fn, _owner=to_owner,
+                _fz=from_zone):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.context import get_ref
             from engine.effect_keywords import put_object
@@ -1402,6 +1429,18 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                            else (list(found) if isinstance(found, list) else [found]))
             elif _tf is not None:
                 objects = _tf(card, event, state)
+            elif _fz:
+                zone = getattr(state.players[cid], str(_fz).lower(), None)
+                pool = list(getattr(zone, "cards", None) or [])
+                if not pool:
+                    return
+                if len(pool) == 1:
+                    objects = pool
+                else:
+                    from engine.card_effects.ability_keywords import _ask_player
+                    pick = _ask_player(state, cid, [c.slug for c in pool],
+                                       context=f"Return a card from your {_fz} to hand")
+                    objects = [next((c for c in pool if c.slug == pick), pool[0])]
             else:
                 objects = [card]
             for obj in objects:
@@ -3268,11 +3307,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # lie as an allowlist entry that is not true. They are declared inert in
         # scripts/audit_params.py instead, where the reason is visible.
 
-        def _fn(card, event, state, _r=ref, _z=to_zone, _pos=position, _w=who):
+        self_target = _names_self(params.get("target"))
+
+        def _fn(card, event, state, _r=ref, _z=to_zone, _pos=position, _w=who,
+                _self=self_target):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import put_object
             from engine.context import get_ref
-            target = get_ref(_r)
+            target = card if _self else get_ref(_r)
             if not target:
                 return
             cid = _controller_id(card)
@@ -3334,11 +3376,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         raw_target = params.get("target")
         object_fn = (_compile_object_target(_object_target_spec(raw_target))
                      if isinstance(raw_target, dict) else None)
+        self_target = _names_self(raw_target)
         ref = params.get("ref", "chosen")
         face_up = params.get("face_up", True)
-        def _fn(card, event, state, _r=ref, _up=face_up, _of=object_fn):
+        def _fn(card, event, state, _r=ref, _up=face_up, _of=object_fn,
+                _self=self_target):
             from engine.context import get_ref
-            if _of is not None:
+            if _self:
+                objects = [card] if card is not None else []
+            elif _of is not None:
                 objects = _of(card, event, state)
             else:
                 target = get_ref(_r)

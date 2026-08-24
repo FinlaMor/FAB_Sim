@@ -549,6 +549,15 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                 return False
             target = getattr(combat, "defense_recalc_card", None)
             if target is None:
+                # Outside the defence-recalc pass there is no "defender being
+                # evaluated", and the answer used to be an unconditional False.
+                # beneath_the_surface_yellow asks "while this is DEFENDING" from
+                # an ON_LEAVE_PLAY trigger, which never runs inside that pass,
+                # so its whole ability could never fire. Membership on the chain
+                # is the same question asked without the recalc context.
+                if _self:
+                    return any(d is c for d in
+                               (getattr(combat, "defending_cards", None) or []))
                 return False
             if _self:
                 return target is c

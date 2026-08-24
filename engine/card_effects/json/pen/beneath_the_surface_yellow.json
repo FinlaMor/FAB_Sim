@@ -1,26 +1,20 @@
 {
   "slug": "beneath_the_surface_yellow",
+  "_comment": "\"While this is DEFENDING, when it's put into your graveyard from the arena, turn IT face-down.\" The gate was IN_COMBAT + CONTROLS_ATTACK_ACTION, which is not the same question -- IS_DEFENDING_CARD asks it directly. REF_EXISTS/FLIP_REF resolve a NAMED REF an earlier effect stored, and \"self\" is not a ref, so the ref fell back to its default (\"chosen\"), which nothing had set: the condition was false and the flip flipped nothing. \"self\" is now a recognised spelling in the ref family, and the vacuous REF_EXISTS gate is gone.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_LEAVE_PLAY",
       "conditions": [
         {
-          "type": "IN_COMBAT"
-        },
-        {
-          "type": "CONTROLS_ATTACK_ACTION",
-          "player": "SELF"
-        },
-        {
-          "type": "REF_EXISTS",
-          "target": "self"
+          "type": "IS_DEFENDING_CARD"
         }
       ],
       "effects": [
         {
           "type": "FLIP_REF",
-          "target": "self"
+          "target": "self",
+          "face_up": false
         }
       ]
     }

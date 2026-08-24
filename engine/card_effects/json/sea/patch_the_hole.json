@@ -1,8 +1,9 @@
 {
   "slug": "patch_the_hole",
+  "_comment": "\"Destroy this: Return a card from your ARSENAL to your hand.\" With no ref and no target, RETURN_TO_HAND fell through to \"return THIS card\" -- it bounced the equipment it had just destroyed as a cost and left the arsenal untouched. `zone` names the source to choose FROM and is read now.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "INSTANT",
       "activation_cost": 0,
       "cost": [
         {

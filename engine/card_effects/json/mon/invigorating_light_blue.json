@@ -1,5 +1,6 @@
 {
   "slug": "invigorating_light_blue",
+  "_comment": "\"put IT into your hero's soul\" -- the object is this card, but MOVE_REF resolves a NAMED REF and \"self\" is not one, so it moved nothing. The soul gate is a bare amount: 0, which means \"exactly none\". UNIMPLEMENTED: the card says \"when the combat chain closes\"; this resolves on play instead, which moves it earlier than printed.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -15,7 +16,7 @@
         {
           "type": "MOVE_REF",
           "target": "self",
-          "destination": "SOUL"
+          "to_zone": "soul"
         }
       ]
     }

@@ -292,8 +292,17 @@ def test_regression_count_does_not_grow():
     # nothing reads -- play.py consults player.playable_from_banished -- so
     # neither payoff half reached the game state, and both re-filtered the
     # WHOLE banished zone rather than the card just banished.
-    assert findings <= 26, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 26). "
+    # 26 -> 23: "self" is not a REF. The ref family resolves its object from a
+    # named ref an earlier effect stored, and three cards wrote
+    # `"target": "self"` for wordings whose object is the source card --
+    # "turn IT face-down", "put IT into your hero's soul". The lookup was
+    # skipped and the ref fell back to a default nothing had set, so each card
+    # did nothing at all. patch_the_hole was worse than nothing: with no ref
+    # and no target, RETURN_TO_HAND fell through to "return THIS card", so
+    # "return a card from your ARSENAL" bounced the equipment it had just
+    # destroyed as a cost and left the arsenal untouched.
+    assert findings <= 23, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 23). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )
