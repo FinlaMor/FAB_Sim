@@ -852,6 +852,93 @@ def _zone_target_spec(target) -> tuple[str | None, str | None]:
     return (player, zone)
 
 
+def _damage_target_player(state, controller_id: int, target: str) -> int:
+    """Which PLAYER a "deal N damage to <target>" names.
+
+    Anything outside the recognised set resolved to the CONTROLLER, so every
+    spelling an author reached for other than "OPPONENT" burned its own hero.
+    Two live families did:
+
+      "hero" / "target hero"   3 cards. In practice the other player.
+      "ATTACKER"               zap_clappers deals to "the ATTACKING hero" from
+                               a WHEN-THIS-DEFENDS trigger, so the controller is
+                               the defender and self was exactly backwards.
+
+    Only frost_hex_blue's "this deals 1 arcane damage to YOU" is genuinely
+    self-inflicted. The vocabulary lives here rather than being spelled out at
+    each call site: it was duplicated across DEAL_ARCANE and DEAL_GENERIC, and
+    a fix applied to one of two copies is the shape this audit keeps finding.
+    """
+    tu = str(target or "").upper()
+    if tu in ("ATTACKER", "ATTACKING_HERO", "ATTACKING"):
+        combat = getattr(state, "combat", None)
+        return getattr(combat, "attacker_id", None) or (3 - controller_id)
+    if tu in ("OPPONENT", "DEFENDING", "DEFENDER", "HERO", "TARGET_HERO",
+              "OPPOSING_HERO", "THEM", "THEY"):
+        return 3 - controller_id
+    return controller_id
+
+
+def _deal_arcane_to_objects(state, card, amount, kind, max_targets,
+                            ally_player="OPPONENT"):
+    """Arcane damage to ALLIES (and, for "any target", heroes too).
+
+    effect_deal_arcane resolves its player_id to that player's HERO and nothing
+    else, so it cannot express "up to 2 target allies". This routes through the
+    same deal_damage keyword with the ally card as the target object, which is
+    what makes the ally death check at CR 1.10.2b see the damage.
+
+    "UP TO" — the controller may take fewer, so `none` is always offered.
+    """
+    from engine.card_effects.ability_keywords import _ask_player, _controller_id
+    from engine.effect_keywords import DamageType as _DT, deal_damage as _deal
+
+    cid = _controller_id(card)
+    if cid not in state.players or amount <= 0:
+        return
+    try:
+        limit = max(0, int(max_targets))
+    except (TypeError, ValueError):
+        limit = 1
+
+    def _allies_of(pid):
+        return [c for c in state.players[pid].permanents.cards
+                if "Ally" in ((getattr(c, "subtypes", None) or [])
+                              + (getattr(c, "types", None) or []))]
+
+    pool = []
+    if kind in ("ANY", "ANY_TARGET"):
+        for pid in (1, 2):
+            hero = state.players[pid].hero
+            if hero is not None:
+                pool.append((f"hero:{pid}", pid, hero))
+            for a in _allies_of(pid):
+                pool.append((a.slug, pid, a))
+    else:
+        pid = (3 - cid) if ally_player in ("OPPONENT", "THEY", "THEM") else cid
+        for a in _allies_of(pid):
+            pool.append((a.slug, pid, a))
+
+    for _ in range(limit):
+        if not pool:
+            return
+        options = [label for label, _pid, _obj in pool] + ["none"]
+        pick = _ask_player(state, cid, options,
+                           context=f"Choose a target for {amount} arcane damage")
+        if pick == "none":
+            return
+        entry = next((x for x in pool if x[0] == pick), pool[0])
+        pool.remove(entry)
+        _label, _pid, obj = entry
+        _deal(state, amount, _DT.ARCANE, cid, obj, 'effect',
+              damage_source_card=card)
+
+
+#: The only two forms an Arakni hero can take. Anything else named as a
+#: TRANSFORM_HERO mode is an authoring error, not a new form.
+_HERO_TRANSFORM_MODES = {"random_agent_of_chaos", "return_to_brood"}
+
+
 def _do_transform(state, sources, into_slug: str, player_id: int):
     """CR 8.5.36c — create the named token, then put the sources under it.
 
@@ -995,11 +1082,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
     if etype == "DEAL_ARCANE":
         amt = params.get("amount", 0)
         tgt = params.get("target", "OPPONENT")
+        # "up to 2 target ALLIES they control" / "up to any 2 targets".
+        # effect_deal_arcane only ever damages a HERO, so `target: "ally"` fell
+        # through to the not-the-opponent branch and singe_yellow dealt its
+        # second point of arcane to ITS OWN CONTROLLER. `max_targets` was unread
+        # on top of that, so it was one point, at the wrong hero.
+        max_targets = _first(params, "max_targets", "targets", "up_to",
+                             default=1)
+        ally_player = str(_first(params, "player", "ally_controller",
+                                 default="OPPONENT")).upper()
 
         def _fn(card, event, state, _a=amt, _t=tgt):
             from engine.card_effects.ability_keywords import effect_deal_arcane, _controller_id
             cid = _controller_id(card)
-            tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            tid = _damage_target_player(state, cid, _t)
             # "deal X arcane, where X is the number of Frostbites you control" —
             # an expression amount was passed through unresolved, and the damage
             # pipeline compares amount against an int, so it raised TypeError
@@ -1009,6 +1105,10 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 n = max(0, int(n))
             except (TypeError, ValueError):
                 n = 0
+            if _t.upper() in ("ALLY", "ALLIES", "ANY", "ANY_TARGET"):
+                _deal_arcane_to_objects(state, card, n, _t.upper(),
+                                        max_targets, ally_player)
+                return
             effect_deal_arcane(state, tid, n, card)
         return _fn
 
@@ -2523,7 +2623,7 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         def _fn(card, event, state, _a=amt, _t=tgt):
             from engine.card_effects.ability_keywords import _controller_id, effect_deal_damage
             cid = _controller_id(card)
-            tid = (3 - cid) if _t.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            tid = _damage_target_player(state, cid, _t)
             effect_deal_damage(state, tid, _a, card, damage_type="generic")
         return _fn
 
@@ -3665,7 +3765,19 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # Arakni: "become a random Agent of Chaos" / "return to the brood".
         # choose=true lets the controller pick the form (e.g. Mask of Deceit when
         # the attacking hero is marked) instead of a random one.
-        mode = params.get("mode", "random_agent_of_chaos").lower()
+        # `target`/`form` are read as spellings of `mode` because both cards
+        # that got this wrong reached for `target`. An unrecognised form RAISES
+        # rather than falling back to the default: invoke_azvolai_red authored
+        # "target": "Ash" meaning the PERMANENT transform, and a silent default
+        # turned the controller's hero into an Agent of Chaos. A load failure
+        # names the card; a wrong default is invisible.
+        mode = str(_first(params, "mode", "target", "form",
+                          default="random_agent_of_chaos")).lower()
+        if mode not in _HERO_TRANSFORM_MODES:
+            raise ValueError(
+                f"TRANSFORM_HERO mode {mode!r} is not a hero form (expected one "
+                f"of {sorted(_HERO_TRANSFORM_MODES)}). Transforming a PERMANENT "
+                f"into a token is the TRANSFORM effect, which takes from/to.")
         choose = params.get("choose", False)
         def _fn(card, event, state, _m=mode, _ch=choose):
             from engine.card_effects.ability_keywords import (

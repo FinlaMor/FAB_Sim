@@ -54,9 +54,10 @@
       "effects": [
         {
           "type": "TRANSFORM_HERO",
-          "target": "RANDOM_AGENT_OF_CHAOS"
+          "mode": "random_agent_of_chaos"
         }
-      ]
+      ],
+      "_comment": "The form was in `target`, a key TRANSFORM_HERO does not read. It happened to name the default, so this one was right by accident -- the same misspelling on invoke_azvolai_red named a token and transformed the hero instead."
     }
   ]
 }

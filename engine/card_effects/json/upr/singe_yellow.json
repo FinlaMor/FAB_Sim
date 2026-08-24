@@ -13,9 +13,11 @@
           "type": "DEAL_ARCANE",
           "amount": 1,
           "target": "ally",
-          "max_targets": 2
+          "max_targets": 2,
+          "player": "OPPONENT"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"and up to 2 target allies THEY control\": DEAL_ARCANE only ever resolved to a HERO, so target:\"ally\" fell through to the not-the-opponent branch and dealt the second point to the CONTROLLER'S OWN hero. max_targets was unread on top of that."
 }

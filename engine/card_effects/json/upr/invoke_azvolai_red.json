@@ -1,12 +1,16 @@
 {
   "slug": "invoke_azvolai_red",
+  "_comment": "Was TRANSFORM_HERO target:'Ash'. TRANSFORM_HERO is Arakni's \"you become a random Agent of Chaos\" and does not read a target, so this card turned YOUR HERO into an Agent of Chaos and left the ash alone -- the fourth card to author the hero effect when it meant the permanent one. \"Target ash\" is not \"up to\", so up_to is false: with no ash the play does nothing rather than transforming something else.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "TRANSFORM_HERO",
-          "target": "Ash"
+          "type": "TRANSFORM",
+          "from": "ash",
+          "to": "azvolai",
+          "amount": 1,
+          "up_to": false
         },
         {
           "type": "GAIN",

@@ -372,10 +372,35 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # True if you control an attack action card in the current combat —
         # the active attack you control OR a card you're defending with
         # (CR: defending with an attack action card counts as controlling it).
-        def _caa(c, e, s):
+        #
+        # Two parameters were authored and unread, and each failed differently:
+        #   opponent   leap_frog_vocal_sac asks about the OPPONENT's attack, so
+        #              looking at your own inverted the gate.
+        #   attack_class  scorpio_comet_tail is "only if you control a LIGHTNING
+        #              attack"; unfiltered, any attack at all let it activate.
+        #              Lightning is a TALENT, not a class -- the same trap as
+        #              Mystic -- so the filter goes through _card_traits, which
+        #              is what every other class filter in this file reads.
+        want_opp = bool(_first_present(params, "opponent", "opposing",
+                                       default=False))
+        who = str(_first_present(params, "player", "controller",
+                                 default="") or "").lower()
+        if who in ("opponent", "opposing", "them"):
+            want_opp = True
+        wanted = [_norm(v) for v in _as_list(
+            params, "attack_class", "class", "classes", "card_class") if v]
+
+        def _caa(c, e, s, _opp=want_opp, _want=wanted):
             from engine.card_effects.ability_keywords import (
                 _controller_id, controlled_attack_action_cards)
-            return bool(controlled_attack_action_cards(s, _controller_id(c)))
+            pid = _controller_id(c)
+            if _opp:
+                pid = 3 - pid
+            cards = controlled_attack_action_cards(s, pid)
+            if _want:
+                cards = [x for x in cards
+                         if any(w in _card_traits(x) for w in _want)]
+            return bool(cards)
         return _caa
 
     if ctype == "HAS_HEAD_OPP_DOESNT":

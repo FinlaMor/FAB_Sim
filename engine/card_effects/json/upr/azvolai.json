@@ -1,0 +1,19 @@
+{
+  "slug": "azvolai",
+  "_comment": "Dragon Ally token, the form invoke_azvolai_red transforms an ash into. This file existed NOWHERE, so the transform raised MissingCardImplementation and aborted the game. Stats come from token_meta.ALLY_TOKEN_STATS. \"Up to any 2 targets\" is any mix of heroes and allies on either side, and \"up to\" means the controller may take fewer.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "optional": true,
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "any",
+          "max_targets": 2
+        }
+      ]
+    }
+  ]
+}

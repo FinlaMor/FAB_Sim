@@ -270,8 +270,17 @@ def test_regression_count_does_not_grow():
     # PITCH cost -- an ability you activate by pitching, which is not what a
     # bond is. A bond is a condition ON PLAY about what paid for the card, and
     # PITCHED_FOR_THIS now reads a class/talent as well as a subtype.
-    assert findings <= 33, (
-        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 33). "
+    # 33 -> 28: TRANSFORM_HERO is Arakni's "you become an Agent of Chaos" and
+    # reads only `mode`. invoke_azvolai_red put "Ash" in `target` meaning the
+    # PERMANENT transform, so it left the ash alone and turned the CONTROLLER'S
+    # HERO into an Agent of Chaos -- the fourth card to confuse the two, so an
+    # unrecognised mode now raises at load. Alongside it, DEAL_ARCANE resolved
+    # every target spelling except "OPPONENT" to the CONTROLLER, so "target
+    # hero" (3 cards) and zap_clappers' "the ATTACKING hero" burned their own
+    # side; that vocabulary is now one shared resolver, because DEAL_GENERIC
+    # held a second copy of it.
+    assert findings <= 28, (
+        f"{findings} cards have an ACTIVE parameter the compiler never reads (was 28). "
         "A new one usually means a new spelling of an existing family — fix it "
         "in the compiler, where it closes every card at once."
     )
