@@ -85,6 +85,66 @@ def _text(fragment: str) -> str:
     return re.sub(r"\s+", " ", fragment).strip()
 
 
+def _closes_a_block(body: str, text: str) -> bool:
+    """A rule of em-dashes between sections ends the current card."""
+    stripped = text.replace("-", "").replace("—", "").replace("–", "")
+    if text and not stripped.strip():
+        return True                      # a rule of em-dashes
+    # Only the rule of em-dashes closes a block. A bold heading looked like the
+    # other candidate, but a paragraph that is entirely bold is ambiguous: it is
+    # a section title ("Channel") AND a card's own printed keyword line
+    # ("**Go again**"), so using it closed cards at their own keyword and lost
+    # Channel Mount Heroic and Blasmophet entirely. The separator is
+    # unambiguous, and it already bounds the bleed to within one section.
+    return False
+
+
+def _parse_by_name(page: str, names: set[str]) -> dict[str, list[str]]:
+    """Fallback for pages with no usable card delimiters at all.
+
+    Monarch and Tales of Aria mark a card with an ORDINARY paragraph -- either
+    the bare name (`<p>Channel Mount Heroic</p>`) or the name followed by a
+    <br> and the type line (`<p>Blasmophet, the Soul Harvester<br>Shadow Token
+    - Ally<br>…</p>`) -- and reserve <strong> for ability-type labels like
+    "Once per Turn Action". There is no structural signal to key on.
+
+    So this keys on the card NAMES themselves: a paragraph whose first line is
+    exactly a card name opens a block. That cannot invent a card, which is the
+    property that matters -- the alternative was guessing at boundaries, and a
+    ruling filed against the wrong card is read as authoritative by everything
+    downstream.
+
+    Used only when the structural parse finds almost nothing, so a page that
+    delimits its cards properly is never subjected to it.
+    """
+    out: dict[str, list[str]] = {}
+    current = None
+    token = re.compile(r'<p class="wp-block-paragraph">(.*?)</p>|<li>(.*?)</li>',
+                       re.S)
+    for m in token.finditer(page):
+        if m.group(1) is not None:
+            body = m.group(1)
+            first_line = re.split(r"<br\s*/?>", body)[0]
+            name = _text(first_line)
+            if name.lower() in names:
+                current = name
+                out.setdefault(current, [])
+            elif _closes_a_block(body, name):
+                # Nothing else closes a block here, so a card whose name did
+                # not match would otherwise donate its notes to the PREVIOUS
+                # card -- which is how Channel Mount Heroic ended up holding a
+                # ruling about a hero's essence. These pages separate sections
+                # with a rule of em-dashes and title them in bold, so both end
+                # the current card. Losing a note is acceptable; filing one
+                # against the wrong card is not.
+                current = None
+        elif current:
+            note = _text(m.group(2))
+            if note:
+                out[current].append(note)
+    return {k: v for k, v in out.items() if v}
+
+
 def _parse(page: str) -> dict[str, list[str]]:
     """Card name -> its notes, in document order."""
     out: dict[str, list[str]] = {}
@@ -149,6 +209,20 @@ def main() -> int:
             print(f"  {slug:44} (not cached, skipped)")
             continue
         found = _parse(page)
+        if len(found) < 20:
+            # No usable delimiters on this page (Monarch, Tales of Aria).
+            # 20 is far below what any real set page yields -- the smallest
+            # structurally-parsed one gives 30 -- so this cannot fire on a page
+            # that parsed correctly.
+            by_name_lower = {(c.get("name") or "").strip().lower()
+                             for c in json.loads(
+                                 SLUG_INDEX.read_text(encoding="utf-8"))["by_slug"].values()}
+            by_name_lower.discard("")
+            fallback = _parse_by_name(page, by_name_lower)
+            if len(fallback) > len(found):
+                print(f"  {slug:44} structural parse found {len(found)}, "
+                      f"name-keyed fallback found {len(fallback)}")
+                found = fallback
         for name, items in found.items():
             notes.setdefault(name, [])
             for it in items:
