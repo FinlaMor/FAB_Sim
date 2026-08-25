@@ -19,6 +19,14 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     "START_OF_EACH_TURN":       "START_OF_ANY_TURN",
     "ON_ACTIVATE":              "ON_ACTIVATE",
     "ON_DEATH":                 "ON_DEATH",
+    # The cards say "WHEN THIS IS DESTROYED" -- 32 of them -- and the
+    # trigger is spelled ON_DEATH. Mapping the obvious spelling costs
+    # nothing and removes the trap: a mechanic that exists under a name
+    # you did not guess is the commonest wrong answer in this corpus, and
+    # authoring ON_DESTROY would silently raise at load instead.
+    "ON_DESTROY":               "ON_DEATH",
+    "ON_DESTROYED":             "ON_DEATH",
+    "WHEN_DESTROYED":           "ON_DEATH",
     "ON_ENTER_PLAY":            "ON_ENTER_PLAY",
     "ON_LEAVE_PLAY":            "ON_LEAVE_PLAY",
     "START_OF_COMBAT":          "START_OF_COMBAT",

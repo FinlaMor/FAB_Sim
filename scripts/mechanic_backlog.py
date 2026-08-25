@@ -114,7 +114,31 @@ def build():
                 continue
             counts[c] += 1
             cards_for[c].append(slug)
-    return counts, cards_for, len(pending), len(impl_clauses)
+    return counts, cards_for, len(pending), len(impl_clauses), index, done
+
+
+#: Words that carry the mechanic rather than the sentence frame. A clause whose
+#: distinctive words all appear in some IMPLEMENTED card's text is probably an
+#: AUTHORING cluster, not a missing mechanic.
+_FRAME = set("""a an the this that it its they them their you your and or if
+when while of to for from with as at by on in is are was were be been has have
+had do does did may can must than then so up out into onto each any all more
+less other another target this way get gets gain gains put puts card cards
+this turn end beginning next also""".split())
+
+
+def _mechanic_probably_exists(clause: str, index: dict, done: set) -> bool:
+    words = [w for w in clause.split() if w not in _FRAME and len(w) > 3]
+    if len(words) < 2:
+        return False
+    key = " ".join(words[:3])
+    for slug in done:
+        text = (index.get(slug, {}).get("functionalText") or "").lower()
+        if all(w in text for w in words[:3]):
+            return True
+        if key in text:
+            return True
+    return False
 
 
 def main() -> int:
@@ -123,7 +147,7 @@ def main() -> int:
     ap.add_argument("--show", metavar="PHRASE")
     args = ap.parse_args()
 
-    counts, cards_for, n_pending, n_impl = build()
+    counts, cards_for, n_pending, n_impl, index, done = build()
     if args.show:
         key = next((c for c in counts if args.show.lower() in c), None)
         if key is None:
@@ -138,8 +162,12 @@ def main() -> int:
           f"{n_impl} distinct clauses already implemented somewhere")
     print(f"\nunimplemented clauses by card count (top {args.limit}) — "
           f"a ranked shortlist to READ, not a verdict:\n")
+    print("  NEW  = no implemented card uses these words -> likely a missing mechanic")
+    print("  AUTH = the words appear on an implemented card -> likely just unauthored")
+    print()
     for clause, n in counts.most_common(args.limit):
-        print(f"  {n:4d}  {clause[:96]}")
+        tag = "AUTH" if _mechanic_probably_exists(clause, index, done) else "NEW "
+        print(f"  {tag} {n:4d}  {clause[:88]}")
     return 0
 
 
