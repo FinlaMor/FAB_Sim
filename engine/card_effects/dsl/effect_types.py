@@ -425,7 +425,21 @@ def _object_zone_cards(player, zone: str) -> list:
     if zone == "ARENA":
         return list(player.permanents.cards)
     if zone == "EQUIPMENT":
-        return list(player.equipment)
+        # player.equipment is the four body slots. An OFF-HAND is an equipment
+        # card too -- CR 2.10.6a makes Off-Hand a functional SUBTYPE, and
+        # 3.16.2a equips it to a WEAPON zone -- so "an equipment you control"
+        # that skipped the weapon zones could never see one, and the single
+        # card naming an off-hand searched a pool it was never in.
+        # Weapons themselves stay out: they are a TYPE of their own.
+        cards = list(player.equipment)
+        for z in (player.weapon1, player.weapon2):
+            for c in z.cards:
+                types = {str(t).lower() for t in (getattr(c, "types", None) or [])}
+                if "weapon" in types:
+                    continue
+                if c not in cards:
+                    cards.append(c)
+        return cards
     if zone == "WEAPON":
         return list(player.weapon1.cards) + list(player.weapon2.cards)
     if zone == "ARSENAL":
@@ -2375,14 +2389,26 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # this destroyed exactly ONE (max_destroy was unread) while the create
         # side made three unconditionally. Strictly better than printed.
         limit = _first(params, "max_destroy", "amount", "count", default=1)
+        # "destroy a Seismic Surge token THEY control". The pool was hard-wired
+        # to the ability's controller, so a card naming the opponent's tokens
+        # destroyed its own -- and destroyed nothing at all when it had none,
+        # which reads exactly like a token that was not there. DESTROY_PERMANENT
+        # already spells this `player`; the two are now the same word.
+        whose = str(params.get("player") or params.get("controller")
+                    or "SELF").upper()
 
-        def _fn(card, event, state, _slug=token_slug, _n=limit):
+        def _fn(card, event, state, _slug=token_slug, _n=limit, _w=whose):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import destroy as _ek_destroy
             if not _slug:
                 return
             want = _norm_amt(_slug)
-            player = state.players[_controller_id(card)]
+            pid = _controller_id(card)
+            if _w in ("OPPONENT", "DEFENDING", "DEFENDER", "THEM", "THEY"):
+                pid = 3 - pid
+            if pid not in state.players:
+                return
+            player = state.players[pid]
             try:
                 n = max(0, int(_resolve_amount(_n, state, card)))
             except (TypeError, ValueError):

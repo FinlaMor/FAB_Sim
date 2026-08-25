@@ -6,8 +6,17 @@
       "trigger": "ON_HIT",
       "_comment": "When this hits a hero, target dagger you control deals 1 damage to them. If damage is dealt this way, the dagger has hit (fires the dagger's ON_HIT). Go again is an engine keyword (card DB). Previously dealt generic damage not attributed to a dagger and never registered the dagger hit.",
       "effects": [
-        {"type": "DAGGER_DEALS_DAMAGE", "amount": 1}
+        {
+          "type": "DAGGER_DEALS_DAMAGE",
+          "amount": 1
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
       ]
     }
-  ]
+  ],
+  "_comment": "Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

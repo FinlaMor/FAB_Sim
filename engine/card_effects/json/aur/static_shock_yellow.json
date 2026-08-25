@@ -1,11 +1,14 @@
 {
   "slug": "static_shock_yellow",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: LIGHTNING_PLAYED_THIS_TURN.",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" \u2014 all lowercase. Was: LIGHTNING_PLAYED_THIS_TURN. Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
       "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
         {
           "type": "FLAG_SET",
           "flag": "played_lightning"

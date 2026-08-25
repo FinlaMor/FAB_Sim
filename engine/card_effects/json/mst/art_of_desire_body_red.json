@@ -6,13 +6,46 @@
       "trigger": "ON_HIT",
       "_comment": "Stealth. When this hits a hero, banish the top card of their deck. Whenever this banishes a red card, draw a card and gain 1{h}. The draw and life gain are gated on the banished card being red (pitch 1); previously both were unconditional and the life gain was missing.",
       "effects": [
-        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "into": "seen"},
-        {"type": "BANISH_REF", "ref": "seen"},
-        {"type": "DRAW", "amount": 1,
-         "conditions": [{"type": "REF_PITCH_IS", "ref": "seen", "pitch": 1}]},
-        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1,
-         "conditions": [{"type": "REF_PITCH_IS", "ref": "seen", "pitch": 1}]}
+        {
+          "type": "LOOK_AT",
+          "zone": "DECK_TOP",
+          "player": "OPPONENT",
+          "into": "seen"
+        },
+        {
+          "type": "BANISH_REF",
+          "ref": "seen"
+        },
+        {
+          "type": "DRAW",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "REF_PITCH_IS",
+              "ref": "seen",
+              "pitch": 1
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "asset": "LIFE_POINTS",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "REF_PITCH_IS",
+              "ref": "seen",
+              "pitch": 1
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
       ]
     }
-  ]
+  ],
+  "_comment": "Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

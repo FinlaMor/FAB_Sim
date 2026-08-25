@@ -6,9 +6,10 @@
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "ref": "pitch_zone",
-          "amount": 6
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "player": "SELF",
+          "power_gte": 6
         }
       ],
       "effects": [

@@ -1,6 +1,6 @@
 {
   "slug": "runaways",
-  "_comment": "Was WARD, which is a different keyword entirely \u2014 ward is 'pay {r} to prevent', a cost the defender may decline, not a flat shield. 'Prevent the next N damage' is a one-shot replacement (CR 6.4). The activation restriction ('only if your hero has been dealt damage this turn') is a real gate and is kept.",
+  "_comment": "Was WARD, which is a different keyword entirely \u2014 ward is 'pay {r} to prevent', a cost the defender may decline, not a flat shield. 'Prevent the next N damage' is a one-shot replacement (CR 6.4). The activation restriction ('only if your hero has been dealt damage this turn') is a real gate and is kept. The gate then read the wrong direction: the `damage` turn-marker is recorded against the player who DEALT the damage, so 'only if YOUR HERO HAS BEEN DEALT damage this turn' was answering whether YOU had dealt some. `damage_taken` is the receiving-side marker.",
   "abilities": [
     {
       "ability_type": "INSTANT",
@@ -8,8 +8,9 @@
       "conditions": [
         {
           "type": "EVENT_THIS_TURN",
-          "event": "damage",
-          "qualifier": "hero"
+          "event": "damage_taken",
+          "qualifier": "hero",
+          "player": "SELF"
         }
       ],
       "cost": [

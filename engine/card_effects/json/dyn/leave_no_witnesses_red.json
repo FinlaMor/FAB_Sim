@@ -6,15 +6,50 @@
       "trigger": "ON_HIT",
       "_comment": "When this hits a hero, banish the top card of their deck and up to 1 card in their arsenal. 'Up to 1' is optional and BANISHES (not destroys); the attacker chooses. Was DESTROY_ARSENAL, which destroyed every arsenal card. Contract keyword / Silver-on-completion not modeled here.",
       "effects": [
-        {"type": "BANISH", "from_zone": "TOP_DECK", "player": "OPPONENT", "amount": 1},
-        {"type": "LOOK_AT", "zone": "ARSENAL", "player": "OPPONENT", "amount": "ALL", "into": "ars"},
-        {"type": "MAY", "prompt": "Banish 1 card from their arsenal?",
-         "conditions": [{"type": "REF_EXISTS", "ref": "ars"}],
-         "effects": [
-           {"type": "SELECT_FROM_REF", "ref": "ars", "mode": "ANY", "min": 1, "max": 1, "into": "chosen"},
-           {"type": "BANISH_REF", "ref": "chosen"}
-         ]}
+        {
+          "type": "BANISH",
+          "from_zone": "TOP_DECK",
+          "player": "OPPONENT",
+          "amount": 1
+        },
+        {
+          "type": "LOOK_AT",
+          "zone": "ARSENAL",
+          "player": "OPPONENT",
+          "amount": "ALL",
+          "into": "ars"
+        },
+        {
+          "type": "MAY",
+          "prompt": "Banish 1 card from their arsenal?",
+          "conditions": [
+            {
+              "type": "REF_EXISTS",
+              "ref": "ars"
+            }
+          ],
+          "effects": [
+            {
+              "type": "SELECT_FROM_REF",
+              "ref": "ars",
+              "mode": "ANY",
+              "min": 1,
+              "max": 1,
+              "into": "chosen"
+            },
+            {
+              "type": "BANISH_REF",
+              "ref": "chosen"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
       ]
     }
-  ]
+  ],
+  "_comment": "Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

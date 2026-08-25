@@ -507,6 +507,16 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
         _dtype = getattr(event.damage_type, "value", event.damage_type)
         _kind = "hero" if is_hero else "ally"
         _record_turn_event(state, event.source_player_id, "damage", _dtype, _kind)
+        # The marker above is recorded against the player who DEALT it, so it
+        # answers "have you dealt damage this turn" and nothing else. "Only if
+        # YOUR HERO HAS BEEN DEALT damage this turn" (Runaways) is the other
+        # direction, and asking it of the same marker gives the attacker's
+        # answer to the defender's question. Recorded separately so the two
+        # cannot be confused: `damage` is dealt, `damage_taken` is received.
+        _victim = getattr(damage_target, "controller", None)
+        if _victim is None:
+            _victim = getattr(damage_target, "owner", None)
+        _record_turn_event(state, _victim, "damage_taken", _dtype, _kind)
         # The marker above answers "have you dealt arcane damage this turn";
         # this tally answers "how much", which the markers cannot — see
         # Player.damage_dealt_this_turn.

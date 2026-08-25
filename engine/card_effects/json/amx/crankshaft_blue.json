@@ -1,6 +1,6 @@
 {
   "slug": "crankshaft_blue",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED.",
+  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" \u2014 all lowercase. Was: BOOSTED. Second defect: 'put a steam counter on A HYPER DRIVER YOU CONTROL' had target 'self', so the counter went on Crankshaft -- which is in the BANISHED zone at that moment, having just been banished from boosting. The CONTROLS_TOKEN_TYPE gate it carried asked the right question and then did nothing with the answer; the target search now IS the question.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -15,13 +15,12 @@
         {
           "type": "PUT_COUNTER",
           "counter": "steam",
-          "target": "self",
-          "conditions": [
-            {
-              "type": "CONTROLS_TOKEN_TYPE",
-              "token_type": "Hyper Driver"
-            }
-          ]
+          "target": {
+            "controller": "SELF",
+            "zone": "ARENA",
+            "name": "Hyper Driver",
+            "amount": 1
+          }
         }
       ]
     }

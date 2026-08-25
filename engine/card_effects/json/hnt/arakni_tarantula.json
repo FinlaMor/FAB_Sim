@@ -5,25 +5,49 @@
     {
       "ability_type": "ATTACK_REACTION",
       "conditions": [
-        {"type": "NOT", "inner_type": "FLAG_SET", "flag": "tarantula_ar_used"}
+        {
+          "type": "NOT",
+          "inner_type": "FLAG_SET",
+          "flag": "tarantula_ar_used"
+        }
       ],
       "cost": [
-        {"type": "DISCARD_CARD", "class_filter": "Assassin", "amount": 1}
+        {
+          "type": "DISCARD_CARD",
+          "class_filter": "Assassin",
+          "amount": 1
+        }
       ],
       "target": {
         "filter": [
-          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}
+          {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtypes": [
+              "Dagger"
+            ]
+          }
         ]
       },
       "effects": [
-        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3},
-        {"type": "SET_FLAG", "flag": "tarantula_ar_used", "scope": "CURRENT"}
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "tarantula_ar_used",
+          "scope": "CURRENT"
+        }
       ]
     },
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_HIT",
       "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
         {
           "type": "ATTACK_CONTROLLED_BY_YOU"
         },
@@ -52,5 +76,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

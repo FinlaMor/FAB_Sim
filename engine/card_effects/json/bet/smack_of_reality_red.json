@@ -6,6 +6,9 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
+        {
           "type": "SELF_ATTACK_POWER_GTE",
           "amount": 13
         }
@@ -21,5 +24,5 @@
       ]
     }
   ],
-  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy ALL aura TOKENS they control' -- all three of those (count, token-only, opponent) were unreachable through DESTROY_TOKEN."
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy ALL aura TOKENS they control' -- all three of those (count, token-only, opponent) were unreachable through DESTROY_TOKEN. Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

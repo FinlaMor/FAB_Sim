@@ -6,6 +6,9 @@
       "trigger": "ON_HIT",
       "conditions": [
         {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
+        {
           "type": "CONTROLS_TOKEN_TYPE",
           "token_type": "Evo"
         }
@@ -58,5 +61,5 @@
       ]
     }
   ],
-  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy all cards defending this' names the cards declared as defenders on this chain link -- combat state, not a zone and not the arena, so no object-target spec can express it. Removed the 'costs {r}{r}{r} less to play' tier. It was a plain STATIC holding MODIFY_ATTACK subtract 3 -- a POWER penalty, not a cost reduction, so had anything dispatched it the card would have LOST 3{p} instead of costing less. NOT IMPLEMENTED: a play-cost reduction driven by board state (Evos equipped). The queued cost mods are one-shots created by an effect; there is no continuous 'this costs less while X' path. The other three tiers -- the on-hit destroy at 1+, overpower at 3+, +3{p} at 4+ -- are live, and CONTROLS_TOKEN_TYPE does reach equipment slots and match the Evo SUBTYPE, so their gates are real."
+  "_comment": "Was DESTROY_TOKEN, which destroys ONE token of a named slug that the CONTROLLER controls. 'destroy all cards defending this' names the cards declared as defenders on this chain link -- combat state, not a zone and not the arena, so no object-target spec can express it. Removed the 'costs {r}{r}{r} less to play' tier. It was a plain STATIC holding MODIFY_ATTACK subtract 3 -- a POWER penalty, not a cost reduction, so had anything dispatched it the card would have LOST 3{p} instead of costing less. NOT IMPLEMENTED: a play-cost reduction driven by board state (Evos equipped). The queued cost mods are one-shots created by an effect; there is no continuous 'this costs less while X' path. The other three tiers -- the on-hit destroy at 1+, overpower at 3+, +3{p} at 4+ -- are live, and CONTROLS_TOKEN_TYPE does reach equipment slots and match the Evo SUBTYPE, so their gates are real. Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

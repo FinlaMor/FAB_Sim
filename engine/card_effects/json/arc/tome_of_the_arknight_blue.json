@@ -6,34 +6,23 @@
       "effects": [
         {
           "type": "REVEAL_TOP_DECK",
-          "amount": 2
+          "amount": 2,
+          "into": "revealed"
         },
         {
-          "type": "SEARCH_DECK",
+          "type": "RETURN_TO_HAND",
+          "ref": "revealed",
           "conditions": [
             {
-              "type": "AND",
-              "conditions": [
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "REVEALED",
-                  "card_type": "ATTACK_ACTION"
-                },
-                {
-                  "type": "CARD_IN_ZONE",
-                  "zone": "REVEALED",
-                  "card_type": "NON_ATTACK_ACTION"
-                }
-              ]
-            }
-          ],
-          "effects": [
-            {
-              "type": "PUT_SELF_BOTTOM_DECK"
+              "type": "REF_CONTAINS_TYPE",
+              "ref": "revealed",
+              "card_type": "Attack"
             },
             {
-              "type": "RETURN_TO_HAND",
-              "ref": "revealed"
+              "type": "REF_CONTAINS_TYPE",
+              "ref": "revealed",
+              "card_type": "Action",
+              "not_subtype": "Attack"
             }
           ]
         },
@@ -43,5 +32,5 @@
       ]
     }
   ],
-  "_comment": "RETURN_TO_HAND returned THIS card -- the source -- and read no target, so 'put THEM into your hand' means the two cards revealed off the top of the deck, not the Tome."
+  "_comment": "RETURN_TO_HAND returned THIS card -- the source -- so 'put THEM into your hand' meant the Tome. The payoff was also wrapped in a SEARCH_DECK gated on CARD_IN_ZONE zone 'REVEALED', a player zone that does not exist, and REVEAL_TOP_DECK stored the revealed cards nowhere. Now it stores them under a ref and asks REF_CONTAINS_TYPE about the SET: REF_IS_TYPE collapses a list to its last entry, which on a two-card reveal tests one card twice."
 }

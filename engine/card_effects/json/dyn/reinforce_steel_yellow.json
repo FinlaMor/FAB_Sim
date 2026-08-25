@@ -16,8 +16,8 @@
                 "card_class": "Guardian"
               },
               {
-                "type": "HAS_KEYWORD",
-                "keyword": "Off-hand"
+                "type": "CARD_IS_TYPE",
+                "subtype": "Off-Hand"
               },
               {
                 "type": "BASE_DEFENSE_LTE",
@@ -29,5 +29,5 @@
       ]
     }
   ],
-  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. Its filter was nested inside the target dict as 'conditions', which nothing compiles -- so BASE_DEFENSE_LTE, the only invented condition type in the whole corpus, sat there unnoticed because it was never reached."
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. Its filter was nested inside the target dict as 'conditions', which nothing compiles -- so BASE_DEFENSE_LTE, the only invented condition type in the whole corpus, sat there unnoticed because it was never reached. Two more: 'off-hand' was authored as HAS_KEYWORD, but CR 2.10.6a lists Off-Hand among the functional SUBTYPES -- HAS_KEYWORD reads card.keywords, populated only from the DB keywords field, so it matched nothing. And the EQUIPMENT zone resolved to the four body slots, while CR 3.16.2a equips an off-hand to a WEAPON zone: the search could not have reached one even with the right filter."
 }

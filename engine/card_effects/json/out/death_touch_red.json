@@ -4,14 +4,45 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_HIT",
-      "_comment": "When this hits a hero, create a Frailty, Inertia, OR Bloodrot Pox token under their control — the controller chooses which. Was hardcoded to frailty. ('Death Touch can't be played from hand' is a play restriction, not modeled here.)",
+      "_comment": "When this hits a hero, create a Frailty, Inertia, OR Bloodrot Pox token under their control \u2014 the controller chooses which. Was hardcoded to frailty. ('Death Touch can't be played from hand' is a play restriction, not modeled here.)",
       "effects": [
-        {"type": "CHOOSE", "amount": 1, "options": [
-          [{"type": "CREATE_TOKEN", "token": "frailty", "count": 1, "player": "OPPONENT"}],
-          [{"type": "CREATE_TOKEN", "token": "inertia", "count": 1, "player": "OPPONENT"}],
-          [{"type": "CREATE_TOKEN", "token": "bloodrot_pox", "count": 1, "player": "OPPONENT"}]
-        ]}
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            [
+              {
+                "type": "CREATE_TOKEN",
+                "token": "frailty",
+                "count": 1,
+                "player": "OPPONENT"
+              }
+            ],
+            [
+              {
+                "type": "CREATE_TOKEN",
+                "token": "inertia",
+                "count": 1,
+                "player": "OPPONENT"
+              }
+            ],
+            [
+              {
+                "type": "CREATE_TOKEN",
+                "token": "bloodrot_pox",
+                "count": 1,
+                "player": "OPPONENT"
+              }
+            ]
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
       ]
     }
-  ]
+  ],
+  "_comment": "Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

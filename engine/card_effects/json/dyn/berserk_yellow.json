@@ -12,33 +12,27 @@
       ],
       "effects": [
         {
-          "type": "BANISH"
+          "type": "BANISH_REF",
+          "ref": "discarded"
         },
         {
-          "type": "REVEAL_TOP_DECK"
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_DISCARD",
-      "conditions": [
-        {
-          "type": "DISCARDED_CARD_POWER_GTE",
-          "amount": 6
+          "type": "REVEAL_TOP_DECK",
+          "amount": 1,
+          "into": "revealed"
         },
-        {
-          "type": "REF_PITCH_IS",
-          "pitch": 6
-        }
-      ],
-      "effects": [
         {
           "type": "DRAW",
-          "amount": 1
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "REF_POWER_GTE",
+              "ref": "revealed",
+              "amount": 6
+            }
+          ]
         }
       ]
     }
   ],
-  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Go again). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had."
+  "_comment": "Three defects. A bare BANISH banishes from the TOP OF THE DECK by default, where 'banish IT' means the card just discarded -- so it milled instead. The payoff read REF_PITCH_IS pitch 6, a PITCH VALUE test on a scale that only runs 1-3, so 'if it has 6 or more {p}' was false for every card in the game; it is a POWER test on the revealed card. And the payoff sat in a SECOND ability, where it could not see the first's refs at all -- a reference scope lasts one ability execution -- so the two halves are now one. NOT FIXED: 'until end of turn' is a turn-scoped injected trigger, the known DSL gap; this ON_DISCARD fires whenever the card is in a listening zone rather than only for the turn Berserk was played."
 }

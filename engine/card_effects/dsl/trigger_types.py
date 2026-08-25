@@ -80,6 +80,7 @@ TRIGGER_TO_EVENT: dict[str, str] = {
     # CR 8.5.48 — "whenever you transcend" (Twelve Petal Kasaya).
     "ON_TRANSCEND":             "ON_TRANSCEND",
     "ON_COMBAT_CLOSE":          "ON_COMBAT_CLOSE",
+    "ON_CHAIN_LINK_RESOLVE":    "ON_CHAIN_LINK_RESOLVE",
     "ON_EQUIP":                 "ON_EQUIP",
     "START_OF_TURN_IN_GRAVEYARD": "START_OF_TURN_IN_GRAVEYARD",
 }

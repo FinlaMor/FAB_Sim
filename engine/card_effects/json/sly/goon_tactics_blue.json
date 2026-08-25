@@ -38,8 +38,12 @@
       ],
       "effects": [
         {
-          "type": "DESTROY_REF",
-          "ref": "OPPONENT_DECK_TOP"
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "DECK_TOP",
+            "amount": 1
+          }
         }
       ]
     }

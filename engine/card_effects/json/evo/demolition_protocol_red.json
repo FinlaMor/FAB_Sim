@@ -6,6 +6,9 @@
       "trigger": "ON_ATTACK",
       "conditions": [
         {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
+        {
           "type": "HAS_KEYWORD",
           "keyword": "EvoUpgrade"
         }
@@ -39,5 +42,5 @@
       ]
     }
   ],
-  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. 'remove ALL steam counters from up to X equipment, items and/or weapons THEY control, where X is the number of Evos you have equipped' -- the count is an expression on the target, and the per-target amount is all of them. Weapons are their own zones and are not covered by Player.equipment."
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. 'remove ALL steam counters from up to X equipment, items and/or weapons THEY control, where X is the number of Evos you have equipped' -- the count is an expression on the target, and the per-target amount is all of them. Weapons are their own zones and are not covered by Player.equipment. Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

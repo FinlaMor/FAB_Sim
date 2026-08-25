@@ -6,19 +6,23 @@
       "effects": [
         {
           "type": "MODIFY_DEFENSE_VALUE",
-          "amount": -3
+          "mod": "subtract",
+          "amount": 3,
+          "target": {
+            "zone": "DEFENDING",
+            "amount": 1
+          }
         }
       ],
-      "target": {
-        "filter": [
-          {
-            "type": "ATTACK_CLASS_IN",
-            "classes": [
-              "assassin"
-            ]
-          }
-        ]
-      }
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "assassin"
+          ]
+        }
+      ]
     }
-  ]
+  ],
+  "_comment": "'TARGET CARD DEFENDING an Assassin attack gets -3{d}' had its target at ABILITY level, which MODIFY_DEFENSE_VALUE does not read -- it reads a target in its OWN params -- so the effect took the untargeted branch and shifted the whole defending TOTAL instead of one card. It also authored amount -3 with no mod, and mod defaults to ADD: -3 added is the same number here, but the pair only agrees by accident, so the intent is now spelled out. 'An Assassin attack' is a property of the attack and belongs on the ability, not in the filter that picks which DEFENDER is hit."
 }

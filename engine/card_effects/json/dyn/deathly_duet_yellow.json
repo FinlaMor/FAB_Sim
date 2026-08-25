@@ -6,8 +6,8 @@
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "ref": "ATTACK_ACTION"
+          "type": "PITCHED_FOR_THIS",
+          "card_type": "Attack"
         }
       ],
       "effects": [
@@ -23,8 +23,9 @@
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "ref": "NON_ATTACK_ACTION"
+          "type": "PITCHED_FOR_THIS",
+          "card_type": "Action",
+          "not_subtype": "Attack"
         }
       ],
       "effects": [
@@ -36,5 +37,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Both clauses gated on REF_PITCH_IS with refs named ATTACK_ACTION and NON_ATTACK_ACTION -- names nothing ever stores, and REF_PITCH_IS tests a PITCH VALUE rather than a card type, so neither clause could ever fire. 'Pitched to play it' is PITCHED_FOR_THIS (play._pitch_for_cost stamps the cards on the played card), not the pitch zone and not the attack pitch."
 }

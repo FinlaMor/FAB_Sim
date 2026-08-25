@@ -35,8 +35,13 @@
             }
           ]
         }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
       ]
     }
   ],
-  "_comment": "X = times you've boosted -> COUNT_BOOSTS (boost appends one marker per boost).  Removed a FLAG_SET 'BOOST_FLAG' gate: the flag was invented AND the text has no such condition — 'when this attacks a hero, they reveal X cards' happens unconditionally, with X simply 0 if you have not boosted. X = times you've boosted THIS COMBAT CHAIN -> COUNT_BOOSTS (scope CHAIN, the default), backed by player.boosts_this_chain which is cleared when the chain closes. Previously this read the TURN-scoped marker and over-counted on a multi-attack turn."
+  "_comment": "X = times you've boosted -> COUNT_BOOSTS (boost appends one marker per boost).  Removed a FLAG_SET 'BOOST_FLAG' gate: the flag was invented AND the text has no such condition \u2014 'when this attacks a hero, they reveal X cards' happens unconditionally, with X simply 0 if you have not boosted. X = times you've boosted THIS COMBAT CHAIN -> COUNT_BOOSTS (scope CHAIN, the default), backed by player.boosts_this_chain which is cleared when the chain closes. Previously this read the TURN-scoped marker and over-counted on a multi-attack turn. Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

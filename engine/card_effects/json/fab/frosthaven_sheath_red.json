@@ -5,8 +5,8 @@
       "ability_type": "DEFENSE_REACTION",
       "conditions": [
         {
-          "type": "REF_PITCH_IS",
-          "ref": "ICE"
+          "type": "PITCHED_FOR_THIS",
+          "card_class": "Ice"
         }
       ],
       "effects": [

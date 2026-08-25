@@ -49,6 +49,21 @@ def _stack(st, pid, zone, slug, n=4):
     getattr(st.players[pid], zone).cards = cards
 
 
+def _attacking_a_hero(st, slug, owner=1):
+    """Excessive Bloodloss reads "When this HITS A HERO", and the gate for that
+    (ATTACK_TARGET_IS_HERO) is false when there is no combat at all. The
+    original fixture ran the ability with combat None, which passed only while
+    the gate was missing -- so the combat is part of the premise, not scenery.
+    """
+    from engine.state import CombatState
+    card = _card(slug, owner)
+    card.zone = "combat_chain"
+    st.combat = CombatState(attacker_id=owner, link_id=1, attack_power=4,
+                            attack_card=card, keywords=[], from_weapon=False)
+    st.combat.attack_target = None      # None means the attack is at the hero
+    return card
+
+
 def _card(slug, owner=1):
     c = copy.deepcopy(DB.get(slug))
     c.owner = c.controller = owner
@@ -89,8 +104,9 @@ def test_excessive_bloodloss_repeats_only_on_red(top, expected_banished):
     """"banish the top card of their deck. If it's red, repeat this process."""
     st = _state()
     _stack(st, 2, "deck", top, n=5)
+    card = _attacking_a_hero(st, "excessive_bloodloss_blue")
 
-    _run("excessive_bloodloss_blue", st)
+    _run("excessive_bloodloss_blue", st, card)
 
     assert len(st.players[2].banished.cards) == expected_banished
 

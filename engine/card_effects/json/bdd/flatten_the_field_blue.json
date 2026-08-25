@@ -4,16 +4,11 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_CRUSH",
-      "conditions": [
-        {
-          "type": "DID_NOT_HIT",
-          "amount": 4
-        }
-      ],
       "effects": [
         {
           "type": "DESTROY_TOKEN",
-          "token_type": "Seismic Surge"
+          "token_type": "Seismic Surge",
+          "player": "OPPONENT"
         }
       ]
     }

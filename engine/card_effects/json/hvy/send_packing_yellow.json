@@ -12,11 +12,16 @@
             "controller": "opponent"
           }
         }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
       ]
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_CRUSH",
+      "trigger": "ON_CHAIN_LINK_RESOLVE",
       "conditions": [
         {
           "type": "DID_NOT_HIT"
@@ -31,5 +36,5 @@
       ]
     }
   ],
-  "_comment": "RETURN_TO_HAND returned THIS card -- the source -- and read no target, so 'return THE BANISHED CARD to ITS OWNER's hand' returned Send Packing to the CASTER's hand. It is the card this attack banished -- the ref BANISH now records -- and it goes back to its owner, who is the opponent."
+  "_comment": "RETURN_TO_HAND returned THIS card -- the source -- and read no target, so 'return THE BANISHED CARD to ITS OWNER's hand' returned Send Packing to the CASTER's hand. It is the card this attack banished -- the ref BANISH now records -- and it goes back to its owner, who is the opponent. Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

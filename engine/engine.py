@@ -1626,6 +1626,17 @@ def _setup_dsl_listeners(state: GameState) -> None:
         dispatch(game_state, "ON_COMBAT_CLOSE", combat.attack_card.slug,
                  card=combat.attack_card, event=event)
 
+    def _dsl_chain_link_resolve_listener(event, game_state: GameState) -> None:
+        # "When the chain link resolves …" (CR 7.6.2) — a per-link timing that
+        # is NOT the combat chain closing: a multi-link chain resolves each link
+        # in turn, and combat.hit is set per link, so "if this didn't hit" reads
+        # the link that just resolved rather than the last one of the chain.
+        combat = game_state.combat
+        if combat is None or combat.attack_card is None:
+            return
+        dispatch(game_state, "ON_CHAIN_LINK_RESOLVE", combat.attack_card.slug,
+                 card=combat.attack_card, event=event)
+
     def _dsl_defend_listener(event, game_state: GameState) -> None:
         # "When this defends" — dispatch to the actual defending card object
         # (e.g. Scowling Flesh Bag intimidates).
@@ -1774,6 +1785,8 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('draw', _dsl_draw_listener)
     state.event_manager.register('defend', _dsl_defend_listener)
     state.event_manager.register('combat_chain_close', _dsl_combat_close_listener)
+    state.event_manager.register('chain_link_resolves',
+                                 _dsl_chain_link_resolve_listener)
     state.event_manager.register('start_of_game', _dsl_start_of_game_listener)
     state.event_manager.register('crowd_boos', _dsl_boo_listener)
     state.event_manager.register('crowd_cheers', _dsl_cheer_listener)

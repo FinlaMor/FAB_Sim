@@ -328,11 +328,25 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # bond keywords name a CLASS or TALENT, which this could not ask about.
         want_cls = _norm(params.get("card_class") or params.get("class")
                          or params.get("talent") or "")
+        # "If a NON-ATTACK ACTION card was pitched to play it" (Deathly Duet).
+        # Two claims about ONE pitched card: it is an Action and it is not an
+        # Attack. NOT around the whole condition says something different and
+        # weaker — "no attack was pitched" — which is wrong the moment both an
+        # attack and a non-attack are pitched to pay for the same card, exactly
+        # the state where both of Deathly Duet's clauses should fire.
+        not_sub = _norm(params.get("not_subtype")
+                        or params.get("exclude_subtype") or "")
 
-        def _pitched(c, e, s, _sub=want_sub, _col=want_col, _cls=want_cls):
+        def _pitched(c, e, s, _sub=want_sub, _col=want_col, _cls=want_cls,
+                     _not=not_sub):
             for pc in (getattr(c, "pitched_for_this", None) or []):
                 if _cls and _cls not in _card_traits(pc):
                     continue
+                if _not:
+                    have = {_norm(x) for x in (getattr(pc, "subtypes", None) or [])}
+                    have |= {_norm(x) for x in (getattr(pc, "types", None) or [])}
+                    if _not in have:
+                        continue
                 if _sub:
                     have = {_norm(x) for x in (getattr(pc, "subtypes", None) or [])}
                     have |= {_norm(x) for x in (getattr(pc, "types", None) or [])}
@@ -2027,6 +2041,51 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             hit = any(w in have for w in _w)
             return hit is bool(_v)
         return _ref_type
+
+    if ctype in ("REF_CONTAINS_TYPE", "REF_ANY_IS_TYPE"):
+        # "If you reveal an attack action card AND a non-attack action card this
+        # way" — a question about the SET a previous effect stored, not about
+        # one card in it.
+        #
+        # REF_IS_TYPE cannot answer it: handed a list it collapses to the last
+        # entry, so on a two-card reveal it tests one card twice and the other
+        # never. That is invisible from the card's side, which is how Tome of
+        # the Arknight came to gate on two conditions that between them looked
+        # at half of what it revealed.
+        wanted = params.get("types") or params.get("card_types")
+        if not wanted:
+            wanted = [params.get("type_name") or params.get("card_type")
+                      or params.get("subtype") or ""]
+        wanted = [_norm(t) for t in wanted if t]
+        ref = params.get("ref", "revealed")
+        # value: false asks for a card matching NONE of them — "a non-attack
+        # action card" is `types: ["Action"]` plus `not_types: ["Attack"]`,
+        # which is two claims about the SAME card and so cannot be two nodes.
+        not_types = [_norm(t) for t in (params.get("not_types")
+                                        or params.get("not_type")
+                                        or ([params["not_subtype"]]
+                                            if params.get("not_subtype") else [])
+                                        ) if t]
+
+        def _ref_contains(c, e, s, _r=ref, _w=wanted, _n=not_types):
+            from engine.context import get_ref
+            pool = get_ref(_r)
+            if pool is None:
+                return False
+            if not isinstance(pool, list):
+                pool = [pool]
+            for obj in pool:
+                if obj is None:
+                    continue
+                have = {_norm(x) for x in (getattr(obj, "types", None) or [])}
+                have |= {_norm(x) for x in (getattr(obj, "subtypes", None) or [])}
+                if _w and not any(w in have for w in _w):
+                    continue
+                if _n and any(t in have for t in _n):
+                    continue
+                return True
+            return False
+        return _ref_contains
 
     if ctype in ("REF_POWER_GTE", "REF_POWER_LTE"):
         # "If a card with 6 or more {p} is banished this way" — a power test on

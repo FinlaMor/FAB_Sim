@@ -25,8 +25,13 @@
           "counter": "steam",
           "amount": 99
         }
+      ],
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
       ]
     }
   ],
-  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. It also named no counter kind at all, so it removed counters of the empty type -- a no-op even once the target was right."
+  "_comment": "The counter effect named a target and the compiler read none of it, so the counter went on the source card. It also named no counter kind at all, so it removed counters of the empty type -- a no-op even once the target was right. Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }

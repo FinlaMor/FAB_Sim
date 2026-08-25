@@ -7,8 +7,12 @@
       "trigger": "ON_DEATH",
       "effects": [
         {
-          "type": "DESTROY_REF",
-          "ref": "arsenal"
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "SELF",
+            "zone": "ARSENAL",
+            "amount": "ALL"
+          }
         }
       ]
     }

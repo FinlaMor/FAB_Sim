@@ -1,24 +1,43 @@
 {
   "slug": "pour_the_mold_blue",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED_THIS_TURN.",
+  "_comment": "The FIRST clause -- 'put a Mechanologist item with cost 0 from your hand into the arena' -- had no implementation at all. In its place stood a PUT_CARDS_BOTTOM that sent a card from hand to the BOTTOM OF THE DECK, the opposite of the arena, and the steam counter then landed on Pour the Mold itself rather than on 'it', the item just deployed. metex_red already spells this correctly as MOVE_MATCHING to_zone 'permanents'; the counter now follows the deployed item through a ref the target records.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "FLAG_SET",
-              "flag": "boosted_this_turn"
-            }
-          ]
+          "type": "MOVE_MATCHING",
+          "to_zone": "permanents",
+          "target": {
+            "controller": "SELF",
+            "zone": "HAND",
+            "amount": 1,
+            "record_as": "deployed",
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Item"
+              },
+              {
+                "type": "CLASS_IN",
+                "classes": [
+                  "Mechanologist"
+                ]
+              },
+              {
+                "type": "CARD_COST_LTE",
+                "amount": 0
+              }
+            ]
+          }
         },
         {
           "type": "PUT_COUNTER",
           "counter": "steam",
           "amount": 1,
+          "target": {
+            "ref": "deployed"
+          },
           "conditions": [
             {
               "type": "FLAG_SET",

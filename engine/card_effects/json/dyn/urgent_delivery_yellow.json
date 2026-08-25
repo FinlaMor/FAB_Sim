@@ -6,42 +6,39 @@
       "trigger": "ON_HIT",
       "effects": [
         {
-          "type": "OPT",
-          "amount": 1
-        },
-        {
-          "type": "PUT_CARDS_BOTTOM",
-          "target": {
-            "filter": [
-              {
-                "type": "CARD_IN_ZONE",
-                "zones": [
-                  "hand"
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "permanents",
+              "target": {
+                "controller": "SELF",
+                "zone": "HAND",
+                "amount": 1,
+                "filter": [
+                  {
+                    "type": "CARD_IS_TYPE",
+                    "card_type": "Item"
+                  },
+                  {
+                    "type": "CLASS_IN",
+                    "classes": [
+                      "Mechanologist"
+                    ]
+                  },
+                  {
+                    "type": "CARD_COST_LTE",
+                    "amount": {
+                      "type": "COUNT_BOOSTS"
+                    }
+                  }
                 ]
-              },
-              {
-                "type": "SUBTYPE_IN",
-                "subtypes": [
-                  "Item"
-                ]
-              },
-              {
-                "type": "CLASS_IN",
-                "classes": [
-                  "Mechanologist"
-                ]
-              },
-              {
-                "type": "COST_LTE",
-                "amount": {
-                  "type": "COUNT_BOOSTS"
-                }
               }
-            ]
-          }
+            }
+          ]
         }
       ]
     }
   ],
-  "_comment": "X = times you've boosted -> COUNT_BOOSTS (boost appends one marker per boost). X = times you've boosted THIS COMBAT CHAIN -> COUNT_BOOSTS (scope CHAIN, the default), backed by player.boosts_this_chain which is cleared when the chain closes. Previously this read the TURN-scoped marker and over-counted on a multi-attack turn."
+  "_comment": "'Put a Mechanologist item from your hand INTO THE ARENA with cost <= X' was PUT_CARDS_BOTTOM -- the bottom of the DECK. Same defect metex was fixed for, left on this sibling because that pass was about COUNT_BOOSTS. 'You may' is the MAY wrapper; the bare OPT node in front of it chose nothing. X = times boosted this combat chain -> COUNT_BOOSTS."
 }

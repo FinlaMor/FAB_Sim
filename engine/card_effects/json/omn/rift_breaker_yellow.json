@@ -12,7 +12,8 @@
       "effects": [
         {
           "type": "DESTROY_TOKEN",
-          "token_type": "Lightning Flow"
+          "token_type": "Lightning Flow",
+          "player": "OPPONENT"
         }
       ]
     }

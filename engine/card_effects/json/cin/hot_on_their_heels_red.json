@@ -2,22 +2,6 @@
   "slug": "hot_on_their_heels_red",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "conditions": [
-        {
-          "type": "CONTROLS_TOKEN_TYPE",
-          "token_type": "Draconic",
-          "amount": 2
-        }
-      ],
-      "effects": [
-        {
-          "type": "MARK"
-        }
-      ]
-    },
-    {
       "ability_type": "WHILE_STATIC",
       "_comment": "Was a plain STATIC, which nothing dispatches -- the ability never ran. The condition counted PERMANENTS with a 'Draconic' subtype. Draconic CHAIN LINKS are resolved attacks, not permanents -- nothing in play has that subtype, so the condition could not have been true.",
       "conditions": [
@@ -57,5 +41,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "A duplicate of the mark ability was left behind when the corrected one was added: same trigger, same effect, gated on CONTROLS_TOKEN_TYPE 'Draconic', which nothing in the DB has as a slug or subtype. It could not fire, but it was one gate-fix away from marking twice."
 }

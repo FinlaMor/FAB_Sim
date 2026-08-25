@@ -1,6 +1,6 @@
 {
   "slug": "war_cry_of_themis_yellow",
-  "_comment": "Was a STATIC. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. The second, unrelated INSTANT ability is preserved.",
+  "_comment": "Was a STATIC. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. The second, unrelated INSTANT ability is preserved. 'Your next ANGEL attack' was filtered with ATTACK_CLASS_IN, and Angel is a SUBTYPE (10 cards carry it), not a class -- so the filter matched no attack and the +4 was never handed out.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -11,8 +11,8 @@
           "amount": 4,
           "filter": [
             {
-              "type": "ATTACK_CLASS_IN",
-              "classes": [
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
                 "Angel"
               ]
             }
