@@ -4758,6 +4758,33 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             })
         return _fn
 
+    if etype == "RESTRICT_NEXT_ATTACK_DEFENDERS":
+        # "The NEXT attack action card you play this turn can't be defended by
+        # more than 2 non-block cards" (Confidence). RESTRICT_DEFENDERS applies
+        # to the attack ALREADY on the chain; this queues the same restriction
+        # on the one-shot next-attack list so it lands on exactly one attack.
+        #
+        # The restriction dict is the shape actions._restriction_blocks reads,
+        # including the max_defenders COUNT limit (every other key names WHICH
+        # cards may not defend; that one names HOW MANY).
+        restriction = {k: v for k, v in params.items()
+                       if k not in ("filter", "scope", "type")}
+        filter_specs = params.get("filter", [])
+        scope = str(params.get("scope") or "TURN").upper()
+
+        def _fn(card, event, state, _r=restriction, _filt=filter_specs, _scope=scope):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = state.players[_controller_id(card)]
+            if not hasattr(player, "dsl_queued_attack_mods"):
+                player.dsl_queued_attack_mods = []
+            player.dsl_queued_attack_mods.append({
+                "mod": "restrict_defenders",
+                "restriction": dict(_r),
+                "filter": _filt,
+                "scope": _scope,
+            })
+        return _fn
+
     if etype == "GAIN":
         asset = params.get("asset")
         keyword = params.get("keyword")

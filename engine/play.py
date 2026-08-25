@@ -11,6 +11,14 @@ from engine.card_effects.costs.alt_costs import ALTERNATE_COSTS
 from engine.card import Card
 from engine.state import GameState, Player, Event, StackEntry, Step
 
+#: The ability kinds a player activates, in the order they appear on the card.
+#: One list, used by BOTH the offer side and the apply side -- reading it in two
+#: places with two spellings is how an action came to name an ability the
+#: resolver indexed differently.
+ACTIVATABLE_ABILITY_TYPES = ("ACTIVATE", "INSTANT", "ATTACK_REACTION",
+                             "DEFENSE_REACTION")
+
+
 def available_actions(state, player_id) -> list[Action]:
     """ Finds all legal card activations/plays, builds an action list from those cards,
     then returns the list of the affordable and legal actions.
@@ -48,10 +56,16 @@ def available_actions(state, player_id) -> list[Action]:
             continue
         # Build a fresh Action per card (reusing the playable-loop action object
         # here previously produced wrong/unbound actions).
-        action = Action(ActionType.ACTIVATE_CARD, player_id, card)
-        can_activate, action = _cost_check(state, card, player_id, action, playable=False)
-        if can_activate:
-            affordable_actions.append(action)
+        # One action per activated ability. A card printing two of them used to
+        # yield a single ambiguous action that _apply_activate refused to
+        # resolve; offering them separately is what makes the choice sayable.
+        for _idx in _activatable_indices(card):
+            action = Action(ActionType.ACTIVATE_CARD, player_id, card,
+                            ability_index=_idx)
+            can_activate, action = _cost_check(state, card, player_id, action,
+                                               playable=False)
+            if can_activate:
+                affordable_actions.append(action)
 
     # Weapon attacks (CR 1.6.2b): offered from the weapon zones during the
     # turn player's action phase.
@@ -260,7 +274,7 @@ def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
             continue
         for ability in cd.abilities:
             atype = ability.ability_type.upper()
-            if atype not in ("ACTIVATE", "INSTANT", "ATTACK_REACTION", "DEFENSE_REACTION"):
+            if atype not in ACTIVATABLE_ABILITY_TYPES:
                 continue
             # Attack activations are handled by _add_weapon_attacks (they must
             # create an attack-proxy on the chain, not dispatch ON_ACTIVATE).
@@ -1196,6 +1210,24 @@ def _apply_play_card(state: GameState, action: Action) -> None:
     # card's own resolution abilities do NOT ride this event (see effect_fn).
     state.event_manager.emit(Event(type='on_play', card=card.slug, data={'card': card, 'meld_side': _meld_side, 'target': action.target}), state)
 
+def _activatable_indices(card) -> list:
+    """Indices into a card's activatable abilities, or [None] when there is one.
+
+    None means "the only one", which keeps every existing action shape intact;
+    an index is emitted only when the card actually prints more than one.
+    """
+    try:
+        from engine.card_effects.dsl.loader import get_card
+        cd = get_card(getattr(card, "slug", "") or "")
+    except Exception:
+        return [None]
+    if cd is None:
+        return [None]
+    n = sum(1 for a in cd.abilities
+            if a.ability_type.upper() in ACTIVATABLE_ABILITY_TYPES)
+    return [None] if n <= 1 else list(range(n))
+
+
 def _apply_activate(state: GameState, action: Action) -> None:
     """Activate an equipment/item/weapon/ally/hero/card ability: pay cost, exhaust, apply effect.
 
@@ -1240,14 +1272,19 @@ def _apply_activate(state: GameState, action: Action) -> None:
     from engine.card_effects.dsl.loader import require_card
     cd = require_card(card.slug)
     activatable = [a for a in cd.abilities
-                   if a.ability_type.upper() in
-                   ("ACTIVATE", "INSTANT", "ATTACK_REACTION", "DEFENSE_REACTION")]
+                   if a.ability_type.upper() in ACTIVATABLE_ABILITY_TYPES]
     if len(activatable) > 1:
-        # The Action does not yet carry which ability was chosen; paying every
-        # ability's costs and firing them all would be wrong. Fail loudly.
-        raise NotImplementedError(
-            f"{card.slug} has {len(activatable)} activated abilities; "
-            "per-ability activation is not supported yet")
+        # The Action names WHICH ability. Paying every ability's costs and
+        # firing them all would be wrong, so an unnamed choice is still a loud
+        # failure rather than a guess.
+        idx = getattr(action, "ability_index", None)
+        if idx is None:
+            raise NotImplementedError(
+                f"{card.slug} has {len(activatable)} activated abilities and the "
+                "action does not name one; pass Action.ability_index")
+        if not 0 <= idx < len(activatable):
+            return
+        activatable = [activatable[idx]]
     for ability in activatable:
         # Cost must be payable before the effect resolves (legality normally
         # guarantees this; guard defensively so an unaffordable activation no-ops).
@@ -1447,7 +1484,7 @@ def _activation_is_action_speed(card) -> bool:
             a.ability_type.upper() == "ACTIVATE"
             for a in cd.abilities
             if a.ability_type.upper() in
-            ("ACTIVATE", "INSTANT", "ATTACK_REACTION", "DEFENSE_REACTION")
+            ACTIVATABLE_ABILITY_TYPES
         )
     text = getattr(card, 'functional_text', None) or ''
     return bool(re.search(r'\*\*(?:[\w ]+ per \w+ )?[Aa]ction\*\*', text))

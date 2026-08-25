@@ -1,6 +1,6 @@
 {
   "slug": "confidence",
-  "_comment": "Aura token. No JSON existed anywhere, so create_token's require_card raised MissingCardImplementation and ABORTED THE GAME the moment Pleiades' crowd-cheer trigger or pleiades_superstar's clash win resolved. UNIMPLEMENTED: \"the next attack card you play this turn can't be defended by more than 2 non-block cards\" -- there is no defender-count restriction hook, so only the self-destroy is modelled.",
+  "_comment": "Aura token. No JSON existed anywhere, so create_token's require_card raised MissingCardImplementation and ABORTED THE GAME the moment Pleiades' crowd-cheer trigger or pleiades_superstar's clash win resolved. \"Can't be defended by more than 2 non-block cards\" is a COUNT limit; RESTRICT_DEFENDERS named only WHICH cards may not defend, so max_defenders was added alongside it. Block is a card TYPE (CR 8.1.12), not a subtype.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -14,6 +14,22 @@
         {
           "type": "DESTROY_PERMANENT",
           "target": "self"
+        },
+        {
+          "type": "RESTRICT_NEXT_ATTACK_DEFENDERS",
+          "max_defenders": 2,
+          "exclude_types": [
+            "Block"
+          ],
+          "filter": [
+            {
+              "type": "CARD_IS_TYPE",
+              "card_types": [
+                "Action"
+              ]
+            }
+          ],
+          "scope": "TURN"
         }
       ]
     }

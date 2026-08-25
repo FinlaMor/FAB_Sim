@@ -120,6 +120,9 @@ ONE_SHOT_PRIMITIVES = (
     "REPLACE_NEXT_POWER_GAIN", "MAKE_NEXT_DAMAGE_UNPREVENTABLE",
     # instant TIMING granted to one card
     "GRANT_INSTANT_TIMING", "PLAY_NEXT_AS_INSTANT",
+    # a defender restriction on ONE attack, queued on the same one-shot list
+    # and consumed by _apply_turn_attack_effects
+    "RESTRICT_NEXT_ATTACK_DEFENDERS",
 )
 
 

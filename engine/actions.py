@@ -45,6 +45,12 @@ class Action:
     player_id: Optional[int] = None
     card: Optional[Card] = None
     choose_index: Optional[int] = None
+    #: WHICH activated ability of the card this action activates. A card
+    #: printing two "Instant - {r}:" abilities (barbed_castaway) offered
+    #: one indistinguishable action and play._apply_activate raised
+    #: NotImplementedError rather than guess, so activating it aborted the
+    #: game. None means "the only one", which is every other card.
+    ability_index: Optional[int] = None
     pitch_cards: list[str] = field(default_factory=list)
     from_arsenal: bool = False
     slot: Optional[str] = None
@@ -866,6 +872,13 @@ def _restriction_blocks(state: GameState, card: Card, slot_name: str | None) -> 
         card_type/subtype   a type or subtype ("Attack", "Action")
         cost_lt / cost_lte / cost_gt / cost_gte
                             a cost threshold, already resolved to a number
+        max_defenders       a COUNT limit rather than a per-card filter: "can't
+                            be defended by more than 2 non-block cards". Every
+                            other key names WHICH cards may not defend; this one
+                            names HOW MANY, so it blocks nothing until that many
+                            already sit on the chain. `exclude_types` names card
+                            types that do not count toward the limit (Block is a
+                            card TYPE, CR 8.1.12, not a subtype).
     """
     combat = state.combat
     if combat is None:
@@ -876,6 +889,27 @@ def _restriction_blocks(state: GameState, card: Card, slot_name: str | None) -> 
     cost = getattr(card, 'cost', None) or 0
 
     for rule in combat.defender_restrictions:
+        if "max_defenders" in rule:
+            # Counted against what is ALREADY defending, so the first N cards
+            # are legal and the N+1th is not. A card excluded by type does not
+            # count and is never blocked.
+            exclude = {t.lower() for t in (rule.get("exclude_types") or [])}
+            if exclude and (traits & exclude):
+                continue
+            counted = 0
+            for d in (getattr(combat, "defending_cards", None) or []):
+                d_traits = {t.lower() for t in (getattr(d, "types", None) or [])}
+                d_traits |= {t.lower() for t in (getattr(d, "subtypes", None) or [])}
+                if exclude and (d_traits & exclude):
+                    continue
+                counted += 1
+            try:
+                limit = int(rule["max_defenders"])
+            except (TypeError, ValueError):
+                continue
+            if counted < limit:
+                continue
+            return True
         if rule.get("equipment") and not is_equipment:
             continue
         if rule.get("from_hand") and (is_equipment or slot_name is not None):

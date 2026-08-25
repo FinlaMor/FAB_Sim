@@ -1209,6 +1209,19 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
                 else:
                     # No live combat to grant onto — keep it for the real attack.
                     remaining.append(mod)
+            elif matches and mod.get('mod') == 'restrict_defenders':
+                # "the NEXT attack action card you play this turn can't be
+                # defended by more than 2 non-block cards" (Confidence). A
+                # defender restriction rides the same one-shot queue as the
+                # other "next attack" mods, so it lands on exactly one attack
+                # rather than every attack for the rest of the turn.
+                rule = mod.get('restriction') or {}
+                if rule and state.combat is not None and attack_card is state.combat.attack_card:
+                    if rule not in state.combat.defender_restrictions:
+                        state.combat.defender_restrictions.append(dict(rule))
+                    # consumed
+                else:
+                    remaining.append(mod)
             elif matches and mod.get('mod') == 'set_base':
                 # "the next attack action card you play this turn has N base
                 # {p}" (Chain of Brutality). Setting base power leaves later
