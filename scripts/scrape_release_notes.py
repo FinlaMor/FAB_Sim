@@ -145,7 +145,7 @@ def _parse_by_name(page: str, names: set[str]) -> dict[str, list[str]]:
     return {k: v for k, v in out.items() if v}
 
 
-def _parse(page: str) -> dict[str, list[str]]:
+def _parse(page: str, names: set[str] | None = None) -> dict[str, list[str]]:
     """Card name -> its notes, in document order."""
     out: dict[str, list[str]] = {}
     current = None
@@ -158,29 +158,58 @@ def _parse(page: str) -> dict[str, list[str]]:
     # thousands of characters long containing a dozen cards' notes. The
     # giveaway was the card counts -- 19 for a whole set where a comparable one
     # had 229.
+    # The same block-CLOSING rule the name-keyed fallback needs, and for the
+    # same reason. Not every card name on a page is bolded: on Omens of the
+    # Third Age "Erode Authority" is, and the very next card,
+    # "Aurora, Legacy of Tempest", is not -- it is a plain paragraph under an
+    # <h2>. With nothing to close the block, Aurora's rulings fell into Erode
+    # Authority, which prints only "Dominate / Fragment" and has no rulings at
+    # all. A section rule or an <h2> ends the current card.
     token = re.compile(
-        r'<h[34][^>]*>(.*?)</h[34]>'
-        r'|<p class="wp-block-paragraph"><strong>(.*?)</strong></p>'
-        r'|<li>(.*?)</li>', re.S)
+        r'<h[34][^>]*>(.*?)</h[34]>'                                  # 1 heading
+        r'|<p class="wp-block-paragraph"><strong>(.*?)</strong></p>'  # 2 bold name
+        r'|<li>(.*?)</li>'                                            # 3 a ruling
+        r'|<h2[^>]*>.*?</h2>'                                         #   section
+        r'|<p class="wp-block-paragraph">(.*?)</p>', re.S)            # 4 plain
     for m in token.finditer(page):
-        raw_name = m.group(1) if m.group(1) is not None else m.group(2)
+        heading, bold, note, plain = m.group(1), m.group(2), m.group(3), m.group(4)
+
+        if note is not None:
+            if current:
+                text = _text(note)
+                if text:
+                    out[current].append(text)
+            continue
+
+        raw_name = heading if heading is not None else bold
         if raw_name is not None:
-            name = _text(raw_name)
-            # "Full Name | Short" -- section headings ("New Keywords") carry no
-            # pipe and no notes, so they collect nothing and drop out below.
-            name = name.split("|")[0].strip()
+            name = _text(raw_name).split("|")[0].strip()
             # A card name is SHORT. Anything long is body text that happened to
-            # be bold, and treating it as a name is exactly how one entry ends
-            # up holding a whole section.
-            if len(name) > 80:
-                name = ""
-            current = name or None
+            # be bold, and treating it as a name is how one entry ends up
+            # holding a whole section.
+            current = name if name and len(name) <= 80 else None
             if current:
                 out.setdefault(current, [])
-        elif current:
-            note = _text(m.group(3))
-            if note:
-                out[current].append(note)
+            continue
+
+        if plain is not None:
+            text = _text(plain).split("|")[0].strip()
+            # An unbolded card name opens a block, but only BETWEEN cards.
+            # "Aurora, Legacy of Tempest" is unbolded and sits under an <h2>
+            # directly after the bolded "Erode Authority"; with nothing to open
+            # a block for it, its rulings landed on Erode Authority, which
+            # prints only "Dominate / Fragment" and has no rulings at all.
+            # Requiring `current is None` stops a stray mention inside a card's
+            # own block hijacking it; requiring an exact name match means this
+            # cannot invent a card.
+            if current is None and names and text.lower() in names:
+                current = text
+                out.setdefault(current, [])
+            elif text and not text.strip("-—– "):
+                current = None      # a rule of em-dashes between sections
+            continue
+
+        current = None              # an <h2> section heading
     return {k: v for k, v in out.items() if v}
 
 
@@ -201,6 +230,11 @@ def main() -> int:
     urls = [u for u in urls if u.rstrip("/") != INDEX_URL.rstrip("/")]
     print(f"{len(urls)} set pages")
 
+    by_name_lower_all = {(c.get("name") or "").strip().lower()
+                         for c in json.loads(
+                             SLUG_INDEX.read_text(encoding="utf-8"))["by_slug"].values()}
+    by_name_lower_all.discard("")
+
     notes: dict[str, list[str]] = {}
     for url in urls:
         slug = url.rstrip("/").rsplit("/", 1)[-1]
@@ -208,20 +242,22 @@ def main() -> int:
         if not page:
             print(f"  {slug:44} (not cached, skipped)")
             continue
-        found = _parse(page)
-        if len(found) < 20:
+        found = _parse(page, by_name_lower_all)
+        # Always try the name-keyed parse and keep whichever yields more. The
+        # threshold used to be "structural found < 20", and that broke the
+        # moment the structural parser learned to open on unbolded names: it
+        # then found 20+ on Monarch, the fallback stopped running, and
+        # Blasmophet's 12 rulings were lost to a parser that was doing BETTER
+        # than before by every other measure.
+        if True:
             # No usable delimiters on this page (Monarch, Tales of Aria).
             # 20 is far below what any real set page yields -- the smallest
             # structurally-parsed one gives 30 -- so this cannot fire on a page
             # that parsed correctly.
-            by_name_lower = {(c.get("name") or "").strip().lower()
-                             for c in json.loads(
-                                 SLUG_INDEX.read_text(encoding="utf-8"))["by_slug"].values()}
-            by_name_lower.discard("")
-            fallback = _parse_by_name(page, by_name_lower)
+            fallback = _parse_by_name(page, by_name_lower_all)
             if len(fallback) > len(found):
-                print(f"  {slug:44} structural parse found {len(found)}, "
-                      f"name-keyed fallback found {len(fallback)}")
+                print(f"  {slug:44} structural {len(found)} -> name-keyed "
+                      f"{len(fallback)}")
                 found = fallback
         for name, items in found.items():
             notes.setdefault(name, [])
