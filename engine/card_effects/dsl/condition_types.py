@@ -450,6 +450,20 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _dwohc
 
     # ── keyword checks ─────────────────────────────────────────────────────
+    if ctype in ("CHARGED_THIS_WAY", "CHARGED_TO_PLAY_THIS"):
+        # "If a YELLOW card is charged this way, ..." — asks about the card the
+        # optional CHARGE additional cost actually took, which the cost stamps
+        # on the card being played. Distinct from "have you charged this turn",
+        # which is a turn event and a different question.
+        want = _norm(params.get("color") or params.get("colour") or "")
+
+        def _charged(c, e, s, _w=want):
+            got = getattr(c, "dsl_charged_color", None)
+            if not got:
+                return False
+            return (not _w) or _norm(got) == _w
+        return _charged
+
     if ctype == "REPRISE":
         def _reprise(c, e, s):
             from engine.card_effects.ability_keywords import reprise_check

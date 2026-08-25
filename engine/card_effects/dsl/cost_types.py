@@ -271,28 +271,50 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         # cost is simply never paid, which is the one thing a cost must never
         # allow. It also charged hand position 0 with nobody choosing.
         amount = params.get("amount", 1)
+        # "As an additional cost to play this, you MAY charge your hero's soul.
+        # If a YELLOW card is charged this way, ..." -- 27 cards in the corpus.
+        # An optional additional cost must never block the play, and the payoff
+        # has to be able to ask WHAT was charged, so the colour of the charged
+        # card is stamped on the card being played. A turn-scoped marker would
+        # leak to the next card played this turn; "this way" is per-play.
+        optional = bool(params.get("optional") or params.get("may"))
 
-        def can_pay(card, event, state, _a=amount):
+        def can_pay(card, event, state, _a=amount, _opt=optional):
             from engine.card_effects.ability_keywords import _controller_id
+            if _opt:
+                return True
             return len(state.players[_controller_id(card)].hand.cards) >= _a
 
-        def pay(card, event, state, _a=amount):
+        def pay(card, event, state, _a=amount, _opt=optional):
             from engine.card_effects.ability_keywords import (
-                _ask_player, _controller_id)
+                _ask_player, _controller_id, ask_optional)
             from engine.effect_keywords import charge as _ek_charge
             cid = _controller_id(card)
             for _ in range(_a):
                 hand = state.players[cid].hand.cards
                 if not hand:
                     return
-                if len(hand) == 1:
+                if _opt:
+                    pick = ask_optional(
+                        state, cid, [c.slug for c in hand],
+                        context="Charge a card to your hero's soul? (optional "
+                                "additional cost)")
+                    if pick is None:
+                        return
+                    chosen = next((c for c in hand if c.slug == pick), hand[0])
+                elif len(hand) == 1:
                     chosen = hand[0]
                 else:
                     pick = _ask_player(state, cid, [c.slug for c in hand],
                                        context="Choose a card to charge to your "
                                                "hero's soul")
                     chosen = next((c for c in hand if c.slug == pick), hand[0])
+                # Card.color is None on real cards; the printing is base_color.
+                colour = (getattr(chosen, "color", None)
+                          or getattr(chosen, "base_color", None) or "")
                 _ek_charge(state, chosen, cid, source_player_id=cid)
+                if card is not None:
+                    card.dsl_charged_color = str(colour).lower()
         return can_pay, pay
 
     if ctype == "TAP_SELF":

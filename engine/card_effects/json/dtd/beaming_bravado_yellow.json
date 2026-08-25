@@ -1,0 +1,29 @@
+{
+  "slug": "beaming_bravado_yellow",
+  "_comment": "\"As an additional cost to play this, you MAY charge your hero's soul. If a YELLOW card is charged this way, ...\" -- 27 cards share this shape. An optional additional cost must never block the play, and the payoff asks WHAT was charged, so the CHARGE cost stamps the charged card's colour on the card being played. A turn-scoped marker would leak to the next card played this turn; \"this way\" is per-play. Cost and payoff sit on ONE ability: an ability carrying only a cost has an empty effects list, which compiles fine and resolves as a no-op.",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "CHARGE",
+          "amount": 1,
+          "optional": true
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "CHARGED_THIS_WAY",
+              "color": "yellow"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
