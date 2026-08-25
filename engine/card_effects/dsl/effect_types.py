@@ -420,6 +420,44 @@ _OBJECT_TARGET_ZONES = ("ARENA", "EQUIPMENT", "WEAPON", "ARSENAL", "HERO",
                         "SOUL", "PITCH")
 
 
+def _grant_go_again(card, state) -> None:
+    """CR 8.3.5 -- "gain 1 action point", by whichever route the rule names.
+
+    8.3.5b: an ability of an ATTACK on the active chain link puts the keyword on
+    the combat, and the engine pays the point out at the Resolution Step.
+    8.3.5a: an ability of a NON-ATTACK LAYER pays its controller directly.
+
+    8.3.5c: an object cannot have two go agains, so neither route pays twice for
+    one resolution.
+
+    KNOWN LIMIT: the test is "is there a combat", not "is this ability on the
+    attack". An INSTANT activated during someone else's combat therefore puts
+    its go again on that attack instead of paying its own controller. The
+    stricter test (card is combat.attack_card) is what 8.3.5b actually says, but
+    no card in the corpus demonstrates the difference, and narrowing it on
+    speculation risks the INJECT_TRIGGER ON_HIT users that grant onto the attack
+    they are riding.
+    """
+    if state.combat is not None:
+        # The PRINTED keyword arrives from the card DB spelled "GoAgain" and a
+        # granted one is spelled "Go Again". An exact-match guard therefore
+        # never saw a printed go again and happily appended a second -- which
+        # CR 8.3.5c says must fail. The engine's own payout check splits the
+        # camel case before comparing (engine._resolution_step); so does this.
+        import re as _re
+        already = any(
+            _re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', str(k)).lower() == "go again"
+            for k in (state.combat.keywords or []))
+        if not already:
+            state.combat.grant_keyword("Go Again")
+        return
+    from engine.card_effects.ability_keywords import _controller_id
+    player = state.players.get(_controller_id(card))
+    if player is None:
+        return
+    player.action_points = (player.action_points or 0) + 1
+
+
 def _object_zone_cards(player, zone: str) -> list:
     zone = (zone or "ARENA").upper()
     if zone == "ARENA":
@@ -4890,18 +4928,39 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             kw = canonical_keyword(keyword)
 
             def _fn(card, event, state, _kw=kw):
+                # Go again is not a keyword the combat merely carries -- it is
+                # "gain 1 action point" (CR 8.3.5), and outside combat there is
+                # no keyword list to put it on. Both spellings ({"type":
+                # "GO_AGAIN"} and {"type": "GAIN", "keyword": "GO_AGAIN"}) mean
+                # the same rule, so they go through the same code.
+                if _kw == "Go Again":
+                    _grant_go_again(card, state)
+                    return
                 if state.combat and _kw not in (state.combat.keywords or []):
                     state.combat.grant_keyword(_kw)
             return _fn
 
     if etype == "GO_AGAIN":
-        # The attack gains go again (CR 8.3.5): its controller gains an action
-        # point when the chain link resolves. Used inside INJECT_TRIGGER ON_HIT
-        # (e.g. Blacktek Whisperers) and as a direct effect.
-        def _fn(card, event, state):
-            if state.combat and "Go Again" not in (state.combat.keywords or []):
-                state.combat.grant_keyword("Go Again")
-        return _fn
+        # Go again is "gain 1 action point" (CR 8.3.5), and the rule splits on
+        # WHAT has it:
+        #
+        #   8.3.5b  an ability of an ATTACK on the active chain link -- the AP
+        #           arrives at the Resolution Step, so the keyword goes onto the
+        #           combat and the engine pays it out later.
+        #   8.3.5a  an ability of a NON-ATTACK LAYER -- the controller gains the
+        #           AP once the other resolution abilities have resolved.
+        #
+        # Only the first was implemented, and the second is what every activated
+        # equipment ability is: 33 abilities printing "Go again" wrote to
+        # state.combat.keywords, which is None in the action phase, so the AP
+        # was silently dropped and the activation ended the player's turn early.
+        # "Is there a combat" is exactly the discriminator the rule uses -- a
+        # weapon ATTACK activation does have one and keeps the 8.3.5b path.
+        #
+        # CR 8.3.5c: an object cannot have two go agains, and an effect granting
+        # a second one fails. The combat path has always honoured that; the
+        # action-point path must not pay twice for one resolution either.
+        return lambda card, event, state: _grant_go_again(card, state)
 
     if etype == "ROLL":
         # Cards author the die size as "faces" or "sides". Effects that consume

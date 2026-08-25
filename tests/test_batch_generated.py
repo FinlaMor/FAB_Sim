@@ -346,25 +346,51 @@ def test_blanch_yellow_on_hit_defense_value():
 
 # --- ronin_renegade_yellow ---
 def test_ronin_renegade_yellow_go_again():
+    """Attacking with it, the go again rides the COMBAT (CR 8.3.5b): the action
+    point is paid at the Resolution Step, not when the ability resolves.
+
+    Same vacuity as the play-effect test below: it read the action point count
+    after the attack and then called activate(), whose helper opens with
+    `p.action_points = max(1, p.action_points)`, so a 0 became a 1 and the
+    assertion passed on the helper. Ronin Renegade has no activated ability at
+    all -- activate() could never have granted anything.
+    """
     st = _make_state(); st.card_db = DB
     card = _card("ronin_renegade_yellow")
     st.players[1].arsenal.cards.append(card)
-    attack(st, card)
+
+    combat = attack(st, card)
     hit(st)
-    # Assert that the player has one more action point after the attack
-    before_action_points = st.players[1].action_points
-    activate(st, card)
-    assert st.players[1].action_points == before_action_points + 1
+
+    import re
+    carried = [re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', str(k)).lower()
+               for k in (combat.keywords or [])]
+    assert carried.count("go again") == 1, (
+        "the attack carries go again once (CR 8.3.5c) -- printed as 'GoAgain' "
+        f"and granted as 'Go Again' are the same keyword: {combat.keywords}")
 
 def test_ronin_renegade_yellow_play_effect():
+    """The card is "Go again" and nothing else: playing it gives the action
+    point back (CR 8.3.5a -- a non-attack layer pays its controller directly).
+
+    This measured the wrong thing before. It captured the action point count
+    AFTER dispatching ON_PLAY, then called activate(), whose helper opens with
+    `p.action_points = max(1, p.action_points)`. On a fresh state that raised 0
+    to 1 and the assertion passed on THAT, with the card's only ability never
+    involved -- the go again could not be granted at all at the time, since
+    GO_AGAIN wrote to state.combat.keywords and there is no combat here.
+    """
     st = _make_state(); st.card_db = DB
     card = _card("ronin_renegade_yellow")
     st.players[1].hand.cards.append(card)
+    st.players[1].action_points = 1
+
     dispatch(st, "ON_PLAY", "ronin_renegade_yellow", card=card, event=None)
-    # Assert that the player has one more action point after playing the card
-    before_action_points = st.players[1].action_points
-    activate(st, card)
-    assert st.players[1].action_points == before_action_points + 1
+
+    assert st.players[1].action_points == 2, (
+        "playing a card whose whole text is Go again spent an action point and "
+        "returned nothing")
+    assert st.players[2].action_points != 2, "the opponent gained it"
 
 # --- autumns_touch_blue ---
 def test_autumns_touch_blue_smoke():
