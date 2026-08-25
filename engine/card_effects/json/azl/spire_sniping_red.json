@@ -1,13 +1,22 @@
 {
   "slug": "spire_sniping_red",
+  "_comment": "Three defects. (1) The trigger was ON_ENTER_PLAY, which fires on ARENA entry -- an arsenal is not the arena, so the ability never fired at all; ON_PUT_FACEUP_IN_ARSENAL is the trigger for exactly this wording. (2) LOOK_AT defaults its `player` to OPPONENT, so a card saying \"the top of YOUR deck\" peeked at the opponent's -- not a dead effect but an information leak in the wrong direction. (3) \"then put them back in any order\" was unimplemented: only the LOOK_AT existed. REORDER_REF acts on the ref LOOK_AT stores, and it too defaults to the OPPONENT, so it names the player as well.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_ENTER_PLAY",
+      "trigger": "ON_PUT_FACEUP_IN_ARSENAL",
       "effects": [
         {
           "type": "LOOK_AT",
-          "amount": 2
+          "amount": 2,
+          "player": "SELF",
+          "zone": "DECK_TOP",
+          "into": "looked"
+        },
+        {
+          "type": "REORDER_REF",
+          "ref": "looked",
+          "player": "SELF"
         }
       ]
     }

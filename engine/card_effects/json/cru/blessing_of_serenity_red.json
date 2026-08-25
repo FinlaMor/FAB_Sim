@@ -1,5 +1,6 @@
 {
   "slug": "blessing_of_serenity_red",
+  "_comment": "\"The next time your hero would be dealt {p} damage this turn, prevent N.\" Two defects. The PREVENT_DAMAGE carried no damage_type, so it shielded ANY damage type. And it was gated on three invented conditions (DURING_TURN, IN_COMBAT, and EVENT_THIS_TURN damage physical) that appear nowhere in the text -- the last of which requires physical damage to have ALREADY been dealt this turn, inverting \"the NEXT time\". The blue printing of the same card carries none of them and is the shape copied here; a colour variant differing STRUCTURALLY from its siblings is the cheapest signal that one of them is wrong.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -8,20 +9,7 @@
           "type": "PREVENT_DAMAGE",
           "amount": 3,
           "target": "PLAYER",
-          "conditions": [
-            {
-              "type": "DURING_TURN",
-              "player": "SELF"
-            },
-            {
-              "type": "IN_COMBAT"
-            },
-            {
-              "type": "EVENT_THIS_TURN",
-              "event": "damage",
-              "qualifier": "physical"
-            }
-          ]
+          "damage_type": "physical"
         }
       ]
     }

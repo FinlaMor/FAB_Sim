@@ -6,7 +6,8 @@
       "trigger": "ON_HIT",
       "effects": [
         {
-          "type": "PUT_SELF_BOTTOM_DECK"
+          "type": "PUT_SELF_IN_ZONE",
+          "zone": "soul"
         },
         {
           "type": "DEAL_ARCANE",
@@ -14,5 +15,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "\"Put it into your hero's SOUL\" was PUT_SELF_BOTTOM_DECK, which hard-codes the deck. PUT_SELF_IN_ZONE is the same handler reading the zone the card names; the repo's own guard (test_put_self_in_zone) requires that spelling rather than a zone passed to the bottom-deck one. A different zone with different consequences: the card is redrawn instead of fuelling soul-count effects. Found on 4 cards by review, 6 by sweeping every card whose text says \"into your soul\"."
 }

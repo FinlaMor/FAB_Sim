@@ -1,12 +1,13 @@
 {
   "slug": "back_stab_yellow",
+  "_comment": "\"Defense reaction cards can't be played this chain link.\" combat.no_defense_reactions is READ in four places (play.py's reaction-step offer and _defense_reaction_legal_check; actions.py for hand and arsenal) and was SET BY NOTHING. All three cards with this text wrote a dead SET_FLAG instead -- under TWO different names -- so they looked implemented and blocked nothing. Same shape as DamageEvent.unpreventable: the reader existed, the writer did not. This is an Action-Attack card, not a defense reaction: its ability_type was DEFENSE_REACTION, which is a different card kind and offered it in the wrong step. The clause applies while it is the attack, so it is an ON_ATTACK trigger. Stealth is printed and fires from the card DB.",
   "abilities": [
     {
-      "ability_type": "DEFENSE_REACTION",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "DEFENSE_REACTION_BLOCKED"
+          "type": "BLOCK_DEFENSE_REACTIONS"
         }
       ]
     }

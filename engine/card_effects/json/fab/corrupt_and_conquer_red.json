@@ -1,19 +1,19 @@
 {
   "slug": "corrupt_and_conquer_red",
+  "_comment": "\"Defense reaction cards can't be played this chain link.\" combat.no_defense_reactions is READ in four places (play.py's reaction-step offer and _defense_reaction_legal_check; actions.py for hand and arsenal) and was SET BY NOTHING. All three cards with this text wrote a dead SET_FLAG instead -- under TWO different names -- so they looked implemented and blocked nothing. Same shape as DamageEvent.unpreventable: the reader existed, the writer did not. The \"if this was played from your banished zone\" gate was CARD_IN_ZONE zone:BANISHED, which asks whether a card is SITTING in the banished zone -- true whenever anything is banished, and unrelated to where THIS card was played from. PLAYED_FROM_ZONE is the real condition. Blood Debt is printed and fires from the card DB.",
   "abilities": [
     {
-      "ability_type": "PLAY",
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "CARD_IN_ZONE",
-          "zone": "BANISHED",
-          "source": "self"
+          "type": "PLAYED_FROM_ZONE",
+          "zone": "banished"
         }
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "DEFENSE_REACTION_BLOCKED"
+          "type": "BLOCK_DEFENSE_REACTIONS"
         }
       ]
     },
@@ -28,7 +28,11 @@
       "effects": [
         {
           "type": "BANISH",
-          "target": "OPPONENT_ARSENAL"
+          "target": {
+            "player": "OPPONENT",
+            "zone": "ARSENAL"
+          },
+          "amount": "ALL"
         }
       ]
     }

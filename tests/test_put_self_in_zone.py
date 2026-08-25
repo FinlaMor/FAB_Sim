@@ -8,6 +8,13 @@ soul-count effect the Illusionist heroes are built around.
 The bottom-deck spelling is kept, because replacement effects like Drone of
 Brutality use it and mean it. PUT_SELF_IN_ZONE is the same handler reading the
 zone the card names.
+
+A later review pass found the same defect on SIX more cards (four flagged by
+the reviewer, six by sweeping every card whose printed text says "into your
+soul"). The per-card guard below was added then: the spelling check alone
+passes for a card that names no zone at all, which is exactly how these six
+survived -- a MISSING parameter and an IGNORED one look identical from the
+card's side, and audit_params can only see the second.
 """
 import copy
 
@@ -106,3 +113,78 @@ def test_no_card_asks_put_self_bottom_deck_for_another_zone():
         walk(raw.get("abilities", []))
     assert not offenders, (
         f"PUT_SELF_BOTTOM_DECK named a zone other than the deck: {offenders}")
+
+
+#: Cards whose printed text says "into your (hero's) soul".
+SOUL_CARDS = ["herald_of_protection_red", "rising_solartide_red",
+              "herald_of_ravages_blue", "herald_of_ravages_red",
+              "ray_of_hope_yellow", "rising_solartide_blue"]
+
+
+@pytest.mark.parametrize("slug", SOUL_CARDS)
+def test_the_card_really_says_soul(slug):
+    """The premise. If the printed text changes, this fails loudly instead of
+    endorsing whatever zone the JSON names."""
+    import json
+    import re
+    from pathlib import Path
+
+    idx = json.load(open(Path(__file__).resolve().parent.parent
+                         / "card_data" / "slug_index.json",
+                         encoding="utf-8"))["by_slug"]
+    text = idx[slug].get("functionalText") or ""
+    assert re.search(r"into (your|their|its owner'?s?) (hero'?s? )?soul",
+                     text, re.I), text
+
+
+def test_no_card_saying_soul_moves_itself_anywhere_else():
+    """Derived from the printed text, not a hardcoded list, so it keeps probing
+    as cards are added.
+
+    The spelling guard above catches a card that names the WRONG zone on the
+    bottom-deck effect. It cannot catch one that names NO zone, which is how
+    six cards saying "put it into your soul" quietly bottomed themselves.
+    """
+    import json
+    import re
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
+    idx = json.load(open(Path(__file__).resolve().parent.parent
+                         / "card_data" / "slug_index.json",
+                         encoding="utf-8"))["by_slug"]
+    soul = re.compile(r"into (your|their|its owner'?s?) (hero'?s? )?soul", re.I)
+    bad = []
+    for path in root.rglob("*.json"):
+        rel = path.relative_to(root)
+        if (path.stem.endswith("_work_queue")
+                or path.name in ("review_queue.json", "triage_queue.json")
+                or any(p.startswith(".") or p == "needs_review" for p in rel.parts)):
+            continue
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        slug = raw.get("slug")
+        if not soul.search(idx.get(slug, {}).get("functionalText") or ""):
+            continue
+
+        def walk(node, out):
+            if isinstance(node, dict):
+                t = node.get("type")
+                if t in ("PUT_SELF_BOTTOM_DECK", "PUT_SELF_IN_ZONE"):
+                    default = "deck" if t == "PUT_SELF_BOTTOM_DECK" else "soul"
+                    out.append(str(node.get("zone") or default).lower())
+                for v in node.values():
+                    walk(v, out)
+            elif isinstance(node, list):
+                for v in node:
+                    walk(v, out)
+
+        zones = []
+        walk(raw.get("abilities"), zones)
+        if zones and any(z != "soul" for z in zones):
+            bad.append(f"{slug}: {zones}")
+    assert bad == [], (
+        "cards whose text says 'into your soul' that move themselves "
+        f"elsewhere: {bad}")

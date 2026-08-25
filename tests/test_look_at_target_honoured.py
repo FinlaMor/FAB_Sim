@@ -90,6 +90,14 @@ def _slugs(looked):
     "on_the_horizon_yellow",
     "right_behind_you_red",
     "seerstone",
+    # A later sweep found three more saying "the top of YOUR deck" that named
+    # no player at all. The five above named a ZONE via `target` and were fixed
+    # by reading it; these named nothing, so they fell through to the OPPONENT
+    # default -- an absent parameter and an ignored one look identical from the
+    # card's side, and only the second is visible to audit_params.
+    "spire_sniping_red",
+    "spire_sniping_yellow",
+    "scouting_shot_red",
 ])
 def test_look_at_your_own_deck_does_not_read_the_opponents(slug):
     """"look at the top card of YOUR deck"."""

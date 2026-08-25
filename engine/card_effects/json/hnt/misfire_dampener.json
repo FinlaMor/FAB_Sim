@@ -1,6 +1,6 @@
 {
   "slug": "misfire_dampener",
-  "_comment": "Instant - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn; if you've boosted this turn, INSTEAD prevent the next 2. Modeled as an ACTIVATE with a destroy-this cost and a CONDITIONAL_EFFECT on the BOOSTED flag (then PREVENT_DAMAGE 2, else 1). Prior JSON gated the whole ability on BOOSTED (no prevention at all when not boosted), used an unrecognized 'additional_effects' key, and only SET_FLAG (which nothing consumed). Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: BOOSTED_THIS_TURN.",
+  "_comment": "Instant - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn; if you've boosted this turn, INSTEAD prevent the next 2. Modeled as an ACTIVATE with a destroy-this cost and a CONDITIONAL_EFFECT on the BOOSTED flag (then PREVENT_DAMAGE 2, else 1). Prior JSON gated the whole ability on BOOSTED (no prevention at all when not boosted), used an unrecognized 'additional_effects' key, and only SET_FLAG (which nothing consumed). Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" \u2014 all lowercase. Was: BOOSTED_THIS_TURN. The prevention named no damage_type, so it absorbed ANY damage where the card names a type. PREVENT_DAMAGE filters on damage_type only when present. Found by sweeping every card whose text names {p} or arcane damage AND prevents; the sibling blessing_of_serenity_blue authored it correctly, which is the variant-mismatch signal.",
   "abilities": [
     {
       "ability_type": "ACTIVATE",
@@ -23,13 +23,15 @@
           "then": [
             {
               "type": "PREVENT_DAMAGE",
-              "amount": 2
+              "amount": 2,
+              "damage_type": "arcane"
             }
           ],
           "else": [
             {
               "type": "PREVENT_DAMAGE",
-              "amount": 1
+              "amount": 1,
+              "damage_type": "arcane"
             }
           ]
         }

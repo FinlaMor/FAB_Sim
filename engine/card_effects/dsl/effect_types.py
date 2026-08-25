@@ -4328,6 +4328,23 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 card.subtypes = subs
         return _fn
 
+    if etype in ("BLOCK_DEFENSE_REACTIONS", "NO_DEFENSE_REACTIONS"):
+        # "Defense reaction cards can't be played this chain link."
+        #
+        # combat.no_defense_reactions is READ in four places -- play.py's
+        # reaction-step offer and _defense_reaction_legal_check, and actions.py
+        # for hand and arsenal -- and was SET BY NOTHING. The three cards with
+        # this text wrote a dead SET_FLAG instead, under TWO different names
+        # (DEFENSE_REACTION_BLOCKED and command_and_conquer_no_dr), so they
+        # looked implemented and blocked nothing.
+        #
+        # Same shape as DamageEvent.unpreventable: the reader existed, the
+        # writer did not.
+        def _fn(card, event, state):
+            if state.combat is not None:
+                state.combat.no_defense_reactions = True
+        return _fn
+
     if etype in ("RESTRICT_DEFENDERS", "RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT"):
         # "This can't be defended by <X>." The filter names the cards that may
         # NOT defend; get_defendable_cards drops anything matching it.
