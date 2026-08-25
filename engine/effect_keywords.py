@@ -1306,6 +1306,14 @@ def intimidate(state: GameState, source_player_id: int,
 
         state.event_manager.register(EventType.END_PHASE_BEGINNING, _return_handler)
 
+    # "If you've INTIMIDATED an opponent this turn ..." (Aggressive Pounce).
+    # The event below is instantaneous -- a listener has to be registered when
+    # it fires -- so it cannot answer a question asked later in the turn. That
+    # is what the turn markers are for, and intimidate was the one keyword
+    # effect that emitted its event and recorded nothing, so every card asking
+    # the question got False forever.
+    _record_turn_event(state, source_player_id, "intimidate")
+
     # CR 8.5.10a: emit intimidated event regardless of whether a card was banished
     state.event_manager.emit(Event(type=EventType.INTIMIDATE, data={
         "source_player_id": event.source_player_id,

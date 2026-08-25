@@ -1,0 +1,16 @@
+{
+  "slug": "aggressive_pounce_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "intimidate"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "\"If you've intimidated an opponent this turn, this gets go again.\" CR 6.2.3d: a static-continuous effect conditional on being generated has its condition evaluated AT ALL TIMES, generated when the condition is met and gone when it is not -- and the rule's own worked example is a conditional go again (Luminaris). So this is a static, not a triggered ability: go again is paid at the Resolution Step (CR 8.3.5b), and the card must HAVE it at that moment, not at declaration. An ON_ATTACK trigger would snapshot the answer when the attack was declared and miss an intimidate that happens after. THE PRINTED KEYWORD IS THE REAL TRAP: the card DB lists GoAgain on all three printings with no way to say it is conditional, so without an ability of exactly this shape the card would ALWAYS have go again -- strictly stronger than printed. loader.conditional_keywords strips it only for an ability gated on SOURCE_IS_ATTACK that grants the keyword, which is what distinguishes 'THIS gains go again' from 'your attacks get go again'. Shape copied from vigor_rush_blue, which is the same sentence with a different condition; 11 other cards use it."
+}
