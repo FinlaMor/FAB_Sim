@@ -1,0 +1,26 @@
+{
+  "slug": "frostbite",
+  "_comment": "PARTIAL, and the missing half is the important half. 'Cards and abilities cost you an additional {r} to play or activate' is a persistent cost tax on its controller; the DSL has MODIFY_NEXT_CARD_COST, which is a one-shot on the next card, and nothing that raises costs continuously while a permanent is in the arena. NEEDS A NEW PRIMITIVE. The destroy clauses ARE authored, so the token appears and expires correctly; it simply does not tax yet. 'or activate an ability' has no ON_ACTIVATE_ANY trigger either, so only the play half of the second clause fires.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CARD_PLAYED",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

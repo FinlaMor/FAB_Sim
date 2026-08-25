@@ -1,0 +1,5 @@
+{
+  "slug": "spellbane_aegis",
+  "_comment": "Generic Token - Aura, printed text is exactly '**Spellvoid 1**'. Nothing to author: numbered keywords come from the card DB / token_meta, and re-declaring a printed keyword is a defect in this corpus, not thoroughness. The file exists so create_token's require_card does not abort the game.",
+  "abilities": []
+}

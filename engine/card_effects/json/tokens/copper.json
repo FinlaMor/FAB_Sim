@@ -1,0 +1,21 @@
+{
+  "slug": "copper",
+  "_comment": "'**Action** - {r}{r}{r}{r}, destroy this: Draw a card. **Go again**'. Go again is a printed keyword on the token and comes from the card DB, so it is deliberately not authored here.",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 4,
+      "cost": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

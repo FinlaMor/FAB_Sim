@@ -1,0 +1,18 @@
+{
+  "slug": "zen_state",
+  "_comment": "PARTIAL. 'This enters the arena with a balance counter' is authored. 'At the beginning of your action phase, destroy this unless you remove a balance counter from it' is an unless-cost on a trigger, and 'If you would be dealt damage, prevent 1 of that damage' is a RECURRING prevention -- PREVENT_DAMAGE registers a one-shot replacement that is consumed, where this token prevents 1 from every instance while it survives. Both NEED NEW PRIMITIVES.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "balance",
+          "amount": 1,
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

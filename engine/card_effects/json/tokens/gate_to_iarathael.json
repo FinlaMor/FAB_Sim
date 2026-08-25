@@ -1,0 +1,5 @@
+{
+  "slug": "gate_to_iarathael",
+  "_comment": "NOT IMPLEMENTED. '**Instant** - {r}, destroy this: You may play TARGET action card with blood debt from your banished zone this turn.' GRANT_PLAY_FROM_BANISHED looked like the fit and is not: it acts on the card a PRECEDING BANISH stored under a ref, so it unlocks what this effect just banished, where the token targets a card ALREADY sitting in the zone. Authored with a `filter`, which that handler does not read -- an unread parameter that would have looked implemented and done nothing, which is the defect class this corpus is being cleared of. NEEDS a target-selecting variant that picks from the banished zone and records what it picked.",
+  "abilities": []
+}

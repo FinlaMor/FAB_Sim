@@ -1,17 +1,5 @@
 {
   "slug": "erode_authority_blue",
-  "abilities": [
-    {
-      "ability_type": "PLAY",
-      "effects": [
-        {
-          "type": "DOMINATE"
-        },
-        {
-          "type": "CREATE_TOKEN",
-          "token_type": "FRAGMENT"
-        }
-      ]
-    }
-  ]
+  "_comment": "Printed text is exactly '**Dominate**\n\n**Fragment**' -- two keywords and nothing else, both carried by the card DB keywords field. The implementation authored BOTH as effects: a DOMINATE effect duplicating a printed keyword, and CREATE_TOKEN 'FRAGMENT', which is not a token at all -- the release notes discuss 'attacks with fragment', an ability. That CREATE_TOKEN would have called require_card('fragment') and aborted the game, since no such card exists. Re-declaring a printed keyword is a defect in this corpus, not thoroughness.",
+  "abilities": []
 }

@@ -1,0 +1,5 @@
+{
+  "slug": "hyper_driver",
+  "_comment": "NOT IMPLEMENTED, deliberately empty rather than guessed. 'When this has no steam counters, destroy it' needs a trigger on a counter reaching zero, and 'Once per turn, when you boost a card, remove a steam counter from this and gain {r}' needs an ON_BOOST trigger; neither exists. The file exists to stop create_token aborting the game, and the card is left visibly unimplemented so the work queue still reports it.",
+  "abilities": []
+}

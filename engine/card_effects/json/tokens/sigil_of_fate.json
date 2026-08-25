@@ -1,0 +1,26 @@
+{
+  "slug": "sigil_of_fate",
+  "_comment": "'When this leaves the arena, **opt 1**. At the beginning of your action phase, destroy this.' Both clauses are expressible as written.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ]
+}

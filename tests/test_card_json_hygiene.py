@@ -50,6 +50,26 @@ _BOLD = re.compile(r"\*\*.*?\*\*")
 # ability type — enforced in actions.get_defendable_cards, the path
 # engine._defend_step actually uses.
 KNOWN_UNIMPLEMENTED: set[str] = {
+    # Three TOKENS that existed nowhere until sixteen live cards were found
+    # referencing them: create_token calls require_card, which RAISES, so the
+    # game aborted mid-resolution rather than misbehaving. The files now exist
+    # so the crash cannot happen; these three carry clauses no primitive
+    # expresses, and are left visibly unimplemented rather than approximated.
+    #
+    # "When this has no steam counters, destroy it" needs a trigger on a counter
+    # reaching zero, and "once per turn, when you boost a card ..." needs an
+    # ON_BOOST trigger. Definition of done: both exist and this entry goes.
+    "hyper_driver",
+    # A once-per-turn permission to play blood-debt cards from the banished
+    # zone, an end-phase optional banish, and a self-destruct conditional on
+    # whether a blood-debt card was banished THIS TURN (no such turn marker is
+    # recorded). Definition of done: the turn marker and the permission exist.
+    "blasmophet_the_insatiable_hunger",
+    # "You may play TARGET action card with blood debt from your banished zone."
+    # GRANT_PLAY_FROM_BANISHED acts on what a PRECEDING BANISH stored under a
+    # ref, not on a card already in the zone, and reads no filter. Definition of
+    # done: a target-selecting variant that records what it picked.
+    "gate_to_iarathael",
     # "Damage that would be dealt by Malign can't be prevented." Needs the
     # damage pipeline to skip prevention for a NAMED SOURCE, which no primitive
     # expresses. It had been authored as a STATIC granting WARD with

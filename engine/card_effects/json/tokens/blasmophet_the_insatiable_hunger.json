@@ -1,0 +1,5 @@
+{
+  "slug": "blasmophet_the_insatiable_hunger",
+  "_comment": "NOT IMPLEMENTED, deliberately empty rather than guessed. Three clauses, none expressible: a once-per-turn permission to play blood-debt action cards from the banished zone, an end-phase optional banish from hand, and a self-destruct conditional on whether a blood-debt card was banished THIS TURN (no such turn marker is recorded). Unique is a printed keyword. The file exists to stop create_token aborting the game.",
+  "abilities": []
+}
