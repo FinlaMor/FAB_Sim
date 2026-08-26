@@ -305,11 +305,21 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
         # Inherit the printed type line from the card DB template so zone
         # entry checks see the real types (e.g. weapon tokens need "Weapon").
         if template is not None and (template.types or template.subtypes):
+            # Trust the card DB's type line. A real token already carries
+            # types=['Token'] there (Frostbite, Runechant, Copper all do), so
+            # stamping "Token" on top only ever fired for an object that is NOT
+            # one -- and then CR 3.0.12a destroyed it. Crouching Tiger is
+            # types=['Action'], and the official release notes are explicit:
+            # "Crouching Tiger is a CARD... if it is created by an effect it
+            # spawns into the game", and "if you do not play it the turn it was
+            # created, it REMAINS IN THE BANISHED ZONE". Stamped as a token it
+            # ceased to exist on arrival, silently -- Blessing of Qi created
+            # nothing at all, in no zone, with no error.
             token.types = list(template.types or [])
             token.subtypes = list(template.subtypes or [])
-            if "Token" not in token.types:
-                token.types.append("Token")
         else:
+            # No template means there is no card behind this object, so it is a
+            # token by construction.
             token.types = ["Token"]
 
         # Set token keywords before zone entry (CR 8.5.2b): explicit override
@@ -370,7 +380,14 @@ def create_token(state: GameState, target_player_id: int = None, token_slug: str
             # No free weapon zone → the token cannot be equipped (CR: it would
             # cease to exist); drop it.
         elif event.destination and event.destination != "tokens":
-            dest_zone = getattr(controller, event.destination, None)
+            # Zone names are Player ATTRIBUTES and therefore lowercase, while
+            # every other DSL parameter is authored in caps -- so a card writing
+            # the natural {"zone": "BANISHED"} raised ValueError here and
+            # aborted the game mid-resolution. Blessing of Qi did exactly that.
+            # Case is not information: fold it rather than making each card
+            # guess which convention this one parameter follows.
+            dest = str(event.destination).strip().lower()
+            dest_zone = getattr(controller, dest, None)
             if dest_zone is None:
                 raise ValueError(f"create_token: unknown destination zone {event.destination!r}")
             dest_zone.add(token)
