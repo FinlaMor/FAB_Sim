@@ -591,10 +591,25 @@ def _permanent_filter(params):
     # "target" holds "self"/"controlled" (not a filter) on most cards and a TYPE
     # name on the two that reach for it that way.
     raw_target = params.get("target")
-    if (isinstance(raw_target, str)
-            and raw_target.lower() not in ("", "self", "this", "source",
-                                           "controlled", "controlled_permanent")):
-        subtype = subtype or raw_target
+    # Two KINDS of value arrive here and only one is a filter. "self" and
+    # friends name WHICH object; a type name ("item") narrows WHAT qualifies.
+    # A directive read as a type is a filter nothing satisfies, so the card
+    # silently does nothing -- and can_pay says the cost is unpayable, which
+    # made good_time_chapeau's ability impossible to activate with a Gold in
+    # play. "chosen" (9 cards) means "the player picks" and was being matched
+    # as a subtype.
+    _DIRECTIVES = ("", "self", "this", "source", "controlled",
+                   "controlled_permanent", "chosen", "choice", "choose",
+                   "any", "target")
+    if isinstance(raw_target, str):
+        low = raw_target.lower()
+        # "controlled_item" is "an item you control": the prefix is the
+        # directive half and the rest is the real filter. Read whole it named a
+        # subtype no card has (2 cards).
+        if low.startswith("controlled_") and low not in _DIRECTIVES:
+            low = low[len("controlled_"):]
+        if low not in _DIRECTIVES:
+            subtype = subtype or low
     want_token = params.get("token")
     max_cost = params.get("max_cost")
     if named is None and subtype is None and want_token is None and max_cost is None:
